@@ -497,11 +497,8 @@ namespace TuvVision.Controllers
                         SubsubMenuList2.SubSubMenuId = 287;
                         SubsubMenuList2.SubSubMenuName = "Create All Users";
                         subMenuList3.SubSubmenuList.Add(SubsubMenuList2);
-
-
                     }
-
-                    //menu.MainMenuName == "";
+                   
                 }
                 if (existsMenu == "No")
                 {
@@ -511,8 +508,6 @@ namespace TuvVision.Controllers
                     menuDTO.MainMenuId = 9;
                     menuDTO.MainMenuName = "Expense";
                     List<SubMenuList> _subMenuList = new List<SubMenuList>();
-
-
                     if (IsOPE.ToUpper() == "YES")
                     {
                         var subMenuListOPE = new SubMenuList();
@@ -522,10 +517,7 @@ namespace TuvVision.Controllers
                         subMenuListOPE.Name = "OPE Report";
                         //subMenuList.SubSubmenuList = 0;
                         _subMenuList.Add(subMenuListOPE);
-
                     }
-
-
                     if (RoleName != "QHSE")
                     {
                         var subMenuList1 = new SubMenuList();
@@ -534,8 +526,9 @@ namespace TuvVision.Controllers
                         subMenuList1.Id = 74;
                         subMenuList1.Name = "Expense Approval";
                         _subMenuList.Add(subMenuList1);
-
                     }
+
+                    //added by test
 
                     var subMenuListVoucher = new SubMenuList();
                     subMenuListVoucher.Action = "GenerateVoucher";
