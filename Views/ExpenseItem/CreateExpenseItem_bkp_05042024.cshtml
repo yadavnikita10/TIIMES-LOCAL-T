@@ -1,0 +1,1606 @@
+﻿@model TuvVision.Models.ExpenseItem
+@{
+    ViewBag.Title = "CreateExpenseItem";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
+
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+<style>
+    td{
+        font-family:'TNG Pro';
+    }
+</style>
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+
+                        <div class="col-xs-12 text-right">
+                            @*<button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action(" VisitReportForm", "VisitReport" ,new { PK_Call_ID=Model.PK_Call_Id} )'">Back</button>*@
+                            <a id="btnBack" href="#" class="btn btn-default news-btn" style="float:right;"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                            <input type="hidden" id="previousUrl" value="@ViewBag.PreviousUrl" />
+
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Expense Item</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+
+                                            <form method="post" enctype="multipart/form-data" id="myform">
+                                                @*Added By Satish Pawar On 17 May 2023*@
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4" hidden>
+                                                        <div class="form-group">
+                                                            <label>Voucher No </label>
+                                                            @Html.TextBoxFor(model => model.VoucherNo, new { @placeholder = "Voucher No", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.VoucherNo, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4" hidden>
+                                                        <div class="form-group">
+                                                            <label>UIN </label>
+                                                            @Html.TextBoxFor(model => model.UIN, new { @placeholder = "UIN", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            @*@Html.ValidationMessageFor(model => model.UIN, "", new { @class = "text-danger validation-msg" })*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            @*<label>Sub Job No :</label>*@
+                                                            <label>Job No / Sub Job No :</label>
+                                                            @Html.TextBoxFor(model => model.SubJobNo, new { @placeholder = "Job No / Sub Job No", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubJobNo, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    @Html.HiddenFor(m => m.SubJobNo)
+
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>SAP No :</label>
+                                                            @Html.TextBoxFor(model => model.SAPNo, new { @placeholder = "SAP No", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SAPNo, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>Country :<span style="color:#ff0000;">*</span></label>
+                                                            @if (ViewBag.SubCatlist != null)
+                                                            {
+                                                                @Html.DropDownListFor(m => m.Country, ViewBag.SubCatlist as IEnumerable<SelectListItem>
+                                                                , "--Select Country--", new { @class = "form-control", @required = "required" })
+                                                                @Html.HiddenFor(m => m.Country)
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                    @*Added BY Satish Pawar on 16 June 2023*@
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>Cost Center :</label>
+                                                            @Html.TextBoxFor(model => model.CostCenter, new { @placeholder = "Cost Center", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.CostCenter, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                @*End Code*@
+                                                <div class="row">
+                                                    @*Added By Satish Pawar on 17 May 2023*@
+                                                    @Html.HiddenFor(m => m.ActivityType)
+
+                                                    @Html.HiddenFor(m => m.FKId)
+                                                    @Html.HiddenFor(m => m.Type)
+
+                                                    @Html.HiddenFor(m => m.PK_Call_Id)
+                                                    @Html.HiddenFor(m => m.PKExpenseId)
+                                                    @*<input type="hidden" id="hdnPKExpenseId" />*@
+
+
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>Date :<span style="color:#ff0000;">*</span></label>
+                                                            @Html.TextBoxFor(model => model.Date, "{0:dd/mm/yy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom StartDate", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>City / Cities (From/To):<span style="color:#ff0000;">*</span></label>
+                                                            @Html.TextBoxFor(model => model.City, new { @placeholder = "City / Cities", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>Expense Type :<span style="color:#ff0000;">*</span></label>
+                                                            @if (ViewBag.ExpensesList != null)
+                                                            {
+                                                                @Html.DropDownListFor(m => m.ExpenseType, ViewBag.ExpensesList as IEnumerable<SelectListItem>
+                                                                , "--Select Expenses--", new { @class = "form-control", @required = "required" })
+                                                                @Html.HiddenFor(m => m.ExpenseType)
+                                                            }
+                                                            @Html.ValidationMessageFor(m => m.ExpenseType, "", new { @class = "text-danger validation-msg" })
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group" id="divAmt">
+                                                            <label>Amount :</label>
+                                                            @Html.TextBoxFor(model => model.Amount, new { @placeholder = "Amount", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                        <div class="form-group" id="divKM">
+                                                            <label>KM :</label> <label id="lblKMFor" style="font-size: 11px;color: #e11414;"></label>
+                                                            @Html.TextBoxFor(model => model.KM, new { @placeholder = "KM", @class = "form-control", autocomplete = "off", @onkeypress = "AllowWithOneDecimal(event)" })
+                                                            @Html.ValidationMessageFor(model => model.KM, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>Currency :<span style="color:#ff0000;">*</span></label>
+                                                            @if (ViewBag.CurrencyList != null)
+                                                            {
+                                                                @Html.DropDownListFor(m => m.Currency, ViewBag.CurrencyList as IEnumerable<SelectListItem>
+                                                                , "--Select Currency--", new { @class = "form-control", @required = "required" })
+                                                                @Html.HiddenFor(m => m.Currency)
+                                                            }
+                                                            @Html.ValidationMessageFor(m => m.Currency, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>Exch. Rate :</label>
+                                                            @Html.TextBoxFor(model => model.ExchRate, htmlAttributes: new { placeholder = "Exch Rate", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.ExchRate, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>Total Amount INR :</label>
+                                                            @Html.TextBoxFor(model => model.TotalAmount, htmlAttributes: new { placeholder = "Total Amount", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+
+                                                    </div>
+
+                                                    @*<div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Attachment</label>
+                                                                @Html.TextBoxFor(model => model.Currency, new { @placeholder = "Currency", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.Currency, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>*@
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label>Description :<span style="color:#ff0000;">*</span></label>
+                                                            @Html.TextAreaFor(model => model.Description, new { @placeholder = "Description", @class = "form-control", autocomplete = "off", @style = "width: 690px; height: 57px; resize:none;" })
+                                                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                @*Added By Satish Pawar 17 May 2023*@
+
+
+                                                <div class="col-xs-12">
+                                                    <div id="divAttachments" class="form-group">
+                                                        <label><i class="fa fa-paperclip" style="color:black;"></i> Related Documents (Please attach files here) (Max File Size 4MB): <span style="color:#ff0000;">*</span></label>
+                                                        <input type="file" class="filepond" name="filepond" id="FileUpload" multiple>
+                                                        <input hidden="hidden" id="hdfFileUpload" name="FileUpload" class="hidden" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group">
+                                                        @if (Model != null)
+                                                        {
+                                                            if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                            {
+                                                                <div class="col-xs-12">
+                                                                    <div class="form-group">
+                                                                        <ul class="Attachment">
+                                                                            @foreach (var item in Model.FileDetails)
+                                                                            {
+                                                                                <li>
+                                                                                    <a class="title" href="/ExpenseItemMaster/Download/?p=@(item.IDS + item.Extension)&d=@item.FileName">@item.FileName</a>&nbsp;&nbsp;&nbsp;
+                                                                                    <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem"><b>X</b></a>
+                                                                                </li>
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                @*<p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>*@
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="color:red;text-align:center;font-weight:bold;">There are no attachments !!!</p>
+                                                        }
+                                                        @Html.HiddenFor(m => m.Attachment)
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            @*<input type="button" id="btnSave1" class="btn btn-default insert-form-btn" name="Save" value="Save">*@
+                                                            <button type="submit" id="btnSave" class="btn btn-default insert-form-btn" name="Save" value="Save"> Save</button>
+                                                            <button type="button" id="btnCancel" class="btn btn-default insert-form-btn" name="Cancel" value="Cancel"> Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <table id="example" class="display dataTable no-footer evaluation" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="hidden">PKExpenseId</th>
+                                                    <th class="hidden">Type</th>
+                                                    <th class="hidden">FKId</th>
+                                                    <th class="remove-search">Action</th>
+                                                    <th>Date</th>
+                                                    <th>PKExpenseId</th>
+                                                    <th>Job/SubJob</th>
+                                                    <th>SAP No</th>
+                                                    <th>Country</th>
+                                                    <th>User Cost Center</th>
+                                                    <th>City</th>
+                                                    <th>Expense Type</th>
+                                                    <th>KM</th>
+                                                    <th>Amount</th>
+                                                    <th>Currency</th>
+                                                    <th>Exch. Rate</th>
+                                                    <th>Total Amount in INR</th>
+                                                    <th>Description</th>
+                                                    <th class="remove-search">Attachments</th>
+                                                    @*<th class="hidden">PKExpenseId</th>
+                                                        <th class="hidden">Type</th>
+                                                        <th class="hidden">FKId</th>
+                                                        <th class="remove-search">Action</th>
+                                                        <th>Date</th>
+                                                        <th>City</th>
+                                                        <th>Expense Type</th>
+                                                        <th>Total Amount in INR</th>
+                                                        <th class="remove-search">Attachments</th>*@
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                @foreach (var b in ViewBag.ExpenseItem)
+                                                {
+                                                    <tr>
+                                                        <td class="hidden">@b.PKExpenseId</td>
+                                                        <td class="hidden">@b.Type</td>
+                                                        <td class="hidden">@b.FKId</td>
+                                                        @if (b.IsSendForApproval == "0")
+                                                        {
+                                                            <td cRemarkslass="action-btn" style="text-align:center;font-family:'TNG Pro'">
+                                                                @*<a href="@Url.Action(" CreateExpenseItem", "ExpenseItem" , new { PKExpenseId=@b.PKExpenseId, Type=@b.Type, FKId=@b.FKId })" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>*@
+                                                                <a href="#" id="@b.PKExpenseId" onclick="Save(@b.PKExpenseId)" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>
+                                                                <a href="@Url.Action("Delete", "ExpenseItem" , new { PKExpenseId=@b.PKExpenseId })" class="delete" onclick="return confirm('Are you sure you wish to delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td cRemarkslass="action-btn" style="text-align:center;font-family:'TNG Pro'">Send for Approval</td>
+                                                        }
+                                                        @*<td>@b.Date</td>
+                                                        <th>@b.PKExpenseId</th>
+                                                        <th>@b.SubJobNo</th>
+                                                        <th>@b.SAPNo</th>
+                                                        <th>@b.Country</th>
+                                                        <th>@b.CostCenter</th>
+                                                        <td>@b.City</td>
+                                                        <td>@b.ExpenseType</td>
+                                                        <th>@b.KM</th>
+                                                        <th>@b.Amount</th>
+                                                        <th>@b.Currency</th>
+                                                        <th>@b.ExchRate</th>
+                                                        <td>@b.TotalAmount</td>
+                                                        <th>@b.Description</th>*@
+
+                                                        <td>@b.Date</td>
+                                                        <td>@b.PKExpenseId</td>
+                                                        <td>@b.SubJobNo</td>
+                                                        <td>@b.SAPNo</td>
+                                                        <td>@b.Country</td>
+                                                        <td>@b.CostCenter</td>
+                                                        <td>@b.City</td>
+                                                        <td>@b.ExpenseType</td>
+                                                        <td>@b.KM</td>
+                                                        <td>@b.Amount</td>
+                                                        <td>@b.Currency</td>
+                                                        <td>@b.ExchRate</td>
+                                                        <td>@b.TotalAmount</td>
+                                                        <td>@b.Description</td>
+                                                        @if (b.Attachment != "")
+                                                        {
+                                                            <td cRemarkslass="action-btn" style="text-align:center;">
+                                                                @{
+                                                                    string _value = "";
+                                                                    //if (b.Attachment.Contains(","))
+                                                                    //{
+                                                                    if (b.Attachment.EndsWith(","))
+                                                                    {
+                                                                        _value = b.Attachment.TrimEnd(',');
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        _value = b.Attachment;
+                                                                    }
+                                                                    //}
+
+                                                                    string[] values = _value.Split(',');
+                                                                    if (values.Length > 0)
+                                                                    {
+                                                                        foreach (string value in values)
+                                                                        {
+                                                                            int lastIndex = value.LastIndexOf(".");
+                                                                            string lastValue = "";
+                                                                            if (lastIndex != -1)
+                                                                            {
+                                                                                lastValue = value.Substring(lastIndex + 1);
+
+                                                                            }
+                                                                            if (lastValue == "xls" || lastValue == "xlsx")
+                                                                            {
+                                                                                @*<a href="#" id="@b.PKExpenseId" onclick="ExcelView('@value')" class="btn btn-info btn-xs" title="Edit"><i class="glyphicon glyphicon-eye-open"></i></a>*@
+                                                                                <a href="#" id="@b.PKExpenseId" onclick="ExcelView('@value')" title="View"><img src="/View1.png"></a>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @*<a href="@Url.Action(" Download1", "ExpenseItem" , new { VoucherNo=b.Attachment })" class="delete" title="Attachment"><img src="/View1.png"></a>*@
+                                                                                @*<a href="#" id="@b.PKExpenseId" onclick="ViewPdf('@value')" class="btn btn-info btn-xs" title="Edit"><img src="/TIIMESTESTING/View1.png"></a>*@
+                                                                                <a href="#" id="@b.PKExpenseId" onclick="ViewPdf('@value')" class="btn  btn-xs" title="Edit"><img src="/View1.png"></a>
+
+                                                                            }
+                                                                        }
+                                                                    }
+
+
+                                                                }
+
+                                                            </td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td cRemarkslass="action-btn" style="text-align:center;">-</td>
+                                                                    }
+
+
+                                                    </tr>
+                                                                    }
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--======================================-->
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<!-- Modal -->
+<div id="pdfModal" class="modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">PDF Viewer</h5>
+                <button type="button" id="pdfModalclose" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <a id="downloadLink" href="path/to/file.pdf" download>Download</a>
+                <iframe id="pdfIframe" src="" width="100%" height="400"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="excelModal" class="modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Excel Viewer</h5>
+                <button type="button" id="excelModalclose" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <a id="ExceldownloadLink" href="path/to/file.pdf" download>Download</a>
+                <iframe id="excelIframe" src="" width="100%" height="400"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#pdfModalclose").on("click", function () {
+        $("#pdfModal").hide();
+    });
+
+    $("#excelModalclose").on("click", function () {
+        $("#excelModal").hide();
+    });
+
+    function ViewPdf(_pdfUrl) {
+        var downloadLink = $("#downloadLink");
+        var pdfUrl = _pdfUrl; // Default PDF URL from the model
+
+        // You can dynamically change the PDF URL based on your logic here
+        // Example:
+        // var pdfUrl = "http://example.com/path/to/dynamic.pdf";
+        var modifiedString = _pdfUrl;
+
+        if (modifiedString.charAt(0) === "~") {
+            pdfUrl = "https://tiimes.tuv-india.com/" + modifiedString.substring(1);
+        }
+        downloadLink.attr("href", pdfUrl);
+        $("#pdfIframe").attr("src", pdfUrl);
+        $("#pdfModal").show();
+    };
+
+    function ExcelView(excelUrl) {
+        //var excelUrl = "path/to/excel_file.xlsx"; // Replace with the actual URL of the Excel file
+        var modifiedString = excelUrl;
+        var downloadLink = $("#ExceldownloadLink");
+        if (modifiedString.charAt(0) === "~") {
+            excelUrl = "https://tiimes.tuv-india.com/" + modifiedString.substring(1);
+        }
+        downloadLink.attr("href", excelUrl);
+        // Load the Excel file
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", excelUrl, true);
+        oReq.responseType = "arraybuffer";
+
+        oReq.onload = function (e) {
+            var arraybuffer = oReq.response;
+
+            // Convert the Excel file to HTML
+            var data = new Uint8Array(arraybuffer);
+            var workbook = XLSX.read(data, { type: "array" });
+            var htmlData = XLSX.write(workbook, { type: "string", bookType: "html" });
+
+            // Set the HTML content as the source of the iframe
+            $("#excelIframe").contents().find("body").html(htmlData);
+        };
+
+        oReq.send();
+        $("#excelModal").show();
+    }
+</script>
+
+
+
+<!--===========================================================-->
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+
+<script>
+    FilePond.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(document.querySelector('.filepond'));
+</script>
+
+@*
+    <script>
+            FilePond.setOptions({
+                server: '@Url.Action("TemporaryFilePathDocumentAttachment", "EnquiryMaster")'
+            });
+    </script>*@
+
+<script>
+    FilePond.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(document.querySelector('.filepond'));
+</script>
+@*<script>  commented  by nikita on 02022024
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment", "ExpenseItem")'
+    });
+</script>*@
+@{
+    foreach (var b in ViewBag.CarRatePerKM)
+    {
+        <input type="hidden" id="hdnCarRate" value=@b.CarRate />
+        <input type="hidden" id="hdnMotorBikeRate" value=@b.MotorBikeRate />
+    }
+    <input type="hidden" id="hdnMaxExpenseLimit" value=@ViewBag.MaxExpenseLimit />
+
+    <input type="hidden" id="hdnEntryDoneForLodgging" value="No" />
+    <input type="hidden" id="hdnEntryDoneForDailyAllowance" value="No" />
+    <input type="hidden" id="hdnOverseastravelallowance" value="No" />
+
+
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // added by nikita on 11032024
+        var status = '@ViewBag.status'; // Render ViewBag.status as a JavaScript variable
+
+        if (status === "yes") {
+            $('#btnSave').hide();
+            $('#btnCancel').hide();
+        }
+        else {
+            $('#btnSave').show();
+            $('#btnCancel').show();
+        }
+        //end
+
+        $("#KM").val("0");
+        $("#divAmt").show();
+        $("#divKM").hide();
+        var myValue = '@ViewBag.CarRatePerKM';
+
+        var myVisitedDates = '@ViewBag.VisitedDates';
+
+        const specificDates = myVisitedDates.split(",");
+        console.log(specificDates)
+
+        debugger;
+        //const filePond = FilePond.create('#FileUpload');
+        //filePond.disabled = true;
+        //$('#divAttachments').hide();
+        //$('#divAttachments').addClass('disabled');
+        //$('#divAttachments').attr('aria-disabled', 'true');
+        //$('#divAttachments').css('opacity', '0.5');
+        //$('#divAttachments').css('pointer-events', 'none');
+
+
+        //var datesArray = ['01/06/2023', '01/04/2023', '15/03/2023', '22/04/2023', '10/05/2023', '03/06/2023'];
+        var datesArray = specificDates;
+        // Get the current date
+        var today = new Date();
+
+        // Calculate the cutoff date for two months ago
+        var twoMonthsAgo = new Date();
+        twoMonthsAgo.setMonth(today.getMonth() - 2);
+        twoMonthsAgo.setHours(0, 0, 0, 0);
+
+        // Filter the dates array
+        var lastTwoMonthsDates = datesArray.filter(function (dateString) {
+            var dateParts = dateString.split('/');
+            var date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+            return date >= twoMonthsAgo;
+        });
+
+        console.log(lastTwoMonthsDates);
+
+        enableMultipleDates(lastTwoMonthsDates);
+
+        //var twoMonthsAgo = new Date();
+        //twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+
+        //var format = "dd/mm/yy"; // Date format
+
+        //var dateString = $.datepicker.formatDate(format, twoMonthsAgo);
+        //var dateObj = $.datepicker.parseDate(format, dateString);
+
+
+
+        //======================================================================
+        //var specificDates = ['2023-03-16', '2023-04-02', '2023-05-09'];
+
+        // Get the current date
+        //var currentDate = new Date();
+
+        //// Subtract 2 months from the current date
+        //var twoMonthsAgo = new Date();
+        //twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+
+        //var format = "dd/mm/yy"; // Date format
+        //var currentDate_date = $.datepicker.formatDate(format, currentDate);
+        //var twoMonthsAgo_date = $.datepicker.formatDate(format, twoMonthsAgo);
+        //var twoMonthsAgo_dateObj = $.datepicker.parseDate(format, twoMonthsAgo_date);
+
+        //// Filter the specificDates array to get dates within the last two months
+        //var filteredDates = specificDates.filter(function (currentDate) {
+        //    var dateObj = new Date(currentDate);
+
+        //    var _date = $.datepicker.formatDate(format, currentDate);
+        //    return _date >= twoMonthsAgo && _date <= currentDate_date;
+        //    //return date >= twoMonthsAgo_date;// && date;
+        //});
+
+
+
+        //var specificDates1 = ['2023-06-16', '2023-06-02', '2023-06-09'];
+        //console.log(specificDates1);
+
+
+
+        ////======================================================================
+
+
+        ////var specificDates = ["2023-05-16", "2023-05-02", "2023-05-09"]; // Set your specific dates here
+        //var filteredDates1 = ['05/06/2023']; // Set your specific dates here
+        //enableMultipleDates(filteredDates);
+
+        var selectedValue = "INR"; // Value of the option you want to select
+        $("#Currency").val(selectedValue);
+
+     //   var selectedCountry = "India"; // Value of the option you want to select
+        var selectedCountry = "52"; // Value of the option you want to select
+        $("#Country").val(selectedCountry);
+       // alert(123);
+
+    });
+
+    function enableMultipleDates(specificDates) {
+
+
+        $("#Date").datepicker({
+            dateFormat: "dd/mm/yy",
+            beforeShowDay: function (date) {
+                //var string = $.datepicker.formatDate("yy-mm-dd", date);
+                var string = $.datepicker.formatDate("dd/mm/yy", date);
+                //var string = $.datepicker.formatDate("dd-MMM-yyyy", date);
+                return [specificDates.indexOf(string) > -1];
+            }
+        });
+
+        if (specificDates.length == 1) {
+            //var inputDate = specificDates;
+            //var parts = inputDate[0].split("-");
+            //var formattedDate = parts[1] + "/" + parts[2] + "/" + parts[0];
+            $("#Date").datepicker("setDate", specificDates[0]);
+        }
+    }
+
+    $('#btnCancel').click(function (event) {
+        console.log(window.history.back());
+        var a = window.history.back();
+        console.log(a);
+
+
+    });
+    $('#btnBack').click(function () {
+        var previousUrl = $('#previousUrl').val(); // Get the previous URL from the hidden field
+        window.location.href = previousUrl; // Redirect to the previous URL
+    });
+    $('#btnSave').click(function (event) {
+        event.preventDefault(); // Prevents the form from submitting
+        var Attachment = $("#Attachment").val();
+        var Date = $("#Date").val();
+        var Country = $("#Country :selected").val();
+        var City = $("#City").val();
+        var Remarks = $("#Description").val();
+
+        //var ExpenseType = $.trim($("#ExpenseType").val());
+        var ExpenseType = $.trim($("#ExpenseType :selected").text());
+
+        if (ExpenseType == "Self-arranged Lodging" && $("#hdnEntryDoneForLodgging").val() == "Yes") {
+            alert("For " + ExpenseType + "Expenses already Added");
+        }
+        else if (ExpenseType == "Daily allowance" && $("#hdnEntryDoneForDailyAllowance").val() == "Yes") {
+            alert("For " + ExpenseType + "Expenses already Added");
+        }
+        else {
+            if ((ExpenseType == 'Flight*' || ExpenseType == 'Train - Express*'
+                    || ExpenseType == 'Hotel*' || ExpenseType == 'Room Rent*'
+                    || ExpenseType == 'Parking*' || ExpenseType == 'Toll*'
+                    || ExpenseType == 'Misc*' || ExpenseType == 'Taxi - Rented (Ola/Uber/Prepaid)'
+                    || ExpenseType == 'Travels*'
+                    || ExpenseType == 'Courier*' || ExpenseType == 'Entertainment Expenses*') && Attachment == '') {
+                alert("Kindly Upload Documents for expense " + ExpenseType);
+                $("#ExpenseType").focus();
+            }
+            else if (Country == "--Select Country--") {
+                alert("Kindly Select Country");
+                $("#Country").focus();
+            }
+            else if (Date == "") {
+                alert("Kindly Select Date");
+                $("#Date").focus();
+            }
+            else if (City == "") {
+                alert("Kindly enter City");
+                $("#City").focus();
+            }
+            else if (ExpenseType == "--Select Expenses--") {
+                alert("Kindly Select Expenses");
+                $("#ExpenseType").focus();
+            }
+            else if (Remarks == "") {
+                alert("Kindly Add Remarks");
+                $("#Description").focus();
+            }
+            else if ($('#divKM').css('display') != 'none' && $('#KM').val() == 0) {      //added by nikita on 01022024
+                alert("Please Check Values Inserted in KM");
+                $("#divKM").focus();
+            }
+            else {
+                $('#myform').submit();
+            }
+        }
+        // Perform your custom validation logic here
+        //if (1 == 2) {
+        //    // If the validation passes, submit the form
+        //    $('#myForm').submit();
+        //} else {
+        //    // If the validation fails, display an error message or take appropriate action
+        //    alert('Validation failed. Please check your inputs.');
+
+        //}
+    });
+
+    //$("#btnSave").click(function () {
+    //    alert("Clicked On Save");
+    //});
+    //function Save() {
+    //    alert("Clicked On Save");
+    //}
+    function Save(PKExpenseId) {
+        //alert("click");
+        //alert(PKExpenseId);
+        var value = $("#Attachment").val();
+        var Link = "";
+        var ExpenseType = $("#ExpenseType").val();
+        if (ExpenseType == 'Flight' || ExpenseType == 'Express train' || ExpenseType == 'Hotel' || ExpenseType == 'Room Rent'
+            || ExpenseType == 'Parking' || ExpenseType == 'Toll' || ExpenseType == 'misc' || ExpenseType == 'Taxi - Rented (Ola/Uber/Prepaid)') {
+            alert("You Clicked On :- " + ExpenseType);
+        }
+
+        $.ajax({
+            type: "GET",
+            url: Link + "/ExpenseItem/Get_ExpenseById",
+            //url: '@Url.Action("Get_ExpenseById", "ExpenseItem")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            traditional: true,
+            data: { PKExpenseId: PKExpenseId },
+            success: function (response) {
+                debugger;
+                var Result = JSON.parse(response);
+                var _Result = JSON.stringify(response);
+
+                if (Result != "Error") {
+
+                    $("#PKExpenseId").val(PKExpenseId);
+                    $("#UIN").val(Result[0].UIN);
+                    $("#SubUIN").val('SubUIN');
+                    $("#Country").val(Result[0].Country);
+                    $("#City").val(Result[0].City);
+                    $("#ExpenseType").val(Result[0].ExpenseType);
+                    $("#Date").val(Result[0].Date);
+                    $("#Amount").val(Result[0].Amount);   //added by nikita on 18012024
+                    var ExpenseType = $.trim(Result[0].ExpenseType);
+                    if (ExpenseType == "Own Bike" || ExpenseType == "Own Car" || ExpenseType == "Parking*" ||
+                        ExpenseType == "Toll*" || ExpenseType == "Travels*" || ExpenseType == "Flight*" ||
+                        ExpenseType == "Hotel*" || ExpenseType == "Room Rent*" || ExpenseType == "Misc*"
+                        || ExpenseType == "Train - Express*" || ExpenseType == "Train - Express*"
+                        || ExpenseType == "Taxi - Rented (Ola/Uber/Prepaid)"
+                        ) {
+
+                        if (ExpenseType == "Own Bike" || ExpenseType == "Own Car") {
+                            var lblMsg = (ExpenseType === "Own Car") ? '(Car Rate Per KM is ' + $("#hdnCarRate").val() + ')' : '(Bike Rate Per KM is ' + $("#hdnMotorBikeRate").val() + ')';
+
+                            $("#lblKMFor").text(lblMsg);
+                            $("#Amount").val("0");
+
+                            $("#divAmt").hide();
+                            $("#divKM").show();
+                            $("#KM").val(Result[0].Kilometer);
+
+                            //$('#divAttachments').hide();
+                            //$('#divAttachments').addClass('disabled');
+                            //$('#divAttachments').attr('aria-disabled', 'true');
+                            //$('#divAttachments').css('opacity', '0.5');
+                            //$('#divAttachments').css('pointer-events', 'none');
+                        }
+                        else {
+                            $("#lblKMFor").text("");
+                            $("#KM").val("0");
+
+                            $("#divAmt").show();
+                            $("#divKM").hide();
+                            $("#Amount").val(Result[0].Amount);
+
+                            //$('#divAttachments').show();
+                            //$('#divAttachments').removeClass('disabled');
+                            //$('#divAttachments').removeAttr('aria-disabled');
+                            //$('#divAttachments').css('opacity', '1');
+                            //$('#divAttachments').css('pointer-events', 'auto');
+                        }
+
+
+                    }
+
+                    //if (Result[0].ExpenseType == "Own Car" || Result[0].ExpenseType == "Own Bike") {
+                    //    $("#divAmt").hide();
+                    //    $("#divKM").show();
+                    //    $("#KM").val(Result[0].Kilometer);
+
+
+                    //}
+                    //else {
+                    //    $("#divAmt").show();
+                    //    $("#divKM").hide();
+                    //    $("#Amount").val(Result[0].Amount);
+                    //}
+
+
+                    $("#Currency").val(Result[0].Currency);
+                    $("#ExchRate").val(Result[0].ExchRate);
+                    $("#Description").val(Result[0].Description);
+                    $("#SubJobNo").val(Result[0].SubJobNo);
+                    $("#TotalAmount").val(Result[0].TotalAmount);
+                    $("#VoucherNo").val(Result[0].VoucherNo);
+
+
+                    $('#btnSave').prop('Save', 'Update');
+                    $("#btnSave").text("Update");
+                    $("#btnSave").val("Update");
+                }
+                else {
+                    alert("Something Went Wrong...");
+                }
+                //alert(response);
+                //alert(Result);
+                //alert(_Result);
+
+
+            },
+            error: function (xhr, status, error) {
+                // Code to handle errors goes here
+            }
+        });
+    }
+
+    function CalculateAmount(_Date, Expense) {
+        //alert("HI");
+        debugger;
+        //const targetDate = "2023-07-21";
+        const table = document.getElementById("example");
+        //let TotalAmount = $("#TotalAmount").val();
+        let TotalAmount = $("#Amount").val();
+
+        let _amount = 0.00;
+        for (let i = 2; i < table.rows.length; i++) {
+            const row = table.rows[i];
+
+            const Cell1 = row.cells[0].innerText;
+
+            if (Cell1 != "No data available in table") {
+                // Access the date from the third cell in the row (index 2)
+                const dateCell = row.cells[4].innerText;
+                if (dateCell != '') {
+                    let Amount = row.cells[16].innerText;
+                    const _Expense = row.cells[11].innerText;
+
+                    // Check if the date matches the target date
+                    if (dateCell === _Date) {
+                        if (Expense == _Expense) {
+                            _amount = parseFloat(_amount) + parseFloat(Amount);
+                            if (Expense == "Self-arranged Lodging") {
+                                $("#hdnEntryDoneForLodgging").val("Yes");
+                            }
+                            else if (Expense == "Daily allowance") {
+                                $("#hdnEntryDoneForDailyAllowance").val("Yes");
+                            }
+                            // Perform your action here
+                            //const name = row.cells[0].innerText;
+                            //console.log("Found a matching date for:", name);
+                        }
+                    }
+                }
+            }
+
+        }
+        let FinalAmount = parseFloat(TotalAmount) + parseFloat(_amount);
+        let hdnMaxExpenseLimit = $("#hdnMaxExpenseLimit").val();
+
+        if (Expense == "Self-arranged Lodging" && FinalAmount > hdnMaxExpenseLimit) {
+            alert("Expense amount for " + Expense + " Can not more than 1000");
+            $("#TotalAmount").val(0);
+            $("#Amount").val(0);
+        }
+        else if (Expense == "Daily allowance" && FinalAmount > hdnMaxExpenseLimit) {
+            alert("Expense amount for " + Expense + " Can not more than 600");
+            $("#TotalAmount").val(0);
+            $("#Amount").val(0);
+        }
+        else if (Expense == "Overseas travel – allowance" && FinalAmount > 60) {
+            alert("Expense amount for " + Expense + " Can not more than 60");
+            $("#TotalAmount").val(0);
+            $("#Amount").val(0);
+        }
+        //alert(_amount);
+
+        //$("#example tr:gt(0)").each(function () {
+        //    const dateCell = $(this).find("td:eq(2)").text();
+
+        //    // Check if the date matches the target date
+        //    if (dateCell === targetDate) {
+        //        // Perform your action here
+        //        const name = $(this).find("td:eq(1)").text();
+        //        console.log("Found a matching date for:", name);
+        //    }
+        //});
+    }
+
+    function disableOptions() {
+        debugger;
+        var dropdown = document.getElementById("Currency");
+        var ExpenseType = $.trim($("#ExpenseType :selected").text());
+        // Get the selected value (this is just for illustration)
+        var selectedValue = '';
+        if (ExpenseType == "Overseas travel – allowance") {
+            // Replace this with your own logic to determine which options to disable
+            for (var i = 0; i < dropdown.options.length; i++) {
+                var optionValue = dropdown.options[i].value;
+                // Replace this condition with your own logic to determine which options to disable
+                if (optionValue != "USD" && optionValue != "EUR") {
+                    dropdown.options[i].disabled = true;
+                    dropdown.options[i].style.display = "none";
+                    selectedValue = "USD";
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < dropdown.options.length; i++) {
+                var optionValue = dropdown.options[i].value;
+                // Disable the option
+                dropdown.options[i].disabled = false;
+                dropdown.options[i].style.display = "block";
+                selectedValue = "INR";
+            }
+        }
+
+        //// Loop through each option in the dropdown
+        //for (var i = 0; i < dropdown.options.length; i++) {
+        //    var optionValue = dropdown.options[i].value;
+
+        //    // Replace this condition with your own logic to determine which options to disable
+        //    if (optionValue == "USD" || optionValue == "EUR") {
+        //        dropdown.options[i].disabled = true;
+        //        dropdown.options[i].style.display = "none";
+        //        selectedValue = "USD";
+
+        //        //// Disable the option
+        //        //dropdown.options[i].disabled = false;
+        //        //dropdown.options[i].style.display = "block";
+        //        //selectedValue = "INR";
+
+        //    } else {
+        //        // Enable the option (in case it was previously disabled)
+        //        dropdown.options[i].disabled = true;
+        //        dropdown.options[i].style.display = "none";
+        //        selectedValue = "USD";
+        //    }
+        //}
+
+
+        $("#Currency").val(selectedValue);
+    }
+
+    $("#ExpenseType").change(function (e) {
+        //debugger;
+        //alert("Hi");
+        var _Date = $("#Date").val();
+
+        var ExpenseType = $("#ExpenseType").val();
+        var ExpenseTypeText = $.trim($("#ExpenseType :selected").text());
+        if (ExpenseTypeText == "Self-arranged Lodging" || ExpenseTypeText == "Self-arranged Lodging" || ExpenseTypeText == "Daily allowance") {
+            CalculateAmount(_Date, ExpenseTypeText);
+        }
+        else {
+            debugger;
+            disableOptions();
+
+            if (ExpenseTypeText == "Self-arranged Lodging" && $("#hdnEntryDoneForLodgging").val() == "Yes") {
+                alert("For " + ExpenseTypeText + "Expenses already Added");
+            }
+            else if (ExpenseTypeText == "Daily allowance" && $("#hdnEntryDoneForDailyAllowance").val() == "Yes") {
+                alert("For " + ExpenseTypeText + "Expenses already Added");
+            }
+            else if (ExpenseTypeText == "Overseas travel – allowance" && $("#hdnEntryDoneForDailyAllowance").val() == "Yes") {
+                alert("For " + ExpenseTypeText + "Expenses already Added");
+            }
+            else {
+                if (ExpenseType == "Own Bike" || ExpenseType == "Own Car" || ExpenseType == "Parking*" ||
+                    ExpenseType == "Toll*" || ExpenseType == "Travels*" || ExpenseType == "Flight*" ||
+                    ExpenseType == "Hotel*" || ExpenseType == "Room Rent*" || ExpenseType == "Misc*"
+                    || ExpenseType == "Train - Express*" || ExpenseType == "Taxi - Rented (Ola/Uber/Prepaid)"
+                    ) {
+
+                    if (ExpenseType == "Own Bike" || ExpenseType == "Own Car") {
+                        var lblMsg = (ExpenseType === "Own Car") ? '(Car Rate Per KM is ' + $("#hdnCarRate").val() + ')' : '(Bike Rate Per KM is ' + $("#hdnMotorBikeRate").val() + ')';
+
+                        $("#lblKMFor").text(lblMsg);
+                        $("#ExchRate").val("1");
+                        $("#KM").val("0");
+                        $("#Amount").val("0");
+                        $("#divAmt").hide();
+                        $("#divKM").show();
+                        $("#TotalAmount").val("0"); //nikita added on 16012024
+                        //$('#divAttachments').hide();
+                        //$('#divAttachments').addClass('disabled');
+                        //$('#divAttachments').attr('aria-disabled', 'true');
+                        //$('#divAttachments').css('opacity', '0.5');
+                        //$('#divAttachments').css('pointer-events', 'none');
+                    }
+                    else {
+                        $("#lblKMFor").text("");
+                        $("#ExchRate").val("1");
+                        $("#KM").val("0");
+                        $("#Amount").val("0");
+                        $("#divAmt").show();
+                        $("#divKM").hide();
+                        $("#TotalAmount").val("0"); //nikita added on 16012024
+
+                        //$('#divAttachments').show();
+                        //$('#divAttachments').removeClass('disabled');
+                        //$('#divAttachments').removeAttr('aria-disabled');
+                        //$('#divAttachments').css('opacity', '1');
+                        //$('#divAttachments').css('pointer-events', 'auto');
+                    }
+
+
+                }
+                else if (ExpenseTypeText == "--Select Expenses--") {
+                    //$('#divAttachments').hide();
+                    //$('#divAttachments').addClass('disabled');
+                    //$('#divAttachments').attr('aria-disabled', 'true');
+                    //$('#divAttachments').css('opacity', '0.5');
+                    //$('#divAttachments').css('pointer-events', 'none');
+                }
+                else {
+                    $("#ExchRate").val("1");
+                    $("#KM").val("0");
+                    $("#Amount").val("0");
+                    $("#divAmt").show();
+                    $("#divKM").hide();
+                    $("#TotalAmount").val("0"); //nikita  added on 16012024
+                    //$('#divAttachments').hide();
+                    //$('#divAttachments').removeClass('disabled');
+                    //$('#divAttachments').removeAttr('aria-disabled');
+                    //$('#divAttachments').css('opacity', '1');
+                    //$('#divAttachments').css('pointer-events', 'auto');
+                }
+            }
+        }
+
+    })
+    $("#Amount").blur(function () {
+        var _Date = $("#Date").val();
+        var Amount = $("#Amount").val();
+        var ExchRate = $("#ExchRate").val();
+        var ExpenseType = $("#ExpenseType :selected").text();
+        if (ExpenseType == "Self-arranged Lodging" || ExpenseType == "Overseas travel – allowance" || ExpenseType == "Daily allowance") {
+            CalculateAmount(_Date, ExpenseType);
+        }
+        Amount = $("#Amount").val();
+        //if (ExpenseType == "Self-arranged Lodging" && $("#hdnEntryDoneForLodgging").val() == "Yes") {
+        //    alert("For " + ExpenseType + "Expenses already Added");
+        //}
+        //else if (ExpenseType == "Daily allowance" && $("#hdnDailyallowance").val() == "Yes") {
+        //    alert("For " + ExpenseType + "Expenses already Added");
+        //}
+        //else if (ExpenseType == "Overseas travel – allowance" && $("#hdnOverseastravelallowance").val() > 60) {
+        //    alert("For " + ExpenseType + "Expenses already Added");
+        //}
+        //else {
+        if (Amount != '') {
+            if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+                var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+                var Total = (Amount * a) * ExchRate;
+                $("#Amount").val(Total);
+                $("#TotalAmount").val(Total);
+            }
+            else {
+                var Total = Amount * ExchRate;
+                $("#Amount").val(Total);
+                $("#TotalAmount").val(Total);
+            }
+
+        }
+        else {
+
+        }
+
+        //}
+
+    });
+
+    $("#KM").blur(function () {
+        var _Date = $("#Date").val();
+        var Amount = $("#KM").val();
+        var ExchRate = $("#ExchRate").val();
+        var ExpenseType = $("#ExpenseType :selected").text();
+
+        if (ExpenseType == "Self-arranged Lodging" || ExpenseType == "Overseas travel – allowance" || ExpenseType == "Daily allowance") {
+            CalculateAmount(_Date, ExpenseType);
+        }
+        Amount = $("#KM").val();
+        //if (ExpenseType == "Self-arranged Lodging" && $("#hdnEntryDoneForLodgging").val() == "Yes") {
+        //    alert("For " + ExpenseType + "Expenses already Added");
+        //}
+        //else if (ExpenseType == "Daily allowance" && $("#hdnEntryDoneForDailyAllowance").val() == "Yes") {
+        //    alert("For " + ExpenseType + "Expenses already Added");
+        //}
+        //else {
+        if (Amount != '') {
+            if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+
+                var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+
+                var Total = (Amount * a) * ExchRate;
+
+                $("#Amount").val(Total);
+                $("#TotalAmount").val(Total);
+            }
+            else {
+                var Total = Amount * ExchRate;
+                $("#Amount").val(Total);
+                $("#TotalAmount").val(Total);
+            }
+
+        }
+        //}
+
+        //var Total = Amount * ExchRate;
+        //$("#TotalAmount").val(Total);
+    });
+
+
+    function AllowWithOneDecimal(event) {
+        var key = event.keyCode || event.which;
+        var keyChar = String.fromCharCode(key);
+        var input = event.target.value;
+
+        // Check if the pressed key is a number or decimal point
+        var isNumber = /[0-9]/.test(keyChar);
+        var isDecimalPoint = keyChar === "." && input.indexOf(".") === -1;
+
+        // Allow the key if it's a number or the first decimal point
+        if (isNumber || isDecimalPoint) {
+            return true;
+        } else {
+            event.preventDefault(); // Prevent the key from being entered
+            return false;
+        }
+    }
+
+    $("#ExchRate").blur(function () {
+        var _Date = $("#Date").val();
+        var Amount = $("#Amount").val();
+        var KM = $("#KM").val();
+        var ExchRate = $("#ExchRate").val();
+        var ExpenseType = $("#ExpenseType :selected").text();
+        //if (ExpenseType == "Self-arranged Lodging" || ExpenseType == "Self-arranged Lodging") {
+        //    CalculateAmount(_Date, ExpenseType);
+        //}
+        //if (ExpenseType == "Self-arranged Lodging" || ExpenseType == "Self-arranged Lodging") {
+        //    CalculateAmount(_Date, ExpenseType);
+        //}
+
+        if (ExpenseType == "Self-arranged Lodging" || ExpenseType == "Overseas travel – allowance" || ExpenseType == "Daily allowance") {
+            CalculateAmount(_Date, ExpenseType);
+        }
+        else {
+            if (ExpenseType == "Self-arranged Lodging" && $("#hdnEntryDoneForLodgging").val() == "Yes") {
+                alert("For " + ExpenseType + "Expenses already Added");
+            }
+            else if (ExpenseType == "Daily allowance" && $("#hdnEntryDoneForDailyAllowance").val() == "Yes") {
+                alert("For " + ExpenseType + "Expenses already Added");
+            }
+            else {
+                if (ExchRate != '') {
+                    if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+                        if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+                            var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+                            var Total = (KM * a) * ExchRate;
+                            //$("#Amount").val(Total);
+                            $("#TotalAmount").val(Total);
+                        }
+                        else {
+                            var Total = KM * ExchRate;
+                            //$("#Amount").val(Total);
+                            $("#TotalAmount").val(Total);
+                        }
+                    }
+                    else {
+                        if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+                            var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+                            var Total = (Amount * a) * ExchRate;
+                            // $("#Amount").val(Total);
+                            $("#TotalAmount").val(Total);
+                        }
+                        else {
+                            var Total = Amount * ExchRate;
+                            //$("#Amount").val(Total);
+                            $("#TotalAmount").val(Total);
+                        }
+                    }
+                    //if (Amount != '0') {
+                    //    if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+                    //        var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+                    //        var Total = (Amount * a) * ExchRate;
+                    //        // $("#Amount").val(Total);
+                    //        $("#TotalAmount").val(Total);
+                    //    }
+                    //    else {
+                    //        var Total = Amount * ExchRate;
+                    //        //$("#Amount").val(Total);
+                    //        $("#TotalAmount").val(Total);
+                    //    }
+
+                    //}
+                    //else if (KM != '0') {
+                    //    if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+                    //        var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+                    //        var Total = (KM * a) * ExchRate;
+                    //        //$("#Amount").val(Total);
+                    //        $("#TotalAmount").val(Total);
+                    //    }
+                    //    else {
+                    //        var Total = KM * ExchRate;
+                    //        //$("#Amount").val(Total);
+                    //        $("#TotalAmount").val(Total);
+                    //    }
+                    //}
+                    //else {
+                    //}
+
+                }
+            }
+        }
+    });
+
+    //$("#ExpenseType").change(function (e) {
+    //    //debugger;
+    //    //alert("Hi");
+    //    //var ExpenseTypeText = $("#ExpenseType").val();
+    //    var ExpenseType = $.trim($("#ExpenseType :selected").text());
+    //    if (ExpenseType == "Own Bike" || ExpenseType == "Own Car" || ExpenseType == "Parking*" ||
+    //        ExpenseType == "Toll*" || ExpenseType == "Travels*" || ExpenseType == "Flight*" ||
+    //        ExpenseType == "Hotel*" || ExpenseType == "Room Rent*" || ExpenseType == "Misc*"
+    //        || ExpenseType == "Train - Express*" || ExpenseType == "Taxi - Rented (Ola/Uber/Prepaid)"
+    //        ) {
+    //        if (ExpenseType == "Own Bike" || ExpenseType == "Own Car") {
+    //            var lblMsg = (ExpenseType === "Own Car") ? '(Car Rate Per KM is ' + $("#hdnCarRate").val() + ')' : '(Bike Rate Per KM is ' + $("#hdnMotorBikeRate").val() + ')';
+    //            $("#lblKMFor").text(lblMsg);
+    //            $("#ExchRate").val("1");
+    //            $("#KM").val("0");
+    //            $("#Amount").val("0");
+    //            $("#divAmt").hide();
+    //            $("#divKM").show();
+    //            //$('#divAttachments').hide();
+    //            //$('#divAttachments').addClass('disabled');
+    //            //$('#divAttachments').attr('aria-disabled', 'true');
+    //            //$('#divAttachments').css('opacity', '0.5');
+    //            //$('#divAttachments').css('pointer-events', 'none');
+    //        }
+    //        else {
+    //            $("#lblKMFor").text("");
+    //            $("#ExchRate").val("1");
+    //            $("#KM").val("0");
+    //            $("#Amount").val("0");
+    //            $("#divAmt").show();
+    //            $("#divKM").hide();
+    //            //$('#divAttachments').show();
+    //            //$('#divAttachments').removeClass('disabled');
+    //            //$('#divAttachments').removeAttr('aria-disabled');
+    //            //$('#divAttachments').css('opacity', '1');
+    //            //$('#divAttachments').css('pointer-events', 'auto');
+    //        }
+    //    }
+    //    else if (ExpenseType == "--Select Expenses--") {
+    //        //$('#divAttachments').hide();
+    //        //$('#divAttachments').addClass('disabled');
+    //        //$('#divAttachments').attr('aria-disabled', 'true');
+    //        //$('#divAttachments').css('opacity', '0.5');
+    //        //$('#divAttachments').css('pointer-events', 'none');
+    //    }
+    //    else {
+    //        $("#ExchRate").val("1");
+    //        $("#KM").val("0");
+    //        $("#Amount").val("0");
+    //        $("#divAmt").show();
+    //        $("#divKM").hide();
+    //        //$('#divAttachments').hide();
+    //        //$('#divAttachments').removeClass('disabled');
+    //        //$('#divAttachments').removeAttr('aria-disabled');
+    //        //$('#divAttachments').css('opacity', '1');
+    //        //$('#divAttachments').css('pointer-events', 'auto');
+    //    }
+    //})
+    //$("#Amount").blur(function () {
+    //    var Amount = $("#Amount").val();
+    //    var ExchRate = $("#ExchRate").val();
+    //    var ExpenseType = $("#ExpenseType :selected").text();
+    //    if (Amount != '') {
+    //        if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+    //            var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+    //            var Total = (Amount * a) * ExchRate;
+    //            //$("#Amount").val(Total);
+    //            $("#TotalAmount").val(Total);
+    //        }
+    //        else {
+    //            var Total = Amount * ExchRate;
+    //           // $("#Amount").val(Total);
+    //            $("#TotalAmount").val(Total);
+    //        }
+
+    //    }
+    //    else {
+    //    }
+    //});
+    //$("#KM").blur(function () {
+    //    var Amount = $("#KM").val();
+    //    var ExchRate = $("#ExchRate").val();
+    //    var ExpenseType = $("#ExpenseType :selected").text();
+    //    if (Amount != '') {
+    //        if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+
+    //            var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+
+    //            var Total = (Amount * a) * ExchRate;
+
+    //            //$("#Amount").val(Total);
+    //            $("#TotalAmount").val(Total);
+    //        }
+    //        else {
+    //            var Total = Amount * ExchRate;
+    //            //$("#Amount").val(Total);
+    //            $("#TotalAmount").val(Total);
+    //        }
+
+    //    }
+
+    //    //var Total = Amount * ExchRate;
+    //    //$("#TotalAmount").val(Total);
+    //});
+
+    //$("#ExchRate").blur(function () {
+    //    var Amount = $("#Amount").val();
+    //    var KM = $("#KM").val();
+    //    var ExchRate = $("#ExchRate").val();
+    //    var ExpenseType = $("#ExpenseType :selected").text();
+    //    if (ExchRate != '') {
+    //        if (Amount != '0') {
+    //            if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+    //                var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+    //                var Total = (Amount * a) * ExchRate;
+    //                // $("#Amount").val(Total);
+    //                $("#TotalAmount").val(Total);
+    //            }
+    //            else {
+    //                var Total = Amount * ExchRate;
+    //                //$("#Amount").val(Total);
+    //                $("#TotalAmount").val(Total);
+    //            }
+
+    //        }
+    //        else if (KM != '0') {
+    //            if (ExpenseType == "Own Car" || ExpenseType == "Own Bike") {
+    //                var a = (ExpenseType === "Own Car") ? $("#hdnCarRate").val() : $("#hdnMotorBikeRate").val();
+    //                var Total = (KM * a) * ExchRate;
+    //                //$("#Amount").val(Total);
+    //                $("#TotalAmount").val(Total);
+    //            }
+    //            else {
+    //                var Total = KM * ExchRate;
+    //                //$("#Amount").val(Total);
+    //                $("#TotalAmount").val(Total);
+    //            }
+    //        }
+    //        else {
+    //        }
+    //    }
+    //});
+</script>
+
+<script>
+    function CheckAmount() {
+        var Date = $("#Date").val();
+        var ExpenseTypeText = $.trim($("#ExpenseType :selected").text());
+        if (ExpenseTypeText == "Self-arranged Lodging") {
+
+            const targetDate = $("#Date").val();
+
+            $("#example tr:gt(0)").each(function () {
+                const dateCell = $(this).find("td:eq(1)").text();
+
+                // Check if the date matches the target date
+                if (dateCell === targetDate) {
+                    // Perform your action here
+                    const name = $(this).find("td:eq(2)").text();
+                    console.log("Found a matching date for:", name);
+                }
+            });
+
+        }
+    }
+</script>
+<script>
+    var SummaryExtension = false;
+    //var fileExtension = ["pdf", "xls", "xlsx", "doc", "png", "jpg", "JPEG", "gif"];
+    var fileExtension = ["pdf", "PDF", "xls", "xlsx", "doc", "png", "jpg", "JPEG"];
+    $("#FileUpload").change(function (e) {
+        debugger;
+        var files = $("#FileUpload input[type='file']").get(0).files;
+        var MaxSize = 0;
+        for (var i = 0; i < files.length; i++) {
+            var fileSize = files[i].size;
+            if (fileSize > 4 * 1024 * 1024) {
+                MaxSize = 1;
+                $('.filepond--file-action-button.filepond--action-remove-item').eq(0).trigger('click');
+                //return;
+            }
+        }
+        if (MaxSize == 0) {
+
+
+            for (var index = 0; index < files.length; index++) {
+                var singleExtension = e.target.files[index].name.split('.').pop();
+                var Condition = fileExtension.includes(singleExtension);
+                if (Condition == true) {
+                    SummaryExtension = true;
+                }
+                else {
+                    alert("Only formats are allowed : " + fileExtension.join(','));
+                    SummaryExtension = false;
+                    return;
+                }
+            }
+            if (SummaryExtension == true) {
+                var fileData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append("FileUpload input[type='file']", files[i]);
+                    //var fileSize = files[i].size;
+                    //if (fileSize < 4 * 1024 * 1024) {
+                    //    fileData.append("FileUpload input[type='file']", files[i]);
+                    //}
+                    //else {
+                    //    return;
+                    //}
+                }
+                //Creating an XMLHttpRequest and sending
+                var xhr = new XMLHttpRequest();
+                var link = '@Url.Action("TemporaryFilePathDocumentAttachment", "ExpenseItem")';
+                xhr.open('POST', link, 'true');
+                xhr.send(fileData);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var data = xhr.responseText;
+                        data = data.replace(/"/g, "");
+                        $("#Attachment").val(data);
+                    }
+                }
+                //})
+            }
+        }
+        else {
+            //$('.filepond--file-action-button.filepond--action-remove-item').eq(0).trigger('click');
+        }
+
+    })
+</script>
+
+@*
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>*@
+
+
+
+@*...Calender Control...*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<script>
+    $(function () {
+        $(".StartDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+@*//added by nikita on 5122023*@
+<script>
+    $("#Currency").change(function () {
+        debugger;
+        const drpvalue = $('#Currency :selected').text();
+        if (drpvalue === "INR")
+            $("#ExchRate").val(1);
+        else
+            $("#ExchRate").val(0);
+
+    });
+
+</script>
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+@*
+    <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+    <script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+
+
+
+
+
+
+

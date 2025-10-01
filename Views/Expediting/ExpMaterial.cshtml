@@ -1,0 +1,1234 @@
+﻿@model TuvVision.Models.Material
+@{
+    ViewBag.Title = "ExpMaterial";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+    int k = 0;
+}
+
+
+
+<style>
+    body {
+        overflow-x: hidden;
+    }
+</style>
+
+
+<script src="~/AllJsAndCss/moment.min.js"></script>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+    $(function () {
+        $("#datepicker").datepicker();
+        $("#format").on("change", function () {
+            $("#datepicker").datepicker("option", "dateFormat", $(this).val());
+        });
+    });
+
+</script>
+
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+
+<style>
+    #Idtem1 {
+        width: 100%;
+    }
+</style>
+
+
+
+<script>
+    $(function () {
+        $(".CStatusUpdatedOn").datepicker({
+            //dateFormat: 'dd/mm/yy',//check change
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+
+    $(function () {
+        $(".CPoDate").datepicker({
+            //dateFormat: 'dd/mm/yy',//check change
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+
+    $(function () {
+        $(".CContractual_DeliveryDate").datepicker({
+            //dateFormat: 'dd/mm/yy',//check change
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+
+    $(function () {
+        $(".CEstimatedDeliveryDate").datepicker({
+            //dateFormat: 'dd/mm/yy',//check change
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+    $(function () {
+        $(".CEstimatedEndDate").datepicker({
+            //dateFormat: 'dd/mm/yy',//check change
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+
+
+</script>
+
+
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            @*class="container-fluid"*@
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                <div class="col-xs-12">
+                    <div class="row">
+
+                        <br />
+
+                        <h5 class="dynamic-page-title dynamic-page-title-2">@Session["ExpeditingType"]Expediting Report Number : @Session["VisitReportNo"]</h5>
+
+                        <div class="col-xs-12">
+
+
+                            @if (Model.PK_Call_Id != "")
+                            {
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpeditingReport", "Expediting",new { @PK_Call_ID = Model.PK_Call_Id} )'"> General</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpItemDescription", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Item Description</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpProgress", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Progress</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EXp_commercial", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Commercial</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpEngineering", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Engineering</button>
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ExpMaterial", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Procurement</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpManufacturing", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Manufacturing</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpFinalStage", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Final Stage</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpDelays", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Item Wise Delays</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpConcerns", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Concerns</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("PhotoAttachement", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Photo</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Observation", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Observation</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Records", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Records</button>
+                            }
+
+
+
+                        </div>
+
+                        
+                          
+                                
+                                <div class="col-xs-12">
+                                    <div class="white-bg section-box-shadow">
+                                        <h3 class="form-page-title">Procurement</h3>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                                <div class="form-box">
+                                                    <form method="post" enctype="multipart/form-data">
+                                                        <div hidden class="col-xs-8" style="text-align:center;">
+
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <label>(Action initiated for %)</label>
+                                                                <input type="text" class="form-control" id="idmaterial" value="100" />
+                                                            </div>
+                                                            @*<div class="col-xs-12 col-sm-3">
+
+                <button type="button" class="btn btn-default insert-form-btn" onclick="idbtnSaveEng();" title="Add New Status" style="margin-top: 25px">Add</button>
+            </div>*@
+                                                        </div>
+
+                                                        @*@using (Html.BeginForm("ExpEngineering", "Expediting", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formiid" }))
+                                    1292px{*@
+                                                        @Html.HiddenFor(m => m.PK_Call_Id)
+
+
+                                                        <div class="row">
+
+                                                            <div id="DomesticCurrency" style="margin-left: inherit;width:inherit; overflow-x:auto;width: 117%; margin-left: -71px; height:auto">
+
+
+                                                                <table id="DTestTable" cellspacing="0" cellpadding="3" border="1" style="width: 170%">
+                                                                    <tr style="background-color:#104193;color:white">
+
+                                                                        <td width="2.25%" style="text-align: center;vertical-align:central;">
+                                                                            PO Item Number
+                                                                        </td>
+                                                                        
+                                                                        <td width="20.25%" style="text-align: center;vertical-align:central;">
+                                                                          Material Description
+                                                                        </td>
+                                                                        <td width="8.25%" style="text-align: center;vertical-align:central;">
+                                                                            UOM
+                                                                        </td>
+                                                                        <td width="4.25%" style="text-align: center;vertical-align:central;">
+                                                                            Quantity
+                                                                        </td>
+                                                                       
+                                                                        <td width="9.25%" style="text-align: center;vertical-align:central;">
+                                                                            Status
+                                                                        </td>
+                                                                        <td width="6.25%" style="text-align: center;vertical-align:central;">
+                                                                            Status Changed/Updated On
+                                                                        </td>
+                                                                        <td width="6.25%" style="text-align: center;vertical-align:central;">
+                                                                            Supplier Name
+                                                                        </td>
+                                                                        <td width="5.25%" style="text-align: center;vertical-align:central;">
+                                                                            PO Number
+                                                                        </td>
+                                                                        <td width="6.25%" style="text-align: center;vertical-align:central;">
+                                                                            PO Date
+                                                                        </td>
+                                                                        <td width="6.25%" style="text-align: center;vertical-align:central;">
+                                                                            Supplier Contractual Delivery Date
+                                                                        </td>
+                                                                        @*<td width="6.25%" style="text-align: center;vertical-align:central;">
+                                                                            Supplier Estimated Delivery Date
+                                                                        </td>*@
+                                                                        <td width="6.25%" style="text-align: center;vertical-align:central;">
+                                                                            Supplier Estimated End Date
+                                                                        </td>
+                                                                        <td width="3.25%" style="text-align: center;vertical-align:central;">
+                                                                            Material Progress %
+
+                                                                        </td>
+                                                                        @*<td width="3.25%" style="text-align: center;vertical-align:central;">
+                            Material Delay in Days
+                        </td>*@
+
+                                                                    </tr>
+
+
+
+                                                                    @{
+                                                                        int i = 0;
+                                                                    }
+
+                                                                    @if (ViewBag.lstMaterial != null)
+                                                                    {
+                                                                        if (ViewBag.lstMaterial.Count != 0)
+                                                                        {
+                                                                            foreach (var item in ViewBag.lstMaterial as IEnumerable<TuvVision.Models.Material>)
+                                                                            {
+                                                                                i = i + 1;
+                                                                                <tr class="trDomestic" style="background-color:#f0f0f0">
+
+
+                                                                                    @Html.HiddenFor(model => model.lstMaterial[j].PK_Material_Id, new { @style = "text-align:center", @placeholder = "PK_Material_Id", @class = "form-control CPK_Engi_Id", @Value = item.PK_Material_Id, @id = "PK_Material_Id", @onkeypress = "return isNumberKey(event);" })
+                                                                                    <td>
+                                                                                        @if (ViewBag.BindItem != null)
+                                                                                        {
+
+                                                                                            @*@Html.DropDownListFor(m => m.lstMaterial[j].Item, new SelectList(@ViewBag.BindItem, "Value", "Text", item.Item), "--Select--", new { @id = "ddlItem", @class = "form-control CItem" })*@
+                                                                                            @Html.ListBoxFor(m => m.lstMaterial[j].Item, new MultiSelectList(@ViewBag.BindItem, "Value", "Text", item.Item?.Split(',')), new { @id = "ddlItem", @class = "form-control CItem", @multiple = "multiple" })
+                                                                                            @Html.HiddenFor(m => m.lstMaterial[j].Item)
+                                                                                        }
+                                                                                    </td>
+                                                                                    @*<td>
+                                                                                        @Html.DropDownListFor(m => m.lstMaterial[j].Material_Category, new List<SelectListItem>
+                                                                           {
+                                                                                new SelectListItem{ Text="Select", Value = "" },
+                                                                                        new SelectListItem{ Text="Raw Material", Value = "Raw Material" , Selected = (item.Material_Category == "Raw Material") ?true : false} ,
+                                                                                        new SelectListItem{ Text="Bought out Item", Value = "Bought out Item", Selected = (item.Material_Category == "Bought out Item") ?true : false },
+
+
+
+                                                                           },
+                                                                                        new { @style = "text-align:left", @class = "form-control CMaterial_Category", @id = "IDMaterial_Category" + i })
+                                                                                        @Html.ValidationMessageFor(model => model.lstMaterial[j].Material_Category, "", new { @class = "text-danger validation-msg CIOrderRate" })
+                                                                                    </td>*@
+                                                                                    <td>
+
+
+                                                                                        @Html.TextBoxFor(model => model.lstMaterial[j].Description, new { @placeholder = "Description", @class = "form-control CDescription auto-resize-textarea", autocomplete = "off", @id = "IdDescription", @Value = item.Description })
+
+                                                                                    </td>
+                                                                                   <td>
+                                                                                        @*@Html.TextBoxFor(model => model.lstMaterial[j].UOM, new { @placeholder = "UOM", @class = "form-control CUOM", autocomplete = "off", @id = "IdUOM", @Value = item.UOM })*@
+                                                                                        @if (ViewBag.UOM != null)
+                                                                                        {
+                                                                                            @Html.DropDownListFor(model => model.lstMaterial[j].UOM, new SelectList(@ViewBag.UOM, "Code", "Name", item.UOM), "---Select UOM---", new { @id = "IdUOM", @class = "form-control CUOM" })
+                                                                                            @Html.HiddenFor(model => model.UOM)
+                                                                                        }
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @Html.TextBoxFor(model => model.lstMaterial[j].Quantity, new { @placeholder = "Quantity", @class = "form-control CQuantity", autocomplete = "off", @id = "IdQuantity", @Value = item.Quantity })
+                                                                                    </td>
+                                                                                    @*<td>
+                                                                                        @Html.DropDownListFor(m => m.lstMaterial[j].Source, new List<SelectListItem>
+                                                                           {
+                                                                                new SelectListItem{ Text="Select", Value = "" },
+                                                                                        new SelectListItem{ Text="In Stock", Value = "In Stock" , Selected = (item.Source == "In Stock") ?true : false} ,
+                                                                                        new SelectListItem{ Text="Outsourcing", Value = "Outsourcing", Selected = (item.Source == "Outsourcing") ?true : false },
+
+                                                                           },
+                                                                                        new { @style = "text-align:left", @class = "form-control CSource", @id = "IDSource" + i })
+                                                                                        @Html.ValidationMessageFor(model => model.lstMaterial[j].Source, "", new { @class = "text-danger validation-msg CSource" })
+                                                                                    </td>*@
+                                                                                    <td>
+                                                                                        @if (ViewBag.MaterialStatus != null)
+                                                                                        {
+
+                                                                                            @Html.DropDownListFor(m => m.lstMaterial[j].Status, new SelectList(@ViewBag.MaterialStatus, "Value", "Text", item.Status), "--Select--", new { @id = "ddlStatus", @class = "form-control CStatus" })
+                                                                                            @Html.HiddenFor(m => m.lstMaterial[j].Status)
+                                                                                        }
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @Html.TextBoxFor(m => m.lstMaterial[j].StatusUpdatedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "StatusUpdatedOn", @class = "form-control CStatusUpdatedOn", autocomplete = "off", @Value = item.StatusUpdatedOn })
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @*@Html.TextBoxFor(m => m.lstMaterial[j].OrderPlacedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "OrderPlacedOn", @class = "form-control COrderPlacedOn", autocomplete = "off", @Value = item.OrderPlacedOn })*@
+                                                                                        @Html.TextBoxFor(m => m.lstMaterial[j].OrderPlacedOn, new { @placeholder = "Order Placed On", @class = "form-control  COrderPlacedOn", autocomplete = "off", @Value = item.OrderPlacedOn })
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @Html.TextBoxFor(model => model.lstMaterial[j].PONumber, new { @placeholder = "PONumber", @class = "form-control CPONumber", autocomplete = "off", @id = "IdPONumber", @Value = item.PONumber })
+                                                                                    </td>
+                                                                                    @*added by shrutika salve 02012023*@
+                                                                                    <td>
+                                                                                        @*@Html.TextBoxFor(m => m.lstMaterial[j].OrderPlacedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "OrderPlacedOn", @class = "form-control COrderPlacedOn", autocomplete = "off", @Value = item.OrderPlacedOn })*@
+                                                                                        @Html.TextBoxFor(m => m.lstMaterial[j].PODate, new { @placeholder = "PO Date ", @class = "form-control  CPoDate", autocomplete = "off", @Value = item.PODate })
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @*@Html.TextBoxFor(m => m.lstMaterial[j].OrderPlacedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "OrderPlacedOn", @class = "form-control COrderPlacedOn", autocomplete = "off", @Value = item.OrderPlacedOn })*@
+                                                                                        @Html.TextBoxFor(m => m.lstMaterial[j].Contractual_DeliveryDateAsPerPO, new { @placeholder = "Contractual Delivery Date", @class = "form-control  CContractual_DeliveryDate", autocomplete = "off", @Value = item.Contractual_DeliveryDateAsPerPO })
+                                                                                    </td>
+                                                                                    @*<td>
+                                                                                        @Html.TextBoxFor(m => m.lstMaterial[j].OrderPlacedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "OrderPlacedOn", @class = "form-control COrderPlacedOn", autocomplete = "off", @Value = item.OrderPlacedOn })
+                                                                                        @Html.TextBoxFor(m => m.lstMaterial[j].EstimatedDeliveryDate, new { @placeholder = "Estimated Delivery Date", @class = "form-control  CEstimatedDeliveryDate", autocomplete = "off", @Value = item.EstimatedDeliveryDate })
+                                                                                    </td>*@
+                                                                                    <td>
+                                                                                        @Html.TextBoxFor(m => m.lstMaterial[j].EstimatedEndDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "EstimatedEndDate", @class = "form-control CEstimatedEndDate", autocomplete = "off", @Value = item.EstimatedEndDate })
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @Html.TextBoxFor(model => model.lstMaterial[j].MaterialActual_Progressper, new { @style = "text-align:center", @placeholder = "Number", @class = "form-control ", @id = "ddlActual_Progressper", @Value = item.MaterialActual_Progressper, @readonly = "readonly" })
+                                                                                        @Html.ValidationMessageFor(model => model.lstMaterial[j].MaterialActual_Progressper, "", new { @class = "text-danger validation-msg ActualProgressper" })
+                                                                                    </td>
+
+                                                                                    @*<td>
+                                        @Html.TextBoxFor(model => model.lstMaterial[j].delaydays, new { @style = "text-align:center", @placeholder = "Number", @class = "form-control ", @id = "ddldelaydays", @Value = item.delaydays, @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(model => model.lstMaterial[j].delaydays, "", new { @class = "text-danger validation-msg delaydays" })
+                                    </td>*@
+
+                                                                                    <td style="width:2%">
+                                                                                        @if (i == 1)
+                                                                                        {
+                                                                                            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                                            <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                                            <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+                                                                                        }
+
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                                j++;
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @Html.HiddenFor(model => model.PK_Material_Id, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CPK_Material_Id", @onkeypress = "return isNumberKey(event);" })
+                                                                            <tr class="trDomestic" style="background-color:#f0f0f0">
+
+                                                                                <td>
+                                                                                    @if (ViewBag.BindItem != null)
+                                                                                    {
+
+                                                                                        @Html.DropDownListFor(m => m.Item, new SelectList(@ViewBag.BindItem, "Value", "Text"), new { @id = "IdItem", @class = "form-control CItem", @multiple = "multiple" })
+                                                                                        @Html.HiddenFor(m => m.Item)
+                                                                                    }
+                                                                                </td>
+
+
+
+                                                                               
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.Description, new { @placeholder = "Description", @class = "form-control  CDescription auto-resize-textarea" })
+                                                                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                <td>
+                                                                                   @* @Html.TextBoxFor(model => model.UOM, new { @placeholder = "UOM", @class = "form-control  CUOM" })*@
+    @Html.ValidationMessageFor(model => model.UOM, "", new { @class = "text-danger validation-msg" })
+                                                    @if (Model != null)
+                                                    {
+                                                        @Html.DropDownListFor(model => model.UOM, new SelectList(@ViewBag.UOM, "Code", "Name"), "---Select UOM---", new { @id = "IdUOM", @class = "form-control CUOM" })
+                                                        @Html.HiddenFor(model => model.UOM)
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.Quantity, new { @placeholder = "Quantity", @class = "form-control  CQuantity" })
+                                                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger validation-msg" })
+                                                </td>
+
+                                                <td>
+                                                    @if (ViewBag.MaterialStatus != null)
+                                                    {
+
+                                                        @Html.DropDownListFor(m => m.Status, new SelectList(@ViewBag.MaterialStatus, "Value", "Text"), "--Select--", new { @id = "IdStatus", @class = "form-control CStatus" })
+                                                        @Html.HiddenFor(m => m.Status)
+                                                    }
+                                                </td>
+                                                                                <td>
+
+                                                                                    @Html.TextBoxFor(model => model.StatusUpdatedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Status Updated On", @class = "form-control CStatusUpdatedOn", autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(model => model.StatusUpdatedOn, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                <td>
+
+                                                                                    @*@Html.TextBoxFor(model => model.OrderPlacedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Order Place On", @class = "form-control COrderPlacedOn", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(model => model.OrderPlacedOn, "", new { @class = "text-danger validation-msg" })*@
+
+                                                                                    @Html.TextBoxFor(model => model.OrderPlacedOn, new { @placeholder = "Order Placed On", @class = "form-control  COrderPlacedOn" })
+                                                                                    @Html.ValidationMessageFor(model => model.OrderPlacedOn, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.PONumber, new { @placeholder = "PONumber", @class = "form-control CPONumber", autocomplete = "off", @id = "IdPONumber" })
+
+                                                                                    @Html.ValidationMessageFor(model => model.PONumber, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                <td>
+
+                                                                                    @*@Html.TextBoxFor(model => model.OrderPlacedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Order Place On", @class = "form-control COrderPlacedOn", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(model => model.OrderPlacedOn, "", new { @class = "text-danger validation-msg" })*@
+
+                                                                                    @Html.TextBoxFor(model => model.PODate, new { @placeholder = "Po Date", @class = "form-control  CPoDate" })
+                                                                                    @Html.ValidationMessageFor(model => model.PODate, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                <td>
+
+                                                                                    @*@Html.TextBoxFor(model => model.OrderPlacedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Order Place On", @class = "form-control COrderPlacedOn", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(model => model.OrderPlacedOn, "", new { @class = "text-danger validation-msg" })*@
+
+                                                                                    @Html.TextBoxFor(model => model.Contractual_DeliveryDateAsPerPO, new { @placeholder = "Contractual Delivery Date", @class = "form-control  CContractual_DeliveryDate" })
+                                                                                    @Html.ValidationMessageFor(model => model.Contractual_DeliveryDateAsPerPO, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                @*<td>
+
+                                                                                    @Html.TextBoxFor(model => model.OrderPlacedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Order Place On", @class = "form-control COrderPlacedOn", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(model => model.OrderPlacedOn, "", new { @class = "text-danger validation-msg" })
+
+                                                                                    @Html.TextBoxFor(model => model.EstimatedDeliveryDate, new { @placeholder = "Estimated Delivery Date", @class = "form-control  CEstimatedDeliveryDate" })
+                                                                                    @Html.ValidationMessageFor(model => model.EstimatedDeliveryDate, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>*@
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(m => m.EstimatedEndDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "EstimatedEndDate", @class = "form-control CEstimatedEndDate", autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(model => model.EstimatedEndDate, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.MaterialActual_Progressper, new { @style = "text-align:center", @placeholder = "Number", @class = "form-control ", @id = "ddlActual_Progressper", @readonly = "readonly" })
+                                                                                    @Html.ValidationMessageFor(model => model.MaterialActual_Progressper, "", new { @class = "text-danger validation-msg ActualProgressper" })
+                                                                                </td>
+
+                                                                                @*<td>
+                                    @Html.TextBoxFor(model => model.delaydays, new { @style = "text-align:center", @placeholder = "Number", @class = "form-control ", @id = "ddldelaydays", @onkeypress = "return isNumberKey(event);", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.delaydays, "", new { @class = "text-danger validation-msg delaydays" })
+                                </td>*@
+
+
+                                                                                <td>
+
+                                                                                    <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                                    <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+
+                                                                                </td>
+
+
+
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <tr class="trDomestic" style="background-color:#f0f0f0">
+                                                                            @Html.HiddenFor(model => model.PK_Material_Id, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CPK_Engi_Id", @onkeypress = "return isNumberKey(event);" })
+                                                                            <td>
+                                                                                @if (ViewBag.BindItem != null)
+                                                                                {
+
+                                                                                    @Html.DropDownListFor(m => m.Item, new SelectList(@ViewBag.BindItem, "Value", "Text"), new { @id = "ddlItem", @class = "form-control CItem", @multiple = "multiple" })
+                                                                                    @Html.HiddenFor(m => m.Item)
+                                                                                }
+                                                                            </td>
+
+                                                                            
+                                                                            <td>
+                                                                                @Html.TextBoxFor(model => model.Description, new { @placeholder = "Description", @class = "form-control  CDescription auto-resize-textarea" })
+                                                                                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                           <td>
+                                                    @*@Html.TextBoxFor(model => model.UOM, new { @placeholder = "UOM", @class = "form-control  CUOM" })
+    @Html.ValidationMessageFor(model => model.UOM, "", new { @class = "text-danger validation-msg" })*@
+                                                                                @if (Model != null)
+                                                                                {
+                                                                                    @Html.DropDownListFor(model => model.UOM, new SelectList(@ViewBag.UOM, "Code", "Name"), "---Select UOM---", new { @id = "IdUOM", @class = "form-control CUOM" })
+                                                                                    @Html.HiddenFor(model => model.UOM)
+                                                                                }
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.TextBoxFor(model => model.Quantity, new { @placeholder = "Quantity", @class = "form-control  CQuantity" })
+                                                                                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                           
+                                                                            <td>
+                                                                                @if (ViewBag.MaterialStatus != null)
+                                                                                {
+
+                                                                                    @Html.DropDownListFor(m => m.Status, new SelectList(@ViewBag.MaterialStatus, "Value", "Text"), "--Select--", new { @id = "IdStatus", @class = "form-control CStatus" })
+                                                                                    @Html.HiddenFor(m => m.Status)
+                                                                                }
+                                                                            </td>
+                                                                            <td>
+
+                                                                                @Html.TextBoxFor(model => model.StatusUpdatedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Status Updated On", @class = "form-control CStatusUpdatedOn", autocomplete = "off" })
+                                                                                @Html.ValidationMessageFor(model => model.StatusUpdatedOn, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                            <td>
+
+                                                                                @*@Html.TextBoxFor(model => model.OrderPlacedOn, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Order Place On", @class = "form-control COrderPlacedOn", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.OrderPlacedOn, "", new { @class = "text-danger validation-msg" })*@
+                                                                                @Html.TextBoxFor(model => model.OrderPlacedOn, new { @placeholder = "Order Placed On", @class = "form-control  COrderPlacedOn", autocomplete = "off" })
+                                                                                @Html.ValidationMessageFor(model => model.OrderPlacedOn, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.TextBoxFor(model => model.PONumber, new { @placeholder = "PONumber", @class = "form-control CPONumber", autocomplete = "off", @id = "IdPONumber" })
+
+                                                                                @Html.ValidationMessageFor(model => model.PONumber, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                            <td>
+
+
+
+                                                                                @Html.TextBoxFor(model => model.PODate, new { @placeholder = "Po Date", @class = "form-control  CPoDate" })
+                                                                                @Html.ValidationMessageFor(model => model.PODate, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                            <td>
+
+
+                                                                                @Html.TextBoxFor(model => model.Contractual_DeliveryDateAsPerPO, new { @placeholder = "Contractual Delivery Date", @class = "form-control  CContractual_DeliveryDate" })
+                                                                                @Html.ValidationMessageFor(model => model.Contractual_DeliveryDateAsPerPO, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                            @*<td>
+
+
+
+                                                                                @Html.TextBoxFor(model => model.EstimatedDeliveryDate, new { @placeholder = "Estimated Delivery Date", @class = "form-control  CEstimatedDeliveryDate" })
+                                                                                @Html.ValidationMessageFor(model => model.EstimatedDeliveryDate, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>*@
+                                                                            <td>
+                                                                                @Html.TextBoxFor(m => m.EstimatedEndDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "EstimatedEndDate", @class = "form-control CEstimatedEndDate", autocomplete = "off" })
+                                                                                @Html.ValidationMessageFor(model => model.EstimatedEndDate, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+
+
+                                                                            <td>
+                                                                                @Html.TextBoxFor(model => model.MaterialActual_Progressper, new { @style = "text-align:center", @placeholder = "Number", @class = "form-control ", @id = "ddlActual_Progressper", @readonly = "readonly" })
+                                                                                @Html.ValidationMessageFor(model => model.MaterialActual_Progressper, "", new { @class = "text-danger validation-msg ActualProgressper" })
+                                                                            </td>
+
+
+                                                                            @*<td>
+                                @Html.TextBoxFor(model => model.delaydays, new { @style = "text-align:center", @placeholder = "Number", @class = "form-control ", @id = "ddldelaydays", @onkeypress = "return isNumberKey(event);", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.delaydays, "", new { @class = "text-danger validation-msg delaydays" })
+                            </td>*@
+
+                                                                            <td>
+
+                                                                                <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                                <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+
+                                                                            </td>
+
+
+
+                                                                        </tr>
+                                                                    }
+
+                                                                </table><br />
+
+                                                            </div>
+
+                                                        </div>
+
+
+
+
+                                                        <div class="col-xs-12 text-center">
+                                                            <button type="button" class="btn btn-default insert-form-btn" id="btnsave">Save</button>
+                                                        </div>
+
+                                                        @*}*@
+
+
+
+                                                    </form>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+
+    var ITRowCount = 1;
+    $(document).ready(function () {
+        $(document).on("click", ".classAdd", function () { //
+
+            debugger
+
+            var rowCount = $('.data-contact-person').length + 1;
+
+
+            if ($('#DTestTable tr').length - 1 >= ITRowCount) {
+                var count = $('#DTestTable tr').length - 1;
+                ITRowCount = count;
+            }
+            ddlMaterialstatus(ITRowCount);
+            BindItemByCallId(ITRowCount);
+            ddlMaterialUOM(ITRowCount);
+
+
+
+            var contactdiv = '<tr class="trDomestic">' +
+                '<td>' +
+
+                '<select name="CItem" class="form-control CItem" id="Idtem' + ITRowCount + '"multiple="multiple" ><option value="">Select</option></select>  </td>' +
+                '<td><input type="text"  name="Description" class="form-control CDescription auto-resize-textarea"  /></td>' +
+                 '<td><select name="UOM" class="form-control CUOM" id="IdUOM' + ITRowCount + '" ><option value="">Select</option></select>  </td>' +
+
+                 '<td><input type="text"  name="Quantity" class="form-control CQuantity"  /></td>' +
+                 
+           '<td><select name="CStatus" class="form-control CMaterialStatus CStatus" id="IdMaterialStatus' + ITRowCount + '" ><option value="">Select</option></select>  </td>' +
+           //'<td><input type="Date" pattern="\d{4}/\d{2}/\d{2}" name="IdStatusUpdatedOn"  id="IdStatusUpdatedOn"  class="form-control CStatusUpdatedOn" data-date="" data-date-format="dd/MM/yyyy" /></td>' +
+            '<td><input type="text" class="form-control CStatusUpdatedOn" placeholder="dd/mm/yyyy" id="IdStatusUpdatedOn' + ITRowCount + '" /></td>' +
+
+          '<td><input type="text" style="text-align:left" name="OrderPlaceOn" class="form-control COrderPlacedOn"  /></td>' +
+             '<td><input type="text" style="text-align:left" name="PONumber" class="form-control CPONumber"  /></td>' +
+
+
+             //added by shrutika salve 02012023
+             //'<td><input type="Date" pattern="\d{4}/\d{2}/\d{2}" name="PODate"  id="IdPODate"  class="form-control  CPoDate" data-date="" data-date-format="dd/MM/yyyy" /></td>' +
+             '<td><input type="text" class="form-control CPoDate" placeholder="dd/mm/yyyy" id="IdPODate' + ITRowCount + '" /></td>' +
+            // '<td><input type="Date" pattern="\d{4}/\d{2}/\d{2}" name="Contractual_DeliveryDateAsPerPO"  id="IdContractual_DeliveryDateAsPerPO"  class="form-control  CContractual_DeliveryDate" data-date="" data-date-format="dd/MM/yyyy" /></td>' +
+             '<td><input type="text" class="form-control CContractual_DeliveryDate" placeholder="dd/mm/yyyy" id="IdContractual_DeliveryDateAsPerPO' + ITRowCount + '" /></td>' +
+             //'<td><input type="Date" pattern="\d{4}/\d{2}/\d{2}" name="EstimatedDeliveryDate"  id="IdEstimatedDeliveryDate"  class="form-control  CEstimatedDeliveryDate" data-date="" data-date-format="dd/MM/yyyy" /></td>' +
+            // '<td><input type="Date" pattern="\d{4}/\d{2}/\d{2}" name="IdEstimatedEndDate"  id="IdEstimatedEndDate"  class="form-control CEstimatedEndDate" data-date="" data-date-format="dd/MM/yyyy" /></td>' +
+             '<td><input type="text" class="form-control CEstimatedEndDate" placeholder="dd/mm/yyyy" id="IdEstimatedEndDate' + ITRowCount + '" /></td>' +
+              '<td><input type="text" style="text-align:center" name="IdActual_Progressper"  id="IdActual_Progressper"  class="form-control" disabled/></td>' +
+              //'<td><input type="text" style="text-align:center" name="Iddelaydays"  id="Iddelaydays"  class="form-control" disabled/></td>' +
+         '<td><button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button><button type="button" style="text-align:center" id="IbtnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button> ' +
+
+
+
+               '</tr>';
+
+            $('#DTestTable').append(contactdiv); // Adding these controls to Main table class
+
+            $(function () {
+                $(".CStatusUpdatedOn").datepicker({
+                    //dateFormat: 'dd/mm/yy',//check change
+                    dateFormat: 'dd/mm/yy',//check change
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+50",
+                    //maxDate: "+60d",
+                    //minDate: "-60d"
+                });
+            });
+
+            $(function () {
+                $(".CPoDate").datepicker({
+                    //dateFormat: 'dd/mm/yy',//check change
+                    dateFormat: 'dd/mm/yy',//check change
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+50",
+                    //maxDate: "+60d",
+                    //minDate: "-60d"
+                });
+            });
+
+            $(function () {
+                $(".CContractual_DeliveryDate").datepicker({
+                    //dateFormat: 'dd/mm/yy',//check change
+                    dateFormat: 'dd/mm/yy',//check change
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+50",
+                    //maxDate: "+60d",
+                    //minDate: "-60d"
+                });
+            });
+
+            $(function () {
+                $(".CEstimatedDeliveryDate").datepicker({
+                    //dateFormat: 'dd/mm/yy',//check change
+                    dateFormat: 'dd/mm/yy',//check change
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+50",
+                    //maxDate: "+60d",
+                    //minDate: "-60d"
+                });
+            });
+            $(function () {
+                $(".CEstimatedEndDate").datepicker({
+                    //dateFormat: 'dd/mm/yy',//check change
+                    dateFormat: 'dd/mm/yy',//check change
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+50",
+                    //maxDate: "+60d",
+                    //minDate: "-60d"
+                });
+            });
+
+        });
+    });
+</script>
+
+@*<script>
+    $(document).on("click", ".IdeleteContact", function () {
+        if (confirm("Do you really want to remove this row?")) {
+            ITRowCount = ITRowCount - 1;
+            $(this).closest("tr").remove(); // closest used to remove the respective 'tr' in which I have my controls
+        }
+    });
+</script>*@
+
+<script>
+    $(document).on("click", ".IdeleteContact", function () {
+        if (confirm("Do you really want to remove this row?")) {
+            ITRowCount = ITRowCount - 1;
+            debugger;
+            // var varPK_Engi_Id = $(this).find('#PK_Engi_Id').val();
+            var varPK_Material_Id = $(this).closest('tr').find('#PK_Material_Id').val();
+            if (typeof varPK_Material_Id !== 'undefined') {
+                // Call AJAX
+                $.ajax({
+                    url:'@Url.Action("deleteMaterialData", "Expediting")',
+                    type: 'POST',
+                    data: { varPK_Material_Id: varPK_Material_Id },
+                    success: function(response) {
+                        //alert("Data delete successful!");
+                    },
+                    error: function(xhr, status, error) {
+                        alert("Something Went Wrong!.");
+                    }
+                });
+            }
+            $(this).closest("tr").remove();
+        }
+    });
+</script>
+
+<script type="text/javascript">
+
+    debugger
+    function ddlMaterialstatus(ITRowCount) {
+        var PK_Call_Id = $("#PK_Call_Id").val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetMaterialStatus", "Expediting")',
+            data: { "PK_Call_Id": PK_Call_Id },
+            success: function (data) {
+                var s = '<option value="-1">--Select--</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                }
+                $("#IdMaterialStatus" + ITRowCount).html(s);
+
+            }
+        });
+    }
+
+
+    //added by shrutika salve 27122023
+
+    function ddlMaterialUOM(ITRowCount) {
+        debugger;
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetMaterialUOM", "Expediting")',
+            data: "{}",
+            success: function (data) {
+                debugger;
+                var s = '<option value="-1">---Select UOM---</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Code + '">' + data[i].Name + '</option>';
+                }
+                $("#IdUOM" + ITRowCount).html(s);
+
+            }
+        });
+    }
+
+
+    @*function BindItemByCallId(ITRowCount) {
+        var PK_Call_Id = $("#PK_Call_Id").val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetItemByPK_Call_Id", "Expediting")',
+            //data: "{}",
+            data: { "PK_Call_Id": PK_Call_Id },
+            success: function (data) {
+                var s = '<option value="-1">Please Select</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                }
+                $("#Idtem" + ITRowCount).html(s);
+
+            }
+        });
+
+
+    }*@
+
+    function BindItemByCallId(ITRowCount) {
+        var PK_Call_Id = $("#PK_Call_Id").val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetItemByPK_Call_Id", "Expediting")',
+            data: { "PK_Call_Id": PK_Call_Id },
+            success: function (data) {
+                var s = '';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                }
+                $("#Idtem" + ITRowCount).html(s);
+
+                // Initialize Select2 on the updated dropdown
+                $("#Idtem" + ITRowCount).multiselect({
+                    includeSelectAllOption: true, // Enable the "Select All" option
+                    selectAllText: 'Select All', // Customize the text for "Select All" option
+                    enableFiltering: true, // Enable filtering/searching
+                    enableCaseInsensitiveFiltering: true, // Make the filtering case-insensitive
+                    maxHeight: 300 // Adjust the maximum height of the dropdown
+                });
+            }
+        });
+    }
+
+
+
+
+
+
+
+</script>
+
+
+<script>
+    $("#btnsave").on('click', function (event) {
+        debugger;
+
+        idbtnSaveEng();
+        var a = "1";
+        var DArray = [];
+
+
+        var PK_Call_Id = $("#PK_Call_Id").val();
+        $('.trDomestic').each(function () {
+            debugger;
+            var trD = {};
+
+            var varPK_Engi_Id = $(this).find('#PK_Material_Id').val();
+
+            var Item = $(this).find('.CItem').val();
+            var Material_Category = $(this).find('.CMaterial_Category').val();
+            var Description = $(this).find('.CDescription').val();
+            var UOM = $(this).find('.CUOM').val();
+            var Quantity = $(this).find('.CQuantity').val();
+            var Source = $(this).find('.CSource').val();
+            var Status = $(this).find('.CStatus').val();
+            var PONumber = $(this).find('.CPONumber').val();
+            var EstimatedEndDate = $(this).find('.CEstimatedEndDate').val();
+
+            debugger;
+            var StatusUpdatedOn = $(this).find('.CStatusUpdatedOn').val();
+            //var convertedStatusUpdatedOn = moment(StatusUpdatedOn).format('DD/MM/YYYY');
+
+            //if (convertedStatusUpdatedOn == 'Invalid date') {
+            //    convertedStatusUpdatedOn = StatusUpdatedOn;
+            //}
+            //else {
+            //    convertedStatusUpdatedOn = convertedStatusUpdatedOn;
+            //}
+            //var convertedFormat1 = moment(EstimatedEndDate).format('DD/MM/YYYY');
+            //if (convertedFormat1 == 'Invalid date') {
+            //    convertedFormat1 = EstimatedEndDate;
+            //}
+            //else {
+            //    convertedFormat1 = convertedFormat1;
+            //}
+
+            var convertedOrderPlacedOn = $(this).find('.COrderPlacedOn').val();
+
+            //added by shrutika salve 02/01/2023
+            var PODate = $(this).find('.CPoDate').val();
+
+            //var convertedPODate = moment(PODate).format('DD/MM/YYYY');
+            //if (convertedPODate == 'Invalid date') {
+            //    convertedPODate = PODate;
+            //}
+            //else {
+            //    convertedPODate = convertedPODate;
+            //}
+
+            var Contractual_DeliveryDate = $(this).find('.CContractual_DeliveryDate').val();
+
+            //var convertedContractual_DeliveryDate = moment(Contractual_DeliveryDate).format('DD/MM/YYYY');
+            //if (convertedContractual_DeliveryDate == 'Invalid date') {
+            //    convertedContractual_DeliveryDate = Contractual_DeliveryDate;
+            //}
+            //else {
+            //    convertedContractual_DeliveryDate = convertedContractual_DeliveryDate;
+            //}
+
+            //var EstimatedDeliveryDate = $(this).find('.CEstimatedDeliveryDate').val();
+
+            //var convertedEstimatedDeliveryDate = moment(EstimatedDeliveryDate).format('DD/MM/YYYY');
+            //if (convertedEstimatedDeliveryDate == 'Invalid date') {
+            //    convertedEstimatedDeliveryDate = EstimatedDeliveryDate;
+            //}
+            //else {
+            //    convertedEstimatedDeliveryDate = convertedEstimatedDeliveryDate;
+            //}
+
+
+
+            if (EstimatedEndDate == '' && (Status !== "10" && Status !== "11")) { a = "14"; }
+            if (Contractual_DeliveryDate == '' && (Status !== "1" && Status !== "2" && Status !== "3" && Status !== "4" && Status !== "10" && Status !== "11")) { a = "15"; }
+            if (PODate == '' && (Status !== "1" && Status !== "2" && Status !== "3" && Status !== "4" && Status !== "10" && Status !== "11")) { a = "13"; }
+            if (PONumber == '' && (Status !== "1" && Status !== "2" && Status !== "3" && Status !== "4" && Status !== "10" && Status !== "11")) { a = "12"; }
+            if (convertedOrderPlacedOn == '' && (Status !== "1" && Status !== "2" && Status !== "3" && Status !== "4" && Status !== "10" && Status !== "11")) {
+                a = "11";
+            }
+
+            if (StatusUpdatedOn == '' && (Status !== "1")) { a = "10"; }
+            if (Status == '' || Status == '-1') { a = "9"; }
+            if (Quantity == '') { a = "7"; }
+            if (UOM == '' || UOM == '-1') { a = "6"; }
+            if (Description == '') { a = "5"; }
+            if (Item == '' || Item == null) { a = "3"; }
+
+
+            
+
+            
+
+            if (a == "1") {
+
+                varItemString = Item.join(',');
+
+                //trD['Item'] = Item;
+                //trD['Material_Category'] = Material_Category;
+                //trD['Description'] = Description;
+                //trD['UOM'] = UOM;
+                //trD['Quantity'] = Quantity;
+                //trD['Source'] = Source;
+                //trD['Status'] = Status;
+                //trD['StatusUpdatedOn'] = convertedStatusUpdatedOn;
+                //trD['OrderPlacedOn'] = convertedOrderPlacedOn;
+                //trD['PONumber'] = PONumber;
+
+                var trD = {
+                    'Item': varItemString,
+                    'Material_Category': Material_Category,
+                    'Description': Description,
+                    'UOM': UOM,
+                    'Quantity': Quantity,
+                    'Source': Source,
+                    'Status': Status,
+                    'StatusUpdatedOn': StatusUpdatedOn,
+                    'OrderPlacedOn': convertedOrderPlacedOn,
+                    'PONumber': PONumber,
+                    'PODate': PODate,
+                    'EstimatedEndDate': EstimatedEndDate,
+                    'Contractual_DeliveryDateAsPerPO': Contractual_DeliveryDate,
+                    'PK_Material_Id': varPK_Engi_Id
+                    //'EstimatedDeliveryDate': convertedEstimatedDeliveryDate
+                };
+                DArray.push(trD);
+            }
+            else {
+
+                return false;
+            }
+
+        });
+
+
+
+      
+        if (a == "3") {
+            alert("Please Enter Po Item!");
+            return false;
+        }
+        //if (a == "4") {
+        //    alert("Please Enter Material Category!");
+        //    return false;
+        //}
+        if (a == "5") {
+            alert("Please Enter Material Description!");
+            return false;
+        }
+        if (a == "6") {
+            alert("Please Enter UOM!");
+            return false;
+        }
+        if (a == "7") {
+            alert("Please Enter Quantity!");
+            return false;
+        }
+        //if (a == "8") {
+        //    alert("Please Enter Source!");
+        //    return false;
+        //}
+        if (a == "9") {
+            alert("Please Enter Status!");
+            return false;
+        }
+        //if (a == "15") {
+        //    alert("Please Enter Estimated End Date!");
+        //    return false;
+        //}
+        //if (a == "12") {
+        //    debugger;
+        //    alert("Please Enter PONumber!");
+        //    return false;
+
+        //}
+        if (a == "10") {
+
+            alert("Please Enter Status Changed/Updated On!");
+            return false;
+
+        }
+        if (a == "11") {
+
+            alert("Please Enter Supplier Name!");
+            return false;
+
+        }
+
+        if (a == "12") {
+            debugger;
+            alert("Please Enter PO Number!");
+            return false;
+        }
+
+        if (a == "15") {
+
+            alert("Please Enter contractual delivert date!");
+            return false;
+        }
+
+
+        if (a == "13") {
+
+            alert("Please Enter PO Date!");
+            return false;
+        }
+        if (a == "14") {
+
+            alert("Please Enter Estimated Delivery Date!");
+            return false;
+        }
+        
+        
+      
+
+       
+           
+        
+
+        var ModelVisitReport =
+       {
+           PK_Call_Id: PK_Call_Id,
+
+
+       }
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ExpMaterial", "Expediting")',
+            dataType: 'json',
+            async:false,
+            data: JSON.stringify({ IVR: ModelVisitReport, "DArray": DArray }),
+
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                if (response.result == 'Redirect') {
+                    alert("Details has been Save successfully!!!")
+                    window.location = response.url;
+                }
+
+                if (response.result == 'Update') {
+                    alert("Details has been updated successfully!!!")
+                    window.location = response.url;
+                }
+            }
+        })
+
+
+
+
+
+    });
+</script>
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('.CItem').multiselect({
+            includeSelectAllOption: true
+        });
+
+        // Optional: Add event handlers if needed
+        $('.CItem').change(function () {
+            // Handle change event
+            console.log($(this).val()); // Log selected values to the console
+        });
+
+
+    });
+
+</script>
+
+
+<script>
+    function idbtnSaveEng() {
+        debugger;
+
+        var PK_Call_Id = $("#PK_Call_Id").val();
+        var ActionValue = $("#idmaterial").val();
+        var stage = "2";
+
+        if (ActionValue == "0") {
+            alert("please enter Action Value");
+            return false;
+        }
+
+
+        if (parseFloat(ActionValue) > 100) {
+            alert("Status value cannot exceed 100.");
+            return;
+
+        }
+
+
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("StatusSaveEng", "Expediting")',
+            data: { PK_Call_Id: PK_Call_Id, ActionValue: ActionValue, stage: stage },
+            async: false,
+            success: function (data) {
+                //alert("Data Added successfully");
+                //location.reload();
+            },
+            error: function (error) {
+                console.error('Error saving status:', error);
+            }
+        });
+    }
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        var PK_Call_Id = $("#PK_Call_Id").val();
+        var stage = "2";
+        $.ajax({
+            url: '@Url.Action("GetActionData", "Expediting")',
+            type: 'GET',
+            data: {
+                PK_Call_Id: PK_Call_Id,
+                stage: stage
+            },
+            Async: false,
+            success: function (response) {
+                debugger;
+                var data1 = JSON.parse(response);
+                var data2 = JSON.stringify(data1);
+
+
+                $("#idmaterial").val(data1[0].Actionvalue);
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    });
+
+</script>
+
+
+

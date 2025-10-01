@@ -1,0 +1,311 @@
+﻿@model TuvVision.Models.JobMasters
+
+@{
+    ViewBag.Title = "JobDashBoard";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+
+ <!--Start of main content 3-->
+<div class="grey-bg-f3">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-5">
+
+            <div class="col-xs-12 form-col">
+                <div class="row">
+
+                    <div class="col-xs-12 text-right">
+                        <a href="companies.html" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <div class="white-bg section-box-shadow">
+                            <h3 class="form-page-title">JOB No:- 1243456</h3>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <div class="form-box">
+                                        <form method="post" enctype="multipart/form-data">
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Control Number:</label>
+                                                    @Html.TextBoxFor(model => model.Job_Number, new { @placeholder = "Job Number", @class = "form-control", @readonly = "readonly" })
+                                                    @Html.ValidationMessageFor(model => model.Job_Number, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Description:</label>
+                                                    @Html.TextBoxFor(model => model.Description, new { @placeholder = "Description", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger validation-msg" })
+                                                    @*<input type="email" class="form-control" placeholder="Email Here">*@
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Customer Name:</label>
+
+                                                    @Html.TextBoxFor(model => model.Client_Name, new { @placeholder = "Client Name", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Client_Name, "", new { @class = "text-danger validation-msg" })
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>End User:</label>
+                                                    @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+
+                                                    @Html.TextBoxFor(model => model.End_User, new { @placeholder = "End User", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.End_User, "", new { @class = "text-danger validation-msg" })
+
+                                                </div>
+                                            </div>
+                                           
+                                             <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Customer Po No</label>
+                                                    @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                    @Html.TextBoxFor(model => model.Customer_PoNo_PoDate, new { @placeholder = "Po No", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Customer_PoNo_PoDate, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Po Date:</label>
+                                                    <input type="text" class="form-control" placeholder="Po Date">
+                                                    @*@Html.TextBoxFor(model => model.Customer_PoNo_PoDate, new { @placeholder = "Po No&Po Date", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Customer_PoNo_PoDate, "", new { @class = "text-danger validation-msg" })*@
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label> PO Validity:</label>
+                                                    @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                    @Html.TextBoxFor(model => model.Po_Validity, new { @placeholder = "Po Validity", @class = "form-control", @type = "date" })
+                                                    @Html.ValidationMessageFor(model => model.Po_Validity, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Customer PO Amount:</label>
+                                                    @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                    @Html.TextBoxFor(model => model.Customer_PO_Amount, new { @placeholder = "Po Amount", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Customer_PO_Amount, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Enquiry for Reference :</label>
+                                                    @*<input type="text" class="form-control" placeholder="Phone Here">*@
+
+                                                    @Html.TextBoxFor(model => model.Enquiry_Of_Order, new { @placeholder = "Enquiry Of Order", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Enquiry_Of_Order, "", new { @class = "text-danger validation-msg" })
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Quotation for Reference:</label>
+                                                    @*<input type="text" class="form-control" placeholder="Website Here">*@
+                                                    @Html.TextBoxFor(model => model.Quotation_Of_Order, new { @placeholder = "Quotation Of Order", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Quotation_Of_Order, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Estimated Man Days:</label>
+                                                    @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                    @Html.TextBoxFor(model => model.Estimate_ManDays_ManMonth, new { @placeholder = "Estimate ManDays ManMonth", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Estimate_ManDays_ManMonth, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Estimated Man Month:</label>
+                                                    <input type="text" class="form-control" placeholder="TAN Here">
+                                                    @*@Html.TextBoxFor(model => model.Estimate_ManDays_ManMonth, new { @placeholder = "Estimate_ManDays_ManMonth", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Estimate_ManDays_ManMonth, "", new { @class = "text-danger validation-msg" })*@
+                                                </div>
+                                            </div>
+
+                                           
+                                         
+                                        
+                                          
+                                           
+
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Branch:</label>
+
+
+                                                    @Html.TextBoxFor(model => model.Branch, new { @placeholder = "Branch", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger validation-msg" })
+
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Service Type:</label>
+                                                    @Html.TextBoxFor(model => model.Service_type, new { @placeholder = "Service Type", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Service_type, "", new { @class = "text-danger validation-msg" })
+                                                    @*<input type="text" class="form-control" placeholder="Main Here">*@
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Job Type:</label>
+                                                    @Html.TextBoxFor(model => model.Job_type, new { @placeholder = "Job type", @class = "form-control", @readonly = "readonly" })
+                                                    @Html.ValidationMessageFor(model => model.Job_type, "", new { @class = "text-danger validation-msg" })
+                                                    @*<input type="text" class="form-control" placeholder="Main Here">*@
+                                                </div>
+                                            </div>
+
+                                           
+
+                                            @*<div class="col-xs-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Contract ReviewList:</label>
+                                                  
+                                                    @Html.TextBoxFor(model => model.Contract_reviewList, new { @placeholder = "Contract ReviewList", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Contract_reviewList, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>*@
+
+                                            <div class="col-xs-12 col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Special Notes:</label>
+                                                    <textarea rows="3" class="form-control" placeholder="Type your Special Notes..."></textarea>
+
+                                                    @*@Html.TextBoxFor(model => model.Special_Notes, new { @placeholder = "Special Notes", @class = "form-control" })*@
+                                                    @Html.ValidationMessageFor(model => model.Special_Notes, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>
+
+                                            @*<div class="col-xs-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Formates of Report:</label>
+                                                    <input type="file" class="form-control" placeholder="TAN Here" required>
+                                                    @Html.ValidationMessageFor(model => model.formats_Of_Report, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>*@
+
+                                            @*<div class="col-xs-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Attachment:</label>
+                                                    <input type="file" class="form-control" placeholder="TAN Here" required>
+                                                    @Html.ValidationMessageFor(model => model.Attachment, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>*@
+
+                                            <div class="col-xs-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Attachment </label>
+                                                    <input type="file" class="inputupload" name="img_Banner" id="img_Banner" required/>
+                                                    @Html.HiddenFor(m => m.Attachment)
+                                                    @if (Model != null)
+                                                    {
+                                                        <a href="~/ImageUpload/@Html.DisplayFor(m => m.Attachment)">
+                                                            <img src="@Url.Content("~/Content/Uploads/Images/"+@Html.DisplayFor(m => m.Attachment))" width="75" height="75" />
+                                                            @Html.ValidationMessageFor(m => m.Attachment, "", new { @class = "text-danger", })
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Format Of Reports </label>
+                                                    <input type="file" class="inputupload" name="img_Banner1" id="img_Banner1" required/>
+                                                    @Html.HiddenFor(m => m.formats_Of_Report)
+                                                    @if (Model != null)
+                                                    {
+                                                        <a href="~/ImageUpload/@Html.DisplayFor(m => m.formats_Of_Report)">
+                                                            <img src="@Url.Content("~/Content/Uploads/Images/"+@Html.DisplayFor(m => m.formats_Of_Report))" width="75" height="75" />
+                                                            @Html.ValidationMessageFor(m => m.formats_Of_Report, "", new { @class = "text-danger", })
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="col-xs-12 text-center">
+                                                <button type="reset" class="btn btn-default news-btn">Reset</button>
+                                                <button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Add Job</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div><!-- /.row -->
+
+                            <div class="row">
+                                <hr>
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <h2 class="dynamic-page-title dynamic-page-title-2"><i class="fa fa-address-book"></i>List of Sub-Job</h2>
+                                    <a href="insert-contact.html" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-plus-circle"></i> Add New Sub-Job</a>
+                                </div>
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <table id="contacts-dt" class="display" cellspacing="0" width="100%">
+
+                                        <thead>
+                                            <tr>
+                                                <th>Sub-Job No</th>
+                                                <th>Description</th>
+                                                <th>Vendor</th>
+                                                <th>Amount</th>
+                                                <th>Invoice Amount</th>
+                                                <th>Po Number</th>
+                                                <th>Po Date</th>
+                                              
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr>
+                                                <td>123456789</td>
+                                                <td>Project Manager</td>
+                                                <td>DotCom india</td>
+                                                <td>500000.00</td>
+                                                <td>500000.00</td>
+                                                <td>1644</td>
+                                                <td>20/june/2019</td>
+                                               
+                                                <td style="text-align:center;"><a href="#"><i class="fa fa-pencil"></i></a></td>
+                                                <td style="text-align:center;"><a href="#"><i class="fa fa-trash"></i></a></td>
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+                                    <hr>
+                                </div><!-- /.data table col -->
+                            </div>
+
+                        </div><!-- /.box-shadow -->
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.col -->
+
+
+
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+    <!--End of header-->
+
+</div>
+<!--End of main content 3-->

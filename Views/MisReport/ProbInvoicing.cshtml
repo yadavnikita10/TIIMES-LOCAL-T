@@ -1,0 +1,241 @@
+﻿@model TuvVision.Models.JobMasters
+
+@{
+    ViewBag.Title = "ProbableInvoicing";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm("ProbInvoicing", "MisReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <br /><br />
+
+        <div class="form-group" style="padding-left:25px;">
+            <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Probable Invoicing</h3>
+        </div>
+
+        @if (Convert.ToString(TempData["Result"]) != null && Convert.ToString(TempData["Result"]) != "")
+        {
+        <div class="col-xs-4">
+            <h4 style="color:red;font-weight:bold;">@Convert.ToString(TempData["Result"])</h4>
+        </div>
+        }
+
+        <div class="form-group" style="padding-left:25px;">
+            <hr class="custom-hr1">
+        </div>
+        <br /><br />
+        <div class="row">
+
+            <div class="col-xs-2" style="padding-left:50px;">
+
+                <label>Financial Year:</label>
+                @if (ViewBag.FinancialYear != null)
+                {
+                @Html.DropDownListFor(model => model.FYear, ViewBag.FinancialYear as IEnumerable<SelectListItem>
+                    , "--Select Financial Year--", new { @class = "form-control", @id = "FinYear", })
+
+                    }
+
+            </div>
+
+
+            <div class="col-xs-2">
+
+                <label>Month:</label>
+                @if (ViewBag.MonthList != null)
+                {
+                @Html.DropDownListFor(model => model.monthID, ViewBag.MonthList as IEnumerable<SelectListItem>
+                    , "--Select Month--", new { @class = "form-control", @id = "Month", })
+
+                    }
+
+
+
+            </div>
+            <div class="col-xs-2">
+                <label></label>
+                <button type="button" class="btn btn-primary form-control" id="btnSearch" style="margin-top:4px;">Search</button>
+            </div>
+            <div class="col-xs-2">
+                <label></label>
+                <button type="button" id="a" value="ExportToExcel" class="btn btn-primary form-control" style="margin-top:4px;" onclick="location.href='@Url.Action("ExportIndexProbInvoicing","MisReport")'">
+                    Export To Excel
+                </button>
+            </div>
+
+            @if (Model.ProposedInvoicingSum != null && Model.ConsumedInvoicingSum != null)
+            {
+            <div class="col-xs-2">
+
+                <label style="color:#001ED2;font-size:14px;">Probable Invoicing (INR)</label>
+                @Html.TextBoxFor(model => Model.ProposedInvoicingSum, new {  @class = "form-control form-control-custom",@readonly="readonly", @style = "width:200px;font-size:16px" })
+
+
+
+            </div>
+            <div class="col-xs-2">
+
+                <label style="color:#001ED2;font-size:14px;">Consumed Invoicing (INR)</label>
+                @Html.TextBoxFor(model => Model.ConsumedInvoicingSum, new { @class = "form-control form-control-custom", @readonly = "readonly", @style = "width:200px;font-size:16px" })
+
+
+
+            </div>
+
+
+
+
+            }
+
+
+
+
+        </div>
+        <br /><br />
+
+
+        <div class="col-xs-12">
+
+            <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>
+
+                        @(Html
+                        .Grid(Model.lst1)
+                        .Build(columns =>
+                        {
+
+                        columns.Add(c => c.Job_Number).Titled("Job Number");
+                        columns.Add(c => c.Branch).Titled("Branch");
+                        columns.Add(c => c.CreatedBy).Titled("Created By");
+                        columns.Add(c => c.OrderType).Titled("Order Type");
+                        columns.Add(c => c.OrderRate).Titled("Order Rate");
+                        columns.Add(c => c.EstimatedMandays).Titled("Estimated Mandays");
+                        columns.Add(c => c.Client_Name).Titled("Customer Name");
+                        columns.Add(c => c.SAP_No).Titled("SAP No");
+                        columns.Add(c => c.ProjectName).Titled("Project Name");
+                        columns.Add(c => c.Customer_PO_Amount).Titled("Customer PO Amount");
+                        columns.Add(c => c.ProposedMandays).Titled("Proposed Mandays");
+                        columns.Add(c => c.ConsumedMandays).Titled("Consumed Mandays");
+                        columns.Add(c => c.ConsumedInvoicing).Titled("Consumed Invoicing");
+                        columns.Add(c => c.ProposedInvoicing).Titled("Proposed Invoicing");
+                        columns.Add(c => c.RemainingMandays).Titled("Remaining Mandays");
+
+
+                        })
+                        .Pageable(pager =>
+                        {
+
+                        pager.ShowPageSizes = true;
+                        // pager.PagesToDisplay = 3;
+                        pager.CurrentPage = 1;
+                        pager.RowsPerPage = 2;
+                        })
+                        .UsingFilterMode(GridFilterMode.Row)
+                        .Empty("No data found")
+                        .Filterable()
+                        .Sortable()
+
+
+                        )
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+}
+
+
+@*...Calender Control...*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="~/Scripts/MvcGrid/jquery.quicksearch.js"></script>
+<script src="~/Scripts/MvcGrid/dataTables.fixedColumns.min.js"></script>
+
+<script>
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSearch").click(function myfunction() {
+            debugger;
+            if (ValidateForm() == false) {
+                return false;
+            }
+            else {
+                $("#form1").submit()
+            }
+        });
+    });
+
+    function ValidateForm()
+    {
+        if ($("#Month").val() != "")
+        {
+            if ($("#FinYear").val() == "")
+            {
+                alert('Select Financial Year!');
+                return false;
+            }
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+</script>
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+
+
+            $('.mvc-grid-value').each(function (i)
+            {
+                    $(this).quicksearch("#gridMapping tr:not(:has(th))",
+                    {
+                        'testQuery': function (query, txt, row)
+                        {
+                            return $(row).children(":eq(" + i + ")").text().toLowerCase().indexOf(query[0].toLowerCase()) != -1;
+                        }
+                    });
+            });
+
+</script>

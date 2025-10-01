@@ -1,0 +1,854 @@
+﻿@model TuvVision.Models.Leave
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "AddLeave";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+@*...Calender Control...*@
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>*@
+
+
+
+@*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+@*<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+
+<script>
+$(function () {
+    $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+});
+$(function () {
+    $(".ToD").datepicker({
+        dateFormat: 'dd/mm/yy',//check change
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+50"
+    });
+});
+</script>
+
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+@*DATEPICKER*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.js" data-modules="effect effect-bounce effect-blind effect-bounce effect-clip effect-drop effect-fold effect-slide"></script>*@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+<style>
+    .ifa {
+        pointer-events: none;
+    }
+
+    .dataTables_filter, .dataTables_info {
+        display: none;
+    }
+</style>
+
+@if (TempData["S"] == "Leave Added SuccessFully")
+{
+    TempData["S"] = null;
+    <script>
+alert("Leave added successfully!")
+    </script>
+}
+
+
+@if (TempData["CallAssigned"] == "CallAssigned")
+{
+    TempData["CallAssigned"] = null;
+    <script>
+        alert("Call has been assigned / Non Inspection activity is filled for selected date(s). Please take necessary action.")
+    </script>
+}
+
+@if ( TempData["A"] == "Leave Already Added")
+{
+     TempData["A"] = null;
+<script>
+    alert("Activity or Leave or Weekly off has been already added for selected date(s). Please check records.")
+</script>
+}
+
+
+@if (TempData["E"] == "Something Went Wrong")
+{
+    TempData["E"] = null;
+    <script>
+alert("Leave Updated Successfully")
+    </script>
+}
+@if (ViewBag.Message == "Leave Already Added")
+{
+    <script>
+alert("Leave Already Added")
+    </script>
+}
+
+@if (ViewBag.Message == "Please Select Proper Date")
+{
+    <script>
+alert("Selected date(s) are cannot be entered as holiday!")
+    </script>
+}
+@if (ViewBag.Message == "call assign")
+{
+    <script>
+alert("Call Has been  Assigned on Selected Date(s)")
+    </script>
+}
+@if (ViewBag.Message == "Weekly off")
+{
+    <script>
+alert("Check Leave Data on Selected Date ")
+    </script>
+}
+@if (Convert.ToString(TempData["Message1"]) != string.Empty)
+{
+    if (Convert.ToString(TempData["Message1"]) == "Holiday Not Valid")
+    {
+        TempData["Message1"] = null;
+        <script>
+            alert("Selected date(s) not registered in Holiday list of your region. For any modification please contact support team.")
+        </script>
+    }
+}
+
+
+@using (Html.BeginForm("LeaveApplicationUser", "Leave", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+
+                <div class="row assignfixedwidth rp-5">
+                    @*<a href="@Url.Action("LeaveApprovalList","Leave")" class="btn btn-default news-btn" style="float:right;"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
+                    <a class="btn btn-default news-btn" href="~/Excel/Leave Application form.docx" role="button" download="Leave Application form.docx" style="margin-top:0px;float:right;margin-top:15px;margin-right:10px;">
+                        <i class="fa fa-download"></i>Download Leave Application Template
+                    </a>
+                    <br />
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+
+
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Add Leave</h3>
+                                    <div class="row">
+
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+                                                    @Html.HiddenFor(m => m.Id)
+
+                                                    <div class="row">
+                                                        <span style="color:#E12F24;">
+                                                            <strong>&nbsp;&nbsp;&nbsp;Notes </strong> :
+                                                        </span>
+
+                                                        <span>
+
+
+                                                            1) <span style="color:#ff0000;">*</span>Mandatory. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            2) <span style="color:#1C3DE3;"></span>PL Should be more than continuous 3 days.
+                                                            <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            3) <span style="color:#2EFE2E;"></span> CL in excess of 3 days , will not be permited.
+                                                            <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            4) For Sick leave in excess of 5 days , medical certificate is mandatory.<br />
+
+
+                                                        </span>
+                                                        <div class="col-xs-12 col-sm-4">
+
+
+                                                            <div class="form-group">
+                                                                <label>Select Leave:</label>
+                                                                @Html.DropDownListFor(m => m.ActivityType, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                      new SelectListItem{ Text="Privilege Leave", Value = "Privilege Leave" },
+                                                                     new SelectListItem{ Text="Casual Leave", Value = "Casual Leave" },
+                                                                     new SelectListItem{ Text="Sick Leave", Value = "Sick Leave" },
+                                                                      new SelectListItem{ Text="Weekly off", Value = "Weekly off" },
+                                                                     new SelectListItem{ Text="Holiday", Value = "Holiday" },
+                                                                     },
+
+                                                                     new { @class = "form-control", @id = "PT", onchange = "onchangeDropdown()" })
+                                                                @Html.ValidationMessageFor(m => m.ActivityType, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>From Date:</label>
+
+                                                                @Html.TextBoxFor(model => model.StartDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off", @id = "StartDate" })
+                                                                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>To Date:</label>
+
+                                                                @Html.TextBoxFor(model => model.ToD, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom FromD", autocomplete = "off", @id = "ToD" })
+                                                                @Html.ValidationMessageFor(model => model.ToD, "", new { @class = "text-danger validation-msg" })
+                                                                @Html.HiddenFor(model => model.uniqueNumber)
+                                                            </div>
+                                                        </div>
+
+
+
+
+
+
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Reason for Leave: @*<span class="text-danger">*</span>*@</label>
+                                                                @Html.TextAreaFor(model => model.Reason, new { @placeholder = "Reason for Leave", @class = "form-control Reason", @rows = "3", @id = "Reason" })
+                                                                @Html.HiddenFor(model => model.Id)
+                                                                @Html.HiddenFor(model => model.UniversalID)
+                                                                @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-sm-8" style="height: 50px;">
+                                                                    <div class="form-group">
+
+                                                                        <div class="form-group">
+                                                                            @Html.CheckBoxFor(model => model.ChkLTILeave, new { @id = "chkPassport" })
+
+
+                                                                            <label for="InActive" style="color:red;"> leave(s) due to safety incident (Accident, Injuries etc.)</label>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-xs-12 col-sm-4" style="height: 50px;">
+                                                                    <div class="form-group">
+
+                                                                        <div class="form-group">
+                                                                            @Html.CheckBoxFor(model => model.ChkHalfDayLeave, new { @id = "chkPassport" })
+
+
+                                                                            <label for="InActive" style="color:red;"> Check if half day Leave</label>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="form-group">
+                                                                <div class="col-xs-12 col-sm-6" style="height: 75px;" id="LeaveCerificate">
+
+                                                                    <label><i class="fa fa-paperclip" style="color:black;"></i> Leave Application Form : <span style="color:#ff0000;">*</span></label>
+                                                                    @*<input type="file" class="filepond" name="filepond" id="FileUpload" multiple data-max-files="10">*@
+                                                                    <input type="file" class="filepond" name="FILEUPLOAD1" multiple id="FileUpload1">
+                                                                    
+                                                                    <input hidden="hidden" id="hdfFileUpload1" name="FileUpload1" class="hidden" />
+
+                                                                    @*</div>*@
+                                                                    @if (Model != null)
+                                                                    {
+                                                                        if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                                        {
+                                                                          
+                                                                            <ul class="Attachment">
+                                                                                @foreach (var item in Model.FileDetails)
+                                                                                {
+                                                                                    <li>
+                                                                                        <a class="title" href="~/EnquiryMaster/Download1/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                                        <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem">X</a>
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+                                                                         
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <p style="color:red;text-align:center;font-weight:bold;">There are no attachments !!!</p>
+                                                                    }
+                                                                   
+                                                                </div>
+
+
+                                                                <div class="col-xs-12 col-sm-6" style="height: 75px;" id="MedicalCerificate">
+
+                                                                    <label><i class="fa fa-paperclip" style="color:black;"></i> Medical Cerificate : <span style="color:#ff0000;">*</span></label>
+                                                                    @*<input type="file" class="filepond" name="filepond" id="FileUpload" multiple data-max-files="10">*@
+                                                                    <input type="file" class="filepond" name="FILEUPLOAD" multiple id="FileUpload">
+
+                                                                    <input hidden="hidden" id="hdfFileUpload" name="FileUpload" class="hidden" />
+                                                                    @*</div>*@
+                                                                    @if (Model != null)
+                                                                    {
+                                                                        if (Model.FileDetails1 != null && Model.FileDetails1.Count > 0)
+                                                                        {
+                                                                            @*<div class="row">
+                                                                                <div class="col-xs-6">
+                                                                                    <div class="form-group">*@
+                                                                            <ul class="Attachment">
+                                                                                @foreach (var item in Model.FileDetails1)
+                                                                                {
+                                                                                    <li>
+                                                                                        <a class="title" href="~/EnquiryMaster/Download1/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                                        <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem">X</a>
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+                                                                            @*</div>
+                                                                                    </div>
+                                                                                </div>*@
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <p style="color:red;text-align:center;font-weight:bold;">There are no attachments !!!</p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+
+
+
+
+
+                                                    </div>
+                                                    <br />
+                                                    <br />
+                                            
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-6" style="height: 100px;">
+                                                            <div class="form-group">
+
+                                                                <div class="form-group">
+                                                                    <label>Approver name</label>
+                                                                    @Html.TextBoxFor(model => model.ApproveName, htmlAttributes: new { placeholder = "Approve Name", @class = "form-control", autocomplete = "off" })
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-xs-12 col-sm-4">
+
+                                                            <div class="form-group">
+
+                                                                <button type="submit" class="btn btn-default insert-form-btn" id="btnic"> Save </button>
+
+
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </form>
+
+                                                @*</div>
+
+                                                    </div>*@
+
+
+                                                @using (Html.BeginForm("LeaveDetail", "Leave", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+                                                {
+
+
+
+
+
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <table id="example" class="display custom-table" cellspacing="0" width="100%">
+
+                                                            <thead>
+                                                                <tr>
+
+                                                                    <th>Edit /Delete</th>
+
+                                                                    <th>Date(s)</th>
+                                                                    <th>Leave Count</th>
+                                                                    <th> Leave Type</th>
+                                                                    <th> Auto PL</th>
+                                                                    <th>Are leaves due to safety incident </th>
+                                                                    <th>Status</th>
+                                                                    <th>Unique number</th>
+
+
+
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                @{
+                                                                    if (ViewData["Leave"] != null)
+                                                                    {
+                                                                        foreach (var item in ViewData["Leave"] as IEnumerable<TuvVision.Models.Leave>)
+                                                                        {
+                                                                            if (item.AutoPL == "")
+                                                                            {
+                                                                                <tr>
+
+                                                                                    <td>
+                                                                                        @*columns.AAUTO PLdd().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "AddLeave", new { @id = o.Id }, new { @class = "fa fa-pencil", title = "Edit" }));*@
+
+                                                                                        @*<a href="@Url.Action("LeaveApplicationUser", "Leave", new { id1 = item.UniversalID })" title="Edit" class="fa fa-pencil"></a>*@
+                                                                                        
+@if (item.Status == "Approved")
+{
+
+}
+else
+{
+    <a href="@Url.Action("DeleteUserLeave", "Leave", new {Id = item.Id })" class="delete" onclick="return confirm('Are you sure you wish to Delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+}
+
+                                                                                       
+
+                                                                                    </td>
+
+                                                                                    <td>@item.StartDate</td>
+                                                                                    <td>@item.LeaveCount</td>
+                                                                                    <td>@item.ActivityType</td>
+                                                                                    <td>@item.AutoPL</td>
+                                                                                    <td>@item.LTILeave</td>
+
+                                                                                    <td>@item.Status</td>
+                                                                                    <td>@item.Id</td>
+
+
+                                                                                </tr>
+
+                                                                            }
+                                                                            else
+                                                                            {
+
+
+                                                                                <tr>
+
+                                                                                    <td style="background-color:lightgreen">
+                                                                                        @*columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "AddLeave", new { @id = o.Id }, new { @class = "fa fa-pencil", title = "Edit" }));*@
+
+                                                                                        @*<a href="@Url.Action("LeaveApplicationUser", "Leave", new { id1 = item.UniversalID })" title="Edit" class="fa fa-pencil"></a>
+                                                                                            <a href="@Url.Action("DeleteUserLeave", "Leave", new { id1 = item.UniversalID })" class="delete" onclick="return confirm('Are you sure you wish to Delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>*@
+                                                                                    </td>
+
+                                                                                    <td style="background-color:lightgreen">@item.StartDate</td>
+                                                                                    <td style="background-color:lightgreen">@item.LeaveCount</td>
+                                                                                    <td style="background-color:lightgreen">@item.ActivityType</td>
+                                                                                    <td style="background-color:lightgreen">@item.AutoPL</td>
+
+                                                                                    <td style="background-color:lightgreen">@item.ChkLTILeave</td>
+
+                                                                                    <td style="background-color:lightgreen">@item.Status</td>
+                                                                                    <td style="background-color:lightgreen">@item.Id</td>
+
+
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                }
+
+                                                            </tbody>
+
+                                                        </table>
+
+                                                    </div>
+
+
+
+                                                                    }
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                                                    }
+@*...Calender Control...*@
+
+<script>
+$(document).ready(function() {
+debugger;
+     var x = $("#PT").val();
+
+
+       if(x == "Sick Leave")
+        {
+               $('#MedicalCerificate').show();
+
+        }
+else {
+    $('#MedicalCerificate').hide();
+    }
+});
+</script>
+@*<script>
+
+        $("#btnAddFl").click(function myfunction() {
+            debugger;
+            alert(1);
+            if (validateform() == false)
+            {
+                return false;
+            }
+            else {
+                $("#form1").submit();
+            }
+        });
+
+
+
+
+        //function validateform()
+        //{
+        //    debugger
+        //    var FromD = $("#StartDate").val();
+        //    var ToD = $("#EndDate").val();
+
+        //    var ActivityType = $("#PT").val();
+        //    var FirstName = $("#a").val();
+        //    var Reason = $("#Reason").val();
+
+
+
+        //    if ((FirstName == null || FirstName == "")) {
+        //        alert("Please Select Inspector Name");
+        //        $("#a").focus();
+        //        return false;
+        //    }
+
+        //    if ((FromD == null || FromD == "") || (ToD == null || ToD == "")) {
+        //        alert("Please Enter From Date and To Date");
+        //        $("#FromD").focus();
+        //        return false;
+        //    }
+
+        //    if ((ToD == null || ToD == "")) {
+        //        alert("Please Enter To Date ");
+        //        $("#ToD").focus();
+        //        return false;
+        //    }
+
+        //    if ((ActivityType == null || ActivityType == ""))
+        //    {
+        //        alert("Please Select Leave Type");
+        //        $("#ActivityType").focus();
+        //        return false;
+        //    }
+
+        //    if ((Reason == null || Reason == "")) {
+        //        alert("Please Enter Reason for Leave");
+        //        $("#Reason").focus();
+        //        return false;
+        //    }
+
+        //    var LeaveFile = $("[name='img_Banner']").val();
+        //  if (LeaveFile == "") {
+        //        alert("Please attach approved Leave Application Form");
+        //        $("#img_Banner").focus();
+        //        return false;
+        //    }
+
+
+
+
+        //    return true;
+
+
+        //}
+
+
+    </script>*@
+<script>
+
+
+    function onchangeDropdown() {
+        debugger;
+
+        var x = $("#PT").val();
+
+
+       if(x == "Sick Leave")
+        {
+               $('#MedicalCerificate').show();
+
+        }
+
+        if(x=="Weekly off" || x=="Holiday"){
+     
+       $('#LeaveCerificate').hide();
+            return false;
+        
+}
+ else {
+
+  $('#LeaveCerificate').show();
+            return false;
+}
+
+
+
+
+
+
+    }
+</script>
+
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+
+<script>
+    FilePond.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(document.querySelector('.filepond'));
+</script>
+
+<script>
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment", "Leave")'
+    });
+</script>
+
+<script>
+    //$("#btnic").click(function myfunction() {
+    $("#btnic").on('click', function (event) {
+
+        if (validateform() == false) {
+
+            return false;
+        }
+        else {
+            $("#formic").submit();
+        }
+    });
+
+
+
+
+    function validateform()
+    {
+        debugger;
+
+        var x = $("#PT").val();
+
+        var FromDate = $("#StartDate").val();
+        var Todate = $("#ToD").val();
+        var FileUpload1 = $("[name='FILEUPLOAD1']").val();
+        @*var ExistFileUpload1 = '@Model.FileDetails';*@
+        var FileUpload = $("[name='FILEUPLOAD']").val();
+      @*var ExistFileUpload = '@Model.FileDetails1';*@
+
+
+
+        var fromd1 = FromDate.substr(0, 2);
+        var fromM1 = FromDate.substr(3, 2);
+        var fromY1 = FromDate.substr(6, 4);
+        var FinalDate1 = fromM1 + "/" + fromd1 + "/" + fromY1;
+        var fromd2 = Todate.substr(0, 2);
+        var fromM2 = Todate.substr(3, 2);
+        var fromY2 = Todate.substr(6, 4);
+        var FinalDate2 = fromM2 + "/" + fromd2 + "/" + fromY2;
+
+
+
+        var date1 = new Date(FinalDate1);
+        var date2 = new Date(FinalDate2);
+
+        //var start = $("#firstDate").datepicker("getDate");
+        //var end = $("#secondDate").datepicker("getDate");
+        var diffTimes = date2.getTime() - date1.getTime();
+
+        var diffDays = diffTimes / (1000 * 3600 * 24);
+        var FinalDays = diffDays + 1;
+
+
+        if (FromDate == "" || FromDate == null)
+        {
+            alert('please select From Date');
+            $("#StartDate").focus()
+
+            return false;
+        }
+
+
+
+        if (Todate == "" || Todate == null)
+        {
+            alert('please select To Date');
+            $("#ToD").focus();
+            return false;
+        }
+
+
+        //if (FromDate > Todate) {
+        //    alert('please select Proper Date');
+        //    $("#ToD").focus();
+        //    return false;
+        //}
+
+        if (x == "Privilege Leave") {
+            if (FinalDays < 4) {
+                alert('Please select another type of leave for selected date(s). Refer Notes.');
+
+                return false;
+            }
+
+
+        }
+
+        if (x == "Casual Leave") {
+            if (FinalDays > 3) {
+                alert('Please select another type of leave for selected date(s). Refer Notes.');
+
+                return false;
+            }
+        }
+
+
+
+        if (x == "")
+        {
+            alert("Enter LeaveType !");
+            $("#PT").focus()
+            return false;
+        }
+
+
+
+        if (x == "Sick Leave") {
+
+            if (FinalDays > 5) {
+                if(FileUpload == "" || FileUpload == null)
+                    {
+                    alert('Please attached medical certificate.');
+                    return false;
+            }
+
+            }
+
+        }
+
+         if (x == "Weekly off") {
+
+            if (FinalDays > 2) {
+
+                    alert('Weekly off not allowed more than 2 continuos days.');
+                    return false;
+
+
+            }
+
+        }
+
+
+         if (x != "Weekly off" && x != "Holiday")
+         {
+             //if ((FileUpload1 == "" || FileUpload1 == null) && ( ExistFileUpload1 == "" || ExistFileUpload1==null))
+             if ((FileUpload1 == "" || FileUpload1 == null) )
+            {
+                alert("Please Attach Leave Application Form");
+                $("#PT").focus()
+                return false;
+            }
+        }
+
+
+        return true;
+
+    }
+</script>
+
+
+<script>
+
+    function Confirm(ID) {
+        alert(ID);
+
+        if (confirm('Are you sure you wish to delete this Record.')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteUserLeave")',
+                    type: 'POST',
+                    data: { ID: ID }
+                }).done(function (data) {
+                    if (data.Result == "OK")
+                    {
+                        window.location.href = '@Url.Action("LeaveApplicationUser", "Leave")'
+                        //$("#Lessiondata").load(location.href + " #Lessiondata");
+                        //k("#Lessiondata").addClass('col-xs-12');
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("There is something wrong. Please try again.");
+                })
+
+            }
+    }
+</script>
+
+

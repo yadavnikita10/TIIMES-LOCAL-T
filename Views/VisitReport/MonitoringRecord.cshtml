@@ -1,0 +1,512 @@
+﻿@model TuvVision.Models.VisitMonitoringRecord
+@{
+    ViewBag.Title = "MonitoringRecord";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+
+<script src="~/AllJsAndCss/jquery-1.10.2.js"></script>
+<script src="~/AllJsAndCss/jquery-ui.js"></script>
+<link href="~/AllJsAndCss/jquery-ui.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/ValidateTimeSheet.js"></script>
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<!--multiselect-->
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+
+
+<style>
+    .height-table {
+        height: auto;
+    }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
+</style>
+
+<script>
+
+
+
+    $(function () {
+        $(".SubSubVendorDate_of_PO").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".Date_of_PO").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+@*<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+    <script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+@Html.HiddenFor(m => m.Signature)
+@Html.HiddenFor(m => m.pk_call_id)
+@Html.HiddenFor(m => m.Pk_id)
+@Html.HiddenFor(m => m.PK_IVR_ID)
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <br />
+    <!--Start of header-->
+
+
+
+    <div class="container-fluid">
+        <div class="col-xs-12">
+            <div class="white-bg section-box-shadow">
+                <h3 class="form-page-title">Mfr. Monitoring Record (IBR)</h3>
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                        <input type="text" hidden value="@Model.pk_call_id" />
+                        <input type="text" hidden value="@Model.Pk_id" />
+                        <input type="text" hidden value="@Model.PK_IVR_ID" />
+                        <input type="text" id="VendorName" hidden value="@Model.VendorName" />
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a href="@Url.Action("VisitReportForm", "VisitReport", new { PK_Call_ID = Model.pk_call_id, PK_RM_ID = Model.Pk_id })"
+                                   class="btn btn-default news-btn" style="float:right;">
+                                    Go Back
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12" style="pointer-events:none;">
+                            <div class="form-group">
+                                <label><b>Name Of the Competent Person</b></label>
+                                @Html.TextBoxFor(model => model.Person, new { @placeholder = "", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Person, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                            <div class="form-group">
+                                <label><b>Name of the Inspecting Authority</b></label>
+                                @Html.TextBoxFor(model => model.inspectingAuthority, new { @placeholder = "", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.inspectingAuthority, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-8" style="pointer-events:none;">
+                            <div class="form-group">
+                                <label><b>Manufacturer Name</b> </label>
+                                @Html.TextBoxFor(model => model.VendorName_location, new { @placeholder = "", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.VendorName_location, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        @*<div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    <label><b>IVR Ref No</b> </label>
+                                    @Html.TextBoxFor(model => model.IVRRefNo, new { @placeholder = "", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.IVRRefNo, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>*@
+                        <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                            <div class="form-group">
+                                <label><b>Date Of Inspection</b> </label>
+                                @Html.TextBoxFor(model => model.DateofInspection, new { @placeholder = "", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.DateofInspection, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                            <div class="form-group">
+                                <label><b>Date of Issue</b> </label>
+                                @Html.TextBoxFor(model => model.IsComfirmation_Date, new { @placeholder = "", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.IsComfirmation_Date, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+
+
+
+                        <div class="row col-xs-12">
+                            <div class="col-xs-12 col-sm-4">
+                                <label><b>Shop Approved</b></label>
+                                <div>
+                                    @Html.RadioButtonFor(model => model.ShopApproved, true, new { @class = "ShopApproved" }) <span>Yes</span>
+                                    @Html.RadioButtonFor(model => model.ShopApproved, false, new { @class = "ShopApproved" }) <span>No</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-4" id="txtshowdiv">
+                                <label style="font-family:'TNG Pro'"><b>Shop Approved Number</b><span style="color:red;">*</span></label>
+                                @Html.TextBoxFor(model => model.ShopApproved_Number, new { @placeholder = "", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ShopApproved_Number, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                            <div class="form-group col-sm-4" id="txtshowdiv1">
+                                <label style="font-family:'TNG Pro'"><b>Validity Date</b><span style="color:red;">*</span></label>
+                                @Html.TextBoxFor(model => model.Validity, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control Date_of_PO", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.Validity, "", new { @class = "text-danger validation-msg" })
+
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="col-xs-12 col-sm-4">
+                                <label><b>BOILER OWNER</b></label>
+                                @Html.CheckBoxFor(model => model.BolierOwner, new { @class = "boiler-role BolierOwner" })
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <label><b>BOILER MANUFACTURER</b></label>
+                                @Html.CheckBoxFor(model => model.BoilerManufacturer, new { @class = "boiler-role BoilerManufacturer" })
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <label><b>BOILER COMPONENT MANUFACTURER</b></label>
+                                @Html.CheckBoxFor(model => model.BoilerComponentManufacturer, new { @class = "boiler-role BoilerComponentManufacturer" })
+                            </div>
+
+                        </div>
+                        <table class="table table-bordered" id="example">
+                            <thead>
+                                <tr>
+                                    <th>Section</th>
+                                    <th>Date Monitored</th>
+                                    <th style="width:0px;">Observation *(Satisfactory/<br />Unsatisfactory)</th>
+                                    <th>Comments</th>
+                                    <th>Monitored by (Name)</th>
+                                    <th>Signature</th>
+                                </tr>
+                            </thead>
+                            @{
+                                var rows = ViewData["MonitoringData"] as List<TuvVision.Models.VisitMonitoringRecord>;
+                            }
+                            <tbody>
+                                @foreach (var row in rows)
+                                {
+                                    <tr class="data-row" data-section="@row.Section">
+                                        <td style="width:0px;">@row.Section</td>
+
+                                        <td>
+                                            <input type="text" class="form-control date-cell" style="pointer-events:none;" value="@row.Date" />
+                                        </td>
+
+                                        <td sstyle="width:0px;">
+                                            <select class="form-control status-dropdown">
+                                                <option value="">Select</option>
+                                                <option value="Satisfactory" @(row.Status == "Satisfactory" ? "selected" : "")>Satisfactory</option>
+                                                <option value="Unsatisfactory" @(row.Status == "Unsatisfactory" ? "selected" : "")>Unsatisfactory</option>
+                                            </select>
+                                        </td>
+
+                                        <td>
+                                            <textarea class="form-control comment-box" rows="1" style="height: 190px;width: 470px;">@row.Comment</textarea>
+                                        </td>
+
+                                        <td>
+                                            <input type="text" style="border:none;" value="@(!string.IsNullOrEmpty(row.Person) ? row.Person : Model.Person)" class="form-control auditor-name" />
+                                        </td>
+
+                                        <td>
+                                            <img src="@Url.Content("~/Content/SIGN/" + Model.Signature)" alt="Signature" style="max-height: 35px;" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                        @if (Model.IsComfirmation == true)
+                        {
+                            <div class="col-xs-12" style="pointer-events:none;">
+                                <div class="form-group">
+                                    <label><b>Additional Internal Comment (Will not be printed on pdf)</b> </label>
+                                    @Html.TextBoxFor(model => model.Additionalcomment, new { @placeholder = "", @class = "form-control", @id = "Additionalcomment" })
+                                    @Html.ValidationMessageFor(model => model.Additionalcomment, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label><b>Additional Internal Comment (Will not be printed on pdf)</b> </label>
+                                    @Html.TextBoxFor(model => model.Additionalcomment, new { @placeholder = "", @class = "form-control", @id = "Additionalcomment" })
+                                    @Html.ValidationMessageFor(model => model.Additionalcomment, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+                        }                       <div class="col-xs-12">
+                            <hr class="custom-hr1 line">
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12" style="margin-left: -14px;" id="hidecomfirmation">
+                            <div class="form-group">
+
+                                @if (Model.IsComfirmation != true)
+                                {
+                                    @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+
+                                    <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                    <label style="margin-left: 21px;">
+
+                                        I hereby confirm that I have reviewed the content  and found it accurate. <br />
+
+                                        <label style="color:#E12F24;">
+                                            I authorize TIIMES to affix the  signature.
+                                        </label><br />
+                                        <label style="color:#001ED2;"> Note:</label><br />
+                                        <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
+                                    </label>
+                                                                        @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                }
+                                else
+                                {
+                                    <div style="pointer-events:none;">
+                                        @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+                                        <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                        <label style="margin-left: 21px;">
+
+                                            I hereby confirm that I have reviewed the content and found it accurate. <br />
+
+                                            <label style="color:#E12F24;">
+                                                I authorize TIIMES to affix the  signature.
+                                            </label><br />
+                                            <label style="color:#001ED2;"> Note:</label><br />
+                                            <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
+                                        </label>
+                                        @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div>
+                            @if (Model.IsComfirmation == true)
+                            {
+                                <button type="button" id="saveDataBtn" class="btn btn-default insert-form-btn" style="pointer-events:none;"> Save IVR</button>
+                            }
+                            else
+                            {
+                                <button type="button" id="saveDataBtn" class="btn btn-default insert-form-btn"> Save IVR</button>
+
+                            }                                                         @*<button type="submit" id="myButton" class="btn btn-default insert-form-btn">Export To Pdf</button>*@
+                            <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF", "VisitReport", new { pk_call_id = Model.pk_call_id,PK_RM_ID=Model.Pk_id })">
+                                Export to PDF
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<script>
+    function getCurrentDateFormatted() {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    }
+    $(document).ready(function () {
+        debugger;
+        var ShopApproved = $(".ShopApproved:checked").val();//$(".ShopApproved").is(':checked');
+        if (ShopApproved.toLowerCase() == "true") {
+            $("#txtshowdiv").show();
+            $("#txtshowdiv1").show();
+        }
+        else {
+            $("#txtshowdiv").hide();
+            $("#txtshowdiv1").hide();
+        }
+    });
+
+    $(document).ready(function () {
+        $('.status-dropdown, .comment-box').on('change keyup', function () {
+            var row = $(this).closest('tr');
+            var dateCell = row.find('.date-cell');
+            //if (dateCell.text().trim() === "") {
+            //    dateCell.text(getCurrentDateFormatted());
+            //}
+            //if (!dateCell.val()) {
+            //    dateCell.val(getCurrentDateFormatted());
+            //}
+            var statusVal = row.find('.status-dropdown').val();
+            var commentVal = row.find('.comment-box').val();
+
+            if ((statusVal && statusVal.trim() !== "") || (commentVal && commentVal.trim() !== "")) {
+                dateCell.val('@Model.DateofInspection');
+            } else {
+                dateCell.val('');
+            }
+        });
+    });
+
+
+    $("#saveDataBtn").click(function () {
+        debugger;
+        $("body").prepend('<div id="preloader"></div>');
+        const data = [];
+
+        $('#example tbody tr.data-row').each(function () {
+            const row = $(this);
+            const section = row.data('section');
+            const date = row.find('.date-cell').val();
+            const status = row.find('.status-dropdown').val();
+            const comment = row.find('.comment-box').val();
+            const auditor = row.find('.auditor-name').val();
+
+            data.push({
+                Section: section,
+                Date: date,
+                Status: status,
+                Comment: comment,
+                Person: auditor
+            });
+        });
+        var pk_call_id = $("#pk_call_id").val();
+        var Additionalcomment = $("#Additionalcomment").val();
+        var IsComfirmation = $('.checkBox_').is(':checked');
+        var PK_IVR_ID = $("#PK_IVR_ID").val();
+        var PK_RM_ID = $("#Pk_id").val();
+        var ShopApproved = $(".ShopApproved:checked").val();// $(".ShopApproved").is(':checked');
+        var ShopApproved_Number = $("#ShopApproved_Number").val();
+        var ValidityDate = $("#Validity").val();
+        var VendorName = $("#VendorName").val();
+        var BoilerComponentManufacturer = $('.BoilerComponentManufacturer').is(':checked');
+        var BolierOwner = $('.BolierOwner').is(':checked');
+        var BoilerManufacturer = $('.BoilerManufacturer').is(':checked');
+        var IsComfirmation = $('.checkBox_').is(':checked');
+        if (IsComfirmation) {
+            //if (ShopApproved==) {
+            if(ShopApproved.toLowerCase() == "true"){
+                if (ShopApproved_Number == null || ShopApproved_Number == "") {
+                    alert("Please enter Shop Approved Number.");
+                    $("#preloader").remove();
+                    return false;
+                }
+            }
+
+            if (ShopApproved.toLowerCase() =="true") {
+                if (ValidityDate == "") {
+                    alert("Please Select Validity Date");
+                    $("#preloader").remove();
+                    return false;
+                }
+
+            }
+            if (!BoilerComponentManufacturer && !BolierOwner && !BoilerManufacturer) {
+                alert("Please select at least one: Boiler Component Manufacturer, Boiler Owner, or Boiler Manufacturer.");
+                $("#preloader").remove();
+                return false;
+            }
+        }
+        $.ajax({
+            url: '@Url.Action("SaveMonitoringAjax", "VisitReport")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                data: data,
+                pk_call_id: pk_call_id,
+                Additionalcomment: Additionalcomment,
+                IsComfirmation: IsComfirmation,
+                PK_IVR_ID: PK_IVR_ID
+               , PK_RM_ID: PK_RM_ID
+                , ShopApproved: ShopApproved
+                ,ShopApproved_Number: ShopApproved_Number
+                , ValidityDate: ValidityDate
+                , VendorName: VendorName,
+                BoilerComponentManufacturer: BoilerComponentManufacturer,
+                BolierOwner: BolierOwner,
+                BoilerManufacturer: BoilerManufacturer
+            }),
+            success: function (response) {
+                alert(response.message || "Saved successfully!");
+                window.location.reload();
+                $("#preloader").remove();
+            },
+            error: function () {
+                alert("Error saving data.");
+                $("#preloader").remove();
+            }
+        });
+    });
+
+
+
+    $(".ShopApproved").change(function () {
+        debugger;
+        var ShopApproved = $(".ShopApproved:checked").val(); // This returns a string: "true" or "false"
+
+        if (ShopApproved === "True") {
+            $("#txtshowdiv").show();
+            $("#txtshowdiv1").show();
+        } else {
+            $("#txtshowdiv").hide();
+            $("#txtshowdiv1").hide();
+        }
+    });
+
+    $('.boiler-role').on('change', function () {
+        if (this.checked) {
+            $('.boiler-role').not(this).prop('checked', false);
+        }
+    });
+</script>

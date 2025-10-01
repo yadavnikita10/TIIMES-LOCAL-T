@@ -1,0 +1,238 @@
+﻿@model TuvVision.Models.MarketingPerformance
+@using NonFactors.Mvc.Grid;
+@{
+    //ViewBag.Title = "MarketingPerformance";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+}
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+<!-- Bootstrap -->
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+
+<!-- Start Other stylesheets -->
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+
+
+<style>
+    .table-container {
+        width: 1300px; /* Adjust the width as needed */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        overflow-y: hidden;
+    }
+
+    /* Set the size of the table */
+    .fixed-size-table {
+        width: 100%;
+        table-layout: fixed; /* Fixed table layout */
+    }
+
+        /* Style the table cells (optional) */
+        .fixed-size-table td {
+            border: 1px solid #00003C;
+            padding: 4px 0px;
+            font-size: 12px;
+        }
+</style>
+
+
+
+<script>
+
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+
+@using (Html.BeginForm("MarketingPerformance", "MarketingPerformance", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+    <div class="main-content3 xs-max-height">
+        <div class="container-fluid">
+
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <a href="@Url.Action("Welcome","Login")" class="logo">
+                            <img src="~/AllJsAndCss/images/logoN.png" alt="" style="max-width: 210%;margin-top: -59px;">
+                        </a>
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left:147px;padding-top:10px;font-family:'TNG Pro'; ">TUV India Private Limited <br />Performance - Marketing</h3>
+                    </div>
+
+                    <div class="col-lg-2" style="padding-right:20px;">
+                        <button type="button" class="btn btn-info" style="margin-top: 16px;margin-left: 37px;width: 150px;background-color: #104193;color:white;border-radius: 0;" onclick="Redirect()">Go Back</button>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="col-xs-12">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left"><b></b></h3>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>From Date:</label>
+                                @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>To Date:</label>
+                                @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-2">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-top: 22px;">Search</button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br />
+
+
+            </div>
+
+
+            <div class="form-group" style="padding-left:25px;">
+                <hr class="custom-hr1">
+            </div>
+
+
+            <div class="col-lg-12">
+                @*<div class="col-xs-12" style="overflow:auto;height:500px;width:100%">
+                    <table id="example" class="equal-height-table table-bordered table-striped" style="border: 1px solid black;font-size:13px; padding:0px; margin:5px;" width="100%">*@
+                <div class="col-xs-12 table-container">
+                    <table class="display dataTable no-footer fixed-size-table" id="example">
+                        <thead>
+                                <tr style="background-color: #104193; border:1px solid #00003C; font-size:13px; color: #ffffff; text-align:center;">
+                                
+                                    
+                                    <th>Name</th>
+                                    <th>Branch</th>
+                                    <th>Total Enquiries</th>
+                                    <th>Enquiries Created On Time</th>
+                                    <th>Percentage</th>
+                                    <th>Action Taken Against Enquiries</th>
+                                    <th>Percentage (%)</th>
+                                    <th>Total Quotations Generated</th>
+                                    <th>Action Taken Quotations</th>
+                                    <th>Percentage (%)</th>
+                                    <th>No Of Job Created </th>
+                                    <th>Job Created On Time </th>
+                                    <th>Percentage (%) </th>
+                                    @*<th>OverAll (%) </th>*@
+                                    
+                                    
+
+                            </tr>
+                        </thead>
+                        @{
+                            var items = ViewData["MarketingPer"] as IList<TuvVision.Models.MarketingPerformance>;
+
+
+                            if (items != null)
+                            {
+
+                                <tbody>
+                                    @foreach (var obj in ViewData["MarketingPer"] as IEnumerable<TuvVision.Models.MarketingPerformance>)
+                                    {
+                                        <tr>
+
+                                            
+                                            <td>@obj.Name </td>
+                                            <td>@obj.Branch  </td>
+                                            <td>@obj.TotalEnquiries  </td>
+                                            <td>@obj.EnquiriesOnTime  </td>
+                                            <td>@obj.OnTimePercentage  </td>
+                                            <td>@obj.QuotationsGeneratedAgainstEnquiries </td>
+                                            <td>@obj.QuotationsPercentage  </td>
+                                            <td>@obj.TotalQuotationsGenerated  </td>
+                                            <td>@obj.ActionTakenQuotations  </td>
+                                            <td>@obj.ActionTakenQuotationsPercentage  </td>
+                                            <td>@obj.JobCreated  </td>
+                                            <td>@obj.JobCreatedOnTime  </td>
+                                            <td>@obj.JobPercentage  </td>
+                                            @*<td>@obj.OverAllPercentage  </td>*@
+
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            }
+                        }
+
+                      
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+}
+<script>
+function Redirect() {
+        window.location.href = "@Url.Action("Welcome", "Login")"
+        }
+</script>

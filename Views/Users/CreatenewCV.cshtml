@@ -1,0 +1,2728 @@
+﻿
+@{
+    ViewBag.Title = "Createnew CV";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<title>Create CV</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" crossorigin="anonymous"></script>
+
+<script src="~/AllJsAndCss/moment-precise-range.js"></script>
+
+<!--  required libraries  -->
+
+<script type="text/javascript" src="../../Scripts/jquery-1.5.1.min.js"></script>
+
+<script src="https://cdn.ckeditor.com/4.6.0/full/ckeditor.js"></script>
+
+
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+<style>
+    .ui-widget-header {
+        background: #001ED2 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+
+    .ui-widget-header {
+        background: #001ED2 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+
+    .NoBorder {
+        border: none;
+        background-color: white;
+    }
+
+    .addCSS {
+        pointer-events: none;
+    }
+
+    .PersonalInfo {
+        width: 400px;
+    }
+
+    hr {
+        border: none;
+        border-top: 2px solid #000;
+    }
+
+    @@media print {
+        .pagebreak {
+            page-break-before: always;
+        }
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    table tr:hover {
+        background-color: #ddd;
+    }
+
+    table td, table th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #001ED2;
+        color: white;
+    }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
+
+    .col-md-12 {
+        width: 103%;
+    }
+     #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
+</style>
+
+
+@*@using (Html.BeginForm())
+    {
+
+        @Html.AntiForgeryToken()*@
+<div class="grey-bg-f3">
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-5">
+
+            <div class="col-xs-12 form-col">
+
+                <div class="col-xs-12">
+                    <div class="white-bg section-box-shadow">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                <div class="form-box">
+                                    <form>
+                                        <div id="personalionfo">
+
+                                            <div>
+                                                <label class="heading">
+                                                    <h4><b>Personal information:</b></h4>
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <input id="hdnuserid" type="text" value='@TempData["isEdit"]' hidden />
+                                                </div>
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    <div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>First Name:</label>
+                                                                <input type="text" id="FName" class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Middle Name:</label>
+                                                            <input type="text" id="MName" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Last Name:</label>
+                                                            <input type="text" id="LName" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Date of Birth</label>
+                                                            <input type="date" id="dob" class="form-control" onchange="CalclateYearMonth()"/>
+                                                        </div>
+                                                    </div>
+                                                    <div id="idLastName">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Age:</label>
+                                                                <input type="text" id="Age" class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Nationality:</label>
+                                                            <input type="text" id="Nationality" class="form-control" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Location:</label>
+                                                            <input type="text" id="empLocation" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div id="idLastName">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Gender:</label>
+                                                                <select id="Gender" name="Gender" class="form-control">
+                                                                    <option value="">---SELECT---</option>
+                                                                    <option value="Male">Male</option>
+                                                                    <option value="Female">Female</option>
+                                                                    <option value="Non-binary">Non-binary</option>
+                                                                    <option value="Transgender">Transgender</option>
+                                                                    <option value="Intersex">Intersex</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Maritial Status:</label>
+                                                            <select id="Marrigestatus" name="Marrigestatus" class="form-control">
+                                                                <option value="">---SELECT---</option>
+                                                                <option value="Single">Single</option>
+                                                                <option value="Married">Married</option>
+                                                                <option value="Divorced">Divorced</option>
+                                                                <option value="Widowed">Widowed</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        
+                                                        <div class="form-group">
+                                                            <input type="hidden" id="selectedLanguages" name="selectedLanguages"value="" />
+
+                                                            <label>Language Known:</label>
+                                                            <select id="LangAuditee" class="form-control form-multiselect-LangAuditee" multiple="multiple" name="LangAuditee" placeholder="Select Option">
+                                                                @*@{
+                                                                    foreach (var item in ViewData["LangNameItems"] as IEnumerable<SelectListItem>)
+                                                                    {
+
+                                                                        if (ViewData["ListBranchchecked"] != null)
+                                                                        {
+                                                                            if (Convert.ToString(ViewData["ListLangchecked"]).Split(',').Contains(item.Value.ToString()))
+                                                                            {
+                                                                                <option selected="selected" value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                        }
+                                                                    }
+                                                                }*@
+                                                            </select>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div id="idLastName">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>TUV India DOJ:</label>
+                                                                <input type="date" id="doj" class="form-control" onchange="onchangejoindate()" />
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Exp. with TUV India:</label>
+                                                            <input type="text" id="tuvexp" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Total Experience:</label>
+                                                            <input type="text" id="totalexp" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div id="idLastName">
+                                                     <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Upload Profile Photo:</label>
+                                                                @*<input id="profilephoto" type="file" src="/Content/SIGN/NoImage.jpg" class="form-control" />*@
+                                                                <input id="profilephoto" accept="image/*" class="filepond form-control" name="filepond" type="file" src=""  />
+                                                                <img id="blah" src="#" alt="your image" />
+
+                                                            </div>   
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Agency Name:</label>
+                                                            <input type="text" id="agency" class="form-control" />
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="DomesticCurrency" style="align:center">
+                                            <div class="form-page-title" style="width:100%;"> <label><u>Educational Qualification</u></label> </div>
+                                            @*<table id="DTestTable" cellspacing="0" cellpadding="5" border="1" style="width: 110%;font-family:'TNG Pro';font-size:14px;">*@
+                                            <table id="DTestTable" cellpadding="1" cellspacing="1" border="1" width="100%">
+                                                <thead id="DTestTablehead">
+                                                    <tr style="background-color:lightgray;color:black">
+                                                        <td  name ="Course" width="10%" style="text-align: left">
+                                                            Course
+                                                        </td>
+                                                        <td  name="Degree" width="20%" style="text-align: left">
+                                                            Degree
+                                                        </td>
+                                                        <td name="Field of study" width="20%" style="text-align: left">
+                                                            Field of study
+                                                        </td>
+                                                        <td name="Year of Passing" width="10%" style="text-align: left">
+                                                            Year of Passing
+                                                        </td>
+                                                        <td name="Institution/University" width="15%" style="text-align: left">
+                                                            Institution/University
+                                                        </td>
+
+                                                        <td name="Last Year % / CGPA" width="10%" style="text-align: left">
+                                                            Last Year % / CGPA
+                                                        </td>
+                                                        <td  name="Aggregate % / CGPA" width="10%" style="text-align: left">
+                                                            Aggregate % / CGPA
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </thead>
+
+
+                                                <tbody id="DTestTablebody">
+                                                    <tr class="trEduQualification" style="background-color:#f0f0f0">
+                                                        <td style="text-align:left">
+                                                            <select class="form-control CCourse" id="ddlCourse" name="Course" onchange="return GetCourceName(this);">
+                                                                <option selected="selected" value="">---SELECT---</option>
+                                                                <option value="S.S.C">S.S.C</option>
+                                                                <option value="H.S.C">H.S.C</option>
+                                                                <option value="Diploma">Diploma</option>
+                                                                <option value="Graduate">Graduate</option>
+                                                                <option value="PGD">PGD</option>
+                                                                <option value="PG">PG</option>
+                                                            </select>
+                                                        </td>
+                                                        <td style="text-align:left">
+                                                            <select class="form-control CDegree" id="ddlDegree" name="Degree" onchange="GetBranchName(this);" style="display:none;">
+                                                                <option selected="selected" value="">---SELECT---</option>
+                                                                <option value="BEng">Bachelor of Engineering</option>
+                                                                <option value="BTech">Bachelor of Technology</option>
+                                                                <option value="AMIE">AMIE</option>
+                                                                <option value="BA">Bachelor of Arts</option>
+                                                                <option value="BSc">Bachelor of Science</option>
+                                                                <option value="BCom">Bachelor of Commerce</option>
+                                                                <option value="BBA">BBA</option>
+                                                                <option value="BMS">BMS</option>
+                                                                <option value="BBS">BBS</option>
+                                                            </select>
+                                                            <select class="form-control CDiploma" id="ddlDiploma" name="Degree" onchange="GetBranchName(this);" style="display:none;">
+                                                                <option selected="selected" value="">---SELECT---</option>
+                                                                <option value="Tech">Technical</option>
+                                                                <option value="NTech">Non Technical</option>
+                                                            </select>
+                                                            <select class="form-control CPGD" id="ddlPGD" name="lstEducationQualification[0].Degree" onchange="GetBranchName(this);" style="display:none;">
+                                                                <option value="">---SELECT---</option>
+                                                            </select>
+                                                            <select class="form-control CPG" id="ddlPG" name="lstEducationQualification[0].Degree" onchange="GetBranchName(this);" style="display:none;">
+                                                                <option value="">---SELECT---</option>
+                                                                <option value="ME">Master of Engineering</option>
+                                                                <option value="MTech">MTech</option>
+                                                                <option value="MBA">MBA</option>
+                                                            </select>
+
+
+                                                        </td>
+                                                        <td style="text-align:left">
+
+                                                            <select class="form-control CDBranch" id="DBranch" name="MajorFieldOfStudy">
+                                                                <option value="">---Select---</option>
+                                                            </select>
+                                                            <span class="field-validation-valid text-danger validation-msg" data-valmsg-for="lstEducationQualification[0].MajorFieldOfStudy" data-valmsg-replace="true"></span>
+                                                        </td>
+                                                        <td style="text-align:left">
+
+
+                                                            <select class="form-control CYearOfPassing" id="ddlYearPassing" name="YearOfPassing">
+                                                                <option value="">--Select Year--</option>
+                                                                <option value="1970">1970</option>
+                                                                <option value="1971">1971</option>
+                                                                <option value="1972">1972</option>
+                                                                <option value="1973">1973</option>
+                                                                <option value="1974">1974</option>
+                                                                <option value="1975">1975</option>
+                                                                <option value="1976">1976</option>
+                                                                <option value="1977">1977</option>
+                                                                <option value="1978">1978</option>
+                                                                <option value="1979">1979</option>
+                                                                <option value="1980">1980</option>
+                                                                <option value="1981">1981</option>
+                                                                <option value="1982">1982</option>
+                                                                <option value="1983">1983</option>
+                                                                <option value="1984">1984</option>
+                                                                <option value="1985">1985</option>
+                                                                <option value="1986">1986</option>
+                                                                <option value="1987">1987</option>
+                                                                <option value="1988">1988</option>
+                                                                <option value="1989">1989</option>
+                                                                <option value="1990">1990</option>
+                                                                <option value="1991">1991</option>
+                                                                <option value="1992">1992</option>
+                                                                <option value="1993">1993</option>
+                                                                <option value="1994">1994</option>
+                                                                <option value="1995">1995</option>
+                                                                <option value="1996">1996</option>
+                                                                <option value="1997">1997</option>
+                                                                <option value="1998">1998</option>
+                                                                <option value="1999">1999</option>
+                                                                <option value="2000">2000</option>
+                                                                <option value="2001">2001</option>
+                                                                <option value="2002">2002</option>
+                                                                <option value="2003">2003</option>
+                                                                <option value="2004">2004</option>
+                                                                <option value="2005">2005</option>
+                                                                <option value="2006">2006</option>
+                                                                <option value="2007">2007</option>
+                                                                <option value="2008">2008</option>
+                                                                <option value="2009">2009</option>
+                                                                <option value="2010">2010</option>
+                                                                <option value="2011">2011</option>
+                                                                <option value="2012">2012</option>
+                                                                <option value="2013">2013</option>
+                                                                <option value="2014">2014</option>
+                                                                <option value="2015">2015</option>
+                                                                <option value="2016">2016</option>
+                                                                <option value="2017">2017</option>
+                                                                <option value="2018">2018</option>
+                                                                <option value="2019">2019</option>
+                                                                <option value="2020">2020</option>
+                                                                <option value="2021">2021</option>
+                                                                <option value="2022">2022</option>
+                                                                <option value="2023">2023</option>
+                                                                <option value="2024">2024</option>
+                                                            </select>
+                                                            <span class="field-validation-valid text-danger validation-msg" data-valmsg-for="YearOfPassing" data-valmsg-replace="true"></span>
+                                                        </td>
+                                                        <td style="text-align:left">
+                                                            <input class="form-control CUniversity" id="UniversityName" name="UniversityName" placeholder="University" type="text" value="">
+                                                            <span class="field-validation-valid text-danger validation-msg" data-valmsg-for="lstEducationQualification[0].UniversityName" data-valmsg-replace="true"></span>
+                                                        </td>
+                                                        <td style="text-align:left">
+                                                            <input class="form-control CLastYearCGPA" id="LastYearCGPA" name="LastYearCGPA" onkeypress="return isNumberKey(event);" onkeyup="return AcceptSelNumber(this);" placeholder="LastYearCGPA" type="text" value="">
+                                                            <span class="field-validation-valid text-danger validation-msg" data-valmsg-for="lstEducationQualification[0].LastYearCGPA" data-valmsg-replace="true"></span>
+                                                        </td>
+                                                        <td style="text-align:left">
+                                                            <input class="form-control CAggregateCGPA" id="AggregateCGPA" name="AggregateCGPA" onkeypress="return isNumberKey(event);" onkeyup="return AcceptSelNumber(this);" placeholder="AggregateCGPA" type="text" value="">
+                                                            <span class="field-validation-valid text-danger validation-msg" data-valmsg-for="lstEducationQualification[0].AggregateCGPA" data-valmsg-replace="true"></span>
+                                                        </td>
+                                                        <td>
+
+                                                            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div><br/>
+                                        <div id="DivProffCert" style='text-align:center'>
+                                            <div class="form-page-title" style="width:100%;">
+                                                <label><u>Professional Qualification</u></label>
+                                            </div>
+
+                                            <table id="DTestTablePFC" cellpadding="1" cellspacing="1" border="1" width="100%">
+                                                <thead id="DTestTablePFChead">
+
+                                                    <tr style="background-color:lightgray;color:black">
+                                                        <td name="Certification" width="25%" style="text-align: left">
+                                                            Certification
+                                                        </td>
+                                                        <td name="Certification No." width="25%" style="text-align: left">
+                                                            Certification No.
+                                                        </td>
+                                                        <td name="Issue Date" width="20%" style="text-align: left">
+                                                            Issue Date
+                                                        </td>
+                                                        <td name="Valid Till" width="20%" style="text-align: left">
+                                                            Valid Till
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody id="DTestTablePFCbody">
+
+                                                    <tr class="trProfCertificates" style="background-color:#f0f0f0">
+                                                        <td style="text-align:left">
+                                                            <input type="text" id="CertName" placeholder="Certificate Name" class="form-control form-control-custom CCertName" />
+                                                            <span id="CertNameValidationMsg" class="text-danger validation-msg"></span>
+                                                        </td>
+                                                        <td style="text-align:left">
+                                                            <input type="text" id="CertNo" placeholder="Certificate No" class="form-control CCertNo" />
+                                                            <span id="CertNoValidationMsg" class="text-danger validation-msg"></span>
+                                                        </td>
+                                                        <td style="text-align:left">
+                                                            <input type="text" id="CertIssueDate" placeholder="Certificate Issue Date" class="form-control CCertIssueDate" />
+                                                            <span id="CertIssueDateValidationMsg" class="text-danger validation-msg"></span>
+                                                        </td>
+                                                        <td style="text-align:left">
+                                                            <input type="text" id="CertValidTill" placeholder="Certificate Valid Till" class="form-control CCertValidTill" />
+                                                            <span id="CertValidTillValidationMsg" class="text-danger validation-msg"></span>
+                                                        </td>
+                                                        <td style="text-align:left">
+                                                            <button type="button" id="btnAddPFC" class="btn btn-xs btn-primary classAddPFC">Add</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table><br />
+                                        </div>
+                                        <div>
+                                            @*<input type="checkbox" id="ChkInspection" name="ChkInspection" value="Yes" style="margin-right: 10px;">*@
+                                            <label class="heading">
+                                                <h4><b>Core Competency in Inspection/Assessment of</b></h4>
+                                            </label>
+                                            @*<input type="button" value="Fetch Data from TCE" onclick="RefetchInspectionData()" class="btn btn-primary" style="margin-left: 10px;">*@
+                                        </div>
+                                        <div class="col-md-12 hrafter">
+                                            <textarea id="Inspection" class="form-control RemoveBorder" style="width: 100%;height: 80px;resize: none;margin-left: -15px;" onkeypress="isAlphaNumeric(event)"></textarea>
+                                        </div>  
+                                        <hr style="margin-top: 95px;">                                    
+                                            <label class="heading">
+                                                <h4><b>Summary of Expertise:</b></h4>
+                                            </label><div class="col-md-12" style="margin-left: -13px;">
+                                                <textarea id="ExpertiseSummary" class="form-control RemoveBorder" style="width: 100%;height: 80px;resize: none;margin-left: -15px;"></textarea>
+                                            </div>
+                                        </div><hr style="margin-top: 290px;">
+                                        <label class="heading">
+                                            <h4><b>Work Experience:</b></h4>
+                                        </label>
+                                        <div class="col-md-12 row DownloadHide">
+                                            <div class="col-md-4">
+                                                <label>Period From</label>
+                                                <input  type="date"  id="txtPeriodFrom" msg="Period" class="form-control Emp datepicker" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Period To</label>
+                                                <input  type="date" id="txtPeriodTo" msg="Period" class="form-control datepicker" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Employer Name</label>
+                                                <input id="txtEmployerName" msg="Employer Name" class="form-control Emp" />
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-12 row DownloadHide" style="margin-bottom:20px">
+
+                                            <div class="col-md-4">
+                                                <label>Location</label>
+                                                <input id="txtLocation" msg="Location" class="form-control Emp" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Designation</label>
+                                                <input id="txtDesignation" msg="Designation" class="form-control Emp" />
+                                            </div>
+                                            <div class="col-md-11">
+                                                <label>Responsibilities</label>
+
+                                                <textarea id="txtResponsibilities" msg="Responsibilities" class="form-control" style="height:200px; resize:none"></textarea>
+
+                                            </div>
+                                            <div class="col-md-1">
+
+                                                <input type="button" class="btn btn-primary" style="margin-top: 150px" id="AddEmployment" onclick="AddEmploymentDetails()" value="Add" />
+                                                <input type="button" class="btn btn-primary" style="visibility: hidden;" id="UpdateEmployment" onclick="UpdateEmploymentDetails()" value="Update" />
+                                            </div>
+                                        </div>
+                                        <table id="EmpTable" cellpadding="1" cellspacing="1" border="1" width="100%">
+                                            <thead id="EmpHead">
+                                                <tr>
+                                                    <th>Period</th>
+                                                    <th>Employer Name</th>
+                                                    <th>Location</th>
+                                                    <th>Designation</th>
+                                                    <th hidden>Responsibilities</th>
+                                                    <th>Edit</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="EmpBody"></tbody>
+                                        </table>
+                                        @*<hr id="EmpHR" style="margin-top: 150px;">*@
+                                        <hr id="EmpHR" style="margin-top: 30px;">
+
+                                        <label class="heading">
+                                            <h4><b>Major Achievement:</b></h4>
+                                        </label>
+                                        <div class="col-md-12 row DownloadHide">
+                                            <div class="col-md-3">
+                                                <label>Achievement Date</label>
+                                                <input id="txtAchievementDate" msg="Achievement Date" class="form-control Achievement datepicker" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Description</label>
+                                                <input id="txtDescription" msg="Achievement Description" class="form-control Achievement" />
+                                            </div>
+
+                                            <div class="col-md-1">
+
+                                                <input type="button" class="btn btn-primary" style="margin-top: 25px" id="AddAchievement" onclick="AddAchievementDetails()" value="Add" />
+                                                <input type="button" class="btn btn-primary" style="visibility: hidden;margin-top: -50px;" id="UpdateAchievement" onclick="UpdateAchievementDetails()" value="Update" />
+                                            </div>
+                                        </div>
+                                        <div>
+
+                                            <table id="AchievementTable" cellpadding="1" cellspacing="1" border="1" width="100%">
+                                                <thead id="AchievementHead">
+                                                    <tr>
+                                                        <th>Achievement Date</th>
+                                                        <th>Description</th>
+                                                        <th>Edit</th>
+                                                        <th>Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="AchievementBody"></tbody>
+                                            </table>
+                                        </div>
+                                        <hr id="AchieveHR">
+                                        <label class="heading">
+                                            <h4><b>Major Projects/Assignment Handled Details:</b></h4>
+                                        </label>
+                                        <div class="col-md-12 row DownloadHide">
+                                            <div class="col-md-3">
+                                                <label>Item Details<span style="color:white">Activity and Item Ispected</span></label>
+                                                <textarea id="txtActivityInspected" msg="Item Details" style="width: 210px;height: 200px;" class="form-control Project"></textarea>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Code / Standard / Specification / MOC</label>
+                                                <textarea id="txtCodes" msg="Code / Standard / Spec. / MOC" style="width: 210px;height: 200px;" class="form-control Project"></textarea>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Customer / End Customer / Project Name</label>
+                                                <textarea id="txtProject" msg="Customer / End Customer / Project Name" style="width: 210px;height: 200px;" class="form-control Project"></textarea>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>Manufacturer Name and Location</label>
+                                                <textarea id="txtEndUser" msg="Manufacturer Name and location" style="width: 135px;height: 200px;" class="form-control Project"></textarea>
+                                            </div>
+
+                                            <div class="col-md-1">
+
+                                                <input type="button" class="btn btn-primary" style="margin-top: 130px" id="AddProject" onclick="AddProjectDetails()" value="Add" />
+                                                <input type="button" class="btn btn-primary" style="visibility: hidden;margin-top: -50px;" id="UpdateProject" onclick="UpdateProjectDetails()" value="Update" />
+                                            </div>
+                                        </div>
+                                <br/>
+                                        <table id="ProjectTable" cellpadding="1" cellspacing="1" border="1" width="100%">
+                                            <thead id="ProjectHead">
+                                                <tr>
+                                                    <th name="ActivityItemInspected">Item Details</th>
+                                                    <th name="Codes">Code / Standard / Spec. / MOC</th>
+                                                    <th name="Project">Customer / End Customer / Project Name</th>
+                                                    <th name="EndUserName">Manufacturer Name and Location</th>
+                                                    <th name="Edit">Edit</th>
+                                                    <th name="Delete">Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="ProjectBody">
+                                                
+                                            </tbody>
+                                        </table>
+                                        <hr id="ProjectHR" style="margin-top: 30px;">
+                                        <label class="heading">
+                                            <h4><b>Skill Enhancement Training attended (Self - Arranged):</b></h4>
+                                        </label>
+                                        <br/>
+                                        <div class="col-md-12 row DownloadHide">
+
+                                            <div class="col-md-3">
+                                                <label>Date</label>
+                                                <input id="txtTrainingDate" msg="Training Date" class="form-control training datepicker" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Hours</label>
+                                                <input type="number" id="txtTrainingHours" msg="Training Hours" min="0" class="form-control training" />
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label>Topic</label>
+                                                <input id="txtTrainingTopic" msg="Training Topic" class="form-control training" />
+                                            </div>
+                                            <div class="col-md-1">
+
+                                                <input type="button" class="btn btn-primary" style="margin-top: 25px" id="AddTraining" onclick="AddTrainingDetails()" value="Add" />
+                                                <input type="button" class="btn btn-primary" style="visibility: hidden;margin-top: -50px;" id="UpdateTraining" onclick="UpdateTrainingDetails()" value="Update" />
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div style="margin-top:100px" class="RemoveMargin pagebreak">
+
+                                            <table id="TrainingTable" cellpadding="1" cellspacing="1" border="1" width="100%">
+                                                <thead id="TrainingHead">
+                                                    <tr>
+
+                                                        <th style="width: 134px;">Date</th>
+                                                        <th style="width: 81px;">Hours</th>
+                                                        <th>Topic</th>
+                                                        <th style="width: 82px;">Edit</th>
+                                                        <th style="width: 82px;">Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="TrainingBody">
+                                                    
+                                                    @*<tr id="nodata"><td colspan="12">No Data Found</td></tr>*@
+                                                </tbody>
+                                            </table>
+                                            <table id="TUVTrainingTable" cellpadding="1" cellspacing="1" border="1" width="100%" hidden="">
+                                                <thead id="TUVTrainingHead">
+                                                    <tr>
+
+                                                        <th>Date</th>
+                                                        <th>Hours</th>
+                                                        <th>Topic</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="TUVTrainingBody">
+                                                    <tr><td colspan="12">No Data Found</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <hr id="TrainingHR" style="margin-top: 15px;">
+
+                                        <div class="col-md-12 row col-md-offset-4 DownloadHide">
+                                            <input type="button" value="Update CV" class="btn btn-primary insert-form-btn" onclick="CreateAndDownloadCV()">
+                                            <input type="button" value="Download CV" class="btn btn-primary insert-form-btn" onclick="downloadcv()">
+                                        </div>
+                                <div hidden>
+                                    <input type="text" id="hdnupdatedon" hidden/>
+                                    <input type="text" id="downloadon" hidden />
+                                </div>
+
+
+            </form>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#blah").hide();
+        BindValidDate();
+        BindIssueDate();
+        LanguageDropdown();
+        CKEDITOR.replace('ExpertiseSummary', {
+            toolbarGroups: [
+		{
+		    "name": "paragraph",
+		    "groups": ["list"]
+		},
+            {
+                "name": "basicstyles",
+                "groups": ["basicstyles"]
+            }],
+            removeButtons: 'Strike,Subscript,Superscript,Anchor,Styles,NumberedList,Specialchar,Source,Smiley,SpecialChar,PageBreak,Iframe,Blockquote,CreateDiv,Flash,FontSize ',//,Font'
+            enterMode: CKEDITOR.ENTER_BR,
+            removePlugins: 'magicline',
+            font_names: 'Calibri (Body)',
+            font_defaultLabel: 'Calibri (Body)',
+            fontSize_defaultLabel: '16'
+        });
+
+    });
+    CKEDITOR.replace('txtResponsibilities', {
+        toolbarGroups: [
+    {
+        "name": "paragraph",
+        "groups": ["list"]
+    },
+        {
+            "name": "basicstyles",
+            "groups": ["basicstyles"]
+        }],
+        removeButtons: 'Strike,Subscript,Superscript,Anchor,Styles,NumberedList,Specialchar,Source,Smiley,SpecialChar,PageBreak,Iframe,Blockquote,CreateDiv,Flash,FontSize ',//,Font'
+        enterMode: CKEDITOR.ENTER_BR,
+        removePlugins: 'magicline',
+        font_names: 'Calibri (Body)',
+        font_defaultLabel: 'Calibri (Body)',
+        fontSize_defaultLabel: '16'
+    });
+
+   
+</script>
+<script>
+    $(document).on('click', '#btnAddPFC', function() 
+        {
+       
+        var newRow = document.createElement('tr');
+        newRow.className = "trProfCertificates";
+        newRow.style.background = '#f0f0f0';
+
+        newRow.innerHTML = `
+            <td style="text-align:left">
+                <input type="text" placeholder="Certificate Name" class="form-control form-control-custom CCertName" />
+                <span class="text-danger validation-msg"></span>
+            </td>
+            <td style="text-align:left">
+                <input type="text" placeholder="Certificate No" class="form-control CCertNo" />
+                <span class="text-danger validation-msg"></span>
+            </td>
+            <td style="text-align:left">
+                <input type="text" placeholder="Certificate Issue Date" class="form-control CCertIssueDate" />
+                <span class="text-danger validation-msg"></span>
+            </td>
+            <td style="text-align:left">
+                <input type="text" placeholder="Certificate Valid Till" class="form-control CCertValidTill" />
+                <span class="text-danger validation-msg"></span>
+            </td>
+            <td style="text-align:left">
+                <button type="button" class="deleteContact btn btn btn-danger btn-xs">Remove</button>
+            </td>
+        `;
+
+        document.getElementById('DTestTablePFC').appendChild(newRow);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('deleteContact')) {
+            var rowToRemove = e.target.closest('.trProfCertificates');
+            rowToRemove.remove();
+        }
+    });
+
+
+</script>
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<script>
+    function BindIssueDate() {
+
+        $(".CCertIssueDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    }
+    $(function () {
+        $(".CCertIssueDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+
+    function BindValidDate() {
+        $(".CCertValidTill").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    }
+    $(function () {
+        $(".CCertValidTill").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+
+
+    $(function () {
+        $(".OrgChangeDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+
+
+
+    $(function () {
+        $(".dateofbirths").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+    function LanguageDropdown() {
+       
+           
+            $('#LangAuditee').empty();
+    
+            
+            var langItems = @Html.Raw(Json.Encode(ViewData["LangNameItems"]));
+    
+            
+            $.each(langItems, function(index, item) {
+                var option = $('<option></option>');
+                option.val(item.Value).text(item.Text);
+        
+                //var inputId = 'select_lang' + item.Value;
+        
+                
+                //var label = $('<label></label>').attr('for', inputId).text(item.Text);
+                //var input = $('<input>').attr('type', 'checkbox').attr('id', inputId).val(item.Value);
+
+                
+                //label.append(input);
+
+                //// Append the label tag inside the list item
+                //var listItem = $('<li></li>').append(label);
+
+             
+                @*if (@Html.Raw(Json.Encode(ViewData["ListLangchecked"])).split(',').includes(item.Value.toString())) {
+                    option.prop('selected', true);
+                }*@
+        
+               $('#LangAuditee').append(option);
+            });
+    
+            
+        
+
+    }
+    
+
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        $('.form-multiselect-LangAuditee').multiselect({
+            enableFiltering: true,
+            includeSelectAllOption: true,
+            enableCaseInsensitiveFiltering: true
+        });
+        $(function () {
+            $('#LangAuditee').multiselect({
+                includeSelectAllOption: true
+            });
+
+        });
+        var DTRowCount = 1;
+        var isedit = $('#hdnuserid').val();
+        
+        var currentYear = new Date().getFullYear();
+        var maxYears = 30;
+        for (var i = 0; i < maxYears; i++) {
+            var year = currentYear - i;
+            if (year >= currentYear - maxYears) {
+                $('#YearOfPassing').append($('<option>', {
+                    value: year,
+                    text: year
+                }));
+            } else {
+                break; // Stop adding years once we reach the limit
+            }
+        }
+        $(document).on("click", ".classAdd", function () {
+
+            // Increment the row count
+            DTRowCount += 1;
+
+            // Create the HTML for the new row
+            var contactdiv = '<tr class="trEduQualification" style="background-color:#f0f0f0">' +
+                '<td>' +
+                ' <select name="Course" class="form-control CCourse" id="ddlCourse' + DTRowCount + '" onchange="return GetCourceName(this);"> <option value="">Select</option> <option value="S.S.C">S.S.C</option> <option value="H.S.C">H.S.C</option> <option value="Diploma">Diploma</option><option value="Graduate">Graduate</option> <option value="PGD">PGD</option><option value="PG">PG</option></select></td>' +
+                '<td style="text-align:left">' +
+                '<select name="Degree" class="form-control CDegree" id="ddlDegree' + DTRowCount + '" onchange="GetBranchName(this);" style="display:block;"> <option value="">Select</option> <option Value="BEng">Bachelor of Engineering</option><option Value="BTech">Bachelor of Technology</option><option value="AMIE">AMIE</option> <option value="BA">Bachelor of Arts</option><option value="BSc">Bachelor of Science</option> <option value="BCom">Bachelor of Commerce</option><option value="BBA">BBA</option><option value="BMS">BMS</option><option value="BBS">BBS</option></select><select name="Diploma" class="form-control CDiploma" id="ddlDiploma' + DTRowCount + '" onchange="GetBranchName(this);" style="display:none;"><option value="">---Select---</option> <option Value="Tech">Technical</option><option Value="NTech">Non Technical</option></select><select name="PGD" class="form-control CPGD" id="ddlPGD' + DTRowCount + '" onchange="GetBranchName(this);" style="display:none;"><option value="">---Select---</option> </select><select name="PG" class="form-control CPG" id="ddlPG' + DTRowCount + '" onchange="GetBranchName(this);" style="display:none;"><option value="">---Select---</option> <option value="ME">Master of Engineering</option><option value="MTech">MTech</option><option value="MBA">MBA</option></select></td>' +
+                '<td style="text-align:left"><select name="DBranch" class="form-control CDBranch" id="DBranch' + DTRowCount + '" > <option value="">---Select---</option></td>' +
+                '<td style="text-align:left"><select name="YearOfPassing" class="form-control CYearOfPassing" id="YearOfPassing' + DTRowCount + '" ><option value="">---Select---</option>' +
+                    generateYearOptions() +
+                '</select></td>' +
+                '<td style="text-align:left"><input name="University" class="form-control CUniversity" id="University' + DTRowCount + '"/></td>' +
+                '<td style="text-align:left"><input name="LastYearCGPA" onkeypress="return isNumberKey(event);" onkeyup="return AcceptSelNumber(this);" class="form-control CLastYearCGPA" id="ILastYearCGPA' + DTRowCount + '"/></td>' +
+                '<td style="text-align:left"><input type="number" name="AggregateCGPA" onkeypress="return isNumberKey(event);" onkeyup="return AcceptSelNumber(this);" class="form-control CAggregateCGPA" onkeyup="c()" Id="ICAggregateCGPA' + DTRowCount + '" /></td>' +
+                '<td style="text-align:left"><button type="button" class="deleteContact btn btn btn-danger btn-xs">Remove</button></td>' +
+                '</tr>';
+
+            // Append the new row to the table
+            $('#DTestTable').append(contactdiv);
+        });
+
+        $(document).on("click", ".deleteContact", function () {
+            $(this).closest("tr").remove();
+        });
+
+        
+        function generateYearOptions() {
+            var currentYear = new Date().getFullYear();
+            var yearOptions = '';
+            for (var year = 1970; year <= currentYear; year++) {
+                yearOptions += '<option value="' + year + '">' + year + '</option>';
+            }
+            return yearOptions;
+        }
+
+        function BindYearOfPassing() {
+            $(".CYearOfPassing").datepicker({
+                dateFormat: 'yy',//check change
+                viewMode: "years",
+                changeMonth: false,
+                changeYear: true,
+                yearRange: "-100:+50"
+
+                //dateFormat: "yyyy",
+                //viewMode: "years",
+                //minViewMode: "years",
+                //autoclose: true
+
+            });
+        }
+        if (isedit != "") {
+            EditUser(isedit);
+        }
+    });
+    //AgeCalculator = CalclateYearMonth()
+    //$('#Age').val(AgeCalculator);
+    
+
+
+</script>
+<script>
+    function GetCourceName(obj) {
+        var strCourse = $(obj).val();
+        var row = $(obj).closest("tr");
+        var objBranch = row.find('.CDBranch');
+
+        if (strCourse == 'Diploma') {
+            var objdiploma = row.find('.CDiploma');
+            var objdeg = row.find('.CDegree');
+            var objPGD = row.find('.CPGD');
+            var objPG = row.find('.CPG');
+            $(objdeg).css('display', 'none')
+            $(objdiploma).css('display', 'block')
+            $(objPGD).css('display', 'none')
+            $(objPG).css('display', 'none')
+            return false;
+        }
+        else if (strCourse == 'PGD') {
+            var objdiploma = row.find('.CDiploma');
+            var objdeg = row.find('.CDegree');
+            var objPGD = row.find('.CPGD');
+            var objPG = row.find('.CPG');
+            $(objdeg).css('display', 'none')
+            $(objdiploma).css('display', 'none')
+            $(objPGD).css('display', 'block')
+            $(objPG).css('display', 'none')
+
+            $(objPGD).prop('disabled', true);
+            $(objPGD).css("background-color", "Lightgrey");
+            $(objBranch).prop('disabled', true);
+            $(objBranch).css("background-color", "Lightgrey");
+            return false;
+        }
+        else if (strCourse == 'PG') {
+            var objdiploma = row.find('.CDiploma');
+            var objdeg = row.find('.CDegree');
+            var objPGD = row.find('.CPGD');
+            var objPG = row.find('.CPG');
+            $(objdeg).css('display', 'none')
+            $(objdiploma).css('display', 'none')
+            $(objPGD).css('display', 'none')
+            $(objPG).css('display', 'block')
+        }
+        else {
+
+            var objdiploma = row.find('.CDiploma');
+            var objdeg = row.find('.CDegree');
+            var objPGD = row.find('.CPGD');
+            var objPG = row.find('.CPG');
+
+            $(objdeg).css('display', 'block')
+            $(objdiploma).css('display', 'none')
+            $(objPGD).css('display', 'none')
+            $(objPG).css('display', 'none')
+
+            if (strCourse == 'S.S.C' || strCourse == 'H.S.C') {
+
+                $(objdeg).prop('disabled', true);
+                $(objdeg).css("background-color", "Lightgrey");
+
+                $(objBranch).prop('disabled', true);
+                $(objBranch).css("background-color", "Lightgrey");
+            }
+            else {
+
+                $(objdeg).prop('disabled', false);
+                $(objdeg).css("background-color", "white");
+                $(objBranch).prop('disabled', false);
+                $(objBranch).css("background-color", "white");
+            }
+            return false;
+
+
+        }
+
+
+
+
+    }
+
+    function GetBranchName(obj) {
+        var strdegree = $(obj).val();
+        var row = $(obj).closest("tr");
+        var objBranch = row.find('.CDBranch');
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetDegreeName", "Users")',
+            dataType: 'json',
+            Async: false,
+            data: JSON.stringify({ "strDegree": strdegree }),
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+
+            success: function (res) {
+                $(objBranch).empty();
+                for (var i = 0; i < res.length; i++) {
+                    var opt = new Option(res[i].BranchName, res[i].DBrId);
+                    $(objBranch).append(opt);
+
+                }
+
+
+            }
+
+        });
+    }
+
+</script>
+@*<script>
+    var SummaryExtension = false;
+    var fileExtension = ["pdf", "PDF", "xls", "xlsx", "doc", "png", "jpg", "JPEG"];
+    $("#profilephoto").change(function (e) {
+        debugger;
+        //var files = $("#profilephoto input[type='file']").get(0).files;
+        var fileInput = document.getElementById('profilephoto');
+        var files = fileInput.files[0];
+        var MaxSize = 0;
+            var fileSize = files.size;
+            if (fileSize > 4 * 1024 * 1024) {
+                MaxSize = 1;
+                $('.filepond--file-action-button.filepond--action-remove-item').eq(0).trigger('click');
+                SummaryExtension = true;
+
+            }
+        
+        if (MaxSize == 0) {
+
+
+           
+            if (SummaryExtension == true) {
+                var fileData = new FormData();
+               
+                    fileData.append("profilephoto input[type='file']", files);
+                    
+                
+                var xhr = new XMLHttpRequest();
+                var link = '@Url.Action("ProfileImagesave", "Users")';
+                xhr.open('POST', link, 'true');
+                xhr.send(fileData);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var data = xhr.responseText;
+                        data = data.replace(/"/g, "");
+                        //$("#Attachment").val(data);
+                    }
+                }
+                //})
+            }
+        }
+        else {
+            //$('.filepond--file-action-button.filepond--action-remove-item').eq(0).trigger('click');
+        }
+
+    })
+</script>*@
+<script>
+    var SummaryExtension = false;
+    var fileExtension = ["png","PNG","jpg", "JPEG"];
+    
+    $("#profilephoto").change(function (e) {
+        debugger;
+        $("#blah").show();
+        var files = e.target.files;
+        var MaxSize = 0;
+
+        // Check file size
+        var fileSize = files[0].size;
+        if (fileSize > 4 * 1024 * 1024) {
+            MaxSize = 1;
+            $('.filepond--file-action-button.filepond--action-remove-item').eq(0).trigger('click');
+            return;
+        }
+
+        // Check file extension
+        var singleExtension = files[0].name.split('.').pop();
+        var Condition = fileExtension.includes(singleExtension);
+        if (!Condition) {
+            alert("Only formats are allowed: " + fileExtension.join(','));
+            return;
+        }
+
+        // If size and extension are valid, proceed with file upload
+        if (!MaxSize && Condition) {
+            var fileData = new FormData();
+            fileData.append("profilephoto", files[0]);
+
+            var xhr = new XMLHttpRequest();
+            var link = '@Url.Action("ProfileImagesave", "Users")';
+            xhr.open('POST', link, 'true');
+            xhr.send(fileData);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var data = xhr.responseText;
+                    data = data.replace(/"/g, "");
+                    //$("#Attachment").val(data);
+                }
+            }
+        }
+    });
+</script>
+
+
+<script>
+    function CreateAndDownloadCV() {
+        $("body").prepend('<div id="preloader"></div>');
+        debugger
+        var FirstName = $("#FName").val();
+        var MiddleName = $("#MName").val();
+        var LastName = $("#LName").val();
+        var DOB = $("#dob").val();
+        var Age = $('#Age').val();
+        var Nationality = 'Indian';
+        var Location = $('#empLocation').val();
+        var Gender = $("#Gender").val();
+        var Marital_Status = $('#Marrigestatus').val();
+        var selectedValues = getSelectedValues();
+        console.log(selectedValues);
+        var doj = $('#doj').val();
+        var TUVEXP = $('#tuvexp').val();
+        var TotalExp = $('#totalexp').val();
+        var fileInput = document.getElementById('profilephoto');
+        var file = fileInput.files[0];
+        var Profileimage  = file.name;
+        var image;
+        if (Profileimage !== ""){
+            image = Profileimage;
+
+        }
+        else{
+                    image = "NoImage.jpg";
+
+        }
+        var Agency = $('#agency').val();
+        var ExpertiseSummary = CKEDITOR.instances['ExpertiseSummary'].getData();
+        if (ExpertiseSummary == '') {
+            $('#preloader').remove();
+            alert('Please Add Summary of Expertise');
+            return false;
+        }
+        var coreCometency = $("#Inspection").val();
+        var data = {
+            FirstName: FirstName,
+            MiddleName: MiddleName,
+            LastName: LastName,
+            DOB: DOB,
+            Age: Age,
+            Marital_Status: Marital_Status,
+            Languages:selectedValues ,
+            Dateofjoining: doj,
+            TUVTotalyearofExperience: TUVEXP,
+            TotalyearofExprience: TotalExp,
+            Image: image,
+            ImageData:file,
+            Agency: Agency,
+            Gender: Gender,
+            ExpertiseSummary: ExpertiseSummary,
+            coreCometency:coreCometency,
+            Location: Location,
+            Nationality:Nationality,
+            EmploymentDetails: [],
+            ProjectDetails: [],
+            TrainingDetails: [],
+            AchievementDetails: [],
+            Professionalqualification: [],
+            Education: []
+        }
+
+
+        var Professionalqualification = [];
+        $('#DTestTablePFCbody tr').each(function (rowIndex, row) {
+            debugger;
+            var trData = {};
+            $(row).find('td').each(function (cellIndex, cell) {
+                var textboxValue = $(cell).find('input[type="text"]').val();
+                var cellValue = (textboxValue !== undefined && textboxValue !== "Add") ? textboxValue.trim() : $(cell).text().trim();
+                // Push cellValue into trData object
+                //trData['Field' + (cellIndex + 1)] = cellValue;
+                if (cellValue !== '') {
+                    switch (cellIndex) {
+                        case 0:
+                            trData['certification'] = cellValue;
+                            break;
+                        case 1:
+                            trData['certificationNO'] = cellValue;
+                            break;
+                        case 2:
+                            trData['issuedate'] = cellValue;
+                            break;
+                        case 3:
+                            trData['validtill'] = cellValue;
+                            break;
+                }
+                }
+            });
+            // Only push trData if it contains non-empty values
+            if (Object.keys(trData).length > 0) {
+                data.Professionalqualification.push(trData);
+            }
+        });
+
+
+        var Education = [];
+        $('.trEduQualification').each(function () {
+            var trD = {};
+
+            var Course = $(this).find('.CCourse').val();
+            if (Course == 'Diploma') {
+                Degree = $(this).find('.CDiploma').val();
+            }
+            else if (Course == 'PGD') {
+                Degree = $(this).find('.CPGD').val();
+            }
+            else if (Course == 'PG') {
+                Degree = $(this).find('.CPG').val();
+            }
+            else {
+                Degree = $(this).find('.CDegree').val();
+            }
+            var MajorFieldOfStudy = $(this).find('.CDBranch').val();
+            var University = $(this).find('.CUniversity').val();
+            var LastYearCGPA = $(this).find('.CLastYearCGPA').val();
+            var AggregateCGPA = $(this).find('.CAggregateCGPA').val();
+            var YearOfPassing = $(this).find('.CYearOfPassing').val();
+
+            if (Course != '') {
+                trD['course'] = Course;
+                trD['degree'] = Degree;
+                trD['fos'] = MajorFieldOfStudy;
+                trD['university'] = University;
+                trD['lastyearcgpa'] = LastYearCGPA;
+                trD['aggregate'] = AggregateCGPA;
+                trD['year'] = YearOfPassing;
+
+                if (Course == 'Diploma' || Course == 'Graduate') {
+                    a = "2";
+                }
+
+                if (LastYearCGPA == "" || LastYearCGPA == "0") {
+                    a = "3"
+                }
+                data.Education.push(trD);
+            }
+        });
+
+
+         var EmploymentDetails = [];
+         $('#EmpBody tr').each(function (rowIndex, row) {
+                var trD = {};
+                $(row).find('td').each(function (cellIndex, cell) {
+                    if (cellIndex < $(row).find('td').length - 2) {
+                        var value = $(cell).html().replaceAll(/&lt;/g, '<').replaceAll(/&gt;/g, '>').replaceAll(/&amp;/g, '&').replaceAll(/&nbsp;/g, '\n').trim();
+
+                        if (value !== '') {
+                            debugger;
+                            switch (cellIndex) {
+                                case 0:
+                                    trD['periodfrom'] = value;
+                                    break;
+                                case 1:
+                                    trD['employeername'] = value;
+                                    break;
+                                case 2:
+                                    trD['location'] = value;
+                                    break;
+                                case 3:
+                                    trD['designation'] = value;
+                                    break;
+                                case 4:
+                                    trD['Responsibilities'] = value;
+                                    break;
+
+                            }
+                        }
+                    }
+                    //rowData.push($(cell).html().replaceAll(/&lt;/g, '<').replaceAll(/&gt;/g, '>').replaceAll(/&amp;/g, '&').replaceAll(/&nbsp;/g, '\n').trim());
+                });
+                if (Object.keys(trD).length > 0) {
+                    data.EmploymentDetails.push(trD);
+                }
+                //EmploymentDetails.push(rowData);
+            });
+
+
+         var ProjectDetails = [];
+         $('#ProjectBody tr').each(function (rowIndex, row) {
+                var trD = {};
+
+                $(row).find('td').each(function (cellIndex, cell) {
+                    var value = $(cell).text().trim();
+                    if (value !== "") {
+                        switch (cellIndex) {
+                            case 0:
+                                trD['ItemDetails'] = value;
+                                break;
+                            case 1:
+                                trD['code'] = value;
+                                break;
+                            case 2:
+                                trD['Endcustomer'] = value;
+                                break;
+                            case 3:
+                                trD['manufacturername'] = value;
+                                break;
+                        }
+                    }
+                });
+
+                if (Object.keys(trD).length > 0) {
+                    data.ProjectDetails.push(trD);
+                }
+            });
+
+
+          var TrainingDetails = [];
+          $('#TrainingBody tr').each(function (rowIndex, row) {
+                var trD = {};
+                $(row).find('td').each(function (cellIndex, cell) {
+                    var value = $(cell).text().trim();
+                    // Exclude empty string values
+                    if (value !== "") {
+                        switch(cellIndex)
+                        {
+                            case 0:
+                                trD['date'] = value;
+                                break;
+                            case 1:
+                                trD['hours'] = value;
+                                break;
+                            case 2:
+                                trD['topic'] = value;
+                                break;
+                        }
+
+                    }
+                });
+                data.TrainingDetails.push(trD);
+            });
+
+
+           var AchievementDetails = [];
+           $('#AchievementBody tr').each(function (rowIndex, row) {
+                var rowData = {};
+                $(row).find('td').each(function (cellIndex, cell) {
+                     var value = $(cell).text().trim();
+                     if (value !== "") {
+                         switch (cellIndex) {
+                             case 0:
+                                 rowData['archievementdate'] = value;
+                                 break;
+                             case 1:
+                                 rowData['description'] = value;
+                                 break;
+                         }
+        }
+                });
+                if (Object.keys(rowData).length > 0) {
+                   data.AchievementDetails.push(rowData);
+                }
+            });
+
+            console.log(data);
+
+        $.ajax({
+            url: '/Users/InsertExtCV',
+            method: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            datatype: 'json',
+            data: JSON.stringify({ externalcv: data }),
+            async: false,
+            success: function (response) {
+                if (response == true) {
+                    $('#preloader').remove();
+                    alert('Data Saved Successfully');
+                    var id = $('#hdnuserid').val();
+                    if (id == ""){
+                    var url = '@Url.Action("getcvgrid", "Users")'
+                    window.location.href = url;
+                    }
+                    else{
+                        $('#hdnuserid').val("");
+                    }
+
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#preloader').remove();
+                alert('Something went wrong');
+            }
+        });
+
+    }
+
+    function getSelectedValues() {
+        var selectedValue = '';
+        var checkboxes = document.querySelectorAll('.multiselect-container input[type="checkbox"]');
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                if (selectedValue !== '') {
+                    selectedValue += ', '; // Add comma if it's not the first selected value
+                }
+                selectedValue += checkbox.value;
+            }
+        });
+
+        return selectedValue;
+    }
+
+
+
+    function UpdateAchievementDetails() {
+        var Achieveid = localStorage.getItem('Achieveid');
+        var AchievementDate = $('#txtAchievementDate').val();
+        var Description = $('#txtDescription').val();
+
+        var AchieveValidation = true;
+
+        $('.Achievement').each(function (i, obj) {
+            if (obj.value == '' || obj.value == null || obj.value == '0') {
+                var id = obj.attributes.msg.value;
+                AchieveValidation = false;
+                alert('Please Add ' + id);
+                return false;
+
+            }
+        });
+
+        if (AchieveValidation) {
+
+            var row = $("#" + Achieveid);
+
+            row.find('td:eq(0)').text(AchievementDate);
+            row.find('td:eq(1)').text(Description);
+
+
+            $('.Achievement').val('');
+            $('#AddAchievement').css('visibility', 'visible');
+            $('#UpdateAchievement').css('visibility', 'hidden');
+
+            rearrangeRows();
+        }
+
+    }
+
+
+    function downloadcv() {
+        $("body").prepend('<div id="preloader"></div>');
+        var FirstName = $("#FName").val();
+        var MiddleName = $("#MName").val();
+        var LastName = $("#LName").val();
+        var DOB = $("#dob").val();
+        var Age = $('#Age').val();
+        var Nationality = 'Indian';
+        var Location = $('#empLocation').val();
+        var Gender = $("#Gender").val();
+        var Marital_Status = $('#Marrigestatus').val();
+        var selectedValues = $(".multiselect-selected-text").text();
+        var doj = $('#doj').val();
+        var TUVEXP = $('#tuvexp').val();
+        var TotalExp = $('#totalexp').val();       
+        debugger;
+        var ImageName = $("#blah").attr("src");
+        var Image = ImageName.split('/').pop();
+        var Agency = $('#agency').val();
+        var ExpertiseSummary = CKEDITOR.instances['ExpertiseSummary'].getData();
+        if (ExpertiseSummary == '') {
+            alert('Please Add Summary of Expertise');
+            return false;
+        }
+        var coreCometency = $("#Inspection").val();
+        var updatedon = $("#hdnupdatedon").val();
+        var dateString = updatedon;
+        var parts = dateString.split('-');
+        var date = new Date(parts[2], parts[1] - 1, parts[0]);
+        var day = date.getDate().toString().padStart(2, '0'); // Add leading zero if needed
+        var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Add leading zero if needed (Note: Months are zero-based)
+        var year = date.getFullYear();
+        var formattedDate = day + '-' + month + '-' + year;
+
+
+       
+        var data = {
+            FirstName: FirstName,
+            MiddleName: MiddleName,
+            LastName: LastName,
+            DOB: DOB,
+            Age: Age,
+            Marital_Status: Marital_Status,
+            Languages:selectedValues ,
+            Dateofjoining: doj,
+            TUVTotalyearofExperience: TUVEXP,
+            TotalyearofExprience: TotalExp,
+            Image: Image,
+            Agency: Agency,
+            Gender: Gender,
+            ExpertiseSummary: ExpertiseSummary,
+            coreCometency:coreCometency,
+            Location: Location,
+            Nationality:Nationality,
+            updatedon:updatedon,
+            EmploymentDetails: [],
+            ProjectDetails: [],
+            TrainingDetails: [],
+            AchievementDetails: [],
+            Professionalqualification: [],
+            Education: [],
+            updatedon:date
+        }
+        var Professionalqualification = [];
+        $('#DTestTablePFCbody tr').each(function (rowIndex, row) {
+            debugger;
+            var trData = {};
+            $(row).find('td').each(function (cellIndex, cell) {
+                var textboxValue = $(cell).find('input[type="text"]').val();
+                var cellValue = (textboxValue !== undefined && textboxValue !== "Add") ? textboxValue.trim() : $(cell).text().trim();
+                // Push cellValue into trData object
+                //trData['Field' + (cellIndex + 1)] = cellValue;
+                if (cellValue !== '') {
+                    switch (cellIndex) {
+                        case 0:
+                            trData['certification'] = cellValue;
+                            break;
+                        case 1:
+                            trData['certificationNO'] = cellValue;
+                            break;
+                        case 2:
+                            trData['issuedate'] = cellValue;
+                            break;
+                        case 3:
+                            trData['validtill'] = cellValue;
+                            break;
+                    }
+                }
+            });
+            // Only push trData if it contains non-empty values
+            if (Object.keys(trData).length > 0) {
+                data.Professionalqualification.push(trData);
+            }
+        });
+
+
+        var Education = [];
+        $('.trEduQualification').each(function () {
+            var trD = {};
+
+            var Course = $(this).find('.CCourse').val();
+            if (Course == 'Diploma') {
+                Degree = $(this).find('.CDiploma').val();
+            }
+            else if (Course == 'PGD') {
+                Degree = $(this).find('.CPGD').val();
+            }
+            else if (Course == 'PG') {
+                Degree = $(this).find('.CPG').val();
+            }
+            else {
+                Degree = $(this).find('.CDegree').val();
+            }
+            var MajorFieldOfStudy = $(this).find('.CDBranch').val();
+            var University = $(this).find('.CUniversity').val();
+            var LastYearCGPA = $(this).find('.CLastYearCGPA').val();
+            var AggregateCGPA = $(this).find('.CAggregateCGPA').val();
+            var YearOfPassing = $(this).find('.CYearOfPassing').val();
+
+            if (Course != '') {
+                trD['course'] = Course;
+                trD['degree'] = Degree;
+                trD['fos'] = MajorFieldOfStudy;
+                trD['university'] = University;
+                trD['lastyearcgpa'] = LastYearCGPA;
+                trD['aggregate'] = AggregateCGPA;
+                trD['year'] = YearOfPassing;
+
+                if (Course == 'Diploma' || Course == 'Graduate') {
+                    a = "2";
+                }
+
+                if (LastYearCGPA == "" || LastYearCGPA == "0") {
+                    a = "3"
+                }
+                data.Education.push(trD);
+            }
+        });
+
+
+        var EmploymentDetails = [];
+        $('#EmpBody tr').each(function (rowIndex, row) {
+            var trD = {};
+            $(row).find('td').each(function (cellIndex, cell) {
+                if (cellIndex < $(row).find('td').length - 2) {
+                    var value = $(cell).html().replaceAll(/&lt;/g, '<').replaceAll(/&gt;/g, '>').replaceAll(/&amp;/g, '&').replaceAll(/&nbsp;/g, '\n').trim();
+
+                    if (value !== '') {
+                        debugger;
+                        switch (cellIndex) {
+                            case 0:
+                                trD['periodfrom'] = value;
+                                break;
+                            case 1:
+                                trD['employeername'] = value;
+                                break;
+                            case 2:
+                                trD['location'] = value;
+                                break;
+                            case 3:
+                                trD['designation'] = value;
+                                break;
+                            case 4:
+                                trD['Responsibilities'] = value;
+                                break;
+
+                        }
+                    }
+                }
+                //rowData.push($(cell).html().replaceAll(/&lt;/g, '<').replaceAll(/&gt;/g, '>').replaceAll(/&amp;/g, '&').replaceAll(/&nbsp;/g, '\n').trim());
+            });
+            if (Object.keys(trD).length > 0) {
+                data.EmploymentDetails.push(trD);
+            }
+            //EmploymentDetails.push(rowData);
+        });
+
+
+        var ProjectDetails = [];
+        $('#ProjectBody tr').each(function (rowIndex, row) {
+            var trD = {};
+
+            $(row).find('td').each(function (cellIndex, cell) {
+                var value = $(cell).text().trim();
+                if (value !== "") {
+                    switch (cellIndex) {
+                        case 0:
+                            trD['ItemDetails'] = value;
+                            break;
+                        case 1:
+                            trD['code'] = value;
+                            break;
+                        case 2:
+                            trD['Endcustomer'] = value;
+                            break;
+                        case 3:
+                            trD['manufacturername'] = value;
+                            break;
+                    }
+                }
+            });
+
+            if (Object.keys(trD).length > 0) {
+                data.ProjectDetails.push(trD);
+            }
+        });
+
+
+        var TrainingDetails = [];
+        $('#TrainingBody tr').each(function (rowIndex, row) {
+            var trD = {};
+            $(row).find('td').each(function (cellIndex, cell) {
+                var value = $(cell).text().trim();
+                // Exclude empty string values
+                if (value !== "") {
+                    switch(cellIndex)
+                    {
+                        case 0:
+                            trD['date'] = value;
+                            break;
+                        case 1:
+                            trD['hours'] = value;
+                            break;
+                        case 2:
+                            trD['topic'] = value;
+                            break;
+                    }
+
+                }
+            });
+            data.TrainingDetails.push(trD);
+        });
+
+
+        var AchievementDetails = [];
+        $('#AchievementBody tr').each(function (rowIndex, row) {
+            var rowData = {};
+            $(row).find('td').each(function (cellIndex, cell) {
+                var value = $(cell).text().trim();
+                if (value !== "") {
+                    switch (cellIndex) {
+                        case 0:
+                            rowData['archievementdate'] = value;
+                            break;
+                        case 1:
+                            rowData['description'] = value;
+                            break;
+                    }
+                }
+            });
+            if (Object.keys(rowData).length > 0) {
+                data.AchievementDetails.push(rowData);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("DownloadExtCv", "Users")',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ externalcv: data }),
+            dataType: "json",
+            success: function (response) {
+                debugger
+                $("#preloader").remove();
+                if (response == true) {
+                        location.href = '@Url.Action("CV","Users")';
+                    $("#preloader").remove();
+                    
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#preloader").remove();
+                alert('Something went wrong');
+            }
+        });
+
+    }
+    function AcceptSelNumber(obj) {
+
+        if ($(obj).val() > 100) {
+
+            $(obj).val('');
+            return false;
+            //    $(obj).val('100');
+        }
+    }
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+
+        if (String.fromCharCode(charCode).match(/[^0-9]/g))
+
+            return false;
+
+
+
+
+        return true;
+    }
+    function isAlphaNumeric(e) {
+        var keyCode = e.keyCode || e.which;
+
+        var regex = /^[A-Za-z0-9,\s]+$/;
+
+        var isValid = regex.test(String.fromCharCode(keyCode));
+        if (!isValid) {
+            e.preventDefault();
+            alert("Only Alphabets and Numbers allowed.");
+        }
+
+        return isValid;
+    };
+
+    function AddEmploymentDetails() {
+        debugger
+        var Period = $('#txtPeriodFrom').val() + " to " + $('#txtPeriodTo').val();
+        var EmployerName = $('#txtEmployerName').val();
+        var Location = $('#txtLocation').val();
+        var Designation = $('#txtDesignation').val();
+        var Responsibilities = CKEDITOR.instances['txtResponsibilities'].getData(); //$('#txtResponsibilities').val();
+
+        var EmpValidation = true;
+        $('#txtEmployerName').removeAttr('disabled');
+        $('#txtLocation').removeAttr('disabled');
+
+        $('.Emp').each(function (i, obj) {
+            if (obj.value == '' || obj.value == null || obj.value == '0') {
+                var id = obj.attributes.msg.value;
+                EmpValidation = false;
+                alert('Please Add ' + id);
+                return false;
+
+            }
+        });
+        if (Responsibilities == "") {
+            alert('Please Add Responsibilities');
+            return false;
+        }
+
+        if (EmpValidation) {
+            if (!isDateRangeValid(Period)) {
+                alert("The new date range overlaps with existing records.");
+                return;
+            }
+            count = $('#EmpBody tr').length + 1;
+            $('#EmpBody').append('<tr id="Emp' + count + '"><td>' + Period + '</td><td>' + EmployerName + '</td><td>' + Location + '</td><td>' + Designation
+                + '</td><td hidden class="hidden-column">' + Responsibilities + '</td><td><input type="button" class="btn btn-primary" value="Edit" onclick="EditEmployment(\'Emp' + count
+                + '\')" /></td><td><input type="button" class="btn btn-primary" value="Delete" onclick="DeleteEmployment(\'Emp' + count + '\')" /></td></tr>')
+            $('#EmpTable').removeAttr('hidden');
+            $('#EmpHR').css('margin-top', '15px');
+            $('.Emp').val('');
+            CKEDITOR.instances['txtResponsibilities'].setData('')
+            $('#txtPeriodTo').val('');
+
+            rearrangeRows();
+        }
+    }
+    function isDateRangeValid(newDateRange) {
+        debugger;
+        var EditedRow = localStorage.getItem('Empid');
+        var table = document.getElementById("EmpTable").getElementsByTagName('tbody')[0];
+        for (var i = 0; i < table.rows.length; i++) {
+            if (table.rows[i].id != EditedRow) {
+                var existingDateRange = table.rows[i].cells[0].innerText;
+                var startDateExisting = getDateFromString(existingDateRange.split(' to ')[0]);
+                var endDateExisting;
+                if (existingDateRange.split(' to ')[1] == 'Till Date') {
+                    var d = new Date();
+
+                    //var month = d.getMonth() + 1;
+                    //var day = d.getDate();
+
+                    //endDateExisting = d.getFullYear() + '/' + (month < 10 ? '0' : '') + month + '/' + (day < 10 ? '0' : '') + day;
+                    endDateExisting = d;
+                }
+                else {
+                    endDateExisting = getDateFromString(existingDateRange.split(' to ')[1]);
+                }
+
+                var startDateNew = getDateFromString(newDateRange.split(' to ')[0]);
+                var endDateNew = getDateFromString(newDateRange.split(' to ')[1]);
+
+                if (startDateNew >= startDateExisting && startDateNew <= endDateExisting) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    function rearrangeRows() {
+        var table = document.getElementById("EmpTable").getElementsByTagName('tbody')[0];
+        var rows = table.rows;
+        var switching = true;
+        while (switching) {
+            switching = false;
+            for (var i = 1; i < rows.length - 1; i++) {
+                var shouldSwitch = false;
+                var date1 = getDateFromString(rows[i].cells[0].innerText).getTime();
+                var date2 = getDateFromString(rows[i + 1].cells[0].innerText).getTime();
+                if (date1 < date2) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+        UpdateEmpID();
+    }
+    function UpdateEmpID() {
+        $('#EmpBody').each(function () {
+            var trElements = $(this).find('tr');
+            trElements.each(function (index) {
+                var DeleteTD = $(this).find('td:last');
+                var EditTD = $(this).find('td:nth-last-child(2)');
+                if (index != 0) {
+                    var DeleteBtn = $('<input type="button" class="btn btn-primary" value="Delete" onclick="DeleteEmployment(\'Emp' + (index + 1) + '\')">');
+                    DeleteTD.html('');
+                    DeleteTD.append(DeleteBtn);
+                }
+                var EditBtn = $('<input type="button" class="btn btn-primary" value="Edit" onclick="EditEmployment(\'Emp' + (index + 1) + '\')">');
+
+
+
+                EditTD.html('');
+                EditTD.append(EditBtn);
+                $(this).attr('id', 'Emp' + (index + 1));
+            });
+        });
+    }
+
+    function AddAchievementDetails() {
+        debugger
+        var AchievementDate = $('#txtAchievementDate').val();
+        var Description = $('#txtDescription').val();
+
+        var AchieveValidation = true;
+
+        $('.Achievement').each(function (i, obj) {
+            if (obj.value == '' || obj.value == null || obj.value == '0') {
+                var id = obj.attributes.msg.value;
+                AchieveValidation = false;
+                alert('Please Add ' + id);
+                return false;
+
+            }
+        });
+
+        if (AchieveValidation) {
+
+            count = $('#AchievementBody tr').length + 1;
+            $('#AchievementBody').append('<tr id="Achieve' + count + '"><td>'
+             + AchievementDate + '</td><td>' + Description +
+             '</td><td><input type="button" class="btn btn-primary" value="Edit" onclick="EditAchievement(\'Achieve' + count + '\')" /></td>'
+             +'<td><input type="button" class="btn btn-primary" value="Delete" onclick="DeleteAchievement(\'Achieve' + count + '\')" /></td></tr>');
+            $('#AchievementTable').removeAttr('hidden');
+            $('#AchieveHR').css('margin-top', '15px');
+            $('.Achievement').val('');
+
+        }
+    }
+    function AddProjectDetails() {
+        debugger
+        var Project = $('#txtProject').val();
+        var ActivityInspected = $('#txtActivityInspected').val();
+        var Codes = $('#txtCodes').val();
+        var EndUser = $('#txtEndUser').val();
+
+        var ProjectValidation = true;
+
+        $('.Project').each(function (i, obj) {
+            if (obj.value == '' || obj.value == null || obj.value == '0') {
+                var id = obj.attributes.msg.value;
+                ProjectValidation = false;
+                alert('Please Add ' + id);
+                return false;
+            }
+        });
+
+        if (ProjectValidation) {
+            count = $('#EmpBody tr').length + 1;
+            $('#ProjectBody').append('<tr id="Proj' + count + '"><td>' + ActivityInspected + '</td><td>' + Codes + '</td><td>' + Project + '</td><td>' + EndUser
+                + '</td><td><input type="button" class="btn btn-primary" value="Edit" onclick="EditProject(\'Proj' + count + '\')" /></td><td><input type="button" class="btn btn-primary" value="Delete" onclick="DeleteProject(\'Proj' + count + '\')" /></td></tr>');
+            $('#ProjectTable').removeAttr('hidden');
+            $('#ProjectHR').css('margin-top', '15px');
+            $('.Project').val('');
+        }
+    }
+    function AddTrainingDetails() {
+        debugger
+        //var ArrangedBy = $('#ddlArrangedBy').val();
+        //var txtActivityInspected = $('#txtEmployerName').val();
+        var TrainingDate = $('#txtTrainingDate').val();
+        var TrainingHours = $('#txtTrainingHours').val();
+        var TrainingTopic = $('#txtTrainingTopic').val();
+
+        var TrainingValidation = true;
+
+        $('.training').each(function (i, obj) {
+            if (obj.value == '' || obj.value == null || obj.value == '0') {
+                var id = obj.attributes.msg.value;
+                TrainingValidation = false;
+                alert('Please Add ' + id);
+                return false;
+            }
+        });
+
+        if (TrainingValidation) {
+            //$('#TrainingBody').append('<tr><td>' + ArrangedBy + '</td><td>' + TrainingDate + '</td><td>' + TrainingHours + '</td><td>' + TrainingTopic + '</td></tr>')
+            if ($('#nodata').length) {
+                $('#nodata').remove();
+            }
+            count = $('#TrainingBody tr').length + 1;
+            $('#TrainingBody').append('<tr id="Train' + count + '"><td>' + TrainingDate + '</td><td>' + TrainingHours + '</td><td>' + TrainingTopic
+                + '</td><td><input type="button" class="btn btn-primary" value="Edit" onclick="EditTraining(\'Train' + count
+                + '\')" /></td><td><input type="button" class="btn btn-primary" value="Delete" onclick="DeleteTraining(\'Train' + count + '\')" /></td></tr>')
+            $('#TrainingTable').removeAttr('hidden');
+            $('#TrainingHR').css('margin-top', '15px');
+            $('.training').val('');
+            //$('#ddlArrangedBy').val(0);
+        }
+    }
+    function deleteeducation(id) {
+
+        $('#' + Achieveid).remove();
+
+        $('#AchievementBody').each(function () {
+
+            var trElements = $(this).find('tr');
+
+            trElements.each(function (index) {
+                var DeleteTD = $(this).find('td:last');
+                var EditTD = $(this).find('td:nth-last-child(2)');
+                var DeleteBtn = $('<input type="button" class="btn btn-primary" value="Delete" onclick="DeleteAchievement(\'Achieve' + (index + 1) + '\')">');
+                DeleteTD.html('');
+                DeleteTD.append(DeleteBtn);
+                var EditBtn = $('<input type="button" class="btn btn-primary" value="Edit" onclick="EditAchievement(\'Achieve' + (index + 1) + '\')">');
+
+                EditTD.html('');
+                EditTD.append(EditBtn);
+                $(this).attr('id', 'Achieve' + (index + 1));
+            });
+        });
+    }
+    function DeleteEmployment(EmpID) {
+        $('#' + EmpID).remove();
+
+        UpdateEmpID();
+    }
+
+    function UpdateEmpID() {
+        $('#EmpBody').each(function () {
+            var trElements = $(this).find('tr');
+            trElements.each(function (index) {
+                var DeleteTD = $(this).find('td:last');
+                var EditTD = $(this).find('td:nth-last-child(2)');
+                if (index != 0) {
+                    var DeleteBtn = $('<input type="button" class="btn btn-primary" value="Delete" onclick="DeleteEmployment(\'Emp' + (index + 1) + '\')">');
+                    DeleteTD.html('');
+                    DeleteTD.append(DeleteBtn);
+                }
+                var EditBtn = $('<input type="button" class="btn btn-primary" value="Edit" onclick="EditEmployment(\'Emp' + (index + 1) + '\')">');
+
+
+
+                EditTD.html('');
+                EditTD.append(EditBtn);
+                $(this).attr('id', 'Emp' + (index + 1));
+            });
+        });
+    }
+    function DeleteAchievement(Achieveid) {
+
+        $('#' + Achieveid).remove();
+
+        $('#AchievementBody').each(function () {
+
+            var trElements = $(this).find('tr');
+
+            trElements.each(function (index) {
+                var DeleteTD = $(this).find('td:last');
+                var EditTD = $(this).find('td:nth-last-child(2)');
+                var DeleteBtn = $('<input type="button" class="btn btn-primary" value="Delete" onclick="DeleteAchievement(\'Achieve' + (index + 1) + '\')">');
+                DeleteTD.html('');
+                DeleteTD.append(DeleteBtn);
+                var EditBtn = $('<input type="button" class="btn btn-primary" value="Edit" onclick="EditAchievement(\'Achieve' + (index + 1) + '\')">');
+
+                EditTD.html('');
+                EditTD.append(EditBtn);
+                $(this).attr('id', 'Achieve' + (index + 1));
+            });
+        });
+    }
+    function DeleteProject(ProjID) {
+        $('#' + ProjID).remove();
+
+        $('#ProjectBody').each(function () {
+            var trElements = $(this).find('tr');
+
+            trElements.each(function (index) {
+                var DeleteTD = $(this).find('td:last');
+                var EditTD = $(this).find('td:nth-last-child(2)');
+                var DeleteBtn = $('<input type="button" class="btn btn-primary" value="Delete" onclick="DeleteProject(\'Proj' + (index + 1) + '\')">');
+                DeleteTD.html('');
+                DeleteTD.append(DeleteBtn);
+                var EditBtn = $('<input type="button" class="btn btn-primary" value="Edit" onclick="EditProject(\'Proj' + (index + 1) + '\')">');
+
+                EditTD.html('');
+                EditTD.append(EditBtn);
+                $(this).attr('id', 'Proj' + (index + 1));
+            });
+        });
+    }
+    function DeleteTraining(TrainID) {
+        $('#' + TrainID).remove();
+
+        $('#TrainingBody').each(function () {
+
+            var trElements = $(this).find('tr');
+
+            trElements.each(function (index) {
+                var DeleteTD = $(this).find('td:last');
+                var EditTD = $(this).find('td:nth-last-child(2)');
+                var DeleteBtn = $('<input type="button" class="btn btn-primary" value="Delete" onclick="DeleteTraining(\'Train' + (index + 1) + '\')">');
+                DeleteTD.html('');
+                DeleteTD.append(DeleteBtn);
+                var EditBtn = $('<input type="button" class="btn btn-primary" value="Edit" onclick="EditTraining(\'Train' + (index + 1) + '\')">');
+
+                EditTD.html('');
+                EditTD.append(EditBtn);
+                $(this).attr('id', 'Train' + (index + 1));
+            });
+        });
+    }
+
+    function CalclateYearMonth() {
+        debugger;
+        var dob = $('#dob').val();
+        if (dob !== undefined && dob !== "") {
+            var joinDateParts = dob.split('-');
+            //var joinDate = new Date(joinDateParts[2], joinDateParts[1] - 1, joinDateParts[0]);
+            var bday = new Date(joinDateParts[0], joinDateParts[1] - 1, joinDateParts[2]);
+
+            var currentDate = new Date();
+
+            var yearsDiff = currentDate.getFullYear() - bday.getFullYear();
+            var monthsDiff = currentDate.getMonth() - bday.getMonth();
+
+            if (currentDate.getDate() < bday.getDate()) {
+                debugger;
+                monthsDiff--;
+            }
+
+            if (monthsDiff < 0) {
+                yearsDiff--;
+                monthsDiff += 12;
+            }
+
+            if (yearsDiff >= 0 && yearsDiff <= 9) {
+                yearsDiff = '0' + yearsDiff;
+            }
+
+            if (monthsDiff >= 0 && monthsDiff <= 9) {
+                monthsDiff = '0' + monthsDiff;
+            }
+            var res = (yearsDiff + ' Years and ' + monthsDiff + ' Months');
+            $('#Age').val(res);
+        }
+
+    }
+    function onchangejoindate() {
+        var doj = $('#doj').val();
+        if (doj !== undefined && doj !== "") {
+            debugger;
+            var joinDateParts = doj.split('-');
+            var Joindate = new Date(joinDateParts[0], joinDateParts[1] - 1, joinDateParts[2]);
+
+            var currentDate = new Date();
+
+            var yearsDiff = currentDate.getFullYear() - Joindate.getFullYear();
+            var monthsDiff = currentDate.getMonth() - Joindate.getMonth();
+
+            if (currentDate.getDate() < Joindate.getDate()) {
+                monthsDiff--;
+            }
+
+            if (monthsDiff < 0) {
+                yearsDiff--;
+                monthsDiff += 12;
+            }
+
+            if (yearsDiff >= 0 && yearsDiff <= 9) {
+                yearsDiff = '0' + yearsDiff;
+            }
+
+            if (monthsDiff >= 0 && monthsDiff <= 9) {
+                monthsDiff = '0' + monthsDiff;
+            }
+            var res = (yearsDiff + ' Years and ' + monthsDiff + ' Months');
+            $('#tuvexp').val(res);
+        }
+    }
+    function EditUser(userid) {
+        $("body").prepend('<div id="preloader"></div>');
+        $.ajax({
+            url: '/Users/Edit?UserID=' + userid,
+            method: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            datatype: 'json',
+            async: false,
+            success: function (response) {
+                $("#preloader").remove();
+                $("#FName").val(response[0][0].FirstName);
+                $("#MName").val(response[0][0].MiddleName);
+                $("#LName").val(response[0][0].LastName);
+                $("#Inspection").val(response[0][0].CoreCompetency);
+                //var updatedon = response[0][0].UpdatedDate;
+                var dateString = response[0][0].DOB;
+                var timestamp = parseInt(dateString.match(/\d+/)[0], 10);
+                var date = new Date(timestamp);
+                $("#hdnupdatedon").val(response[0][0].UpdatedDate);
+                document.getElementById('dob').value = date.toISOString().slice(0, 10);
+                $("#Age").val(response[0][0].Age);
+                $("#Nationality").val(response[0][0].Nationality);
+                $("#empLocation").val(response[0][0].Location);
+                $("#Gender").val(response[0][0].Gender);
+                $("#Marrigestatus").val(response[0][0].Marital_Status);
+                $("#agency").val(response[0][0].AgencyName);
+                $("#Inspection").val(response[1][0].CoreCompetency);
+                debugger;
+                var imageName = response[0][0].ProfileImage;
+                var imagepath = "/Content/Uploads/Images/" + imageName;
+                $("#blah").attr("src", imagepath);
+
+                var joindate = response[0][0].DateOfJoining;
+                var time = parseInt(joindate.match(/\d+/)[0], 10);
+                var dt = new Date(time);
+                document.getElementById('doj').value = dt.toISOString().slice(0, 10);
+                $("#tuvexp").val(response[0][0].exeperiencewithtuvind);
+                $("#totalexp").val(response[0][0].totalexeperience);
+                $("#ExpertiseSummary").val(response[1][0].ExpertiseSummary);
+
+                var workexp = response[2];
+
+                $('#EmpBody').empty();
+
+                for (var i = 0; i < workexp.length; i++) {
+                    var count1 = $('#EmpBody tr').length + 1;
+
+                    var row = '<tr>' +
+                        '<td>' + workexp[i].Period + '</td>' +
+                        '<td>' + workexp[i].EmployerName + '</td>' +
+                        '<td>' + workexp[i].Location + '</td>' +
+                        '<td>' + workexp[i].Designation + '</td>' +
+                        '<td hidden>' + workexp[i].Responsibilities + '</td>' +
+                        '<td><input type="button" class="btn btn-primary" value="Edit" onclick="EditEmployment(\'Emp' + count1 + '\')" /></td>' +
+                        '<td><input type="button" class="btn btn-primary" value="Delete" onclick="DeleteEmployment(\'Emp' + count1 + '\')" /></td>' +
+                        '</tr>';
+
+                    $('#EmpBody').append(row);
+                    count1++;
+                }
+
+                var project = response[3];
+                $("#ProjectBody").empty();
+
+                for (var i = 0; i < project.length; i++) {
+                    var count2 = $('#EmpBody tr').length + 1;
+
+                    var row = '<tr><td>' + project[i].ActivityItemInspected +
+                        '</td><td>' + project[i].Codes +
+                        '</td><td>' + project[i].Project +
+                        '</td><td>' + project[i].EndUserName
+                + '</td><td><input type="button" class="btn btn-primary" value="Edit" onclick="EditProject(\'Proj' + count2 + '\')" /></td><td><input type="button" class="btn btn-primary" value="Delete" onclick="DeleteProject(\'Proj' + count2 + '\')" /></td></tr>'
+
+                    $("#ProjectBody").append(row);
+                    count2++;
+                }
+
+                var skills = response[4];
+
+                $("#TrainingBody").empty();
+
+                for (var i = 0; i < skills.length; i++) {
+                    var Skilldate = skills[i].Date;
+                    var tms = parseInt(Skilldate.match(/\d+/)[0], 10);
+                    var skilldate1 = new Date(tms);
+                    var day = skilldate1.getDate();
+                    var month = skilldate1.getMonth() + 1;
+                    var year = skilldate1.getFullYear();
+                    if (day < 10) {
+                        day = '0' + day;
+                    }
+                    if (month < 10) {
+                        month = '0' + month;
+                    }
+                    var formattedDate = day + '/' + month + '/' + year;
+
+                    var count3 = $('#TrainingBody tr').length + 1;
+
+                    var row = '<tr><td>' + formattedDate + '</td><td>' +
+                        skills[i].Hours + '</td><td>' +
+                        skills[i].Topic + '</td><td><input type="button" class="btn btn-primary" value="Edit" onclick="EditTraining(\'skill' + count3 + '\')" /></td><td><input type="button" class="btn btn-primary" value="Delete" onclick="DeleteTraining(\'skill' + count3 + '\')" /></td></tr>';
+
+                    $("#TrainingBody").append(row);
+                    count3++
+                }
+
+
+                $("#DTestTablePFCbody").empty();
+                var qulification = response[6];
+
+                for (var i = 0; i < qulification.length; i++) {
+                    var count4 = $('#DTestTablePFCbody tr').length + 1;
+                    var certification = qulification[i].certification ? qulification[i].certification : '';
+                    var certificationNO = qulification[i].certificationNO ? qulification[i].certificationNO : '';
+                    var Issuedate = qulification[i].issuedate;
+                    var time = parseInt(Issuedate.match(/\d+/)[0], 10);
+                    var dt = new Date(time);
+                    var formattedDate = dt.toLocaleDateString('en-GB');
+                    var validtill = qulification[i].validtill;
+                    var time1 = parseInt(validtill.match(/\d+/)[0], 10);
+                    var datetime = new Date(time1);
+                    var todate = datetime.toLocaleDateString('en-GB');
+                    var row = '<tr>' +
+                        '<td><input type="text" id="CertName' + count4 + '" class="form-control form-control-custom CCertName" placeholder="Certificate Name" value="' + certification + '"></td>' +
+                        '<td><input type="text" id="CertNo' + count4 + '" class="form-control CCertNo" placeholder="Certificate No" value="' + certificationNO + '"></td>' +
+                        '<td><input type="text" id="CertIssueDate' + count4 + '" placeholder="Certificate Issue Date" class="form-control CCertIssueDate" value="' + formattedDate + '"></td>' +
+                        '<td><input type="text" id="CertValidTill' + count4 + '" class="form-control CCertValidTill" placeholder="Certificate Valid Till" value="' + todate + '"></td>' +
+                        '<td><button type="button" id="btnAddPFC" class="btn btn-xs btn-primary classAddPFC">Add</button></td>' +
+                        '</tr>';
+
+                        $('#DTestTablePFCbody').append(row);
+                        BindIssueDate();
+                        BindValidDate();
+                    count4++;
+                }
+
+                $("#AchievementBody").empty();
+                var archievement = response[7];
+                for (var i = 0; i < archievement.length; i++) {
+
+
+                    var archievementdate = archievement[i].AchievementDate;
+                    var archivementtime = parseInt(archievementdate.match(/\d+/)[0], 10);
+                    var archive = new Date(archivementtime);
+                    var day = archive.getDate();
+                    var month = archive.getMonth() + 1; // Months are zero indexed
+                    var year = archive.getFullYear();
+
+                    // Pad single digit day and month with leading zero if necessary
+                    if (day < 10) {
+                        day = '0' + day;
+                    }
+                    if (month < 10) {
+                        month = '0' + month;
+                    }
+
+                    var formattedDate = day + '/' + month + '/' + year;
+                    var count5 = $('#AchievementBody tr').length + 1;
+                    var row = '<tr><td>' + formattedDate + '</td><td>' + archievement[i].Description +
+                     '</td><td><input type="button" class="btn btn-primary" value="Edit" onclick="EditAchievement(\'Achieve' + count5 + '\')"></td>'
+                    + '<td><input type="button" class="btn btn-primary" value="Delete" onclick="DeleteAchievement(\'Achieve' + count5 + '\')"></td>'
+                    $('#AchievementBody').append(row);
+                    count5++;
+                }
+                $("#DTestTablebody").empty();
+                var education = response[5];
+                for (var i = 0; i < education.length; i++) {
+
+
+                var row = '<tr class="trEduQualification">' +
+                '<td style="text-align:left">' +
+                '<select class="form-control CCourse" id="ddlCourse" name="Course" onchange="return GetCourceName(this);">' +
+                '<option value="" selected>---SELECT---</option>' +
+                '<option value="S.S.C">S.S.C</option>' +
+                '<option value="H.S.C">H.S.C</option>' +
+                '<option value="Diploma">Diploma</option>' +
+                '<option value="Graduate">Graduate</option>' +
+                '<option value="PGD">PGD</option>' +
+                '<option value="PG">PG</option>' +
+                '</select>' +
+                '</td>' +
+                '<td style="text-align:left">' +
+                '<select class="form-control CDegree" id="ddlDegree" name="Degree" onchange="GetBranchName(this);" style="display:none;">' +
+                '<option value="" selected>---SELECT---</option>' +
+                '<option value="BEng">Bachelor of Engineering</option>' +
+                '<option value="BTech">Bachelor of Technology</option>' +
+                '<option value="AMIE">AMIE</option>' +
+                '<option value="BA">Bachelor of Arts</option>' +
+                '<option value="BSc">Bachelor of Science</option>' +
+                '<option value="BCom">Bachelor of Commerce</option>' +
+                '<option value="BBA">BBA</option>' +
+                '<option value="BMS">BMS</option>' +
+                '<option value="BBS">BBS</option>' +
+                '</select>' +
+                '<select class="form-control CDiploma" id="ddlDiploma" name="Degree" onchange="GetBranchName(this);" style="display:none;">'+
+                                                                '<option selected="selected" value="">---SELECT---</option>'
+                                                                +'<option value="Tech">Technical</option>'
+                                                                +'<option value="NTech">Non Technical</option>'
+                                                            +'</select>'
+                                                            +'<select class="form-control CPGD" id="ddlPGD" name="lstEducationQualification[0].Degree" onchange="GetBranchName(this);" style="display:none;">'
+                                                                +'<option value="">---SELECT---</option>'
+                                                            +'</select>'
+                                                            +'<select class="form-control CPG" id="ddlPG" name="lstEducationQualification[0].Degree" onchange="GetBranchName(this);" style="display:none;">'
+                                                                +'<option value="">---SELECT---</option>'
+                                                                +'<option value="ME">Master of Engineering</option>'
+                                                                +'<option value="MTech">MTech</option>'
+                                                                +'<option value="MBA">MBA</option>'
+                                                            +'</select></td>' +
+                '<td style="text-align:left">' +
+    '<select class="form-control CDBranch" id="DBranch" name="Branch">' +
+    '<option value="" selected>---SELECT---</option>' +
+    '</select>' +
+    '</td>' + '<td><select class="form-control CYearOfPassing" id="ddlYearPassing" name="YearOfPassing">' +
+                                                               ' <option value="">--Select Year--</option>'+
+                                                               ' <option value="1970">1970</option>'+
+                                                                '<option value="1971">1971</option>'+
+                                                                '<option value="1972">1972</option>'+
+                                                                '<option value="1973">1973</option>'+
+                                                               ' <option value="1974">1974</option>'+
+                                                                '<option value="1975">1975</option>'+
+                                                                '<option value="1976">1976</option>'+
+                                                                '<option value="1977">1977</option>'+
+                                                                '<option value="1978">1978</option>'+
+                                                                '<option value="1979">1979</option>'+
+                                                                '<option value="1980">1980</option>'+
+                                                                '<option value="1981">1981</option>'+
+                                                                '<option value="1982">1982</option>'+
+                                                                '<option value="1983">1983</option>'+
+                                                                '<option value="1984">1984</option>'+
+                                                                '<option value="1985">1985</option>'+
+                                                                '<option value="1986">1986</option>'+
+                                                                '<option value="1987">1987</option>'+
+                                                                '<option value="1988">1988</option>'+
+                                                                '<option value="1989">1989</option>'+
+                                                                '<option value="1990">1990</option>'+
+                                                                '<option value="1991">1991</option>'+
+                                                                '<option value="1992">1992</option>'+
+                                                                '<option value="1993">1993</option>'+
+                                                                '<option value="1994">1994</option>'+
+                                                                '<option value="1995">1995</option>'+
+                                                                '<option value="1996">1996</option>'+
+                                                               ' <option value="1997">1997</option>'+
+                                                                '<option value="1998">1998</option>'+
+                                                                '<option value="1999">1999</option>'+
+                                                                '<option value="2000">2000</option>'+
+                                                                '<option value="2001">2001</option>'+
+                                                                '<option value="2002">2002</option>'+
+                                                                '<option value="2003">2003</option>'+
+                                                                '<option value="2004">2004</option>'+
+                                                                '<option value="2005">2005</option>'+
+                                                                '<option value="2006">2006</option>'+
+                                                               '<option value="2007">2007</option>'+
+                                                                '<option value="2008">2008</option>'+
+                                                                '<option value="2009">2009</option>'+
+                                                                '<option value="2010">2010</option>'+
+                                                                '<option value="2011">2011</option>'+
+                                                                '<option value="2012">2012</option>'+
+                                                                '<option value="2013">2013</option>'+
+                                                                '<option value="2014">2014</option>'+
+                                                                '<option value="2015">2015</option>'+
+                                                                '<option value="2016">2016</option>'+
+                                                                '<option value="2017">2017</option>'+
+                                                                '<option value="2018">2018</option>'+
+                                                                '<option value="2019">2019</option>'+
+                                                                '<option value="2020">2020</option>'+
+                                                                '<option value="2021">2021</option>'+
+                                                                '<option value="2022">2022</option>'+
+                                                                '<option value="2023">2023</option>'+
+                                                                '<option value="2024">2024</option>'+
+                                                            '</select></td>' +
+
+                '<td><input class="form-control CUniversity" id="UniversityName" name="UniversityName" placeholder="University" type="text" value=""></td>' +
+                '<td><input class="form-control CLastYearCGPA" id="LastYearCGPA" name="LastYearCGPA" onkeypress="return isNumberKey(event);" onkeyup="return AcceptSelNumber(this);" placeholder="LastYearCGPA" type="text" value=""></td>' +
+                '<td><input class="form-control CAggregateCGPA" id="AggregateCGPA" name="AggregateCGPA" onkeypress="return isNumberKey(event);" onkeyup="return AcceptSelNumber(this);" placeholder="AggregateCGPA" type="text" value</td>'+
+                '<td><button type="button" class="btn btn-xs btn-primary classAdd">Add</button></td>' +
+                '</tr>';
+
+                $('#DTestTablebody').append(row);
+
+                $('.trEduQualification input[type="text"]').prop('readonly', false);
+                $('.trEduQualification input[type="text"]').addClass('editable');
+                $("#ddlCourse").val(education[i].course).trigger('change');
+                $("#ddlDiploma").val(education[i].degree).trigger('change');
+
+
+                //$("#ddlDiploma option:contains('" + education.degree + "')").prop('selected', true);
+                $("#DBranch option:contains('" + education[i].fos + "')").prop('selected', true);
+                $("#ddlYearPassing option:contains('" + education[i].year + "')").prop('selected', true);
+                $("#UniversityName").val(education[i].university);
+                $("#LastYearCGPA").val(education[i].lastyearcgpa);
+                $("#AggregateCGPA").val(education[i].aggregate);
+
+
+
+                $('.trEduQualification .classAdd').on('click', function () {
+                    var course = $(this).closest('tr').find('.CCourse').val();
+                    var degree = $(this).closest('tr').find('.CDegree').val();
+
+                });
+
+                }
+
+                var languageSpoken = response[0][0].LanguageSpoken;
+                var selectedLanguages = languageSpoken.split(',').map(lang => lang.trim());
+                var selectedLanguageTexts = [];
+
+                $('.multiselect-container input[type="checkbox"]').each(function() {
+                    var checkboxValue = $(this).val();
+
+                    if (selectedLanguages.includes(checkboxValue)) {
+                        $(this).prop('checked', true);
+                        var labelText = $(this).parent().text().trim();
+                        selectedLanguageTexts.push(labelText);
+
+                    }
+                });
+                var titleText = selectedLanguageTexts.join(', ');
+                $('.multiselect.dropdown-toggle').attr('title', titleText);
+
+                $('.multiselect-selected-text').text(titleText);
+
+            }
+
+
+        });
+
+
+    }
+
+    function EditEmployment(Empid) {
+        var row = $("#" + Empid);
+        debugger;
+        // Find td elements within the selected row
+        var tds = row.find('td');
+        debugger;
+        // Extract values from td elements
+        var Period = tds.eq(0).text().trim();
+        var EmployerName = tds.eq(1).text().trim();
+        var Location = tds.eq(2).text().trim();
+        var Designation = tds.eq(3).text().trim();
+        var Responsibilities = tds.eq(4).html().replaceAll(/&lt;/g, '<').replaceAll(/&gt;/g, '>').replaceAll(/&amp;/g, '&').replaceAll(/&nbsp;/g, '\n').trim();
+
+        var PeriodFrom = Period.split('to')[0].trim();
+        var PeriodTo = Period.split('to')[1].trim();
+
+        $('#txtPeriodFrom').val(PeriodFrom);
+        $('#txtPeriodTo').val(PeriodTo);
+        $('#txtEmployerName').val(EmployerName);
+        $('#txtLocation').val(Location);
+        $('#txtDesignation').val(Designation);
+        CKEDITOR.instances['txtResponsibilities'].setData(Responsibilities)
+
+        if ('Emp1' == row.attr('id')) {
+            $('#txtEmployerName').attr('disabled', 'disabled');
+            $('#txtLocation').attr('disabled', 'disabled');
+        }
+        else {
+            $('#txtEmployerName').removeAttr('disabled');
+            $('#txtLocation').removeAttr('disabled');
+        }
+
+        localStorage.setItem('Empid', Empid);
+        $('#AddEmployment').css('visibility', 'hidden');
+        $('#UpdateEmployment').css('visibility', 'visible');
+    }
+    function EditProject(Projid) {
+        var row = $("#" + Projid);
+
+        // Find td elements within the selected row
+        var tds = row.find('td');
+
+        // Extract values from td elements
+        var ActivityInspected = tds.eq(0).text().trim();
+        var Codes = tds.eq(1).text().trim();
+        var Project = tds.eq(2).text().trim();
+        var EndUser = tds.eq(3).text().trim();
+
+        $('#txtProject').val(Project);
+        $('#txtActivityInspected').val(ActivityInspected);
+        $('#txtCodes').val(Codes);
+        $('#txtEndUser').val(EndUser);
+
+        localStorage.setItem('Projid', Projid);
+        $('#AddProject').css('visibility', 'hidden');
+        $('#UpdateProject').css('visibility', 'visible');
+    }
+    function EditTraining(Trainid) {
+        var row = $("#" + Trainid);
+
+        // Find td elements within the selected row
+        var tds = row.find('td');
+
+        // Extract values from td elements
+        var Date = tds.eq(0).text().trim();
+        var Hours = tds.eq(1).text().trim();
+        var Topic = tds.eq(2).text().trim();
+
+        $('#txtTrainingDate').val(Date);
+        $('#txtTrainingHours').val(Hours);
+        $('#txtTrainingTopic').val(Topic);
+
+        localStorage.setItem('Trainid', Trainid);
+        $('#AddTraining').css('visibility', 'hidden');
+        $('#UpdateTraining').css('visibility', 'visible');
+    }
+    function EditAchievement(Achieveid) {
+        var row = $("#" + Achieveid);
+
+        // Find td elements within the selected row
+        var tds = row.find('td');
+
+        // Extract values from td elements
+        var AchievementDate = tds.eq(0).text().trim();
+        var Description = tds.eq(1).text().trim();
+
+        $('#txtAchievementDate').val(AchievementDate);
+        $('#txtDescription').val(Description);
+
+        localStorage.setItem('Achieveid', Achieveid);
+        $('#AddAchievement').css('visibility', 'hidden');
+        $('#UpdateAchievement').css('visibility', 'visible');
+    }
+    function getDateFromString(dateString) {
+        var dateParts = dateString.split('/');
+        return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+    }
+
+</script>
+
+

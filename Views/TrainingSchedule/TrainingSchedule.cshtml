@@ -1,0 +1,2077 @@
+﻿@model TuvVision.Models.TrainingScheduleModel
+@{
+    ViewBag.Title = "TrainingSchedule";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+}
+
+<style>
+    .addCSS {
+        pointer-events: none;
+    }
+</style>
+
+
+
+<style>
+    .ui-widget-header {
+        background: #001ED2 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+
+    /*-- Delete color-profile --*/
+    ul.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+</style>
+
+<link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
+
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+@*DATEPICKER*@
+
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+@*<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />*@
+<link href="~/AllJsAndCss/css/jquery-ui.css" rel="Stylesheet" type="text/css" />
+
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.1/jquery.timepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.1/jquery.timepicker.min.css" type="text/css" />
+
+@using (Html.BeginForm("ScheduleTraining", "TrainingSchedule", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    @Html.HiddenFor(m => m.PK_TrainingScheduleId)
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-5">
+
+                    <div class="col-xs-12 form-col">
+                        <a href="@Url.Action("ListScheduleTraining", "TrainingSchedule")" class="btn btn-default insert-form-btn" style="float:right;"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Organize Training</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Training Name:</label>
+                                                                <div class="editor-field">
+                                                                    @Html.TextBoxFor(model => model.TrainingName, new { @placeholder = "Training Topic Here", @class = "form-control" })
+                                                                    @Html.HiddenFor(model => model.TrainingId, new { id = "hidden" })
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Trainer Name:</label>
+
+                                                                @Html.TextBoxFor(model => model.TrainerName, new { @placeholder = "Trainer Name Here", @class = "form-control TrainerName" })
+                                                                @Html.ValidationMessageFor(model => model.TrainerName, "", new { @class = "text-danger validation-msg" })
+                                                                <input type="hidden" id="HfTrainerName" name="TrainerName" />
+                                                                @Html.HiddenFor(model => model.TrainerName)
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    External Trainer:
+                                                                    <input type="checkbox" id="chkExternalTrainer" />
+                                                                </label>
+                                                                @*<input id="TrainingName" type="text" class="form-control">*@
+                                                                @Html.TextBoxFor(model => model.ExternalTrainer, new { @placeholder = "External Trainer Here", @class = "form-control", disabled = "disabled" })
+                                                                @Html.ValidationMessageFor(model => model.ExternalTrainer, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Service type:</label>
+                                                                @*@{
+                                                                    if (Model != null)
+                                                                    {
+                                                                        if (ViewBag.OBSType != null)
+                                                                        {
+                                                                            @Html.DropDownListFor(model => model.ProjectType, new SelectList(@ViewBag.OBSType, "Code", "Name"), "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control", @onchange = "setObsValue(this.value);CheckData();" })
+                                                                        }
+
+                                                                        else if (ViewData["ProjectTypeItems"] != null)
+                                                                        {
+                                                                            @Html.DropDownListFor(model => model.ProjectType, (IEnumerable<SelectListItem>)ViewData["ProjectTypeItems"], "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control" })
+                                                                        }
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.ProjectType, new SelectList(@ViewBag.OBSType, "Code", "Name"), "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control",@onchange= "setObsValue(this.value);CheckData();" })
+                                                                    }
+                                                                    @Html.ValidationMessageFor(m => m.ProjectType, "", new { @class = "text-danger validation-msg" })
+                                                                    @Html.HiddenFor(model => model.ProjectType, new { id = "hdnObsType" })
+                                                                }*@
+
+
+                                                                <select id="IdOBSType" class="form-control form-multiselect-city" multiple="multiple" name="IdOBSTypeName" placeholder="Select Option">
+                                                                    @{
+                                                                        foreach (var item in ViewData["OBSType"] as IEnumerable<SelectListItem>)
+                                                                        {
+
+                                                                            if (ViewData["OBSTypechecked"] != null)
+                                                                            {
+                                                                                if (Convert.ToString(ViewData["OBSTypechecked"]).Split(',').Contains(item.Value.ToString()))
+                                                                                {
+                                                                                    <option selected="selected" value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                @Html.HiddenFor(model => model.ProjectType, new { id = "hdnObsType" })
+                                                            </div>
+                                                        </div>
+
+                                                        @*<div class="col-xs-12 col-sm-4" id="IdEmploymentCate">
+                                                            <div class="form-group">
+                                                                <label>Employment category:</label>
+
+                                                                @Html.DropDownListFor(m => m.EmployementCategory, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="Payroll", Value = "Payroll" },
+                                                                     new SelectListItem{ Text="Regular Contract", Value = "Regular Contract" },
+                                                                     new SelectListItem{ Text="Exclusive Contract with PF", Value = "Exclusive Contract with PF" },
+                                                                     new SelectListItem{ Text="Exclusive Contract", Value = "Exclusive Contract" },
+                                                                     new SelectListItem{ Text="Empanelled Direct", Value = "Empanelled Direct" },
+                                                                     new SelectListItem{ Text="Empanelled Agency", Value = "Empanelled Agency" },
+
+
+                                                                    },
+
+                                                                     new { @class = "form-control", @id = "EC", @onchange = "setEmpCat(this.value);CheckData();" })
+                                                                @Html.HiddenFor(model => model.EmployementCategory, new { id = "hdnEmpCategory" })
+                                                            </div>
+                                                        </div>*@
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Employment category:</label>
+                                                                <select id="IdEmploymentCate" class="form-control form-multiselect-city" multiple="multiple" name="IdEmploymentCateName" placeholder="Select Option">
+                                                                    @{
+                                                                        foreach (var item in ViewData["EmpCategory"] as IEnumerable<SelectListItem>)
+                                                                        {
+
+                                                                            if (ViewData["EmpCategorychecked"] != null)
+                                                                            {
+                                                                                if (Convert.ToString(ViewData["EmpCategorychecked"]).Split(',').Contains(item.Value.ToString()))
+                                                                                {
+                                                                                    <option selected="selected" value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                @Html.HiddenFor(model => model.EmployementCategory, new { id = "hdnEmpCategory" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Branch:</label>
+
+
+                                                                <select id="BrAuditee" class="form-control form-multiselect-city" multiple="multiple" name="BrAuditeeName" placeholder="Select Option">
+                                                                    @{
+                                                                        foreach (var item in ViewData["BranchNameItems"] as IEnumerable<SelectListItem>)
+                                                                        {
+
+                                                                            if (ViewData["ListBranchchecked"] != null)
+                                                                            {
+                                                                                if (Convert.ToString(ViewData["ListBranchchecked"]).Split(',').Contains(item.Value.ToString()))
+                                                                                {
+                                                                                    <option selected="selected" value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                            }
+                                                                        }
+                                                                        @Html.HiddenFor(model => model.BranchId, new { id = "hdnBranchId" })
+                                                                    }
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Training Type:</label>
+                                                                @Html.DropDownListFor(m => m.TrainType, new List<SelectListItem>
+                                                                    {
+                                                                    new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                    new SelectListItem{ Text="ClassRoom", Value = "ClassRoom" },
+                                                                    new SelectListItem{ Text="OnJob", Value = "OnJob" },
+                                                                    //new SelectListItem{ Text="WorkJob", Value = "WorkJob" },
+                                                                    //new SelectListItem{ Text="WorkShop", Value = "WorkShop" },
+                                                                    new SelectListItem{ Text="Online", Value = "Webx" },
+                                                                    new SelectListItem{ Text="E-Learning", Value = "ELearn" },
+                                                                    //new SelectListItem{ Text="Supervised Training", Value = "SupervisedTraining" },
+                                                                    new SelectListItem{ Text="Supervised Working", Value = "SupervisedTraining" },
+                                                                    new SelectListItem{ Text="Induction Training", Value = "InductionTraining" },
+                                                                    }, new { @class = "form-control", @onchange = "DivDisplay(this.value);CheckData();" })
+                                                                @Html.ValidationMessageFor(m => m.TrainType, "", new { @class = "text-danger validation-msg" })
+
+
+                                                            </div>
+                                                        </div>
+                                                     <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>User Role: </label>
+                                                                @{
+                                                                    @*if (Model != null)
+                                                                    {
+                                                                        if (ViewBag.UserRole != null)
+                                                                        {
+                                                                            @Html.DropDownListFor(model => model.UserRole, new SelectList(@ViewBag.UserRole, "Code", "Name"), "---Select User Type---", new { @id = "ddlUserName", @class = "form-control form-control-custom-ddl", @onchange = "SetUserRoleType(this.value);CheckData();" })
+                                                                        }
+                                                                        else if (ViewData["RoleNameItems"] != null)
+                                                                        {
+                                                                            @Html.DropDownListFor(model => model.UserRole, (IEnumerable<SelectListItem>)ViewData["RoleNameItems"], "---Select User Type---", new { @id = "ddlUserName", @class = "form-control col-md-7 col-xs-12 form-control-custom-ddl" })
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @Html.DropDownListFor(model => model.UserRole, new SelectList(@ViewBag.UserRole, "Code", "Name"), "---Select User Type---", new { @id = "ddlUserName", @class = "form-control form-control-custom-ddl" })
+                                                                        }
+                                                                    }*@
+
+
+                                                                    <select id="IdUserRole" class="form-control form-multiselect-city" multiple="multiple" name="UserRoleName" placeholder="Select Option">
+                                                                        @{
+                                                                            foreach (var item in ViewData["RoleNameItems"] as IEnumerable<SelectListItem>)
+                                                                            {
+
+                                                                                if (ViewData["UserRolechchecked"] != null)
+                                                                                {
+                                                                                    if (Convert.ToString(ViewData["UserRolechchecked"]).Split(',').Contains(item.Value.ToString()))
+                                                                                    {
+                                                                                        <option selected="selected" value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                                }
+                                                                            }
+                                                                            @Html.HiddenFor(model => model.UserRole, new { id = "hdnUserRole" })
+                                                                        }
+                                                                    </select>
+
+                                                                    @Html.HiddenFor(model => model.UserRole, new { id = "hdnUserRole" })
+
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4" id="divVideo">
+                                                            <div class="form-group">
+                                                                <label>Video File: </label>
+
+                                                                <input type="file" class="filepond" name="DocUpload" id="DocUpload" multiple />
+                                                                <input hidden="hidden" id="DocUpload" name="DocUpload" class="hidden" />
+                                                            
+                                                                <div class="col-xs-12">
+                                                                    <div class="form-group">
+                                                                        <ul class="Attachment">
+                                                                            @if (Model.FileName != null)
+                                                                            {
+                                                                                foreach (var item in Model.FileName)
+                                                                                {
+                                                                                <li>
+                                                                                    <a href="~/Content/Uploads/Videos/@Model.FileName" download="@Model.FileName">
+                                                                                        @Model.FileName
+
+                                                                                    </a>
+                                                                                   
+                                                                                   
+                                                                                </li>
+                                                                                }
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                               
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group" id="divTypeofEmp">
+                                                                <label>Trainee: <br />
+                                                                  
+                                                                    @Html.DropDownListFor(m => m.TypeOfEmployee, new List<SelectListItem>
+                                                                     {
+
+                                                                         new SelectListItem{ Text="For all employees", Value = "ForAllEmp" },
+                                                                         //new SelectListItem{ Text="For Branch employees", Value = "ForBranchEmp" },
+                                                                         new SelectListItem{ Text="For Selected employees", Value = "ForSelEmp" },
+
+                                                                    },
+
+                                                                     new { @class = "form-control", @id = "TypeEmp" , @onchange= "SetEmpType(this.value);" })
+                                                                    @Html.HiddenFor(model => model.TypeOfEmployee, new { id = "hdnTypeOfEmployee" })
+                                                                </label>
+
+                                                                @*@Html.TextBoxFor(model => model.TraineeName, new { @placeholder = "Trainee Name Here", @class = "form-control TraineeName", @rows = "5" })*@
+                                                                @Html.TextBoxFor(model => model.TraineeName, new { @placeholder = "Trainee Name Here", @class = "form-control TraineeName" })
+                                                                @Html.ValidationMessageFor(model => model.TraineeName, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Scope:<span style="color:#ff0000;">*</span></label>
+                                                                <select id="BrScope" class="form-control form-multiselect-city" multiple="multiple" name="BrScopeName" placeholder="Select Option">
+                                                                    @{
+                                                                        foreach (var item in ViewData["Scopes"] as IEnumerable<SelectListItem>)
+                                                                        {
+
+                                                                            if (ViewData["ListScopeschecked"] != null)
+                                                                            {
+                                                                                if (Convert.ToString(ViewData["ListScopeschecked"]).Split(',').Contains(item.Value.ToString()))
+                                                                                {
+                                                                                    <option selected="selected" value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Evaluation Method:</label>
+                                                                @Html.DropDownListFor(m => m.EvaluationMethod, new List<SelectListItem>
+                                                                    {
+                                                                    new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                    new SelectListItem{ Text="Quiz", Value = "Quiz" },
+                                                                    new SelectListItem{ Text="On site Monitoring", Value = "On site Monitoring" },
+                                                                    new SelectListItem{ Text="Interview assessment / Face to face interaction.", Value = "Interview assessment / Face to face interaction." },
+                                                                    new SelectListItem{ Text="Not Applicable", Value = "None" },
+                                                                    }, new { @onchange = "DivDisplay1(this.value);", @class = "form-control",@id= "EvaluationMethod" })
+                                                                @Html.ValidationMessageFor(m => m.EvaluationMethod, "", new {  @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        @*<div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Training Category:</label>
+                                                                @Html.DropDownListFor(m => m.Category, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+
+    new SelectListItem{ Text="Technical", Value = "Technical" },
+    new SelectListItem{ Text="NDE", Value = "NDE" },
+    new SelectListItem{ Text="QMS", Value = "QMS" },
+new SelectListItem{ Text="Safety", Value = "Safety" },
+new SelectListItem{ Text="Induction", Value = "Induction" },
+new SelectListItem{ Text="Supervised", Value = "Supervised" },
+new SelectListItem{ Text="Soft skills", Value = "Softskills" },
+new SelectListItem{ Text="Personal development", Value = "Personaldevelopment" },
+
+                                                                      //new SelectListItem{ Text="Other", Value = "Other" },
+                                                                     }, new { @class = "form-control" })
+                                                                @Html.ValidationMessageFor(m => m.Category, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>*@
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Training Category:</label>
+                                                                <select id="IdCategory" class="form-control form-multiselect-city" multiple="multiple" name="IdCategoryName" placeholder="Select Option">
+                                                                    @{
+                                                                        foreach (var item in ViewData["TrainCategory"] as IEnumerable<SelectListItem>)
+                                                                        {
+
+                                                                            if (ViewData["TrainCategorychecked"] != null)
+                                                                            {
+                                                                                if (Convert.ToString(ViewData["TrainCategorychecked"]).Split(',').Contains(item.Value.ToString()))
+                                                                                {
+                                                                                    <option selected="selected" value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                @Html.HiddenFor(model => model.Category, new { id = "hdnCategory" })
+                                                            </div>
+                                                        </div>
+                                                           
+                                                    </div>
+                                                   
+
+
+
+
+
+
+                                                        <div class="row">
+
+
+                                                            @*<div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Start Date:</label>
+                                                                    @Html.TextBoxFor(model => model.TrainingStartDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom TrainingStartDate", autocomplete = "off" })
+
+
+                                                                    @Html.ValidationMessageFor(model => model.TrainingStartDate, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>*@
+
+                                                            <div class="col-xs-12 col-sm-4" hidden>
+                                                                <div class="form-group">
+                                                                    <label>End Date:</label>
+                                                                     @Html.TextBoxFor(model => model.TrainingEndDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select End Date", @class = "form-control form-control-custom TrainingStartDate", autocomplete = "off" })
+
+
+                                                                    @Html.ValidationMessageFor(model => model.TrainingEndDate, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    @*<div id="DomesticCurrency" style='display:none;'>*@
+                                                    <div id="DomesticCurrency">
+                                                        <div class="form-page-title" style="width:110%;height:35px;vertical-align:central;">Add Dates</div>
+
+                                                        <table id="DTestTable" cellspacing="0" cellpadding="3" border="1" style="width: 110%">
+                                                            <tr style="background-color:lightgray;color:black">
+                                                                <td width="220px" style="text-align: center;vertical-align:top;">
+                                                                    Training Start Date
+                                                                </td>
+                                                                <td width="220px" style="text-align: center;vertical-align:top;">
+                                                                    Training Start Time
+                                                                </td>
+                                                                <td width="220px" style="text-align: center;vertical-align:top;">
+                                                                    Training End Time
+                                                                </td>
+                                                                <td width="220px" style="text-align: center;vertical-align:top;">
+                                                                    Total Hours
+                                                                </td>
+                                                            </tr>
+
+                                                            @{
+                                                                int i = 0;
+                                                            }
+
+                                                            @if (ViewBag.lstDOrderType != null)
+                                                            {
+                                                                if (ViewBag.lstDOrderType.Count != 0)
+                                                                {
+                                                                    foreach (var item in ViewBag.lstDOrderType as IEnumerable<TuvVision.Models.TrainingTime>)
+                                                                    {
+                                                                        i = i + 1;
+                                                                        <tr class="trDomestic" style="background-color:#f0f0f0">
+
+
+                                                                            <td>
+                                                                                @Html.TextBoxFor(model => model.lstQuotationMasterDashBoard1[j].TrainingStartDate, "{0:dd MMM yyyy}", new { @style = "text-align:center", @placeholder = "", @class = "form-control CTrainingStartDate", autocomplete = "off", @id = "IDTrainingStartDate", @Value = item.TrainingStartDate })
+                                                                                @*@Html.TextBoxFor(model => model.TrainingStartDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom TrainingStartDate", autocomplete = "off" })*@
+                                                                                
+                                                                                 @Html.HiddenFor(model => model.lstQuotationMasterDashBoard1[j].TrainingStartDate, new { @placeholder = "Start Date", @class = "form-control", autocomplete = "off", @Value = item.TrainingStartDate })
+
+                                                                                @Html.ValidationMessageFor(model => model.TrainingStartDate, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.TextBoxFor(model => model.lstQuotationMasterDashBoard1[j].TrainingStartTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control CTrainingStartTime", autocomplete = "off", @id = "IdTrainingStartTime", @Value = item.TrainingStartTime })
+                                                                              
+                                                                                @Html.HiddenFor(model => model.lstQuotationMasterDashBoard1[j].TrainingStartTime, new { @placeholder = "Start Time", @class = "form-control", autocomplete = "off", @Value = item.TrainingStartTime })
+
+                                                                                @Html.ValidationMessageFor(model => model.TrainingStartTime, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.TextBoxFor(model => model.lstQuotationMasterDashBoard1[j].TrainingEndTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control CTrainingEndTime", autocomplete = "off", @id = "IdTrainingEndTime", @Value = item.TrainingEndTime })
+
+                                                                                @Html.HiddenFor(model => model.lstQuotationMasterDashBoard1[j].TrainingEndTime, new { @placeholder = "End Time", @class = "form-control", autocomplete = "off", @Value = item.TrainingEndTime })
+
+                                                                                @Html.ValidationMessageFor(model => model.TrainingEndTime, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.TextBoxFor(model => model.lstQuotationMasterDashBoard1[j].TotalHours, new { @style = "text-align:center", @placeholder = "", @class = "form-control CTotalHours", autocomplete = "off", @id = "IdTotalHours", @Value = item.TotalHours })
+
+                                                                                @Html.HiddenFor(model => model.lstQuotationMasterDashBoard1[j].TotalHours, new { @placeholder = "Total Hours", @class = "form-control", autocomplete = "off", @Value = item.TotalHours })
+
+                                                                                @Html.ValidationMessageFor(model => model.TotalHours, "", new { @class = "text-danger validation-msg" })
+                                                                            </td>
+                                                                            <td style="text-align:center;">
+                                                                                @if (i == 1)
+                                                                                {
+                                                                                    <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <button type="button" id="btnDelete" class="deleteContact btn btn btn-danger btn-xs">Remove</button>
+                                                                                }
+
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        j++;
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <tr class="trDomestic" style="background-color:#f0f0f0">
+                                                                        <td>
+                                                                            @Html.TextBoxFor(model => model.TrainingStartDate, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTrainingStartDate" })
+                                                                            @Html.ValidationMessageFor(model => model.TrainingStartDate, "", new { @class = "text-danger validation-msg" })
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.TextBoxFor(model => model.TrainingStartTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTrainingStartTime" })
+                                                                            @Html.ValidationMessageFor(model => model.TrainingStartTime, "", new { @class = "text-danger validation-msg" })
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.TextBoxFor(model => model.TrainingEndTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTrainingEndTime" })
+                                                                            @Html.ValidationMessageFor(model => model.TrainingEndTime, "", new { @class = "text-danger validation-msg" })
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.TextBoxFor(model => model.TotalHours, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTotalHours" })
+                                                                            @Html.ValidationMessageFor(model => model.TotalHours, "", new { @class = "text-danger validation-msg" })
+                                                                        </td>
+
+
+                                                                        <td style="text-align:center;">
+
+                                                                            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+
+
+                                                                        </td>
+
+
+
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr class="trDomestic" style="background-color:#f0f0f0">
+
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.TrainingStartDate, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTrainingStartDate"})
+                                                                        @Html.ValidationMessageFor(model => model.TrainingStartDate, "", new { @class = "text-danger validation-msg" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.TrainingStartTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTrainingStartTime"})
+                                                                        @Html.ValidationMessageFor(model => model.TrainingStartTime, "", new { @class = "text-danger validation-msg" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.TrainingEndTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTrainingEndTime" })
+                                                                        @Html.ValidationMessageFor(model => model.TrainingEndTime, "", new { @class = "text-danger validation-msg" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.TotalHours, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTotalHours" })
+                                                                        @Html.ValidationMessageFor(model => model.TotalHours, "", new { @class = "text-danger validation-msg" })
+                                                                    </td>
+
+                                                                    <td  style="text-align:center;">
+                                                                        <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                    </td>
+
+
+
+                                                                </tr>
+                                                            }
+
+                                                        </table><br />
+
+                                                    </div>
+
+
+                                                        <div class="row">
+                                                            
+
+                                                            <div class="col-xs-12 col-sm-4" hidden>
+                                                                <div class="form-group">
+                                                                    <label>Start Time:</label>
+                                                                   
+                                                                    @Html.TextBoxFor(model => model.TrainingStartTime, htmlAttributes: new { placeholder = "Select Start Time", @class = "form-control", autocomplete = "off" })
+
+
+                                                                    @Html.ValidationMessageFor(model => model.TrainingStartTime, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-4" hidden>
+                                                                <div class="form-group">
+                                                                    <label>End Time:</label>
+                                                                   @Html.TextBoxFor(model => model.TrainingEndTime, htmlAttributes: new { placeholder = "Select End Time", @class = "form-control", autocomplete = "off" })
+
+
+                                                                    @Html.ValidationMessageFor(model => model.TrainingEndTime, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Total Hours:</label>
+
+                                                                    @Html.TextBoxFor(model => model.TotalHours, new { @placeholder = "Total Hours Here", @class = "form-control T", @OnKeyPress = "return isNumber(event)" })
+                                                                    @*@Html.ValidationMessageFor(model => model.TrainerName, "", new { @class = "text-danger validation-msg" })*@
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div id="IdVenue">
+
+                                                                <div class="col-xs-12 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label>Venue:</label>
+                                                                        <div class="form-group">
+                                                                            @Html.TextBoxFor(model => model.Venue, new { @placeholder = "Training Venue Here", @class = "form-control" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                                <div class="col-xs-12 col-sm-4" id="IdLink">
+                                                                    <div class="form-group">
+                                                                        <label>Link:</label>
+                                                                        <div class="form-group">
+                                                                            @Html.TextBoxFor(model => model.Link, new { @placeholder = "Link", @class = "form-control" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                           
+
+
+                                                        </div>
+
+
+
+                                                    <div class="row" id="divQuize1" hidden>
+
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Quiz End Date:</label>
+
+                                                                @Html.TextBoxFor(model => model.QuizeEndDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom TrainingStartDate", autocomplete = "off" })
+
+
+                                                                @Html.ValidationMessageFor(model => model.QuizeEndDate, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Quiz Total Quetion:</label>
+                                                                @Html.TextBoxFor(model => model.QuizeEndTime1, htmlAttributes: new { placeholder = "Quize Total Quetion", @class = "form-control", autocomplete = "off" })
+
+
+                                                                @Html.ValidationMessageFor(model => model.QuizeEndTime1, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                      
+
+                                                    </div>
+
+
+
+                                               
+
+                                                        <div class="row">
+                                                            @*<div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Remarks:</label>
+                                                                    @Html.TextBoxFor(model => model.Remarks, new { @placeholder = "Remarks Here", @class = "form-control" })
+                                                                </div>
+                                                            </div>*@
+                                                            <div class="col-xs-12 col-sm-4" hidden>
+                                                                <div class="form-group">
+                                                                    <label>Status:</label>
+                                                                    @Html.RadioButtonFor(m => m.Status, "Yes")
+                                                                    <label>Yes</label>&nbsp;&nbsp;
+                                                                    @Html.RadioButtonFor(m => m.Status, "No")
+                                                                    <label>No</label>
+                                                                </div>
+                                                            </div>
+                                                            @*<div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Quiz End Time In Hours:</label>
+                                                                    @Html.TextBoxFor(model => model.QuizeTimeInHours, new { @placeholder = "Quiz end Time in Hours Here", @class = "form-control" })
+                                                                </div>
+                                                            </div>*@
+                                                        </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <label><i class="fa fa-paperclip" style="color:black;"></i> Documents (Attendance sheet - Signed, Evaluation records, etc) : <span style="color:#ff0000;">*</span></label>
+                                                                @*<input type="file" class="filepond" name="filepond" id="FileUpload" multiple data-max-files="10">*@
+                                                              
+                                                                <input type="file" class="filepond" name="DocUpload1" multiple id="DocUpload1">
+
+                                                                <input hidden="hidden" id="hdfFileUpload" name="DocUpload1" class="hidden" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @if (Model != null)
+                                                    {
+                                                        if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                        {
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <div class="form-group">
+                                                                        <ul class="Attachment">
+                                                                            @foreach (var item in Model.FileDetails)
+                                                                            {
+                                                                                <li>
+                                                                                    <a class="title" href="~/TrainingSchedule/Download1/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                                    <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem">X</a>
+                                                                                </li>
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">There are no attachments !!!</p>
+                                                    }
+
+
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12">
+                                                                <div class="form-group">
+                                                                    @if (Model.PK_TrainingScheduleId != 0)
+                                                                    {
+                                                                        <button type="button" class="btn btn-default insert-form-btn" id="btnUserSave1"> Update Training </button>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                    <button type="button" class="btn btn-default insert-form-btn" id="btnUserSave1"> Save Training </button>
+                                                                    }
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                @*<button type="reset" class="btn btn-default insert-form-btn"> Reset </button>*@
+                                                                @*<button type="submit" class="btn btn-default insert-form-btn" id="btnAttendance">Attendance</button>*@
+                                                                @*<button type="submit" class="btn btn-default insert-form-btn" id="btnFeedBack">FeedBack</button>*@
+                                                              
+                                                                    <a href="@Url.Action("TrainingAttendance", "TrainingSchedule" , new {@tid = Model.PK_TrainingScheduleId })" class="btn btn-default insert-form-btn">Attendance</a>
+                                                                
+                                                                <a href="@Url.Action("FeedBackList", "TrainingSchedule" , new {@tid = Model.PK_TrainingScheduleId })" class="btn btn-default insert-form-btn">FeedBack</a>
+                                                                
+                                                                @if (Model.PK_TrainingScheduleId != 0)
+                                                                {
+                                                                    @*<div id="SetQ">*@
+                                                                        <a href="@Url.Action("QuestionList", "Quiz" , new {@sid = Model.PK_TrainingScheduleId })" class="btn btn-default insert-form-btn SetQ" >Set Quiz</a>
+
+                                                                    @*</div>*@
+                                                                
+                                                                }
+                                                                <a href="@Url.Action("ResultList", "Quiz" , new {@rid = Model.PK_TrainingScheduleId })" class="btn btn-default insert-form-btn">Quiz Result</a>
+                                                                <a href="@Url.Action("TrainingRecordById", "TrainingSchedule" , new {@tid = Model.PK_TrainingScheduleId })" class="btn btn-default insert-form-btn">Training Record</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+</form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      
+        $("#TrainingName").change(function () {
+          
+            var name = $("#TrainingName").val();
+            $.ajax({
+                url: '@Url.Action("GetProposedDate", "TrainingSchedule")',
+                type: "POST",
+                datatype: 'json',
+                data: { tname: name },
+                success: function(objTSM){
+                    $('#ProposedDate').val(objTSM.ProposedDate).val()
+                }
+            });
+        });
+    });
+</script>
+
+
+
+<script>
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+</script>
+
+@*Bind Trainer Name*@
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+
+        $("#TrainerName").autocomplete({
+            source: function (req, resp) {
+                $.ajax({
+                 
+                    url: '@Url.Action("GetTrainerName", "TrainingSchedule")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: GetCurrentSearchTerm(req.term) },
+                    success: function (data) {
+                        resp($.map(data, function (item) {
+                            return { label: item.TrainerName, value: item.TrainerName };
+                        }))
+
+                    }
+                })
+            },
+
+
+
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function () {
+            return false;
+        }
+        });
+        function splitCurrentText(LastTerm) {
+
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+
+            return splitCurrentText(LastTerm).pop();
+        }
+    });
+</script>
+
+<script>
+    $(function () {
+        $(".TrainerName").autocomplete({
+            source: function (request, response) {
+                debugger
+                $.ajax({
+                    url: '@Url.Action("GetTrainerName", "TrainingSchedule")',
+                    data: "{ 'prefix': '" + GetCurrentSearchTerm(request.term) + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data)
+                    {
+                        response($.map(data, function (item)
+                        {
+                          //  alert(1);
+                            return { label: item.CompanyName, value: item.CompanyNames };
+
+                        }));
+                    },
+                    error: function (response)
+                    {
+                        
+                    },
+                    failure: function (response)
+                    {
+                        
+                    }
+                });
+            },
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function () {
+                return false;
+            },
+            minLength: 2
+        });
+
+        function splitCurrentText(LastTerm) {
+
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+
+            return splitCurrentText(LastTerm).pop();
+        }
+
+    });
+
+</script>
+
+@*Bind Trainee Name*@
+
+<script type="text/javascript">
+
+
+
+    $(function () {
+
+        $(".TraineeName").autocomplete({
+
+            source: function (req, response)
+            {
+                var obsType = $('#hdnObsType').val();
+                var EmpCat = $('#hdnEmpCategory').val();
+                var TypeOfEmp = $('#hdnTypeOfEmployee').val();
+                var BranchID = $('#hdnBranchId').val();
+
+                var TrainType = $("#TrainType").val();
+                var UserRole = $("#hdnUserRole").val();
+
+
+
+
+                // OBS Value
+                var selectedProjectType = $("#IdOBSType option:selected");
+                var obsType = "";
+                selectedProjectType.each(function () {
+                    obsType += $(this).val() + ",";
+                });
+                obsType = obsType.replace(/,\s*$/, "");
+
+                // Branch
+                var selected = $("#BrAuditee option:selected");
+                var BranchID = "";
+                selected.each(function () {
+                    BranchID += $(this).val() + ",";
+                });
+                BranchID = BranchID.replace(/,\s*$/, "");
+
+
+                // User Role
+                var selectedUserRole = $("#IdUserRole option:selected");
+                var UserRole = "";
+                selectedUserRole.each(function () {
+                    UserRole += $(this).val() + ",";
+                });
+                UserRole = UserRole.replace(/,\s*$/, "");
+
+
+
+                // Scope
+                var selectedScope = $("#BrScope option:selected");
+                var ddlScopeValue = "";
+                selectedScope.each(function () {
+                    ddlScopeValue += $(this).val() + ",";
+                });
+                ddlScopeValue = ddlScopeValue.replace(/,\s*$/, "");
+
+                // Emp Category
+                var selectedIdEmploymentCate = $("#IdEmploymentCate option:selected");
+                var EmpCat = "";
+                selectedIdEmploymentCate.each(function () {
+                    EmpCat += $(this).val() + ",";
+                });
+                EmpCat = EmpCat.replace(/,\s*$/, "");
+
+                //alert(obsType);
+                //alert(BranchID);
+                //alert(UserRole);
+                //alert(EmpCat);
+
+               
+
+                $.ajax({
+
+                    url: '@Url.Action("GetTraineeName", "TrainingSchedule")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: GetCurrentSearchTerm(req.term), obsType: obsType, EmpCat: EmpCat, TypeOfEmp: TypeOfEmp, Branch: BranchID, TrainType: TrainType, UserRole: UserRole },
+                    //data: "{ prefix': '" + GetCurrentSearchTerm(req.term), obsType: obsType, EmpCat: EmpCat, TypeOfEmp: TypeOfEmp, Branch: BranchID, TrainType: TrainType, UserRole: UserRole + "'}",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                           //  alert(1);
+                             return { label: item.CompanyName, value: item.CompanyNames };
+
+                        }));
+                    },
+                    error: function (response)
+                    {
+                      //  alert(2)
+
+                    },
+                    failure: function (response) {
+                     //   alert(3)
+                    }
+                })
+            },
+
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function ()
+            {
+                return false;
+            }
+        });
+
+        function splitCurrentText(LastTerm)
+        {
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm)
+        {
+            return splitCurrentText(LastTerm).pop();
+        }
+
+    });
+   
+
+</script>
+
+
+
+
+
+@*If External Trainer*@
+
+<script type="text/javascript">
+    $(function () {
+        $("#chkExternalTrainer").click(function () {
+            if ($(this).is(":checked")) {
+                $("#ExternalTrainer").removeAttr("disabled");
+                $("#ExternalTrainer").focus();
+            } else {
+                $("#ExternalTrainer").attr("disabled", "disabled");
+            }
+        });
+    });
+</script>
+
+
+@*Calender Control*@
+
+
+<script>
+    $(function () {
+        $(".TrainingStartDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".CTrainingStartDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $(".TrainingEndDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+
+        });
+    });
+</script>
+
+
+
+
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        $('#TrainingStartTime').timepicker();
+        //$('#QuizeEndTime1').timepicker();
+        
+        $('#TrainingEndTime').timepicker();
+
+        $('.CTrainingStartTime').timepicker();
+        $('.CTrainingEndTime').timepicker();
+
+        if ($("#ExternalTrainer").val() != "")
+        {
+            $("#chkExternalTrainer").prop("checked", true);
+        }
+        else 
+        { $("#chkExternalTrainer").prop("checked", false); }
+       
+        
+        var CAssign = $("#TrainType").val();
+        DivDisplay(CAssign)
+
+
+
+    });
+
+
+
+
+
+</script>
+
+<script type="text/javascript">
+   
+    $(function () {
+        $('#BrAuditee').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+    $(function () {
+        $('#BrScope').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+    $(function () {
+        $('#IdCategory').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+    $(function () {
+        $('#IdOBSType').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+    $(function () {
+        $('#IdEmploymentCate').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+    $(function () {
+        $('#IdUserRole').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+
+    function DivDisplay(CAssign)
+    {
+        debugger;
+        if (CAssign == "ELearn")
+        {
+            $("#divUserRole").css('display', 'block')
+            $("#divVideo").css('display', 'block')
+            $("#divECategory").css('display', 'block')
+            
+            var DL = document.getElementById("IdVenue");
+            DL.className += " addCSS";
+        }
+        else if (CAssign == "ClassRoom")
+        {
+            var DL = document.getElementById("IdLink");
+            DL.className += " addCSS";
+        }
+        else if (CAssign == "OnJob") {
+            var DL = document.getElementById("IdLink");
+            DL.className += " addCSS";
+        }
+        else if (CAssign == "SupervisedTraining") {
+            $("#IdVenue").removeClass("addCSS")
+            var DL = document.getElementById("IdLink");
+            DL.className += " addCSS";
+        }
+        else if (CAssign == "Webx") {
+            //var DL = document.getElementById("IdLink");
+            $("#IdLink").removeClass("addCSS")
+            var DL = document.getElementById("IdVenue");
+            DL.className += " addCSS";
+           
+        }
+        
+        else
+        {
+            $("#divUserRole").css('display', 'none')
+            $("#divVideo").css('display', 'none')
+            $("#divECategory").css('display', 'none')
+
+
+            $("#IdVenue").removeClass("addCSS")
+
+
+        }
+    }
+
+    function DivDisplay1() {
+        var ddlQ = $("#EvaluationMethod").val();
+        debugger;
+        if (ddlQ == "Quiz") {
+            
+            $("#divQuize").css('display', 'block')
+            //$(".SetQ").css('display', 'block')
+            
+        }
+        else {
+            
+            $("#divQuize").css('display', 'none')
+            //$(".SetQ").css('display', 'none')
+           
+        }
+    }
+
+
+    function CheckData()
+    {
+        var blnshow = false;
+
+        var ddlProjectType = $("#hdnObsType").val();
+        var EC = $("#hdnEmpCategory").val();
+        var Branch = $("#hdnBranchId").val();
+        var TrainType = $("#TrainType").val();
+        var UserRole = $("#hdnUserRole").val();
+        var ETrainType = $("#hdnETrainType").val();
+
+        
+        ///alert("Branch " + ddlCountryValue);
+
+        if (ddlProjectType != '' && EC != '' && Branch != '' && TrainType != '')
+        {
+            blnshow = true;
+        }
+
+        //if (TrainType == "ELearn")
+        //{
+        //    if (UserRole == '' || ETrainType == '')
+        //    {
+        //        blnshow = false;
+        //    }
+        //    else
+        //    {
+        //        blnshow = true;
+        //    }
+        //}
+
+        if (blnshow)
+        {
+            
+            $("#divTypeofEmp").removeClass("addCSS")
+        }
+        else
+        {
+            var DL = document.getElementById("divTypeofEmp");
+            DL.className += " addCSS";
+        }
+        
+
+       
+    }
+
+    
+</script>
+
+<script>
+    $(document).ready(function () {
+        var ddlQ1 = $("#EvaluationMethod").val();
+        debugger;
+        if (ddlQ1 == "Quiz") {
+            
+            $("#divQuize").css('display', 'block')
+            //$(".SetQ").css('display', 'block')
+
+        }
+        else {
+            
+            $("#divQuize").css('display', 'none')
+            //$(".SetQ").css('display', 'none')
+
+        }
+    })
+</script>
+
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+
+<script>
+    $("#btnUserSave1").on('click', function (event)
+    {
+        debugger;
+        var a = "1";
+        var DArray = [];
+        var PK_TrainingScheduleId = $("#PK_TrainingScheduleId").val();
+       /// alert(PK_TrainingScheduleId);
+        var TrainingName = $("#TrainingName").val();
+        var TrainerName = $("#TrainerName").val();
+        var chkExternalTrainer = $("#chkExternalTrainer").val();
+        var ExternalTrainer = $("#ExternalTrainer").val();
+
+
+        var ProjectType = $("#hdnObsType").val();
+        var Link = $("#Link").val();
+
+        var selectedProjectType = $("#IdOBSType option:selected");
+        var ddlOBSValue = "";
+        selectedProjectType.each(function () {
+            ddlOBSValue += $(this).val() + ",";
+        });
+        ddlOBSValue = ddlOBSValue.replace(/,\s*$/, "");
+
+
+        //var EmployementCategory = $("#hdnEmpCategory").val();
+        var EmployementCategory = $("#IdEmploymentCate").val();
+        
+        
+
+
+
+        var selected = $("#BrAuditee option:selected");
+        var ddlCountryValue = "";
+        selected.each(function () {
+            ddlCountryValue += $(this).val() + ",";
+        });
+        ddlCountryValue = ddlCountryValue.replace(/,\s*$/, "");
+
+        var selectedUserRole = $("#IdUserRole option:selected");
+        var ddlUserRole = "";
+        selectedUserRole.each(function () {
+            ddlUserRole += $(this).val() + ",";
+        });
+        ddlUserRole = ddlUserRole.replace(/,\s*$/, "");
+        var UserRole = $("#IdUserRole option:selected");
+
+
+        var selectedScope = $("#BrScope option:selected");
+        var ddlScopeValue = "";
+        selectedScope.each(function () {
+            ddlScopeValue += $(this).val() + ",";
+        });
+        ddlScopeValue = ddlScopeValue.replace(/,\s*$/, "");
+
+
+        var selectedIdEmploymentCate = $("#IdEmploymentCate option:selected");
+        var ddlEmploymentCateValue = "";
+        selectedIdEmploymentCate.each(function () {
+            ddlEmploymentCateValue += $(this).val() + ",";
+        });
+        ddlEmploymentCateValue = ddlEmploymentCateValue.replace(/,\s*$/, "");
+
+
+        var selectedCategory = $("#IdCategory option:selected");
+        var Category = "";
+        selectedCategory.each(function () {
+            Category += $(this).val() + ",";
+        });
+        Category = Category.replace(/,\s*$/, "");
+
+       // var Category = $("#Category").val();
+        var EvaluationMethod = $("#EvaluationMethod").val();
+
+        var TrainType = $("#TrainType").val();
+        var TrainingStartDate = $("#TrainingStartDate").val();
+        var TrainingEndDate = $("#TrainingEndDate").val();
+
+        var TrainingStartTime = $("#TrainingStartTime").val();
+        var TrainingEndTime = $("#TrainingEndTime").val();
+        var TotalHours = $("#TotalHours").val();
+
+        var Venue = $("#Venue").val();
+        ///var Remarks = $("#Remarks").val();
+        var status = $("#Status").val();
+       /// var QuizeTimeInHours = $("#QuizeTimeInHours").val();
+        var TypeOfEmployee = $("#hdnTypeOfEmployee").val();
+        var TraineeName = $("#TraineeName").val();
+        
+        var ETrainType = $("#hdnETrainType").val();
+        
+
+        if (TrainingName == "" || TrainingName == null) {
+            alert("Please Enter Training Name !!!");
+            $("#TrainingName").focus()
+            return false;   
+        }
+
+        //if (Category == "" || Category == null) {
+        //    alert("Please Enter Category !!!");
+        //    $("#Category").focus()
+        //    return false;
+        //}
+        if (EvaluationMethod == "" || EvaluationMethod == null) {
+            alert("Please Enter Evaluation Method !!!");
+            $("#EvaluationMethod").focus()
+            return false;
+        }
+
+        //var varQuizeEndDate = $("#QuizeEndDate").val();
+        //var QuizeEndTime1 = $("#QuizeEndTime1").val();
+        //if (EvaluationMethod == "Quiz") {
+        //    if (varQuizeEndDate == "" || varQuizeEndDate == null)
+        //    {
+        //        alert("Please Enter Quiz End Date!!!");
+        //        $("#QuizeEndDate").focus()
+        //        return false;
+        //    }
+        //    if (QuizeEndTime1 == "" || QuizeEndTime1 == null)
+        //    {
+        //        alert("Please Enter Total Question !!!");
+        //        $("#QuizeEndTime1").focus()
+        //        return false;
+        //    }
+            
+        //}
+
+        
+
+      
+        if ($('#chkExternalTrainer').prop('checked'))
+        {
+            if (ExternalTrainer == "" || ExternalTrainer == null)
+            {
+                alert("Please Enter External Trainer Name !!!");
+                $("#ExternalTrainer").focus()
+                return false;
+            }
+        }
+        else
+        {
+            if (TrainerName == "" || TrainerName == null) {
+                alert("Please Enter Trainer Name !!!");
+                $("#TrainerName").focus()
+                return false;
+            }
+        }
+
+        if (ddlOBSValue == "" || ddlOBSValue == null) {
+            alert("Please Enter OBS Type!!!");
+            $("#ProjectType").focus()
+            return false;
+        }
+
+        //if (EmployementCategory == "" || EmployementCategory == null) {
+        if (ddlEmploymentCateValue == "" || ddlEmploymentCateValue == null)
+        {
+            alert("Please Enter Employeement Category!!!");
+            $("#EmployementCategory").focus()
+            return false;
+        }
+
+
+        if (ddlCountryValue == "" || ddlCountryValue == null) {
+            alert("Please Enter Branch Details!!!");
+            $("#ddlCountryValue").focus()
+            return false;
+        }
+
+        if (ddlScopeValue == "" || ddlScopeValue == null) {
+            alert("Please Enter Scope Details!!!");
+            $("#ddlScopeValue").focus()
+            return false;
+        }
+
+        //if (Category == "" || Category == null) {
+        //    alert("Please Enter Branch Details!!!");
+        //    $("#Category").focus()
+        //    return false;
+        //}
+
+        if (EvaluationMethod == "" || EvaluationMethod == null) {
+            alert("Please Enter Evaluation Method!!!");
+            $("#EvaluationMethod").focus()
+            return false;
+        }
+
+
+        if (TrainType == "" || TrainType == null) {
+            alert("Please Enter Training Type!!!");
+            $("#TrainType").focus()
+            return false;
+        }
+
+
+        if (TrainType != 'ELearn')
+        {
+            //if (TrainingStartDate == "" || TrainingStartDate == null) {
+            //    alert("Please Enter Training Start Date!!!");
+            //    $("#TrainingStartDate").focus()
+            //    return false;
+            //}
+
+
+            //if (TrainingEndDate == "" || TrainingEndDate == null) {
+            //    alert("Please Enter Training End Date!!!");
+            //    $("#TrainingEndDate").focus()
+            //    return false;
+            //}
+
+            //if (TrainingStartTime == "" || TrainingStartTime == null) {
+            //    alert("Please Enter Training Start Time!!!");
+            //    $("#TrainingStartTime").focus()
+            //    return false;
+            //}
+
+            //if (TrainingEndTime == "" || TrainingEndTime == null) {
+            //    alert("Please Enter Training End Time!!!");
+            //    $("#TrainingEndTime").focus()
+            //    return false;
+            //}
+
+            //if (TotalHours == "" || TotalHours == null) {
+            //    alert("Please Enter Total Hours !!!");
+            //    $("#TotalHours").focus()
+            //    return false;
+            //}
+
+            if (Venue == "" || Venue == null) {
+                alert("Please Enter Venue Details !!!");
+                $("#Venue").focus()
+                return false;
+            }
+        }
+        
+        if (TrainType == 'ELearn')
+        {
+            var POFile = $("[name='DocUpload']").val();
+
+            if (POFile == "") {
+                alert("Please attach Video file for Training");
+                $("#DocUpload").focus();
+                return false;
+            }
+            //if (UserRole == "" || UserRole == null) {
+            if (ddlUserRole == "" || ddlUserRole == null) {
+                alert("Please Select User Role !!!");
+                $("#UserRole").focus()
+                return false;
+            }
+
+            //if (ETrainType == "" || ETrainType == null)
+            //{
+            //    alert("Please Select Category of E-Learning  !!!");
+            //    $("#ETrainType").focus()
+            //    return false;
+            //}         
+        }
+
+        if (TypeOfEmployee == "")
+        {
+            TypeOfEmployee = "ForAllEmp";
+        }
+
+        if (TypeOfEmployee == "ForSelEmp")
+        {
+            if(TraineeName=='')
+            {
+                alert("Please Enter Trainee Names");
+                $("#TraineeName").focus();
+                return false;
+            }
+        }
+            
+        
+
+        $('.trDomestic').each(function () {
+            var trD = {};
+
+            var TrainingStartDate = $(this).find('.CTrainingStartDate').val();
+            var TrainingStartTime = $(this).find('.CTrainingStartTime').val();
+            var TrainingEndTime = $(this).find('.CTrainingEndTime').val();
+            var TotalHours = $(this).find('.CTotalHours').val();
+
+
+            if (TrainingStartDate == 'TrainingStartDate') {
+                strMsg = "Please fill Training Start Date";
+                $(this).find('.CTrainingStartDate').focus()
+                return a = "2";
+            }
+            if (TrainingStartDate == 'TrainingStartTime') {
+                strMsg = "Please fill Training Start Date";
+                $(this).find('.CTrainingStartTime').focus()
+                return a = "2";
+            }
+            if (TrainingStartDate == 'TrainingEndTime') {
+                strMsg = "Please fill Training Start Date";
+                $(this).find('.CTrainingEndTime').focus()
+                return a = "2";
+            }
+
+            if (a !== "2") {
+
+                trD['TrainingStartDate'] = TrainingStartDate;
+                trD['TrainingStartTime'] = TrainingStartTime;
+                trD['TrainingEndTime'] = TrainingEndTime;
+                trD['TotalHours'] = TotalHours;
+             
+                DArray.push(trD);
+            }
+            else {
+                alert(strMsg);
+                return false;
+            }
+
+        });
+
+
+
+        var TrainingDetails =
+        {
+            PK_TrainingScheduleId:PK_TrainingScheduleId,
+            TrainingName: TrainingName,
+            TrainerName: TrainerName,
+            chkExternalTrainer: chkExternalTrainer,
+            ExternalTrainer: ExternalTrainer,
+            ProjectType: ddlOBSValue,
+            EmployementCategory: ddlEmploymentCateValue,
+            Category: Category,
+            EvaluationMethod: EvaluationMethod,
+            TrainType: TrainType,
+            TrainingStartDate: TrainingStartDate,
+            TrainingEndDate: TrainingEndDate,
+            TrainingStartTime: TrainingStartTime,
+            TrainingEndTime: TrainingEndTime,
+            TotalHours: TotalHours,
+            TypeOfEmployee:TypeOfEmployee,
+            Venue: Venue,
+            UserRole: ddlUserRole,
+            status: status,
+            Branch: ddlCountryValue,
+            Scope: ddlScopeValue,
+            ETrainType: ETrainType,
+            TraineeName: TraineeName,
+            //QuizeEndDate:varQuizeEndDate,
+            //QuizeEndTime1: QuizeEndTime1,
+            Link:Link,
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ScheduleTraining", "TrainingSchedule")',
+            dataType: 'json',
+            Async: false,
+            data: JSON.stringify({ TSM: TrainingDetails, "DArray": DArray, }),
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (response)
+            {
+
+                if (response.result == 'Redirect') {
+                    alert("Training Details has been Save successfully!!!")
+                    window.location = response.url;
+                }
+
+                if (response.result == 'Update') {
+                    alert("Training Details has been updated successfully!!!")
+                    window.location = response.url;
+                }
+            }
+        })
+
+
+    });
+
+
+
+
+
+    $(document).ready(function ()
+    {
+
+        $("#divUserRole").css('display', 'none')
+        $("#divVideo").css('display', 'none')
+        $("#divECategory").css('display', 'none')
+        
+        var selectedTrainingType = $("#TrainType option:selected");
+        if (selectedTrainingType == 'ELearn')
+        {
+            var DL = document.getElementById("IdVenue");
+            DL.className += " addCSS";
+            $("#divVideo").css('display', 'block')
+        }
+        else
+        {
+            $("#IdVenue").removeClass("addCSS")
+            $("#divVideo").css('display', 'none')
+        }
+        
+        var DL = document.getElementById("divTypeofEmp");
+
+      //  DL.className += " addCSS";
+    });
+
+  
+
+
+  function setObsValue(obsval)
+  {
+      $('#hdnObsType').val(obsval);
+  }
+
+  function setEmpCat(EmpCatval)
+  {
+      $('#hdnEmpCategory').val(EmpCatval);
+  }
+  
+  function SetEmpType(TypeOfEmp)
+  {
+      $('#hdnTypeOfEmployee').val(TypeOfEmp);
+      
+  }
+
+  function SetUserRoleType(UserRole) {
+      $('#hdnUserRole').val(UserRole);
+
+  }
+
+  function SetECategory(ECategory)
+  {
+      $('#hdnETrainType').val(ECategory);
+
+  }
+
+  
+
+  function SetEmpType(TypeOfEmp) {
+      $('#hdnTypeOfEmployee').val(TypeOfEmp);
+
+      if (TypeOfEmp == "ForAllEmp") {
+        //  $("#TraineeName").attr("readonly", "readonly");
+      }
+      else {
+       //   $("#TraineeName").removeAttr("readonly");
+
+      }
+  }
+     
+
+  $(function () {
+      $("#BrAuditee").change(function () {
+         
+          $('#hdnBranchId').val($('option:selected', this).val());
+          CheckData();
+      });
+  });
+
+  $(function () {
+      $("#IdEmploymentCate").change(function () {
+          $('#hdnEmpCategory').val($('option:selected', this).val());
+          CheckData();
+      });
+  });
+  $(function () {
+      $("#IdOBSType").change(function () {
+          $('#hdnObsType').val($('option:selected', this).text());
+          CheckData();
+      });
+  });
+  $(function () {
+      $("#IdUserRole").change(function () {
+          $('#hdnUserRole').val($('option:selected', this).text());
+          CheckData();
+      });
+  });
+
+
+
+</script>
+
+
+
+
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<script>
+    FilePond.parse(document.body);
+</script>
+
+<script>
+    FilePond.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(document.querySelector('.filepond'));
+</script>
+
+<script>
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment", "TrainingSchedule")'
+    });
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+
+    var DTRowCount = 1;
+
+    $(document).ready(function () {
+        debugger;
+        $(document).on("click", ".classAdd", function () { //
+            debugger;
+
+            $('body').on('focus', ".CTrainingStartDate", function () {
+                $(this).datepicker({ dateFormat: 'dd/mm/yy' });
+            });
+            $('body').on('focus', ".CTrainingStartTime", function () {
+                $(this).timepicker();
+            });
+            $('body').on('focus', ".CTrainingEndTime", function () {
+                $(this).timepicker();
+            });
+
+            
+
+
+            if ($('#DTestTable tr').length - 1 >= DTRowCount) {
+                var count = $('#DTestTable tr').length - 1;
+                DTRowCount = count;
+            }
+            //if (count < 3) {
+                DTRowCount += 1;
+                var contactdiv = '<tr class="trDomestic">' +
+              '<td>' +
+
+
+         '<input type="text"  style="text-align:center" name="TrainingStartDate"  class="form-control CTrainingStartDate" id="IDTrainingStartDate' + DTRowCount + '" /></td>' +
+         '<td><input type="text"  style="text-align:center" name="TrainingStartTime"  class="form-control CTrainingStartTime" id="IDTrainingStartTime' + DTRowCount + '" /></td>' +
+         '<td><input type="text"  style="text-align:center" name="TrainingEndTime"  class="form-control CTrainingEndTime" id="IDTrainingEndTime' + DTRowCount + '" /></td>' +
+         '<td><input type="text"  style="text-align:center" name="TotalHours"  class="form-control CTotalHours" onkeyup="CICI()" id="IDTotalHours' + DTRowCount + '" /></td>' +
+         '<td style="text-align:center"><button type="button" style="text-align:center" id="btnDelete" class="deleteContact btn btn btn-danger btn-xs">Remove</button></td>' +
+              '</tr>';
+
+                $('#DTestTable').append(contactdiv); // Adding these controls to Main table class
+
+
+          
+
+
+
+
+
+
+        });
+    });
+</script>
+
+<script>
+    $(document).on("click", ".deleteContact", function () {
+        $(this).closest("tr").remove(); // closest used to remove the respective 'tr' in which I have my controls
+        DTRowCount = DTRowCount - 1;
+        sumIt()
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    // <![CDATA[
+    function addRow() {
+        //copy the table row and clear the value of the input, then append the row to the end of the table
+        $("#DTestTable tbody tr:first").clone().find("input").each(function () {
+            $(this).val('');
+        }).end().appendTo("#DTestTable");
+    }
+</script>
+
+
+<!--filepond-->
+<!-- Load FilePond library -->
+
+<script>
+ function CICI() {
+        debugger;
+        $(".CTotalHours").on("keyup change", function (e) {
+            debugger;
+            var totalnew = 0, val;
+
+            $('.CTotalHours').each(function () {
+                val = $(this).val();
+                val = isNaN(val) || $.trim(val) === "" ? 0 : parseFloat(val);
+                totalnew += val;
+            });
+            $('.T').val(Math.round(totalnew));
+
+        })
+
+ }
+
+
+ $(".CTotalHours").on("keyup change", function (e) {
+     debugger;
+     var totalnew = 0, val;
+
+     $('.CTotalHours').each(function () {
+         val = $(this).val();
+         val = isNaN(val) || $.trim(val) === "" ? 0 : parseFloat(val);
+         totalnew += val;
+     });
+     $('.T').val(Math.round(totalnew));
+
+ })
+</script>

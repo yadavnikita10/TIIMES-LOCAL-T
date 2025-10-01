@@ -1,0 +1,293 @@
+﻿
+@model  List<TuvVision.Models.Report>
+@{ 
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TECHNICAL COMPETENCY EVALUATION</title>
+
+
+    <style>
+        body {
+            margin: 0;
+           font-family:'TNG Pro';
+            font-size: 12px;
+        }
+
+        table tr td {
+            vertical-align: top;
+        }
+
+        table.top-header > thead > tr > th {
+            border-top: 2px solid #000;
+            border-left: 2px solid #000;
+            border-bottom: 2px solid #000;
+            border-right: 2px solid #000;
+        }
+
+            table.top-header > thead > tr > th:nth-of-type(2) {
+                border-left: 0px solid #000;
+                border-right: 0px solid #000;
+            }
+
+        table.lasttable > thead > tr > td {
+            border-bottom: 2px solid #565656;
+        }
+
+        table.lasttable > tbody > tr > td {
+            border-right: 2px solid #565656;
+        }
+
+        table.lasttable > tbody > tr:last-child {
+            border-right: none;
+        }
+
+        .page1, .page2, .page3, .page4, .page5 {
+            position: relative;
+            page-break-after: always;
+        }
+    </style>
+
+</head>
+<body style="margin:0 auto;font-family:'TNG Pro';">
+    <div class="page1">
+        <table width="100%" cellpadding="5" cellspacing="0" class="top-header">
+            <thead>
+                <tr>
+                    <th width="25%" style="text-align: left; font-weight:normal;">
+                        F/MR/15/06<br>
+                        Effective date – Sep, 2012<br>
+                        Revision date – 11 Sept 2017<br>
+                        Page 1 of  5
+                    </th>
+                    <th width="50%">
+                        <span style="font-size: 18px;">Technical Competency Evaluation for Inspectors</span><br><br>
+                        <span style="font-size: 12px;">NAME OF THE INSPECTOR :     (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</span>
+                    </th>
+                    <th width="25%" style="text-align:center;"><img src="logo.jpg" alt="" style="max-width:80px;"></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td>
+
+                    <table width="100%" border="1" cellpadding="3" cellspacing="0" id="myTable">
+                        <thead>
+                            <tr>
+                                <th style="background: #f3f1f1; text-align: left;" colspan="5">BRANCH OFFICE :</th>
+                            </tr>
+                            <tr style="background: #e2e2e2;">
+                                <th width="5%">IAF Scope</th>
+                                <th width="15%">Field of Inspection</th>
+                                <th width="17%">RangeInspection</th>
+                                <th width="5%">AuthorizationLevel</th>
+                                <th width="5%" style="font-size:11px;">BasisOfAuthorization</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model as List<TuvVision.Models.Report>)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.IAFScope
+                                    </td>
+                                    <td>
+                                        @item.InspectionName
+                                    </td>
+                                    <td>
+                                        @item.RangeInspection
+                                    </td>
+                                    <td>
+                                        @item.AuthorizationLevel
+                                    </td>
+                                    <td>
+                                        @item.BasisOfAuthorization
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <table width="100%" cellpadding="3" cellspacing="0" class="lasttable" style="border: 2px solid #000;">
+                        <thead>
+                            <tr style="background: #e2e2e2;">
+                                <th width="30%" style="text-align: left; border-bottom: 2px solid #000; border-right: 2px solid  #565656;">Legend  - for Authorization level</th>
+                                <th width="30%" style="text-align: left; border-bottom: 2px solid #000; border-right: 2px solid  #565656;">Legend  - for Basis of Authorization</th>
+                                <th width="20%" style="text-align: left; border-bottom: 2px solid #000; border-right: 2px solid  #565656;"></th>
+                                <th width="20%" style="text-align: left; border-bottom: 2px solid #000;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1 – Can work under supervision.</td>
+                                <td>A–  Professional Qualification OR Past Experience till date </td>
+                                <td rowspan="2"><u>Updated on (Date):  15.12.2017</u></td>
+                                <td rowspan="2" style="border-right: none;"><u>Reviewed and authorized by Regional Head:</u></td>
+                            </tr>
+                            <tr>
+                                <td>2 – Can work individually under guidance of seniors. </td>
+                                <td>B -  Interview Assessment</td>
+                            </tr>
+                            <tr>
+                                <td>3 – Can work independently & guide others.</td>
+                                <td>C -  Training Imparted   OR Inspection Under Supervision</td>
+                                <td><u>Updated by (Name & Signature):</u></td>
+                                <td style="border-right: none;"><u>Name & Signature :</u></td>
+                            </tr>
+                            <tr>
+                                <td>4 - Can train, monitor, guide & evaluate others.</td>
+                                <td>D – Supervised Inspection completed</td>
+                                <td><u>Designation: Inspection  Engineer</u></td>
+                                <td style="border-right: none;"><u>Designation:</u> Manager(QA)</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>E –  Re-Assessment : Quiz  OR Interview </td>
+                                <td></td>
+                                <td style="border-right: none;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <table width="100%" border="1" cellpadding="3" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <td width="5%"></td>
+                                <td width="10%"></td>
+                                <td width="50%"></td>
+                                <td width="12%"></td>
+                                <td width="10%"></td>
+                                <td width="13%"></td>
+                            </tr>
+                            <tr>
+                                <td align="center" style="vertical-align: middle;">06</td>
+                                <td align="center" style="vertical-align: middle;">11Sept, 2017</td>
+                                <td style="vertical-align: middle;">
+                                    SCOPE 22 – ROLLING STOCK ACTIVITIES ADDED, BASIS OF AUTHORIZATION ADDED,
+                                    FIELD OF INSPECTION REVISED IN LINE WITH NABCB CERTIFICATE DETAILS
+                                </td>
+                                <td align="center" style="vertical-align: middle;">I.P. CHANDNA</td>
+                                <td align="center" style="vertical-align: middle;">NATARAJAN</td>
+                                <td align="center" style="vertical-align: middle;">AMIT NAIK</td>
+                            </tr>
+                            <tr>
+                                <td align="center" style="vertical-align: middle;">05</td>
+                                <td align="center" style="vertical-align: middle;">APRIL 2016</td>
+                                <td style="vertical-align: middle;">SCOPE 28 - CIVIL ACTIVITIES ADDED</td>
+                                <td align="center" style="vertical-align: middle;">I.P. CHANDNA</td>
+                                <td align="center" style="vertical-align: middle;">AMIT NAIK</td>
+                                <td align="center" style="vertical-align: middle;">SANDEEP DESHPANDE</td>
+                            </tr>
+
+                            <tr style="background: #e2e2e2;">
+                                <th width="5%" style="font-size:10px; vertical-align: middle;">REVISION NUMBER</th>
+                                <th width="15%" style="font-size:10px; vertical-align: middle;">DATE</th>
+                                <th width="70%" style="font-size:10px; vertical-align: middle;">REASON FOR REVISION</th>
+                                <th width="5%" style="font-size:10px; vertical-align: middle;">PREPARED BY</th>
+                                <th width="5%" style="font-size:10px; vertical-align: middle;">REVIEWED BY</th>
+                                <th width="5%" style="font-size:10px; vertical-align: middle;">APPROVED BY</th>
+                            </tr>
+                            <tr style="background: #8bccff;">
+                                <td colspan="6" style="font-size:13px; text-align: center; vertical-align: middle;"><strong>REVISION HISTORY</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+</body>
+</html>
+
+<script>
+        //$(function(){
+
+
+        //  var indexOfColumnToRowSpan = 0;
+        //  var $table = $('#myTable');
+
+        //  var rowSpanMap = {};
+        //  $table.find('tr').each(function(){
+        //    var valueOfTheSpannableCell = $($(this).children('td')[indexOfColumnToRowSpan]).text();
+        //    $($(this).children('td')[indexOfColumnToRowSpan]).attr('data-original-value', valueOfTheSpannableCell);
+        //    rowSpanMap[valueOfTheSpannableCell] = true;
+        //  });
+
+        //  for(var rowGroup in rowSpanMap){
+        //    var $cellsToSpan = $('td[data-original-value="'+rowGroup+'"]');
+        //    var numberOfRowsToSpan = $cellsToSpan.length;
+        //    $cellsToSpan.each(function(index){
+        //      if(index==0){
+        //        $(this).attr('rowspan', numberOfRowsToSpan);
+        //      }else{
+        //        $(this).hide();
+        //      }
+        //    });
+        //  }
+
+
+        //})();
+
+        //function fixit(selector) {
+        //    selector.each(function () {
+        //        var values = $(this).find("tr>td:first-of-type")
+        //        var run = 1
+        //        for (var i = values.length - 1; i > -1; i--) {
+        //            if (values.eq(i).text() === values.eq(i - 1).text()) {
+        //                values.eq(i).remove()
+        //                run++
+        //            } else {
+        //                values.eq(i).attr("rowspan", run)
+        //                run = 1
+        //            }
+        //        }
+        //    })
+        //}
+        //fixit($("#myTable"))
+
+
+</script>
+
+
+@*<button id="combine">Combine</button>*@
+
+@*<script>
+    !function(t,n,e,i){"use strict";function a(n,e){this.element=n,this.settings=t.extend({},o,e),this._defaults=o,this._name=s,this.init()}var s="rowspanizer",o={vertical_align:"top"};t.extend(a.prototype,{init:function(){var n=this,e=t(this.element),i=[];e.find("tr").each(function(n,e){t(this).find("td").each(function(n,e){var a=t(e),s=a.html();if("undefined"!=typeof i[n]&&"dato"in i[n]&&i[n].dato==s){var o=i[n].elem.data("rowspan");("undefined"==o||isNaN(o))&&(o=1),i[n].elem.data("rowspan",parseInt(o)+1).addClass("rowspan-combine"),a.addClass("rowspan-remove")}else i[n]={dato:s,elem:a}})}),t(".rowspan-combine").each(function(e,i){var a=t(this);a.attr("rowspan",a.data("rowspan")).css({"vertical-align":n.settings.vertical_align})}),t(".rowspan-remove").remove()}}),t.fn[s]=function(n){return this.each(function(){t.data(this,"plugin_"+s)||t.data(this,"plugin_"+s,new a(this,n))})}}(jQuery,window,document);
+
+
+    $('#combine').on('click', function() {
+        $("#myTable").rowspanizer({ vertical_align: 'middle' });
+    });
+    </script>*@
+@Scripts.Render("~/AllJsAndCss/js/b.js")
+<script src="~/AllJsAndCss/js/b.js"></script>
+<script>
+    $(document).ready(function () {
+        !function (t, n, e, i) { "use strict"; function a(n, e) { this.element = n, this.settings = t.extend({}, o, e), this._defaults = o, this._name = s, this.init() } var s = "rowspanizer", o = { vertical_align: "top" }; t.extend(a.prototype, { init: function () { var n = this, e = t(this.element), i = []; e.find("tr").each(function (n, e) { t(this).find("td").each(function (n, e) { var a = t(e), s = a.html(); if ("undefined" != typeof i[n] && "dato" in i[n] && i[n].dato == s) { var o = i[n].elem.data("rowspan"); ("undefined" == o || isNaN(o)) && (o = 1), i[n].elem.data("rowspan", parseInt(o) + 1).addClass("rowspan-combine"), a.addClass("rowspan-remove") } else i[n] = { dato: s, elem: a } }) }), t(".rowspan-combine").each(function (e, i) { var a = t(this); a.attr("rowspan", a.data("rowspan")).css({ "vertical-align": n.settings.vertical_align }) }), t(".rowspan-remove").remove() } }), t.fn[s] = function (n) { return this.each(function () { t.data(this, "plugin_" + s) || t.data(this, "plugin_" + s, new a(this, n)) }) } }(jQuery, window, document);
+
+
+        $(function () {
+            $("#myTable").rowspanizer({ vertical_align: 'middle' });
+        });
+    })
+</script>
+@{
+    Html.AddJavaScript("~/AllJsAndCss/js/b.js");
+}
+
+@Html.RenderStyles()
+
+
+
+

@@ -1,0 +1,1834 @@
+﻿@model TuvVision.Models.InspectionvisitReportModel
+@{ string key = System.Configuration.ConfigurationManager.AppSettings["Web"].ToString(); }
+
+@{
+    ViewBag.Title = "Conclusion";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+    List<string> EditProdName = ViewBag.EditproductName as List<string>;
+    int k = 0;
+}
+@if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
+{
+    TempData["UpdateCompany"] = null;
+    @*<script type="text/javascript" language="javascript">
+               alert("Conclusion Saved Successfully ..!");
+        </script>*@
+}
+
+
+<style>
+    .ui-widget-header {
+        background: #3677e6 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+    /*-- Delete color-profile --*/
+    ul.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+    /*EndCode*/
+    /*-- Delete color-profile --*/
+    ul.AttachmentFormat {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.AttachmentFormat > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.AttachmentFormat > li a.title1 {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.AttachmentFormat > li a.deleteItemFormat {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+    /*EndCode*/
+</style>
+<!--multiselect-->
+@*<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />*@
+
+
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link href="~/AllJsAndCss/css/extrastyles.css" rel="stylesheet" />
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+
+
+
+@*@using (Html.BeginForm("VisitReportForm", "VisitReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+    {*@
+<form method="post" enctype="multipart/form-data" id="formic">
+
+
+    @Html.HiddenFor(m => m.PK_Call_ID)
+    @Html.HiddenFor(m => m.PK_IVR_ID)
+
+    @Html.HiddenFor(m => m.PK_SubJob_Id)
+    @Html.HiddenFor(m => m.chkARC)
+
+
+
+
+    @*@Html.AntiForgeryToken()*@
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+                            <br />
+                            <h5 class="dynamic-page-title dynamic-page-title-2 " style="padding-left: 11px;">Inspection Visit Report Number : @Session["VisitReportNo"]</h5>
+                            @*<a href="@Url.Action("IvrReports","VisitReport" )" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
+                            <div class="col-xs-12">
+                                @if (Model.PK_Call_ID != 0)
+                                {
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">General</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Item Description</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Reference Documents</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Stages Witnessed</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Document Reviewed</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Details Of Measuring Instrument</button>
+                                    <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Conclusion</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Image</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_Call_ID} )'">Report</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_Call_ID} )'">List of Issues</button>
+            }
+
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Conclusion</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Non Conformities Raised: <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("CreateNCR", "NCR",new { @SubJobId = Model.SubJob_No, IVRId = Model.PK_IVR_ID, Type = "VisitReport" } )'">NCR</button></label>
+
+                                                            @Html.DisplayFor(model => model.NCRNo)
+
+                                                            @if (!string.IsNullOrEmpty(Model.PDF))
+                                                            {
+                                                                //string[] pdf = (Model.Pdf).Split(',');
+                                                                <a id="btnPdf" class="btn btn-default insert-form-btn" href="@Url.Content("~/NCRPDF/"+@Model.PDF)" role="button" download="@Url.Content("~/NCRPDF/" +@Model.PDF)">
+                                                                    <i class="fa fa-download">@Model.PDF</i>
+                                                                    @Html.HiddenFor(model => Model.PDF)
+                                                                </a>
+
+                                                            }
+
+                                                            @Html.TextAreaFor(model => model.Non_Conformities_raised, new { @placeholder = "Enter Non Conformities Raised", @class = "form-control", @rows = "3" })
+                                                            @Html.ValidationMessageFor(model => model.Non_Conformities_raised, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Areas Of Concerns:</label><span style="color:#ff0000;">(Mention PO Item Number before statement)</span>
+                                                            @Html.TextAreaFor(model => model.Areas_Of_Concerns, new { @placeholder = "Enter Areas Of Concerns and click on add button", @class = "form-control", @rows = "3", id = "Areas_Of_Concerns" })
+
+                                                            @*<input type="text" id="Areas_Of_Concerns" style="width:140px" class = "form-control"/>*@
+
+
+
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="btnAdd" value="Add" />
+                                                @if (ViewData["AreasOfConcern"] != null)
+                                                {
+
+
+                                                    <table id="tblCustomers" class="table" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <th style="width:50px">Id</th>
+                                                            <th style="width:500px">Areas Of Concern</th>
+                                                            <th style="width:150px"></th>
+                                                        </tr>
+                                                        @*@foreach (Customer customer in Model)*@
+                                                        @foreach (var item in ViewData["AreasOfConcern"] as IEnumerable<TuvVision.Models.InspectionvisitReportModel>)
+                                                        {
+                                                            <tr>
+                                                                <td class="CustomerId" width="50px">
+                                                                    <span>@item.PkId</span>
+                                                                </td>
+                                                                <td class="Name" width="600px">
+                                                                    <span>@item.Areas_Of_Concerns</span>
+                                                                    <input type="text" value="@item.Areas_Of_Concerns" style="display:none;width:600px;height:100px;" />
+                                                                </td>
+
+                                                                <td width="150px">
+                                                                    <a class="Edit" href="javascript:;">Edit</a>
+                                                                    <a class="Update" href="javascript:;" style="display:none">Update</a>
+                                                                    <a class="Cancel" href="javascript:;" style="display:none">Cancel</a>
+                                                                    <a class="Delete" href="javascript:;">Delete</a>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </table>
+                                                }
+                                                else
+                                                {
+
+                                                    <table id="tblCustomers" class="table" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <th style="width:50px">Id</th>
+                                                            <th style="width:600px">Areas Of Concern</th>
+                                                            <th style="width:150px"></th>
+                                                        </tr>
+
+                                                        @if (Model.Areas_Of_Concerns != null || Model.Areas_Of_Concerns != "")
+                                                        {
+                                                            <input type="hidden" value="2" style="display:none" id="a" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="hidden" value="1" style="display:none" id="a" />
+                                                        }
+                                                        <tr>
+                                                            <td class="CustomerId">
+                                                                <span>@Model.PkId</span>
+                                                            </td>
+                                                            <td class="Name">
+                                                                <span>@Model.Areas_Of_Concerns</span>
+                                                                <input type="text" value="@Model.Areas_Of_Concerns" style="display:none;width:600px;height:100px;" />
+                                                            </td>
+
+                                                            <td>
+                                                                <a class="Edit" href="javascript:;">Edit</a>
+                                                                <a class="Update" href="javascript:;" style="display:none">Update</a>
+                                                                <a class="Cancel" href="javascript:;" style="display:none">Cancel</a>
+                                                                <a class="Delete" href="javascript:;">Delete</a>
+                                                            </td>
+                                                        </tr>
+
+
+
+                                                    </table>
+                                                }
+
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Pending Activities:</label><span style="color:#ff0000;">(Mention PO Item Number before statement)</span>@*<input type="button" id="btnAddPA" value="Add" />*@
+                                                            @Html.TextAreaFor(model => model.Pending_Activites, new { @placeholder = "Enter Pending Activites and click on add button", @class = "form-control", @rows = "3" })
+                                                            @Html.ValidationMessageFor(model => model.Pending_Activites, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="btnAddPA" value="Add" />
+                                                @if (ViewData["PA"] != null)
+                                                {
+
+                                                    <table id="tblPA" class="table" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <th style="width:50px">Id</th>
+                                                            <th style="width:600px">Pending Activities</th>
+                                                            <th style="width:150px"></th>
+                                                        </tr>
+
+
+
+                                                        @*@foreach (Customer customer in Model)*@
+                                                        @foreach (var item in ViewData["PA"] as IEnumerable<TuvVision.Models.InspectionvisitReportModel>)
+                                                        {
+
+                                                            <tr>
+                                                                <td class="PAId">
+                                                                    <span>@item.PkId</span>
+                                                                </td>
+                                                                <td class="PAName">
+                                                                    <span>@item.Pending_Activites</span>
+                                                                    <input type="text" value="@item.Pending_Activites" style="display:none;width:600px;height:100px;" />
+                                                                </td>
+
+                                                                <td>
+
+                                                                    <a class="Edit" href="javascript:;">Edit</a>
+                                                                    <a class="Update" href="javascript:;" style="display:none">Update</a>
+                                                                    <a class="Cancel" href="javascript:;" style="display:none">Cancel</a>
+                                                                    <a class="Delete" href="javascript:;">Delete</a>
+                                                                </td>
+                                                            </tr>
+                                                        }
+
+                                                    </table>
+
+
+                                                }
+                                                else
+                                                {
+                                                    <table id="tblPA" class="table" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <th style="width:50px">Id</th>
+                                                            <th style="width:600px">Pending Activities</th>
+                                                            <th style="width:150px"></th>
+                                                        </tr>
+                                                        @if (Model.Pending_Activites != null && Model.Pending_Activites != "")
+                                                        {
+                                                            <input type="hidden" value="2" style="display:none" id="b" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="hidden" value="1" style="display:none" id="b" />
+                                                        }
+                                                        <tr>
+                                                            <td class="PAId">
+                                                                <span>@Model.PkId</span>
+                                                            </td>
+                                                            <td class="PAName">
+                                                                <span>@Model.Pending_Activites</span>
+                                                                <input type="text" value="@Model.Pending_Activites" style="display:none;width:600px;height:100px;" />
+                                                            </td>
+
+                                                            <td>
+                                                                <a class="Edit" href="javascript:;">Edit</a>
+                                                                <a class="Update" href="javascript:;" style="display:none">Update</a>
+                                                                <a class="Cancel" href="javascript:;" style="display:none">Cancel</a>
+                                                                <a class="Delete" href="javascript:;">Delete</a>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>
+                                                }
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Identification Of Inspected Item:</label> <button type="button" class="btn btn-default news-btn" style="margin-bottom:15px;margin-left:10px;" data-toggle="modal" data-target="#myModal">Insert Statement</button>
+                                                            @Html.HiddenFor(model => model.Identification_Of_Inspected_AfterSave)
+                                                            <div class="textcontentUpdate">
+
+                                                            </div>
+
+                                                            @*<img src="@Url.Content(""+@Html.DisplayFor(model=>model.Identification_Of_Inspected))" width="75" height="75" />
+                                                                <span>@Html.DisplayFor(model => model.Identification_Of_Inspected)</span>*@
+                                                            @*@Html.DisplayFor(model=>model.Identification_Of_Inspected)*@
+                                                            @*<button type="reset" class="btn btn-default news-btn" data-toggle="modal" data-target="#myModal">Identification</button>*@
+
+
+                                                            @*<label>Insert List Option:</label>*@@*<button type="button" class="btn btn-default news-btn" style="margin-bottom:15px;margin-left:10px;" data-toggle="modal" data-target="#myModal">Insert Statement</button>*@
+
+
+                                                            @*@Html.TextAreaFor(model => model.Identification_Of_Inspected, new { @placeholder = "Type....", @class = "form-control", @rows = "3" })
+                                                                @Html.ValidationMessageFor(model => model.Identification_Of_Inspected, "", new { @class = "text-danger validation-msg" })*@
+                                                            <div class="textcontent" contenteditable="true" id="textcontent" name="textcontent">
+
+                                                            </div>
+                                                            <input hidden="hidden" id="hdnContent" name="hdnContent" class="hidden" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        debugger;
+                                                        var myHid = $('#Identification_Of_Inspected_AfterSave').val();
+
+
+                                                        //$('.textcontentUpdate').html(myHid);
+                                                        $('.textcontent').html(myHid);
+                                                        $('#Identification_Of_Inspected').val(myHid);
+                                                    });
+                                                </script>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Conclusion:</label><span style="color:#ff0000;"></span>
+
+                                                            @*@Html.DropDownListFor(m => m.Conclusion, new List<SelectListItem>
+                                                            {
+                                                            new SelectListItem{ Text="Select", Value = "" },
+                                                            new SelectListItem{ Text="Acceptable", Value = "Acceptable" },
+                                                            new SelectListItem{ Text="Partial Item(s) acceptable", Value = "Partial Item(s) acceptable" },
+                                                            new SelectListItem{ Text="Partial Stage(s) acceptable", Value = "Partial Stage(s) acceptable" },
+                                                            new SelectListItem{ Text="Not acceptable - Refer areas of concern and Pending activities", Value = "Not acceptable - Refer areas of concern and Pending activities" },
+                                                            new SelectListItem{ Text="Not acceptable - Refer Pending activities", Value = "Not acceptable - Refer Pending activities" },
+                                                            new SelectListItem{ Text="Offered Stages Acceptable", Value = "Offered Stages Acceptable" },
+                                                            new SelectListItem{ Text="Offered Stages Acceptable. For remaining stages refer pending activities.", Value = "Offered Stages Acceptable. For remaining stages refer pending activities." },
+                                                            new SelectListItem{ Text="Not acceptable", Value = "Not acceptable" },
+                                                            new SelectListItem{ Text="Not acceptable - Refer areas of concern", Value = "Not acceptable - Refer areas of concern" },
+                                                            new SelectListItem{ Text="Visit aborted", Value = "Visit aborted" },
+
+                                                            }, new { @class = "form-control", @id = "Conclusion" })*@
+
+
+
+                                                            @if (ViewBag.SubCatlist != null)
+                                                            {
+                                                                @Html.DropDownListFor(m => m.Conclusion, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Conclusion--", new { @class = "form-control", @id = "Conclusion", })
+                                                                @Html.ValidationMessageFor(model => model.Conclusion, "", new { @class = "text-danger validation-msg" })
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-xs-8"  id="divAcceptStages">
+                                                        <div class="form-group">
+                                                            <label>Acceptable Stages</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.acceptedStages, new { @placeholder = "Accepted Stages", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.acceptedStages, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Non Acceptable Stages</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.NonacceptedStages, new { @placeholder = "Non Accepted Stages", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.NonacceptedStages, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-xs-8" id="divAcceptItems">
+                                                        <div class="form-group">
+                                                            <label>Acceptable Items:</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.acceptedItems, new { @placeholder = "Accepted Items", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.acceptedItems, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Non Acceptable Items:</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.NonacceptedItems, new { @placeholder = "Non Accepted Items", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.NonacceptedItems, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label> Can IRN be issued? :</label>
+
+                                                            @Html.DropDownListFor(m => m.CanIRNbeissued, new List<SelectListItem>
+                                                            {
+                                                            new SelectListItem{ Text="Select", Value = "" },
+                                                            new SelectListItem{ Text="Yes for all items", Value = "Yes" },
+                                                            new SelectListItem{ Text="Partially", Value = "Partially" },
+                                                            new SelectListItem{ Text="Not for all items", Value = "No" },
+
+                                                            }, new { @class = "form-control", @id = "Type" })
+                                                            @Html.ValidationMessageFor(m => m.CanIRNbeissued, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-xs-5">
+                                                        <div class="form-group">
+                                                            <label>IRN can be issued for PO Item numbers:</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.IssuedPOItemNumbers, new { @placeholder = "Issued PO Item Numbers", @class = "form-control", @onkeypress = "return CheckNumeric(event);" })
+                                                            @Html.ValidationMessageFor(model => model.IssuedPOItemNumbers, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-xs-4" id="divProductLists">
+                                                        <div class="form-group">
+                                                            <label>Reason:</label><span style="color:#ff0000;">*</span>
+                                                            <div class="drpdomn"></div>
+
+                                                            @if (ViewBag.check == "productcheck")
+                                                            {
+                                                                <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required">
+                                                                    @foreach (var item in ViewBag.ProjectTypeItems)
+                                                                    {
+                                                                        if (EditProdName.Contains(item.Value))
+                                                                        {
+                                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@item.Value">@item.Text</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            else
+                                                            {
+                                                                <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required">
+
+                                                                    @{
+                                                                        if (ViewData["Drpproduct"] != null)
+                                                                        {
+
+                                                                            foreach (var item in ViewData["Drpproduct"] as IEnumerable<TuvVision.Models.InspectionvisitReportModel>)
+                                                                            {
+                                                                                <option value="@item.ReasonID">@item.ReasonName&nbsp; &nbsp;</option>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                        }
+
+                                                            @Html.ValidationMessageFor(model => model.ProductList, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                        <input type="text" class="hidden" id="ProductLists" />
+                                                    </div>
+
+                                                </div>
+
+
+
+
+
+
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-xs-6">
+                                                        <div class="form-group">
+                                                            <label>@Html.CheckBoxFor(model => model.Inspection_records, new { @type = "checkbox", @class = "checkBox" }) Inspection Records (Total Page Nos)</label>
+                                                            @Html.TextBoxFor(model => model.InspectiobRecord_Remark, new { @placeholder = "Enter Inspection Records", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.InspectiobRecord_Remark, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xs-12 col-xs-6">
+                                                        <div class="form-group">
+                                                            <label>@Html.CheckBoxFor(model => model.Other_Specify, new { @type = "checkbox", @class = "checkBox" }) Others Specify</label>
+                                                            @Html.TextBoxFor(model => model.OtherSpecifyRecords, new { @placeholder = "Enter Other Specify", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.OtherSpecifyRecords, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    @*<div class="col-xs-12 col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Inspection Photos (Refer Page Nos.):</label>
+                                                                @Html.CheckBoxFor(model => model.Inspection_Photo, new { @type = "checkbox", @class = "checkBox" })
+                                                                @Html.TextBoxFor(model => model.TempInspectionPhotosNo, new { @placeholder = "Inspection Photos No", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Inspection_Photo, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>*@
+                                                    <div class="col-xs-12 col-xs-6">
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.MasterListOfcalibratedInstruments, new { @type = "checkbox", @class = "checkBox" })
+                                                            <label>Master List Of calibrated Instruments / equipment</label>
+
+                                                            @Html.TextBoxFor(model => model.TempMaster_List_Of_calibrated_Instruments, new { @placeholder = "Master List Of calibrated Instruments", @class = "form-control" })
+
+                                                            @Html.ValidationMessageFor(model => model.MasterListOfcalibratedInstruments, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Distribution List: <span style="color:#ff0000;"></span></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group ">
+                                                            <label>@Html.CheckBoxFor(model => model.DTUVIndiaClientEndUser, new { @type = "checkbox", @class = "checkBox", @id = "1" }) TUV India Client / End User </label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group ">
+                                                            <label>@Html.CheckBoxFor(model => model.DTUVIndiaExecuting_Originating_Branch, new { @type = "checkbox", @class = "checkBox", @id = "2" }) TUVI Executing Branch / TUV Originating Branch </label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group ">
+                                                            <label>@Html.CheckBoxFor(model => model.DVendor_Sub_Vendor, new { @type = "checkbox", @class = "checkBox", @id = "3" }) Vendor / Sub Vendor </label>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-xs-12">
+                                                        <div class="form-group ">
+
+                                                            <label>
+                                                                @Html.CheckBoxFor(model => model.TiimeCheckBox, new { @type = "checkbox", @class = "checkBox" })
+                                                                Time -
+                                                            </label> <span style="color:#ff0000;">
+                                                                ( Tick if it is a customer specific requirement.Inserted data will be visible on IVR)
+
+                                                            </span>
+
+
+
+
+                                                        </div>
+                                                    </div>
+                                                    @*<div class="col-xs-12 col-xs-4">
+                                                        <div class="form-group ">
+                                                            <label>In Time:</label>
+
+                                                            @Html.TextBoxFor(model => model.Intime, new { @placeholder = "Enter In Time", @class = "form-control ", @type = "time" })
+                                                            @Html.ValidationMessageFor(model => model.Intime, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-xs-4">
+                                                        <div class="form-group">
+                                                            <label>Out Time:</label>
+                                                            @Html.TextBoxFor(model => model.Outtime, new { @placeholder = "Enter Out Time", @class = "form-control", @type = "time" })
+                                                            @Html.ValidationMessageFor(model => model.Outtime, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>*@
+
+                                                </div>
+
+
+                                                @if (ViewBag.VisitDateINOUTTime != null)
+                                                {
+                                                    var dates = "";
+
+                                                    <h3 class="form-page-title">Time Sheet</h3>
+                                                    foreach (var item in ViewBag.VisitDateINOUTTime  as IEnumerable<TuvVision.Models.InspectionvisitReportModel>)
+                                                    {
+                                                        
+
+                                                        <div class="row">
+
+                                                            <div class="col-xs-12 col-sm-3">
+                                                                <div class="form-group">
+                                                                    <label>Start Date:</label>
+                                                                    @Html.TextBoxFor(model => model.lstVisitDateINOUTTime[k].DateSe, "{0:dd MMM yyyy}", htmlAttributes: new
+               {
+                   placeholder = "Select Start Date",
+                   @Value = item.DateSe,
+                   @class = "form-control form-control-custom ",
+                   autocomplete = "off",
+                   @readonly = "readonly"
+               })
+                                                                    
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xs-12 col-xs-3">
+                                                                <div class="form-group ">
+                                                                    <label>In Time:</label>
+
+                                                                    @Html.TextBoxFor(model => model.lstVisitDateINOUTTime[k].Intime, new { @placeholder = "Enter In Time", @class = "form-control ", @type = "time", @Value = item.Intime })
+                                                                    @Html.ValidationMessageFor(model => model.Intime, "", new { @class = "text-danger validation-msg" })
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-xs-3">
+                                                                <div class="form-group">
+                                                                    <label>Out Time:</label>
+                                                                    @Html.TextBoxFor(model => model.lstVisitDateINOUTTime[k].Outtime, new { @placeholder = "Enter Out Time", @class = "form-control", @type = "time" , @Value = item.Outtime })
+                                                                    @Html.ValidationMessageFor(model => model.Outtime, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                        k++;
+                                                    }
+                                                }
+
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group ">
+
+                                                            <label>
+                                                                @Html.CheckBoxFor(model => model.ExpenseCheckBox, new { @type = "checkbox", @class = "checkBox" })
+                                                                Travel Expenses in INR:
+                                                            </label>
+
+                                                            <span style="color:#ff0000;">   (Tick if it is a customer specific requirement.Inserted data will be visible on IVR)</span>
+
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group ">
+                                                            @Html.TextAreaFor(model => model.Expenses, new { @placeholder = "Enter Expenses", @class = "form-control", @rows = "1" })
+                                                            @Html.ValidationMessageFor(model => model.Expenses, "", new { @class = "text-danger validation-msg" })
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label><i class="fa fa-paperclip" style="color:black;"></i> @*Related Documents*@ Inspection Records / Reports : </label> <br /> <span style="color:#ff0000;">Note:</span> 1) Attach endorsed documents during inspection here. <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2) Attach reports in customer specific formats.
+                                                            <input type="file" class="filepond" name="FileUpload" id="FileUpload" multiple>
+
+                                                            <input hidden="hidden" id="FileUpload" name="FileUpload" class="hidden" />
+                                                        </div>
+                                                    </div>
+
+                                                    @if (Model != null)
+                                                    {
+                                                        if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                        {
+                                                            <input type="hidden" value="Yes" name="testing" id="testing" />
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <ul class="Attachment">
+                                                                        @foreach (var item in Model.FileDetails)
+                                                                        {
+                                                                            <li>
+                                                                                @*<a class="title" href="@Url.Action("Download1", "VisitReport", new { @p = item.IDS + item.Extension, @d= item.PK_ID })">@item.FileName</a>*@
+                                                                                @*<a class="title1" href="~/VisitReport/Download1/?d=@item.FileName">@item.FileName</a>*@
+                                                                                <a class="title1" href="~/VisitReport/Download1/?d=@item.PK_ID">@item.FileName</a>
+                                                                                <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem">X</a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="hidden" value="" name="testing" id="testing" />
+                                                            <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">There is no attachments !!!</p>
+                                                    }
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>
+                                                                <i class="fa fa-paperclip" style="color:black;"></i> Reference Documents :
+                                                            </label><br /> <span style="color:#ff0000;">
+
+                                                                Note :
+                                                            </span> 1) Attach referred P.O. , PR/MR/ARM, QAP/ITP/QCP, Drawings, Datasheets, Procedures & others etc. <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) If referred documents are already available on call page please do not attach here again. <br />
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) Rename the file denoting the file contents before uploading.  @*<span style="color:#ff0000;">*</span>*@
+
+                                                            <input type="file" class="filepond" name="FileUpload1" id="FileUpload1" multiple>
+                                                            <input hidden="hidden" id="hdfFileUpload1" name="FileUpload1" class="hidden" />
+                                                        </div>
+                                                    </div>
+                                                    @if (Model != null)
+                                                    {
+                                                        if (Model.RefFileDetails != null && Model.RefFileDetails.Count > 0)
+                                                        {
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <ul class="AttachmentFormat">
+                                                                        @foreach (var item in Model.RefFileDetails)
+                                                                        {
+                                                                            <li>
+                                                                                <a class="title1" href="~/VisitReport/Download2/?d=@item.PK_ID">@item.FileName</a>
+                                                                                @*<a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem">X</a>*@
+                                                                                <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem">X</a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">There is no attachments !!!</p>
+                                                    }
+                                                </div>
+
+                                                @Html.HiddenFor(m => m.Identification_Of_Inspected)
+                                                <div class="col-xs-12 text-center">
+                                                    <button type="submit" id="btnSave" name="btnSave" class="btn btn-default insert-form-btn"> Save </button>
+                                                    @*<button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("UpdateReports", "VisitReport", new { @PK_CALL_ID = Model.PK_Call_ID })'">Print</button>*@
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!--Contact Details By Manoj -->
+
+
+                                </div><!-- /.box-shadow -->
+                            </div><!-- /.col -->
+
+                        </div><!-- /.row -->
+                    </div><!-- /.col -->
+
+
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+            <!--End of header-->
+
+        </div>
+    </div>
+</form>
+@*}*@
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Insert List Option</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+                    <ul class="nav-tabs nav-tabs-pop-ul" id="myTabs" role="tablist">
+                        <li role="presentation" class="dropdown active">
+                            <a href="#" class="dropdown-toggle" id="myTabDrop1" data-toggle="dropdown" aria-controls="myTabDrop1-contents" aria-expanded="false">Select Type <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="active"><a href="#plates" role="tab" data-toggle="tab" aria-expanded="true">Plates</a></li>
+                                <li><a href="#pipes" role="tab" data-toggle="tab" aria-expanded="false">Pipes</a></li>
+                                <li><a href="#tubes" role="tab" data-toggle="tab" aria-expanded="false">Tubes</a></li>
+                                <li><a href="#fasteners" role="tab" data-toggle="tab" aria-expanded="false">Fasteners</a></li>
+                                <li><a href="#pressurevessels" role="tab" data-toggle="tab" aria-expanded="false">Pressure Vessels</a></li>
+                                <li><a href="#pumps" role="tab" data-toggle="tab" aria-expanded="false">Pumps</a></li>
+                                <li><a href="#instruments" role="tab" data-toggle="tab" aria-expanded="false">Instruments</a></li>
+                                <li><a href="#motors" role="tab" data-toggle="tab" aria-expanded="false">Motors</a></li>
+                                <li><a href="#gaskets" role="tab" data-toggle="tab" aria-expanded="false">Gaskets</a></li>
+                                <li><a href="#valves" role="tab" data-toggle="tab" aria-expanded="false">Valves</a></li>
+                                <li><a href="#random" role="tab" data-toggle="tab" aria-expanded="false">Random Electrical Items – Panels/Cabinets/Cables/Conductors/Transformers/Bust duct</a></li>
+                                <li><a href="#castings" role="tab" data-toggle="tab" aria-expanded="false">Castings</a></li>
+                                <li><a href="#generalstatements" role="tab" data-toggle="tab" aria-expanded="false">General Statements</a></li>
+                                <li><a href="#stampimageonly" role="tab" data-toggle="tab" aria-expanded="false">Stamp Images only</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+
+
+                        <div class="tab-pane fade active in" role="tabpanel" id="plates">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>All plates stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> or check testing as per specified requirements.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Plates selected per heat/per size hard stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted plates hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer's marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted plates hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted plates identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""></span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="pipes">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>All pipes stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Pipes selected per heat/per size hard stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted pipes hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted pipes hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected pipes hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining pipes hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected pipes hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""><img src="images/logo.png" style="width:30px;height:30px;" alt=""> &amp; the remaining pipes hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted pipes identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="">.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___ randomly selected &amp; inspected pipes identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining pipes as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="tubes">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected tubes identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining tubes as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>100% tubes identified with hard stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the metal tags attached to the bundles.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Inspected tubes identified with undersigned inspectors signature.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Inspected tubes identified with hard stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the metal tags attached to the tube bundles &amp; remaining tubes with <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the metal tags.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="fasteners">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>Fasteners randomly selected per heat/per size hard stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp;Inspected fasteners hard stamped on the face as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining quantity identified with soft stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the tags attached with gunny bags/boxes.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp;Inspected fasteners hard stamped on the face as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> &amp; the remaining quantity identified with soft stamp as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> on the tags attached with gunny bags/boxes.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="pressurevessels">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>Hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the equipment name plate.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the manhole flange alongside the manufacturers hard punched details.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="pumps">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>Hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the discharge nozzle flange.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="instruments">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted items identified with soft TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on stickers.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected items identified with soft TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining items as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on stickers.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="motors">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>Hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> beside the motor name plate.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="gaskets">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted items identified with soft TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on stickers/tags.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="valves">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>All inspected valves hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All inspected valves hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___per size per class randomly selected &amp; inspected valves double hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining valves single hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___per size per class randomly selected &amp; inspected valves double hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""><img src="images/logo.png" style="width:30px;height:30px;" alt=""> &amp; the remaining valves single hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="random">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted items identified with soft TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on stickers.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturers marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturers marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the material.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> on the material.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="castings">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>Integral test bar stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near the heat number for check testing as per specified requirements.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Integral test bar stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near the heat number for check testing as per specified requirements.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Integral test bar hard stamped on Steel strip as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near the heat number before/during pouring witness.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="generalstatements">
+                            <ul class="checkbox-ul">
+                                <li><label><input type="checkbox" class="chkbox"><span>All randomly selected and inspected items hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> and remaining quantity hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="">.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All randomly selected and inspected items hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""><img src="images/logo.png" style="width:30px;height:30px;" alt=""> and remaining quantity hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt="">.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Randomly selected samples stamped as <img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" role="tabpanel" id="stampimageonly">
+                            <ul class="checkbox-ul">
+
+                                <li><label><input type="checkbox" class="chkbox"><span>Stamped as <img src="@key/Stamp/1. Inspection - Regular - Hard Stamp.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Stamp/1. Inspection - Regular - Hard Stamp.jpg" style="width:30px;height:30px;" alt="">&nbsp;&nbsp;&nbsp;<img src="@key/Stamp/1. Inspection - Regular - Hard Stamp.jpg" style="width:30px;height:30px;" alt=""> </span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Stamped as <img src="@key/Stamp/3. Inspection - Low Stress - Hard Stamp.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Stamp/3. Inspection - Low Stress - Hard Stamp.jpg" style="width:30px;height:30px;" alt="">&nbsp;&nbsp;&nbsp;<img src="@key/Stamp/3. Inspection - Low Stress - Hard Stamp.jpg" style="width:30px;height:30px;" alt=""> </span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Stamped as <img src="@key/Stamp/2. Inspection - Check test - Hard Stamp.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Stamp/2. Inspection - Check test - Hard Stamp.jpg" style="width:30px;height:30px;" alt="">&nbsp;&nbsp;&nbsp;<img src="@key/Stamp/2. Inspection - Check test - Hard Stamp.jpg" style="width:30px;height:30px;" alt=""> </span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Stamped as <img src="@key/Stamp/10. PED - Hard Stamp - 1.jpg" style="width:30px;height:30px;" alt=""> </span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Stamped as <img src="@key/Stamp/11. PED  Hard Stamp - 2.jpg" style="width:30px;height:30px;" alt=""> </span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Stamped as <img src="@key/Stamp/12. PED Hard Stamp - 3.jpg" style="width:30px;height:30px;" alt=""> </span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Stamped as <img src="@key/Stamp/14. SMPV - Hard Stamp.jpg" style="width:30px;height:30px;" alt=""> </span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Stamped as <img src="@key/Stamp/ASME - Soft stamp.JPG" style="width:30px;height:30px;" alt=""> </span></label></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary insertcontent">Insert</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.deleteItem').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#PK_ID").val();
+            if (confirm('Do you really want to Delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteConFile")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("Something went Wrong, Please try again!");
+                })
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('.deleteItem1').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#PK_ID").val();
+            if (confirm('Do you really want to Delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteConFile1")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("Something went Wrong, Please try again!");
+                })
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.deleteItemFormat').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#PK_ID").val();
+            if (confirm('Do you really want to Delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteConFile1")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("Something went Wrong, Please try again!");
+                })
+            }
+        });
+    });
+</script>
+
+<script>
+    var CheckedIndentiication = [];
+    var markup = "";
+    $('#Identification_Of_Inspected').val('');
+    $('.chkIdentification').click(function () {
+        if ($(this).is(":checked") == true) {
+            CheckedIndentiication.push($(this).val());
+            $('#Identification_Of_Inspected').val(CheckedIndentiication.toString())
+            //markup += '   '<ul><li>' + CheckedIndentiication + '</li></ul>';
+            //$('#Identification_Of_Inspected').val(markup)
+            //for (var i = 0; i < CheckedIndentiication.length; i++)
+            //{
+            //    $('#Identification_Of_Inspected').val(CheckedIndentiication[i].toString())
+            //}
+        }
+    });
+
+    $('#btnSave').on('click', function () {
+        debugger;
+
+        var checkbox1 = document.getElementById("1");
+        var checkbox2 = document.getElementById("2");
+        var Conclusion = $("#Conclusion").val();
+
+        if (Conclusion == "Select") {
+            alert("Select Conclusion");
+            $("#Conclusion").focus();
+            return false;
+        } else {
+
+        }
+
+        if (checkbox1.checked) {
+
+        } else {
+            alert("Select TUV India Client / End User Checkbox");
+            $("#1").focus();
+            return false;
+        }
+        if (checkbox2.checked) {
+
+        } else {
+            alert("Select TUVI Executing Branch / TUV Originating Branch Checkbox");
+            $("#2").focus();
+            return false;
+        }
+
+
+
+        var content = document.getElementById('textcontent').innerHTML;
+        var contenttext = document.getElementById('textcontent').innerText;
+
+        var Type = $("#Type").val();
+        var IssuedPOItemNumbers = $("#IssuedPOItemNumbers").val();
+
+
+        var multipleValues = $("#ProductLists").val() || [];
+        var p = multipleValues.join(",");
+
+        $('#hdnContent').val(content);
+        $('#Identification_Of_Inspected').val(content);
+        $('#Identification_Of_Inspected_AfterSave').val(content);
+
+
+        if (Type != 'Yes') {
+            if (multipleValues == '') {
+                alert("Please Enter Reason for Not issueing IRN !!!");
+                $("#ProductLists").focus();
+                return false;
+            }
+            else {
+                $("#formic").submit();
+            }
+        }
+        else if (Type == 'Partially') {
+            if (IssuedPOItemNumbers == '') {
+                alert("Insert PO Number for which IRN can be issued.  !!!");
+                $("#IssuedPOItemNumbers").focus();
+                return false;
+            }
+            else {
+                $("#formic").submit();
+            }
+
+        }
+        else {
+            $("#formic").submit();
+        }
+
+    });
+</script>
+
+<!--Start:This is for modal checkbox content to be inserted in form div-->
+<script>
+    var Identification;
+    $('.chkbox').click(function () {
+        debugger
+        var text = "";
+        $('.chkbox:checked').each(function () {
+            text += $(this).parent().find('span').html() + "<br>";
+        });
+        text = text.substring(0, text.length - 1);
+        $('.insertcontent').click(function () {
+            $('.textcontent').html(text);
+            $('#Identification_Of_Inspected').val(text);
+            $('#Identification_Of_Inspected_AfterSave').val(text);
+        });
+    });
+
+    //function Validate()
+    //{
+    //    Identification = $('.textcontent').html();
+    //    $('#Identification_Of_Inspected').val(Identification);
+    //}
+
+</script>
+
+
+
+@****************************************************************************************Script Started Here******************************************************************@
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+
+<script>
+    FilePond.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(document.querySelector('.filepond'));
+</script>
+<script>
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment", "VisitReport")'
+    });
+</script>
+
+<script>
+    FilePond1.parse(document.body);
+</script>
+
+<script>
+    FilePond1.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond1.create(document.querySelector('.filepond1'));
+</script>
+
+<script>
+    FilePond1.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment1", "VisitReport")'
+    });
+</script>
+
+
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+
+@*Areas Of Concern*@
+
+<script type="text/javascript">
+    $(function () {
+        debugger;
+        // Remove the dummy row if data present.
+        var rowCount = $('#tblCustomers tr').length;
+        var test = $("#a").val();
+
+        if (test == "1") {
+            var row = $("#tblCustomers tr:last-child");
+            row.find(".Edit").hide();
+            row.find(".Delete").hide();
+            row.find("span").html('&nbsp;');
+        }
+        else {
+            if ($("#tblCustomers tr").length >= 2) {
+                // $("#tblCustomers tr:eq(1)").remove();
+            } else {
+                var row = $("#tblCustomers tr:last-child");
+                row.find(".Edit").hide();
+                row.find(".Delete").hide();
+                row.find("span").html('&nbsp;');
+            }
+        }
+
+
+
+
+    });
+
+    function AppendRow(row, customerId, name) {
+        //Bind CustomerId.
+        $(".CustomerId", row).find("span").html(customerId);
+
+        //Bind Name.
+        $(".Name", row).find("span").html(name);
+        $(".Name", row).find("input").val(name);
+
+
+
+        row.find(".Edit").show();
+        row.find(".Delete").show();
+        $("#tblCustomers").append(row);
+    };
+
+    //Add event handler.
+    //$("body").on("click", "#btnAdd", function () {
+    //    var txtName = $("#txtAreaOfConcern");
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/VisitReport/InsertConcern1",
+    //        data: '{Areas_Of_Concerns: "' + txtName.val() + '" }',
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "json",
+    //        success: function (r) {
+    //            var row = $("#tblCustomers tr:last-child");
+    //            if ($("#tblCustomers tr:last-child span").eq(0).html() != "&nbsp;") {
+    //                row = row.clone();
+    //            }
+    //            AppendRow(row, r.CustomerId, r.Name, r.Country);
+    //            txtAreaOfConcern.val("");
+
+    //        }
+    //    });
+    //});
+
+
+
+
+    $('#btnAdd').on('click', function () {
+        debugger
+        var Conclusion =
+				{
+				    Areas_Of_Concerns: $("#Areas_Of_Concerns").val(),
+
+				    PK_Call_ID: $("#PK_Call_ID").val(),
+				}
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("InsertConcern1", "VisitReport")',
+            dataType: 'json',
+            Async: false,
+            data: JSON.stringify({ Conclusion: Conclusion }),
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (r) {
+
+
+                var row = $("#tblCustomers tr:last-child");
+                if ($("#tblCustomers tr:last-child span").eq(0).html() != "&nbsp;") {
+
+                    row = row.clone();
+                }
+                AppendRow(row, r.PkId, r.Areas_Of_Concerns);
+                $("#Areas_Of_Concerns").val("");
+
+
+
+
+
+            }
+        });
+
+
+
+
+
+    });
+
+
+
+
+
+
+
+    //Edit event handler.
+    $("body").on("click", "#tblCustomers .Edit", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                $(this).find("input").show();
+                $(this).find("span").hide();
+            }
+        });
+        row.find(".Update").show();
+        row.find(".Cancel").show();
+        row.find(".Delete").hide();
+        $(this).hide();
+    });
+
+    //Update event handler.
+    $("body").on("click", "#tblCustomers .Update", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                span.html(input.val());
+                span.show();
+                input.hide();
+            }
+        });
+        row.find(".Edit").show();
+        row.find(".Delete").show();
+        row.find(".Cancel").hide();
+        $(this).hide();
+
+        var customer = {};
+        var Conclusion =
+           {
+               //Areas_Of_Concerns: $("#Areas_Of_Concerns").val(),
+               Areas_Of_Concerns: row.find(".Name").find("span").html(),
+
+
+               PkId: row.find(".CustomerId").find("span").html(),
+           }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateConcern", "VisitReport")',
+
+            data: JSON.stringify({ Conclusion: Conclusion }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    });
+
+    //Cancel event handler.
+    $("body").on("click", "#tblCustomers .Cancel", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                input.val(span.html());
+                span.show();
+                input.hide();
+            }
+        });
+        row.find(".Edit").show();
+        row.find(".Delete").show();
+        row.find(".Update").hide();
+        $(this).hide();
+    });
+
+    //Delete event handler.
+    $("body").on("click", "#tblCustomers .Delete", function () {
+        debugger;
+        if (confirm("Do you want to delete this row?")) {
+            var row = $(this).closest("tr");
+            var customerId = row.find("span").html();
+            var Conclusion =
+          {
+
+              Areas_Of_Concerns: row.find(".Name").find("span").html(),
+
+              PkId: row.find(".CustomerId").find("span").html(),
+          }
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteConcern", "VisitReport")',
+                data: JSON.stringify({ Conclusion: Conclusion }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if ($("#tblCustomers tr").length > 2) {
+                        row.remove();
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+
+@*Pending Activity*@
+<script type="text/javascript">
+    $(function () {
+        debugger;
+        //Remove the dummy row if data present.
+        var rowCount = $('#tblPA tr').length;
+        var test1 = $("#b").val();
+        if (test1 == "1") {
+            var row = $("#tblPA tr:last-child");
+            row.find(".Edit").hide();
+            row.find(".Delete").hide();
+            row.find("span").html('&nbsp;');
+        }
+        else {
+
+
+            if ($("#tblPA tr").length >= 2) {
+                // $("#tblPA tr:eq(1)").remove();
+
+            } else {
+                var row = $("#tblPA tr:last-child");
+
+                row.find(".Edit").hide();
+                row.find(".Delete").hide();
+                row.find("span").html('&nbsp;');
+            }
+        }
+    });
+    function AppendRow1(row, customerId, name) {
+        //Bind CustomerId.
+        $(".PAId", row).find("span").html(customerId);
+
+        //Bind Name.
+        $(".PAName", row).find("span").html(name);
+        $(".PAName", row).find("input").val(name);
+
+
+
+        row.find(".Edit").show();
+        row.find(".Delete").show();
+        $("#tblPA").append(row);
+    };
+
+
+
+
+
+
+    $('#btnAddPA').on('click', function () {
+        debugger
+        var Conclusion =
+				{
+				    Areas_Of_Concerns: $("#Pending_Activites").val(),
+
+				    PK_Call_ID: $("#PK_Call_ID").val(),
+				}
+
+        $.ajax({
+
+            type: 'POST',
+            url: '@Url.Action("PendingActivities", "VisitReport")',
+            dataType: 'json',
+            Async: false,
+            data: JSON.stringify({ Conclusion: Conclusion }),
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (r) {
+                debugger
+
+                var row = $("#tblPA tr:last-child");
+                if ($("#tblPA tr:last-child span").eq(0).html() != "&nbsp;") {
+                    row = row.clone();
+                }
+                AppendRow1(row, r.PkId, r.Pending_Activites);
+                $("#Pending_Activites").val("");
+
+
+
+
+
+            }
+        });
+
+
+
+
+
+    });
+
+
+
+
+
+
+
+    //Edit event handler.
+    $("body").on("click", "#tblPA .Edit", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                $(this).find("input").show();
+                $(this).find("span").hide();
+            }
+        });
+        row.find(".Update").show();
+        row.find(".Cancel").show();
+        row.find(".Delete").hide();
+        $(this).hide();
+    });
+
+    //Update event handler.
+    $("body").on("click", "#tblPA .Update", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                span.html(input.val());
+                span.show();
+                input.hide();
+            }
+        });
+        row.find(".Edit").show();
+        row.find(".Delete").show();
+        row.find(".Cancel").hide();
+        $(this).hide();
+
+        var customer = {};
+        var Conclusion =
+           {
+               //Areas_Of_Concerns: $("#Areas_Of_Concerns").val(),
+               Areas_Of_Concerns: row.find(".PAName").find("span").html(),
+
+
+               PkId: row.find(".PAId").find("span").html(),
+           }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateConcern", "VisitReport")',
+
+            data: JSON.stringify({ Conclusion: Conclusion }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    });
+
+    //Cancel event handler.
+    $("body").on("click", "#tblPA .Cancel", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                input.val(span.html());
+                span.show();
+                input.hide();
+            }
+        });
+        row.find(".Edit").show();
+        row.find(".Delete").show();
+        row.find(".Update").hide();
+        $(this).hide();
+    });
+
+    //Delete event handler.
+    $("body").on("click", "#tblPA .Delete", function () {
+        if (confirm("Do you want to delete this row?")) {
+            var row = $(this).closest("tr");
+            var customerId = row.find("span").html();
+            var Conclusion =
+          {
+
+              Areas_Of_Concerns: row.find(".PAName").find("span").html(),
+
+
+              PkId: row.find(".PAId").find("span").html(),
+          }
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteConcern", "VisitReport")',
+                data: JSON.stringify({ Conclusion: Conclusion }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if ($("#tblPA tr").length > 2) {
+                        row.remove();
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+@*<script>
+        $('#Type').on('click', function () {
+            debugger
+            var CopyNew =
+                    {
+                        PK_Call_ID: $('#Type').val(),
+                    }
+
+            $.ajax({
+
+                type: 'POST',
+                url: '@Url.Action("GetItemPONo", "VisitReport")',
+                dataType: 'json',
+                Async: false,
+                data: JSON.stringify({ CopyNew: CopyNew }),
+                enctype: "multipart/form-data",
+                contentType: "application/json; charset=utf-8",
+                success: function (address) {
+                    debugger
+
+                    if (response.success == 1) {
+                        alert("Data Copy Successfuly");
+                    }
+                    else
+                    {
+                        alert("Something went wrong please try again.");
+                    }
+
+
+                }
+
+            })
+        });
+    </script>*@
+
+<script>
+    $(document).ready(function ()
+    {
+
+        if ($("#Conclusion").val() == "2") {
+            document.getElementById('divAcceptItems').style.display = "block";
+            document.getElementById('divAcceptStages').style.display = "none";
+        }
+        else if ($("#Conclusion").val() == "3") {
+            document.getElementById('divAcceptStages').style.display = "block";
+            document.getElementById('divAcceptItems').style.display = "none";
+
+        }
+        else {
+            document.getElementById('divAcceptStages').style.display = "none";
+            document.getElementById('divAcceptItems').style.display = "none";
+        }
+
+        if ($("#Type").val() == "Yes") {
+            document.getElementById('IssuedPOItemNumbers').readOnly = true;
+            document.getElementById('divProductLists').style.display = "none"
+
+        }
+        if ($("#Type").val() == "No") {
+            document.getElementById('IssuedPOItemNumbers').readOnly = true;
+            document.getElementById('divProductLists').style.display = "block"
+        }
+
+        if ($("#Type").val() == "") {
+
+            document.getElementById('divProductLists').style.display = "none"
+        }
+
+      
+
+        $("#Type").change(function () {
+            debugger;
+            var a = $("#PK_Call_ID").val();
+
+
+
+            if ($("#Type").val() == "Yes") {
+                var Address = {};
+
+                Address.url = '@Url.Action("GetItemPONo", "VisitReport")';
+                Address.type = "Get";
+                Address.data = { PK_Call_Id: $("#PK_Call_ID").val() };
+                Address.datatype = "json";
+                Address.ContentType = "application/json";
+                Address.success = function (address) {
+                    $("#IssuedPOItemNumbers").val(address.Po_No).val();
+                    document.getElementById('IssuedPOItemNumbers').readOnly = true;
+                };
+                Address.error = function () { alert("Error in Getting Address !"); };
+                $.ajax(Address);
+                document.getElementById('divProductLists').style.display = "none";
+            }
+            else if ($("#Type").val() == "No") {
+                $("#IssuedPOItemNumbers").val("");
+                document.getElementById('IssuedPOItemNumbers').readOnly = true;
+                document.getElementById('divProductLists').style.display = "block";
+
+            }
+            else {
+                $("#IssuedPOItemNumbers").val("");
+                document.getElementById('IssuedPOItemNumbers').readOnly = false;
+                document.getElementById('divProductLists').style.display = "block";
+            }
+        });
+    });
+
+    $(function () {
+        $('#ProductLists').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+</script>
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#Auditee').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+</script>
+
+<script>
+
+    $("#Conclusion").change(function () 
+    {
+        debugger;
+        
+
+
+      //  alert($("#Conclusion").val());
+
+        if ($("#Conclusion").val() == "2") 
+        {           
+            document.getElementById('divAcceptItems').style.display = "block";
+            document.getElementById('divAcceptStages').style.display = "none";
+        }
+        else if ($("#Conclusion").val() == "3") 
+        {
+            document.getElementById('divAcceptStages').style.display = "block";
+            document.getElementById('divAcceptItems').style.display = "none";
+
+        }
+        else
+        {
+            document.getElementById('divAcceptStages').style.display = "none";
+            document.getElementById('divAcceptItems').style.display = "none";
+        }
+    });
+    
+</script>

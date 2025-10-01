@@ -1,0 +1,181 @@
+﻿@model TuvVision.Models.ExpenseItem
+@{
+    ViewBag.Title = "GenerateExpenseVoucher";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int k = 0;
+}
+
+@*calender control*@
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+@using (Html.BeginForm("ExpenseVoucher", "ExpenseVoucher", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div class="main-content3 xs-max-height">
+        <div class="row">
+            <div class="col-xs-12 text-right">
+                <a href="@Url.Action("VoucherStatus", "ExpenseVoucher")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+
+            </div>
+        </div>
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>From Date:</label>
+                        @*@Html.TextBoxFor(model => model.FromDate, new { placeholder = "Select From Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off" })*@
+                        @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                    </div>
+                </div>
+
+
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>To Date:</label>
+                        @*@Html.TextBoxFor(model => model.FromDate, new { placeholder = "Select From Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off" })*@
+                        @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                    </div>
+
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Search:</label>
+                        @*@Html.TextBoxFor(model => model.FromDate, new { placeholder = "Select From Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off" })*@
+                        <input type="submit" value="Search" class="btn btn-primary form-control" />
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Expense Voucher</h3>
+                </div><!-- /.col -->
+
+
+            <div class="col-xs-12">
+                <table id="example" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="ckbCheckAll" /></th>
+                            <th>Id</th>
+                            <th class="hidden">HID</th>
+                            <th>Expense Type</th>
+                            <th>Date</th>
+                            <th>Total Amount</th>
+                            <th class="hidden">Total Amount</th>
+
+
+                            @*<th class="remove-search">Action</th>*@
+                        </tr>
+                    </thead>
+                    @{ var viewDataProd = ViewData["ExpenseVoucher"] as IList<TuvVision.Models.ExpenseItemList>;}
+
+                        @if(viewDataProd!=null)
+                        { 
+                        <tbody>
+                            @foreach (var asset in ViewData["ExpenseVoucher"] as IEnumerable<TuvVision.Models.ExpenseItemList>)
+                            {
+                                <tr>
+                                    @*<td><input type="checkbox" class="checkBoxClass" id="Checkbox1" /></td>*@
+                                    <td>
+                                        @Html.CheckBoxFor(m => m.ExpenseItemList[k].Checkbox1, new { @class = "checkBoxClass" })
+                                    </td>
+                                    <td>@asset.LPKExpenseId</td>
+                                    <td class="hidden">@Html.HiddenFor(m => m.ExpenseItemList[k].LPKExpenseId, new { Value = @asset.LPKExpenseId })</td>
+                                    <td>@asset.LExpenseType</td>
+                                    <td>@asset.LDate</td>
+                                    <td>@asset.LTotalAmount</td>
+                                    <td class="hidden">@Html.HiddenFor(m => m.ExpenseItemList[k].LTotalAmount, new { Value = @asset.LTotalAmount })</td>
+
+                                   
+
+                                </tr>
+                                k++;
+                            }
+                            
+                        </tbody>
+                        }
+</table>
+
+            </div>
+
+            <div class="col-xs-4">
+                <a href="@Url.Action("GenerateExpenseVoucher", "ExpenseVoucher")" data-form-method="post" class="btn btn-primary form-control" title="Edit">Save</a>
+                @*<button type="submit" class="btn btn-default insert-form-btn"> Add </button>*@
+    
+            </div>
+
+            </div>
+
+    </div>
+}
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+
+
+@*Date Picker for From Date*@
+
+<script>
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script>
+$(document).ready(function () {
+    $("#ckbCheckAll").click(function () {
+        $(".checkBoxClass").prop('checked', $(this).prop('checked'));
+    });
+});
+</script>.
+
+<script>
+$("a[data-form-method='post']").click(function (event) {
+    event.preventDefault();
+    var element = $(this);
+    var action = element.attr("href");
+    element.closest("form").each(function () {
+        var form = $(this);
+        form.attr("action", action);
+        form.submit();
+    });
+});
+</script>

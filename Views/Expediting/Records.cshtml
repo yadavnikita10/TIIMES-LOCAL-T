@@ -1,0 +1,327 @@
+﻿@model TuvVision.Models.Records
+
+@{
+    ViewBag.Title = "Records";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+
+}
+
+
+@{
+
+    string strFileName = string.Empty;
+    string strPKId = string.Empty;
+}
+
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+
+
+
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            @*class="container-fluid"*@
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                <div class="col-xs-12">
+                    <div class="row">
+
+
+                        <br />
+
+                        <h5 class="dynamic-page-title dynamic-page-title-2">@Session["ExpeditingType"]/Expediting Report Number : @Session["VisitReportNo"]</h5>
+
+                        <div class="col-xs-12">
+
+
+                            @if (Model.PK_Call_ID != "")
+                            {
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpeditingReport", "Expediting",new { @PK_Call_ID = Model.PK_Call_ID} )'"> General</button>
+
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpItemDescription", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Item Description</button>
+
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpProgress", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Progress</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EXp_commercial", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Commercial</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpEngineering", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Engineering</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpMaterial", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Procurement</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpManufacturing", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Manufacturing</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpFinalStage", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Final Stage</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpDelays", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Item Wise Delays</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpConcerns", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Concerns</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("PhotoAttachement", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Photo</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Observation", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Observation</button>
+                                    <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("Records", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Records</button>
+
+
+                            }
+
+
+
+                        </div>
+
+
+                        <div class="col-xs-12">
+                        <div class="white-bg section-box-shadow">
+                            <h3 class="form-page-title">Records</h3>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <div class="form-box">
+                                        <form method="post" enctype="multipart/form-data">
+
+
+                                            @Html.HiddenFor(m => m.PK_Call_ID)
+                                            <div class="row">
+
+
+
+                                                <div class="col-xs-4">
+
+                                                    <label>Name</label>
+
+                                                    @Html.TextBoxFor(model => model.Name, new { @placeholder = "Name", @class = "form-control Recordname" })
+                                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger validation-msg" })
+
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-6">
+                                                    <label></label>
+                                                    <input type="file" class="filepond" name="DocUpload1" id="DocUpload1" multiple style="width:670px;" />
+                                                    <input hidden="hidden" id="DocUpload1" name="DocUpload1" class="hidden" />
+
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-2">
+                                                    <div class="form-group">
+                                                        <button type="button" class="btn btn-default insert-form-btn" title="Save" style="margin-top:28px; margin-left:13px;" id="btnAddDoc">Save</button>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-xs-12" id="divDocuments1">
+
+
+                                                    @if (Model.ReportDetails != null)
+                                                    {
+                                                        <br />
+                                                            <table width="100%" align="left">
+                                                                <tr>
+                                                                    <td>
+                                                                        <h2 class="dynamic-page-title dynamic-page-title-2"><i class="fa fa-address-book"></i>Records</h2>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td align="left">
+                                                                        <table class="display dataTable no-footer" style="width:100%" id="DocumentTable">
+                                                                            <tr style="background-color:lightgray">
+
+                                                                                <td>Name</td>
+                                                                                <td>File Name</td>
+                                                                                <td>&nbsp;</td>
+                                                                            </tr>
+                                                                            @foreach (var item in ViewData["DocAttachmentsTest"] as IEnumerable<TuvVision.Models.Records>)
+                                                                            {
+                                                                                string[] arrFile = item.FileName.Split(',');
+                                                                                string[] arrValue = null;
+                                                                                <tr style="background-color:#f0f0f0">
+                                                                                    <td width="35%">@item.Name</td>
+                                                                                    <td>
+                                                                                        @for (int cnt = 0; cnt < arrFile.Length; cnt++)
+                                                                                        {
+
+                                                                                            arrValue = arrFile[cnt].ToString().Split('#');
+
+
+
+
+
+                                                                                            strFileName = arrValue[0].ToString();
+                                                                                            strPKId = arrValue[1].ToString();
+                                                                                            @*<a class="title" href="@Url.Action("DownloadFormat", "Users", new {  @d= strPKId})">@strFileName</a>*@
+                                                                                            <a class="title" href="@Url.Action("DownloadFormat1", "Expediting", new {  @d= strPKId})">@strFileName</a>
+
+
+                                                                                        }
+                                                                                    </td>
+
+                                                                                    <td width="8%">
+                                                                                        <a href="javascript:void(0);" data-id="@strPKId" class="deleteItemFormat">X</a>
+                                                                                    </td>
+
+                                                                                </tr>
+                                                                            }
+
+                                                                        </table>
+                                                                    </td>
+
+                                                                </tr>
+                                                            </table>
+
+
+
+
+
+
+
+                                                    }
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                            
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<script>
+    debugger;
+    FilePond.parse(document.body);
+</script>
+
+
+<script>
+    debugger;
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment", "Users")'
+    });
+</script>
+
+
+
+<script>
+    $(function () {
+        $("#btnAddDoc").click(function () {
+            debugger;
+            var Pk_call_id = $("#PK_Call_ID").val();
+            var Name = $("#Name").val();
+            var selected = $("#DocUpload1").text();
+
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("InsertDocumentRecords", "Expediting")',
+                dataType: 'json',
+                Async: false,
+                data: JSON.stringify({ "Pk_call_id": Pk_call_id, "Name": Name }),
+                enctype: "multipart/form-data",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    debugger;
+                    if (response.result == "TYPEERROR") {
+                        debugger;
+                        let filePond = FilePond.find(document.getElementById("DocUpload1"));
+                        if (filePond != null) {
+                            //this will remove all files
+                            filePond.removeFiles();
+                        }
+
+                    }
+                    if (response.result == "ERROR") {
+
+
+                        let filePond1 = FilePond.find(document.getElementById("DocUpload1"));
+                        if (filePond1 != null) {
+                            filePond1.removeFiles();
+                        }
+
+                        $("#PT").val("");
+                        alert("There is some error while uploading the file");
+                        return false;
+                    }
+                    if (response.result == "SUCCESS") {
+                        let filePond = FilePond.find(document.getElementById("DocUpload1"));
+                        if (filePond != null) {
+                            //this will remove all files
+                            filePond.removeFiles();
+                        }
+
+                        let filePond1 = FilePond.find(document.getElementById("DocUpload1"));
+                        if (filePond1 != null) {
+                            filePond1.removeFiles();
+                        }
+                        $("#PT").val("");
+
+                        alert("File Uploaded Successfully");
+                        
+                        $("#divDocuments1").load(location.href + " #divDocuments1");
+                        location.reload();
+
+                    }
+
+               
+
+                }
+
+            });
+
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.deleteItemFormat').click(function (e) {
+
+            debugger;
+            var PK_Call_ID = $("#PK_Call_ID").val();
+            var id = $(this).data('id');
+
+            var $ctrl = $(this);
+            // var docType;
+
+
+            if (confirm('Do you really want to delete this file?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DeleteFileFormat", "Expediting")',
+                    dataType: 'json',
+                    Async: false,
+                    data: JSON.stringify({ "id": id, "PK_Call_ID": PK_Call_ID }),
+                    enctype: "multipart/form-data",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+
+                        if (response.result == "OK") {
+                            alert("Deleted Successfully");
+                            $ctrl.closest('li').remove();
+                            
+                            $("#divDocuments1").load(location.href + " #divDocuments1");
+                            location.reload();
+                            //window.location = response.url;
+
+                        }
+                        else if (response.result.Message) {
+                            alert(response.result.Message);
+                        }
+                    }
+                });
+            }
+        })
+    })
+</script>

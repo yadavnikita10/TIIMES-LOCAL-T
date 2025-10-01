@@ -1,0 +1,78 @@
+﻿@model TuvVision.Models.QuotationMaster
+
+@{    
+    int j = 0;
+    int rowcnt = 0;
+    int ItemCnt = 0;
+    int reminder = 0;
+    j = Model.JobDashBoard.Count();
+    rowcnt = j / 4;
+    reminder = (j % 2);
+    if (reminder == 1)
+    {
+        rowcnt = rowcnt + 1;
+    }
+}
+
+                <table cellpadding="0" cellspacing="0" border="1" width="100%">
+
+                @for (ItemCnt = 0; ItemCnt < Model.JobDashBoard.Count(); ItemCnt++)
+                {
+
+                    for (int cnt = 0; cnt < rowcnt; cnt++)
+                    {
+                        if (ItemCnt < Model.JobDashBoard.Count())
+                        {
+                            <tr>
+                                @for (int colcnt = 0; colcnt < 4; colcnt++)
+                                {
+                                    if (ItemCnt < Model.JobDashBoard.Count())
+                                    {
+                                        <td align="center">
+                                            @*@Html.RadioButtonFor(model => model.LImage[ItemCnt].chkbox, new { @placeholder = "Heading", @Name = "grpImage",  @class = "chkCheckBoxId"})*@
+                                            @Html.RadioButton("grpImage", Model.JobDashBoard[ItemCnt].IId)<br />
+                                            <img src="@Url.Content(String.Format("~/CoverImages/{0}", Model.JobDashBoard[ItemCnt].IName))" height="150px" width="150px" />
+                                        </td>
+                                        ItemCnt++;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
+                            </tr>
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+
+                    @*if (reminder == 1)
+                    {
+                        <tr>
+                            <td align="center">
+                                
+                                @Html.RadioButton("grpImage", Model.JobDashBoard[ItemCnt].IId)<br />
+                                <img src="@Url.Content(String.Format("~/CoverImages/{0}", Model.JobDashBoard[ItemCnt].IName))" height="150px" width="150px" />
+                            </td>
+                        </tr>
+
+
+
+                    }*@
+                }
+
+                </table>
+
+
+
+                   
+
+                    
+                
+
+        
+        
+

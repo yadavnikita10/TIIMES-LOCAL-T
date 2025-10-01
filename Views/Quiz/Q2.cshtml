@@ -1,0 +1,376 @@
+﻿@model TuvVision.Models.QuizModel
+@{
+    Layout = null; // Assuming the quiz page does not require the usual layout
+    int i = 0;
+    int k = 0;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Bootstrap -->
+    <link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Start Other stylesheets -->
+    <link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+    <link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+    <link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="~/AllJsAndCss/js/jquery.min.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="~/AllJsAndCss/js/bootstrap.min.js"></script>
+    @*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+        <script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+    <!-- Start Other script files -->
+    <!--AOS animate-->
+    <script src="~/AllJsAndCss/js/aos.js"></script>
+    <script src="~/AllJsAndCss/js/aos-call.js"></script>
+
+    <!--Owl JS-->
+    @*<script src="~/AllJsAndCss/owlCarousel/owl.carousel.js"></script>*@
+
+    <script src="~/AllJsAndCss/js/custom.js"></script>
+
+
+
+    <title>Quiz Page</title>
+    <style>
+        /* Overlay to block other content */
+        .overlay {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5); /* Semi-transparent overlay */
+            z-index: 9999;
+            pointer-events: none; /* Disable all pointer events */
+        }
+
+        /* Allow pointer events only in the quiz section */
+        .quiz-container {
+            pointer-events: auto;
+            position: relative;
+            z-index: 10000; /* Make sure it's above the overlay */
+            padding: 20px;
+            background: white;
+            margin: auto;
+            width: 50%;
+            text-align: center;
+        }
+
+        /* Timer style */
+        .timer {
+            font-size: 20px;
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay covering entire screen -->
+    <div class="overlay"></div>
+
+    <!-- Quiz Container -->
+
+@using (Html.BeginForm("GetQuiz", "Quiz", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formqz" }))
+{
+    <form>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+                @Html.HiddenFor(model => model.TrainingID)
+                @Html.HiddenFor(model => model.QuizID)
+            </div>
+        </div>
+        <div class="quiz-container">
+            <h2>Quiz Section</h2>
+            <p class="timer" id="timer">Time Left: @ViewBag.Time minutes</p>
+
+            <!-- Your quiz content here -->
+            <div id="quiz-content">
+                @*<p>Question 1: ...</p>
+                    <p>Question 2: ...</p>
+                    <button onclick="submitQuiz()">Submit Quiz</button>*@
+
+                <div id="quizDiv">
+                    @*Time remaining: <span id="timer"></span>*@
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="form-group">
+
+                                <input type="button" id='next' value="Next" onlick="sum_values()" class="btn btn-primary btn-lg" style="width:100px;">
+                                <input type="button" id='Previous' value="Previous" onlick="sum_values()" class="btn btn-primary btn-lg" style="width:109px;">
+                                @*<button type="submit" class="btn btn-primary  btn-lg" id="submit" style="width:100px;" onclick='return confirm("Are you sure  you want to Submit Quiz ?")'> Submit </button>*@
+                                <button type="submit" class="btn btn-primary  btn-lg" id="submit" style="width:100px;"> Submit </button>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+
+
+                                @*<input type="button" id='Previous' value="Previous" onlick="sum_values()" class="btn btn-primary btn-lg" style="width:109px;">*@
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+
+
+                                @*<button type="submit" class="btn btn-primary  btn-lg" id="submit" style="width:100px;" onclick='return confirm("Are you sure  you want to Submit Quiz ?")'> Submit </button>*@
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-xs-12">
+                        <table>
+                            @foreach (var item in ViewBag.QuizQuestions as List<TuvVision.Models.QuizQuestion>)
+                        {
+
+                            i = i + 1;
+
+                        <tr><td><br /></td></tr>
+
+
+                        @*<div class="quiz-container">*@
+                        <div class="questions">
+                            <p style="text-align:left;"> @i &nbsp;@item.TQuestion </p>
+                            @Html.HiddenFor(m => m.QuizQuestion[k].TQuizID, new { Value = item.TQuizID })
+                            @Html.HiddenFor(m => m.QuizQuestion[k].TrainingID, new { Value = item.TrainingID })
+                            @*<form>*@
+                            <p style="text-align:left;">
+                                @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption1)))
+                                    {
+                                    @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "a", new { name = "abc", @class = "R" })
+                                    <span> @item.TOption1 &nbsp;&nbsp;</span>
+                                    }
+                            </p>
+                            <p style="text-align:left;">
+                                @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption2)))
+                                    {
+                                    @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "b", new { name = "abc2", @class = "R2" })
+                                    <span> @item.TOption2 &nbsp;&nbsp;</span>
+                                    }
+                            </p>
+                            <p style="text-align:left;">
+                                @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption3)))
+                                    {
+                                    @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "c", new { name = "abc3", @class = "R3" })
+                                    <span> @item.TOption3 &nbsp;&nbsp;</span>
+                                    }
+                            </p>
+                            <p style="text-align:left;">
+                                @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption4)))
+                                    {
+                                    @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "d", new { name = "abc4", @class = "R4" })
+                                    <span> @item.TOption4 &nbsp;&nbsp;</span>
+                                    }
+                            </p>
+                            @*</form>*@
+                        </div>
+                        @*</div>*@
+                            k++;
+                        }
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    All The Best..
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+}
+    <script>
+
+        var totalTime = @ViewBag.Time * 60; // 10 minutes in seconds
+        var timerDisplay = document.getElementById('timer');
+
+        // Timer function to update every second
+        function startTimer() {
+            var interval = setInterval(function() {
+                if (totalTime <= 0) {
+                    clearInterval(interval);
+                    alert("Time's up! Submitting your quiz.");
+                    submitQuiz(); // Auto-submit when time runs out
+                } else {
+                    totalTime--;
+                    var minutes = Math.floor(totalTime / 60);
+                    var seconds = totalTime % 60;
+                    timerDisplay.innerHTML = 'Time Left: ' + minutes + ":" + (seconds < 10 ? '0' + seconds : seconds);
+                }
+            }, 1000);
+        }
+
+        // Start the timer when the page loads
+        window.onload = function() {
+            startTimer();
+
+            // Restrict user from interacting with other browser tabs
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    alert("You can't leave the quiz page.");
+                    // Optionally, bring the user back to the quiz page
+                    window.focus();
+                }
+            });
+        };
+
+        // Function to handle quiz submission
+        function submitQuiz() {
+            // Your logic to submit the quiz form, e.g., AJAX call or form submit
+            //alert('Quiz Submitted!');
+            // Redirect to submission confirmation or results page
+            document.getElementById("submit").click();
+        }
+    </script>
+
+
+    @*Logic for Next and previous Button*@
+    <script>
+    $(document).ready(function () {
+        debugger
+        answers = new Object();
+        $('.option').change(function () {
+            var answer = ($(this).attr('value'))
+            var question = ($(this).attr('name'))
+            answers[question] = answer
+        })
+        var item1 = document.getElementById('questions');
+
+        var totalQuestions = $('.questions').size();
+        var currentQuestion = 0;
+
+        $questions = $('.questions');
+        $questions.hide();
+        $($questions.get(currentQuestion)).fadeIn();
+
+        chkFirstQ(currentQuestion)
+        $('#next').click(function () {
+            debugger;
+
+            $($questions.get(currentQuestion)).fadeOut(function () {
+                currentQuestion = currentQuestion + 1;
+                if (currentQuestion == totalQuestions) {
+                    var result = sum_values()
+                    $("#next").hide();
+                    $("#submit").show();
+                    //do stuff with the result
+                    chkFirstQ(currentQuestion)
+                } else {
+                    $("#next").show();
+                    $("#submit").hide();
+                    chkFirstQ(currentQuestion)
+
+                    $($questions.get(currentQuestion)).fadeIn();
+                }
+            });
+
+        });
+
+        $('#submit').click(function () {
+            debugger;
+            var getSelectedValue = document.querySelector('input[name="abc"]:checked');
+
+        })
+
+
+        $('#Previous').click(function () {
+            debugger;
+            $($questions.get(currentQuestion)).fadeOut(function () {
+                currentQuestion = currentQuestion - 1;
+                if (currentQuestion == totalQuestions) {
+                    var result = sum_values()
+                    $("#next").hide();
+                    $("#submit").show();
+
+                    //do stuff with the result
+                    chkFirstQ(currentQuestion)
+                } else {
+                    $("#submit").hide();
+                    $("#next").show();
+                    chkFirstQ(currentQuestion)
+
+                    $($questions.get(currentQuestion)).fadeIn();
+                }
+            });
+
+        });
+
+
+
+    });
+
+
+    function chkFirstQ(currentQuestion) {
+        debugger;
+
+            if (currentQuestion == "0") {
+                $("#Previous").hide();
+            }
+            else {
+                $("#Previous").show();
+            }
+
+
+            var totalQuestions1 = $('.questions').size();
+            if (currentQuestion + 1 == totalQuestions1) {
+                $("#submit").show();
+                $("#next").hide();
+            }
+            else {
+                $("#submit").hide();
+                $("#next").show();
+            }
+
+    }
+
+
+
+
+    function sum_values() {
+        var the_sum = 0;
+        for (questions in answers) {
+            the_sum = the_sum + parseInt(answers[question])
+        }
+        return the_sum
+    }
+
+
+    function GetQCount(q) {
+        debugger;
+
+        if (q == 1) {
+            $("#Previous").hide();
+        }
+        else
+        {
+            $("#Previous").show();
+        }
+    }
+    function GetQCountOnPre(q) {
+        debugger;
+        if (q == 1) {
+            $("#Previous").hide();
+            $("#submit").hide();
+            $("#next").show();
+        }
+        else {
+            $("#Previous").show();
+        }
+    }
+
+
+    </script>
+
+
+</body>
+</html>
+
+

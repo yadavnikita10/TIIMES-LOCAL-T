@@ -1,0 +1,529 @@
+﻿@model TuvVision.Models.CallsModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "CallHistory";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js"></script>
+
+@*DATEPICKER*@
+@*<script src="https://code.jquery.com/jquery-1.10.2.js"></script>*@
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+
+@helper CustomRenderingOfReport1(TuvVision.Models.CallsModel IVR)
+        {
+    <a href="~/IVRReport/@IVR.IVR" download="~/IVRReport/@IVR.IVR">
+        @*@Report.Report*@
+        @IVR.IVR
+    </a>
+}
+
+@helper CustomRenderingOfReport5(TuvVision.Models.CallsModel IVRReportNo)
+{
+if (IVRReportNo.Iv_pk_call_id != 0)
+{
+        <a href="@Url.Action("IVRNoHistory", "MISOPEReport", new { Pk_Ivr_id= IVRReportNo.Iv_pk_call_id })">@IVRReportNo.IVRReportNo</a>
+}
+else
+{
+        
+}
+}
+@helper CustomRenderingOfReport6(TuvVision.Models.CallsModel IRNReportNo)
+{
+if (IRNReportNo.pk_ivr_id != 0)
+{
+        <a href="@Url.Action("IRNNoHistory", "MISOPEReport", new { Pk_Ivr_idID = IRNReportNo.pk_ivr_id })">@IRNReportNo.IRNReportNo</a>
+}
+else
+{
+
+}
+}
+
+@helper CustomRenderingOfReport3(TuvVision.Models.CallsModel callmodel)
+        {
+
+if (callmodel.Status == "Open")
+{
+        <span style='color: #3cb371; font-weight:bold;'>@callmodel.Status</span>
+}
+else if (callmodel.Status == "Closed")
+{
+        <span style='color: #ff0000; font-weight:bold;'>@callmodel.Status</span>
+}
+else if (callmodel.Status == "NoDone")
+{
+        <span style='color: #ffa500; font-weight:bold;'>@callmodel.Status</span>
+}
+else
+{
+        <span style='color: #000000; font-weight:bold;'>@callmodel.Status</span>
+}
+}
+
+
+@helper CustomRenderingOfColumn4(TuvVision.Models.CallsModel callmodel)
+{
+if (callmodel.ExtendCall_Status != null && callmodel.ExtendCall_Status != "")
+{
+        <span style='color: #ff0000; font-weight:bold;'>@callmodel.ExtendCall_Status</span>
+}
+else
+{
+        <span style='color: #000000'>@callmodel.ExtendCall_Status</span>
+}
+}
+
+
+
+
+
+
+
+@helper CustomRenderingOfReport2(TuvVision.Models.CallsModel IRN)
+        {
+    <a href="~/IVRReport/@IRN.IRN" download="~/IVRReport/@IRN.IRN">
+        @*@Report.Report*@
+        @IRN.IRN
+    </a>
+}
+
+<style>
+    .single-row {
+        background-color: #FFEB00;
+    }
+</style>
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+@*calender control*@
+
+<script>
+
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+
+@using (Html.BeginForm("CallHistory", "MISOPEReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+        <div class="main-content3 xs-max-height">
+            <div class="container-fluid">
+
+                <!--Start of header-->
+
+
+                <div class="col-xs-12">
+
+                    @Html.HiddenFor(m => m.PK_Call_ID)
+                    @Html.HiddenFor(m => m.pk_ivr_id)
+                    @Html.HiddenFor(m => m.Iv_pk_call_id)
+
+
+
+
+                    <div class="col-xs-12">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Operation Call History </h3>
+                        <br />
+
+                        <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex2", "MISOPEReport")'"
+                                style="border:none;">
+                            Export To Excel
+                        </button>
+
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label>From Date:</label>
+                                    @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+
+
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label>To Date:</label>
+                                    @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                                </div>
+
+                            </div>
+
+                            <div class="col-xs-2">
+                                <div class="form-group">
+                                   <button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle" id="btnsave"></i>Search</button>
+                                    
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        @*<div id="pie-chart"></div>*@
+
+                        <br />
+
+
+                    </div>
+
+
+                    <div class="form-group" style="padding-left:25px;">
+                        <hr class="custom-hr1">
+                    </div>
+                    <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                        <tr>
+                            <td id="example">
+
+
+
+                                @(Html.Grid(Model.lstDashBoard)
+            .Build(columns =>
+            {
+                columns.Add(c => c.Call_No).Titled("Call Number");
+                columns.Add(c => c.Call_Type).Titled("Call_Type");
+                columns.Add(c => c.DocumentRelatedToInspectionCall).Titled("Document Related To Inspection Call ");
+                columns.Add(c => c.SubSubJobNo).Titled("Sub Job/Sub-Sub job Number ");
+                columns.Add(c => c.SAP_Number).Titled("Sap Number ");
+                columns.Add(c => c.Company_Name).Titled("Company Name");
+                columns.Add(c => c.End_Customer).Titled("End Customer");
+                columns.Add(c => c.Project_Name).Titled("Project Name");
+                columns.Add(c => c.TopSubVendorName).Titled("Vendor name");
+                columns.Add(c => c.TopSubVendorPONo).Titled("Po Number");
+                columns.Add(c => c.VendorName).Titled("Sub Vendor Name");
+                columns.Add(c => c.VendorPONo).Titled("Sub Po Number");
+                columns.Add(c => c.checkIFCustomerSpecific1).Titled("Report required in Customer specific format");
+                columns.Add(c => c.chkARC1).Titled("chkARC");
+                columns.Add(c => c.ItemsToBeInpsected).Titled("Items To Be Inpsected");
+                columns.Add(c => c.StageOfInspection).Titled("Stage Of Inspection");
+                columns.Add(c => c.Job_Location).Titled("Inspection Location");
+                columns.Add(c => c.Urgency).Titled("Priority");
+                columns.Add(c => c.DECName).Titled("DEC/PMC/EPC Name");
+                columns.Add(c => c.DECNumber).Titled("DEC/PMC/EPC Assignment No");
+                columns.Add(c => c.CreatedBy).Titled("Coordinator Name");
+                columns.Add(c => c.PresentDay).Titled("Present Day Status");
+                columns.Add(c => c.Branch_Name).Titled(" Originating Branch Name");
+                columns.Add(c => c.Excuting_Branch).Titled("Excuting Branch Name");
+                columns.Add(c => c.Inspector).Titled("Inspector Name");
+                columns.Add(c => c.Call_Recived_date).Titled("Call Received Time");
+                //columns.Add(c => c.CALLRECEIVETIME).Titled("Call Received Time");
+                columns.Add(c => c.Call_Request_Date).Titled("Call Request Date");
+                columns.Add(c => c.Actual_Visit_Date).Titled("Actual Visit Date");
+                columns.Add(c => c.CreatedDate).Titled("Created Date");
+                columns.Add(c => c.Status).Titled("Status").RenderedAs(c => CustomRenderingOfReport3(c)).Sortable(true);
+                columns.Add(c => c.Reasion).Titled("Reasion");
+                columns.Add(c => c.EXECUTIONDELAYDAY).Titled("EXECUTION DELAY DAY");
+                columns.Add(c => c.EXECUTISTATUS).Titled("EXECUTI STATUS");
+                columns.Add(c => c.ExtendCall_Status).Titled("ExtendCall Status").RenderedAs(c => CustomRenderingOfColumn4(c)).Sortable(true);
+                columns.Add(c => c.CallClosureDate).Titled("Call Closure Date");
+                columns.Add(c => c.IsVisitReportGenerated).Titled("Is Visit Report Generated");
+                columns.Add(c => c.IVR).Titled("IVR Number").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true);
+                columns.Add(c => c.IVRReportNo).Titled("IVR Report No");
+                columns.Add(c => c.IVRCreateDate).Titled("IVR Create Date");
+                columns.Add(c => c.IVRModifiedDate).Titled("IVR Modified Date");
+                columns.Add(c => c.IVRDownloadDateTime).Titled("IVR First Download Date");
+                columns.Add(c => c.IVRDownloadModifiedDate).Titled("IVR Download Update Date");
+                columns.Add(c => c.IVRDistributionDelay).Titled("IVR Distribution Delay");
+                columns.Add(c => c.IVRConclusion).Titled("IVR Conclusion");
+                columns.Add(c => c.IRN).Titled("IRN Number").RenderedAs(c => CustomRenderingOfReport2(c)).Sortable(true);
+                columns.Add(c => c.IRNReportNo).Titled("IRN Report No");
+                columns.Add(c => c.IRNCreateDate).Titled("IRN Create Date");
+                columns.Add(c => c.IRNModifiedDate).Titled("IRN Modified Date");
+                columns.Add(c => c.IRNDownloadDatetime).Titled("IRN First Download Date");
+                columns.Add(c => c.IRNDownloadModifiedDate).Titled("IRN Download Update Date");
+                columns.Add(c => c.IRNDistributionDelay).Titled("IRN Distribution Delay");
+                columns.Add(c => c.IRNConclusion).Titled("IRN Conclusion");
+                columns.Add(c => c.Call_No).Titled("Call Number History").RenderedAs(c => Html.ActionLink(c.Call_No, "CallNumberHistory", new { PK_Call_ID = c.PK_Call_ID }, new { title = "Call Number History", target = "_blank" }));
+                columns.Add(c => c.IVRReportNo).Titled("IVR Report History").RenderedAs(c => CustomRenderingOfReport5(c)).Sortable(true);
+                columns.Add(c => c.IRNReportNo).Titled("IRN Report History").RenderedAs(c => CustomRenderingOfReport6(c)).Sortable(true);
+
+
+            })
+            .Pageable(pager =>
+            {
+
+                pager.ShowPageSizes = true;
+
+                pager.CurrentPage = 1;
+                pager.RowsPerPage = 2;
+            })
+            .UsingFilterMode(GridFilterMode.Row)
+            .Empty("No data found")
+            .Filterable()
+            .Sortable()
+
+                                )
+
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+
+
+            </div>
+        </div>
+   
+}
+
+
+        <script>
+            var CustomTextFilter = (function (base) {
+                MvcGridExtends(CustomTextFilter, base);
+
+                function CustomTextFilter(column) {
+                    base.call(this, column);
+
+                    this.methods = ['contains'];
+                    column.grid.lang.custom = { contains: 'Contains' };
+                }
+
+                // Other extension points can be found at MvcGridFilter declaration
+
+                return CustomTextFilter;
+            })(MvcGridFilter);
+
+            new MvcGrid(document.querySelector('.mvc-grid'), {
+                filters: {
+                    'custom': CustomTextFilter
+                }
+            });
+        </script>
+        <script>
+            //$(document).ready(function() {
+            //  $('#example tbody tr').each(function() {
+            //    var callType = $(this).find('td:eq(1)').text(); // Assuming Call_Type column is the second column (index 1)
+
+            //    if (callType === 'Continuous Call') {
+            //      $(this).find('td:eq(1)').css('background-color', 'yellow');
+            //    } else {
+            //      $(this).find('td:eq(1)').css('background-color', 'grey');
+            //    }
+            //  });
+            //});
+
+            $(document).ready(function () {
+                $('#example tbody tr').each(function () {
+                    var Call_Type = $(this).find('td:eq(21)').text(); // Assuming Call_Type column is the second column (index 1)
+
+                    if (Call_Type === 'Continuous Call') {
+                        $(this).css('background-color', 'white');
+                    }
+                    else {
+                        $(this).css('background-color', 'light grey');
+                    }
+                    {
+
+                    }
+                });
+            });
+
+        </script>
+
+
+        @*<script type="text/javascript">
+                $(document).ready(function () {
+                    debugger;
+                    $.ajax({
+                        type: "GET",
+                        url: "/ MISOPEReport/PieChart",
+                        data: {},
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(response) {
+                            successFunc(response);
+                        },
+                    });
+
+                    function successFunc(jsondata) {
+                        var data = {};
+                        var Call_type = [];
+                        jsondata.forEach(function(e) {
+                            Call_type.push(e.Call_type);
+                            data[e.Call_Type] = e.Status;
+                        })
+                        var chart = c3.generate({
+                            bindto: '#pieChart',
+                            data: {
+                                json: [data],
+                                keys: {
+                                    value: Call_type,
+                                },
+                                type: 'pie'
+                            },
+                            color: {
+                                pattern: ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5']
+                            },
+                        });
+                    }
+                });
+            </script>*@
+
+        @*<script>
+            $(document).ready(function() {
+                // Get the list data from ViewData
+                var data = @Html.Raw(Json.Encode(ViewData["List"]));
+
+                // Prepare the data in the format required by C3.js (an array of arrays)
+                var chartData = [];
+                data.forEach(function(item) {
+                chartData.push([item.Status, item.PK_Call_ID]);
+                });
+
+                // Configure the chart using C3.js
+                var chart = c3.generate({
+                bindto: '#pie-chart', // Replace 'pie-chart' with the ID of your chart container element
+                data: {
+                columns: chartData,
+                type: 'pie'
+
+                },
+                donut: {
+                    expand: false,
+                    label: {
+                        show: false
+                    }
+                }
+                });
+                });
+
+            </script>*@
+
+
+
+        @*<script>
+                $(document).ready(function() {
+                    // Get the list data from ViewData
+                    var data = @Html.Raw(Json.Encode(ViewData["List"]));
+
+                    // Prepare the data in the format required by C3.js (an array of arrays)
+                    var chartData = [];
+                    var colors = [];
+
+                    data.forEach(function(item, index) {
+                        chartData.push([item.Call_Type, item.PK_Call_ID]);
+
+                        // Assign colors based on index or your own logic
+                        var color;
+                        if (index === 0) {
+                            color = '#FF0000'; // Red
+                        } else if (index === 1) {
+                            color = '#00FF00'; // Green
+                        } else if (index === 2) {
+                            color = '#0000FF'; // Blue
+                        } else {
+                            color = '#000000'; // Black
+
+                        }
+
+                        colors.push(color);
+                    });
+
+                    // Configure the chart using C3.js
+                    var chart = c3.generate({
+                        bindto: '#pie-chart1', // Replace 'pie-chart' with the ID of your chart container element
+                        data: {
+                            columns: chartData,
+                            type: 'pie',
+                            colors: colors
+                        },
+                        pie: {
+                        label: {
+                            format: function(columns, ratio, PK_Call_ID) {
+                        return value;
+                    }
+                }
+                }
+                    });
+                });
+
+            </script>*@
+
+        @*Comment By shrutika salve 05/07/2023 *@
+        @*<script>
+
+            $(document).ready(function() {
+                // Get the list data from ViewData
+                var data = @Html.Raw(Json.Encode(ViewData["List"]));
+
+                // Prepare the data in the format required by C3.js (an array of arrays)
+                var chartData = [];
+                var colors = [];
+
+                data.forEach(function(item, index) {
+                chartData.push([item.Status, 1]); // Set the value to 1 for each slice
+
+                // Assign a color to each slice
+                var color;
+                if (index === 0) {
+                color = '#FF0000'; // Red for the first slice
+                } else if (index === 1) {
+                color = '#00FF00'; // Green for the second slice
+                } else {
+                // For the remaining slices, generate random colors
+                color = getRandomColor();
+                }
+                colors.push(color);
+                });
+
+                // Configure the chart using C3.js
+                var chart = c3.generate({
+                bindto: '#pie-chart', // Replace 'pie-chart' with the ID of your chart container element
+                data: {
+                columns: chartData,
+                type: 'pie',
+                colors: colors
+                },
+                pie: {
+                label: {
+                format: function(value, ratio, PK_Call_ID) {
+                return '100%'; // Display '100%' for each slice
+                }
+                }
+                }
+                });
+
+                // Function to generate a random color
+                function getRandomColor() {
+                var letters = '0123456789ABCDEF';
+                var color = '#FF0000';
+                for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+                }
+                });
+            </script>*@

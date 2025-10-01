@@ -1,0 +1,506 @@
+﻿
+@{
+    ViewBag.Title = "OPE_ApprovedHistory";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<style>
+    .box_ {
+        width: 18%;
+        height: 34px;
+        padding: 0px 15px;
+        font-size: 14px;
+        line-height: 4.428571;
+        color: black;
+        background-color: #fff;
+        background-image: none;
+        border: 0px solid #ccc;
+        border-radius: 0;
+        /*background-color: #eee;*/
+        opacity: 1;
+    }
+
+    .height-table {
+        height: auto;
+    }
+
+    .fixedsize {
+        width: 1400px;
+        table-layout: fixed;
+    }
+
+        .fixedsize td {
+            /*border:1px solid;*/
+            padding: 4px 0px;
+            font-size: 12px;
+        }
+
+        .fixedsize th {
+            /*border:1px solid;*/
+            padding: 4px 0px;
+            font-size: 12px;
+            word-wrap: break-word;
+        }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+                font-weight: normal;
+                font-family: 'TNG Pro';
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+
+    .box_1 {
+        width: 1039px;
+        height: 34px;
+        padding: 0px 15px;
+        font-size: 14px;
+        line-height: 4.428571;
+        color: black;
+        background-color: #fff;
+        background-image: none;
+        border: 0px solid #ccc;
+        border-radius: 0;
+    }
+</style>
+
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+            <form method="post">
+
+                <div class="col-xs-12" style="margin-left: -47px;">
+                    @*<h3 class="dynamic-page-title dynamic-page-title-2  text-left">OPE History For Approval</h3>*@
+                    <b style="padding-left: 0px;"> OPE Number : </b><input type="text" id="txtOP_Number" name="txtOP_Number" class="box_" value="@ViewBag.OP_Number" readonly />
+                    @*<b style="padding-left: 0px;"> Inspector Name :  </b><input type="text" id="txtinspectorname" class="box_" readonly />
+                        <b style="padding-left: 0px;"> EmployeeCode :  </b><input type="text" id="txtemployeecode" class="box_" readonly />*@
+                    <b style="padding-left: 43px;"> Period : </b><input type="text" id="txtperiod" name="txtperiod" class="box_" readonly />
+                    <b style="padding-left: 35px;"> Month : </b><input type="text" id="txtmonth" name="txtperiod" class="box_" readonly />
+
+                    <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportToExcel1","MISOPEReport", new { OPE_Number = @ViewBag.OP_Number })'"
+                            style="border:none;">
+                        Export To Excel
+                    </button>
+                    <button type="button" value="Back" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("OPE_Approval","MISOPEReport" )'"
+                            style="border:none;">
+                        Back
+                    </button>
+
+                </div><!-- /.col -->
+            </form>
+
+            @*<div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div>*@<!-- /.col -->
+            <!--Table was here-->
+
+        </div><!-- /.row -->
+
+        <div class="col-xs-12">
+
+        </div><!-- /.data table col -->
+        <div class="row">
+            @*<div class="col-xs-12 col-sm-4">*@
+            <div class="form-group">
+                @*<b style="padding-left: 41px;">Address: </b><input type="text" id="txtaddress" name="Address" class="box_1" readonly />*@
+                <b style="padding-left: 41px;"> Inspector Name :</b><input type="text" id="txtinspectorname" class="box_" readonly />
+                <b style="padding-left: 0px;margin-left:-4px;"> Branch :</b><input type="text" id="txtBranch" class="box_" readonly />
+
+                <b style="padding-left: 0px;"> EmployeeCode:</b><input type="text" id="txtemployeecode" class="box_" readonly />
+
+            </div>
+        </div>
+        <div class="col-xs-12">
+
+        
+            <input type="hidden" id="hdnOP_Number" name="hdnOP_Number" value="@ViewBag.OP_Number" />
+            <input type="hidden" id="hdnPKExpenseId" name="hdnPKExpenseId" />
+
+            <table class="display dataTable no-footer evaluation fixedsize" id="example">
+                <thead style="background-color:#001ED2;color:white;border:1px solid;">
+                    <tr>
+                        <th><label>Activity Type</label></th>
+                        <th><label>Sub job Number</label></th>
+                        <th><label>SAP Number</label></th>
+                        <th><label>Vendor Name</label></th>
+                        <th><label>Inspection Location</label></th>
+                        <th><label>Customer Name</label></th>
+                         <th><label>Stage</label></th>*@
+                        <th><label>Onsite Time(Hrs)</label></th>
+                        <th><label>Amount (INR)</label></th>
+                    </tr>
+                </thead>
+            </table>
+
+
+
+            <div class="col-xs-12">
+                <label>Total Amount:</label> <input type="text" id="txtTotalAmount" readonly />
+                <label>Approved Amount:</label> <input type="text" id="txtApprovedAmount" readonly />
+                <label>Deducted Mandays:</label> <input type="text" id="txtdeductedMandays" />
+
+            </div>
+          
+            <div class="col-xs-12">
+                <label for="txtRemarks">Remarks:</label><br />
+                <textarea rows="4" style="resize: none; width: 500px; height: 86px;" id="txtRemarks"></textarea><br />
+                <input type="button" id="btnApprove" value="Approve" class="btn btn-default insert-form-btn" style="margin-bottom: 40px;" />
+            </div>
+            <div class="col-md-6" style="margin-top:auto;margin-left:0px;font-family:'TNG Pro';">
+                <div class="table">
+                    <table class="table table-condensed table-responsive " id="tblusers" style="border:1px;font-size:12px;">
+                        <thead style="background-color:#001ED2;color:white;border:1px solid;">
+                            <tr class="" style="background-color:#001ED2;font-family:'TNG Pro';color:white;">
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Date</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Approval</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Approval Name</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Reason</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Deducted Mandays</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userbody" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: black;"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<script>
+    FilePond.parse(document.body);
+</script>
+@{
+    var UrlLink = System.Configuration.ConfigurationManager.AppSettings["UrlLink"];
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var OP_Number = $("#hdnOP_Number").val();
+        VoucherHistory(OP_Number);
+        BindDescription();
+
+    });
+
+
+    function VoucherHistory(OP_Number) {
+        var UrlLink = '@UrlLink';
+        $.ajax({
+            type: "GET",
+            url: UrlLink + "/MISOPEReport/GetOP_HistoryList",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { OP_Number: OP_Number },
+            success: function (response) {
+                var a = JSON.parse(response);
+                var aa = JSON.stringify(response);
+
+                let name = a[0].InspectorName;
+                let employeecode = a[0].EmployeeCode;
+                let address = a[0].address;
+                let Approved_Amount = a[0].ApprovedAmount;
+                var Current_DeductMandays = a[0].Current_DeductMandays;
+                var Branch = a[0].Branch_Name;
+                var MonthName = a[0].MonthName;
+
+
+                $("#txtinspectorname").val(name);
+                $("#txtemployeecode").val(employeecode);
+                $("#txtaddress").val(address);
+                $("#txtBranch").val(Branch);
+                $("#txtmonth").val(MonthName);
+
+                let dateArray = [];
+                let dateRange = '';
+                // Assume 'Date' is the column name containing date values
+                for (let i = 0; i < a.length; i++) {
+                    let currentDate = a[i].Date;
+
+                    // Check if the date is defined and not null
+                    if (currentDate) {
+                        dateArray.push(currentDate);
+                    }
+                }
+
+                // Ensure the array is not empty
+                if (dateArray.length > 0) {
+                    // Sort the date strings in ascending order
+                    dateArray.sort((a, b) => {
+                        const dateA = new Date(a);
+                        const dateB = new Date(b);
+                        return dateA - dateB;
+                    });
+
+                    // Get the minimum and maximum dates
+                    const minDate = dateArray[0];
+                    const maxDate = dateArray[dateArray.length - 1];
+
+                    // Display the result
+                     dateRange = minDate + " - " + maxDate;
+                    //console.log(dateRange);
+                } else {
+                    console.log("The date array is empty or contains only undefined/null values.");
+                }
+                $("#txtperiod").val(dateRange);
+
+
+                if (a == "Error") {
+
+                }
+                else {
+                    var TotalAmt = 0;
+                    var Isreadonly = '';
+                    $("#example tbody").empty();
+                    var TotalApprovalAmount = 0;
+                    var Deduct = 0;
+
+                    for (var i = 0; i < a.length; i++) {
+                        //if (a[i].StageName == QuestionSet) {
+
+                        var parts = a[i].Date.split("T");
+
+                        var c = i + 1;
+                        TotalApprovalAmount = TotalApprovalAmount + a[i].TotalAmount;
+                        tr = $('<tr/>');
+
+                        TotalAmt = TotalAmt + a[i].OPEClaim;
+                        tr.append("<td>" + a[i].ActivityType + "</td>");
+                        //tr.append("<td>" + a[i].Job + "</td>");
+                        tr.append("<td>" + a[i].Sub_jOb + "</td>");
+                        tr.append("<td>" + a[i].SAP_No + "</td>");
+                        tr.append("<td>" + a[i].Vendor_Name+ "</td>");
+                        tr.append("<td>" + a[i].Job_Location + "</td>");
+                        tr.append("<td>" + a[i].Company_Name + "</td>");
+                        tr.append("<td>" + a[i].StartTime + "</td>");
+                        tr.append("<td>" + a[i].OPEClaim + "</td>");
+
+
+                        $('#example').append(tr);
+                        //}
+                    }
+                    var roundedNumber = Math.round(TotalAmt * 10) / 10;
+
+                    $("#txtTotalAmount").val(roundedNumber);
+                    $("#txtApprovedAmount").val(roundedNumber);
+                    $("#txtdeductedMandays").val(Deduct);
+
+                    var approvedAmountInput = $("#txtApprovedAmount");
+                    var deductedMandaysInput = $("#txtdeductedMandays");
+
+                    deductedMandaysInput.on('blur', function () {
+                        var inputValue = $(this).val();
+                        var approvedAmount = approvedAmountInput.val();
+                        OnChangeDays(i, inputValue, approvedAmount);
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                // Code to handle errors goes here
+            }
+
+        });
+
+    };
+
+    $('#chkChkAll').click(function (e) {
+        var table = $(e.target).closest('table');
+        $('td input:checkbox', table).prop('checked', this.checked);
+    });
+    debugger;
+    $('#btnApprove').click(function (e) {
+        var OP_Number = $("#hdnOP_Number").val();
+        var Remarks = $("#txtRemarks").val();
+        var ApprovedAmount = $("#txtApprovedAmount").val();
+        var TotalAmount = $("#txtTotalAmount").val();
+        var deduct_mandays = $("#txtdeductedMandays").val();
+
+        var UrlLink = '@UrlLink';
+
+        //alert(VoucherNo);
+        //alert(Remarks);
+        var data = [];
+        var item = {};
+        item["row_num"] = 1;
+        item["OP_Number"] = OP_Number;
+        item["Remarks"] = Remarks;
+        item["ApprovedAmount"] = ApprovedAmount;
+        item["TotalAmount"] = TotalAmount;
+        item["Deduct_Mandays"] = deduct_mandays;
+
+
+
+
+        data.push(item);
+        var _OP_Number = OP_Number
+        var Data1 = JSON.stringify(data);
+        $.ajax({
+            type: "Get",
+            url: UrlLink+"/MISOPEReport/GetOPBulk_ApprovalList",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { Data1: Data1, _OP_Number: _OP_Number },
+            success: function (response) {
+                var a = JSON.parse(response);
+                var aa = JSON.stringify(response);
+                window.location.href="@Url.Action("OPE_Approval", "MISOPEReport")"
+
+            },
+            error: function (xhr, status, error) {
+            }
+
+        });
+
+    });
+    var specialKeys = new Array();
+    specialKeys.push(8); //Backspace
+    function IsNumeric(e) {
+        var keyCode = e.which ? e.which : e.keyCode
+        if (!(keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1) {
+            return false;
+        };
+
+    }
+
+
+
+    //added by nikita for table description on 251222023
+     function BindDescription() {
+            debugger;
+            var VoucherNo = $("#txtOP_Number").val();
+            var UrlLink = '@UrlLink';
+
+            $.ajax({
+                ////url: UrlLink + "/GenerateVoucher/Voucher_History_Description",
+                url: "@Url.Action("Op_Voucher_History_Description", "MISOPEReport")",
+                type: "get",
+                DataType: "json",
+                async: false,
+                contenttype: "application/json; charset=utf-8",
+                data:{VoucherNo:VoucherNo},
+                success: function (result) {
+                debugger;
+                var a = JSON.parse(result);
+
+                let date = [a[0].Date, a[0].ApprovalOne_two_Date, a[0].PCH_Approval_Date, a[0].AdminQA_Approval_Date, a[0].CH_Approval_Date, a[0].Accountant_date];
+                    //added by nikita on 27122023
+                let DeductMandays = [a[0].DeductMandays_BranchQA, a[0].DeductMandays_ApprovalOne_Two, a[0].DeductMandays_Pch, a[0].DeductMandays_Admin, a[0].DeductMandays_Ch, a[0].DeductMandays_Accounatantt];
+                let Name_ = [a[0].BranchQAApproval, a[0].Name, a[0].PCH_Name, a[0].AdminQA_Approval, a[0].CH_Approval, a[0].Account_Approval];
+
+                var Data = ["BranchQA", "ApprovalOne/ApprovalTwo", "PCH", "AdminQA", "ClusterHead", "Accountant"];
+                let k = 0;
+                var myArray = [];
+                for(var i=0;i<a.length;i++)
+                {
+                    if (!!a[i].Branch_QA_Description) {
+                        myArray.push(a[i].Branch_QA_Description);
+                        k++;
+                    }
+                    if (!!a[i].ApprovalOne_Description)
+                    {
+                        myArray.push(a[i].ApprovalOne_Description);
+                        k++;
+                    }
+                    if (!!a[i].PCH_Approval_Description)
+                    {
+                        myArray.push(a[i].PCH_Approval_Description);
+                        k++;
+
+                    }
+                    if (!!a[i].AdminQA_Description) {
+                        myArray.push(a[i].AdminQA_Description);
+                        k++;
+                    }
+                    if (!!a[i].CH_Approval_Description)
+                    {
+                        myArray.push(a[i].CH_Approval_Description);
+                        k++;
+
+                    }
+                    if (!!a[i].Accountant_Description)
+                    {
+                        myArray.push(a[i].Accountant_Description);
+                        k++;
+                    }
+
+
+                    for (var j = 0; j < myArray.length; j++)
+                    {
+                        //const approvalName = Name[j] == undefined ? "-" : Name[j];
+                        // changes added by nikita on 22112023
+                        $("#tblusers").append('<tr><td>' + date[j] + '</td><td>' + Data[j] + '</td><td>' + Name_[j] + '</td><td>' + myArray[j] + '</td><td>' + DeductMandays[j] + '</td></tr>')
+                    }
+
+                }
+            },
+            error: function (result) {
+                debugger;
+                (result+"something went wrong");
+            }
+        });
+     }
+
+
+    function OnChangeDays(i, inputValue) {
+        debugger;
+        var Days_ = parseFloat(inputValue); // Parse the value as a float
+        var Days_deduct = isNaN(Days_) ? 0 : Days_; // Set to 0 if NaN
+        var Actual_amount = $("#txtTotalAmount").val();
+        var amount = Days_deduct * 275;
+        var deduct_Amount = Actual_amount - amount;
+        deduct_Amount = Math.ceil(deduct_Amount);
+
+        $('#txtApprovedAmount').val(deduct_Amount);
+        // Do something with deduct_Amount if needed
+    }
+
+</script>

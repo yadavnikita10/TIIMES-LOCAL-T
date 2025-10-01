@@ -1,0 +1,102 @@
+﻿@model TuvVision.Models.UserRoles
+@{
+    ViewBag.Title = "RoleDashBoard";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+@using (Html.BeginForm())
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">List Of Roles</h3>
+                    <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("UsersRole", "UserRole")'">Add New Role</button>
+                </div><!-- /.col -->
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+            <div class="col-xs-12 col-sm-offset-2 col-sm-8">
+                <table id="example" class="display custom-table" cellspacing="0" width="100%">
+
+                    <thead>
+                        <tr>
+                            @*<th class="remove-search less-width">RoleID</th>*@
+                            <th>Role Name</th>
+                            <th class="hidden">Sub Menu Names</th>
+                            <th class="remove-search">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        
+                        @{
+                            int i = 0;
+                        }
+                        @foreach (var item in ViewData["RoleList"] as IEnumerable<TuvVision.Models.UserRoles>)
+                        {
+                            <tr>
+                                @*<td>@item.UserRoleID</td>*@
+                                <td>@item.RoleName</td>
+                                <td class="hidden">@item.FK_SUB_MenuNames</td>
+                                <td>
+                                    @*<a href="@Url.Action("CreateRole", "UserRole", new {@RoleID = item.UserRoleID })" class="btn btn-info btn-custom edit-btn"><span class="fa fa-pencil"></span>&nbsp;Edit</a>*@
+                                    <a href="@Url.Action("UsersRole", "UserRole", new {@RoleID = item.UserRoleID })" class="btn btn-info btn-custom edit-btn" title="Test Role"><span class="fa fa-pencil"></span>&nbsp; Edit</a>
+                                    <a href="@Url.Action("Delete", "UserRole", new {@RoleID = item.UserRoleID })" class="btn btn-dangerbutton btn-custom" onclick="return confirm('Are you sure you want to delete this record?')"><span class="fa fa-trash-o"></span>&nbsp; Delete</a>
+                                    @{
+                                        if ((Convert.ToString(TempData["InsertUpdate"])) != "" && Convert.ToString(TempData["InsertUpdate"]) != null)
+                                        {
+                                            TempData["InsertUpdate"] = null;
+                                            <script type="text/javascript" language="javascript">
+                                                                alert("Role has been Saved Successfully!!!!");
+                                            </script>
+                                        }
+                                        if ((Convert.ToString(TempData["Error"])) != "" && Convert.ToString(TempData["Error"]) != null)
+                                        {
+                                            TempData["Error"] = null;
+                                            <script type="text/javascript" language="javascript">
+                                                                alert("Something went wrong!!!!");
+                                            </script>
+                                        }
+                                        if ((Convert.ToString(TempData["Result"])) != "" && Convert.ToString(TempData["Result"]) != null)
+                                        {
+                                            TempData["Result"] = null;
+                                            <script type="text/javascript" language="javascript">
+                                                                alert("Role has been Deleted Successfully!!!!");
+                                            </script>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                                        }
+
+                    </tbody>
+
+                </table>
+            </div><!-- /.data table col -->
+            
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+
+   
+                                                        }

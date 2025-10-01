@@ -1,0 +1,238 @@
+﻿@model TuvVision.Models.QuotationMaster
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@using System.Configuration;
+
+@{
+    ViewBag.Title = "Quotation";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+
+    List<string> EditLocation = ViewBag.EditproductName as List<string>;
+
+    List<string> EditCurrency = ViewBag.Currency as List<string>;
+    int j = 0;
+    int k = 0;
+    string strDMessage = string.Empty;
+    string strIMessage = string.Empty;
+    string strMessage = string.Empty;
+
+}
+@{
+    // Ensure TempData contains the JSON data
+    var quotationJson = TempData["QuotationJSON"] as string;
+}
+@*http://localhost:54895/QuotationMaster/quoatationNew*@
+<script>
+    function ExclusionFunction() {
+        var Exclusion = document.getElementById("Exclusion");
+
+        var ExclusionDiv = document.getElementById("ExclusionDiv");
+        if (Exclusion.checked == true) {
+            ExclusionDiv.style.display = "grid";
+        } else {
+            ExclusionDiv.style.display = "none";
+        }
+    }
+    function TermsAndConditionsFunction() {
+        var Exclusion = document.getElementById("TermsAndConditions");
+
+        var ExclusionDiv = document.getElementById("TermsAndConditionsDiv");
+        if (Exclusion.checked == true) {
+            ExclusionDiv.style.display = "grid";
+        } else {
+            ExclusionDiv.style.display = "none";
+        }
+    }
+</script>
+
+
+<div style="display:flex; width:100%;height:auto;">
+    <div style="border:solid 1px black;width:20%;">
+        <input type="checkbox" id="Exclusion" name="Exclusion" value="ExclusionRequired" onclick="ExclusionFunction()" />
+        <label for="Exclusion">Tick to display Excusions on quotation pdf</label> 
+        <input type="checkbox" id="TermsAndConditions" name="TermsAndConditions" value="TermsAndConditionsRequired" onclick="TermsAndConditionsFunction()" />
+        <label for="TermsAndConditions">Tick to display Additional Terms and Condition on quotation pdf</label>        
+    </div>
+    <div id="downloadDIV" style="border:solid 1px black;width:60%;font-family:'TNG Pro';">
+        <div>
+            <div style="display:grid;">
+                <label>Salutation \ Greeting \ Address :</label>
+                <textarea id="SalutationText"></textarea>
+            </div>
+            <div style="display:grid;">
+                <label>Scope Of Work:</label>
+                <textarea id="ScopeOfWorkText"></textarea>
+            </div>
+            <div id="ExclusionDiv" style="display:none;">
+                <label>Exclusions: </label>
+                <textarea></textarea>
+            </div>
+            <div style="display:grid;">
+                <label>Deliverables:</label>
+                <textarea id="Deliverabletext"></textarea>
+                
+            </div>
+            <div style="display:grid;">
+                <label>Communication Protocol:</label>
+                <textarea id="CommunicationProtocoltext"></textarea>
+                
+            </div>
+            <div style="display:grid;">
+                <label>Professional Fees:</label>
+                <textarea id="feesText"></textarea>
+                
+            </div>
+            <div style="display:grid;">
+                <label>Payment Terms:</label>
+                <textarea id="PayemntTermsText"></textarea>
+                
+            </div>
+            <div style="display:grid;">
+                <label>Validity :<p id="validityQuotation"></p></label>
+                <textarea id="validityText"></textarea>
+                
+            </div>
+            <div id="TermsAndConditionsDiv" style="display:none;">
+                <label>Additional Terms and Condition: </label>
+                <textarea id="TermsAndConditionstext"></textarea>
+            </div>
+            <div style="display:grid;">
+                <label>Complimentary Close:</label>
+                <textarea id="complimentaryClosetext"></textarea>
+                
+            </div>
+            <div style="display:grid;">
+                <label>Enclosures:</label>
+                <textarea id="EnclosuresText"></textarea>
+                
+            </div>
+            
+
+
+            
+        </div>
+    </div>
+    <div style="border:solid 1px black;width:20%;"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    debugger;
+    var JsonString = @Html.Raw(Json.Encode(quotationJson));
+
+    window.onload = function(){
+        if (JsonString != null){
+            if (JsonString == "No data Found"){
+
+            }
+            else{
+                debugger;
+                var data = JSON.parse(JsonString);
+                console.log(data);
+
+                var quotationNumber = data[0].QuotationNumber;
+                //salutation
+                var SalutationTextinp = data[0].ThankYouLetter;
+                //'Dear Sir / Madam ,This refers to your above subject enquiry. We thank you for the interest shown in the services of TUV India Private Limited. We are pleased to submit our offer for Third Party Inspection at '+data[0].CompanyName+' as follows:';
+                if (SalutationTextinp != null){
+                    var SalutationText = document.getElementById("SalutationText");
+                    SalutationText.value = SalutationTextinp;
+                }
+                //scope of work
+                var ScopeOfWork = data[0].ScopeOfWork;
+
+                if (ScopeOfWork != null){
+                    var ScopeOfWorkText = document.getElementById("ScopeOfWorkText");
+                    ScopeOfWorkText.value = ScopeOfWork;
+                }
+                //deliverable
+                var Deliverable = data[0].Deliverable;
+                if (Deliverable != null){
+                    var Deliverabletext = document.getElementById("Deliverabletext");
+                    Deliverabletext.value = Deliverable;
+                }
+                //communication protocol
+                var CommunicationProtocol = data[0].CommunicationProtocol;
+                if (CommunicationProtocol != null){
+                    var CommunicationProtocoltext = document.getElementById("CommunicationProtocoltext");
+                    CommunicationProtocoltext.value = CommunicationProtocol;
+                }
+
+                //proffesional fees
+                var CommunicationProtocol = data[0].CommunicationProtocol;
+                if (CommunicationProtocol != null){
+                    var feesText = document.getElementById("feesText");
+                    feesText.value = CommunicationProtocol;
+                }
+
+                ///payment terms
+                var PaymentTerms = data[0].PaymentTerms;
+                if (CommunicationProtocol != null){
+                    var PayemntTermsText = document.getElementById("PayemntTermsText");
+                    PayemntTermsText.value = PaymentTerms;
+                }
+
+                //exclusion
+                var ExclusionCheckBox = data[0].ExclusionCheckBox;
+                if (ExclusionCheckBox == 0 || ExclusionCheckBox == null ){
+
+                }else{
+                    var ExclusionChwck = document.getElementById("Exclusion");
+                    ExclusionChwck.checked = true;
+
+                    var ExclusionDivcheck = document.getElementById("ExclusionDiv");
+                    ExclusionDivcheck.checked = true;
+                }
+                
+                //validity
+                var validity = data[0].Validity;
+
+                if (validity != null){
+                    var validityText = document.getElementById("validityText");
+                    validityText.value = validity;
+                }
+
+                //terms and conditions
+                var GeneralTermsCheckbox = data[0].GeneralTermsCheckbox;
+                var GeneralTerms = data[0].GeneralTerms;
+
+                if (GeneralTerms != null){
+                    var TermsAndConditionstext = document.getElementById("TermsAndConditionstext");
+                    TermsAndConditions.value = GeneralTerms;
+                }
+                
+
+                
+                
+                //compliemntary Close
+                var ComplimentaryClose = data[0].ComplimentaryClose;
+                if (ComplimentaryClose != null){
+                    var complimentaryClosetext = document.getElementById("complimentaryClosetext");
+                    complimentaryClosetext.value = ComplimentaryClose;
+                }
+
+                //enclousers
+
+                var Exclusion = data[0].Exclusion;
+                if (ComplimentaryClose != null){
+                    var EnclosuresText = document.getElementById("EnclosuresText");
+                    EnclosuresText.value = Exclusion;
+                }
+
+
+            }
+        }
+    }
+
+</script>

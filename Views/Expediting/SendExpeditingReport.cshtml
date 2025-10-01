@@ -1,0 +1,2516 @@
+﻿@model TuvVision.Models.ExpeditingModel
+@{ string key = System.Configuration.ConfigurationManager.AppSettings["Web"].ToString(); }
+
+@{
+    ViewBag.Title = "SendExpeditingReport";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<style>
+    .height-table {
+        height: auto;
+    }
+
+    .ui-autocomplete {
+        z-index: 1051 !important; 
+    }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-family: 'TNG Pro';
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+        font-family: 'TNG Pro';
+        font-weight: normal;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    .label1 {
+        font-weight: normal !important;
+    }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+    }
+
+    #example tbody tr.highlight-row {
+        background-color: #FFEB00;
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+
+    #example tbody tr.highlight-row_ {
+        background-color: #FED7DA;
+    }
+
+    .btn.btn-info.dynamic-function-btn.highlighted {
+        background-color: #001ED2; /* Change the color as desired */
+    }
+</style>
+
+<form method="post" enctype="multipart/form-data" id="formic">
+    @Html.HiddenFor(m => m.PK_call_id)
+    @Html.HiddenFor(m => m.PK_SubJob_Id)
+    @Html.HiddenFor(m => m.CMP_ID)
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <div class="container-fluid">
+                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+                            <br />
+                            @*<h5 class="dynamic-page-title dynamic-page-title-2 " style="padding-left: 11px;">Inspection Visit Report Number : @Session["VisitReportNo"]</h5>*@
+                            <div class="col-xs-12">
+                               @if (Model.PK_call_id != "0")
+                               {
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ExpeditingReport", "Expediting", new { @PK_Call_ID = Model.PK_call_id })'">General</button>
+                                   //if (Model.PK_Expediting_Id != 0)
+                                   //{
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpItemDescription", "Expediting", new { @PK_Call_ID = Model.PK_call_id })'">Item Description</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpProgress", "Expediting", new { @PK_Call_ID = Model.PK_call_id })'">Progress</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EXp_commercial", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Commercial</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpEngineering", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Engineering</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpMaterial", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Procurement</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpManufacturing", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Manufacturing</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpFinalStage", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Final Stage</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpDelays", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Item Wise Delays</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpConcerns", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Concerns</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("PhotoAttachement", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Photo</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Observation", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Observation</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Records", "Expediting", new { @PK_Call_Id = Model.PK_call_id })'">Records</button>
+                                        @*<button id="btnAddExpenses" class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem", new { FKId = Model.PK_Expediting_Id, Type = "Expediting", SubJobNo = Model.Sub_Job_No, PK_Call_Id = Model.PK_call_id })'">Add Expenses</button>*@
+                                        @*<button id="btnsendreport" class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("SendExpeditingReport", "Expediting", new { FKId = Model.PK_Expediting_Id, Type = "Expediting", SubJobNo = Model.Sub_Job_No, PK_Call_Id = Model.PK_call_id, CustomerName = Model.Customer_Name, VendorName = Model.VendorName, SubVendorName = Model.Sub_VendorName, Date_Of_Expediting = Model.Date_Of_Expediting })'">Add Expenses</button>*@
+
+                                   //}
+                               }
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Expediting Report</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        @Html.HiddenFor(m => m.PK_call_id)
+                                        @Html.HiddenFor(m => m.CMP_ID)
+
+
+                                        <div class="row">
+                                            <br /><br />
+                                            <div class="col-xs-12 col-sm-12">
+                                                <label style="margin-left: 16px;font-family:'TNG Pro';font-weight:bold;">Distribution list : Tick for sending inspection call confirmation Email notification</label>
+                                            </div><br />
+                                            <div class="col-xs-12 col-sm-12">
+                                                <p style="margin-left: 16px;font-family:'TNG Pro';font-weight:bold;color:#FB5F6B" id="txtmail"></p>
+                                            </div>
+
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-xs-12" style="margin-left:15px;">
+                                                <label style="margin-left:2px;font-family:'TNG Pro';font-weight:bold;">Mail Subject</label>
+                                                @Html.TextAreaFor(model => model.MailSubject, new { @placeholder = "Enter Subject", @class = "form-control", @id = "Subject" })
+                                            </div>
+
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <div class="col-xs-12" id="divDocuments">
+                                            <table class="display" id="example">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <input type="checkbox" style="font-family:'TNG Pro';font-size:12px;" class="column-checkbox" id="TuvCheckbox" data-column="Tuv">
+                                                            Tuv Emails&nbsp;&nbsp;<i class="fa-solid fa-user-plus" data-toggle="modal" data-contacttype="Tuv" data-target="#AddNewContactDetails_TUV"></i>
+                                                        </th>
+                                                        <th>
+                                                            <i class="fa-solid fa-circle-plus" data-toggle="modal" data-contacttype="Tuv" data-target="#AddExistingClient"></i>&nbsp;&nbsp;
+                                                            <input type="checkbox" style="font-family:'TNG Pro';font-size:12px;" class="column-checkbox" id="ClientCheckbox" data-column="Client">
+                                                            Client Emails&nbsp;&nbsp;<i class="fa-solid fa-user-plus" id="lnkNewContact1" data-toggle="modal" data-contacttype="Client" data-target="#AddNewContactDetails"></i>@Html.HiddenFor(m => m.Customer_Name)
+                                                        </th>
+                                                        <th>
+                                                            <i class="fa-solid fa-circle-plus" data-toggle="modal" data-contacttype="Tuv" data-target="#AddExistingSubvendor"></i>&nbsp;&nbsp;
+                                                            <input type="checkbox" style="font-family:'TNG Pro';font-size:12px;" class="column-checkbox" id="VendorCheckbox" data-column="Vendor">
+                                                            Vendor Emails&nbsp;&nbsp;<i class="fa-solid fa-user-plus" id="lnkNewContact2" data-toggle="modal" data-contacttype="Vendor" data-target="#AddNewContactDetails"></i>@Html.HiddenFor(m => m.VendorName)
+                                                        </th>
+                                                        <th>
+                                                            <i class="fa-solid fa-circle-plus" data-toggle="modal" data-contacttype="Tuv" data-target="#AddExistingSubSubvendor"></i>&nbsp;&nbsp;
+                                                            <input type="checkbox" style="font-family:'TNG Pro';font-size:12px;" class="column-checkbox" id="SubvendorCheckbox" data-column="Subvendor">
+                                                            Sub Vendor Emails&nbsp;&nbsp;<i class="fa-solid fa-user-plus" id="lnkNewContact3" data-toggle="modal" data-contacttype="SubVendor" data-target="#AddNewContactDetails"></i>@Html.HiddenFor(m => m.Sub_VendorName)
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="font-size:12px;font-family:'TNG Pro'"></tbody>
+                                            </table>
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <div class="col-xs-12 col-sm-12">
+                                            <table class="table table-condensed" style="border:1px solid;font-family:'TNG Pro'">
+                                                <thead style="background-color:#001ED2;color:#FFFFFF;font-family:'TNG Pro'">
+                                                    <tr>
+                                                        <th class="hidden"></th>
+                                                        <th style="border:1px solid;font-family:'TNG Pro';text-align:center;width:50px;">
+                                                            <input type="checkbox" id="selectAll" />
+                                                        </th>
+                                                        <th style="border:1px solid;font-family:'TNG Pro';text-align:left;">Attachment</th>
+                                                    </tr>
+                                                <thead>
+                                                <tbody id="tblbody" style="text-align:left;"></tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-xs-12 text-center">
+                                            <button type="button" class="btn btn-default insert-form-btn" id="btndistribute_" onclick="btndistribute()">Send Expediting Report</button>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddNewContactDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new contact</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span style="color:#E12F24;">
+                                <strong>Notes </strong> :
+                            </span> 1) <span style="color:#ff0000;">*</span> - Mandatory.<br /><br />
+                        </div>
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Contact Person name:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.ContactNames, new { @placeholder = "Contact Name Here", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 hidden">
+
+                            <div class="form-group">
+                                <label>Company name:</label>
+                                @if (Model != null)
+                                {
+                                    if (ViewBag.ContactCompanyName != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.ContactCompanyName, new SelectList(@ViewBag.ContactCompanyName, "Code", "Name"), "---Select Company---", new { @id = "ddlContactCompanyname", @class = "form-control" })
+                                    }
+                                }
+                                else
+                                {
+                                    if (ViewBag.ContactCompanyName != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.ContactCompanyName, new SelectList(@ViewBag.ContactCompanyName, "Code", "Name"), new { @id = "ddlContactCompanyname", @class = "form-control" })
+                                    }
+                                }
+                            </div>
+                            @Html.Hidden("hidCompany")
+                            @Html.Hidden("hiddenButtonId")
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Designation:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.TitleName, new { @placeholder = "Designation", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TitleName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Email Id:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email Here", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Landline number:</label>
+                                @Html.TextBoxFor(model => model.HomePhone, new { @placeholder = "Landline Number Here", @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Mobile number:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.Mobile, new { @placeholder = "Mobile Number Here", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Fax number:</label>
+                                @Html.TextBoxFor(model => model.Fax_No, new { @placeholder = "Enter Fax Number", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Fax_No, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                @if (Model != null)
+                                {
+                                    if (Model.IsMainContact == true)
+                                    {
+                                        <div>
+                                            <label>
+                                                <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" checked="checked" />Primary Contact
+                                            </label>
+                                        </div>
+                                    }
+                                    else if (Model.IsMainContact == false)
+                                    {
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" />Primary Contact
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" /> Primary Contact
+                                            <input name="IsMainContact" type="hidden" value="false" />
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Status:<span style="color:#ff0000;">*</span></label>
+                                @Html.DropDownListFor(m => m.ContactStatus, new List<SelectListItem>
+                                {
+                                 new SelectListItem{ Text="---SELECT---", Value = "" },
+                                 new SelectListItem{ Text="Active", Value = "Active" },
+                                 new SelectListItem{ Text="In-Active", Value = "In-Active" },
+                                }, new { @class = "form-control", @id = "PT" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label>Address:<span style="color:#ff0000;">*</span></label>
+                                @Html.DropDownListFor(model => model.Address, new SelectList(Enumerable.Empty<SelectListItem>(), "--Select Vendor Address--", "--Select Vendor Address--"), "--Select Vendor Address--", new { @id = "ddlCaddr", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <button type="button" class="btn btn-default insert-form-btn " id="btnAddNewContact" title="Add New Contact"><i class="fa fa-plus-circle"></i> Add Contact</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 10px 15px;">
+                <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalCloseButton"><span aria-hidden="true">&times;</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddNewContactDetails_TUV" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add New Email</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span style="color:#E12F24;">
+                                <strong>Notes </strong> :
+                            </span> 1) <span style="color:#ff0000;">*</span> - Mandatory.<br /><br />
+                        </div>
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="form-group">
+                                <label>TUV Email ID:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.Tuv_Email, new { @placeholder = "TUV Email ", @class = "form-control TuvEmailData", @id = "ddlTuvEmail" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <button type="button" class="btn btn-default insert-form-btn " id="btntuvemail" title="Add New Contact"><i class="fa fa-plus-circle"></i> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 15px;">
+                    <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalCloseButton"><span aria-hidden="true">&times;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@*//////////////////////////*@
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddExistingClient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Existing Email</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                        <div class="col-xs-12 col-sm-6" id="IDVendorContact">
+                            <div class="form-group">
+                                <label><b>Client Email:</b></label>
+                                @{
+                                    var selectedContacts_client = Model.Customer_Name?.Split(',') ?? new string[] { };
+                                    var contacts_client = ViewBag.Contacts as List<SelectListItem>;
+                                }
+                                @if (Model.Customer_Name != null && Model.Customer_Name.Any())
+                                {
+                                    @Html.DropDownListFor(model => model.Customer_Name, new MultiSelectList(contacts_client, "Value", "Text", selectedContacts_client), new { @id = "ClientContactContact", @class = "form-control form-multiselect-city", @multiple = "multiple" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.Customer_Name, new SelectList(Enumerable.Empty<SelectListItem>()), new { @id = "ClientContactContact", @class = "form-control form-multiselect-city", @multiple = "multiple" })
+                                }
+                                @*@{
+                                    var selectedContacts_client = Model.CMP_ID?.Split(',') ?? new string[] { };
+                                    var contacts_client = ViewBag.Contacts_client as List<SelectListItem>;
+                                }
+                                @if (Model.CMP_ID != null && Model.CMP_ID.Any())
+                                {
+                                    @Html.DropDownListFor(model => model.CMP_ID, new MultiSelectList(contacts_client, "Value", "Text", selectedContacts_client), new { @id = "ClientContactContact", @class = "form-control form-multiselect-city", @multiple = "multiple" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.CMP_ID, new SelectList(Enumerable.Empty<SelectListItem>()), new { @id = "ClientContactContact", @class = "form-control form-multiselect-city", @multiple = "multiple" })
+                                }*@
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <button type="button" class="btn btn-default insert-form-btn " id="btnAddClient" title="Add New Contact" onclick="btnAddClient_();"><i class="fa fa-plus-circle"></i> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 15px;">
+                    <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalCloseButton5"><span aria-hidden="true">&times;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@*//////////////////////////////////*@
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddExistingSubvendor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Existing Email</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                        <div class="col-xs-12 col-sm-6" id="IDVendorContact">
+                            <div class="form-group">
+                                <label>Vendor Contact Details:</label>
+                                @{
+                                    var selectedContacts = Model.VendorName?.Split(',') ?? new string[] { };
+                                    var contacts = ViewBag.Contacts as List<SelectListItem>;
+                                }
+                                @if (Model.VendorName != null && Model.VendorName.Any())
+                                {
+                                    @Html.DropDownListFor(model => model.VendorName, new MultiSelectList(contacts, "Value", "Text", selectedContacts), new { @id = "VendorContact", @class = "form-control form-multiselect-city", @multiple = "multiple" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.VendorName, new SelectList(Enumerable.Empty<SelectListItem>()), new { @id = "VendorContact", @class = "form-control form-multiselect-city", @multiple = "multiple" })
+                                }
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <button type="button" class="btn btn-default insert-form-btn " id="btnAddVendorName" onclick="btnAddVendorName_();" title="Add New Contact"><i class="fa fa-plus-circle"></i> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 15px;">
+                    <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalCloseButton4"><span aria-hidden="true">&times;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddExistingSubSubvendor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Existing Email</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                        <div class="col-xs-12 col-sm-6" id="IDVendorContact">
+                            <div class="form-group">
+                                <label>Vendor Contact Details:</label>
+                                @{
+                                    var selectedContacts_ = Model.Sub_VendorName?.Split(',') ?? new string[] { };
+                                    var contacts_ = ViewBag.Contacts_ as List<SelectListItem>;
+                                }
+                                @if (Model.Sub_VendorName != null && Model.Sub_VendorName.Any())
+                                {
+                                    @Html.DropDownListFor(model => model.Sub_VendorName, new MultiSelectList(contacts_, "Value", "Text", selectedContacts_), new { @id = "SubVendorContact", @class = "form-control form-multiselect-city", @multiple = "multiple" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.Sub_VendorName, new SelectList(Enumerable.Empty<SelectListItem>()), new { @id = "SubVendorContact", @class = "form-control form-multiselect-city", @multiple = "multiple" })
+                                }
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <button type="button" class="btn btn-default insert-form-btn " id="btntuvemail" title="Add New Contact" onclick="btnAddSubVendorName_();"><i class="fa fa-plus-circle"></i> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 15px;">
+                    <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalCloseButton3"><span aria-hidden="true">&times;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+
+
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        // Function to initialize the multiselect dropdown
+        function initializeMultiselect() {
+            debugger;
+            $('#VendorContact').multiselect({
+                includeSelectAllOption: true,
+                selectAllText: 'Select All',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                maxHeight: 300
+            });
+        }
+
+        function initializeMultiselect_() {
+            debugger;
+            $('#SubVendorContact').multiselect({
+                includeSelectAllOption: true,
+                selectAllText: 'Select All',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                maxHeight: 300
+            });
+        }
+
+       
+        function initializeMultiselectClient_() {
+            debugger;
+            $('#ClientContactContact').multiselect({
+                includeSelectAllOption: true,
+                selectAllText: 'Select All',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                maxHeight: 300
+            });
+        }
+
+        // Function to load vendor details and populate the dropdown
+        function loadVendorDetails(vendorName) {
+            debugger;
+            $.ajax({
+                url: '@Url.Action("Getvendordetails", "subJobMaster")',
+                data: JSON.stringify({ 'Pre': vendorName }),
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    // Clear existing options
+                    $('#VendorContact').empty();
+
+                    var selectedContacts = $('#VendorContact').data('selected-contacts') || [];
+
+                    var options = '';
+                    for (var i = 0; i < response.length; i++) {
+                        var selected = selectedContacts.includes(response[i].Vendor_Contact.toString()) ? ' selected' : '';
+                        options += '<option value="' + response[i].Vendor_Contact + '"' + selected + '>' + response[i].vendor_name + '</option>';
+                    }
+                    $("#VendorContact").html(options);
+
+                    // Destroy the previous instance of the multi-select plugin
+                    $('#VendorContact').multiselect('destroy');
+
+                    // Re-initialize the multi-select plugin
+                    initializeMultiselect();
+                },
+                error: function (response) {
+                    console.error(response.responseText);
+                },
+                failure: function (response) {
+                    console.error(response.responseText);
+                }
+            });
+        }
+
+
+
+        ///get sub vendor addreess
+
+        function loadSubVendorDetails(vendorName) {
+            debugger;
+            $.ajax({
+                url: '@Url.Action("Getvendordetails", "subJobMaster")',
+                data: JSON.stringify({ 'Pre': vendorName }),
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    // Clear existing options
+                    $('#SubVendorContact').empty();
+
+                    var selectedContacts = $('#SubVendorContact').data('selected-contacts') || [];
+
+                    var options = '';
+                    for (var i = 0; i < response.length; i++) {
+                        var selected = selectedContacts.includes(response[i].Vendor_Contact.toString()) ? ' selected' : '';
+                        options += '<option value="' + response[i].Vendor_Contact + '"' + selected + '>' + response[i].vendor_name + '</option>';
+                    }
+                    $("#SubVendorContact").html(options);
+
+                    // Destroy the previous instance of the multi-select plugin
+                    $('#SubVendorContact').multiselect('destroy');
+
+                    // Re-initialize the multi-select plugin
+                    initializeMultiselect_();
+                },
+                error: function (response) {
+                    console.error(response.responseText);
+                },
+                failure: function (response) {
+                    console.error(response.responseText);
+                }
+            });
+        }
+
+
+        ///////////////
+        function loadSubSubVendorDetails(vendorName) {
+            debugger;
+            $.ajax({
+                url: '@Url.Action("Getvendordetails", "subJobMaster")',
+                data: JSON.stringify({ 'Pre': vendorName }),
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    // Clear existing options
+                    $('#SubSubVendorContact').empty();
+
+                    var selectedContacts = $('#SubSubVendorContact').data('selected-contacts') || [];
+
+                    var options = '';
+                    for (var i = 0; i < response.length; i++) {
+                        var selected = selectedContacts.includes(response[i].Vendor_Contact.toString()) ? ' selected' : '';
+                        options += '<option value="' + response[i].Vendor_Contact + '"' + selected + '>' + response[i].vendor_name + '</option>';
+                    }
+                    $("#SubSubVendorContact").html(options);
+
+                    // Destroy the previous instance of the multi-select plugin
+                    $('#SubSubVendorContact').multiselect('destroy');
+
+                    // Re-initialize the multi-select plugin
+                    initializeMultiselectsubsub_();
+                },
+                error: function (response) {
+                    console.error(response.responseText);
+                },
+                failure: function (response) {
+                    console.error(response.responseText);
+                }
+            });
+        }////////////////////
+
+
+
+        
+
+        @*$('#IDVendorContact').on('click', function() {
+            var initialClientName = $('#CMP_ID').val();
+            $.ajax({
+                url: '@Url.Action("GetClientdetails", "subJobMaster")',
+                data: JSON.stringify({ 'Pre': initialClientName }),
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    // Clear existing options
+                    $('#ClientContactContact').empty();
+
+                    var selectedContacts = $('#ClientContactContact').data('selected-contacts') || [];
+
+                    var options = '';
+                    for (var i = 0; i < response.length; i++) {
+                        var selected = selectedContacts.includes(response[i].Vendor_Contact.toString()) ? ' selected' : '';
+                        options += '<option value="' + response[i].Vendor_Contact + '"' + selected + '>' + response[i].vendor_name + '</option>';
+                    }
+                    $("#ClientContactContact").html(options);
+
+                    // Destroy the previous instance of the multi-select plugin
+                    $('#ClientContactContact').multiselect('destroy');
+
+                    // Re-initialize the multi-select plugin
+                    initializeMultiselectClient_();
+                },
+                error: function (response) {
+                    console.error(response.responseText);
+                },
+                failure: function (response) {
+                    console.error(response.responseText);
+                }
+            });
+
+            //loadClientDetails(initialClientName);
+        });*@
+
+
+        function loadClientDetails(vendorName) {
+            debugger;
+            $.ajax({
+                url: '@Url.Action("GetClientdetails", "subJobMaster")',
+                data: JSON.stringify({ 'Pre': vendorName }),
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    // Clear existing options
+                    $('#ClientContactContact').empty();
+
+                    var selectedContacts = $('#ClientContactContact').data('selected-contacts') || [];
+
+                    var options = '';
+                    for (var i = 0; i < response.length; i++) {
+                        var selected = selectedContacts.includes(response[i].Vendor_Contact.toString()) ? ' selected' : '';
+                        options += '<option value="' + response[i].Vendor_Contact + '"' + selected + '>' + response[i].vendor_name + '</option>';
+                    }
+                    $("#ClientContactContact").html(options);
+
+                    // Destroy the previous instance of the multi-select plugin
+                    $('#ClientContactContact').multiselect('destroy');
+
+                    // Re-initialize the multi-select plugin
+                    initializeMultiselectClient_();
+                },
+                error: function (response) {
+                    console.error(response.responseText);
+                },
+                failure: function (response) {
+                    console.error(response.responseText);
+                }
+            });
+        }
+
+
+        // Event binding for vendor_name blur event
+        $('#VendorName').blur(function () {
+            var vendorName = this.value;
+            loadVendorDetails(vendorName);
+        });
+
+        $('#Sub_VendorName').blur(function () {
+            var SubvendorName = this.value;
+            loadSubVendorDetails(SubvendorName);
+        });
+
+
+        $('#Customer_Name').blur(function () {
+            var Client_Name = this.value;
+            loadClientDetails(Client_Name);
+        });
+        // Initial load
+        var initialVendorName = $('#VendorName').val();
+
+        var initialSubVendorName = $('#Sub_VendorName').val();
+
+        var initialClientName = $('#CMP_ID').val();
+
+
+        // Extract and store the initial selected contacts from the model
+        var selectedContacts = '@Model.VendorName'.split(',');
+        $('#VendorContact').data('selected-contacts', selectedContacts);
+
+        loadVendorDetails(initialVendorName);
+
+
+        var selectedContacts_ = '@Model.Sub_VendorName'.split(',');
+        $('#SubVendorContact').data('selected-contacts', selectedContacts);
+
+        loadSubVendorDetails(initialSubVendorName);
+
+
+
+
+        var selectedClientContacts_ = '@Model.Customer_Name'.split(',');
+        $('#CMP_ID').data('selected-contacts', selectedClientContacts_);
+        loadClientDetails(initialClientName);
+
+        // Initial call to initialize the multi-select plugin
+        initializeMultiselect_();
+
+        // Event binding for VendorContact change event
+        $('#Vendor_Name_Location').on('change', function () {
+            var selectedContacts = $(this).val() || [];
+            var vendorCompany = $('#Vendor_Name_Location').val();
+
+            if (selectedContacts.length === 0) {
+                // If no option is selected, clear the email field
+                $('#Vendor_Email').val('');
+                return;
+            }
+            // Create a JSON object with vendorid
+            var dataToSend = JSON.stringify({ vendorid: selectedContacts });
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetvendorEmailId", "subJobMaster")',
+                data: { myArray: dataToSend, vendorComapny: vendorCompany },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var emailAddresses = [];
+                    if (Array.isArray(response)) {
+                        $.each(response, function (index, value) {
+                            emailAddresses.push(value.Vendor_Email);
+                        });
+                        // Join email addresses with a comma and set to the input
+                        $('#Vendor_Email').val(emailAddresses.join(', '));
+                    } else {
+                        cxonsole.error("Invalid response format");
+                    }
+                },
+                error: function (response) {
+                    console.error("Error: ", response.responseText);
+                }
+            });
+        });
+    });
+
+</script>
+
+<script>
+
+    $('#Vendor_Name_Location').on('change', function () {
+        debugger
+        var selectedContacts = $(this).val() || [];
+        var vendorCompany = $('#vendor_name').val();
+        if (selectedContacts.length === 0) {
+            // If no option is selected, clear the email field
+            $('#Vendor_ContactAll').val('');
+            return;
+        }
+        // Create a JSON object with vendorid
+        var dataToSend = JSON.stringify({ vendorid: selectedContacts });
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetvendorDetailsall", "subJobMaster")',
+            data: { myArray: dataToSend, vendorComapny: vendorCompany },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                var vendorDetails = [];
+
+                if (Array.isArray(response)) {
+                    $.each(response, function (index, value) {
+                        vendorDetails.push(value.ContactNames);
+                    });
+                    // Join email addresses with a comma and set to the input
+                    $('#Vendor_ContactAll').val(vendorDetails.join(','));
+                    //console.log($('#Vendor_ContactAll').val(vendorDetails.join('-')));
+                } else {
+                    console.error("Invalid response format");
+                }
+            },
+            error: function (response) {
+                console.error("Error: ", response.responseText);
+            }
+        });
+    });
+
+
+
+    $('#SubSubSubVendorName').on('change', function () {
+        debugger
+        var selectedContacts = $(this).val() || [];
+        var vendorCompany = $('#vendor_name').val();
+
+
+        if (selectedContacts.length === 0) {
+            // If no option is selected, clear the email field
+            $('#Subsubvendorname_').val('');
+            return;
+        }
+
+        // Create a JSON object with vendorid
+        var dataToSend = JSON.stringify({ vendorid: selectedContacts });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetvendorDetailsall", "subJobMaster")',
+            data: { myArray: dataToSend, vendorComapny: vendorCompany },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                var vendorDetails = [];
+
+                if (Array.isArray(response)) {
+                    $.each(response, function (index, value) {
+                        vendorDetails.push(value.ContactNames);
+                    });
+                    // Join email addresses with a comma and set to the input
+                    $('#initializeMultiselectsubsub_').val(vendorDetails.join(','));
+                    //console.log($('#Vendor_ContactAll').val(vendorDetails.join('-')));
+                } else {
+                    console.error("Invalid response format");
+                }
+            },
+            error: function (response) {
+                console.error("Error: ", response.responseText);
+            }
+        });
+    });
+
+
+
+    $('#Sub_Vendor_Name').on('change', function () {
+        debugger
+        var selectedContacts = $(this).val() || [];
+        var vendorCompany = $('#Sub_Vendor_Name').val();
+
+
+        if (selectedContacts.length === 0) {
+            // If no option is selected, clear the email field
+            $('#Subsubvendorname_').val('');
+            return;
+        }
+
+        // Create a JSON object with vendorid
+        var dataToSend = JSON.stringify({ vendorid: selectedContacts });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetvendorDetailsall", "subJobMaster")',
+            data: { myArray: dataToSend, vendorComapny: vendorCompany },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                var vendorDetails = [];
+
+                if (Array.isArray(response)) {
+                    $.each(response, function (index, value) {
+                        vendorDetails.push(value.ContactNames);
+                    });
+                    // Join email addresses with a comma and set to the input
+                    $('#Subsubvendorname_').val(vendorDetails.join(','));
+                    //console.log($('#Vendor_ContactAll').val(vendorDetails.join('-')));
+                } else {
+                    console.error("Invalid response format");
+                }
+            },
+            error: function (response) {
+                console.error("Error: ", response.responseText);
+            }
+        });
+    });
+
+
+
+    /////     ClientContactContact
+
+
+
+
+</script>
+
+
+
+<script>
+
+    $('#VendorContact').on('change', function () {
+        debugger
+        var selectedContacts = $(this).val() || [];
+        var vendorCompany = $('#vendor_name').val();
+
+
+        if (selectedContacts.length === 0) {
+            // If no option is selected, clear the email field
+            $('#Vendor_ContactAll').val('');
+            return;
+        }
+
+        // Create a JSON object with vendorid
+        var dataToSend = JSON.stringify({ vendorid: selectedContacts });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetvendorDetailsall", "subJobMaster")',
+            data: { myArray: dataToSend, vendorComapny: vendorCompany },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                var vendorDetails = [];
+
+                if (Array.isArray(response)) {
+                    $.each(response, function (index, value) {
+                        vendorDetails.push(value.ContactNames);
+                    });
+                    // Join email addresses with a comma and set to the input
+                    $('#Vendor_ContactAll').val(vendorDetails.join(','));
+                    //console.log($('#Vendor_ContactAll').val(vendorDetails.join('-')));
+                } else {
+                    console.error("Invalid response format");
+                }
+            },
+            error: function (response) {
+                console.error("Error: ", response.responseText);
+            }
+        });
+    });
+
+
+
+
+    $('#Sub_Vendor_Name').on('change', function () {
+        debugger
+        var selectedContacts = $(this).val() || [];
+        var vendorCompany = $('#vendor_name').val();
+
+
+        if (selectedContacts_.length === 0) {
+            // If no option is selected, clear the email field
+            $('#Subsubvendorname_').val('');
+            return;
+        }
+
+        // Create a JSON object with vendorid
+        var dataToSend = JSON.stringify({ vendorid: selectedContacts });
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetvendorDetailsall", "subJobMaster")',
+            data: { myArray: dataToSend, vendorComapny: vendorCompany },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                var vendorDetails = [];
+
+                if (Array.isArray(response)) {
+                    $.each(response, function (index, value) {
+                        vendorDetails.push(value.ContactNames);
+                    });
+                    // Join email addresses with a comma and set to the input
+                    $('#SubVendorContact').val(vendorDetails.join(','));
+                    //console.log($('#Vendor_ContactAll').val(vendorDetails.join('-')));
+                } else {
+                    console.error("Invalid response format");
+                }
+            },
+            error: function (response) {
+                console.error("Error: ", response.responseText);
+            }
+        });
+    });
+
+</script>
+
+
+<script>
+    function saveloadVendorDetail(vendorName) {
+        $.ajax({
+            url: '@Url.Action("Getvendordetails", "subJobMaster")',
+            data: JSON.stringify({ 'Pre': vendorName }),
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                // Clear existing options
+                $('#VendorContact').empty();
+
+                var selectedContacts = $('#VendorContact').data('selected-contacts') || [];
+
+                var options = '';
+                for (var i = 0; i < response.length; i++) {
+                    var selected = selectedContacts.includes(response[i].Vendor_Contact.toString()) ? ' selected' : '';
+                    options += '<option value="' + response[i].Vendor_Contact + '"' + selected + '>' + response[i].vendor_name + '</option>';
+                }
+                $("#VendorContact").html(options);
+
+                // Destroy the previous instance of the multi-select plugin
+                $('#VendorContact').multiselect('destroy');
+
+                // Re-initialize the multi-select plugin
+                saveinitializeMultiselect();
+
+                alert("Contact Saved Successfully!!!")
+
+                $("#modalCloseButton").click();
+            },
+            error: function (response) {
+                console.error(response.responseText);
+            },
+            failure: function (response) {
+                console.error(response.responseText);
+            }
+        });
+    }
+
+
+    function saveinitializeMultiselect() {
+        $('#VendorContact').multiselect({
+            includeSelectAllOption: true,
+            selectAllText: 'Select All',
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 300
+        });
+    }
+</script>
+
+<script>
+
+        var Type_;
+        var GetClientidedtity;
+
+
+
+
+        $("#lnkNewContact").click(function () {
+            debugger;
+            //Bind_EmailID();
+            if ($("#VendorName").val() != "") {
+                var Address = {};
+                var Company_Name = $("#VendorName").val();
+                $("#hidCompany").val(Company_Name);
+                Address.url = '@Url.Action("GetAddressOfCompany", "CompanyMasters")';
+                Address.type = "Get";
+                Address.data = { Company_Name: Company_Name };
+                Address.datatype = "json";
+                Address.ContentType = "application/json";
+                Address.success = function (response) {
+                    $('#ddlCaddr').empty();
+                    var s = '<option value="-1">--Select Address--</option>';
+                    for (var i = 0; i < response.length; i++) {
+                        s += '<option value="' + response[i].Name + '">' + response[i].Name + '</option>';
+                    }
+                    $("#ddlCaddr").html(s);
+                };
+                Address.error = function () {
+                    alert("Error in Getting Address !");
+                };
+                $.ajax(Address);
+            }
+            else {
+                $("#ddlCaddr").empty();
+                //$("#ddlCaddr").prop("disabled", true);
+            }
+        });
+
+
+        //////////////////////////////
+
+        $("#lnkNewContact1").click(function () {
+            debugger;
+            //Bind_EmailID();
+            @*var clientname= $("#Customer_Name").val('@Html.Raw(Model.Customer_Name)');
+            var clientname= $("#Customer_Name").val();*@
+
+            var clientname= $("#CMP_ID").val();
+            var Client_Name= $("#Customer_Name").val();
+
+            // Set the value
+            $("#hiddenButtonId").val("client");
+
+            console.log("Hidden Button ID value:", $("#hiddenButtonId").val());
+
+
+            // Log the value to check if it's been set correctly
+            console.log("Hidden Button ID value:", $("#hiddenButtonId").val());
+
+
+            if ($("#Customer_Name").val() != "") {
+                var Address = {};
+                var Company_Name = clientname;
+                $("#hidCompany").val(Company_Name);
+                Address.url = '@Url.Action("GetAddressOfCompany", "CompanyMasters")';
+                Address.type = "Get";
+                Address.data = { Company_Name: Company_Name };
+                Address.datatype = "json";
+                Address.ContentType = "application/json";
+                Address.success = function (response) {
+                    $('#ddlCaddr').empty();
+                    var s = '<option value="-1">--Select Address--</option>';
+                    for (var i = 0; i < response.length; i++) {
+                        s += '<option value="' + response[i].Name + '">' + response[i].Name + '</option>';
+                    }
+                    $("#ddlCaddr").html(s);
+                };
+                Address.error = function () {
+                    alert("Error in Getting Address !");
+                };
+                $.ajax(Address);
+            }
+            else {
+                $("#ddlCaddr").empty();
+                //$("#ddlCaddr").prop("disabled", true);
+            }
+        });
+        /////////////////////////////////////////////
+
+
+        $("#lnkNewContact2").click(function () {
+            debugger;
+            //Bind_EmailID();
+            $("#VendorName").val('@Model.VendorName');
+            var Company_Name_ = $("#VendorName").val();
+            Type_="Sub Job";
+            $("#hidCompany").val(Company_Name_);
+            if ($("#VendorName").val() != "") {
+                var Address = {};
+                var Company_Name = $("#VendorName").val();
+                $("#hidCompany").val(Company_Name);
+                Address.url = '@Url.Action("GetAddressOfCompanyVendor_", "CompanyMasters")';
+                Address.type = "Get";
+                Address.data = { Company_Name: Company_Name };
+                Address.datatype = "json";
+                Address.ContentType = "application/json";
+                Address.success = function (response) {
+                    $('#ddlCaddr').empty();
+                    var s = '<option value="-1">--Select Address--</option>';
+                    for (var i = 0; i < response.length; i++) {
+                        s += '<option value="' + response[i].Name + '">' + response[i].Name + '</option>';
+                    }
+                    $("#ddlCaddr").html(s);
+
+
+                };
+                Address.error = function () {
+                    alert("Error in Getting Address !");
+                };
+                $.ajax(Address);
+            }
+            else {
+                $("#ddlCaddr").empty();
+                //$("#ddlCaddr").prop("disabled", true);
+            }
+        });
+
+        ////////////////////////////////////
+
+
+        $("#lnkNewContact3").click(function () {
+            debugger;
+            //Bind_EmailID();
+            $("#Sub_VendorName").val('@Model.Sub_VendorName');
+            var Company_Name_ = $("#Sub_VendorName").val();
+
+            $("#hidCompany").val(Company_Name_);
+            Type_="SubSub Job";
+
+            if ($("#Sub_VendorName").val() != "") {
+                var Address = {};
+                var Company_Name = $("#Sub_VendorName").val();
+                $("#hidCompany").val(Company_Name);
+                Address.url = '@Url.Action("GetAddressOfCompany", "CompanyMasters")';
+                Address.type = "Get";
+                Address.data = { Company_Name: Company_Name };
+                Address.datatype = "json";
+                Address.ContentType = "application/json";
+                Address.success = function (response) {
+                    $('#ddlCaddr').empty();
+                    var s = '<option value="-1">--Select Address--</option>';
+                    for (var i = 0; i < response.length; i++) {
+                        s += '<option value="' + response[i].Name + '">' + response[i].Name + '</option>';
+                    }
+                    $("#ddlCaddr").html(s);
+                };
+                Address.error = function () {
+                    alert("Error in Getting Address !");
+                };
+                $.ajax(Address);
+            }
+            else {
+                $("#ddlCaddr").empty();
+                //$("#ddlCaddr").prop("disabled", true);
+            }
+        });
+
+        ///////////////////////////
+
+
+
+
+
+
+        $("#btnAddNewContact").on('click', function () {
+            debugger;
+            //$('#hiddenButtonId').val(buttonId); // Store the clicked button id
+            //var clickedButtonId = $('#hiddenButtonId').val();
+
+            var GetType=Type_;
+            var testcompanynameparam = $('#hidCompany').val();
+            var ContactNames = $("#ContactNames").val();
+            var ddlContactCompanyName = ContactNames;
+            var ddlCompanyName = testcompanynameparam;
+            var HomePhoneNo = $("#HomePhone").val();
+            var MobileNo = $("#Mobile").val();
+            var MainContact = $('#IsMainContact').is(':checked');
+            var CompanyName = $('#hidCompany').val();
+            var Address = $("#ddlCaddr option:selected").val();
+            var Email = $("#Email").val();
+            var Fax_No = $("#Fax_No").val();
+            var TitleName = $("#TitleName").val();
+            var ContactStatus = $("#PT").val();
+            //**************************************************************************
+            if ($("#ContactNames").val() == "" || $("#ContactNames").val() == null) {
+                alert("Please Enter Contact Name!!!");
+                $("#ContactNames").focus()
+                return false;
+            }
+            else if (ddlCompanyName == 0 || ddlCompanyName == null) {
+                alert("Please Select Company Name !!!");
+                $("#ContactCompanyName").focus()
+                return false;
+            }
+            else if (TitleName == "" || TitleName == null) {
+                alert("Enter Designation !!!");
+                $("#TitleName").focus()
+                return false;
+            }
+            else if (Email == "" || Email == null) {
+                alert("Enter Email !!!");
+                $("#Email").focus()
+                return false;
+            }
+            else if (MobileNo == "" || MobileNo == null) {
+                alert("Enter Mobile !!!");
+                $("#Mobile").focus()
+                return false;
+            }
+            else if(Address === "-1" || Address === "") {
+                alert("select Address !!!");
+                // Handle the case where no valid option is selected
+                console.log("No valid address selected.");
+            }
+            else if (ContactStatus == "" || ContactStatus == null) {
+                alert("Enter Status !!!");
+                $("#PT").focus()
+                return false;
+            }
+            else {
+                var ContactDetails =
+                    {
+                        ContactNames: ContactNames,
+                        ContactCompanyName: ddlContactCompanyName,
+                        CompanyName: testcompanynameparam,
+                        HomePhone: HomePhoneNo,
+                        Mobile: MobileNo,
+                        IsMainContact: MainContact,
+                        Address: Address,
+                        Email: Email,
+                        Fax_No: Fax_No,
+                        TitleName: TitleName,
+                        ContactStatus: ContactStatus
+                    }
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify({ ECM: ContactDetails }),
+                    url: '@Url.Action("ContactDetails", "EnquiryMaster")',
+                    dataType: 'json',
+                    Async: false,
+                    enctype: "multipart/form-data",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.success == 1) {
+                            // window.location.reload();
+                            //$('#AddNewContactDetails').modal('hide');
+                            var test = $('#Vendor_Name_Location').val();
+                            //saveloadVendorDetail(test);
+                            $('#ContactNames').val("");
+                            $('#TitleName').val("");
+                            $('#Email').val("");
+                            $('#HomePhone').val("");
+                            $('#Mobile').val("");
+                            $('#Fax_No').val("");
+                            $("#PT").val("");
+                            //Bind_EmailID();
+                            //showMessage();
+                            if($("#hiddenButtonId").val()=="client"){
+                                UpdateClienttable(Email,CompanyName);
+                            }
+                            else{
+                                UpdateTable(Email,GetType);
+                            }
+                            $('#AddNewContactDetails').modal('hide');
+                            window.location.reload();  // Refresh the page after save
+
+                        }
+                        else if (response.success == 2) {
+                            alert("Duplicate Contact detail Or !!Failed!!! Something Went Wrong!!! Please Try Again....")
+                            //Bind_EmailID();
+                            $('#AddNewContactDetails').modal('hide');
+                            //showMessage();
+                        }
+                        //Bind_EmailID();
+                    }
+                });
+            }
+        });
+
+
+        $("#btntuvemail").on('click', function () {
+            debugger;
+            var PK_Call_ID = @Html.Raw(Json.Encode(Model.PK_call_id));
+            var Email=$("#ddlTuvEmail").val();
+             if (Email == "" || Email == null) {
+                alert("Enter Email !!!");
+                $("#ddlTuvEmail").focus()
+                return false;
+            }
+                $.ajax({
+                    url: '@Url.Action("UpdateTUVEmial","Expediting")',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {PK_Call_ID:PK_Call_ID,Email:Email},
+                    Async: false,
+                    success: function (response) {
+                        if (response.success == 1) {
+                            $('#TUV_Email').val("");
+                            //Bind_EmailID();
+                            //showMessage();
+                            //$('#AddNewContactDetails_TUV').modal('hide');
+                            //UpdateTUVEmial(Email,ClientName);
+                            $('#AddNewContactDetails_TUV').modal('hide');
+                            window.location.reload();  // Refresh the page after save
+                        }
+                    }
+                });
+            });
+</script>
+
+
+
+
+
+<script type="text/javascript">
+        $(function () {
+            debugger;
+            $("#VendorName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("GetCompanyName", "subJobMaster")',
+                        data: "{ 'prefix': '" + request.term + "'}",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                debugger
+                                return { label: item.vendor_name, value: item.vendor_name };
+                            }));
+                        },
+                        error: function (response) {
+                        },
+                        failure: function (response) {
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    //if (u.item.val == -1) {
+                    //    return false;
+                    //}
+                    //$("#hfCompanyName").val(i.item.val);
+                },
+                minLength: 2
+            });
+
+        });
+
+
+    $('#VendorName').blur(function () {
+            debugger;
+            var vendorname = $('#VendorName').val();
+            //if (vendorname !== null && vendorname !== "") {
+            ////    $('#IDVendorContact').show();
+            ////    $('#IDVendorAddress').show();
+            ////} else {
+            ////    $('#IDVendorContact').hide();
+            ////    $('#IDVendorAddress').hide();
+            //}
+
+            $.ajax({
+                url: '@Url.Action("GetCompanyAddress", "subJobMaster")',
+                data: "{ 'Prefix': '" + this.value + "'}",
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $('#Address').empty();
+                    var s = '<option value="-1">--Select Vendor Address--</option>';
+                    for (var i = 0; i < response.length; i++) {
+                        s += '<option value="' + response[i].pkID + '">' + response[i].Company_Name + '</option>';
+                    }
+                    $("#Address").html(s);
+                },
+                error: function (response) {
+                },
+                failure: function (response) {
+                }
+            });
+        })
+
+</script>
+
+<script>
+    $('#VendorName').blur(function () {
+            $.ajax({
+                url: '@Url.Action("GetCompanyAddress", "subJobMaster")',
+                data: "{ 'Prefix': '" + this.value + "'}",
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    //  alert(response);
+                    $('#VendorAddress').empty();
+
+                    var s = '<option value="-1">--Select Vendor Address--</option>';
+                    for (var i = 0; i < response.length; i++) {
+                        s += '<option value="' + response[i].pkID + '">' + response[i].Company_Name + '</option>';
+                    }
+                    $("#VendorAddress").html(s);
+
+                },
+                error: function (response) {
+                },
+                failure: function (response) {
+                }
+            });
+        })
+
+        $(document).ready(function () {
+            var a = $('#VendorName').val();
+            //alert(2);
+            $.ajax({
+                url: '@Url.Action("GetCompanyAddress", "subJobMaster")',
+                data: "{ 'Prefix': '" + a + "'}",
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $('#VendorAddress').empty();
+                    var s = '';
+                    for (var i = 0; i < response.length; i++) {
+                        s += '<option value="' + response[i].pkID + '">' + response[i].Company_Name + '</option>';
+                    }
+                    $("#VendorAddress").html(s);
+                },
+                error: function (response) {
+                },
+                failure: function (response) {
+                }
+            })
+
+        })
+</script>
+
+
+<script>
+    $(function () {
+        debugger
+        $(".TuvEmailData").autocomplete({
+            source: function (request, response) {
+                debugger
+                $.ajax({
+                    url: '@Url.Action("GetLeadByName", "JobMaster")',
+                    data: "{ 'prefix': '" + GetCurrentSearchTerm(request.term) + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            var value = item.CompanyName;
+                            return { label: item.CompanyName, value: value };
+
+                        }));
+                    },
+                    error: function (response) {
+                    },
+                    failure: function (response) {
+
+                    }
+                });
+            },
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function () {
+                return false;
+            }
+        });
+
+        function splitCurrentText(LastTerm) {
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+            return splitCurrentText(LastTerm).pop();
+        }
+        });
+</script>
+
+
+<script>
+        $(document).ready(function () {
+            debugger;
+            BindData();
+            GetAttachmentData_();
+
+            var Date_Of_Inspection=@Html.Raw(Json.Encode(Model.Date_Of_Expediting));
+            var splitdate = Date_Of_Inspection.split(',').map(dateString => dateString.trim()); // Split and trim
+
+            var array = [];
+
+            splitdate.forEach(function(dateString) {
+                if (dateString) {
+                    var dateParts = dateString.split('/');
+                    if (dateParts.length === 3) {  // Ensure it has three parts (dd, MM, yyyy)
+                        var day = parseInt(dateParts[0], 10);
+                        var month = parseInt(dateParts[1], 10) - 1;  // Months are 0-indexed in JS
+                        var year = parseInt(dateParts[2], 10);
+                        var getadate = new Date(year, month, day);
+                        if (!isNaN(getadate.getTime())) {  // Ensure it's a valid date
+                            array.push(getadate);
+                        }
+                    }
+                }
+            });
+
+            // Find the maximum date
+            var maxDate = new Date(Math.max.apply(null, array));
+
+            // Format the max date as 'DD/MM/YYYY'
+            var formattedMaxDate = ("0" + maxDate.getDate()).slice(-2) + '/' +
+                                   ("0" + (maxDate.getMonth() + 1)).slice(-2) + '/' +
+                                   maxDate.getFullYear();
+
+            console.log("Max Date:", formattedMaxDate); // Should b
+
+            var date = new Date();
+            date.setDate(date.getDate() - 7);
+
+            var finalDate = date.getDate()+'/'+ (date.getMonth()+1) +'/'+date.getFullYear();
+
+            console.log("finalDate",finalDate);
+
+            //if(formattedMaxDate < finalDate){
+            //    $("#btndistribute").hide();
+            //}
+        });
+
+        @*function GetAttachmentData_() {
+    debugger;
+    var pk_ivr_id =@Html.Raw(Json.Encode(Model.PK_Call_ID));
+      //CopyFileToserver(pk_ivr_id);
+      $.ajax({
+      url:"@Url.Action("GetAttachmentData", "VisitReport")",
+      type: 'POST',
+      dataType: 'json',
+      async: false,
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ pk_ivr_id: pk_ivr_id }),
+      success: function (result) {
+            debugger;
+            var a = JSON.parse(result);
+            if (result === "Error") {
+                var tr = $('<tr/>');
+                tr.append('<td colspan=4>No Record Found</td>');
+                $("#tblbody").append(tr);
+            } else {
+                $("#tblbody").empty();
+                $.each(a, function (i, item) {
+                    var fileNames = [item.FileName, item.Filename_, item.Report,item.FormattedPath];
+                    $.each(fileNames, function (j, fileName) {
+                        if (fileName) {
+                            var trimmedFileName = String(fileName).trim();
+                            var link = "<a href='/"+ item.FormattedPath +"/" + encodeURIComponent(trimmedFileName) + "' target='_blank'>" + trimmedFileName + "</a>";
+                            var data = "<tr>"
+                                     +"<td class='hidden'>"+ item.Type +"</td>"
+                                     + "<td><input type='checkbox' name='Selectone' class='chk_isChecked' id='" + trimmedFileName + "'/></td>"
+                                     + "<td>" + link + "</td>"
+                                     + "</tr>";
+                            $("#tblbody").append(data);
+                        }
+                    });
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log("Error: " + error);
+        }
+    });
+}*@
+
+        @*function GetAttachmentData_() {
+            debugger;
+            var Pk_Call_id = @Html.Raw(Json.Encode(Model.PK_call_id));
+
+            $.ajax({
+                url: "@Url.Action("GetAttachmentData","Expediting")",
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ Pk_Call_id: Pk_Call_id }),
+                success: function (result) {
+                    debugger;
+                    var data = [];
+
+                    try {
+                        if (typeof result === "string") {
+                            data = JSON.parse(result);
+                        } else {
+                            data = result;
+                        }
+                    } catch (e) {
+                        console.error("Failed to parse JSON:", e);
+                        return;
+                    }
+
+                    console.log("Full Response Data:", data);  // Log the entire response for inspection
+
+                    if (data === "Error") {
+                        var tr = $('<tr/>');
+                        tr.append('<td colspan=4>No Record Found</td>');
+                        $("#tblbody").append(tr);
+                    } else {
+                        $("#tblbody").empty();
+
+                        // Loop through each item in the response
+                        $.each(data, function (i, item) {
+                            console.log("Processing item:", item);  // Log each item being processed
+
+                            // Ensure that FormattedPath is defined and normalize it
+                            var path = item.FormattedPath ? item.FormattedPath.trim() : '';
+
+                            // If the path is defined, ensure it ends with a slash
+                            if (path && !path.endsWith('/')) {
+                                path += 'CV/';
+                            }
+
+                            console.log("Normalized Path:", path);  // Log the normalized path
+
+                            // Extract the filename and create a link
+                            var fileName = item.FileName;
+                            if (fileName) {
+                                var trimmedFileName = String(fileName).trim();
+                                var encodedFileName = encodeURIComponent(trimmedFileName);
+
+                                // Use the formatted path if it's not null or empty
+                                var link;
+                                if (path) {
+                                    link = "<a href='/CV/" + path + encodedFileName + "' target='_blank'>" + trimmedFileName + "</a>";
+                                } else {
+                                    // If no path, assume the file is in the root or handle accordingly
+                                    link = "<a href='/CV/" + encodedFileName + "' target='_blank'>" + trimmedFileName + "</a>";
+                                }
+
+                                var row = "<tr>"
+                                         + "<td class='hidden'>" + (item.Type || '') + "</td>"
+                                         + "<td><input type='checkbox' name='Selectone' class='chk_isChecked' id='" + trimmedFileName + "'/></td>"
+                                         + "<td style='text-align:left;'>" + link + "</td>"
+                                         + "</tr>";
+                                $("#tblbody").append(row);
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }*@
+
+
+    $(document).ready(function () {
+        debugger;
+        $('#selectAll').on('click', function () {
+            var isChecked = $(this).is(':checked'); // Check if the Select All checkbox is checked
+            $('.chk_isChecked').prop('checked', isChecked); // Check/uncheck all checkboxes
+        });
+        GetAttachmentData_(); // Make sure to call this after your jQuery is ready
+    });
+    $('#selectAll').on('click', function () {
+        var isChecked = $(this).is(':checked'); // Check if the Select All checkbox is checked
+        $('.chk_isChecked').prop('checked', isChecked); // Check/uncheck all checkboxes
+    });
+
+    function GetAttachmentData_() {
+        debugger;
+        var Pk_Call_id = @Html.Raw(Json.Encode(Model.PK_call_id));
+            $.ajax({
+            url: "@Url.Action("GetAttachmentData","Expediting")",
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ Pk_Call_id: Pk_Call_id }),
+            success: function (result) {
+            debugger;
+            var data = [];
+
+            try {
+                if (typeof result === "string") {
+                    data = JSON.parse(result);
+                } else {
+                    data = result;
+                }
+            } catch (e) {
+                console.error("Failed to parse JSON:", e);
+                return;
+            }
+
+            console.log("Full Response Data:", data);  // Log the entire response for inspection
+
+            if (data === "Error") {
+                var tr = $('<tr/>');
+                tr.append('<td colspan=4>No Record Found</td>');
+                $("#tblbody").append(tr);
+            } else {
+                $("#tblbody").empty();
+
+                // Loop through each item in the response
+                $.each(data, function (i, item) {
+                    console.log("Processing item:", item);  // Log each item being processed
+                    // Ensure that FormattedPath is defined and normalize it
+                    var path = item.FormattedPath ? item.FormattedPath.trim() : '';
+                    // If the path is defined, ensure it ends with a slash
+                    if (path && !path.endsWith('/')) {
+                        path += '/';
+                    }
+                    console.log("Normalized Path:", path);  // Log the normalized path
+                    var FormattedPath = item.FormattedPath ? ` (${item.FormattedPath})` : ''; // Append file type in brackets
+                    // Extract the filename and create a link
+                    var fileName = item.FileName;
+                    var fileType = item.Type ? ` (${item.Type})` : ''; // Append file type in brackets
+                    if (fileName) {
+                        var trimmedFileName = String(fileName).trim();
+                        var encodedFileName = encodeURIComponent(trimmedFileName);
+
+                        // Use the formatted path if it's not null or empty
+                        var link;
+                        if (path) {
+                            link = "<a href='/" + path + encodedFileName + "' target='_blank'>" + trimmedFileName + "</a>";
+                        } else {
+                            // If no path, assume the file is in the root or handle accordingly
+                            link = "<a href='/" + encodedFileName + "' target='_blank'>" + trimmedFileName + "</a>";
+                        }
+                        var row = "<tr>"
+                                 + "<td class='hidden'>" + (item.Type || '') + "</td>"
+                                 + "<td><input type='checkbox' name='Selectone' class='chk_isChecked' id='" + trimmedFileName + fileType + FormattedPath+"'/></td>"
+                                     + "<td style='text-align:left;' data-filetype='" + fileType + "' data-FormattedPath='" + FormattedPath + "'>" + link + "</td>"  // Hide both fileType and CreatedDate
+
+                                 //+ "<td style='text-align:left;'>" + link + fileType + "</td>"
+                                 + "</tr>";
+                        $("#tblbody").append(row);
+                    }
+                });
+                $("#selectAll").on('change', function () {
+                    var checked = $(this).is(':checked');
+                    $('.chk_isChecked').prop('checked', checked); // Select or deselect all checkboxes
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log("Error: " + error);
+        }
+    });
+    }
+
+   
+
+
+        //*************************************************************************************************************************************************************************************//
+        var tuvEmails = [];
+        var clientEmails = [];
+        var vendorEmails = [];
+        var subvendorEmails = [];
+        var subsubvendorEmails = [];
+
+        // Function to bind data and update the table
+        function BindData() {
+            debugger;
+            var Pk_Call_id = @Html.Raw(Json.Encode(Model.PK_call_id));
+
+            $.ajax({
+                url: "@Url.Action("GetData", "Expediting")",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ Pk_Call_id: Pk_Call_id }),
+                success: function (Response) {
+                    debugger;
+                    var data = $.parseJSON(Response);
+                    var Tuv_Email = data[0].Tuv_Email || '';
+                    var Client_Email = data[0].Client_Email || '';
+                    var Vendor_Email = data[0].Vendor_Email || '';
+                    var Subvendor_Email = data[0].Subvendor_Email || '';
+                    var Po_No = data[0].Po_No || '';  
+                    var vendor_name = data[0].vendor_name || '';
+                    var SubJob_No = data[0].SubJob_No || '';
+                    var Semd_Mails_To_Email = data[0].Semd_Mails_To_Email || '';
+
+                    //function splitEmails(emailList) {
+                    //    return emailList ? emailList.split(';').filter(email => email.trim() !== '') : [];
+                    //}
+                    var subject = `Expediting Visit Report for PO Number ${Po_No} and ${vendor_name} - ${SubJob_No}`;
+
+                // Using jQuery to set the value of the HTML element with the ID 'Subject'
+                $("#Subject").val(subject);
+
+
+                if (Semd_Mails_To_Email == "1") {
+                    document.getElementById("txtmail").innerText = "Mail has been sent to the client.";
+                }
+
+
+                    function splitEmails(emailList) {
+                        return emailList
+                            ? emailList
+                                  .replace(/[,;]/g, ';') // Replace both commas and semicolons with a common delimiter (semicolon in this case)
+                                  .split(';') // Split by semicolon
+                                  .filter(email => email.trim() !== '') // Filter out empty values
+                                  .map(email => email.trim()) // Trim whitespace from each email
+                            : [];
+                    }
+
+                    // Split each email list into an array
+                    tuvEmails = splitEmails(Tuv_Email);
+                    clientEmails = splitEmails(Client_Email);
+                    vendorEmails = splitEmails(Vendor_Email);
+                    subvendorEmails = splitEmails(Subvendor_Email);
+
+                    // Get the max number of emails among all columns
+                    var maxRows = Math.max(
+                        tuvEmails.length,
+                        clientEmails.length,
+                        vendorEmails.length,
+                        subvendorEmails.length
+                    );
+
+                    // Clear and update the table body
+                    var tableBody = $('#example tbody');
+                    tableBody.empty(); // Clear existing rows
+
+                    // Loop through the emails and generate rows
+                    for (var i = 0; i < maxRows; i++) {
+                        var rowHtml = `<tr>
+                    ${generateEmailCell(tuvEmails[i], i, 'Tuv')}
+                    ${generateEmailCell(clientEmails[i], i, 'Client')}
+                    ${generateEmailCell(vendorEmails[i], i, 'Vendor')}
+                    ${generateEmailCell(subvendorEmails[i], i, 'Subvendor')}
+                </tr>`;
+                        tableBody.append(rowHtml);
+                    }
+
+                    // Attach an event listener to handle column checkbox changes
+                    $('.column-checkbox').change(function () {
+                        var isChecked = $(this).is(':checked');
+                        var column = $(this).data('column');
+
+                        var emails = [];
+                        switch (column) {
+                            case 'Tuv':
+                                emails = tuvEmails;
+                                break;
+                            case 'Client':
+                                emails = clientEmails;
+                                break;
+                            case 'Vendor':
+                                emails = vendorEmails;
+                                break;
+                            case 'Subvendor':
+                                emails = subvendorEmails;
+                                break;
+                        }
+
+                        if (isChecked) {
+                            console.log('Checked emails in column:', column, emails);
+                            // Do something with the emails when the checkbox is checked
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+
+        // Helper function to generate the email cell with optional cancel button
+        function generateEmailCell(email, emailIndex, column) {
+            if (email) {
+                return `<td data-column="${column}" data-index="${emailIndex}" data-email="${email}">${email} <button onclick="removeEmail(this)" style="color:red; font-weight: bold; background-color:white;">X</button></td>`;
+            } else {
+                return `<td></td>`;
+            }
+        }
+
+        // Function to handle email removal
+        function removeEmail(button) {
+            var $cell = $(button).closest('td');
+            var column = $cell.data('column');
+            var index = $cell.data('index');
+            var value = $cell.data('email'); // This will now correctly retrieve the email
+            // Remove the email from the corresponding array
+            switch (column) {
+                case 'Tuv':
+                    tuvEmails[index] = ''; // Clear the email from the array
+                    break;
+                case 'Client':
+                    clientEmails[index] = ''; // Clear the email from the array
+                    break;
+                case 'Vendor':
+                    vendorEmails[index] = ''; // Clear the email from the array
+                    break;
+                case 'Subvendor':
+                    subvendorEmails[index] = ''; // Clear the email from the array
+                    break;
+            }
+
+            // Update the specific cell in the table
+            $cell.html(''); // Clear the cell 
+            DeleteEmail(column,value);
+        }
+
+
+
+        function btndistribute() {
+            debugger;
+            var pk_call_id = @Html.Raw(Json.Encode(Model.PK_call_id));
+            var mailsubject = $("#Subject").val();
+
+            // Collect selected column checkboxes
+            var selectedColumns = [];
+            $('.column-checkbox:checked').each(function() {
+                var column = $(this).data('column');
+                selectedColumns.push(column);
+            });
+
+            // Check if at least one email column is selected
+            if (selectedColumns.length === 0) {
+                alert("Please select at least one Email column.");
+                return false;
+            }
+
+            // Collect email values for selected columns
+            var checkedEmailValues = [];
+            selectedColumns.forEach(function(column) {
+                var emailArray = [];
+                switch (column) {
+                    case 'Tuv':
+                        emailArray = tuvEmails;
+                        break;
+                    case 'Client':
+                        emailArray = clientEmails;
+                        break;
+                    case 'Vendor':
+                        emailArray = vendorEmails;
+                        break;
+                    case 'Subvendor':
+                        emailArray = subvendorEmails;
+                        break;
+                }
+                if (emailArray.length > 0) {
+                    checkedEmailValues = checkedEmailValues.concat(emailArray);
+                }
+            });
+
+            // Function to clean up email array
+            function cleanEmailArray(emails) {
+                return emails
+                    .map(email => email.trim()) // Trim leading and trailing spaces
+                    .filter(email => email.length > 0); // Remove empty strings
+            }
+
+            // Clean the checkedEmailValues array
+            checkedEmailValues = cleanEmailArray(checkedEmailValues);
+
+            // Collect selected attachments
+            var selectedAttachments = [];
+            $('.chk_isChecked:checked').each(function() {
+                var attachmentValue = $(this).attr('id');
+                selectedAttachments.push(attachmentValue);
+            });
+
+            // Validate if at least one email and one attachment are selected
+            if (checkedEmailValues.length === 0) {
+                alert("Please select at least one Email.");
+                return false;
+            }
+
+            if (selectedAttachments.length === 0) {
+                alert("Please select at least one file.");
+                return false;
+            }
+
+            console.log('Selected Emails:', checkedEmailValues);
+            console.log('Selected Attachments:', selectedAttachments);
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SendExpeditingMail","Expediting")",
+                //url: "/Expediting/SendExpeditingMail",
+                data: {
+                    emails: checkedEmailValues.join(';'),
+                    attachments: selectedAttachments.join(';'),
+                    pk_call_id: pk_call_id,
+                    mailsubject: mailsubject
+                },
+                success: function(response) {
+                    if (response !== false) {
+                        alert("Email Sent Successfully!");
+                    }
+                    console.log('Email sent successfully');
+                    // Optionally, call another function to update the mail flag if needed
+                    // UpdateMailFlag(pk_call_id);
+                    $(".email-checkbox").prop('checked', false);
+                    $("#TuvCheckbox").prop('checked', false);
+                    $("#ClientCheckbox").prop('checked', false);
+
+                    $("#VendorCheckbox").prop('checked', false);
+
+                    $("#SubvendorCheckbox").prop('checked', false);
+                    $("#selectAll").prop('checked', false);
+
+                    
+                    $("#Subject").val('');
+                    GetAttachmentData_();
+                    BindData();
+                },
+                error: function(error) {
+                    console.log('Error in sending email: ', error);
+                }
+            });
+        }
+
+
+
+    function DeleteEmail(column ,value){
+        debugger;
+        var pk_call_id = @Html.Raw(Json.Encode(Model.PK_call_id));
+        var Name;
+        var Type;
+        var Email=value;
+        var columnValue=column;
+        if(columnValue=="Client"){
+            Name=$("#Customer_Name").val();
+            Type="Client_Email";
+        }
+        else if(columnValue=="Tuv")
+        {
+            Name="Tuv";
+            Type="TUV";
+        }
+        else if(columnValue=="Vendor"){
+            Name=$("#VendorName").val();
+            Type="Sub Vendor";
+        }
+        else if(columnValue=="Subvendor"){
+            Name=$("#Sub_VendorName").val();
+            Type="SubSub Vendor";
+        }
+        $.ajax({
+
+            type: "POST",
+            url: "/Expediting/DeleteEmail",
+               
+            @*url:"@Url.Action("DeleteEmail","VisitReport")",
+            type:'json',*@
+            datatype:'json',
+            data:{pk_call_id:pk_call_id,Type:Type,Name:Name,Email:Email},
+            success:function(result){
+            debugger;
+            BindData();
+            //if(result=="success"){
+            //    alert(1);
+            //}
+            //else{
+            //    alert("Something went wrong");
+            //}
+        },
+        error: function(result) {
+            console.log('Error in sending email: ', result);
+            alert("Something went wrong");
+        }
+    });
+
+    } 
+
+
+        function UpdateMailFlag(pk_call_id){
+            debugger;
+            $.ajax({
+                url:"@Url.Action("UpdateMailFlag", "Expediting")",
+                type:'json',
+                datatype:'post',
+                Data:{pk_call_id:pk_call_id},
+                success:function(result){
+                    alert("Mail Send Successfully");
+                },
+                error:function(error){
+                    alert("Error in sending email: " + error);
+                }
+            });
+        }
+
+        function UpdateEmail(){
+            debugger;
+            $.ajax({
+                url:"@Url.Action("UpdateEmail", "Expediting")",
+                type:'json',
+                datatype:'post',
+                Data:{pk_call_id:pk_call_id},
+                success:function(result){
+                    //$("#divDocuments").load(location.href + " #divDocuments");
+                    BindData();
+                },
+                error:function(error){
+                    alert("Error in sending email: " + error);
+                }
+            });
+        }
+
+        function UpdateTable(Email,GetType){
+            debugger;
+            var PK_Call_ID = @Html.Raw(Json.Encode(Model.PK_call_id));
+            $.ajax({
+                url:"@Url.Action("Updatetable", "Expediting")",
+                type: 'POST',  // This should be POST for your controller
+                dataType: 'json',  // This specifies the expected response type
+                data:{pk_call_id:PK_Call_ID,Email:Email,GetType:GetType},
+                success:function(result){
+                    debugger;
+                    //$("#divDocuments").load(location.href + " #divDocuments");
+                    BindData();
+                    //GetAttachmentData_();
+                },
+                error:function(error){
+                    alert("Error in sending email: " + error);
+                }
+            });
+        }
+
+
+        function UpdateClienttable(Email,ClientName){
+            debugger;
+            var PK_Call_ID = @Html.Raw(Json.Encode(Model.PK_call_id));
+            $.ajax({
+                url:"@Url.Action("UpdateClientTable", "Expediting")",
+                type: 'POST',
+                dataType: 'json',
+                data:{pk_call_id:PK_Call_ID,Email:Email,ClientName:ClientName},
+                success:function(result){
+                    //$("#divDocuments").load(location.href + " #divDocuments");
+                    BindData();
+                },
+                error:function(error){
+                    alert("Error in sending email: " + error);
+                }
+            });
+        }
+
+            function UpdateTUVEmial(Email,ClientName){
+            debugger;
+            var PK_Call_ID = @Html.Raw(Json.Encode(Model.PK_call_id));
+            $.ajax({
+            url:"@Url.Action("UpdateTUVEmial", "Expediting")",
+            type: 'POST',  
+            dataType: 'json', 
+            data:{pk_call_id:PK_Call_ID,Email:Email,ClientName:ClientName},
+            success:function(result){
+                //$("#divDocuments").load(location.href + " #divDocuments");
+                BindData();
+            },
+            error:function(error){
+                alert("Error in sending email: " + error);
+            }
+        });
+        }
+</script>
+<script>
+    function btnAddClient_(){
+        debugger;
+        var PK_Call_ID = @Html.Raw(Json.Encode(Model.PK_call_id));
+        var ClientEmail=$("#ClientContactContact").val();
+        var clientname= $("#Customer_Name").val();
+        // Ensure ClientEmail is a string and handle it as a comma-separated list
+        var emailArray = Array.isArray(ClientEmail) ? ClientEmail : [ClientEmail];
+        // Trim whitespace from each email
+        emailArray = emailArray.map(function(email) {
+            return email.trim();
+        });
+
+        $.ajax({
+            url:"@Url.Action("updateClientName", "Expediting")",
+            type:'post',
+            dataType:'json',
+            async:false,
+            data:{PK_Call_ID:PK_Call_ID,Email:emailArray,clientname:clientname},
+            success:function(result){
+                debugger;
+                $("#AddExistingClient").modal('hide');
+                $("#modalCloseButton5").click();
+                $('.modal-backdrop').removeClass('in');
+                //$('#divDocuments').load(document.URL +  ' #divDocuments');
+                if (result.success) {
+                    @*$('#divDocuments').load('@Url.Action("GetUpdatedDocumentSection", "VisitReport")', { id: PK_Call_ID });*@
+                    //$('#divDocuments').load(document.URL +  ' #divDocuments');
+                    BindData();
+                    addclass();
+                }
+                //$('.modal-backdrop').addClass('in');
+            },
+            error:function(result){
+                console.error("AJAX Error:", xhr, status, error);
+                alert("Error in sending email: " + error);
+            }
+        });
+    }
+
+    //$('#AddExistingClient').on('shown.bs.modal', function() {
+    //    $('.modal-backdrop').addClass('in');
+    //});
+    //$("#AddExistingSubvendor").on('shown.bs.modal',function(){
+    //    $('.modal-backdrop').addClass('in');
+    //});
+    //$("#AddExistingSubSubvendor").on('shown.bs.modal',function(){
+    //    $('.modal-backdrop').addClass('in');
+    //});
+ 
+    function addclass(){
+
+        $('#AddExistingClient').on('shown.bs.modal', function() {
+            $('.modal-backdrop').addClass('in');
+        });
+        $('#AddNewContactDetails_TUV').on('shown.bs.modal', function() {
+            $('.modal-backdrop').addClass('in');
+        });
+
+        $("#AddExistingSubvendor").on('shown.bs.modal',function(){
+            $('.modal-backdrop').addClass('in');
+        });
+        $("#AddExistingSubSubvendor").on('shown.bs.modal',function(){
+            $('.modal-backdrop').addClass('in');
+        });
+
+        $("#AddExistingSubSubsubvendor").on('shown.bs.modal',function(){
+            $('.modal-backdrop').addClass('in');
+        });
+    }
+    function btnAddVendorName_(){
+        debugger;
+        var PK_Call_ID = @Html.Raw(Json.Encode(Model.PK_call_id));
+        var ClientEmail=$("#VendorContact").val();
+        var Vendor_Name_Location= $("#VendorName").val();
+        var emailArray = Array.isArray(ClientEmail) ? ClientEmail : [ClientEmail];
+        emailArray = emailArray.map(function(email) {
+            return email.trim();
+        });
+        $.ajax({
+            url:"@Url.Action("updateVendorName", "Expediting")",
+            type:'post',
+            dataType:'json',
+            data:{PK_Call_ID:PK_Call_ID,Email:emailArray,Vendor_Name_Location:Vendor_Name_Location},
+            success:function(result){
+                debugger;
+                $('#AddExistingSubvendor').modal('hide');
+                $("#modalCloseButton4").click();
+                $('.modal-backdrop').removeClass('in');
+                //$("#divDocuments").load(location.href + " #divDocuments");
+                BindData();
+            },
+        error:function(result){
+            alert("Error in sending email: " + error);
+        }
+    });
+    }
+
+
+
+    function btnAddSubVendorName_(){
+        debugger;
+        var PK_Call_ID = @Html.Raw(Json.Encode(Model.PK_call_id));
+        var ClientEmail=$("#SubVendorContact").val();
+        var Vendor_Name_Location= $("#Sub_VendorName").val();
+        var emailArray = Array.isArray(ClientEmail) ? ClientEmail : [ClientEmail];
+        emailArray = emailArray.map(function(email) {
+            return email.trim();
+        });
+        $.ajax({
+            url:"@Url.Action("updateSubVendorName", "Expediting")",
+            type:'post',
+        dataType:'json',
+        data:{PK_Call_ID:PK_Call_ID,Email:emailArray,Vendor_Name_Location:Vendor_Name_Location},
+        success:function(result){
+            debugger;
+            $('#AddExistingSubSubvendor').modal('hide');
+            $("#modalCloseButton3").click();
+            $('.modal-backdrop').removeClass('in');
+            //$("#divDocuments").load(location.href + " #divDocuments");
+            if (result.success) {
+                BindData();
+                addclass();
+            }
+            //BindData();
+            //GetAttachmentData_();
+
+        },
+        error:function(result){
+            alert("Error in sending email: " + error);
+        }
+    });
+    }
+</script>

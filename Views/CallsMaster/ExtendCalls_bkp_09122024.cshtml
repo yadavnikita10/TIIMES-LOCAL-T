@@ -1,0 +1,2527 @@
+﻿@model TuvVision.Models.CallsModel
+
+@{
+    ViewBag.Title = "ExtendCalls";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    List<string> EditProdName = ViewBag.EditproductName as List<string>;
+}
+
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.8.0.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.22/jquery-ui.js"></script>
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+@*DATEPICKER*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
+
+<script type="text/javascript">
+    function ShowHideDiv(chkPassport) {
+        var dvPassport = document.getElementById("dvPassport");
+        dvPassport.style.display = chkPassport.checked ? "block" : "none";
+    }
+
+    function ShowHideDivman(chkPassport) {
+        //added by shrutika salve 20032024
+        var dvPassportMan = document.getElementById("dvPassportman");
+        dvPassportMan.style.display = chkManMonths.checked ? "block" : "none";
+
+
+
+    }
+</script>
+<script>
+    $(function () {
+        $(".CallRecivedate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //minDate: "-40d", // Set to the previous one month
+            minDate: "-45d", // Set to the previous one month
+            //minDate: "-90d",
+            maxDate: "+40d"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".PoDates").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script>
+    //$(function () {
+    //    $("#datepicker1").datetimepicker({
+    //        format: 'DD/MM/YYYY HH:mm'
+    //    });
+    //});
+    $(function () {
+        // Calculate min and max dates
+        var today = new Date();
+        var minDate = new Date();
+        minDate.setDate(today.getDate() - 30); // last 20 days
+        var maxDate = new Date();
+        maxDate.setDate(today.getDate() + 40); // next 40 days
+
+        $("#datepicker1").datetimepicker({
+            format: 'DD/MM/YYYY HH:mm',
+            minDate: minDate,
+            maxDate: maxDate
+            
+        });
+    });
+</script>
+
+<script>
+
+    $(function () {
+        $(".TODate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $(".CallRecivedate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".CallRequestdate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $(".PlannedDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script>
+
+    $(function () {
+
+        $(".PoDates1").datepicker({
+            //dateFormat: 'dd/mm/yy',//check change by rahul
+
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+           minDate: "-45d", // Set to the previous one month
+           // minDate: "-90d",
+            maxDate: "+40d"
+
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".TODate1").datepicker({
+            //dateFormat: 'dd/mm/yy',//check change
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            minDate: "-45d", // Set to the previous one month
+            //minDate: "-90d",
+            maxDate: "+40d"
+        });
+    });
+</script>
+
+
+
+
+
+
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+<style>
+    .ui-widget-header {
+        background: #001ED2 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+   
+}
+
+</style>
+@*@if ((Convert.ToString(TempData["ExtendCalls"])) != "" && Convert.ToString(TempData["ExtendCalls"]) != null)
+{
+    TempData["ExtendCalls"] = null;
+    <script type="text/javascript" language="javascript">
+        alert("Calls Extended Successfully!!!!");
+    </script>
+}*@
+
+
+
+@Html.AntiForgeryToken()
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+
+                        <div class="col-xs-12 text-right">
+                            <a href="@Url.Action("CallsList","CallsMaster")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                               
+                                    <h3 class="form-page-title"> Extend Call No : @Model.Call_No</h3>
+                               
+
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+                                                @Html.HiddenFor(m => m.PK_SubJob_Id)
+                                                @Html.HiddenFor(m => m.PK_Call_ID)
+                                                @Html.HiddenFor(m => m.Actual_Visit_Date)
+                                                <div class="row">
+
+                                                    <span style="color:#E12F24;">
+                                                        <strong>&nbsp;&nbsp;&nbsp;Notes </strong> :
+                                                    </span>
+
+                                                    <span>
+                                                        1) <span style="color:#ff0000;">*</span> - Mandatory <br />
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) Enter correct value of estimated inspection Time in hours (4 hours and below - Half manday, Above 4 hours - full manday).
+                                                    </span>
+
+
+
+
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Originating Branch:</label>
+
+                                                            @if (ViewBag.SubCatlist != null)
+                                                            {
+                                                                @Html.DropDownListFor(m => m.Originating_Branch, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Branch--", new { @class = "form-control", @disabled = "disabled" })
+                                                                @Html.HiddenFor(m => m.Originating_Branch)
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.Originating_Branch, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Service Type:</label>
+                                                            @*<input type="text" class="form-control" placeholder="Phone Here">*@
+                                                            @Html.TextBoxFor(model => model.Type, new { @placeholder = "Service Type", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+
+                                                    @if (Model.SubSubJobNo == "" || Model.SubSubJobNo == null)
+                                                    {
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label> TUV India Control number:</label>
+                                                                @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                                @Html.TextBoxFor(model => model.Job, new { @placeholder = "TUV India Control number", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Job, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label> TUVI Control (With Sub/SubSub Job) No.:</label>
+                                                                    @Html.TextBoxFor(model => model.Sub_Job, new { @placeholder = "TUV India Control (With Sub Job) No.", @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.Sub_Job, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label> SAP Number:</label>
+                                                                    @Html.TextBoxFor(model => model.SAP_no, new { @placeholder = "SAP Number", @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.SAP_no, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>TUV India Control number:</label>
+                                                                @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                                @Html.TextBoxFor(model => model.Job, new { @placeholder = "TUV India Control number", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Job, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label> SubSub-Job Number:</label>
+                                                                    @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                                    @Html.TextBoxFor(model => model.SubSubJobNo, new { @placeholder = "Sub Job", @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.SubSubJobNo, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label> SAP Number:</label>
+                                                                    @Html.TextBoxFor(model => model.Sub_Job, new { @placeholder = "SAP Number", @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.Sub_Job, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                    }
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Customer Name:</label>
+                                                            @*<input type="text" class="form-control" placeholder="Company Name Here">*@
+                                                            @Html.TextBoxFor(model => model.Company_Name, new { @placeholder = "Customer Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Company_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label> End Customer Name:</label>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.TextBoxFor(model => model.End_Customer, new { @placeholder = "End Customer Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.End_Customer, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label> Project Name:</label>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.TextBoxFor(model => model.Project_Name, new { @placeholder = "Project Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Project_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>DEC/PMC/EPC Name :</label>
+                                                            @Html.TextBoxFor(model => model.DECName, new { @placeholder = "DEC/PMC/EPC Name", @class = "form-control", @readonly = "readonly" })
+
+                                                            @Html.ValidationMessageFor(model => model.DECName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>DEC/PMC/EPC Assignment No. :</label>
+                                                            @Html.TextBoxFor(model => model.DECNumber, new { @placeholder = "DEC/PMC/EPC Assignment No.", @class = "form-control", @readonly = "readonly" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.DECNumber, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label> Vendor Name:</label>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.TextBoxFor(model => model.TopSubVendorName, new { @placeholder = "Vendor Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.TopSubVendorName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO No. (Client PO on Vendor) :</label>
+                                                            @Html.TextBoxFor(model => model.TopSubVendorPONo, new { @placeholder = " PO No. (Client PO on Vendor) ", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.TopSubVendorPONo, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO Date(Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.TopvendorPODate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "PO Date(Vendor)", @class = "form-control Date_of_PO", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.TopvendorPODate, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    @*@if (Model.SubSubJobNo != "" && Model.SubSubJobNo != null)
+            {*@
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Sub Vendor Name:</label>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.TextBoxFor(model => model.SubSubVendorName, new { @placeholder = "Sub Vendor Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubSubVendorName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO No.(Vendor PO on Sub Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.SubSubVendorPO, new { @placeholder = "PO No.(Vendor PO on Sub Vendor)", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubSubVendorPO, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO Date(Sub Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.SubSubVendorDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "PO Date(Sub Vendor)", @class = "form-control Date_of_PO", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubSubVendorDate, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Sub Sub Sub Vendor Name:</label>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.TextBoxFor(model => model.Vendor_Name, new { @placeholder = "Sub Sub Sub Vendor Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Vendor_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Sub Sub Sub PO No.(Vendor PO on Sub Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.PO_Number, new { @placeholder = "PO No.(SubSubSubVendor PO on Sub Vendor)", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.PO_Number, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Sub Sub Sub PO Date(Sub Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.SubVendorPODate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "PO Date(Sub Vendor)", @class = "form-control Date_of_PO", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubVendorPODate, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    @*}*@
+
+
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.chkARC, new { @onclick = "return false;" })
+                                                            <label for="InActive" style="color:black;">ARC Job</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.checkIFExpeditingReport, new { @onclick = "return false;" })
+                                                            <label for="InActive" style="color:black;">Expediting Job</label>
+
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.checkIFCustomerSpecific, new { @onclick = "return false;" })
+                                                            <label for="InActive" style="color:black;">Report required in Customer Specific Format</label>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-6">
+
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.checkIFCustomerSpecificReportNo, new { @onclick = "return false;" })
+                                                            <label for="InActive" style="color:black;">Customer defined numbering is required for IVR & IRN</label>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @* added by shrutika salve 01082024 *@
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-6">
+
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.checkIFConcernDisplay, new { @onclick = "return false;" })
+                                                            <label for="InActive" style="color:black;">display areas of Concern  on IVR</label>
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.ItemDescriptionDynamic, new { @onclick = "return false;" })
+                                                            <label for="InActive" style="color:black;">Display Heat number in item description of IVR & IRN</label>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            <label> Priority:</label><span style="color:#ff0000;">*</span>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.DropDownListFor(m => m.Urgency, new List<SelectListItem>
+                                                                                                      {
+                                                                                                        new SelectListItem{ Text="High", Value = "High" },
+                                                                                                        new SelectListItem{ Text="Low", Value = "Low" },
+                                                                                                        new SelectListItem{ Text="Med-High", Value = "Med-High" },
+                                                                                                        new SelectListItem{ Text="Med-Low", Value = "Med-Low" },
+                                                                                                        new SelectListItem{ Text="Low", Value = "SubSub Job" },
+
+                                                                                                     }, new { @class = "form-control", @id = "Type" })
+                                                            @Html.ValidationMessageFor(m => m.Urgency, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label> Notification Number:</label><span style="color:#ff0000;">*</span>
+
+                                                            @*@Html.DropDownListFor(m => m.Source, new List<SelectListItem>
+                     {
+                      new SelectListItem{ Text="Select Source", Value = "" },
+                       new SelectListItem{ Text="Email", Value = "Email" },
+                       new SelectListItem{ Text="Fax", Value = "Fax" },
+                       new SelectListItem{ Text="Phone", Value = "Phone" },
+                       new SelectListItem{ Text="Walk-in", Value = "Walk-in" },
+                       new SelectListItem{ Text="Web", Value = "Web" },
+
+                    }, new { @class = "form-control" })*@
+
+                                                            @Html.TextBoxFor(model => model.Source, new { @placeholder = "Source", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Source, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                            <label>Inspection Location:</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.Job_Location, new { @placeholder = "Inspection Location", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Job_Location, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-3" id="divMandayRate">
+                                                        <div class="form-group">
+                                                            <label>Man-day Rate ₹ <font color="#FB5F6B">(Editable)</font>:</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.MandayRate, new { @placeholder = "Manday Rate", @class = "form-control", @Maxlength = "5", @minlength = "4", @onkeypress = "return isNumberKey(event);" })
+                                                            @Html.ValidationMessageFor(model => model.MandayRate, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Primary Material:</label><span style="color:#ff0000;"></span>
+                                                            <select id="IdPrimaryMaterial" class="form-control form-multiselect-city" multiple="multiple" name="IdPrimaryMaterialName" placeholder="Select Option">
+                                                                @{
+                                                                    foreach (var item in ViewData["PrimaryMaterial"] as IEnumerable<SelectListItem>)
+                                                                    {
+
+                                                                        if (ViewData["PrimaryMaterialchecked"] != null)
+                                                                        {
+                                                                            if (Convert.ToString(ViewData["PrimaryMaterialchecked"]).Split(',').Contains(item.Value.ToString()))
+                                                                            {
+                                                                                <option selected="selected" value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </select>
+                                                            @Html.HiddenFor(model => model.PrimaryMaterial, new { id = "hdnObsType" })
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Item to be Inspected:</label><span style="color:#ff0000;">*</span>
+                                                            <div class="drpdomn" id="drpdomn">
+                                                            </div>
+                                                            @if (ViewBag.check == "productcheck")
+                                                            {
+
+                                                                <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required">
+                                                                    @foreach (var item in ViewBag.ProjectTypeItems)
+                                                                    {
+                                                                        if (EditProdName.Contains(item.Text))
+                                                                        {
+                                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@item.Value">@item.Text</option>
+                                                                        }
+
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            else
+                                                            {
+                                                                <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required">
+
+                                                                    @{
+                                                                        foreach (var item in ViewData["Drpproduct"] as IEnumerable<TuvVision.Models.Calls>)
+                                                                        {
+
+                                                                            <option value="@item.Product_Name">@item.Product_Name&nbsp; &nbsp;</option>
+
+
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                        }
+
+                                                            @Html.ValidationMessageFor(model => model.ProductList, "", new { @class = "text-danger" })
+
+                                                        </div>
+
+
+
+
+                                                        <input type="text" class="hidden" id="ProductLists" />
+                                                    </div>
+
+                                                    @*<div class="col-xs-12 col-sm-3">
+                <div class="form-group">
+                    <label>Stages of Inspection:</label><span style="color:#ff0000;">*</span>
+                    @Html.DropDownListFor(m => m.Sub_Category, new List<SelectListItem>
+                                {
+                                new SelectListItem{ Text="kick Off Meeting", Value = "kick Off Meeting" },
+                                new SelectListItem{ Text="Pre inspection meeting", Value = "Pre inspection meeting" },
+                                new SelectListItem{ Text="Stage Inspection", Value = "Stage Inspection" },
+                                new SelectListItem{ Text="Final Inspection", Value = "Final Inspection" },
+                                }, new { @class = "form-control", @id = "Type" })
+                    @Html.ValidationMessageFor(m => m.Sub_Category, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Stages of Inspection:</label><span style="color:#ff0000;">*</span>
+                                                            <select id="Sub_Category" name="Sub_Category" class="form-control form-multiselect-city" multiple>
+                                                                @{
+                                                                    //                                                        var defaultOptions = new List<SelectListItem>
+                                                                    //{
+                                                                    //     new SelectListItem{ Text="Kick Off/Pre Inspection", Value = "kick Off Meeting" },
+                                                                    //    new SelectListItem{ Text="Material Identification", Value = "Material Identification" },
+                                                                    //    new SelectListItem{ Text="Stage Inspection", Value = "Stage Inspection"},
+                                                                    //    new SelectListItem{ Text="Document Review", Value = "Document Review" },
+                                                                    //    new SelectListItem{ Text="Final Inspection", Value = "Final Inspection"},
+                                                                    //    new SelectListItem{ Text="Expediting", Value = "Expediting"},
+                                                                    //   new SelectListItem{ Text="Re-Inspection", Value = "Re-Inspection" }
+                                                                    //};
+
+
+                                                                    var defaultOptions = ViewBag.DefaultOptions as SelectList;
+
+                                                                    // Ensure that defaultOptions is not null before proceeding
+                                                                    if (defaultOptions != null)
+                                                                    {
+                                                                        foreach (var option in defaultOptions)
+                                                                        {
+                                                                            var isSelected = Model.Sub_Category != null && Model.Sub_Category.Contains(option.Text);
+                                                                            <option value="@option.Value" @(isSelected ? "selected" : "")>@option.Text</option>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="">Default Option</option>
+                                                                    }
+                                                                }
+
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+
+
+                                                    @*<div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Stage Description:</label>
+                                                            @Html.TextBoxFor(model => model.Description, new { placeholder = "Stage Description", @class = "form-control form-control-custom ProdDesc", id = "ProdDesc" })
+                                                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>*@
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Item Quantity With UOM:</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.Quantity, new { placeholder = "Item Quantity", @class = "form-control form-control-custom ProdQty", id = "ProdQty" })
+                                                            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Estimated Time in hours:</label><span style="color:#ff0000;">*</span>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextBoxFor(model => model.EstimatedHours, new { @placeholder = "in hours", @class = "form-control", @onkeypress = "return isNumberKey(event);" })
+                                                            @Html.ValidationMessageFor(model => model.EstimatedHours, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Note: </label>
+
+                                                            @{
+                                                                string DayHours = string.Empty;
+                                                                if (Model.EstimatedHours != null && Model.EstimatedHours != "0")
+                                                                {
+                                                                    if (Convert.ToInt32(Model.EstimatedHours) >= 5)
+                                                                    {
+
+                                                                        //DayHours = "Full day";
+                                                                        <input type="text" value="Full day" class="form-control" />
+                                                                    }
+                                                                    else if (Convert.ToInt32(Model.EstimatedHours) < 5)
+                                                                    {
+                                                                        //DayHours = "Half day";
+                                                                        <input type="text" value="Half day" class="form-control" />
+                                                                    }
+                                                                }
+
+                                                            }
+
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+
+                                                            @if (Model.checkIFExpeditingReport == true)
+                                                            {
+                                                                <label>Expediting Type:</label><span style="color:#ff0000;">*</span>
+                                                                var selectListItems1 = new List<SelectListItem>
+    {
+                                                                        new SelectListItem{ Text="---Select---", Value = "" },
+        new SelectListItem{ Text="Onsite", Value = "Onsite" },
+        new SelectListItem{ Text="Desk", Value = "Desk" }
+
+    };
+
+
+
+                                                                @Html.DropDownListFor(m => m.ExpeditingType, selectListItems1, new { @class = "form-control", @id = "IdType1" })
+                                                                @Html.ValidationMessageFor(m => m.ExpeditingType, "", new { @class = "text-danger" })
+                                                            }
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+
+
+
+
+
+                                                    
+                                                    
+
+
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-3" style="height: 75px;">
+                                                        <div class="form-group">
+
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(model => model.ChkContinuousCall, new { @id = "chkPassport", @onclick = "ShowHideDiv(this)" })
+                                                                <label for="InActive" style="color:#FB5F6B;">Is it Continuous Call?</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3" style="height: 75px;">
+                                                        <div class="form-group">
+
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(model => model.ManMonths, new { @id = "chkManMonths", @onclick = "ShowHideDivman(this)" })
+                                                                <label for="InActive" style="color:#FB5F6B;">Man Months Assignment</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            @*@Html.CheckBoxFor(m => m.FinalInspection)
+                <label for="InActive" style="color:red;">Final Inspection</label>*@
+                                                            @*@Html.CheckBoxFor(m => m.FinalInspection)*@
+                                                            <label for="InActive" style="color:#FB5F6B;">Final Inspection</label><span style="color:#ff0000;">*</span>
+                                                            @Html.DropDownListFor(model => model.FinalInspectionValue, new List<SelectListItem>
+                                                                            {
+                                                                                new SelectListItem{ Text="Select Action", Value = "" },
+                                                                                new SelectListItem{ Text="Yes", Value = "1" , Selected = (Model.FinalInspectionValue == "1") ?true : false} ,
+                                                                                new SelectListItem{ Text="No", Value = "0" , Selected = (Model.FinalInspectionValue == "0") ?true : false} ,
+
+
+                                                                            }, new { @class = "form-control CFinalInspection", @id = "FinalInspectionValue" })
+
+
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="dvPassportman" style="display: none">
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <label>Weekly of on Day:</label><span style="color:#ff0000;">*</span>
+
+                                                            @Html.DropDownListFor(m => m.WeekDays, new List<SelectListItem>
+                                                                      {
+
+                                                                        new SelectListItem{ Text="Monday", Value = "Monday" },
+                                                                        new SelectListItem{ Text="Tuesday", Value = "Tuesday" },
+                                                                        new SelectListItem{ Text="Wednesday", Value = "Wednesday" },
+                                                                        new SelectListItem{ Text="Thursday", Value = "Thursday" },
+                                                                        new SelectListItem{ Text="Friday", Value = "Friday" },
+                                                                        new SelectListItem{ Text="Saturday", Value = "Saturday" },
+                                                                        new SelectListItem{ Text="Sunday", Value = "Sunday" },
+                                                           }, new { @class = "form-control CItem form-multiselect-city", multiple = "multiple" })
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+                                                <div class="row">
+
+                                                    <div id="dvPassport" style="display: none">
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <label>From Date:</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.FromDateNew, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "From Date", @class = "form-control PoDates1 ", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.FromDateNew, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <label>To Date:</label><span style="color:#ff0000;">*</span>
+                                                            @Html.TextBoxFor(model => model.ToDateNew, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "To Date", @class = "form-control TODate1 ", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.ToDateNew, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                        @*<label>From Date:</label>
+                @Html.TextBoxFor(model => model.FromDateNew, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "From Date", @class = "form-control PoDates1 ", autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.FromDateNew, "", new { @class = "text-danger validation-msg" })
+                <label>To Date:</label>
+                @Html.TextBoxFor(model => model.ToDateNew, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "To Date", @class = "form-control TODate1 ", autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.ToDateNew, "", new { @class = "text-danger validation-msg" })*@
+                                                    </div>
+
+                                                    
+
+                                                    @*</div>
+            </div>*@
+
+
+                                                    @if (Model.PK_Call_ID == 0)
+                                                    {
+
+                                                        <div class="col-xs-12 col-sm-12 hidden" id="autoUpdate">
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(model => model.ChkMultipleSubJobNo)
+                                                                <label>Select Multiple Sub-Job no </label>
+
+                                                                @*<select id="Auditee" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName" placeholder="Select Option" required="required">*@
+                                                                <select id="Auditee" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName" placeholder="Select Option">
+                                                                    @{
+                                                                        foreach (var item in ViewData["SubJob_NoByJobNo"] as IEnumerable<TuvVision.Models.CallsModel>)
+                                                                        {
+                                                                            <option value="@item.DPK_SubJob_Id">@item.DSubJob_No&nbsp; &nbsp;</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                                        }
+
+
+                                                </div>
+
+
+
+                                                <div class="row">
+                                                    @*<div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Call Received Date:</label><span style="color:#ff0000;">*</span>
+                                                            
+                                                            @Html.TextBoxFor(model => model.Call_Recived_date, htmlAttributes: new { placeholder = "Call Received Date", @class = "form-control CallRecivedate ", autocomplete = "off" })
+
+                                                            @Html.ValidationMessageFor(model => model.Call_Recived_date, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>*@
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Call Received Date:</label><span style="color:#ff0000;">*</span>
+                                                            @*<div class='input-group date' id='datepicker1'>
+                                                                @Html.TextBoxFor(model => model.CallReceiveTime, htmlAttributes: new { placeholder = "Call Received Date", @class = "form-control datepicker1 ", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.CallReceiveTime, "", new { @class = "text-danger" })
+                                                                <span class="input-group-addon" id="TDTime">
+                                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                                </span>
+                                                            </div>*@
+                                                            @Html.TextBoxFor(model => model.CallReceiveTime, htmlAttributes: new { placeholder = "Call Received Date", @class = "form-control CallRecivedate ", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.CallReceiveTime, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label> Call Requested Date:</label><span style="color:#ff0000;">*</span>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.TextBoxFor(model => model.Call_Request_Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Call Requested Date", @class = "form-control CallRequestdate ", autocomplete = "off" })
+
+                                                            @Html.ValidationMessageFor(model => model.Call_Request_Date, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label> Planned Date:</label><span style="color:#ff0000;">*</span>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.TextBoxFor(model => model.Planned_Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Planned Date", @class = "form-control PlannedDate ", autocomplete = "off", onchange = "CheckIFLeaveAdded()" })
+
+                                                            @Html.ValidationMessageFor(model => model.Planned_Date, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Executing Service:</label><span style="color:#ff0000;">*</span>
+
+                                                            @if (ViewBag.ExeService != null)
+                                                            {
+                                                                @Html.DropDownListFor(m => m.ExecutingService, ViewBag.ExeService as IEnumerable<SelectListItem>, "--Select Service--", new { @class = "form-control" })
+                                                                @Html.HiddenFor(m => m.ExecutingService)
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.ExecutingService, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Executing Branch:</label><span style="color:#ff0000;">*</span>
+                                                            @*<input type="text" class="form-control" placeholder="Status Here">*@
+                                                            @*@Html.TextBoxFor(model => model.Executing_Branch, new { @placeholder = "Executing Branch", @class = "form-control" })*@
+                                                            @if (ViewBag.SubCatlist != null)
+                                                            {
+                                                                @Html.DropDownListFor(m => m.Br_Id, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Branch--", new { @class = "form-control", @required = "required", @style = "pointer-events: none" })
+
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.Br_Id, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Call Status:</label>
+                                                            @*<input type="email" class="form-control" placeholder="Email Here">*@
+                                                            @Html.TextBoxFor(model => model.Status, new { @placeholder = "Call Status", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    
+
+                                                </div>
+
+
+
+
+
+                                                
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label> Inspector Name:</label>
+
+                                                            @if (ViewBag.Userlist != null)
+                                                            {
+                                                                if (Model.Status.ToUpper() == "CLOSED")
+                                                                {
+                                                                    @Html.DropDownListFor(m => m.FirstName, ViewBag.Userlist as IEnumerable<SelectListItem>, "--Select Inspector--", new { @class = "form-control", id = 'a', @disabled = "disabled", onchange = "updateLink()" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownListFor(m => m.FirstName, ViewBag.Userlist as IEnumerable<SelectListItem>, "--Select Inspector--", new { @class = "form-control", id = 'a', onBlur = "CheckIFLeaveAdded()", onchange = "updateLink()" })
+                                                                }
+                                                            }
+
+                                                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Is inspector Competant:</label>
+                                                            @Html.TextBoxFor(model => model.inspectorCompetant, new { @class = "form-control", @readonly = "readonly", @id = "inspectorCompetant" })
+                                                            @Html.ValidationMessageFor(model => model.inspectorCompetant, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    @*<div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>&nbsp;</label>
+                                                            <a href="@Url.Action("ListCompentencyMetrixViewN","CompentencyMetrixView")" target="_blank" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-right:128px;"> Competency Matrix</a>
+                                                        </div>
+                                                    </div>*@ 
+
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            <label>TCE Filled:</label>
+                                                            @Html.TextBoxFor(model => model.TCEFilled, new { @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.TCEFilled, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Is inspector Approved:</label>
+                                                            @Html.TextBoxFor(model => model.inspectorapproved, new { @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.inspectorapproved, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-1">
+                                                        <div class="form-group">
+                                                            <label>&nbsp;</label>
+                                                            @*<span class="tooltip-container" data-toggle="tooltip" data-placement="top" title="Compentency Metrix View">
+                                                                <a href="@Url.Action("ListCompentencyMetrixViewN","CompentencyMetrixView")" target="_blank" style="margin-right:128px;"><img src="~/View1.png" /></a>
+                                                            </span>*@
+                                                            <a id="inspectionLink" href="#" target="_blank" style="margin-right:128px;display:none;">
+                                                                <img src="~/View1.png" />
+                                                            </a>
+
+
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6">
+
+                                                        <div class="form-group">
+                                                            <div id="btnshowdataproject">
+                                                                <div class="row">
+                                                                    @*<a id="lnkNewContact" href="@Url.Action("ContactDetails","EnquiryMaster")" style="margin-left: 15px;"
+                                                                       data-toggle="modal" data-target="#AddNewContactDetails">
+                                                                        <i class="fa fa-plus-circle"></i>Add New Contact Person
+                                                                    </a>*@
+                                                                    <a id="lnkNewContact" style="margin-left: 15px;"
+                                                                       data-toggle="modal" data-target="#AddNewContactDetails">
+                                                                        <i class="fa fa-plus-circle"></i>Add New Contact Person
+                                                                    </a>
+                                                                </div>
+
+
+                                                                <div>
+                                                                    <label>Call raised by:</label>
+
+
+                                                                    @Html.DropDownListFor(
+    model => model.CustomerRepresentative,
+    Enumerable.Empty<SelectListItem>(), // Initialize with empty list
+    new { @id = "Contact", @class = "form-control form-select-city" }
+)
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Call specific instruction to inspectors:</label>
+                                                            @Html.TextAreaFor(model => model.CallRemarks, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.CallRemarks, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                   
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Sub Vendor Contact Details:</label>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextAreaFor(model => model.Sub_Vendor_Contact, new { @placeholder = "Sub Vendor Contact Details", @class = "form-control", @rows = "3", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Sub_Vendor_Contact, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <label>Vendor Contact Details:</label>
+                                                                @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                                @Html.TextAreaFor(model => model.Vendor_Contact, new { @placeholder = "Vendor Contact Details", @class = "form-control", @rows = "3", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Vendor_Contact, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                <div class="row">
+
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label>Customer Contact Details:</label>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextAreaFor(model => model.Client_Contact, new { @placeholder = "Customer Contact Details", @class = "form-control", @rows = "3", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Client_Contact, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                    <div class="row">
+
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <label>Distribution list : Tick for sending inspection call confirmation Email notification</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(model => model.Homecheckbox)  <label>TUVI Email ID</label>
+                                                                @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                                @Html.TextAreaFor(model => model.Tuv_Branch, new { @placeholder = " Home Branch", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Tuv_Branch, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(model => model.ClientEmailcheckbox)<label> Customer Email ID</label>
+                                                                @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                                @Html.TextAreaFor(model => model.Client_Email, new { @placeholder = "Client Email", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Client_Email, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(model => model.Vendorcheckbox)<label>Vendor and Sub Vendor Email ID</label>
+                                                                @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                                @Html.TextAreaFor(model => model.Vendor_Email, new { @placeholder = "Vendor Email", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Vendor_Email, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+
+
+
+
+
+
+
+
+
+                                                    @*<div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Attachment </label>
+                    <input type="file" class="inputupload" name="Image" id="img_Banner" multiple="multiple" />
+                    @Html.HiddenFor(m => m.Attachment)
+                    @if (Model != null && Model.Attachment != null && Model.Attachment != "")
+                    {
+                        string[] words = (Model.Attachment).Split(',');
+                        for (int j = 1; j < words.Count(); j++)
+                        {
+                            <a target="_blank" href="@Url.Content("~/Content/JobDocument/" + words[j-1])">
+
+                                <i class="fa fa-download"></i> Download
+                            </a>
+
+                        }
+                    }
+                </div>
+            </div>*@
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <hr class="custom-hr1">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+
+
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <label><i class="fa fa-paperclip" style="color:black;"></i> Related Documents (Please attach files here) : <span style="color:#ff0000;">*</span></label>
+                                                                <input type="file" class="filepond" name="filepond" id="FileUpload" multiple>
+                                                                <input hidden="hidden" id="hdfFileUpload" name="FileUpload" class="hidden" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                @{
+                                                                    if (Model != null)
+                                                                    {
+
+                                                                        if (!string.IsNullOrEmpty(Model.Attachment))
+                                                                        {
+                                                                            <div class="cform-group">
+                                                                                @{
+                                                                                    string[] words = (Model.Attachment).Split(',');
+                                                                                    for (int i = 0; i < words.Count(); i++)
+                                                                                    {
+                                                                                        <a id="btnAddToCart" class="btn btn-default insert-form-btn" href="@Url.Content("" + words[i])" role="button" download="@Url.Content("~/Content/Uploads/Images/" + words[i])">
+                                                                                            <i class="fa fa-download"></i>           @words[i]
+                                                                                        </a>
+                                                                                    }
+                                                                                }
+                                                                            </div>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <div class="form-group">
+
+                                                                                        </div>
+                                                                                        }
+                                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <hr class="custom-hr1">'
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 text-center">
+                                                        @if (Model.Call_No == null)
+                                                        {
+                                                            <button type="submit" id="btnic" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Save </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button type="submit" id="btnic" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Update </button>
+                                                        }
+
+
+
+                                                    </div>
+</form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Contact Details By Manoj -->
+
+
+                            </div><!-- /.box-shadow -->
+                        </div><!-- /.col -->
+
+                    </div><!-- /.row -->
+                </div><!-- /.col -->
+
+
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddNewContactDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new contact</h4>
+            </div>
+
+
+
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+
+                            <span style="color:#E12F24;">
+                                <strong>Notes </strong> :
+                            </span> 1) <span style="color:#ff0000;">*</span> - Mandatory.<br /><br />
+
+                        </div>
+
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Contact Person name:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.ContactNames, new { @placeholder = "Contact Name Here", @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.ContactNames, "", new { @class = "text-danger" })*@
+
+                            </div>
+                        </div>
+                        @Html.HiddenFor(m => m.Attachment)
+                        <div class="col-xs-12 col-sm-4 hidden">
+
+                            <div class="form-group">
+                                <label>Company name:</label>
+
+                                @if (Model != null)
+                                {
+                                    if (ViewBag.ContactCompanyName != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.ContactCompanyName, new SelectList(@ViewBag.ContactCompanyName, "Code", "Name"), "---Select Company---", new { @id = "ddlContactCompanyname", @class = "form-control" })
+                                    }
+                                }
+                                else
+                                {
+                                    if (ViewBag.ContactCompanyName != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.ContactCompanyName, new SelectList(@ViewBag.ContactCompanyName, "Code", "Name"), new { @id = "ddlContactCompanyname", @class = "form-control" })
+                                    }
+
+                                }
+                            </div>
+                            @Html.Hidden("hidCompany")
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Designation:<span style="color:#ff0000;">*</span></label>
+
+                                @Html.TextBoxFor(model => model.TitleName, new { @placeholder = "Designation", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TitleName, "", new { @class = "text-danger" })
+
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Email Id:<span style="color:#ff0000;">*</span></label>
+
+                                @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email Here", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Landline number:</label>
+                                @*<input type="text" class="form-control" placeholder="Home Phone Here">*@
+                                @Html.TextBoxFor(model => model.HomePhone, new { @placeholder = "Landline Number Here", @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.HomePhone, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Mobile number:<span style="color:#ff0000;">*</span></label>
+                                @*<input type="text" class="form-control" placeholder="Mobile Here">*@
+                                @Html.TextBoxFor(model => model.Mobile, new { @placeholder = "Mobile Number Here", @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Fax number:</label>
+                                @Html.TextBoxFor(model => model.Fax_No, new { @placeholder = "Enter Fax Number", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Fax_No, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                @*<label>Primary Contact :</label>*@
+                                @if (Model != null)
+                                {
+                                    if (Model.IsMainContact == true)
+                                    {
+                                        <div>
+                                            <label>
+                                                <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" checked="checked" />Primary Contact
+                                            </label>
+                                        </div>
+                                    }
+                                    else if (Model.IsMainContact == false)
+                                    {
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" />Primary Contact
+                                            </label>
+                                        </div>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" /> Primary Contact
+                                            <input name="IsMainContact" type="hidden" value="false" />
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Status:<span style="color:#ff0000;">*</span></label>
+
+                                @Html.DropDownListFor(m => m.ContactStatus, new List<SelectListItem>
+                                                                                     {
+                                                                                         new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                                         new SelectListItem{ Text="Active", Value = "Active" },
+                                                                                         new SelectListItem{ Text="In-Active", Value = "In-Active" },
+
+
+
+                                                                                        }, new { @class = "form-control", @id = "PT" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label>Address:<span style="color:#ff0000;">*</span></label>
+                                @*@Html.TextAreaFor(model => model.Address, new { @placeholder = "Address  Here", @class = "form-control", @rows = "3" })*@
+
+                                @Html.DropDownListFor(model => model.Address, new SelectList(Enumerable.Empty<SelectListItem>(), "--Select Company Address--", "--Select Company Address--"), "--Select Company Address--", new { @id = "ddlCaddr", @class = "form-control" })
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <button type="button" class="btn btn-default insert-form-btn " id="btnAddNewContact" title="Add New Contact"><i class="fa fa-plus-circle"></i> Add Contact</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer" style="padding: 10px 15px;">
+                <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+            <div class="modal-footer" style="padding: 10px 15px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="addmodalCloseButton"><span aria-hidden="true">&times;</span></button>
+
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var E = $('#Br_Id').val();
+        var O = $('#Originating_Branch').val();
+        
+        if (E == '@Session["UserBranchId"]') {
+
+            $("#FirstName").removeAttr("disabled");
+
+        } else {
+            $("#FirstName").attr("disabled", "disabled");
+        }
+
+        $("#Br_Id").change(function () {
+            debugger;
+
+
+            var E = $('#Br_Id').val();
+            var O = $('#Originating_Branch').val();
+
+            if (E == O) {
+
+                $("#FirstName").removeAttr("disabled");
+
+            } else {
+                $("#FirstName").attr("disabled", "disabled");
+            }
+
+
+        })
+
+
+        var customer = $('#Company_Name').val();
+        $.ajax({
+            url: '@Url.Action("GetCompanyAddress", "subJobMaster")',
+            data: "{ 'Prefix': '" + customer + "'}",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                //  alert(response);
+                $("#ddlCaddr").empty();
+
+                var s = '<option value="-1">--Select Vendor Address--</option>';
+                for (var i = 0; i < response.length; i++) {
+                    s += '<option value="' + response[i].pkID + '">' + response[i].Company_Name + '</option>';
+                }
+                $("#ddlCaddr").html(s);
+
+            },
+            error: function (response) {
+                // alert(response.responseText);
+            },
+            failure: function (response) {
+                //   alert(response.responseText);
+            }
+        })
+
+        var customer = $('#Company_Name').val();
+        loadVendorDetails(customer);
+    });
+
+
+    $(function () {
+        var v = $('#Br_Id').val();
+        debugger;
+        $("#FirstName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/CallsMaster/GetAutoCompleteData/",
+                    // data: "{'InspectorName':'" + request.term + "'}",
+                    data: '{InspectorName: "' + request.term + '" ,Br_Id: "' + v + '"}',
+                    datatype: "json",
+                    type: "POST",
+                    contentType: "application/json;charset-utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.FirstName, value: item.FirstName };
+                        }))
+                    },
+                    minLength: 1
+                });
+            }
+        });
+    });
+
+</script>
+
+
+<script type="text/javascript">
+    $(function () {
+
+        debugger;
+        $("#Sub_Job").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/CallsMaster/GetSubNoAutoComplete/",
+                    data: "{'InspectorName':'" + request.term + "'}",
+                    // data: '{InspectorName: "' + request.term + '" ,Br_Id: "' + v + '"}',
+                    datatype: "json",
+                    type: "POST",
+                    contentType: "application/json;charset-utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Sub_Job, value: item.Sub_Job };
+                        }))
+                    },
+                    minLength: 1
+                });
+            }
+        });
+    });
+
+</script>
+
+
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+<script>
+    FilePond.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(document.querySelector('.filepond'));
+</script>
+<script>
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment", "CallsMaster")'
+    });
+</script>
+
+<script>
+    var SummaryExtension = false;
+    var fileExtension = ["pdf", "PDF", "xls", "xlsx", "doc", "DOC", "docx", "DOCX", "png", "PNG", "jpg", "JPG", "JPEG", "gif"];
+    $("#FileUpload").change(function (e) {
+        debugger;
+        var files = $("#FileUpload input[type='file']").get(0).files;
+        for (var index = 0; index < files.length; index++)
+        {
+            var singleExtension = e.target.files[index].name.split('.').pop();
+            var Condition = fileExtension.includes(singleExtension);
+            if (Condition == true)
+            {
+                SummaryExtension = true;
+            }
+            else
+            {
+                alert("Only formats are allowed : " + fileExtension.join(','));
+                SummaryExtension = false;
+                return;
+            }
+        }
+        if (SummaryExtension == true)
+        {
+            var fileData = new FormData();
+            for (var i = 0; i < files.length; i++)
+            {
+                fileData.append("FileUpload input[type='file']", files[i]);
+            }
+            //Creating an XMLHttpRequest and sending
+            var xhr = new XMLHttpRequest();
+            var link = '@Url.Action("TemporaryFilePathDocumentAttachment", "CallsMaster")';
+            xhr.open('POST', link, 'true');
+            xhr.send(fileData);
+            xhr.onreadystatechange = function ()
+            {
+                if (xhr.readyState == 4 && xhr.status == 200)
+                {
+                    var data = xhr.responseText;
+                    data = data.replace(/"/g, "");
+                    $("#Attachment").val(data);
+                }
+            }
+            //})
+        }
+
+
+
+    })
+</script>
+
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    function ShowHideDiv(chkPassport) {
+        var dvPassport = document.getElementById("dvPassport");
+        dvPassport.style.display = chkPassport.checked ? "block" : "none";
+    }
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#chkPassport").click(function () {
+            if ($(this).is(":checked")) {
+                $("#Call_Request_Date").attr("disabled", "disabled");
+                $("#Call_Request_Date").val("");
+
+            } else {
+                $("#Call_Request_Date").removeAttr("disabled");
+            }
+        });
+    });
+</script>
+
+
+<script>
+    function CheckIFLeaveAdded() {
+        // debugger;
+
+        var chkContinuousCall = $("#chkPassport").val()
+        var FromDate = $("#FromDateNew").val()
+        var ToDate = $("#ToDateNew").val()
+        var ActualVisitDate = $("#Planned_Date").val()
+        var Inspector = $("#a").val()
+
+        if (Inspector != '') {
+            $.post("@Url.Action("CheckLeave", "CallsMaster")",
+            {
+                FromDate: FromDate,
+                ToDate: ToDate,
+                ActualVisitDate: ActualVisitDate,
+                Inspector: Inspector
+
+            },
+
+            function (data) {
+                if (data == 0) {
+
+                }
+                else {
+                    $("#a").val("");
+                    alert(data);
+                }
+            });
+        }
+    }
+</script>
+
+
+<script>
+    $("#btnic").click(function myfunction() {
+        if (validateform() == false) {
+
+            return false;
+        }
+        else {
+            $("#formic").submit();
+        }
+    });
+
+
+
+
+    function validateform() {
+
+        debugger;
+        // var RecDate = $("#Call_Recived_date").val();
+
+
+        var RecDate = $("#CallReceiveTime").val();
+        var ReqDate = $("#Call_Request_Date").val();
+        var PlnDate = $("#Planned_Date").val();
+        //var ProdDesc = $("#ProdDesc").val();
+        var ProdQty = $("#ProdQty").val();
+        var Reason = $("#Reasion").val();
+        var EstimatedHours = $("#EstimatedHours").val();
+        var Job_Location = $("#Job_Location").val();
+        var PrimaryMaterial = $("#IdPrimaryMaterial option:selected").val();
+
+        var FinalInspectionValue = $("#FinalInspectionValue").val();
+
+        var Sub_Category = $("#Sub_Category").val();
+
+        if (PrimaryMaterial == "" || PrimaryMaterial == null) {
+            alert("Please Select Primary Material !!!");
+            $("#IdPrimaryMaterial").focus()
+            return false;
+        }
+
+        if (RecDate == "" || RecDate == null)
+        {
+            alert("Please select Call Received Date !");
+            $("#CallReceiveTime").focus()
+            return false;
+        }
+
+        if ((ReqDate == "" || ReqDate == null) && chkPassport.checked == false)
+        {
+            alert("Please select Call Requested Date !");
+            $("#Call_Request_Date").focus()
+            return false;
+        }
+        //if ((PlnDate == "" || PlnDate == null) && chkPassport.checked == false)
+        if (PlnDate == "" || PlnDate == null) {
+            alert("Please select Planned Date !");
+            $("#Planned_Date").focus()
+            return false;
+        }
+
+        //if (ProdDesc == "" || ProdDesc == null) {
+        //    alert("Please Enter Product Description !");
+        //    $("#ProdDesc").focus()
+        //    return false;
+        //}
+
+        if (ProdQty == "" || ProdQty == null)
+        {
+            alert("Please Enter Product Quantity !");
+            $("#ProdQty").focus()
+            return false;
+        }
+
+        if (EstimatedHours == "" || EstimatedHours == null) {
+            alert("Enter Estimated Hours !");
+            $("#EstimatedHours").focus()
+            return false;
+        }
+
+        if (Sub_Category == "" || Sub_Category == null) {
+            alert("Please select Stages of Inspection !");
+            $("#Sub_Category").focus()
+            return false;
+        }
+
+        if ($("#chkCallCancelled").prop("checked"))
+        {
+            if (Reason == "" || Reason == null) {
+                alert("Please Enter Reason for Cancellation !!!");
+                $("#Reasion").focus();
+                return false;
+            }
+        }
+        if (Job_Location == "" || Job_Location == null || Job_Location == "NA" || Job_Location == "0") {
+            alert("Enter Inspection Location !");
+            $("#Job_Location").focus()
+            return false;
+        }
+
+        //added by shrutika salve 27032024
+        if (FinalInspectionValue == "" || FinalInspectionValue == null) {
+            alert("Please select Final Inspection!");
+            $("#FinalInspectionValue").focus()
+            return false;
+        }
+
+        if ($("#checkIFExpeditingReport").prop("checked")) {
+            var Expeditingreport = $("#IdType1").val();
+            if (Expeditingreport == null || Expeditingreport == "") {
+                alert("please select Expediting Type!")
+                return false;
+            }
+        }
+
+        //if ($('#a').val() != null || $('#a').val() != "") {
+        //    var iscompedent = $("#inspectorCompetant").val();
+        //    if (iscompedent == "" || iscompedent == null) {
+        //        alert("Please Enter inspector Competant  !!!");
+        //        $("#inspectorCompetant").focus()
+        //        return false;
+        //    }
+
+        //}
+
+    }
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        IsinspectorApproved();
+        var Inspector = "";
+        var scopeVal = "";
+        var ProdList = "";
+        Inspector = $('#a').val();
+
+
+
+        if (($("#ProductLists").val() != "" && $("#ProductLists").val() != null) && (Inspector != "" && Inspector != null)) {
+            var selected = $("#ProductLists option:selected");
+            var stageOf = $("#Sub_Category option:selected");
+            var ddlCityValue = "";
+            selected.each(function () {
+                ddlCityValue += $(this).text().trim() + ",";
+            });
+            var stageofData = "";
+            stageOf.each(function () {
+                stageofData += $(this).text().trim() + ",";
+            });
+            ProdList = ddlCityValue;
+            StageList = stageofData;
+
+            Scopefunction(ProdList, Inspector, StageList);
+            FormFilled(Inspector);
+
+        }
+        else {
+            $("#inspectorCompetant").val("");
+            $("#TCEFilled").val("");
+        }
+
+    })
+
+    $("#a").change(function () {
+        debugger;
+        var Inspector = "";
+        var scopeVal = "";
+        var ProdList = "";
+        Inspector = $('#a').val();
+
+
+
+        if (($("#ProductLists").val() != "" && $("#ProductLists").val() != null) && (Inspector != "" && Inspector != null))
+        {
+            var selected = $("#ProductLists option:selected");
+            var stageOf = $("#Sub_Category option:selected");
+            var ddlCityValue = "";
+            selected.each(function () {
+                ddlCityValue += $(this).text().trim() + ",";
+            });
+            var stageofData = "";
+            stageOf.each(function () {
+                stageofData += $(this).text().trim() + ",";
+            });
+            //alert(ddlCityValue);
+            ProdList = ddlCityValue;
+            StageList = stageofData;
+          ///  ProdList = $("#ProductLists").val();
+
+            Scopefunction(ProdList, Inspector, StageList);
+            FormFilled(Inspector);
+            //FormFilled(Inspector);
+
+        }
+        else
+        {
+            $("#inspectorCompetant").val("");
+            $("#TCEFilled").val("");
+        }
+
+    });
+
+
+    $("#ProductLists").change(function () {
+
+
+
+            var Inspector = "";
+            var scopeVal = "";
+            var ProdList = "";
+            Inspector = $('#a').val();
+
+            if (($("#ProductLists").val() != "" && $("#ProductLists").val() != null) && (Inspector != "" && Inspector != null))
+            {
+                var selected = $("#ProductLists option:selected");
+                var stageOf = $("#Sub_Category option:selected");
+                var ddlCityValue = "";
+                selected.each(function () {
+                    ddlCityValue += $(this).text().trim() + ",";
+                });
+                var stageofData = "";
+                stageOf.each(function () {
+                    stageofData += $(this).text().trim() + ",";
+                });
+               // alert(ddlCityValue);
+                ProdList = ddlCityValue;
+                StageList = stageofData;
+
+                Scopefunction(ProdList, Inspector, StageList);
+                FormFilled(Inspector);
+
+            }
+            else {
+                $("#inspectorCompetant").val("");
+                $("#TCEFilled").val("");
+            }
+
+            console.log(Inspector);
+
+
+    });
+
+
+    function Scopefunction(ProdList, Inspector, StageList) {
+        debugger;
+        // alert(ProdList);
+        $.ajax
+       ({
+           url: '@Url.Action("GetCompetancy", "CallsMaster")',
+           type: "POST",
+           data: '{Name:' + JSON.stringify(Inspector) + ', Status: ' + JSON.stringify(ProdList) + ',StageOf: ' + JSON.stringify(StageList) + '}',
+           datatype: "json",
+           contentType: "application/json; charset=utf-8",
+           async: false,
+           success: function (response) {
+               //  alert(response);
+
+               if (response == "YES") {
+                   //  alert("Inspector is Competant");
+
+                   $("#inspectorCompetant").val("YES");
+               }
+               else if (response == "NO") {
+                   $("#inspectorCompetant").val("NO");
+               }
+               else {
+
+               }
+           }
+
+       });
+
+    }
+
+
+    function FormFilled(Inspector) {
+        debugger;
+        // alert(ProdList);
+        $.ajax
+       ({
+           url: '@Url.Action("GetFormFilled", "CallsMaster")',
+           type: "POST",
+           data: '{Name:' + JSON.stringify(Inspector) + '}',
+           datatype: "json",
+           contentType: "application/json; charset=utf-8",
+           async: false,
+           success: function (response) {
+               //  alert(response);
+
+
+
+               if (response == "YES") {
+                   //  alert("Inspector is Competant");
+
+                   $("#TCEFilled").val("YES");
+               }
+               else if (response == "NO") {
+                   $("#TCEFilled").val("NO");
+               }
+               else {
+
+               }
+           }
+
+       });
+    }
+
+
+    $("#Sub_Category").change(function () {
+
+
+
+        var Inspector = "";
+        var scopeVal = "";
+        var ProdList = "";
+        Inspector = $('#a').val();
+
+        if (($("#ProductLists").val() != "" && $("#ProductLists").val() != null) && (Inspector != "" && Inspector != null)) {
+            var selected = $("#ProductLists option:selected");
+            var stageOf = $("#Sub_Category option:selected");
+            var ddlCityValue = "";
+            selected.each(function () {
+                ddlCityValue += $(this).text().trim() + ",";
+            });
+
+            //added by shrutika salve 27032024
+            var stageofData = "";
+            stageOf.each(function () {
+                stageofData += $(this).text().trim() + ",";
+            });
+            // alert(ddlCityValue);
+            ProdList = ddlCityValue;
+            StageList = stageofData;
+            Scopefunction(ProdList, Inspector, StageList);
+            FormFilled(Inspector);
+
+
+        }
+        else {
+            $("#inspectorCompetant").val("");
+            $("#TCEFilled").val("");
+        }
+
+        console.log(Inspector);
+
+
+    });
+
+    function IsinspectorApproved() {
+        debugger;
+        var status = $('#Status').val();
+        var CustomerName = $('#Company_Name').val();
+        var Inspector = $('#a').val();
+        if (status == "Open" && Inspector == "") {
+            $("#inspectorapproved").val("INA");
+
+        }
+        else {
+
+            $.ajax
+          ({
+              url: '@Url.Action("Getisinspectorapproved", "CallsMaster")',
+              type: "POST",
+              data: '{Name:' + JSON.stringify(Inspector) + ', CustomerName: ' + JSON.stringify(CustomerName) + '}',
+              datatype: "json",
+              contentType: "application/json; charset=utf-8",
+              async: false,
+              success: function (response) {
+                  //  alert(response);
+                  $("#inspectorapproved").val(response);
+
+
+              }
+
+          });
+
+        }
+
+
+    }
+
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+
+
+</script>
+
+<script>
+    function checkDateConstraints(fromDate, toDate, errorMessage) {
+        debugger;
+        var fromDateMoment = moment(fromDate, 'DD/MM/YYYY');
+        var toDateMoment = moment(toDate, 'DD/MM/YYYY');
+
+
+        let fromdate = fromDateMoment.format('YYYY-MM-DD');
+        let todate = toDateMoment.format('YYYY-MM-DD');
+
+
+        if (Date.parse(fromdate) > Date.parse(todate)) {
+
+            alert(errorMessage);
+            return 1;
+
+        } else {
+            return 0;
+        }
+
+
+    }
+
+    $('#Call_Request_Date').change(function () {
+        debugger;
+        var CallReceiveTime = $('#CallReceiveTime').val();
+        var Call_Request_Date = $(this).val();
+
+        var a = checkDateConstraints(CallReceiveTime, Call_Request_Date, "Call Receive Date cannot be greater than Call Request Date.");
+        if (a == 1)
+        {
+            $(this).val("");
+
+        }
+    })
+
+
+    $('#Planned_Date').change(function () {
+        var Call_Request_Date = $('#Call_Request_Date').val();
+        var Planned_Date = $(this).val();
+        var a = checkDateConstraints(Call_Request_Date, Planned_Date, "Call Request Date cannot be greater than Planned Date.");
+       if (a == 1) {
+
+            $(this).val("");
+
+        }
+
+    })
+
+</script>
+
+<script>
+    //$(".PoDates1").change(function () {
+    $('#FromDateNew, #ToDateNew, #ChkContinuousCall').change(function () {
+        debugger;
+        if ($('#chkManMonths').prop('checked') && !$('#chkPassport').prop('checked') || $('#chkManMonths').prop('checked') && $('#chkPassport').prop('checked')) {
+            checkDateDifferenceMaxDaysValidation();
+        }
+        else {
+            checkDateDifference();
+
+        }
+        //checkDateDifference();
+    });
+</script>
+
+<script>
+    function checkDateDifferenceMaxDaysValidation() {
+        debugger;
+        //if ($('#chkPassport').prop('checked')) {
+
+        var fromDate = $("#FromDateNew").val();
+        var convertedfromDate = moment(fromDate).format('DD/MM/YYYY');
+        var toDate = $("#ToDateNew").val();
+        var convertedtoDate = moment(toDate).format('DD/MM/YYYY');
+
+        if (moment(fromDate, 'DD/MM/YYYY').isValid() && moment(toDate, 'DD/MM/YYYY').isValid()) {
+            var diffDuration = moment.duration(moment(toDate, 'DD/MM/YYYY').diff(moment(fromDate, 'DD/MM/YYYY')));
+
+            var daysDifference = diffDuration.asDays();
+
+
+        } else {
+            console.log('Invalid date format');
+        }
+
+
+        //var timeDifference = toDate - fromDate;
+        //var dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+        if (daysDifference > 15) {
+            alert('System will not allow to generate continuous call for more than 15 days.');
+            $("#FromDateNew").val("");
+            $("#ToDateNew").val("");
+        }
+    }
+
+
+
+</script>
+
+<script>
+    function checkDateDifference() {
+        debugger;
+        //if ($('#chkPassport').prop('checked')) {
+
+        var fromDate = $("#FromDateNew").val();
+        var convertedfromDate = moment(fromDate).format('DD/MM/YYYY');
+        var toDate = $("#ToDateNew").val();
+        var convertedtoDate = moment(toDate).format('DD/MM/YYYY');
+
+        if (moment(fromDate, 'DD/MM/YYYY').isValid() && moment(toDate, 'DD/MM/YYYY').isValid()) {
+            var diffDuration = moment.duration(moment(toDate, 'DD/MM/YYYY').diff(moment(fromDate, 'DD/MM/YYYY')));
+
+            var daysDifference = diffDuration.asDays();
+
+
+        } else {
+            console.log('Invalid date format');
+        }
+
+
+        //var timeDifference = toDate - fromDate;
+        //var dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+        if (daysDifference > 6) {
+            alert('System will not allow to generate continuous call for more than 6 days.');
+            $("#FromDateNew").val("");
+            $("#ToDateNew").val("");
+        }
+    }
+
+
+
+</script>
+
+<script>
+    $("#btnAddNewContact").on('click', function () {
+        debugger
+        var testcompanynameparam = $('#Company_Name').val();
+
+        var ContactNames = $("#ContactNames").val();
+        var ddlContactCompanyName = ContactNames;
+        var ddlCompanyName = testcompanynameparam;
+
+        var HomePhoneNo = $("#HomePhone").val();
+        var MobileNo = $("#Mobile").val();
+
+        var MainContact = $('#IsMainContact').is(':checked');
+        var CompanyName = $('#hidCompany').val();
+        var Address = $("#ddlCaddr option:selected").val();
+        var Email = $("#Email").val();
+        var Fax_No = $("#Fax_No").val();
+        var TitleName = $("#TitleName").val();
+        var ContactStatus = $("#PT").val();
+
+
+        //**************************************************************************
+        if ($("#ContactNames").val() == "" || $("#ContactNames").val() == null) {
+            alert("Please Enter Contact Name!!!");
+            $("#ContactNames").focus()
+            return false;
+        }
+        //else if (ddlCompanyName == 0 || ddlCompanyName == null) {
+        //    alert("Please Select Company Name !!!");
+        //    $("#ContactCompanyName").focus()
+        //    return false;
+        //}
+        else if (TitleName == "" || TitleName == null) {
+            alert("Enter Designation !!!");
+            $("#TitleName").focus()
+            return false;
+        }
+        else if (Email == "" || Email == null) {
+            alert("Enter Email !!!");
+            $("#Email").focus()
+            return false;
+        }
+        else if (MobileNo == "" || MobileNo == null) {
+            alert("Enter Mobile !!!");
+            $("#Mobile").focus()
+            return false;
+        }
+        else if (ContactStatus == "" || ContactStatus == null) {
+            alert("Enter Status !!!");
+            $("#PT").focus()
+            return false;
+        }
+        else {
+            var ContactDetails =
+                {
+                    ContactNames: ContactNames,
+                    ContactCompanyName: ddlContactCompanyName,
+                    CompanyName: testcompanynameparam,
+                    HomePhone: HomePhoneNo,
+                    Mobile: MobileNo,
+                    IsMainContact: MainContact,
+                    Address: Address,
+                    Email: Email,
+                    Fax_No: Fax_No,
+                    TitleName: TitleName,
+                    ContactStatus: ContactStatus
+                }
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify({ ECM: ContactDetails }),
+                url: '@Url.Action("ContactDetails", "EnquiryMaster")',
+                dataType: 'json',
+                Async: false,
+                enctype: "multipart/form-data",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+
+                    if (response.success == 1) {
+                        alert("Contact Saved Successfully!!!")
+
+                        //$('#AddNewContactDetails').modal('hide');
+                        //Bind_EmailID();
+                        //showMessage();
+                        $("#addmodalCloseButton").click();
+                        var customer = $('#Company_Name').val();
+                        loadVendorDetails(customer);
+
+
+                    }
+                    else if (response.success == 2) {
+
+                        alert("Duplicate Contact detail Or !!Failed!!! Something Went Wrong!!! Please Try Again....")
+                        //Bind_EmailID();
+                        $('#AddNewContactDetails').modal('hide');
+                        //showMessage();
+
+                    }
+                    Bind_EmailID();
+
+                }
+            });
+        }
+    });
+</script>
+<script>
+
+
+
+    $('#Company_Name').blur(function () {
+        //  alert(this.value);
+        //$('#EndCustomer').val($('#CompanyName').val())
+        $.ajax({
+            url: '@Url.Action("GetCompanyAddress", "subJobMaster")',
+            data: "{ 'Prefix': '" + this.value + "'}",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                //  alert(response);
+                $("#ddlCaddr").empty();
+
+                var s = '<option value="-1">--Select Vendor Address--</option>';
+                for (var i = 0; i < response.length; i++) {
+                    s += '<option value="' + response[i].pkID + '">' + response[i].Company_Name + '</option>';
+                }
+                $("#ddlCaddr").html(s);
+
+            },
+            error: function (response) {
+                // alert(response.responseText);
+            },
+            failure: function (response) {
+                //   alert(response.responseText);
+            }
+        });
+    })
+
+</script>
+
+<script>
+        function loadVendorDetails(CustomerName) {
+
+            $.ajax({
+                url: '@Url.Action("Getvendordetails", "subJobMaster")',
+                data: JSON.stringify({ 'Pre': CustomerName }),
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    debugger
+                    // Clear existing options
+                    $('#Contact').empty();
+
+                    var selectedContact = $('#Contact').data('selected-contact') || '';
+
+                    var options = '<option value="">Select Customer Name</option>';
+                    for (var i = 0; i < response.length; i++) {
+                        var selected = selectedContact === response[i].Vendor_Contact.toString() ? ' selected' : '';
+                        options += '<option value="' + response[i].Vendor_Contact + '"' + selected + '>' + response[i].vendor_name + '</option>';
+                    }
+                    $("#Contact").html(options);
+                },
+                error: function (response) {
+                    console.error(response.responseText);
+                },
+                failure: function (response) {
+                    console.error(response.responseText);
+                }
+            });
+        }
+
+        // Event binding for vendor_name blur event
+        $('#Company_Name').blur(function () {
+            debugger;
+            var CustomerName = this.value;
+            loadVendorDetails(CustomerName);
+        });
+
+        // Initial load
+        var initialVendorName = $('#Company_Name').val();
+
+        // Extract and store the initial selected contact from the model
+        var selectedContact = '@Model.CustomerRepresentative';
+    $('#Contact').data('selected-contact', selectedContact);
+
+
+
+</script>
+
+
+<script>
+    function updateLink() {
+        var dropdown = document.getElementById('a');
+        var selectedValue = dropdown.value;
+
+        var link = document.getElementById('inspectionLink');
+
+        if (selectedValue) {
+            link.href = '@Url.Action("TechnicalCompetencyEvaluation", "TechnicalCompetencyEvaluation", new { Id = "__id__" })'.replace('__id__', selectedValue);
+            link.style.display = 'inline';
+        } else {
+            link.style.display = 'none';
+        }
+    }
+
+    window.onload = function () {
+        updateLink();
+    };
+</script>

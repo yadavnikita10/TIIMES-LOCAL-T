@@ -1,0 +1,647 @@
+﻿@model TuvVision.Models.CostSheet
+
+@{
+    ViewBag.Title = "CostSheet";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+
+    int j = 0;
+    int k = 0;
+    int i = 0;
+    int TotalAmount = 0;
+}
+  
+
+@*Ashwini Scripts here for datatable starts here*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>*@
+@*<script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+@*Ashwini Scripts here for datatable ends here*@
+
+@*<form method="post" enctype="multipart/form-data">*@
+
+    <div class="white-bg section-box-shadow">
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                <div class="form-box">
+                    <form method="post" enctype="multipart/form-data">
+
+                        <div class="row">
+                            <div class="col-xs-12 text-right">
+                                @*<a href="@Url.Action("Quotation", "QuotationMaster", new {@QuotationNumber =  @Session["QT_ID"] })" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
+                                <a href="@Url.Action("Quotation", "QuotationMaster", new { @PK_QM_ID = Session["PK_QTID"] })" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+
+
+                                    @Html.HiddenFor(m => m.Costsheet)
+                                    @Html.HiddenFor(m => m.PK_QTID)
+                                    @Html.HiddenFor(m => m.QtnNo)
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    <h4><a href="~/Content/feedbackExcel1/CALCULATON  manpower.xlsx" target="_blank"><strong>Download Costsheet Template</strong></a></h4>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                            @if (ViewBag.lstDOrderType != null)
+                            {
+                                if (ViewBag.lstDOrderType.Count != 0)
+                                {
+                                    <div id="DomesticCurrency" style='width:100% ;align:center;pointer-events:none;'>
+                                        <div class="form-page-title"><label>Domestic</label></div>
+
+                                        <table id="DTestTable" cellspacing="0" cellpadding="3" border="1" style="width: 100%">
+                                            <tr>
+                                                <td width="200px">
+                                                    Order Type
+                                                </td>
+                                                <td>
+                                                    Order Rate
+                                                </td>
+                                                <td>
+                                                    Estimated Mandays/ManMonth
+                                                </td>
+                                                <td>
+                                                    Distance in (KM)
+                                                </td>
+
+                                                <td>
+                                                    Currency
+                                                </td>
+                                                <td>
+                                                    Exchange Rate
+                                                </td>
+                                                <td colspan="2">
+                                                    Amount
+                                                </td>
+
+                                            </tr>
+
+
+                                            @foreach (var item in ViewBag.lstDOrderType as IEnumerable<TuvVision.Models.QuotationMaster>)
+                                            {
+                                                i = i + 1;
+
+                                                <tr class="trDomestic">
+
+                                                    <td>
+
+
+                                                        @Html.DropDownListFor(m => m.lstQuotationMasterOrderType[j].OrderType, new List<SelectListItem>
+                                                    {
+                                                        new SelectListItem{ Text="Select Order Type", Value = "" },
+                                                        new SelectListItem{ Text="Man Days", Value = "ManDays" , Selected = (item.OrderType == "ManDays") ?true : false} ,
+                                                        new SelectListItem{ Text="Man Month", Value = "ManMonth", Selected = (item.OrderType == "ManMonth") ?true : false },
+                                                        new SelectListItem{ Text="Lump Sum/Percentage", Value = "LumSum", Selected = (item.OrderType == "LumSum") ?true : false },
+                                                        new SelectListItem{ Text="Man Hours", Value = "ManHR", Selected = (item.OrderType == "ManHR") ?true : false },
+
+                                                    },
+                                                        new { @class = "form-control COrderType", @id = "ddlOrderType" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[j].OrderRate, new { @placeholder = "Order Rate", @class = "form-control  COrderRate", @Value = item.OrderRate, @id = "IddOrderType" + i })
+                                                        @Html.ValidationMessageFor(model => model.OrderRate, "", new { @class = "text-danger validation-msg" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[j].Estimate_ManDays_ManMonth, new { @placeholder = "Estimated Man Days", @class = "form-control CEstimate_ManDays_ManMonth", autocomplete = "off", @id = "IddEstimate_ManDays_ManMonth", @Value = item.Estimate_ManDays_ManMonth, @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.Estimate_ManDays_ManMonth, "", new { @class = "text-danger validation-msg" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[j].Distance, new { @placeholder = "Distance", @class = "form-control CDistance", autocomplete = "off", @id = "IddDistance", @Value = item.Distance, @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.Distance, "", new { @class = "text-danger validation-msg" })
+                                                    </td>
+
+                                                    <td>
+                                                        @*@Html.DropDownListFor(m => m.lstQuotationMasterOrderType[j].Dcurrency, ViewBag.CurrencyItems as IEnumerable<SelectListItem>,"--Select Currency--", new { @id = "IddDcurrency", @class = "form-control CDcurrency"})*@
+
+                                                        @Html.DropDownListFor(m => m.lstQuotationMasterOrderType[j].Dcurrency, new SelectList(@ViewBag.DTestCurrency, "Code", "Name", item.Dcurrency), "--Select Currency--", new { @id = "IddDcurrency", @class = "form-control CDcurrency" })
+
+                                                        @Html.HiddenFor(m => m.Dcurrency)
+
+                                                        @Html.ValidationMessageFor(model => model.Dcurrency, "", new { @class = "text-danger validation-msg" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[j].DExchangeRate, new { @placeholder = "Exchange Rate", @class = "form-control CDExchangeRate", autocomplete = "off", @id = "IddDExchangeRate", @Value = item.DExchangeRate, @onkeypress = "return isNumberKey(event);" })
+                                                        @*<input type="text" name="DExchangeRate" class="form-control CDExchangeRate" , Value = item.DExchangeRate/>*@
+                                                        @Html.ValidationMessageFor(model => model.DExchangeRate, "", new { @class = "text-danger validation-msg" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[j].DTotalAmount, new { @placeholder = "amount", @class = "form-control CDTotalAmount", autocomplete = "off", @id = "IddDTotalAmount", @Value = item.DTotalAmount, @readonly = "readonly" })
+                                                        @Html.HiddenFor(model => model.lstQuotationMasterOrderType[j].DTotalAmount, new { @placeholder = "amount", @class = "form-control", autocomplete = "off", @Value = item.DTotalAmount })
+
+                                                        @Html.ValidationMessageFor(model => model.DTotalAmount, "", new { @class = "text-danger validation-msg" })
+                                                    </td>
+                                                </tr>
+                                                j++;
+                                                TotalAmount = TotalAmount + Convert.ToInt32(item.DTotalAmount);
+                                            }
+                                        </table><br />
+
+
+                                    </div>
+                                        <input type="file" class="inputupload" name="DFileUpload" id="DFileUpload"  />
+                                        <input type="hidden" value="@Session["EQ_ID"]" id="EQ_ID" name="EQ_ID" />
+
+                                }
+                            }
+                            <br />
+
+                            @if (ViewBag.lstIOrderType != null)
+                            {
+                                if (ViewBag.lstIOrderType.Count != 0)
+                                {
+                                    <div id="InternationalCurrency" style='width:100% ;align:center;pointer-events:none;'>
+
+                                        <div class="form-page-title"><label>International</label></div>
+
+                                        <table id="ITestTable" cellspacing="0" cellpadding="3" border="1" style="width: 100%">
+                                            <tr>
+                                                <td width="200px">
+                                                    Order Type
+                                                </td>
+                                                <td>
+                                                    Order Rate
+                                                </td>
+                                                <td>
+                                                    Estimated Mandays/ManMonth
+                                                </td>
+                                                <td>
+                                                    Distance in (KM)
+                                                </td>
+
+                                                <td>
+                                                    Currency
+                                                </td>
+                                                <td>
+                                                    Exchange Rate
+                                                </td>
+                                                <td colspan="2">
+                                                    Amount
+                                                </td>
+                                            </tr>
+
+                                            @foreach (var item in ViewBag.lstIOrderType as IEnumerable<TuvVision.Models.QuotationMaster>)
+                                            {
+                                                int l = 0;
+                                                l = l + 1;
+
+                                                <tr class="trInternational">
+                                                    <td>
+                                                        @Html.DropDownListFor(m => m.lstQuotationMasterOrderType[k].IOrderType, new List<SelectListItem>
+                                                {
+                                                new SelectListItem{ Text="Select Order Type", Value = "" },
+                                                new SelectListItem{ Text="Man Days", Value = "ManDays"  , Selected = (item.IOrderType == "ManDays") ?true : false} ,
+                                                new SelectListItem{ Text="Man Month", Value = "ManMonth" , Selected = (item.IOrderType == "ManMonth") ?true : false} ,
+                                                new SelectListItem{ Text="Lump Sum/Percentage", Value = "LumSum" , Selected = (item.IOrderType == "LumSum") ?true : false} ,
+                                                new SelectListItem{ Text="Man Hours", Value = "ManHR", Selected = (item.IOrderType == "ManHR") ? true : false },
+                                                },
+                                                new { @class = "form-control CIOrderType", @id = "ddlIOrderType" + l })
+
+                                                        @Html.ValidationMessageFor(model => model.IOrderType, "", new { @class = "text-danger validation-msg" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[k].IOrderRate, new { @placeholder = "Order Rate", @class = "form-control CIOrderRate", @Value = item.IOrderRate, @id = "ddlIOrderRate" + l, @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.IOrderRate, "", new { @class = "text-danger validation-msg CIOrderRate" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[k].IEstimate_ManDays_ManMonth, new { @placeholder = "Estimated Man Days", @class = "form-control CIEstimate_ManDays_ManMonth", autocomplete = "off", @id = "ddlIEstimate_ManDays_ManMonth" + l, @Value = item.IEstimate_ManDays_ManMonth, @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.IEstimate_ManDays_ManMonth, "", new { @class = "text-danger validation-msg CIEstimate_ManDays_ManMonth" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[k].IDistance, new { @placeholder = "Distance", @class = "form-control CIDistance", autocomplete = "off", @id = "ddlIDistance" + l, @Value = item.IDistance, @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.IDistance, "", new { @class = "text-danger validation-msg CIDistance" })
+                                                    </td>
+
+                                                    <td>
+
+                                                        @Html.DropDownListFor(m => m.lstQuotationMasterOrderType[k].Icurrency, new SelectList(@ViewBag.ITestCurrency, "Code", "Name", item.Icurrency), "--Select Currency--", new { @id = "IddDcurrency" + l, @class = "form-control CIcurrency" })
+
+                                                        @Html.HiddenFor(m => m.Icurrency)
+
+                                                        @Html.ValidationMessageFor(model => model.Icurrency, "", new { @class = "text-danger validation-msg" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[k].IExchangeRate, new { @placeholder = "Exchange Rate", @class = "form-control CIExchangeRate", autocomplete = "off", @id = "ddlIExchangeRate" + l, @Value = item.IExchangeRate, @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.IExchangeRate, "", new { @class = "text-danger validation-msg CIExchangeRate" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(model => model.lstQuotationMasterOrderType[k].ITotalAmount, new { @placeholder = "amount", @class = "form-control CITotalAmount", autocomplete = "off", @id = "ddlITotalAmount" + l, @Value = item.ITotalAmount, @readonly = "readonly" })
+                                                        @Html.HiddenFor(model => model.lstQuotationMasterOrderType[k].ITotalAmount, new { @placeholder = "amount", @class = "form-control", autocomplete = "off", @id = "ddlITotalAmount" + l, @Value = item.ITotalAmount })
+                                                        @Html.ValidationMessageFor(model => model.ITotalAmount, "", new { @class = "text-danger validation-msg" })
+                                                    </td>
+
+
+                                                </tr>
+
+                                                k++;
+                                                TotalAmount = TotalAmount + Convert.ToInt32(item.ITotalAmount);
+                                            }
+
+
+                                        </table><br />
+
+
+
+                                    </div>
+                                        <input type="file" class="inputupload" name="IFileUpload" id="IFileUpload"  />
+
+                                        <input type="hidden" value="@Session["EQ_ID"]" id="EQ_ID" name="EQ_ID" />
+                                }
+                            }
+
+                            <div class="row">
+                                <div class="col-xs-14 col-sm-12 text-right">
+                                    <div class="form-group">
+                                        <h4>Total Amount = <b> @TotalAmount</b></h4>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="col-xs-12 text-center">
+                                <button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i>Upload cost Sheet</button>
+                            </div>
+
+</form>
+            </div>
+        </div>
+    </div>
+        <!--Contact Details By Manoj -->
+
+
+    </div><!-- /.box-shadow -->
+
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+
+            <div class="row assignfixedwidth rp-15">
+
+                <h3 class="form-page-title">Cost Sheet</h3>
+               
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+                @{
+                    if ((Convert.ToString(TempData["InsertCostSheet"])) != "" && Convert.ToString(TempData["InsertCostSheet"]) != null)
+                    {
+                        TempData["InsertCostSheet"] = null;
+                        <script type="text/javascript" language="javascript">
+                            alert("Cost Sheet Added Successfully!!!!");
+                        </script>
+                    }
+                    if ((Convert.ToString(TempData["UpdateCostSheet"])) != "" && Convert.ToString(TempData["UpdateCostSheet"]) != null)
+                    {
+                        TempData["UpdateCostSheet"] = null;
+                        <script type="text/javascript" language="javascript">
+                            alert("Cost Sheet Approved Successfully");
+                        </script>
+                    }
+                }
+            </div><!-- /.row -->
+
+
+            <div class="col-xs-12">
+                <table id="example" class="display custom-table" cellspacing="0" width="100%">
+
+                    <thead>
+                        <tr>
+                            <th class="remove-search">Delete</th>
+                            <th>Add Comment</th>
+                            <th>Send for Approval</th>
+                            <th>Quotation No</th>
+                            <th>Costsheet Type</th>
+                            <th>Cost Sheet</th>
+                            <th>Uploaded By</th>
+                            <th>Date Time</th>
+                            <th>Sender Comment</th>
+                            <th>PC Head Comment</th>
+                            <th>ClusterHead Comment </th>
+                            <th>PC Head Approval Status</th>
+                            @if (ViewBag.Role == "1")
+                            {
+                                <th>PC Action</th>    
+                            }
+
+                            <th>Clusterhead Approval Status</th>
+                            @if (ViewBag.Role == "46" || ViewBag.Role == "47" || ViewBag.Role == "48" || ViewBag.Role == "49")
+                            {
+                                <th>ClusterHead Action</th>
+                            }
+
+                            <th>Auto Approval</th>
+                        </tr>
+                    </thead>
+
+                    @if (ViewData["CostSheet"] != null)
+                    {
+                        <tbody>
+
+                            @{
+                                
+                                int totalAprCount = (ViewData["CostSheet"] as List<TuvVision.Models.CostSheet>).Where(m => m.Status == "2").Count();
+                                int totalCLAprCount = (ViewData["CostSheet"] as List<TuvVision.Models.CostSheet>).Where(m => m.CLStatus == "2").Count();
+
+                            }
+
+                            @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.CostSheet>)
+                            {
+                                <tr>
+                                    <td>                                        
+                                        @if (item.SendForApprovel == "Yes" || item.SendForApprovel.ToUpper() == "AUTO")
+                                        {
+
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("Delete", "CostSheetMaster", new { id = @item.PK_Cs_Id ,PK_QTID = @item.PK_QTID,PK_EQID = @item.EQ_ID})" onclick='return confirm("Are you sure  you want to Delete this Cost Sheet ?")' class="fa fa-trash-o">
+                                                
+                                            </a>
+                                        }
+                                    </td>
+                                    <td>                                      
+                                        <a href="" class="btn btn-warning" data-toggle="modal" data-target="#myModal" data-status1="@item.PK_QTID" data-status="@item.PK_Cs_Id" data-status2="@item.EComment" >Comment</a>
+                                    </td>
+
+                                    <td>
+                                        @if (item.SendForApprovel == "Yes" || item.SendForApprovel.ToUpper() == "AUTO")
+                                        {
+                                            <p>✔</p>
+                                        }
+                                        else
+                                        {
+                                            if (item.PK_UserId == Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]))
+                                            {
+                                                <a href="@Url.Action("SendForApprovel", "CostSheetMaster", new { id = @item.PK_Cs_Id ,PK_QTID = @item.PK_QTID,PK_EQID = @item.EQ_ID,Comment= Model.SenderComment })" onclick='return confirm("Are you sure  you want send Cost Sheet for approvel?")' class="btn btn-default insert-form-btn">
+                                                    &nbsp;Send for Approval
+                                                </a>
+                                            }
+                                            else
+                                            {
+
+                                            }
+
+                                        }
+
+                                    </td>
+
+                                    <td>@item.RefNo</td>
+                                    <td>@item.InspectionLocation</td>
+
+                                    @if (item.Costsheet != null)
+                                    {
+                                        <td>
+                                            <a href="~/Content/Uploads/Images/@item.Costsheet" download>
+                                                @item.Costsheet
+                                            </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <img src="~/Content/CostSheetStore/no-pdf1.png" />
+                                        </td>
+                                    }
+                                    
+                                    <td>@item.CreatedBy</td>
+                                    <td>@item.Createdate</td>                                   
+                                    <td style="white-space: pre-line;">@item.SenderComment</td>                                    
+                                    <td style="white-space: pre-line;">@item.PCHComment</td>
+                                    <td style="white-space: pre-line;">@Html.Encode(item.CHComment)</td>
+                                
+                                    
+                                    @if (item.SendForApprovel.ToUpper() == "AUTO")
+                                    {
+                                        <td>&nbsp;</td>
+                                    }
+                                    else
+                                    {
+                                        if (item.Status == "2")
+                                        {
+                                            <td>Approved</td>
+                                        }
+                                        else if (item.Status == null || item.Status == "")
+                                        {
+                                            <td>Approval Pending</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Not Approved</td>
+                                        }
+                                    }
+
+                                    @if (ViewBag.Role == "1")
+                                    {
+                                        if (item.Status == "" || @item.Status == null)
+                                        {
+                                            if (item.SendForApprovel == "Yes" && item.SendForApprovel.ToUpper() != "AUTO")
+                                            { 
+                                                <td class="less-width">
+                                                    <a href="@Url.Action("ChangeStatus", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-times"></span>&nbsp;</a>
+                                                    <a href="@Url.Action("ChangeApproval", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-check"></span>&nbsp;</a>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>&nbsp;</td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td class="less-width">
+                                                <a href="@Url.Action("ChangeStatus", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-times"></span>&nbsp;</a>
+                                                <a href="@Url.Action("ChangeApproval", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-check"></span>&nbsp;</a>
+                                            </td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @*<td>&nbsp;</td>*@
+                                    }
+
+                                    @if (item.CLStatus == "2")
+                                    {
+                                        <td>Approved</td>
+                                    }
+                                    else if (item.CLStatus == "1" )
+                                    {
+                                        <td>Not Approved</td>
+                                    }
+                                    else
+                                    {
+                                        <td>&nbsp;</td>
+                                    }
+
+                                    @if (ViewBag.Role == "46" || ViewBag.Role == "47" || ViewBag.Role == "48" || ViewBag.Role == "49")
+                                    {
+                                        if (item.CLStatus == "1")
+                                        {
+                                            if (totalCLAprCount == 0)
+                                            {
+                                                <td class="less-width">
+                                                    <a href="@Url.Action("ChangeCLStatus", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-times"></span>&nbsp;</a>
+                                                    <a href="@Url.Action("ChangeCLApproval", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-check"></span>&nbsp;</a>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>&nbsp;</td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td class="less-width">
+                                                <a href="@Url.Action("ChangeCLStatus", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-times"></span>&nbsp;</a>
+                                                <a href="@Url.Action("ChangeCLApproval", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-check"></span>&nbsp;</a>
+                                            </td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @*<td>&nbsp;</td>*@
+                                    }
+
+                                    @if (item.SendForApprovel.ToUpper() == "AUTO")
+                                    {                                        
+                                        <td>Yes</td>
+                                    }
+                                    else
+                                    {
+                                        <td>&nbsp;</td>
+                                    }
+                                </tr>
+
+                            }
+                            </tbody>
+                    }
+                    else
+                    {
+
+                    }
+
+
+                </table>
+            </div><!-- /.data table col -->
+
+
+            <script type="text/javascript">
+                var showChar = 10;
+                var ellipsestext = "...";
+                var moretext = "See More";
+                var lesstext = "See Less";
+                $('.comments-space').each(function () {
+                    var content = $(this).html();
+                    if (content.length > showChar) {
+                        var show_content = content.substr(0, showChar);
+                        var hide_content = content.substr(showChar, content.length - showChar);
+                        var html = show_content + '<span class="moreelipses">' + ellipsestext + '</span><span class="remaining-content"><span>' + hide_content + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+                        $(this).html(html);
+                    }
+                });
+
+                $(".morelink").click(function () {
+                    if ($(this).hasClass("less")) {
+                        $(this).removeClass("less");
+                        $(this).html(moretext);
+                    } else {
+                        $(this).addClass("less");
+                        $(this).html(lesstext);
+                    }
+                    $(this).parent().prev().toggle();
+                    $(this).prev().toggle();
+                    return false;
+                });
+            </script>
+
+
+            <script type="text/javascript">
+                $(function () {
+                    debugger;
+            $('#myModal').on('show.bs.modal', function (e) {
+                var button = $(e.relatedTarget) // Button that triggered the modal
+                var ST = button.data('status') // Extract info from data-* attributes data-PK_QTID
+                var PK = button.data('status1')
+                var EComment = button.data('status2')
+              
+                $(e.currentTarget).find('#PK_Cs_Id').val(ST);
+                $(e.currentTarget).find('#PK_Cs_Id').val(ST);
+                //$(e.currentTarget).find('#SenderComment').val(EComment);
+                //$(e.currentTarget).find('.ST').val(ST);
+            });
+        });
+            </script>
+
+
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+            @using (Html.BeginForm("AddComment", "CostSheetMaster", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                        <div class="modal-header">                          
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                @*<input class="form-control " id="ST" name="ST" type="text" value="">*@
+                                @Html.HiddenFor(model => model.PK_Cs_Id, new { placeholder = "Comment", @class = "form-control form-control-custom" })
+                                @Html.HiddenFor(model => model.PK_QTID, new { placeholder = "Comment", @class = "form-control form-control-custom" })
+                            </div>
+                            <div class="form-group">
+                                @Html.TextAreaFor(model => model.SenderComment, new { placeholder = "Comment", @class = "form-control form-control-custom" })
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Save</button>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+
+
+}
+
+
+
+

@@ -1,0 +1,72 @@
+﻿@model TuvVision.BusinessEntities.News_VM
+
+@{
+    ViewBag.Title = "ReadNewsContent";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<!--Start of main content 2-->
+<div class="main-content2">
+    <div class="container-fluid white-bg">
+        <div class="row assignfixedwidth">
+            <div class="col-xs-12">
+                <div class="listing" style="margin-top: 20px;">
+                    <div class="news-basic-details2">
+                        @if (Model != null)
+                        {
+                            if (!string.IsNullOrEmpty(Model.NewsImage))
+                            {
+                                <div class="news-img">
+                                    <img src="@Url.Content(Model.NewsImage)" class="img-thumbnail news-img-inner" style="width:100%;" alt="">
+                                </div>
+                            }
+                        }
+                        <div class="news-basic-details">
+                            <h3>@Model.Title</h3><br />   
+                            <h4><strong>Date</strong> : @Convert.ToDateTime(Model.CreatedDate).ToString("dd-MMM-yyyy") </h4>
+                            <p>@Model.StortDescription</p>
+                            <div>
+                                @Html.Raw(Model.HtmlContent)
+                                <br />
+                                @if (ViewBag.GetImages != null && ViewBag.GetImages != "")
+                                {
+                                    <div class="row events">
+                                        @foreach (var indiimg in ViewBag.GetImages.Split(','))
+                                        {
+                                            if (indiimg != null && indiimg != "")
+                                            {
+                                                <div class="col-xs-12 col-sm-6 col-md-3">
+                                                    <img src="@Url.Content(indiimg)" class="thumbnail" alt="" />
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                }
+                                @if (ViewBag.GetEImages != null && ViewBag.GetEImages != "")
+                                {
+                                    <div class="row events">
+                                        @foreach (var indiimg in ViewBag.GetEImages.Split(','))
+                                        {
+                                            if (indiimg != null && indiimg != "")
+                                            {
+                                            <div class="col-xs-12 col-sm-6 col-md-3">
+                                                <img src="@Url.Content(indiimg)" class="thumbnail" alt="" />
+                                            </div>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            </div>                                                       
+                        </div>
+                        <a href="@Url.Action("DisplayListNewsContent", "DisplayNews")" class="transition-all btn news-btn btn-primary">Back</a>
+
+                    </div>
+                </div><!--end of listing-->
+            </div><!--end of news-->
+        </div>
+    </div>
+</div>
+
+<!--End of main content 2-->
+
+

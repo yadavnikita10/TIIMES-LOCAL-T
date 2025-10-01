@@ -1,0 +1,114 @@
+﻿@*@model TuvVision.Models.SafetyInsidentReport*@
+@model IEnumerable<TuvVision.Models.SafetyInsidentReport>
+@{
+    ViewBag.Title = "ListSafetyInsidentReportMis";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Incident Register - F-MR-17 Rev.01, Effective from Sept 22</h3>
+                <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("SafetyInsidentReport", "SafetyInsidentReport")'">Add Safety Incident Report</button>
+            </div><!-- /.col -->
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+            <!--Table was here-->
+
+        </div>
+        <div class="col-xs-12">
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="hidden">Id</th>
+                        <th class="remove-search">Edit/Delete</th>
+                        <th>TIIMES UIN</th>
+                        <th>Date of Report</th>
+                        <th>Date of Incident</th>
+                        <th>Branch</th>
+                        <th>Type of Incident</th>
+                        <th>Description of Incident</th>
+                        <th>Status</th>
+                        <th>Correction</th>
+                        <th>Corrective Action</th>
+                        <th>Risk and opportunities reviewed</th>
+                        <th>AI/HIRA reviewed</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="hidden">
+                        <td class="hidden">Id</td>
+                        <td class="remove-search">Edit/Delete</td>
+                        <td>TIIMES UIN</td>
+                        <td>Date of Report</td>
+                        <td>Date of Incident</td>
+                        <td>Branch</td>
+                        <td>Type of Incident</td>
+                        <td>Description of Incident</td>
+                        <td>Status</td>
+                        <td>Correction</td>
+                        <td>Corrective Action</td>
+                        <td>Risk and opportunities reviewed</td>
+                        <td>AI/HIRA reviewed</td>
+
+
+                    </tr>
+
+                    @foreach (var b in Model)
+                    {
+                        <tr>
+                            <td class="hidden">@b.PKId</td>
+
+                            <td cRemarkslass="action-btn" style="text-align:center;">
+                                <a href="@Url.Action("SafetyInsidentReport", "SafetyInsidentReport", new { PKId = @b.PKId })" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>
+
+                                <a href="@Url.Action("Delete", "SafetyInsidentReport", new { PKId = @b.PKId })" class="delete" onclick="return confirm('Are you sure you wish to delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+                            </td>
+                            <td>@b.TiimesUIN</td>
+                            <td>@b.DateofReport   </td>
+                            <td>@b.DateOfIncident</td>
+                            <td>@b.Branch</td>
+                            <td>@b.TypeOfIncident</td>
+                            <td>@b.DescriptionOfIncident</td>
+                            <td>@b.Status</td>
+                            <td>@b.Correction</td>
+                            <td>@b.CorrectiveAction</td>
+                            <td>@b.SRiskAndOpportunities</td>
+                            <td>@b.SAIHIRAReviewed</td>
+
+
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+
+

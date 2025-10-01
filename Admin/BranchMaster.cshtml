@@ -1,0 +1,186 @@
+﻿
+@{
+    ViewBag.Title = "BranchMaster";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>
+                BranchMaster
+            </h3>
+        </div>
+    </div>
+    <div class="clearfix">
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a href=""><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                        </li>
+                        <li>
+                            <h2>
+                                <a href="@Url.Action("AddUpdateBranchMaster", "Admin")" class="btn btn-sm btn-primary">
+                                    Add Branch
+                                   
+                                </a>
+                            </h2>
+                        </li>
+                    </ul>
+                    <div class="clearfix">
+                    </div>
+                </div>
+                <div class="x_content">
+                    @if (TempData["Message"] == "S")
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <a class="close" onclick="$('.alert').hide()">×</a> Branch Added Successfully...
+                        </div>
+                    }
+                    else if (TempData["Message"] == "E")
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <a class="close" onclick="$('.alert').hide()">×</a> Branch  Updated Successfully...
+                        </div>
+                    }
+                    else if (TempData["Message"] == "D")
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <a class="close" onclick="$('.alert').hide()">×</a> Branch  Deleted Successfully...
+                        </div>
+                    }
+                    <table id="example" class="table table-striped responsive-utilities jambo_table">
+                        <thead>
+                            <tr class="headings">
+                                <th>
+                                    Sr No.
+                                </th>
+                                <th>
+                                    Branch
+                                </th>
+                                <th>
+                                    Branch Code
+                                </th>
+
+                                <th>
+                                    Manager
+                                </th>
+
+                                <th>
+                                    Service Code
+                                </th>
+                                <th>
+                                    Sequence Number
+                                </th>
+                                <th>
+                                    Address 1
+                                </th>
+                                <th>
+                                    Address 2
+                                </th>
+                                <th>
+                                    Address 3
+                                </th>
+                                <th>
+                                    Country
+                                </th>
+                                <th>
+                                    State
+                                </th>
+                                <th>
+                                    City Name
+                                </th>
+                                <th>
+                                    Postal Code
+                                </th>
+
+                                <th>
+                                    Email
+                                </th>
+                                
+                               
+                                <th class=" no-link last">
+                                    <span class="nobr">Action</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{int rowNo = 0;
+                                foreach (var item in ViewData["BranchList"] as IEnumerable<Vision.ViewModel.BranchMasterViewModel>)
+
+                                {
+
+
+                                    <tr class="even pointer">
+                                        <td class="a-center ">
+                                            @(rowNo += 1)
+                                        </td>
+                                        <td class="">
+                                            @item.Branch_Name
+                                        </td>
+                                        <td class="">
+                                            @item.Branch_Code
+                                        </td>
+                                        <td class="">
+                                            @item.Manager
+                                        </td>
+                                        <td class="">
+                                            @item.Service_Code
+                                        </td>
+                                        <td class="">
+                                            @item.Sequence_Number
+                                        </td>
+                                        <td class="">
+                                            @item.Address1
+                                        </td>
+                                        <td class="">
+                                            @item.Address2
+                                        </td>
+                                        <td class="">
+                                            @item.Address3
+                                        </td>
+                                        <td class="">
+                                            @item.Country
+                                        </td>
+                                        <td class="">
+                                            @item.State
+                                        </td>
+                                        <td class="">
+                                            @item.CityName
+                                        </td>
+                                        <td class="">
+                                            @item.Postal_Code
+                                        </td>
+                                        <td class="">
+                                            @item.Email_Id
+                                        </td>
+
+                                        <td class="">
+                                            @Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy")
+                                        </td>
+                                       
+                                        <td class=" last">
+                                            <a href="@Url.Action("AddUpdateBranchMaster", "Admin", new { id = @item.Br_Id })" class="btn btn-info btn-xs">
+                                                <i class="fa fa-pencil"></i>&nbsp;Edit
+                                                <a href="@Url.Action("AddUpdateBranchMaster", "Admin", new { id = @item.Br_Id })" onclick='return confirm("Are you sure  you want to Delete this Video ?")' class="btn btn-danger btn-xs">
+                                                    <i class="fa fa-trash-o"></i>&nbsp;Delete
+                                                </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+    </div>
+</div>

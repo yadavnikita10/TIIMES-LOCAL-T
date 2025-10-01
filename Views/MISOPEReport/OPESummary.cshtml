@@ -1,0 +1,212 @@
+﻿
+@model TuvVision.Models.MISOPEReport
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "OPE Summary";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+
+
+
+
+
+@using (Html.BeginForm("OPESummary", "MISOPEReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div class="main-content3 xs-max-height">
+        <!--Start of header-->
+        <div class="container-fluid">
+
+            <div class="row assignfixedwidth rp-15">
+                <form method="post">
+
+                    <div class="col-xs-12">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">OPE Summary</h3>
+                        <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndexOPESummary", "MISOPEReport")'"
+                                style="border:none;">
+                            Export To Excel
+                        </button>
+                    </div><!-- /.col -->
+
+                
+                </form>
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+            
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>Month </label>
+                        @*@Html.TextBoxFor(model => model.Month, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })*@
+
+                        @if (Model != null)
+                        {
+                           if (ViewBag.MonthList != null)
+                            {
+                                @Html.DropDownListFor(model => model.Month, ViewBag.MonthList as IEnumerable<SelectListItem>, "--Select Month--", new { @class = "form-control", @id = "Month", })
+
+                           }
+
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.Month, ViewBag.MonthList as IEnumerable<SelectListItem>, "--Select Month--", new { @class = "form-control", @id = "Month", })
+                        }
+                    </div>
+                </div>
+
+
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>Year </label>
+                        @*@Html.TextBoxFor(model => model.Year, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })*@
+
+                        @if (Model != null)
+                        {
+                            if (ViewBag.FinancialYear != null)
+                            {
+                                
+                                @Html.DropDownListFor(model => model.Year, ViewBag.FinancialYear as IEnumerable<SelectListItem>, "--Select Year--", new { @class = "form-control", @id = "Year", })
+                            }
+
+                            @*else if (ViewData["ProjectTypeItems"] != null)
+                            {
+                                @Html.DropDownListFor(model => model.Month, (IEnumerable<SelectListItem>)ViewData["ProjectTypeItems"], "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control" })
+                            }*@
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.Year, ViewBag.FinancialYear as IEnumerable<SelectListItem>, "--Select Year--", new { @class = "form-control", @id = "Year", })
+                        }
+                    </div>
+
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Search:</label>
+                        
+                        <button type="button" class="btn btn-primary form-control" id="btnSearch"> Search </button>
+                    </div>
+
+                </div>
+            </div>
+           
+
+            <div class="col-xs-12">
+                <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                    <tr>
+                        <td>
+                            @(Html
+                            .Grid(Model.lst1)
+                            .Build(columns =>
+                            {
+                                columns.Add(c => c.OP_Number).Titled("OPE Number");
+                                columns.Add(c => c.InspectorName).Titled("Inspector Name");
+                                columns.Add(c => c.Branch_Name).Titled("Branch Name");
+                                columns.Add(c => c.EmployeeCode).Titled("Employee Code");
+                                columns.Add(c => c.WorkingDays).Titled("Working Days");
+                                columns.Add(c => c.AmountClaim).Titled("Amount Claim");
+                                columns.Add(c => c.ApprovedAmount).Titled("Approved Amount");
+                                columns.Add(c => c.status).Titled("Status");
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No Data Found")
+                            .Filterable()
+                            .Sortable()
+
+                            )
+
+
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+                 
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+}
+
+
+
+
+
+
+@*Ashwini Scripts here for datatable starts here*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+@*Ashwini Scripts here for datatable ends here*@
+
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSearch").click(function myfunction() {
+            debugger;
+            if (ValidateForm() == false) {
+                return false;
+            }
+            else {
+                $("#form1").submit()
+            }
+        });
+    });
+
+    function ValidateForm() {
+
+        if ($("#Month").val() == "") {
+            alert('Select Month !');
+            return false;
+        }
+        if ($("#year").val() == "") {
+            alert('Select Year');
+            return false;
+        }
+       
+        
+            return true;
+
+      
+    }
+</script>
+
+
+
+
+
+   
+
+
+
+

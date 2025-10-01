@@ -1,0 +1,1113 @@
+﻿@model TuvVision.Models.Progress
+@{
+    ViewBag.Title = "ExpProgress";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+    List<string> EditProdName = ViewBag.EditproductName1 as List<string>;
+}
+
+
+
+
+<style>
+    /*.table-product [class^="col-"] {
+    flex-shrink: 1;*/
+    body {
+        overflow-x: hidden;
+    }
+
+    #customers {
+        font-family: 'TNG Pro';
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 2px;
+        }
+        #Action td, #Action th {
+            border: 1px solid #ddd;
+            padding: 14px;
+        }
+         #Action th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            /*background-color: #04AA6D;*/
+            background-color: #104193;
+            color: white;
+            word-wrap: break-word;
+           
+            
+        }
+
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            /*background-color: #04AA6D;*/
+            background-color: #001ED2;
+            color: white;
+            word-wrap: break-word;
+            line-height: 1;
+    writing-mode: vertical-rl;
+    position: center;
+    transform: rotate(180deg);
+    text-align: start;
+    font-weight: normal;
+           
+            
+        }
+
+    .slanted-heading {
+        transform: skewY();
+        white-space: nowrap;
+        text-wrap: inherit;
+        border-bottom: 1px;
+    }
+
+    .rotate-heading {
+        -ms-transform: rotate(-60deg);
+        transform: rotate(-60deg);
+    }
+
+    /*}*/
+</style>
+
+<style>
+    #gantt_chart {
+        width: 100%; /* Adjust the width as needed */
+        height: 100%; /* Adjust the height as needed */
+        border: 1px solid #ccc; /* Add border for better separation */
+        border-radius: 5px; /* Add rounded corners for a modern look */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+        background-color: #FFFFFF; /* Set background color */
+        padding: 20px; /* Add padding for better spacing */
+        top: 57px;
+    }
+    #btnobservationshow{
+        
+        
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);         
+        background-color: #FFFFFF; 
+        
+       
+    }
+
+    /* Apply styles to the task bars */
+    .google-visualization-orgchart-node {
+        background-color: #001ED2; /* Change the background color of task bars */
+        color: #fff; /* Set text color to white */
+        border-radius: 3px; /* Add rounded corners to task bars */
+        padding: 5px; /* Add padding for better spacing */
+    }
+
+        /* Apply styles to milestone nodes */
+        .google-visualization-orgchart-node.ganttMilestone {
+            background-color: #28a745; /* Change the background color of milestones */
+            color: #fff; /* Set text color to white */
+            border-radius: 50%; /* Make milestone nodes circular */
+            padding: 10px; /* Add padding for better spacing */
+        }
+
+        /* Apply styles to task labels */
+        .google-visualization-orgchart-node div {
+            font-size: 12px;
+        }
+
+    /* Apply styles to grid lines */
+    .google-visualization-orgchart-gridline {
+        stroke: #ddd; /* Set color of grid lines */
+        stroke-width: 1px; /* Set thickness of grid lines */
+    }
+
+    defs {
+        height: 200px;
+    }
+
+   
+
+    text {
+        fill: #00003C;
+    }
+</style>
+
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<script>
+    $(function () {
+        $(".PlannedDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+
+    $(function () {
+        $(".ActualStartDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+</script>
+
+
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            @*class="container-fluid"*@
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                <div class="col-xs-12">
+                    <div class="row">
+
+                        <br />
+
+                        <h5 class="dynamic-page-title dynamic-page-title-2">@Session["ExpeditingType"]Expediting Report Number : @Session["VisitReportNo"]</h5>
+
+                        <div class="col-xs-12">
+
+
+                            @if (Model.PK_Call_Id != "")
+                            {
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpeditingReport", "Expediting",new { @PK_Call_ID = Model.PK_Call_Id} )'"> General</button>
+
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpItemDescription", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Item Description</button>
+
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ExpProgress", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Progress</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EXp_commercial", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Commercial</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpEngineering", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Engineering</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpMaterial", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Procurement</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpManufacturing", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Manufacturing</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpFinalStage", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Final Stage</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpDelays", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Item Wise Delays</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpConcerns", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Concerns</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("PhotoAttachement", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Photo</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Observation", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Observation</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Records", "Expediting",new { @PK_Call_Id = Model.PK_Call_Id} )'">Records</button>
+
+
+                            }
+
+
+
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Progress</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+                                                <div class="row">
+                                                    <div class="col-xs-3">
+                                                        <label>PO Item No:</label>
+
+                                                        @*@if (ViewBag.BindItem != null)
+                {
+
+                    @Html.DropDownListFor(m => m.item, new SelectList(@ViewBag.BindItem, "Value", "Text"), "--Select--", new { @id = "IdItem", @class = "form-control CItem", @multiple = "multiple" })
+                    @Html.HiddenFor(m => m.item)
+                }*@
+
+                                                        @*@if (ViewBag.check == "productcheck")
+                {
+                    <select id="BrScope" class="form-control form-multiselect-city" multiple="multiple" name="BrScope" placeholder="Select Option" required="required">
+                        @foreach (var item in ViewBag.BindItem)
+                        {
+
+                            <option value="@item.Value"> @item.Text </option>
+
+
+                        }
+
+                    </select>
+                }*@
+
+                                                        @if (ViewBag.check == "productcheck")
+                                                        {
+
+                                                            <select id="BrScope" class="form-control form-multiselect-city" multiple="multiple" name="BrScope" placeholder="Select Option" required="required">
+                                                                @foreach (var item in ViewBag.BindItem)
+                                                                {
+                                                                    if (EditProdName.Contains(item.Text))
+                                                                    {
+                                                                        <option value="@item.Value" selected> @item.Text </option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@item.Value"> @item.Text </option>
+                                                                    }
+
+                                                                }
+                                                            </select>
+                                                        }
+                                                        else
+                                                        {
+                                                            <select id="BrScope" class="form-control form-multiselect-city" multiple="multiple" name="BrScope" placeholder="Select Option" required="required">
+
+                                                                @{
+
+                                                                    foreach (var item in ViewBag.BindItem)
+                                                                    {
+
+                                                                        <option value="@item.Value"> @item.Text </option>
+
+
+                                                                    }
+
+                                                                }
+
+                                                            </select>
+                                                                    }
+
+
+                                                    </div>
+                                                    <div class="col-xs-7">
+
+
+                                                        @if (ViewBag.BindItempowise != null)
+                                                        {
+
+
+                                                            foreach (var item in ViewBag.BindItempowise)
+                                                            {
+
+                                                                <button type="button" class="btn btn-default insert-form-btn" id="btnid" style="margin-top:24px;" onclick="GetItem('@item.Value','@item.Text')">
+                                                                    @item.Value
+                                                                </button>
+
+
+
+                                                            }
+
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-2">
+                                                        <div class="row">
+                                                            <button type="button" class="btn btn-default insert-form-btn" id="btnidALL" style="margin-top:24px; margin-left: 620px" onclick="AllItem()">
+                                                                OverAll Status with gannt chart
+                                                            </button>
+
+                                                            <button type="button" class="btn btn-default insert-form-btn" style="margin-top:-59px;width: 64px;margin-left: 860px;background-color: #001ED2;color:white;border-radius: 0;" onclick="Redirect()">Reset</button>
+
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+                                                
+
+
+                                                <div class="row">
+                                                    @Html.HiddenFor(m => m.PK_Call_Id)
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="col-xs-12">
+                                                                @if (ViewBag.CostSheetOverAll != null)
+                                                                {
+                                                                    <table id="customers" class="display custom-table" cellspacing="0" style="overflow-x:scroll;width: 1026px;margin-left:-102px ">
+
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="remove-search slanted-heading" style="width:125px;">Stages </th>
+                                                                                <th class="remove-search slanted-heading" style="width:115px;">Planned Start Date</th>
+                                                                                <th class="remove-search slanted-heading" style="width:115px;">Planned End Date</th>
+                                                                                <th class="remove-search slanted-heading" style="width:115px;">Actual/Estimated Start Date</th>
+                                                                                <th class="remove-search slanted-heading" style="width:115px;">Actual/Estimated End Date</th>
+                                                                                <th class="remove-search slanted-heading">Planned Progress %</th>
+                                                                                @*<th class="remove-search slanted-heading" style="text-align:center;">Action Initiated for % </th>*@
+                                                                                <th class="remove-search slanted-heading">Actual/Estimated Progress %</th>
+                                                                                <th class="remove-search slanted-heading">Concern Closure %</th>
+                                                                                <th class="remove-search slanted-heading">Concerns(Open / Total)</th>
+
+                                                                                <th class="remove-search slanted-heading">Progress Status</th>
+
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody id="tblBody">
+
+                                                                            @{
+                                                                                int i = 0;
+                                                                            }
+
+                                                                            @foreach (var item in ViewBag.CostSheetOverAll as IEnumerable<TuvVision.Models.Progress>)
+                                                                            {
+
+                                                                                i = i + 1;
+
+
+
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        @*@item.Stages*@
+                                                                                        @Html.TextBoxFor(model => model.Activity[j].Stages, "{0:dd MMM yyyy}", new { @Value = item.Stages, @class = "form-control", @readonly = true })
+                                                                                        @Html.HiddenFor(model => model.Activity[j].Id, new { @Value = item.Id, @class = "form-control" })
+                                                                                        @Html.HiddenFor(model => model.Activity[j].PK_Process_Id, new { @Value = item.PK_Process_Id, @class = "form-control" })
+
+                                                                                    </td>
+
+                                                                                    @*@Html.TextBoxFor(model => model.Activity[j].Stages, new { @Value = item.Stages, @class = "form-control",style = "pointer-event:none;"})</td>*@
+                                                                                    <td>
+                                                                                        @Html.TextBoxFor(model => model.Activity[j].ExpectedStartDate, "{0:dd MMM yyyy}", new { @Value = item.ExpectedStartDate, @class = "form-control", @readonly = true })
+                                                                                        @Html.ValidationMessageFor(model => model.Activity[j].ExpectedStartDate, "", new { @class = "text-danger validation-msg" })
+                                                                                    </td>
+                                                                                    <td align="center">
+                                                                                        @Html.TextBoxFor(model => model.Activity[j].ExpectedEndDate, "{0:dd MMM yyyy}", new { @Value = item.ExpectedEndDate, @class = "form-control", @readonly = true })
+                                                                                        @Html.ValidationMessageFor(model => model.Activity[j].ExpectedEndDate, "", new { @class = "text-danger validation-msg" })
+
+                                                                                    </td>
+                                                                                    <td align="center">
+                                                                                        @Html.TextBoxFor(model => model.Activity[j].Actual_Start_Date, new
+                                                                                   {
+                                                                                       @Value = item.Actual_Start_Date,
+                                                                                       @class = "form-control",
+                                                                                       @readonly = true
+
+                                                                                   })
+                                                                                        @Html.ValidationMessageFor(model => model.Activity[j].Actual_Start_Date, "", new { @class = "text-danger validation-msg" })
+
+                                                                                    </td>
+                                                                                    <td align="center">
+                                                                                        @Html.TextBoxFor(model => model.Activity[j].Actual_End_Date, new
+                                                                                   {
+                                                                                       @Value = item.Actual_End_Date,
+                                                                                       @class = "form-control",
+                                                                                       @readonly = true
+                                                                                   })
+                                                                                        @Html.ValidationMessageFor(model => model.Activity[j].Actual_End_Date, "", new { @class = "text-danger validation-msg" })
+
+                                                                                    </td>
+
+
+                                                                                    <td align="center">
+                                                                                        @Html.TextBoxFor(model => model.Activity[j].Expected_Progressper, new
+                                                                                   {
+                                                                                       @Value = item.Expected_Progressper,
+                                                                                       @class = "form-control",
+                                                                                       @readonly = true
+                                                                                   })
+                                                                                        @Html.ValidationMessageFor(model => model.Activity[j].Expected_Progressper, "", new { @class = "text-danger validation-msg" })
+
+                                                                                    </td>
+                                                                                    @*<td align="center">
+                                                 @Html.TextBoxFor(model => model.Activity[j].ActionValue, new
+                                            {
+                                                @Value = item.ActionValue,
+                                                @class = "form-control",
+                                                @readonly = true
+                                            })
+                                                 @Html.ValidationMessageFor(model => model.Activity[j].ActionValue, "", new { @class = "text-danger validation-msg" })
+
+                                             </td>*@
+
+
+                                                                                    <td align="center">
+                                                                                        @Html.TextBoxFor(model => model.Activity[j].Actual_Progressper, new
+                                                                                   {
+                                                                                       @Value = item.Actual_Progressper,
+                                                                                       @class = "form-control",
+                                                                                       @readonly = true
+                                                                                   })
+                                                                                        @Html.ValidationMessageFor(model => model.Activity[j].Actual_Progressper, "", new { @class = "text-danger validation-msg" })
+
+                                                                                    </td>
+
+
+
+                                                                                    <td align="center">
+                                                                                        @Html.TextBoxFor(model => model.Activity[j].ConcernClosureper, new
+                                                                                   {
+                                                                                       @Value = item.ConcernClosureper,
+                                                                                       @class = "form-control",
+                                                                                       @readonly = true
+                                                                                   })
+                                                                                        @Html.ValidationMessageFor(model => model.Activity[j].ConcernClosureper, "", new { @class = "text-danger validation-msg" })
+
+                                                                                    </td>
+
+
+                                                                                    <td align="center">
+                                                                                        @Html.TextBoxFor(model => model.Activity[j].Concern, new
+                                                                                   {
+                                                                                       @Value = item.Concern,
+                                                                                       @class = "form-control",
+                                                                                       @readonly = true
+                                                                                   })
+                                                                                        @Html.ValidationMessageFor(model => model.Activity[j].Concern, "", new { @class = "text-danger validation-msg" })
+
+                                                                                    </td>
+
+                                                                                    @*<td align="center">
+                                                 @Html.TextBoxFor(model => model.Activity[j].delaydays, new
+                                            {
+                                                @Value = item.delaydays,
+                                                @class = "form-control",
+                                                @readonly = true
+                                            })
+                                                 @Html.ValidationMessageFor(model => model.Activity[j].delaydays, "", new { @class = "text-danger validation-msg" })
+
+                                             </td>*@
+
+
+
+                                                                                    <td align="center">
+                                                                                        @{
+                                                                                            string progressStatus = item != null ? item.ProgressStatus : ""; // Check if item is null before accessing its properties
+                                                                                            string color = "";
+
+                                                                                            if (progressStatus == "On Time")
+                                                                                            {
+                                                                                                color = "#FFEF33";
+                                                                                            }
+                                                                                            else if (progressStatus == "Delay")
+                                                                                            {
+                                                                                                color = "#FB5F6B";
+                                                                                            }
+                                                                                            else if (progressStatus == "Early")
+                                                                                            {
+                                                                                                color = "#AEF333";
+                                                                                            }
+                                                                                        }
+
+                                                                                        @Html.TextBoxFor(model => progressStatus, new
+                                                                                   {
+                                                                                       @Value = progressStatus,
+                                                                                       @class = "form-control",
+                                                                                       @readonly = true,
+                                                                                       @style = "color: " + color // Set the color style directly
+                                                                                   })
+
+
+
+
+                                                                                        @*@Html.TextBoxFor(model => model.Activity[j].ProgressStatus, new
+                                                {
+                                                    @Value = item.ProgressStatus,
+                                                    @class = "form-control",
+                                                    @readonly = true
+                                                })*@
+                                                                                        @Html.ValidationMessageFor(model => model.Activity[j].ProgressStatus, "", new { @class = "text-danger validation-msg" })
+                                                                                    </td>
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                </tr>
+
+
+
+
+
+
+                                                                                                j++;
+                                                                                            }
+                                                                            <tr></tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <table id="customers" class="display custom-table" cellspacing="0" style="width: 1026px;margin-left: -102px">
+
+                                                                                                    <thead>
+                                                                                                        <tr>
+                                                                                                            <th class="remove-search">Stages</th>
+                                                                                                            <th class="remove-search">Planned Start Date</th>
+                                                                                                            <th class="remove-search">Planned End Date</th>
+                                                                                                            <th class="remove-search">Actual/Estimated Start Date</th>
+                                                                                                            <th class="remove-search">Actual/Estimated End Date</th>
+                                                                                                            @*<th class="remove-search" style="text-align:center;">Expected Progress %</th>
+                                                                    <th class="remove-search" style="text-align:center;">Actual Progress %</th>
+                                                                    <th class="remove-search" style="text-align:center;">Concern Closure %</th>
+                                                                    <th class="remove-search" style="text-align:center;">Concerns(Open / Total)</th>
+                                                                    <th class="remove-search" style="text-align:center;">Delay in days</th>
+                                                                    <th class="remove-search" style="text-align:center;">Progress Status</th>*@
+
+                                                                                                        </tr>
+                                                                                                    </thead>
+
+                                                                                                    <tbody id="tblBody">
+
+                                                                                                        @{
+                                                                                                            int i = 0;
+                                                                                                        }
+
+                                                                                                        @foreach (var item in ViewBag.CostSheet as IEnumerable<TuvVision.Models.Progress>)
+                                                                                                        {
+
+                                                                                                            i = i + 1;
+
+
+
+                                                                                                            <tr>
+                                                                                                                <td>
+                                                                                                                    @*@item.Stages*@
+                                                                                                                    @Html.TextBoxFor(model => model.Activity[j].Stages, "{0:dd MMM yyyy}", new { @Value = item.Stages, @class = "form-control", @readonly = true })
+                                                                                                                    @Html.HiddenFor(model => model.Activity[j].Id, new { @Value = item.Id, @class = "form-control" })
+                                                                                                                    @Html.HiddenFor(model => model.Activity[j].PK_Process_Id, new { @Value = item.PK_Process_Id, @class = "form-control" })
+
+                                                                                                                </td>
+
+                                                                                                                @*@Html.TextBoxFor(model => model.Activity[j].Stages, new { @Value = item.Stages, @class = "form-control",style = "pointer-event:none;"})</td>*@
+                                                                                                                <td>
+                                                                                                                    @Html.TextBoxFor(model => model.Activity[j].ExpectedStartDate, "{0:dd MMM yyyy}", new { @Value = item.ExpectedStartDate, @class = "form-control PlannedDate" })
+                                                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].ExpectedStartDate, "", new { @class = "text-danger validation-msg" })
+                                                                                                                </td>
+                                                                                                                <td align="center">
+                                                                                                                    @Html.TextBoxFor(model => model.Activity[j].ExpectedEndDate, "{0:dd MMM yyyy}", new { @Value = item.ExpectedEndDate, @class = "form-control PlannedDate" })
+                                                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].ExpectedEndDate, "", new { @class = "text-danger validation-msg" })
+
+                                                                                                                </td>
+                                                                                                                <td align="center">
+                                                                                                                    @Html.TextBoxFor(model => model.Activity[j].Actual_Start_Date, new
+                                                                                                               {
+                                                                                                                   @Value = item.Actual_Start_Date,
+                                                                                                                   @class = "form-control ActualStartDate"
+
+                                                                                                               })
+                                                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].Actual_Start_Date, "", new { @class = "text-danger validation-msg" })
+
+                                                                                                                </td>
+                                                                                                                <td align="center">
+                                                                                                                    @Html.TextBoxFor(model => model.Activity[j].Actual_End_Date, new
+                                                                                                               {
+                                                                                                                   @Value = item.Actual_End_Date,
+                                                                                                                   @class = "form-control",
+                                                                                                                   @readonly = true
+                                                                                                               })
+                                                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].Actual_End_Date, "", new { @class = "text-danger validation-msg" })
+
+                                                                                                                </td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                            </tr>
+
+
+
+
+
+
+                                                                                                            j++;
+                                                                                                        }
+                                                                                                        <tr></tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                                            }
+
+                                                            </div>
+
+
+
+                                                            <!--Contact Details By Manoj -->
+
+
+                                                        </div><!-- /.box-shadow -->
+
+                                                    </div>
+
+
+
+                                                    <div class="col-xs-12 text-center">
+
+
+                                                        <button type="submit" class="btn btn-default insert-form-btn" id="btnsave">Save </button>
+
+
+
+
+                                                    </div>
+
+                                                    @*<div class="col-xs-12">*@
+                                                    <div class="row col-xs-12">
+                                                        <div class="col-xs-12">
+
+                                                            <!-- Your table and other content -->
+
+                                                            <div id="chartDiv" style="max-width: 1300px;height: 400px;margin: 11px auto;margin-left:-59px "></div>
+                                                            @*<div id="gantt_chart" style="width: 1000px;margin-left:-88px; height:250px;">
+                        <svg width="500" height="200" xmlns="http://www.w3.org/2000/svg">
+                            <defs width="500" height="200"></defs>
+                        </svg>
+
+                    </div>*@
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="row col-xs-12 text-center">
+                                                        <div id="btnshow" class="col-xs-12" style="position:center">
+
+                                                            <label style="margin-top: 37px"> Action Required on Point:</label>
+                                                            <table id="Action" class="display custom-table" cellpadding="3" border="1">
+                                                                <thead>
+                                                                    <tr style="background-color:#104193;color:white">
+                                                                        <td style="text-align: center;vertical-align:top;">stage/by</td>
+
+                                                                        <td style="text-align: center;vertical-align:top;">Vendor/Sub Vendor</td>
+                                                                        <td style="text-align: center;vertical-align:top;">Customer</td>
+                                                                        <td style="text-align: center;vertical-align:top;">TUVI</td>
+                                                                        <td style="text-align: center;vertical-align:top;">Total</td>
+
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody>
+                                                                    @if (ViewBag.lstAction != null)
+                                                                    {
+                                                                        foreach (var item in ViewBag.lstAction as IEnumerable<TuvVision.Models.Progress>)
+                                                                        {
+                                                                            <tr>
+                                                                                <td style="text-align: center;">@item.Actionstage</td>
+
+                                                                                <td style="text-align: center;">@item.vendor</td>
+                                                                                <td style="text-align: center;">@item.Customer</td>
+                                                                                <td style="text-align: center;">@item.TUVI</td>
+
+                                                                                <td style="text-align: center;">@item.Total</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+
+
+
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        @*</div>*@
+                                                    </div>
+                                                    @*</div>*@
+
+
+
+
+
+
+</form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $('.BrScope').multiselect({
+            includeSelectAllOption: true
+        });
+
+        $('.form-multiselect-city').multiselect({
+            enableFiltering: true,
+            includeSelectAllOption: true,
+            enableCaseInsensitiveFiltering: true
+        });
+
+    });
+
+</script>
+
+<script>
+   
+    function validateform() {
+        debugger
+        var itemnumber = $('#BrScope').val();
+
+        if ((itemnumber == null || itemnumber == "")) {
+            alert("Please Select Po item number");
+            $("#itemnumber").focus();
+            return false;
+        }
+        return true;
+    }
+</script>
+
+<script>
+    $("#btnsave").click(function myfunction() {
+
+        debugger;
+        if (validateform() == false) {
+            return false;
+        }
+        else {
+            $("#form1").submit();
+        }
+    })
+</script>
+
+@*<script>
+
+        function getData(value, text) {
+         var pk_call_id = $('#PK_Call_Id').val();
+         var item = value;
+         var pk_process_id = text;
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("getDataitem", "Expediting")',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                traditional: true,
+                //data: { Company_Name: "SECAN INVESTCAST (INDIA) PVT LTD(13649)" },
+                data: { pk_call_id: pk_call_id, item: item, pk_process_id: pk_process_id },
+                success: function (response) {
+                    debugger
+                    $('#tblBody').empty();
+                var result = JSON.parse(response);
+                if (result == "Error") {
+                alert("something went wrong !.....")
+                }
+                else {
+
+                    var a = JSON.parse(response);
+                    var aa = JSON.stringify(response);
+                    alert(a);
+                    alert(aa);
+
+                debugger;
+
+                var ID = a[0].Id;
+
+                var Id = '';
+
+                for (var i = 0; i < a.length; i++) {
+
+                    var c = i + 1;
+                    tr = $('<tr/>');
+
+                    tr.append("<td' hidden>" + a[i].Id + "</td>");
+                        tr.append("<td'>" + a[i].Stages + "</td>");
+                        tr.append("<td'>" + a[i].ExpectedStartDate + "</td>");
+                        tr.append("<td'>" + a[i].ExpectedEndDate + "</td>");
+                        tr.append("<td'>" + a[i].Actual_Start_Date + "</td>");
+                        tr.append("<td'>" + a[i].Actual_End_Date + "</td>");
+                        tr.append("<td'>" + a[i].PercentageWorkDone + "</td>");
+                        tr.append("<td'>" + a[i].Actual_Progress + "</td>");
+                        tr.append("<td'>" + a[i].delaydays + "</td>");
+
+                        $('#tblBody').append(tr);
+                }
+            }
+                },
+                error: function (xhr, status, error) {
+                // Code to handle errors goes here
+                }
+                });
+     }
+
+
+    </script>*@
+
+
+
+
+<script>
+
+    function GetItem(value, text) {
+        debugger;
+        var url = '@Url.Action("ItemValue", "Expediting")';
+        const item = value;
+        const pk_call_id = text;
+        url += '?pk_call_id=' + pk_call_id + '&item=' + item;
+        window.location.href = url;
+    }
+</script>
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<script>
+    function AllItem() {
+        debugger;
+        var pk_call_id1 = $('#PK_Call_Id').val();
+        var url = '@Url.Action("AllDataValue", "Expediting")';
+        const pk_call_id = pk_call_id1;
+        url += '?pk_call_id=' + pk_call_id;
+        //window.open(url, '_blank');
+        window.location.href = url;
+        
+    }
+</script>
+
+
+
+
+@*<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>*@
+
+<script type="text/javascript">
+    debugger;
+    google.charts.load('current', {'packages':['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var costSheetData = @Html.Raw(ViewBag.CostSheetJson);
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Task ID');
+        data.addColumn('string', 'Task Name');
+        data.addColumn('date', 'Start Date');
+        data.addColumn('date', 'End Date');
+        data.addColumn('number', 'Duration');
+        data.addColumn('number', 'Percent Complete');
+        data.addColumn('string', 'Dependencies');
+
+        debugger;
+
+        for (var i = 0; i < costSheetData.length; i++) {
+            var activity = costSheetData[i];
+
+            // Extract activity information
+            var stageName = activity.Stages;
+            var startDate = moment(activity.ExpectedStartDate, 'DD/MM/YYYY').toDate();
+            var endDate = moment(activity.ExpectedEndDate, 'DD/MM/YYYY').toDate();
+            var actualStartDate = moment(activity.ActualStartDate, 'DD/MM/YYYY').toDate();
+            var actualEndDate = moment(activity.ActualEndDate, 'DD/MM/YYYY').toDate();
+            var expectedProgress = parseFloat(activity.Expected_Progressper);
+            var actualProgress = parseFloat(activity.Actual_Progressper);
+
+            // Add the activity's data to the DataTable
+            data.addRow([stageName, stageName, startDate, endDate, null, actualProgress, null]);
+        }
+
+        
+
+
+        var options = {
+            height: 200,
+            width: 950,
+            gantt: {
+                trackHeight: 30,
+                fill: "#001ED2",
+                labelStyle: {
+                    fontName: 'TNG Pro',
+                    fontSize: 13,
+                    color: '#001ED2'
+                },
+                barCornerRadius: 3, // Adjust the corner radius of the bars
+                criticalPathEnabled: true, // Enable critical path highlighting
+                criticalPathStyle: {
+                    stroke: '#FF0000', // Set the color of the critical path lines
+                    strokeWidth: 2     // Set the width of the critical path lines
+                }
+            }
+        };
+
+        var chart = new google.visualization.Gantt(document.getElementById('gantt_chart'));
+        chart.draw(data, options);
+    }
+</script>
+
+
+
+
+
+
+
+
+<script>
+    function Redirect() {
+        var pk_call_id1 = $('#PK_Call_Id').val();
+        var url = '@Url.Action("ExpProgress", "Expediting")';
+        const pk_call_id = pk_call_id1;
+        url += '?pk_call_id=' + pk_call_id;
+        window.location.href = url;
+    }
+</script>
+
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+
+
+<script type="text/javascript">
+        var costSheetData = @Html.Raw(ViewBag.CostSheetJson);
+    debugger;
+        var chartData = [];
+
+        // Loop through your costSheetData
+        for (var i = 0; i < costSheetData.length; i++) {
+            var activity = costSheetData[i];
+            var stageName = activity.Stages;
+
+            var expectedStartDate = moment(activity.ExpectedStartDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+            var expectedEndDate = moment(activity.ExpectedEndDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+            var actualStartDate = moment(activity.Actual_Start_Date, 'DD/MM/YYYY').format('MM/DD/YYYY');
+            var actualEndDate = moment(activity.Actual_End_Date, 'DD/MM/YYYY').format('MM/DD/YYYY');
+            var ExpeditingDate = moment(activity.ExpeditingDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+
+            var expectedProgressPer = (parseFloat(activity.Expected_Progressper) / 100).toFixed(4)
+            var actualProgressPer = (parseFloat(activity.Actual_Progressper) / 100).toFixed(4)
+
+            //expectedProgressPer = parseFloat(expectedProgressPer.toFixed(2));
+            //actualProgressPer = parseFloat(actualProgressPer.toFixed(2));
+
+            chartData.push({
+                stageName: stageName,
+                expected: {
+                    startDate: expectedStartDate,
+                    endDate: expectedEndDate,
+                    progress: expectedProgressPer
+                },
+                actual: {
+                    startDate: actualStartDate,
+                    endDate: actualEndDate,
+                    progress: actualProgressPer
+                }
+            });
+        }
+
+        var seriesData = [
+    {
+        name: 'Planned days',
+        points: []
+    },
+    {
+        name: 'Actual/Estimated days',
+        points: []
+    },
+    
+        ];
+
+        // Create series data for the chart
+        chartData.forEach(function (data) {
+            seriesData[0].points.push({
+                name: data.stageName,
+                y: [data.expected.startDate, data.expected.endDate],
+                complete: data.expected.progress,
+                color: '#100ED2', // Set color for expected stages
+                label: {
+                    text: (data.expected.progress * 100).toFixed(2) + '%', // Show completion percentage
+                    align: 'center',
+                    style: {
+                        fontSize: '11px',
+                        color: 'white',
+                        textOutline: '1px contrast',
+                        padding: '2px'
+                    }
+                }
+            });
+
+            seriesData[1].points.push({
+                name: data.stageName,
+                y: [data.actual.startDate, data.actual.endDate],
+                complete: data.actual.progress,
+                color: 'red', // Set color for actual stages
+                label: {
+                    text: (data.actual.progress * 100).toFixed(2) + '%', // Show completion percentage
+                    align: 'center',
+                    style: {
+                        fontSize: '11px',
+                        color: 'white',
+                        textOutline: '1px contrast',
+                        padding: '2px'
+                    }
+                }
+            });
+        });
+
+
+
+
+
+        //JSCharting_33817
+
+        var chart = JSC.chart('chartDiv', {
+            debug: true,
+            type: 'horizontal column',
+            zAxis_scale_type: 'stackedFull',
+            height: 400,
+            width: 950,
+            yAxis_scale_type: 'time',
+            yAxis_formatString: '',
+            xAxis_defaultTick_label_style: { fontSize: 13, fontWeight: 'bold' },
+            defaultPoint_opacity: 0.6,
+            legend: { template: '%icon %name', position: 'inside top right' },
+            title_label_text: 'Gantt Chart',
+            title_label_style: { textAlign: 'center', fontWeight: 'bold' },
+            series: seriesData,
+            toolbar_visible: false,
+            defaultSeries_bar_spacing: 8,
+            defaultPoint_label_autoHide:false,
+            yAxis: {
+                markers: [
+                  {
+                      value: ExpeditingDate,
+                      color: '#FF9900',
+                      label_text: 'Expediting Date('+ ExpeditingDate +')'
+                  }
+                ]
+            },// Set the bar spacing to 8 pixels
+        });
+
+
+</script>

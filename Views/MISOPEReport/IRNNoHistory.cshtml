@@ -1,0 +1,98 @@
+﻿@model TuvVision.Models.CallsModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "IRNNoHistory";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+
+        <div class="col-xs-12">
+
+            @Html.HiddenFor(m => m.pk_ivr_id)
+            @*@Html.HiddenFor(m =>m.p)*@
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left"> IRN Report History </h3>
+                <br />
+                <button type="button" value="Go Back" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("CallHistory","MISOPEReport")'"
+                        style="border:none;">
+                    Go Back
+                </button>
+
+            </div>
+
+
+
+
+            <div class="form-group" style="padding-left:25px;">
+                <hr class="custom-hr1">
+            </div>
+            <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td id="example">
+
+
+
+                        @(Html.Grid(Model.lstDashBoard1)
+                                    .Build(columns =>
+                                    {
+                                        columns.Add(c => c.pk_ivr_id).Titled("Pk_IVR_No");
+                                        columns.Add(c => c.Report_No).Titled("Ivr Report Number");
+                                        columns.Add(c => c.ModifyDate).Titled("Modified Date");
+                                        columns.Add(c => c.ModifyBy).Titled("Modified By");
+                                        columns.Add(c => c.Description).Titled("Description");
+
+                                    })
+                                    .Pageable(pager =>
+                                    {
+
+                                        pager.ShowPageSizes = true;
+
+                                        pager.CurrentPage = 1;
+                                        pager.RowsPerPage = 2;
+                                    })
+                                    .UsingFilterMode(GridFilterMode.Row)
+                                    .Empty("No data found")
+                                    .Filterable()
+                                    .Sortable()
+
+                        )
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>

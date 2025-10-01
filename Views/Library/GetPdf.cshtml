@@ -1,0 +1,139 @@
+﻿@model TuvVision.Models.LibraryDocumentModel
+
+<!-- End Other stylesheets -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+@{
+
+    Layout = null;
+}
+
+
+<script src="~/AllJsAndCss/js/jquery.min.js"></script>
+
+@*<div id="IframeDiv" oncontextmenu="return false;">
+        @Html.HiddenFor(m => m.FileName)
+
+        <iframe name="FileFrame" height="98%" marginheight="0" marginwidth="10" frameborder="0" style="overflow: auto" width="100%"
+                id="FileFrame"></iframe>
+    </div>*@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        .embed-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 10px;
+        }
+
+        .wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function disableContextMenu() {
+            window.frames["FileFrame"].contentDocument.oncontextmenu = function () {
+                return true;
+            };
+            var myFrame = document.getElementById('FileFrame');
+            myFrame.window.eval('document.addEventListener("contextmenu", function(e){ e.preventDefalt();},false)');
+
+        }
+    </script>
+</head>
+<body onload="disableContextMenu();" oncontextmenu="return false" style="overflow-y: auto;">
+    <div class="wrapper">
+        @Html.HiddenFor(m => m.FileName)
+
+        <iframe name="FileFrame" height="98%" marginheight="0" marginwidth="10" frameborder="0" style="overflow: auto" width="100%"
+                id="FileFrame"></iframe>
+        @*<iframe name="pdfframe" height="100%" marginheight="0" marginwidth="10" frameborder="0" style="overflow: auto" width="100%" src="~/Content/ASME SECTION IX 2021.pdf"
+            oncontextmenu="return false" id="pdfframe"></iframe>*@
+        <div class="embed-cover"></div>
+    </div>
+
+</body>
+</html>
+<script>
+
+    $(document).ready(function()
+    {     debugger
+        var FileName = $('#FileName').val() ;
+        var FileFrame = $('#FileFrame').val();
+
+        $.ajax
+            ({
+            type: "post",
+            url: '@Url.Action("GetPDF", "Library")',
+
+            data: { FileName: FileName },
+            datatype: "json",
+
+            success: function (response)
+            {
+
+                // $("#document").html('<iframe src="@Url.Action("PreviewSelectedFile", "PDFForm", new { fileUrl = "_FilePath" }) "'.replace("_FilePath", response)+ 'id="documentViewIframe" onload="LoadLoader();" frameborder="0" allowfullscreen style="overflow: auto;min-height: 550px;height: 700px;width: 100%;" ></iframe>');
+
+                $('#FileFrame').attr("src", response);
+                return false;
+                //console.log(response)
+                //var viewerContainer = document.getElementById("pdfViewer");
+                //var pdfViewer = PDFViewerApplication.pdfViewer;
+                //pdfViewer.setDownloadRestrictions({ disablePrint: true, disableDownload: true });
+
+                //PDFViewerApplication.open(response, { viewerContainer })
+            }
+        });
+
+
+
+    });
+
+</script>
+
+<script>
+    document.addEventListener("keyup", function(event)
+    {
+      //alert("keyup " + event.keyCode);
+       //alert("keypress  " + event.keyCode);
+        if ((event.ctrlKey && event.keyCode == 80) || (event.ctrlKey && event.keyCode == 83)) {
+         event.preventDefault();
+            return false;
+        }
+    });
+
+
+
+    document.addEventListener("keydown", function (event)
+    {
+       // alert("keydown  " + event.keyCode);
+        //alert("keypress  " + event.keyCode);
+        if ((event.ctrlKey && event.keyCode == 80) || (event.ctrlKey && event.keyCode == 83)) {
+         event.preventDefault();
+            return false;
+        }
+    });
+
+
+    document.addEventListener("keypress", function (event) {
+    // alert("keypress  " + event.keyCode);
+
+     if ((event.ctrlKey && event.keyCode == 80) || (event.ctrlKey && event.keyCode == 83)) {
+         event.preventDefault();
+         return false;
+     }
+    });
+
+    //$('#sizer').parentNode.parentNode.parentNode.addEventListener("contextmenu", function (e) {
+    //    e.preventDefault();
+    //}, false);
+
+
+
+</script>
+
+

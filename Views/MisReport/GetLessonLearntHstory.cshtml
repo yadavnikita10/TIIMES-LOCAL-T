@@ -1,0 +1,313 @@
+﻿@model TuvVision.Models.LessionLearntModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@using System.Configuration;
+
+@{
+    ViewBag.Title = "LessonLearnt";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<style>
+    #customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            /*background-color: #04AA6D;*/
+            background-color: #001ED2;
+            color: white;
+        }
+</style>
+
+<style>
+    #myInput {
+        background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 100%; /* Full-width */
+        font-size: 14px; /* Increase font-size */
+        /*padding: 12px 20px 12px 40px;*/ /* Add some padding */
+        padding: 6px 19px 5px 16px;
+        border: 1px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+    }
+
+    #myTable {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        overflow:auto;
+        height:500px;
+    }
+
+    /*td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }*/
+    td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        /*background-color: #04AA6D;*/
+        background-color: #001ED2;
+        color: white;
+    }
+
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<style>
+    .ifa {
+        pointer-events: none;
+    }
+
+    .dataTables_filter, .dataTables_info  {
+        display: none;
+       
+    }
+      .tooltip-inner {
+        max-width: 300px !important;
+        text-align: left;
+    }
+      
+</style>
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <!-- /.col -->
+            <!--Table was here-->
+            <div class="col-xs-12">
+                <div class="col-xs-12 col-sm-4">
+
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Lesson Learnt History</h3>
+
+                </div>
+                <div class="col-xs-12 col-sm-8" >
+                    @*<a href="@Url.Action("LessonLearnt", "MISReport")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Back</a>*@
+                    <button type="button" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" id="a" value="ExportToExcel" onclick="location.href='@Url.Action("LessonLearnt","MisReport")'">
+                       Back
+                    </button>
+                </div>
+
+               
+            </div>
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+        </div>
+
+        
+
+
+
+
+        <div class="col-xs-12">
+            <table id="myTable" class="display" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th  align="left" width="120px" class="remove-search"> UIN</th>
+                        <th  align="left" width="150px" class="remove-search">Unique number</th>
+                        <th  align="left" width="200px" class="remove-search">From</th>
+                        <th  align="left" width="150px" class="remove-search">Category</th>                        
+                        <th  align="left" width="100px" class="remove-search">Description</th>
+
+                        <th  align="left" width="50px" class="remove-search">View</th>
+                        <th  align="left" width="80px" class="remove-search">RCA </th>
+                        <th  align="left" width="1000px" class="remove-search">Lessons Learnt</th>
+                        <th  align="left" width="50px" class="remove-search">View</th>
+                        <th  align="left" width="80px" class="remove-search">Shared on</th>
+                    
+                       
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.dtLessionLeant != null && Model.dtLessionLeant.Rows.Count != 0)
+                    {
+                        for (int cnt = 0; cnt < Model.dtLessionLeant.Rows.Count; cnt++)
+                        {
+                            System.Data.DataRow row = Model.dtLessionLeant.Rows[cnt];
+
+                            <tr>
+                                <td align="left" width="120px">@row["LessionLeantNumber"]</td>
+                                <td align="left" width="150px" >@row["Complaint_No"]</td>
+                                <td align="left" width="200px">@row["FromTable"]</td>
+                                <td align="left" width="150px">@row["Category"]</td>
+                                <td align="left" width="100px"  style="white-space: pre-line;">
+                                    <button  type="button" class="btn btn-secondary" align="left" data-toggle="tooltip" data-placement="right" title="@row["Description"]">
+                                        <img src="~/View1.png" />
+                                    </button>
+                                </td>
+                                @if (row["ComplaintImages"] != null && row["ComplaintImages"].ToString() != "")
+                                {
+                                    var attach6 = row["ComplaintImages"].ToString().Split(',');
+
+                                    <td align="left" width="50px">
+                                        @for (int ar1 = 0; ar1 < attach6.Length; ar1++)
+                                        {
+                                            var attach6PCert = attach6[ar1].ToString().Split('|');
+                                           
+                                                @*<a onclick="openPopUp(this)" fileid="@attach6PCert[1].ToString()" tabletype="@row["FromTable"]"><img src="~/View1.png" /></a>*@
+                                                @*<a onclick="openPopUp(this)" fileid="@attach6PCert[1].ToString()" tabletype="@row["FromTable"]">@attach6PCert[0].ToString()</a>*@
+                                                <a class="title" href="@Url.Action("Download1", "MISReport", new { @d = attach6PCert[1].ToString(),@TableType = row["FromTable"] })"><img src="~/View1.png" align="left" /></a><br />
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td align="left" width="50px">&nbsp;</td>
+                                }
+
+                                <td align="left" width="80px"  style="white-space: pre-line;">
+                                    <button type="button" class="btn btn-secondary" align="left" data-toggle="tooltip" data-placement="right" title="@row["RCA"]" >
+                                        <img src="~/View1.png" />
+                                    </button>
+                                </td>
+
+                                <td align="left" width="1000px" style="white-space: pre-line;">@row["LessonLearned"]</td>
+
+                                @if (row["LessionLearntImages"] != null && row["LessionLearntImages"].ToString() != "")
+                                {
+                                    var attach6 = row["LessionLearntImages"].ToString().Split(',');
+
+                                    <td align="left" width="50px">
+                                        @for (int ar1 = 0; ar1 < attach6.Length; ar1++)
+                                        {
+                                            var attach6PCert = attach6[ar1].ToString().Split('|');
+                                            
+                                               
+                                            <a class="title" href="@Url.Action("Download1", "MISReport", new { @d = attach6PCert[1].ToString(),@TableType = row["FromTable"] })"><img src="~/View1.png" /></a><br />
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td align="left" width="50px">&nbsp;</td>
+                                }
+                                <td align="left" width="80px">
+                                    @row["SharedDate"]
+                                   
+                                </td>
+                               
+                                @Html.Hidden(@row["LessonsLearnt_ID"].ToString())
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-fullscreen" role="document" style="width:100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Attachment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="height:500px">
+                <iframe id="_iframe" style="width:100%;height:100%"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+<script>
+    //disable con+s button
+    $(document).bind('keydown', function (e) {
+        if (e.ctrlKey && (e.which == 83)) {
+            alert("contr + s disabled");
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    function openPopUp(e) {
+
+        var fileid = $(e).attr('fileid');
+        var tabletype = $(e).attr('tabletype');
+
+        $.ajax({
+            url: '@Url.Action("Download1", "MisReport")',
+            type: 'post',
+            datatype: 'json',
+            data: { d: fileid, TableType: tabletype },
+            success: function (result) {
+                $("#_iframe").attr("src", `${result}#toolbar=0`);
+                $(".modal").modal('show');
+                setTimeout(() => {
+                    console.log(document.getElementById('download'));
+                },3000)
+            },
+            error: function (result) {
+
+            }
+
+        });
+
+
+
+
+    }
+</script>
+
+
+<script>
+
+    function disableRightClick(event) {
+        if (event.button == 2) {
+            event.preventDefault();
+        }
+    }
+
+</script>

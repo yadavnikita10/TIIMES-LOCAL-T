@@ -1,0 +1,524 @@
+﻿@model Vision.ViewModel.AspNetUsersViewModel
+@{
+    ViewBag.Title = "AddUpdateUsers";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@*@section Header{
+
+    <link href="@Url.Content("~/css/select2.min.css")" rel="stylesheet">
+    <link href="@Url.Content("~/css/switchery.min.css")" rel="stylesheet">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <script src="~/Scripts/js/jquery-ui.js"></script>
+
+}*@
+
+<script type="text/javascript">
+
+    var ajd = $.noConflict();
+
+    var dateToday = new Date();
+    ajd(function () {
+        ajd(".datepicker").datepicker({
+            dateFormat: "dd/MM/yy",
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "1920:2050",
+
+        });
+    });
+
+</script>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                @if (Model == null)
+                {
+                    <h2>
+                        Add New User Profile <small></small>
+                    </h2>
+
+                }
+                else
+                {
+                    <h2>
+                        Edit User Profile <small></small>
+                    </h2>
+
+                }
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a href="">
+                            <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <h2>
+                            <a href="@Url.Action("Users", "Admin")">Back</a>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="clearfix">
+                </div>
+            </div>
+            <div class="x_content">
+                <br />
+                @if (TempData["Message"] == "")
+                {
+                    <div class="alert alert-danger alert-dismissable">
+                        <a class="close" onclick="$('.alert').hide()">×</a> @TempData["Message"].ToString()
+                    </div>
+                }
+
+
+                @Html.AntiForgeryToken()<br />
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" method="post" enctype="multipart/form-data">
+                    <div class="col-md-6">
+
+
+
+                        @Html.HiddenFor(m => m.Id)
+                        @*<div class=" form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                    Select Temple <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+
+                                    @Html.DropDownListFor(m => m.Temple_ID, ViewBag.TempleList as IEnumerable<SelectListItem>, "----SELECT----", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Temple_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                               First Name <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control col-md-7 col-xs-12" })
+                                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                Last Name <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control col-md-7 col-xs-12" })
+                                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                User Name <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+
+                                @if (Model == null)
+                                {
+                                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control col-md-7 col-xs-12" })
+                                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control col-md-7 col-xs-12", @disabled = "disbaled" })
+
+                                }
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Email ID <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.Email_ID, new { @class = "form-control col-md-7 col-xs-12" })
+                                @Html.ValidationMessageFor(m => m.Email_ID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                Date of Joining
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.DateOf_Joining, new { @class = "form-control col-md-7 col-xs-12 datepicker", @id = "DOJ" })
+                                @Html.ValidationMessageFor(m => m.DateOf_Joining, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                Qualification
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.Qualification, new { @class = "form-control col-md-7 col-xs-12 datepicker", @id = "AT" })
+                                @Html.ValidationMessageFor(m => m.Qualification, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Country <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.DropDownListFor(m => m.Country, ViewBag.countryList as IEnumerable<SelectListItem>, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Country, "", new { @class = "text-danger" })
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Employee Grade <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.EmployeeGrade, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Employee Code <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.EmployeeCode, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                SAP Vendor Code <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.SAP_Vandor_code, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+
+
+
+                        @*<div id="addres" class="form-group hide">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Address <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextAreaFor(m => m.Address1, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>*@
+                        @*<div id="addres" class="form-group hide">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Address 2 <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextAreaFor(m => m.Address2, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Address 1 <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextAreaFor(m => m.Address1, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Address 2 <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextAreaFor(m => m.Address2, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                Status
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.RadioButtonFor(m => m.Status, "0", new { @checked = "checked" }) Active&nbsp;
+                                @Html.RadioButtonFor(m => m.Status, "1") Inactive
+                                <br /><br />
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Zip Code <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Branch <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.Branch, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>*@
+                    </div>
+
+
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                Select  Role <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.DropDownListFor(m => m.U_Role_ID, ViewBag.RoleList as IEnumerable<SelectListItem>, "----SELECT----", new { @class = "form-control", @id = "U_Role_ID", @onchange = "GetRoleText()" })
+                                @Html.ValidationMessageFor(m => m.U_Role_ID, "", new { @class = "text-danger" })
+                                <input type="hidden" name="Role_name" id="Role_name" />
+                            </div>
+                        </div>
+
+                      
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Gender <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.RadioButtonFor(m => m.Gender, "Male", new { @checked = "checked" }) Male&nbsp;
+                                @Html.RadioButtonFor(m => m.Gender, "Female") Female
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+
+
+                                Password <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+
+                                @if (Model == null)
+                                {
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control col-md-7 col-xs-12" })
+                                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                }
+                                else
+                                {
+
+
+
+                                    <input id="Text1" type="text" value="******" class="form-control col-md-7 col-xs-12" disabled />
+                                }
+
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                Date of Birth
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.DOB, new { @class = "form-control col-md-7 col-xs-12 datepicker", @id = "DOB" })
+                                @Html.ValidationMessageFor(m => m.DOB, "", new { @class = "text-danger" })
+
+                                @*<script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $('#DOB').daterangepicker({
+                                                singleDatePicker: true,
+                                                calender_style: "picker_4"
+                                            }, function (start, end, label) {
+                                                console.log(start.toISOString(), end.toISOString(), label);
+                                            });
+                                        });
+                                    </script>*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Mobile No <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control col-md-7 col-xs-12" })
+                                @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Residence No <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.ResiNo, new { @class = "form-control col-md-7 col-xs-12" })
+                                @Html.ValidationMessageFor(m => m.ResiNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Office No <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.OfficeNo, new { @class = "form-control col-md-7 col-xs-12" })
+                                @Html.ValidationMessageFor(m => m.OfficeNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                Designation
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.Designation, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Language Spoken <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.Language_Spoken, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                Status
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.RadioButtonFor(m => m.Status, "0", new { @checked = "checked" }) Active&nbsp;
+                                @Html.RadioButtonFor(m => m.Status, "1") Inactive
+                                <br /><br />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Pincode <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.PostCode, new { @class = "form-control col-md-7 col-xs-12" })
+                                @Html.ValidationMessageFor(m => m.PostCode, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                NRIC <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.NRIC, new { @class = "form-control col-md-7 col-xs-12" })
+                                @Html.ValidationMessageFor(m => m.NRIC, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Unit <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.Unit, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Street <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.Street, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>*@
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Zip Code <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Branch <span class="required"></span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.Branch, new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                Signature (soft-copy) <span class="required"></span><br />
+                                <span>Size :- (56h * 56w)</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(m => m.Signature, new { @class = "form-control col-md-7 col-xs-12", @type = "file" })
+                                @Html.HiddenFor(m => m.Signature)
+                                @if (Model != null)
+                                {
+
+                                    <img src="@Url.Content("~/Content/Uploads/Images/" + Html.DisplayFor(m => m.Signature))" width="200" height="200" />
+                                }
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <div align="center">
+                                <button type="submit" class="btn btn-success">
+                                    Submit
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script type="text/javascript">
+
+    var j = jQuery.noConflict();
+    j(document).ready(function () {
+        debugger;
+        var rn = j("#U_Role_ID option:selected").text();
+        j("#Role_name").val(rn);
+        j("#addres").removeClass('hide');
+    });
+    function GetRoleText() {
+        debugger;
+        var rn = $("#U_Role_ID option:selected").text();
+        $("#Role_name").val(rn);
+
+        var sl = $("#U_Role_ID").val();
+
+        if (sl == "8") {
+            $("#Priest").show();
+        }
+        else {
+
+            $("#Priest").hide();
+
+        }
+        if (sl == "5") {
+            j("#addres").addClass('hide');
+        }
+        else {
+            j("#addres").removeClass('hide');
+        }
+
+    }
+
+</script>*@
+
+@*@section Bottom{
+
+
+
+    <link href="@Url.Content("~/css/switchery.min.css")" rel="stylesheet">
+
+    <script src="@Url.Content("~/Scripts/js/moment.min2.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/js/daterangepicker.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/js/select2.full.js")"></script>
+
+}*@
+

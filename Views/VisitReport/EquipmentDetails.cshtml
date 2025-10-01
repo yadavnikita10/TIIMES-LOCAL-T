@@ -1,0 +1,330 @@
+﻿@model TuvVision.Models.EquipmentDetailsModel
+
+@{
+    ViewBag.Title = "EquipmentDetails";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@*DATEPICKER*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>*@
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+<script>
+
+    $(function () {
+        $(".CertificationTO").datepicker({
+            dateFormat: 'dd/MM/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+@*<script>
+
+    $(function () {
+        $(".CertificationFrom").datepicker({
+            dateFormat: 'dd/MM/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>*@
+<style>
+    .ui-widget-header {
+        background: #001ED2 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+</style>
+
+@*<div class="white-bg section-box-shadow">
+    <h3 class="dynamic-page-title dynamic-page-title-2  " style="margin-left:10px;">Details Of Measuring instrument</h3>
+    <div class="row">*@
+
+
+        <div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+                        <br />
+                        <h5 class="dynamic-page-title dynamic-page-title-2 " style="padding-left: 11px;">Inspection Visit Report Number : @Session["VisitReportNo"]</h5>
+
+                        @*<a href="@Url.Action("CallsListByInspector","CallsMaster")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
+
+                        <div class="col-xs-12">
+
+
+                            @if (Model.PK_CALL_ID != 0)
+            {
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">General</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'"> Item Description</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Reference Documents </button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Stages Witnessed</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Document Reviewed</button>
+                                        <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Details Of Measuring Instrument</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Conclusion</button>
+
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Image</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Report</button>
+                                        @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID} )'">Report</button>*@
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID = Model.abcid} )'">List of Issues</button>
+
+                            }
+
+
+
+
+                        </div>
+
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Details Of Measuring instrument</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+
+                                                @Html.HiddenFor(m => m.PK_CALL_ID)
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Name Of Equipment:</label>
+
+                                                            @Html.TextBoxFor(model => model.Name_Of_Equipments, new { @placeholder = "Name Of Equipment", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Name_Of_Equipments, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Range:</label>
+
+                                                            @Html.TextBoxFor(model => model.Range, new { @placeholder = "Range", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Range, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Id:</label>
+
+                                                            @Html.TextBoxFor(model => model.Id, new { @placeholder = "Id", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                <div class="row">
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Calibration Valid Till date:</label>
+                                                            @Html.TextBoxFor(model => model.CalibrationValid_Till_date, new { @placeholder = "Calibration valid till Date", @class = "form-control", autocomplete = "off" })
+                                                            @*@Html.TextBoxFor(model => model.CalibrationValid_Till_date, new { @placeholder = "Calibration Valid Till date", @class = "form-control CertificationTO ", autocomplete = "off" })*@
+                                                            @Html.ValidationMessageFor(model => model.CalibrationValid_Till_date, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Certification Number with Date:</label>
+
+                                                            @Html.TextBoxFor(model => model.Certification_No_Date, new { @placeholder = "Date", @class = "form-control CertificationFrom ", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Certification_No_Date, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <br /><br />
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.NABLseenote1, new { @type = "checkbox", @class = "checkBox" })
+                                                            <label>NABL</label>
+
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <br /><br />
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.NonNABLseenote2, new { @type = "checkbox", @class = "checkBox" })
+                                                            <label>Non NABL</label>
+
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="col-xs-12 text-center" id="IVRPointerEvents">
+
+                                                    <button type="submit" class="btn btn-default insert-form-btn">Save</button>
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-12">
+
+                                            <table id="example" class="display custom-table" cellspacing="0" width="100%">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th class="remove-search" width="5%">Sr No </th>
+                                                        <th class="remove-search">Name Of Equipment</th>
+                                                        <th class="remove-search">Range</th>
+                                                        <th class="remove-search">ID</th>
+                                                        <th class="remove-search">CalibrationValid Till date</th>
+                                                        <th class="remove-search">Certification No with Date</th>
+                                                        <th class="remove-search">NABL</th>
+                                                        <th class="remove-search">Non-NABL</th>
+                                                        <th class="remove-search" width="5%">Action</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+
+                                                    @{
+                                                                int i = 0;
+                                                    }
+                                                    @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.EquipmentDetailsModel>)
+                                                            {
+                                                                i = i + 1;
+                                                        <tr>
+
+                                                            <td width="5%">@i</td>
+                                                            <td style='white-space: pre-line;'>@item.Name_Of_Equipments</td>
+                                                            <td style='white-space: pre-line;'>@item.Range</td>
+                                                            <td style='white-space: pre-line;'>@item.Id</td>
+                                                            <td style='white-space: pre-line;'>@item.CalibrationValid_Till_date</td>
+                                                            <td style='white-space: pre-line;'>@item.Certification_No_Date</td>
+
+                                                            <td>@item.SNABLseenote1</td>
+                                                            <td>@item.SNonNABLseenote2</td>
+
+                                                            <td class="less-width" width="5%">
+                                                                <a href="@Url.Action("EquipmentDetails", "Visitreport", new {@PK_DOE_Id = item.PK_DOE_Id })" title="Edit"><span class="fa fa-pencil"></span>&nbsp;</a>
+                                                                <a href="@Url.Action("DeleteEquipmentDetails", "Visitreport", new {@PK_DOE_Id = item.PK_DOE_Id,@PK_CALL_ID = item.PK_CALL_ID })" onclick="return confirm('Are you sure you want to Delete this record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
+                                                                @{
+                                                                            @*if ((Convert.ToString(TempData["InsertCompany"])) != "" && Convert.ToString(TempData["InsertCompany"]) != null)
+                                                                            {
+                                                                                TempData["InsertCompany"] = null;
+                                                                        <script type="text/javascript" language="javascript">
+                                                                                    alert("Item Description Added Successfully...");
+                                                                        </script>
+                                                                            }
+                                                                            if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
+                                                                            {
+                                                                                TempData["UpdateCompany"] = null;
+                                                                        <script type="text/javascript" language="javascript">
+                                                                                    alert("Item Description Updated Successfully...");
+                                                                        </script>
+                                                                            }*@
+                                                                }
+                                                            </td>
+
+                                                        </tr>
+                                                                            }
+
+                                                </tbody>
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                    <!--Contact Details By Manoj -->
+
+
+                                </div><!-- /.box-shadow -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".Name_Of_Equipments").autocomplete({
+            source: function (request, response) {
+                debugger
+                $.ajax({
+                    url: '@Url.Action("GetEquipments", "VisitReport")',
+                    data: "{ 'prefix': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        response($.map(data, function (item) {
+                            debugger
+                            return { label: item.CompanyName, value: item.CompanyName };
+
+
+                        }));
+                    },
+                    error: function (response) {
+                        //alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        //  alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                //if (u.item.val == -1) {
+                //    return false;
+                //}
+                //$("#hfCompanyName").val(i.item.val);
+            },
+            minLength: 2
+        });
+
+    });
+</script>
+                                    
+                                    <!--End of Ashwini Code-->
+@*}*@
+
+ 
+<script>
+    var isConfirmationIVR = @Session["IsConfirmationIVR"] ?? 0;
+    // JavaScript to disable pointer events if isConfirmationIVR is 1
+
+    if (isConfirmationIVR == 1) {
+        document.getElementById("IVRPointerEvents").style.pointerEvents = "none";
+    }
+</script>
+  
+

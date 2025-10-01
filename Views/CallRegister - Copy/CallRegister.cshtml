@@ -1,0 +1,259 @@
+﻿@model TuvVision.Models.CallsRegister
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "CallRegister";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="~/Scripts/MvcGrid/jquery.quicksearch.js"></script>
+<script src="~/Scripts/MvcGrid/dataTables.fixedColumns.min.js"></script>
+<script>
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+@using (Html.BeginForm("CallRegister", "CallRegister", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+                <form method="post">
+
+
+                    <div class="col-xs-12">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Calls Register</h3>
+                        @*<button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportAllIndex","BDSMActivities")'"
+                                    style="border:none;">
+                                Export To Excel
+                            </button>*@
+
+                    </div><!-- /.col -->
+                </form>
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+            <div class="row">
+
+                <div class="col-xs-3">
+                    <div class="form-group" style="width:280px;padding-left:25px;">
+                        <label>From Date:</label>
+                        @Html.TextBoxFor(model => model.FromDate, "{0:dd/MM/yyyy}", htmlAttributes: new { placeholder = "dd/mm/yyyy", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                    </div>
+                </div>
+
+
+                <div class="col-xs-3">
+                    <div class="form-group" style="width:280px;padding-right:25px;">
+                        <label>To Date:</label>
+                        @Html.TextBoxFor(model => model.ToDate, "{0:dd/MM/yyyy}", htmlAttributes: new { placeholder = "dd/mm/yyyy", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                    </div>
+
+                </div>
+
+                <div class="col-xs-2">
+                    <label></label>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary form-control" id="btnSearch">Search</button>
+                    </div>
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="button" id="a" value="ExportToExcel" class="btn btn-primary form-control" onclick="location.href='@Url.Action("ExportAllIndex","CallRegister")'">
+                            Export To Excel
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="col-xs-12">
+
+                <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                    <tr>
+                        <td>
+                            @(Html
+                            .Grid(Model.listingCallRegister)
+                            .Build(columns =>
+                            {
+                                columns.Add(c => c.Job).Titled("Job");
+                                columns.Add(c => c.call_no).Titled("Call No");
+                                columns.Add(c => c.inspector).Titled("Inspector Name");
+                                columns.Add(c => c.Vendor_Name).Titled("Vendor Name");
+                                columns.Add(c => c.client).Titled("Customer Name");
+                                columns.Add(c => c.End_Customer).Titled("End Customer Name");
+                                columns.Add(c => c.ProjectName).Titled("Project Name");
+                                columns.Add(c => c.DECPMCName).Titled("DEC/PMC/EPC Name");
+                                columns.Add(c => c.itemTobeInspected).Titled("Item to be Inspected");
+                                columns.Add(c => c.stageOfinspection).Titled("Stages of Inspection");
+                                columns.Add(c => c.primaryMaterial).Titled("Primary Material");
+                                columns.Add(c => c.StageDescription).Titled("Stage Description");
+                                columns.Add(c => c.itemQty).Titled("Item Quantity");
+                                columns.Add(c => c.EstimatedTimeinHours).Titled("Estimated Inspection Time in hours");
+                                columns.Add(c => c.Originating_Branch).Titled("Originating Branch");
+                                columns.Add(c => c.Executing_Branch).Titled("Executing Branch");
+                                columns.Add(c => c.createddate).Titled("Call Created Date");
+                                columns.Add(c => c.Call_Received_Date).Titled("Call Received Date");
+                                columns.Add(c => c.Call_Request_Date).Titled("Call Request Date");
+                                columns.Add(c => c.Actual_Visit_Date).Titled("Actual Visit Date");
+                                columns.Add(c => c.CreatedBy).Titled("Call Created By");
+                                columns.Add(c => c.CallAssignBy).Titled("Call Assign By");
+                                //columns.Add(c => c.EndDate).Titled("End Date");
+                                columns.Add(c => c.status).Titled("Status");
+                                columns.Add(c => c.Continuous_Call).Titled("Continuous Call");
+                                columns.Add(c => c.iscompetant).Titled("Is inspector Competant");
+                                columns.Add(c => c.FormFilled).Titled("Form Filled");
+                                // columns.Add(c => c.IsVerified).Titled("Verified");
+
+                                columns.Add(c => c.Finalinsepection).Titled("Final Insepection");
+                                columns.Add(c => c.ManMonthsAssi).Titled("Man Month Assignment");
+                                columns.Add(c => c.subendusername).Titled("Sub sub End User Name");
+                                columns.Add(c => c.subsubendusername).Titled("Sub Sub End User Name");
+
+
+
+
+
+
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                            )
+
+
+                        </td>
+                    </tr>
+                </table>
+
+
+
+            </div>
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+}
+
+@*<script>
+            [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                new MvcGrid(element);
+            });
+    </script>
+
+    <style>
+        table.evaluation > tbody {
+            width: 100% !important;
+            display: table;
+        }
+
+            table.evaluation > tbody > tr td table {
+                width: 100% !important;
+                display: table;
+            }
+    </style>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSearch").click(function myfunction() {
+            debugger;
+            if (ValidateForm() == false) {
+                return false;
+            }
+            else {
+                $("#form1").submit()
+            }
+        });
+    });
+
+    function ValidateForm() {
+
+        if ($("#FromD").val() == "") {
+            alert('Select From Date!');
+            return false;
+        }
+        if ($("#ToD").val() == "") {
+            alert('Select To Date!');
+            return false;
+        }
+        debugger;
+        if ($("#FromD").val() > $("#ToD").val()) {
+            alert("To Date selected is Greater than From Date  !!!");
+            return false;
+        }
+
+        else {
+            return true;
+
+        }
+    }
+</script>
+
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+
+
+            $('.mvc-grid-value').each(function (i)
+            {
+                    $(this).quicksearch("#gridMapping tr:not(:has(th))",
+                    {
+                        'testQuery': function (query, txt, row)
+                        {
+                            return $(row).children(":eq(" + i + ")").text().toLowerCase().indexOf(query[0].toLowerCase()) != -1;
+                        }
+                    });
+            });
+
+
+</script>
+
+
+
+
+

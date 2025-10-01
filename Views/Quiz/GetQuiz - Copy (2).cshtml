@@ -1,0 +1,717 @@
+﻿@model TuvVision.Models.QuizModel
+@{
+    ViewBag.Title = "GetQuiz";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int i = 0;
+    int k = 0;
+}
+
+@*<style>
+    .qn {
+    display: none;
+}
+.qn:first-child {
+    display: block;
+}
+input[type="submit"] {
+    display:none;
+}
+</style>*@
+@*@import url(https://fonts.googleapis.com/css?family=Work+Sans:300,600);*@
+<script type="text/javascript" src="https://fonts.googleapis.com/css?family=Work+Sans:300,600"></script>
+<style>
+
+  
+
+body{
+	font-size: 20px;
+	font-family: 'Work Sans', sans-serif;
+	color: #333;
+  font-weight: 300;
+  text-align: center;
+  background-color: #f8f6f0;
+}
+h1{
+  font-weight: 300;
+  margin: 0px;
+  padding: 10px;
+  font-size: 20px;
+  background-color: #444;
+  color: #fff;
+}
+.question{
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.answers {
+  margin-bottom: 20px;
+  text-align: left;
+  display: inline-block;
+}
+.answers label{
+  display: block;
+  margin-bottom: 10px;
+}
+button{
+  font-family: 'Work Sans', sans-serif;
+	font-size: 22px;
+	background-color: #279;
+	color: #fff;
+	border: 0px;
+	border-radius: 3px;
+	padding: 20px;
+	cursor: pointer;
+	margin-bottom: 20px;
+}
+button:hover{
+	background-color: #38a;
+}
+
+
+
+
+
+.slide{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.active-slide{
+  opacity: 1;
+  z-index: 2;
+}
+.quiz-container{
+  position: relative;
+  height: 200px;
+  margin-top: 40px;
+}
+</style>
+
+@using (Html.BeginForm("GetQuiz", "Quiz", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formqz" }))
+{
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-5">
+
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                                <br />
+                                <a href="@Url.Action("TrainingDetails", "TrainingSchedule")" class="btn btn-default insert-form-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Quiz on @ViewBag.TP</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            @Html.HiddenFor(model => model.TrainingID)
+                                                            @Html.HiddenFor(model => model.QuizID)
+                                                        </div>
+                                                    </div>
+
+                                                    @*<h3 class="form-page-title">@ViewBag.TrngNm</h3>*@
+                                                    <br />
+                                                    @{ 
+                                                        int QuestionCount = (ViewBag.QuizQuestions as List<TuvVision.Models.QuizQuestion>).Count();
+                                                    }
+                                                    @*@if (ViewBag.Attandance == "1")
+                                                    {*@
+                                                        @if (ViewBag.QuizVerify == "NotSubmitted")
+                                                        {
+                                                            //if (QuestionCount > 0 && ViewBag.QzDate == "True")
+                                                            //{
+                                                            
+                                                                 <div>
+                                                                     <div class="col-xs-12">
+                                                                         <table>
+                                                                             @foreach (var item in ViewBag.QuizQuestions as List<TuvVision.Models.QuizQuestion>)
+                                                                             {
+
+                                                                                 i = i + 1;
+                                                                                 @*<tr>
+                                                                                     <th scope="row"> @i &nbsp; @item.TQuestion</th>
+                                                                                     @Html.HiddenFor(m => m.QuizQuestion[k].TQuizID, new { Value = item.TQuizID })
+                                                                                     @Html.HiddenFor(m => m.QuizQuestion[k].TrainingID, new { Value = item.TrainingID })
+                                                                                 </tr>
+                                                                                 <tr>
+                                                                                     <td>
+                                                                                         @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption1)))
+                                                                                         {
+                                                                                             @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "a")
+                                                                                             <span> @item.TOption1 &nbsp;&nbsp;</span>
+                                                                                         }
+                                                                                         @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption2)))
+                                                                                         {
+                                                                                             @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption2, "b")
+                                                                                             <span> @item.TOption2 &nbsp;&nbsp;</span>
+                                                                                         }
+                                                                                         @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption3)))
+                                                                                         {
+                                                                                             @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption3, "c")
+                                                                                             <span> @item.TOption3 &nbsp;&nbsp;</span>
+                                                                                         }
+                                                                                         @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption4)))
+                                                                                         {
+                                                                                             @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption4, "d")
+                                                                                             <span> @item.TOption4 &nbsp;&nbsp;</span>
+                                                                                         }
+
+                                                                                     </td>
+                                                                                 </tr>*@
+                                                                                 <tr><td><br /></td></tr>
+
+                                                                                <div class="questions">
+                                                                                    <p style="text-align:left;"> @i &nbsp; @item.TQuestion </p>
+                                                                                    @Html.HiddenFor(m => m.QuizQuestion[k].TQuizID, new { Value = item.TQuizID })
+                                                                                    @Html.HiddenFor(m => m.QuizQuestion[k].TrainingID, new { Value = item.TrainingID })
+                                                                                    @*<form>*@
+                                                                                    <li style="text-align:left;">
+                                                                                        @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption1)))
+                                                                                        {
+                                                                                            @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "a", new { name = "abc" })
+                                                                                            <span> @item.TOption1 &nbsp;&nbsp;</span>
+                                                                                        }
+                                                                                    </li>
+                                                                                    <li style="text-align:left;">
+                                                                                        @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption2)))
+                                                                                        {
+                                                                                            @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption2, "b", new { name = "abc" })
+                                                                                            <span> @item.TOption2 &nbsp;&nbsp;</span>
+                                                                                        }
+                                                                                        </li>
+                                                                                    <li style="text-align:left;">
+                                                                                        @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption3)))
+                                                                                        {
+                                                                                            @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption3, "c", new { name = "abc" })
+                                                                                            <span> @item.TOption3 &nbsp;&nbsp;</span>
+                                                                                        }
+                                                                                        </li>
+                                                                                    <li style="text-align:left;">
+                                                                                        @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption4)))
+                                                                                        {
+                                                                                            @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption4, "d", new { name = "abc" })
+                                                                                            <span> @item.TOption4 &nbsp;&nbsp;</span>
+                                                                                        }
+                                                                                        </li>
+                                                                                        @*</form>*@
+</div>
+
+                                                                                    k++;
+                                                                                    }
+</table>
+                                                                     </div>
+                                                                 </div>
+                                                              
+
+
+                                                                <div class="row">
+                                                                    <div class="col-xs-12 col-sm-12">
+                                                                        <div class="form-group">
+                                                                            @*<button type="button" id="next">Next</button>*@
+                                                                            <button type="submit" class="btn btn-default insert-form-btn" id="btnSubmit" style="display:none;"> Submit </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @*}
+                                                            else
+                                                            {
+                                                                if (ViewBag.QzDate == "Expired")
+                                                                {
+                                                                    <div class="row">
+                                                                        <h3 class="form-page-title">Quiz has been expired ... Please reach out to Administrator for further details !</h3>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="row">
+                                                                        <h3 class="form-page-title">Quiz have not been activated yet ... Stay tuned for further details !</h3>
+                                                                    </div>
+                                                                }
+                                                            }*@
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="row">
+                                                                <h3>Congratulations ... You have successfully attempted this Test !</h3>
+                                                                <br />
+                                                                <h3>Result: @ViewBag.Percent% </h3>
+                                                            </div>
+                                                        }
+                                                    @*}*@
+                                                    @*else
+                                                    {
+                                                        <div class="row">                                                            
+                                                            <h4>Please reach out to your Administrator for further details ... </h4>
+                                                        </div>
+                                                    }*@     
+                                                    
+                                                    @*<h1>Quiz on Important Facts</h1>
+                                                    <div class="quiz-container">
+                                                        <div id="quiz"></div>
+                                                    </div>
+                                                    <button id="previous">Previous Question</button>
+                                                    <button id="next">Next Question</button>
+                                                    <button id="submit">Submit Quiz</button>
+                                                    <div id="results"></div>*@
+                                                    
+                                                    
+
+
+                                                    @*<div class="questions">
+                                                        <p>1. You see a girl waiting at the bus stop. She is exactly your type. How do you get her number?</p>
+                                                        <form class="options">
+                                                            <input class="option" type="radio" name="question1" value=4>You walk right up to her, strike up a conversation, and ask for her number<br>
+                                                            <input class="option" type="radio" name="question1" value=3>You wait a few days until you get the courage to go and talk to her<br>
+                                                            <input class="option" type="radio" name="question1" value=2>You tell one of your mutual friends that you like her<br>
+                                                            <input class="option" type="radio" name="question1" value=1>You wait for her to come to you</br>
+                                                        </form>
+                                                    </div>
+                                                    <div class="questions">
+                                                        <p>2. You guys decide to go out on a date. Where do you decide to take her?</p>
+                                                        <form class="options">
+                                                            <input class="option" type="radio" name="question2" value=4>You take her out for a short coffee and talk about life and relationships<br>
+                                                            <input class="option" type="radio" name="question2" value=3>You take her out on a creative date and ask her questions about her life and you respond in kind, tried-and-true interview-style<br>
+                                                            <input class="option" type="radio" name="question2" value=2>You take her out to a nice restaurant and dress in your best clothes. You ask the same questions as above<br>
+                                                            <input class="option" type="radio" name="question2" value=1>You take her to the best restaurant and hope that your clothes does most of the talking. If not, you've got great stories to tell up your sleeves<br>
+                                                        </form>
+                                                    </div>
+                                                    <div class="questions">
+                                                        <p>3. You think you had a great first date. What do you do between now and your second date?</p>
+                                                        <form class="options">
+                                                            <input class="option" type="radio" name="question3" value=4>You send her a text telling her you'll have out again soon. No big deal. Another date with another girl, coming up!<br>
+                                                            <input class="option" type="radio" name="question3" value=3>You send her a text telling her how much fun you had and can't wait for the next date.<br>
+                                                            <input class="option" type="radio" name="question3" value=2>In addition to doing above, you call her and ask her how she thinks the date went and when/where the next date is<br>
+                                                            <input class="option" type="radio" name="question3" value=1>In addition to doing above, you think about how lucky you are for finally finding an amazing girl. You hope to start a relationship ASAP<br>
+                                                        </form>
+                                                    </div>
+                                                    <div class="questions">
+                                                        <p>4. Crap! You just remembered you have a huge project due this Friday. This might be a problem. How many dates do you have this week?</p>
+                                                        <form>
+                                                            <input class="option" type="radio" name="question4" value=4>More than 5. You're going to have to cancel one of them.<br>
+                                                            <input class="option" type="radio" name="question4" value=3>You have a few dates in the pipeline, just testing the waters. You can still make the dates<br>
+                                                            <input class="option" type="radio" name="question4" value=2>You have one date because you're a one woman kind of guy<br>
+                                                            <input class="option" type="radio" name="question4" value=1>You have one date. You don't date much, in general.<br>
+                                                        </form>
+                                                    </div>
+                                                    <div class="questions">
+                                                        <p>5. Finally, how spontaneous are you?</p>
+                                                        <form>
+                                                            <input class="option" type="radio" name="question5" value=4>YOLO is your middle name. Your amusement > all else<br>
+                                                            <input class="option" type="radio" name="question5" value=3>You may not be the most wild or crazy person, but you are definitely down for good times<br>
+                                                            <input class="option" type="radio" name="question5" value=2>You like to have fun as much as the next guy, as long as things don't get too out of hand<br>
+                                                            <input class="option" type="radio" name="question5" value=1>I like to plan ahead, no matter what the situation, work or play<br>
+                                                        </form>
+                                                    </div>
+                                                    <br>*@
+
+                                                    @*<input type="button" id='Previous' value="Previous" onlick="sum_values()" style="background-color: #04AA6D;color: white;display:none;">*@
+                                                    <input type="button" id='next' value="Next" onlick="sum_values()" style="background-color: #04AA6D;color: white;">
+
+
+
+
+                                                                                                   
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        var PreB = 1;
+        answers = new Object();
+        $('.option').change(function () {
+            var answer = ($(this).attr('value'))
+            var question = ($(this).attr('name'))
+            answers[question] = answer
+        })
+        var item1 = document.getElementById('questions');
+
+        var totalQuestions = $('.questions').size();
+        var currentQuestion = 0;
+
+       
+
+        $questions = $('.questions');
+        $questions.hide();
+        $($questions.get(currentQuestion)).fadeIn();
+        //$('#next').click(function () {
+        //    debugger;
+        //    $($questions.get(currentQuestion)).fadeOut(function () {
+        //        currentQuestion = currentQuestion + 1;
+        //        if (currentQuestion == totalQuestions) {
+        //            $("#btnSubmit").show();
+        //            $("#next").hide();
+
+                  
+        //        } else {
+        //            $("#btnSubmit").hide();
+
+                  
+
+        //            $($questions.get(currentQuestion)).fadeIn();
+                   
+        //        }
+        //    });
+
+        //});
+        var q = 1;
+        $("#next").click(function () {
+            debugger;
+            PreB = PreB + 1;
+
+            q = q + 1;
+            GetQCount(q)
+            
+
+            var a = PreB;
+            if (a == "1") {
+                $("#Previous").hide();
+            }
+            else {
+                $("#Previous").show();
+            }
+
+
+            var current = $(".questions:visible"),
+                total = $(".questions").length,
+                last = $(".questions:last");
+            $(current).next().show();
+            $(current).hide();
+            if ($(current).next().is(last)) {
+                $("#next").hide();
+                $("#btnSubmit").show();
+            }
+        });
+
+        
+        $('#Previous').click(function () {
+            debugger;
+            q = q - 1;
+            GetQCountOnPre(q)
+
+            var current = $(".questions:visible"),
+                total = $(".questions").length,
+                last = $(".questions:last");
+            $(current).next().show();
+            $(current).hide();
+            if ($(current).next().is(last)) {
+                $("#next").hide();
+                $("#btnSubmit").show();
+            }
+            $($questions.get(currentQuestion)).fadeIn();
+        });
+
+
+
+
+
+
+
+
+
+    });
+
+
+    function sum_values() {
+        var the_sum = 0;
+        for (questions in answers) {
+            the_sum = the_sum + parseInt(answers[question])
+        }
+        return the_sum
+    }
+
+
+    function GetQCount(q) {
+        debugger;
+
+        if (q == 1) {
+            $("#Previous").hide();
+        }
+        else
+        {
+            $("#Previous").show();
+        }
+    }
+    function GetQCountOnPre(q) {
+        debugger;
+        if (q == 1) {
+            $("#Previous").hide();
+            $("#btnSubmit").hide();
+            $("#next").show();
+        }
+        else {
+            $("#Previous").show();
+        }
+    }
+
+
+
+    //$('#Previous').click(function (currentQuestion) {
+    //    debugger;
+    //    PreB = PreB - 1;
+    //    $($questions.get(currentQuestion)).fadeOut(function () {
+    //        currentQuestion = currentQuestion - 1;
+    //        if (currentQuestion == totalQuestions) {
+    //            $("#btnSubmit").show();
+    //            $("#next").hide();
+    //            HideShowPrevious()
+    //        } else {
+    //            $("#btnSubmit").hide();
+
+    //            $($questions.get(currentQuestion)).fadeIn();
+    //            HideShowPrevious()
+
+
+    //        }
+    //    });
+
+    //});
+</script>
+
+@*
+    <script>
+        debugger;
+        (function () {
+            debugger;
+            // Functions
+            function buildQuiz() {
+                // variable to store the HTML output
+                const output = [];
+
+                // for each question...
+                myQuestions.forEach(
+                  (currentQuestion, questionNumber) => {
+
+                      // variable to store the list of possible answers
+                      const answers = [];
+
+                      // and for each available answer...
+                      for (letter in currentQuestion.answers) {
+
+                          // ...add an HTML radio button
+                          answers.push(
+                            `<label>
+                  <input type="radio" name="question${questionNumber}" value="${letter}">
+                  ${letter} :
+                  ${currentQuestion.answers[letter]}
+                </label>`
+                          );
+                      }
+
+                      // add this question and its answers to the output
+                      output.push(
+                        `<div class="slide">
+                <div class="question"> ${currentQuestion.question} </div>
+                <div class="answers"> ${answers.join("")} </div>
+              </div>`
+                      );
+                  }
+                );
+
+                // finally combine our output list into one string of HTML and put it on the page
+                quizContainer.innerHTML = output.join('');
+            }
+
+            function showResults() {
+
+                // gather answer containers from our quiz
+                const answerContainers = quizContainer.querySelectorAll('.answers');
+
+                // keep track of user's answers
+                let numCorrect = 0;
+
+                // for each question...
+                myQuestions.forEach((currentQuestion, questionNumber) => {
+
+                    // find selected answer
+                    const answerContainer = answerContainers[questionNumber];
+                    const selector = `input[name=question${questionNumber}]:checked`;
+                    const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+                    // if answer is correct
+                    if (userAnswer === currentQuestion.correctAnswer) {
+                        // add to the number of correct answers
+                        numCorrect++;
+
+                        // color the answers green
+                        answerContainers[questionNumber].style.color = 'lightgreen';
+                    }
+                        // if answer is wrong or blank
+                    else {
+                        // color the answers red
+                        answerContainers[questionNumber].style.color = 'red';
+                    }
+                });
+
+                // show number of correct answers out of total
+                resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length}`;
+            }
+
+            function showSlide(n) {
+                debugger;
+                slides[currentSlide].classList.remove('active-slide');
+                slides[n].classList.add('active-slide');
+                currentSlide = n;
+                if (currentSlide === 0) {
+                    previousButton.style.display = 'none';
+                }
+                else {
+                    previousButton.style.display = 'inline-block';
+                }
+                if (currentSlide === slides.length - 1) {
+                    nextButton.style.display = 'none';
+                    submitButton.style.display = 'inline-block';
+                }
+                else {
+                    nextButton.style.display = 'inline-block';
+                    submitButton.style.display = 'none';
+                }
+            }
+
+            function showNextSlide() {
+                debugger;
+                showSlide(currentSlide + 1);
+            }
+
+            function showPreviousSlide() {
+                showSlide(currentSlide - 1);
+            }
+
+            // Variables
+            const quizContainer = document.getElementById('quiz');
+            const resultsContainer = document.getElementById('results');
+            const submitButton = document.getElementById('submit');
+            const myQuestions = [
+              {
+                  question: "Who invented JavaScript?",
+                  answers: {
+                      a: "Douglas Crockford",
+                      b: "Sheryl Sandberg",
+                      c: "Brendan Eich"
+                  },
+                  correctAnswer: "c"
+              },
+              {
+                  question: "Which one of these is a JavaScript package manager?",
+                  answers: {
+                      a: "Node.js",
+                      b: "TypeScript",
+                      c: "npm"
+                  },
+                  correctAnswer: "c"
+              },
+              {
+                  question: "Which tool can you use to ensure code quality?",
+                  answers: {
+                      a: "Angular",
+                      b: "jQuery",
+                      c: "RequireJS",
+                      d: "ESLint"
+                  },
+                  correctAnswer: "d"
+              }
+            ];
+
+            // Kick things off
+            buildQuiz();
+
+            // Pagination
+            const previousButton = document.getElementById("previous");
+            const nextButton = document.getElementById("next");
+            const slides = document.querySelectorAll(".slide");
+            let currentSlide = 0;
+
+            // Show the first slide
+            showSlide(currentSlide);
+
+            // Event listeners
+            submitButton.addEventListener('click', showResults);
+            previousButton.addEventListener("click", showPreviousSlide);
+            nextButton.addEventListener("click", showNextSlide);
+        })();
+
+    </script>
+
+    *@
+
+
+
+    @*<script>
+        $("#next").click(function () {
+            debugger;
+            var current = $(".qn:visible"),
+                total = $(".qn").length,
+                last = $(".qn:last");
+            $(current).next().show();
+            $(current).hide();
+            if ($(current).next().is(last)) {
+                $("#next").hide();
+                //$("input[type='submit']").show();
+            }
+        });
+
+    </script>*@
+
+
+
+@*<script>
+    $("#btnUserSave1").on('click', function (event)
+    {
+
+        var TrainingDetails =
+     {
+         PK_TrainingScheduleId: PK_TrainingScheduleId,
+         TrainingName: TrainingName,
+        
+     }
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ScheduleTraining", "TrainingSchedule")',
+            dataType: 'json',
+            Async: false,
+            data: JSON.stringify({ TSM: TrainingDetails, "DArray": DArray, }),
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                if (response.result == 'Redirect') {
+                    alert("Training Details has been Save successfully!!!")
+                    window.location = response.url;
+                }
+
+                if (response.result == 'Update') {
+                    alert("Training Details has been updated successfully!!!")
+                    window.location = response.url;
+                }
+            }
+        })
+
+
+    });
+
+</script>*@

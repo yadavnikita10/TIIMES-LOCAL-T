@@ -1,0 +1,390 @@
+﻿@model TuvVision.Models.ReportModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@helper CustomRenderingOfReport1(TuvVision.Models.ReportModel Report)
+        {
+        <a href="~/IVRReport/@Report.Report" download="download">
+            @Report.Report
+            
+        </a>
+    }
+
+
+    @{
+        ViewBag.Title = "AllIvrReports";
+        Layout = "~/Views/Shared/_TuvVision.cshtml";
+    }
+    <link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+<script src="~/Scripts/MvcGrid/mvc-grid.js"></script>
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+
+
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/datatable/css/jquery.dataTables.css" rel="stylesheet">
+
+
+
+@helper CustomRenderingOfReport1(TuvVision.Models.CallsModel IVR)
+        {
+    <a href="~/IVRReport/@IVR.IVR" download="~/IVRReport/@IVR.IVR">
+        @*@Report.Report*@
+        @IVR.IVR
+    </a>
+}
+
+@helper CustomRenderingOfReport2(TuvVision.Models.CallsModel Inspection)
+        {
+    <a href="~/IVRReport/@Inspection.insopectionRecord" download="~/IVRReport/@Inspection.insopectionRecord">
+        @*@Report.Report*@
+        @Inspection.insopectionRecord
+    </a>
+}
+
+@helper CustomRenderingOfReport3(TuvVision.Models.CallsModel Refdocument)
+        {
+    <a href="~/IVRReport/@Refdocument.RefDocument" download="~/IVRReport/@Refdocument.RefDocument">
+        @*@Report.Report*@
+        @Refdocument.RefDocument
+    </a>
+}
+<script>
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<style>
+    .eye-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.eye-symbol {
+    font-size: 24px;
+    margin-right: 8px;
+    cursor: pointer; /* Makes it clear that the eye symbol is clickable */
+}
+
+
+.doc-name {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
+.eye-link:hover .doc-name {
+    visibility: visible;
+    opacity: 1;
+}
+
+</style>
+
+
+
+    @using (Html.BeginForm())
+    {
+
+        <div class="main-content3 xs-max-height">
+
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-15">
+                    @*<form method="post">*@
+
+
+                    <div class="row">
+
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="small">From Date:</label>
+                                @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom form-control-sm form FromD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="small">To Date:</label>
+                                @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select End Date", @class = "form-control form-control-custom form-control-sm form FromD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+
+                                <input type="submit" value="Search" class="btn btn-default insert-form-btn insert form-control-sm" id="btnsave" style="margin-top:25px; " />
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12">
+                            <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Inspection Visit Report</h3>
+                        @if (Convert.ToString(System.Web.HttpContext.Current.Session["RoleID"]) == "61" || Convert.ToString(System.Web.HttpContext.Current.Session["RoleID"]) == "62")
+                        {
+
+                        }
+                        else
+                        {
+                        <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportAllIndex", "VisitReport")'"
+                                    style="border:none;">
+                                Export To Excel
+                            </button>
+                        }
+                        </div><!-- /.col -->
+                    </div>
+                    @*</form>*@
+
+                    <div class="col-xs-12">
+                        <hr class="custom-hr">
+                    </div><!-- /.col -->
+                    <!--Table was here-->
+
+                </div><!-- /.row -->
+
+                <div class="col-xs-12">
+
+                </div><!-- /.data table col -->
+
+                <div class="col-xs-12">
+
+                    <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                        <tr>
+                            <td>
+                                @(Html
+                            .Grid(Model.lst1)
+                            .Build(columns =>
+                            {
+                                //columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "VisitReportForm", new { PK_CALL_ID = o.PK_CALL_ID }, new { @class = "fa fa-pencil", title = "Report Name" }));
+
+                                columns.Add(c => c.ReportNo).Titled("Report No");
+                                columns.Add(c => c.Report).Titled("Download File").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true).Css("color: #001ED2;");
+                                columns.Add(c => c.Call_No).Titled("Call No");
+                                columns.Add(c => c.SubJob_No).Titled("Sub-Job No");
+                                columns.Add(c => c.Sap_And_Controle_No).Titled("Job No");
+                                columns.Add(c => c.Project_Name_Location).Titled("Project Name");
+                                columns.Add(c => c.Client_Name).Titled("Customer Name");
+                                columns.Add(c => c.Vendor_Name_Location).Titled("Vendor Name");
+                                columns.Add(c => c.Po_No).Titled("PO No");
+                                columns.Add(c => c.Inspector).Titled("Inspector Name");
+                                //added by nikita on 04102023 start
+                                columns.Add(c => c.IVRDownloadDate).Titled("Last Download Date");
+                                columns.Add(c => c.Date_Of_Inspection).Titled("Inspection Date");
+                                columns.Add(c => c.inspectionDate).Titled("Last Inspection Date");
+                                columns.Add(c => c.checkIFCustomerSpecific).Titled("Customer Specific format");
+                                columns.Add(c => c.ReportprepareinTiimes).Titled("Report Prepared In Tiimes");
+                                //columns.Add(c => c.mitigateddate).Titled("Mitigated Date");
+
+                                //end
+                                columns.Add(c => c.ReportDate).Titled("Report Date");
+                                columns.Add(c => c.Product_item).Titled("Item to be inspected");
+                                columns.Add(c => c.Originating_Branch).Titled("Originating Branch");
+                                columns.Add(c => c.Excuting_Branch).Titled("Executing Branch");
+                                columns.Add(c => c.CanIRNbeissued).Titled("Can IRN be issued");
+                                columns.Add(c => c.IssuedPOItemNumbers).Titled("Issued PO Item Numbers");
+                                columns.Add(c => c.Conclusion).Titled("Conclusion");
+                                columns.Add(c => c.Areas_Of_Concerns).Titled("Areas Of Concerns");
+                                columns.Add(c => c.IVR).Titled("IVR Number").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true);
+
+
+
+
+                                // columns.Add(c => c.refDocument)
+                                //.Titled("Reference Documents")
+                                //.RenderedAs(model =>
+                                //{
+                                //    if (model.refDocument != null && model.refDocument != "")
+                                //    {
+                                //        var output = "<ul>";
+                                //        foreach (var d in model.refDocument.Split('!'))
+                                //        {
+                                //            var attach = d.Split('|');
+                                //            if (attach.Length >= 3)
+                                //            {
+                                //                var linkText = attach[0].ToString();
+                                //                var linkUrl = Url.Action("Download2", "VisitReport", new { d = attach[2].ToString() });
+                                //                output += $"<li><a href='{linkUrl}' download='{linkUrl}'>{linkText}</a></li>";
+                                //            }
+                                //        }
+                                //        output += "</ul>";
+                                //        return new HtmlString(output); ;
+                                //    }
+                                //    else
+                                //    {
+                                //        return "";
+                                //    }
+                                //})
+                                columns.Add(c => c.refDocument)
+     .Titled("Reference Documents")
+     .RenderedAs(model =>
+     {
+         if (model.refDocument != null && model.refDocument != "")
+         {
+             var output = "<div style='display: flex; flex-wrap: wrap; gap: 10px;'>"; // Horizontal layout using flexbox
+             foreach (var d in model.refDocument.Split('!'))
+             {
+                 var attach = d.Split('|');
+                 if (attach.Length >= 3)
+                 {
+                     var linkText = attach[0].ToString();
+                     var linkUrl = Url.Action("Download2", "VisitReport", new { d = attach[2].ToString() });
+                     output += $@"
+                        <div>
+                            <a href='{linkUrl}' download='{linkUrl}' title='{linkText}' style='text-decoration: none;'>
+                                <img src='/View1.png'/>
+                            </a>
+                        </div>";
+                 }
+             }
+             output += "</div>";
+             return new HtmlString(output);
+         }
+         else
+         {
+             return "";
+         }
+     });
+
+                                columns.Add(c => c.Attachment)
+    .Titled("Inspection Records / Reports Documents")
+    .RenderedAs(model =>
+    {
+        if (model.Attachment != null && model.Attachment != "")
+        {
+            var output = "<div style='display: flex; flex-wrap: wrap; gap: 10px;'>"; // Horizontal layout using flexbox
+            foreach (var d in model.Attachment.Split('!'))
+            {
+                var attach = d.Split('|');
+                if (attach.Length >= 3)
+                {
+                    var linkText = attach[0].ToString();
+                    var linkUrl = Url.Action("Download1", "VisitReport", new { d = attach[2].ToString() });
+                    output += $@"
+                        <div>
+                            <a href='{linkUrl}' download='{linkUrl}' title='{linkText}' style='text-decoration: none;'>
+                                <img src='/View1.png'/>
+                            </a>
+                        </div>";
+                }
+            }
+            output += "</div>";
+            return new HtmlString(output);
+        }
+        else
+        {
+            return "";
+        }
+    });
+
+
+                                columns.Add(c => c.insopectionRecord)
+    .Titled("Details of Measuring Instrument Calibration Documents")
+    .RenderedAs(model =>
+    {
+        if (model.insopectionRecord != null && model.insopectionRecord != "")
+        {
+            var output = "<div style='display: flex; flex-wrap: wrap; gap: 10px;'>"; // Horizontal layout using flexbox
+            foreach (var d in model.insopectionRecord.Split('!'))
+            {
+                var attach = d.Split('|');
+                if (attach.Length >= 3)
+                {
+                    var linkText = attach[0].ToString();
+                    var linkUrl = Url.Action("Download3", "VisitReport", new { d = attach[2].ToString() });
+                    output += $@"
+                        <div>
+                            <a href='{linkUrl}' download='{linkUrl}' title='{linkText}' style='text-decoration: none;'>
+                                <img src='/View1.png'/>
+                            </a>
+                        </div>";
+                }
+            }
+            output += "</div>";
+            return new HtmlString(output);
+        }
+        else
+        {
+            return "";
+        }
+    })
+
+                              
+
+
+
+                                .Sortable(true);
+
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                                )
+
+
+                            </td>
+                        </tr>
+                    </table>
+
+
+
+                </div>
+
+            </div><!-- /.container-fluid -->
+            <!--End of header-->
+
+        </div>
+    <!--End of Ashwini Code-->
+    }
+
+    <script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+    </script>
+
+    <style>
+        table.evaluation > tbody {
+            width: 100% !important;
+            display: table;
+        }
+
+            table.evaluation > tbody > tr td table {
+                width: 100% !important;
+                display: table;
+            }
+    </style>
+
+

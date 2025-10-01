@@ -1,0 +1,2732 @@
+﻿@model TuvVision.Models.Internal_Audit_Report
+
+@{
+    ViewBag.Title = "CreateInternal_Audit_Report";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    List<string> EditProdName = ViewBag.EditproductName as List<string>;
+    List<string> EditAuditorName = ViewBag.AuditorNameName as List<string>;
+    int j = 0;
+}
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.8.0.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.22/jquery-ui.js"></script>
+
+@*<link href="~/Content/css/bootstrap-multiselect.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap-multiselect.js"></script>*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+<!--multiselect-->
+@*<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />*@
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+
+@*<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css" type="text/css" />
+<script src="https://code.jquery.com/jquery-2.2.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>*@
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#IdOBSType').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+</script>
+
+
+
+
+@*<script>
+
+        $(function () {
+            $(".Abc").datepicker({
+                dateFormat: 'dd/mm/y',//check change
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+50"
+            });
+        });
+    </script>*@
+
+
+<style>
+    #customers {
+        /*font-family: Arial, Helvetica, sans-serif;*/
+        font-family:'TNG Pro';
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            /*background-color: #04AA6D;*/
+            background-color: #001ED2;
+            color: white;
+        }
+</style>
+
+
+
+<style>
+    /*-- Delete color-profile --*/
+    ul.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+
+            ul.Attachment > li a.deleteItem1 {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+</style>
+<style>
+    .ui-widget-header {
+        background: #001ED2 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+</style>
+<div class="grey-bg-f3">
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-5">
+
+            <div class="col-xs-12 form-col">
+                <div class="row">
+                    <div class="col-xs-12 text-right">
+                        @*@if (ViewBag.lstDOrderType != null)
+                        {
+                            <button id="btnAddExpenses" class="btn btn-default news-btn" type="button" style="margin-bottom:18px;" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem",new { AuditId = Model.Internal_Audit_Id,Type="Internal Audit" } )'">Add Expenses</button>
+                        }*@
+                        
+                        @if (ViewBag.Internal_id != null)
+                        {
+
+                            <button id="btnAddExpenses" class="btn btn-default news-btn" type="button" style="margin-bottom:18px;" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem",new { AuditId = Model.Internal_Audit_Id,Type="Internal Audit" } )'"><i class="fa fa-inr" aria-hidden="true" style="margin-left:-11px;"></i> Add Expenses</button>
+                        }
+                        <a href="@Url.Action("AuditreportDashBoard", "Internal_Audit_Report")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="white-bg section-box-shadow">
+                            @*@Html.HiddenFor(model=>model.Internal_Audit_Id)*@
+                            @if (Model.Internal_Audit_Id != 0)
+                            {
+                                <h3 class="form-page-title">Internal Audit Report</h3>
+
+                            }
+                            else
+                            {
+                                <h3 class="form-page-title">Internal Audit Report</h3>
+
+                            }
+
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <div class="form-box">
+                                        <form method="post" enctype="multipart/form-data" id="btnForm">
+                                            @Html.HiddenFor(model => model.AuditId)
+                                            @Html.HiddenFor(model => model.Internal_Audit_Id)
+                                            @Html.HiddenFor(model => model.Total_NCR_raised)
+                                            <div class="col-xs-12 text-right">
+                                                <p style="padding:0;margin:0;margin-bottom:10px;color:red;font-weight:bold;font-size: 12px;">Fields marked * are mandatory</p>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Branch:</label>
+                                                        <div class="form-group">
+                                                            @Html.TextBoxFor(model => model.Branch, new { placeholder = "Enter Branch", @class = "form-control form-control-custom CompanyName", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                               
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Service Type</label>
+                                                        <div class="form-group">
+                                                            @Html.TextBoxFor(model => model.CostCenter_, new { placeholder = "Enter External Auditor", @class = "form-control form-control-custom CompanyName", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.CostCenter_, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Plan Ref Serial No:</label>
+                                                        <div class="form-group">
+                                                            @Html.TextBoxFor(model => model.Plan_ref_No, new { placeholder = "Enter Plan Ref Serial No.", @class = "form-control form-control-custom CompanyName", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Plan_ref_No, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Auditors:</label>
+                                                        <div class="form-group">
+                                                            @Html.TextBoxFor(model => model.Auditor, new { placeholder = "Enter Auditor", @class = "form-control form-control-custom CompanyName", @readonly = "readonly" })
+                                                            @Html.HiddenFor(model => model.AuditorId)
+                                                            @Html.ValidationMessageFor(model => model.Auditor, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>External Auditor:</label>
+                                                        <div class="form-group">
+                                                            @Html.TextBoxFor(model => model.ExAuditor, new { placeholder = "Enter External Auditor", @class = "form-control form-control-custom CompanyName" })
+                                                            @Html.ValidationMessageFor(model => model.ExAuditor, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*<div class="col-xs-12 col-sm-4">
+                    <div class="form-group">
+                        <label>Auditee:</label>
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.Auditee, new { placeholder = "Enter Auditee", @class = "form-control form-control-custom CompanyName", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.Auditee, "", new { @class = "text-danger" })
+
+
+                        </div>
+                    </div>
+
+                </div>*@
+
+                                                <div class="col-xs-12 col-sm-4">
+
+                                                    <label>Select Auditee Name:</label>
+
+                                                    @*@Html.DropDownListFor(model => model.listAuditee, (IEnumerable<SelectListItem>)ViewData["AuditorName"],
+
+                    new
+                    {
+                        @class = "form-control multiselect multiselect-icon multicls",
+                        @multiple = "multiple",
+                        @style = "width=20px;"
+                    })*@
+
+                                                    @if (ViewBag.checkAuditee == "Auditee")
+            {
+
+                                                        <select id="Auditee" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName" placeholder="Select Option" required="required">
+                                                            @foreach (var item in ViewBag.AuditorName)
+                                                            {
+                                                                if (EditProdName.Contains(item.DAuditorCode))
+                                                                {
+                                                                    <option value="@item.DAuditorCode" selected>@item.DAuditorName</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@item.DAuditorCode">@item.DAuditorName</option>
+                                                                }
+
+                                                            }
+                                                        </select>
+                                                    }
+                                                    else
+                                                    {
+                                                        <select id="Auditee" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName" placeholder="Select Option" required="required">
+
+                                                            @{
+                                                                foreach (var item in ViewData["AuditorName"] as IEnumerable<TuvVision.Models.Audit>)
+                                                                {
+
+                                                                    <option value="@item.DAuditorCode">@item.DAuditorName&nbsp; &nbsp;</option>
+
+
+                                                                }
+                                                            }
+                                                        </select>
+                                                                }
+
+
+                                                    @if (Model != null)
+            {
+
+                                                        <input type="hidden" id="changeOnAuditee" value="@Model.Auditee" />
+                                                    }
+                                                    <input type="text" class="hidden" id="Auditee" />
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                @*<div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Date of Audit (From Date):</label>
+                                                        <div class="form-group">
+                                                            @Html.TextBoxFor(model => model.SDate_Of_Audit, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Enter Date Of Audit", @class = "form-control form-control-custom FromDate", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.Date_Of_Audit, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Date of Audit (To Date):</label>
+                                                        <div class="form-group">
+                                                           @Html.TextBoxFor(model => model.SDateOfAudit_TODate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToDate", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.DateOfAudit_TODate, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>*@
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Process Audited:</label>
+                                                        <div class="form-group">
+                                                            @Html.TextBoxFor(model => model.Department, new { placeholder = "Enter Department", @class = "form-control form-control-custom CompanyName" })
+                                                            @Html.ValidationMessageFor(model => model.Department, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div id="DomesticCurrency">
+                                                <div class="form-page-title" style="width:110%;height:35px;vertical-align:central;">Add Dates</div>
+
+                                                <table id="DTestTable" cellspacing="0" cellpadding="3" border="1" style="width: 110%">
+                                                    <tr style="background-color:lightgray;color:black">
+                                                        <td width="220px" style="text-align: center;vertical-align:top;">
+                                                             Start Date
+                                                        </td>
+                                                        <td width="220px" style="text-align: center;vertical-align:top;">
+                                                             OnSite Time
+                                                        </td>
+                                                        <td width="220px" style="text-align: center;vertical-align:top;">
+                                                            Off-Site Time
+                                                        </td>
+                                                        <td width="220px" style="text-align: center;vertical-align:top;">
+                                                             Travel Time
+                                                        </td>
+
+                                                    </tr>
+
+                                                    @{
+                                                        int i = 0;
+                                                    }
+
+                                                    @if (ViewBag.lstDOrderType != null)
+                                                    {
+                                                        if (ViewBag.lstDOrderType.Count != 0)
+                                                        {
+                                                            foreach (var item in ViewBag.lstDOrderType as IEnumerable<TuvVision.Models.Internal_Audit_Report>)
+                                                            {
+                                                                i = i + 1;
+                                                                <tr class="trDomestic" style="background-color:#f0f0f0">
+
+
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.lstQuotationMasterDashBoard1[j].SDate_Of_Audit, "{0:dd MMM yyyy}", new { @style = "text-align:center", @placeholder = "", @class = "form-control CFromDate", autocomplete = "off", @id = "IDTrainingStartDate", @Value = item.SDate_Of_Audit })
+
+                                                                        @Html.HiddenFor(model => model.lstQuotationMasterDashBoard1[j].SDate_Of_Audit, new { @placeholder = "Start Date", @class = "form-control", autocomplete = "off", @Value = item.Date_Of_Audit })
+
+                                                                        @Html.ValidationMessageFor(model => model.SDate_Of_Audit, "", new { @class = "text-danger validation-msg" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.lstQuotationMasterDashBoard1[j].OnSiteTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control COnSiteTime", autocomplete = "off", @id = "IdTrainingStartTime", @Value = item.OnSiteTime })
+
+                                                                        @Html.HiddenFor(model => model.lstQuotationMasterDashBoard1[j].OnSiteTime, new { @placeholder = "Start Time", @class = "form-control", autocomplete = "off", @Value = item.OnSiteTime })
+
+                                                                        @Html.ValidationMessageFor(model => model.OnSiteTime, "", new { @class = "text-danger validation-msg" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.lstQuotationMasterDashBoard1[j].OffSiteTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control COffSiteTime", autocomplete = "off", @id = "IdOffSiteTime", @Value = item.OffSiteTime })
+
+                                                                        @Html.HiddenFor(model => model.lstQuotationMasterDashBoard1[j].OffSiteTime, new { @placeholder = "Start Time", @class = "form-control", autocomplete = "off", @Value = item.OnSiteTime })
+
+                                                                        @Html.ValidationMessageFor(model => model.OffSiteTime, "", new { @class = "text-danger validation-msg" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.lstQuotationMasterDashBoard1[j].TravelTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control CTravelTime", autocomplete = "off", @id = "IdTrainingEndTime", @Value = item.TravelTime })
+
+                                                                        @Html.HiddenFor(model => model.lstQuotationMasterDashBoard1[j].TravelTime, new { @placeholder = "End Time", @class = "form-control", autocomplete = "off", @Value = item.TravelTime })
+
+                                                                        @Html.ValidationMessageFor(model => model.TravelTime, "", new { @class = "text-danger validation-msg" })
+                                                                    </td>
+                                                                <td style="text-align:center;">
+                                                                        @if (i == 1)
+                                                                        {
+                                                                            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <button type="button" id="btnDelete" class="deleteContact btn btn btn-danger btn-xs">Remove</button>
+                                                                        }
+
+                                                                    </td>
+                                                                </tr>
+
+                                                                j++;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr class="trDomestic" style="background-color:#f0f0f0">
+                                                                <td>
+                                                                    @Html.TextBoxFor(model => model.SDate_Of_Audit, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CFromDate" })
+                                                                    @Html.ValidationMessageFor(model => model.SDate_Of_Audit, "", new { @class = "text-danger validation-msg" })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBoxFor(model => model.OnSiteTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  COnSiteTime" })
+                                                                    @Html.ValidationMessageFor(model => model.OnSiteTime, "", new { @class = "text-danger validation-msg" })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBoxFor(model => model.OffSiteTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  COffSiteTime" })
+                                                                    @Html.ValidationMessageFor(model => model.OffSiteTime, "", new { @class = "text-danger validation-msg" })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBoxFor(model => model.TravelTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTravelTime" })
+                                                                    @Html.ValidationMessageFor(model => model.TravelTime, "", new { @class = "text-danger validation-msg" })
+                                                                </td>
+
+
+                                                                <td style="text-align:center;">
+
+                                                                    <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+
+
+                                                                </td>
+
+
+
+                                                            </tr>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr class="trDomestic" style="background-color:#f0f0f0">
+
+                                                            <td>
+                                                                @Html.TextBoxFor(model => model.SDate_Of_Audit, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CFromDate" })
+                                                                @Html.ValidationMessageFor(model => model.SDate_Of_Audit, "", new { @class = "text-danger validation-msg" })
+                                                            </td>
+                                                            <td>
+                                                                @Html.TextBoxFor(model => model.OnSiteTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  COnSiteTime" })
+                                                                @Html.ValidationMessageFor(model => model.OnSiteTime, "", new { @class = "text-danger validation-msg" })
+                                                            </td>
+                                                            <td>
+                                                                @Html.TextBoxFor(model => model.OffSiteTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  COffSiteTime" })
+                                                                @Html.ValidationMessageFor(model => model.OffSiteTime, "", new { @class = "text-danger validation-msg" })
+                                                            </td>
+                                                            <td>
+                                                                @Html.TextBoxFor(model => model.TravelTime, new { @style = "text-align:center", @placeholder = "", @class = "form-control  CTravelTime" })
+                                                                @Html.ValidationMessageFor(model => model.TravelTime, "", new { @class = "text-danger validation-msg" })
+                                                            </td>
+
+
+                                                            <td style="text-align:center;">
+                                                                <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                            </td>
+
+
+
+                                                        </tr>
+                                                    }
+
+                                                </table><br />
+
+                                            </div>
+
+
+
+                                            <div><br /></div>
+
+                                            <style>
+                                                /*table {
+                                                    border-collapse: collapse;
+                                                    border-spacing: 0;
+                                                    width: 100%;
+                                                    border: 1px solid #ddd;
+                                                }
+
+                                                th, td {
+                                                    text-align: left;
+                                                    padding: 8px;
+                                                }
+
+                                                tr:nth-child(even) {
+                                                    background-color: #f2f2f2;
+                                                }*/
+                                            </style>
+
+                                           @*<div style="overflow-x:auto;">*@
+
+          @*  <table id="customers" class="display custom-table" cellspacing="0">*@
+
+
+                                            @*<style>
+                                                tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+                                            </style>*@
+                                            <div style="overflow-x:auto;">
+                                                @*<table style="width: 100%;table-layout:fixed;word-wrap:break-word;">*@
+                                                    <table style="width: 100%" id="customers">
+
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="hidden">Id</th>
+                                                                <th class="remove-search">Activity</th>
+                                                                <th class="remove-search">9001:2015</th>
+                                                                <th class="remove-search">17020:2012</th>
+
+                                                                <th> Evidence Checked / Sample Taken /Document Referred <a style="color: #001ED2;background-color: #001ED2;">blusssssssssssssseblusssssssssssssseblussssssssssssssessssssss</a></th>
+                                                                <th> Findings <a style="color: #001ED2;background-color: #001ED2;">blusssssssssssssseblusssssssssssssseblussssssssssssssessssssss</a></th>
+
+                                                                 <th class="remove-search">Critical NC</th>
+                                                                <th class="remove-search">Major NC</th>
+                                                                <th class="remove-search">Minor NC</th>
+                                                                <th class="remove-search">Observation</th>
+                                                                <th class="remove-search">Concern</th>
+                                                                <th class="remove-search">OFI <a style="color: #001ED2;background-color: #001ED2;">blusssss</a></th>
+
+                                                                <th>RCA By Auditee's<a style="color: #001ED2;background-color: #001ED2;">blusssssssssssssseblusssssssssssssseblussssssssssssssessssssss</a></th>
+                                                                <th>CA By Auditee's<a style="color: #001ED2;background-color: #001ED2;">blusssssssssssssseblusssssssssssssseblussssssssssssssessssssss</a></th>
+                                                                <th>Correction By Auditee's<a style="color: #001ED2;background-color: #001ED2;">blusssssssssssssseblusssssssssssssseblussssssssssssssessssssss</a></th>
+                                                                <th>Auditor remarks <a style="color: #001ED2;background-color: #001ED2;">blusssssssssssssseblusssssssssssssseblussssssssssssssessssssss</a></th>
+
+
+
+
+
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+
+                                                            @*@{
+                        int i = 0;
+                    }*@
+                                                            @foreach (var item in ViewBag.CostSheet as IEnumerable<TuvVision.Models.Internal_Audit_Report>)
+                                                            {
+
+                                                                <tr class="trAcivity">
+                                                                    @Html.HiddenFor(model => model.Activity[j].Internal_Audit_Id, new { @placeholder = "ID", @Value = item.Internal_Audit_Id, @class = "form-control" })
+                                                                    <td class="hidden">@Html.HiddenFor(model => model.Activity[j].PKActivityTypeId, new { @placeholder = "ID", @Value = item.PKActivityTypeId, @class = "form-control PKActivityTypeId" })</td>
+                                                                    <td>@item.ActivityNameMaster</td>
+                                                                    <td>
+                                                                        @item.Clause1
+                                                                    </td>
+                                                                    <td>
+                                                                        @item.Clause2
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].EvidenceChecked, new { @placeholder = "", @Value = item.EvidenceChecked, @class = "form-control EvidenceChecked", @style = "Height:200px", id = "idRemarks" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].Remarks, new { @placeholder = "", @Value = item.Remarks, @class = "form-control idRemarks", @style = "Height:200px", id ="idRemarks"})
+                                                                    </td>
+
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].CriticalNC, new { @placeholder = "", @Value = item.CriticalNC, @class = "form-control CriticalNC1" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].MajorNC, new { @placeholder = "", @Value = item.MajorNC, @class = "form-control MajorNC1" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].MinorNC, new { @placeholder = "", @Value = item.MinorNC, @class = "form-control MinorNC1" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].Observation, new { @placeholder = "", @Value = item.Observation, @class = "form-control Observation1" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].Concern, new { @placeholder = "", @Value = item.Concern, @class = "form-control Concern1" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].OFI, new { @placeholder = "", @Value = item.OFI, @class = "form-control OFI1" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].RCA, new { @placeholder = "", @Value = item.RCA, @class = "form-control RCA", @style = "Height:200px", id = "idRemarks" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].CA, new { @placeholder = "", @Value = item.CA, @class = "form-control CA", @style = "Height:200px", id = "idRemarks" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].Correction, new { @placeholder = "", @Value = item.Correction, @class = "form-control Correction", @style = "Height:200px", id = "idRemarks" })
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(model => model.Activity[j].Auditorremarks, new { @placeholder = "", @Value = item.Auditorremarks, @class = "form-control Auditorremarks", @style = "Height:200px", id = "idRemarks" })
+                                                                    </td>
+
+
+                                                                </tr>
+
+
+
+                                                                j++;
+                                                            }
+                                                        </tbody>
+
+                                                    </table>
+</div>
+
+
+
+                                            <script>
+    $(document).ready(function () {
+        debugger;
+        //var chkARC = $('#chkARC').val();
+        //var IVRCount = $('#IVRCount').val();
+        //var ARCFirstPrint = $('#ARCFirstPrint').val();
+
+
+        $(".idRemarks").each(function () {
+
+            var textbox = $(document.createElement('textarea')).val(this.value);
+            console.log(this.attributes);
+            $.each(this.attributes, function () {
+                if (this.specified) {
+                    textbox.prop(this.name, this.value)
+                }
+            });
+            $(this).replaceWith(textbox);
+
+
+        })
+
+
+
+
+
+
+    });
+</script>
+
+
+                                            <style>
+                                                table {
+                                                    border-collapse: collapse;
+                                                    border-spacing: 0;
+                                                    width: 100%;
+                                                    border: 1px solid #ddd;
+                                                }
+
+                                                th, td {
+                                                    text-align: left;
+                                                    padding: 8px;
+                                                }
+
+                                                tr:nth-child(even) {
+                                                    background-color: #f2f2f2;
+                                                }
+                                            </style>
+
+
+
+                                            <div style="display:none;">
+
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label style="color:red;">ACTIVITY</label>
+                                                            <div class="form-group">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label style="color:red;">REMARKS</label>
+                                                            <div class="form-group">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            <label style="color:red;">FINDINGS</label>
+                                                            <div class="form-group">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Nominated Person by the Management-Records of MRM:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Nominated_By_Management_Remark, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Nominated_By_Management_Remark, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Nominated_By_Management_Remark, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Nominated_By_Management_NCR, new List<SelectListItem> {
+                                                   new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Nominated_By_Management_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Findings from previous Internal Audit:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Findings_From_PreviousAudit_Remark, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Findings_From_PreviousAudit_Remark, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Findings_From_PreviousAudit_Remark, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Findings_From_PreviousAudit_NCR, new List<SelectListItem> {
+                                                  new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Findings_From_PreviousAudit_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Customer Complaints:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Customer_Complaints_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Customer_Complaints_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Customer_Complaints_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Customer_Complaints_NCR, new List<SelectListItem> {
+                                                    new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Customer_Complaints_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Customer Feedback and Analysis:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.CustomerFeedBacknAnalysis_Remark, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.CustomerFeedBacknAnalysis_Remark, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.CustomerFeedBacknAnalysis_Remark, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.CustomerFeedBacknAnalysis_NCR, new List<SelectListItem> {
+                                                  new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.CustomerFeedBacknAnalysis_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Process Measures:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Process_Measures_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Process_Measures_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Process_Measures_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Process_Measures_NCR, new List<SelectListItem> {
+                                                  new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Process_Measures_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Training Module, Appraisal & KRA's:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Training_AppraisalnKRAs_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Training_AppraisalnKRAs_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Training_AppraisalnKRAs_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Training_AppraisalnKRAs_NCR, new List<SelectListItem> {
+                                                   new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Training_AppraisalnKRAs_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Enquiry Management Process:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Enquiry_Management_Process_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Enquiry_Management_Process_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Enquiry_Management_Process_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Enquiry_Management_Process_NCR, new List<SelectListItem> {
+                                                   new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Enquiry_Management_Process_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Quotation Process:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Quotation_Process_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Quotation_Process_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Quotation_Process_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Quotation_Process_NCR, new List<SelectListItem> {
+                                                  new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Quotation_Process_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Order/Contract Review & Acceptance Contract Review:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.OrderReviewnAccepatanceContractreview_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.OrderReviewnAccepatanceContractreview_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.OrderReviewnAccepatanceContractreview_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.OrderReviewnAccepatanceContractreview_NCR, new List<SelectListItem> {
+                                                new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.OrderReviewnAccepatanceContractreview_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Organization Structure, Roles & Responsibilities:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.OrganisationStructure_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.OrganisationStructure_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.OrganisationStructure_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.OrganisationStructure_NCR, new List<SelectListItem> {
+                                                  new SelectListItem {Text="---nc-Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.OrganisationStructure_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Control of Documents:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Control_Of_Documents_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Control_Of_Documents_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Control_Of_Documents_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Control_Of_Documents_NCR, new List<SelectListItem> {
+                                                 new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Control_Of_Documents_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Control of Records:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Control_Of_Records_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Control_Of_Records_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Control_Of_Records_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Control_Of_Records_NCR, new List<SelectListItem> {
+                                               new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Control_Of_Records_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Competency Mapping:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Competancy_Mapping_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Competancy_Mapping_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Competancy_Mapping_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Competancy_Mapping_NCR, new List<SelectListItem> {
+                                                  new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Competancy_Mapping_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Academic Records:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Academic_records_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Academic_records_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Academic_records_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Academic_records_NCR, new List<SelectListItem> {
+                                                   new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Academic_records_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>NDE Certifications:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.NDE_certifications_Remark, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.NDE_certifications_Remark, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.NDE_certifications_Remark, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.NDE_certifications_NCR, new List<SelectListItem> {
+                                                   new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.NDE_certifications_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Visual Activity:</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Visual_Activity_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Visual_Activity_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Visual_Activity_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Visual_activity_NCR, new List<SelectListItem> {
+                                                   new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Visual_activity_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Training records including Induction Training of new Inspectors, Training Effectiveness:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.TrainingRecords_Effectiveness_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.TrainingRecords_Effectiveness_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.TrainingRecords_Effectiveness_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.TrainingRecords_Effectiveness_NCR, new List<SelectListItem> {
+                                                   new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.TrainingRecords_Effectiveness_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Impartiality, Confidentiality, Declaration:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Impartiality_Confidentiality_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Impartiality_Confidentiality_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Impartiality_Confidentiality_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Impartiality_Confidentiality_NCR, new List<SelectListItem> {
+                                                 new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Impartiality_Confidentiality_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Inspection Co-ordination & Execution Process:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.InspectionCordinationnInspectionProcess_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.InspectionCordinationnInspectionProcess_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.InspectionCordinationnInspectionProcess_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.InspectionCordinationnInspectionProcess_NCR, new List<SelectListItem> {
+                                           new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.InspectionCordinationnInspectionProcess_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Onsite Monitoring:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Onsite_Monitoring_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Onsite_Monitoring_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Onsite_Monitoring_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Onsite_Monitoring_NCR, new List<SelectListItem> {
+                                                new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Onsite_Monitoring_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Document/Completed Work Review:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Document_Work_Review_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Document_Work_Review_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Document_Work_Review_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Document_Work_Review_NCR, new List<SelectListItem> {
+                                                new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Document_Work_Review_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Safety of personnel:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Safety_Of_Personnel_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Safety_Of_Personnel_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Safety_Of_Personnel_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Safety_Of_Personnel_NCR, new List<SelectListItem> {
+                                               new SelectListItem {Text="----Findings----",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Safety_Of_Personnel_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Planning-Actions to address Risk Opportunities:</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            @*@Html.TextBoxFor(model => model.Planning_opportunities_Remarks, new { placeholder = "Enter REMARKS", @class = "form-control form-control-custom CompanyName" })*@
+                                                            @Html.TextAreaFor(model => model.Planning_opportunities_Remarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter REMARKS" })
+                                                            @Html.ValidationMessageFor(model => model.Planning_opportunities_Remarks, "", new { @class = "text-danger" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+                                                        <div class="form-group">
+                                                            @Html.DropDownListFor(model => model.Planning_opportunities_NCR, new List<SelectListItem> {
+                                                    new SelectListItem {Text="----Findings------",Value="" },
+                                                 new SelectListItem {Text="Critical NC",Value="CriticalNC" },
+                                                  new SelectListItem {Text="Major NC",Value="MajorNC" },
+                                                   new SelectListItem {Text="Minor NC",Value="MinorNC" },
+                                                 new SelectListItem {Text="OBSERVATION",Value="OBSERVATION"},
+                                                 new SelectListItem {Text="Concern",Value="Concern"},
+                                                 new SelectListItem {Text="OFI",Value="OFI" },
+                                                 new SelectListItem {Text="None",Value="None" }
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                            @Html.ValidationMessageFor(model => model.Planning_opportunities_NCR, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                                                    <div class="form-group">
+                                                        <label style="color:red;">TOTAL FINDINGS</label> &nbsp;&nbsp;
+                                                        @Html.TextBoxFor(model => model.TotalFindings, new { @placeholder = "", @class = "form-control TotalFindings", autocomplete = "off"})
+                                                        @*<label id="TotalFindings"></label>*@
+                                                        <div class="form-group">
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        
+                                                        
+                                                    </div>
+
+                                                </div>
+                                                @*<div class="col-xs-12 col-sm-6">
+                    <div class="form-group">
+                        <label style="color:red;">REMARKS</label>
+                        <div class="form-group">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                    <div class="form-group">
+                        <label style="color:red;">FINDINGS</label>
+                        <div class="form-group">
+                        </div>
+                    </div>
+                </div>*@
+                                            </div>
+
+                                            <div class="row" style="pointer-events:none;">
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Critical NC Count</label>
+                                                        @Html.TextBoxFor(model => model.CriticalNCCount, new { @placeholder = "Critical NC Count", @class = "form-control CriticalNCCount", autocomplete = "off", @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.CriticalNCCount, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Major NC Count</label>
+                                                        @Html.TextBoxFor(model => model.MajorNCCount, new { @placeholder = "Major NC Count", @class = "form-control MajorNCCount", autocomplete = "off", @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.MajorNCCount, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Minor NC Count</label>
+                                                        @Html.TextBoxFor(model => model.MinorNCCount, new { @placeholder = "Minor NC Count", @class = "form-control MinorNCCount", autocomplete = "off", @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.MinorNCCount, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="row" style="pointer-events:none;">
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>OBSERVATION Count</label>
+                                                        @Html.TextBoxFor(model => model.OBSERVATIONCount, new { @placeholder = "OBSERVATION Count", @class = "form-control OBSERVATIONCount", autocomplete = "off", @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.OBSERVATIONCount, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Concern Count</label>
+                                                        @Html.TextBoxFor(model => model.ConcernCount, new { @placeholder = "Concern Count", @class = "form-control ConcernCount", autocomplete = "off", @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.ConcernCount, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>OFI Count</label>
+                                                        @Html.TextBoxFor(model => model.OFICount, new { @placeholder = "OFI Count", @class = "form-control OFICount", autocomplete = "off", @onkeypress = "return isNumberKey(event);" })
+                                                        @Html.ValidationMessageFor(model => model.OFICount, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Additional Remarks (if any):</label>
+                                                        @*@Html.TextBoxFor(model => model.Planning_opportunities_Remarks, new { placeholder = "Enter Additional Remarks", @class = "form-control form-control-custom CompanyName" })*@
+                                                        @Html.TextAreaFor(model => model.AdditionalRemarks, new { @class = "form-control form-control-custom CompanyName", @rows = "3", @placeholder = "Enter Additional Remarks" })
+                                                        @Html.ValidationMessageFor(model => model.AdditionalRemarks, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label><i class="fa fa-paperclip" style="color:black;"></i> NC Documents (Please attach files here): <span style="color:#ff0000;">*</span></label>
+                                                    <input type="file" class="filepond" name="filepond" id="FileUpload" multiple>
+                                                    <input hidden="hidden" id="hdfFileUpload" name="FileUpload" class="hidden" />
+                                                </div>
+                                            </div>
+                                            @if (Model != null)
+                                            {
+                                                if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <ul class="Attachment">
+                                                                    @foreach (var item in Model.FileDetails)
+                                                                    {
+                                                                        <li>
+                                                                            <a class="title" href="/Internal_Audit_Report/Download/?p=@(item.IDS + item.Extension)&d=@item.FileName">@item.FileName</a>
+                                                                            <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem">X</a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <p style="color:red;text-align:center;font-weight:bold;">No Files Uploaded</p>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <p style="color:red;text-align:center;font-weight:bold;">There are no Attachments !</p>
+                                            }
+
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Is Audit Completed:</label>
+                                                        @Html.DropDownListFor(model => model.IsAuditCompleted, new List<SelectListItem> {
+                                               new SelectListItem {Text="----Is Audit Completed------",Value="" },
+                                                 new SelectListItem {Text="Yes",Value="Yes" },
+                                                  new SelectListItem {Text="No",Value="No" }
+
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                        @Html.ValidationMessageFor(model => model.IsAuditCompleted, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                @*<div class="form-group">
+                                                    @{
+                                                        if (Model != null)
+                                                        {
+
+                                                            if (!string.IsNullOrEmpty(Model.NCDocument))
+                                                            {
+                                                                <div class="cform-group">
+                                                                    @{
+                                                                        string[] words = (Model.NCDocument).Split(',');
+                                                                        for (int i = 0; i < words.Count(); i++)
+                                                                        {
+                                                                            <a id="btnAddToCart" class="btn btn-default insert-form-btn" href="@Url.Content("" + words[i])" role="button" download="@Url.Content("~/AuditReportNCDocument/" + words[i])">
+                                                                                <i class="fa fa-download"></i>           @words[i]
+                                                                            </a>
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <div class="form-group">
+
+                                                                            </div>
+                                                                            }
+                                                                        }
+                                                    }
+                                                </div>*@
+                                            </div>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label><i class="fa fa-paperclip" style="color:black;"></i> Closure Related Documents (Please attach files here) : <span style="color:#ff0000;">*</span></label>
+                                                    <input type="file" class="filepond" name="filepond" id="SupportingDocumentFileUpload" multiple>
+                                                    <input hidden="hidden" id="hdfFileUploadSupportingDocument" name="FileUpload" class="hidden" />
+                                                </div>
+                                            </div>
+
+                                            @if (Model != null)
+                                            {
+                                                if (Model.FileDetails1 != null && Model.FileDetails1.Count > 0)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <ul class="Attachment">
+                                                                    @foreach (var item in Model.FileDetails1)
+                                                                    {
+                                                                        <li>
+                                                                            <a class="title" href="/Internal_Audit_Report/Download1/?p=@(item.IDS + item.Extension)&d=@item.FileName">@item.FileName</a>
+                                                                            <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem1">X</a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <p style="color:red;text-align:center;font-weight:bold;">No Files Uploaded</p>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <p style="color:red;text-align:center;font-weight:bold;">There are no Attachments !</p>
+                                            }
+                                            @*<div class="col-xs-12">
+                <div class="form-group">
+                    @{
+                        if (Model != null)
+                        {
+
+                            if (!string.IsNullOrEmpty(Model.SupportingDocument))
+                            {
+                                <div class="cform-group">
+                                    @{
+                                        string[] words = (Model.SupportingDocument).Split(',');
+                                        for (int i = 0; i < words.Count(); i++)
+                                        {
+                                            <a id="btnAddToCart" class="btn btn-default insert-form-btn" href="@Url.Content("" + words[i])" role="button" download="@Url.Content("~/AuditReportRelatedDocument/" + words[i])">
+                                                <i class="fa fa-download"></i>           @words[i]
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="form-group">
+
+                                            </div>
+                                            }
+                                        }
+                    }
+                </div>
+            </div>*@
+
+
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Are Findings Closed:</label>
+                                                        @Html.DropDownListFor(model => model.AreFindingsClose, new List<SelectListItem> {
+                                               new SelectListItem {Text="--- Are Finding Closed ---",Value="" },
+                                                 new SelectListItem {Text="Yes",Value="Yes" },
+                                                  new SelectListItem {Text="No",Value="No" }
+
+                                             }, new { @class = "form-control form-control-custom Count" })
+                                                        @Html.ValidationMessageFor(model => model.AreFindingsClose, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-xs-12 text-center">
+                                               
+                                                    @if (Model.Internal_Audit_Id != 0)
+                                                    {
+                                                        @*<button type="submit" class="btn btn-default insert-form-btn" id="btnsave"><i class="fa fa-plus-circle"></i> Save</button>*@
+                                                        <button type="button" class="btn btn-default insert-form-btn" id="btnsave"> Save </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="reset" class="btn btn-default news-btn">Reset</button>
+                                                        @*<button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle" id="btnsave"></i>Save</button>*@
+                                                        <button type="button" class="btn btn-default insert-form-btn" id="btnsave"> Save </button>
+                                                    }
+                                               
+
+
+                                            </div>
+
+
+
+
+
+
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<script>
+    $(function () {
+        $("#btnsave").click(function () {
+            debugger;
+            alert("A")
+            if ($("#Branch").val() == "" || $("#Branch").val() == null) {
+                alert("Please Enter Branch first!");
+                $("#Branch").focus()
+                return false;
+            }
+            if ($("#Plan_ref_No").val() == "" || $("#Plan_ref_No").val() == null) {
+                alert("Please Enter Plan ref Serial No first!");
+                $("#Branch").focus()
+                return false;
+            }
+            if ($("#Auditor").val() == "" || $("#Auditor").val() == null) {
+                alert("Please Enter Auditor first!");
+                $("#Branch").focus()
+                return false;
+            }
+            if ($("#Auditee").val() == "" || $("#Auditee").val() == null) {
+                alert("Please Enter Auditee first!");
+                $("#Branch").focus()
+                return false;
+            }
+            if ($("#Department").val() == "" || $("#Department").val() == null) {
+                alert("Please Enter Department first!");
+                $("#Branch").focus()
+                return false;
+            }
+
+
+            var a = "1";
+            var DArray = [];
+              $('.trDomestic').each(function () {
+                var trD = {};
+
+                var TrainingStartDate = $(this).find('.CFromDate').val();
+                var TrainingStartTime = $(this).find('.COnSiteTime').val();
+                var TrainingEndTime = $(this).find('.CTravelTime').val();
+           
+
+
+                if (a !== "2") {
+                    @Model.Test =TrainingStartDate;
+                    trD['SDate_Of_Audit'] = TrainingStartDate;
+                    trD['OnSiteTime'] = TrainingStartTime;
+                    trD['TravelTime'] = TrainingEndTime;
+            
+                    DArray.push(trD);
+                }
+                else {
+                    alert(strMsg);
+                    return false;
+                }
+
+            });
+
+
+
+          
+        });
+
+
+
+    });
+
+                                            </script>*@
+
+
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+@*Custom Scripts*@
+@*Binding Service Type Dropdownlist*@
+<script>
+    $(document).ready(function () {
+        $("#ddlServiceType").change(function () {
+            $("#ddlPedType").empty();
+            $("#ddlOtherType").empty();
+            $("#ddlEnergyType").empty();
+            $("#ddlPedType").append('<option>--Select Ped Type--</option>');
+            $("#ddlOtherType").append('<option>--Select Other Type--</option>');
+            $("#ddlEnergyType").append('<option>--Select Energy Type--</option>');
+            if ($("#ddlServiceType").val() != "--Select ServiceType--") {
+                if ($("#ddlServiceType").val() == 200) {
+                    $.ajax({
+                        url: '@Url.Action("BindPedType", "EnquiryMaster")',
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify({ SubType: $("#ddlServiceType").val() }),
+                        contentType: 'application/json',
+                        success: function (Data) {
+                            if (Data.ErrorMessage == "SystemSessionTimeOut") {
+                                window.location = "../Login/UserLogin";
+                            }
+                            else {
+                                $.each(Data, function (i, l) {
+                                    $("#ddlPedType").append('<option value="' + l.Value + '">' +
+										 l.Text + '</option>');
+                                });
+                            }
+                        },
+                        error: function (ex) {
+                            alert('Failed! ' + ex);
+                        }
+                    });
+                }
+                if ($("#ddlServiceType").val() == 300) {
+                    //$(".form-multiselect-others-box").show();
+                    //$(".form-multiselect-energy-box").hide();
+                    //$(".form-multiselect-ped-box").hide();
+                    $.ajax({
+                        url: '@Url.Action("BindOtherType", "EnquiryMaster")',
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify({ OtherType: $("#ddlServiceType").val() }),
+                        contentType: 'application/json',
+                        success: function (Data) {
+                            if (Data.ErrorMessage == "SystemSessionTimeOut") {
+                                window.location = "../Login/UserLogin";
+                            }
+                            else {
+                                $.each(Data, function (i, l) {
+                                    $("#ddlOtherType").append('<option value="' + l.Value + '">' +
+										 l.Text + '</option>');
+                                });
+                            }
+                        },
+                        error: function (ex) {
+                            alert('Failed! ' + ex);
+                        }
+                    });
+                }
+                if ($("#ddlServiceType").val() == 400) {
+                    //$(".form-multiselect-others-box").hide();
+                    //$(".form-multiselect-energy-box").show();
+                    //$(".form-multiselect-ped-box").hide();
+                    $.ajax({
+                        url: '@Url.Action("BindEnergyType", "EnquiryMaster")',
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify({ EnergyType: $("#ddlServiceType").val() }),
+                        contentType: 'application/json',
+                        success: function (Data) {
+                            if (Data.ErrorMessage == "SystemSessionTimeOut") {
+                                window.location = "../Login/UserLogin";
+                            }
+                            else {
+                                $.each(Data, function (i, l) {
+                                    $("#ddlEnergyType").append('<option value="' + l.Value + '">' +
+										 l.Text + '</option>');
+                                });
+                            }
+                        },
+                        error: function (ex) {
+                            alert('Failed! ' + ex);
+                        }
+                    });
+                }
+            }//First Bind Ped
+        });
+    });
+</script>
+
+<script>
+    var SummaryExtension = false;
+    var fileExtension = ["pdf", "PDF", "xls", "xlsx", "doc", "DOC", "docx", "DOCX", "png", "PNG", "jpg", "JPG", "JPEG", "gif"];
+    $("#FileUpload").change(function (e) {
+        debugger;
+        var files = $("#FileUpload input[type='file']").get(0).files;
+        for (var index = 0; index < files.length; index++) {
+            var singleExtension = e.target.files[index].name.split('.').pop();
+            var Condition = fileExtension.includes(singleExtension);
+            if (Condition == true) {
+                SummaryExtension = true;
+            }
+            else {
+                alert("Only formats are allowed : " + fileExtension.join(','));
+                SummaryExtension = false;
+                return;
+            }
+        }
+        if (SummaryExtension == true) {
+            var fileData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                fileData.append("FileUpload input[type='file']", files[i]);
+            }
+            //Creating an XMLHttpRequest and sending
+            var xhr = new XMLHttpRequest();
+            var link = '@Url.Action("TemporaryFilePathDocumentAttachment", "Internal_Audit_Report")';
+            xhr.open('POST', link, 'true');
+            xhr.send(fileData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var data = xhr.responseText;
+                    data = data.replace(/"/g, "");
+                    $("#NCDocument").val(data);
+                }
+            }
+
+        }
+
+
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $('.deleteItem').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#EQ_ID").val();
+            if (confirm('Do you really want to delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteFile")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("There is something wrong. Please try again.");
+                })
+
+            }
+        });
+    });
+
+</script>
+
+<!--Supporting Document-->
+
+<script>
+    var SummaryExtension = false;
+    var fileExtension = ["pdf", "PDF", "xls", "xlsx", "doc", "DOC", "docx", "DOCX", "png", "PNG", "jpg", "JPG", "JPEG", "gif"];
+    $("#SupportingDocumentFileUpload").change(function (e) {
+        debugger;
+        var files = $("#SupportingDocumentFileUpload input[type='file']").get(0).files;
+        for (var index = 0; index < files.length; index++) {
+            var singleExtension = e.target.files[index].name.split('.').pop();
+            var Condition = fileExtension.includes(singleExtension);
+            if (Condition == true) {
+                SummaryExtension = true;
+            }
+            else {
+                alert("Only formats are allowed : " + fileExtension.join(','));
+                SummaryExtension = false;
+                return;
+            }
+        }
+        if (SummaryExtension == true) {
+            var fileData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                fileData.append("SupportingDocumentFileUpload input[type='file']", files[i]);
+            }
+            //Creating an XMLHttpRequest and sending
+            var xhr = new XMLHttpRequest();
+            var link = '@Url.Action("SupportingDocumentAttachment", "Internal_Audit_Report")';
+            xhr.open('POST', link, 'true');
+            xhr.send(fileData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var data = xhr.responseText;
+                    data = data.replace(/"/g, "");
+                    $("#SupportingDocument").val(data);
+                }
+            }
+
+        }
+
+
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.deleteItem1').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#EQ_ID").val();
+            if (confirm('Do you really want to delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteFile1")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("There is something wrong. Please try again.");
+                })
+
+            }
+        });
+    });
+
+</script>
+
+<script>
+    var SummaryExtension = false;
+    var fileExtension = ["pdf", "PDF", "xls", "xlsx", "doc", "DOC", "docx", "DOCX", "png", "PNG", "jpg", "JPG", "JPEG", "gif",".msg",".MSG"];
+    $("#SupportingDocumentFileUpload").change(function (e) {
+        debugger;
+        var files = $("#SupportingDocumentFileUpload input[type='file']").get(0).files;
+        for (var index = 0; index < files.length; index++) {
+            var singleExtension = e.target.files[index].name.split('.').pop();
+            var Condition = fileExtension.includes(singleExtension);
+            if (Condition == true) {
+                SummaryExtension = true;
+            }
+            else {
+                alert("Only formats are allowed : " + fileExtension.join(','));
+                SummaryExtension = false;
+                return;
+            }
+        }
+        if (SummaryExtension == true) {
+            var fileData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                fileData.append("SupportingDocumentFileUpload input[type='file']", files[i]);
+            }
+            //Creating an XMLHttpRequest and sending
+            var xhr = new XMLHttpRequest();
+            var link = '@Url.Action("AuditReportRelatedDocument", "Internal_Audit_Report")';
+            xhr.open('POST', link, 'true');
+            xhr.send(fileData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var data = xhr.responseText;
+                    data = data.replace(/"/g, "");
+                    $("#SupportingDocument").val(data);
+                }
+            }
+
+        }
+
+
+    })
+</script>
+
+@*<script>
+        $(document).ready(function () {
+            debugger;
+            var fld = $(".Count").val();
+
+            var values = [];
+            var count = 0;
+            for (var i = 0; i < fld.length; ++i) {
+                if (fld[i] == 'OBSERVATION')
+                    count+1;
+
+            }
+        });
+    </script>*@
+
+<script>
+    $(function () {
+        $(".ToDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".FromDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+
+        });
+    });
+
+    $(function () {
+        $(".CFromDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+
+        });
+    });
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+</script>
+
+@*<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css" type="text/css" />
+<script src="https://code.jquery.com/jquery-2.2.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />*@
+<script type="text/javascript">
+    $(function () {
+        $('#Auditee').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+</script>
+
+<script>
+    $('.COnSiteTime').keypress(function (e) {
+        debugger;
+        var regex = new RegExp("^[0-9*#+]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+
+            return true;
+
+        }
+
+        e.preventDefault();
+        return false;
+    });
+    $('.CTravelTime').keypress(function (e) {
+        debugger;
+        var regex = new RegExp("^[0-9*#+]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+
+            return true;
+
+        }
+
+        e.preventDefault();
+        return false;
+    });
+
+
+    $('.CriticalNC1').keypress(function (e) {
+        debugger;
+        var regex = new RegExp("^[0-9*#+]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            
+            return true;
+           
+        }
+
+        e.preventDefault();
+        return false;
+    });
+    $('.MajorNC1').keypress(function (e) {
+        debugger;
+        var regex = new RegExp("^[0-9*#+]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            
+            return true;
+        }
+        e.preventDefault();
+        return false;
+    });
+    $('.MinorNC1').keypress(function (e) {
+        debugger;
+        var regex = new RegExp("^[0-9*#+]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+           
+            return true;
+        }
+        e.preventDefault();
+        return false;
+    });
+    $('.Observation1').keypress(function (e) {
+        debugger;
+        var regex = new RegExp("^[0-9*#+]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            
+            return true;
+        }
+        e.preventDefault();
+        return false;
+    });
+    $('.Concern1').keypress(function (e) {
+        debugger;
+        var regex = new RegExp("^[0-9*#+]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            
+            return true;
+        }
+        e.preventDefault();
+        return false;
+    });
+    $('.OFI1').keypress(function (e) {
+        debugger;
+        var regex = new RegExp("^[0-9*#+]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            
+            return true;
+        }
+        e.preventDefault();
+        return false;
+    });
+
+    $(".CriticalNC1").change(function () {
+        var sum = 0;
+        $('.CriticalNC1').each(function () {
+            if ($(this).val() != "") {
+                sum += parseInt($(this).val());
+            }
+            // Or this.innerHTML, this.innerText
+
+        });
+        $('#CriticalNCCount').val(sum);
+        updateTotal();
+    })
+    $(".MajorNC1").change(function () {
+        var sum = 0;
+        $('.MajorNC1').each(function () {
+            if ($(this).val() != "") {
+                sum += parseInt($(this).val());
+            }
+            // Or this.innerHTML, this.innerText
+
+        });
+        $('#MajorNCCount').val(sum);
+        updateTotal();
+    })
+    $(".MinorNC1").change(function () {
+        var sum = 0;
+        $('.MinorNC1').each(function () {
+            if ($(this).val() != "") {
+                sum += parseInt($(this).val());
+            }
+            // Or this.innerHTML, this.innerText
+
+        });
+        $('#MinorNCCount').val(sum);
+        updateTotal();
+    })
+    $(".Observation1").change(function () {
+        var sum = 0;
+        $('.Observation1').each(function () {
+            if ($(this).val() != "") {
+                sum += parseInt($(this).val());
+            }
+            // Or this.innerHTML, this.innerText
+
+        });
+        $('#OBSERVATIONCount').val(sum);
+        updateTotal();
+    })
+    $(".Concern1").change(function () {
+        var sum = 0;
+        $('.Concern1').each(function () {
+            if ($(this).val() != "") {
+                sum += parseInt($(this).val());
+            }
+            // Or this.innerHTML, this.innerText
+
+        });
+        $('#ConcernCount').val(sum);
+        updateTotal();
+    })
+    $(".OFI1").change(function () {
+        var sum = 0;
+        $('.OFI1').each(function () {
+            if ($(this).val() != "") {
+                sum += parseInt($(this).val());
+            }
+            // Or this.innerHTML, this.innerText
+
+        });
+        $('#OFICount').val(sum);
+        updateTotal();
+    })
+
+
+</script>
+
+
+<script>
+    var updateTotal = function () {
+        debugger;
+        var input1 = parseInt($('#CriticalNCCount').val());
+        var input2 = parseInt($('#MajorNCCount').val());
+        var input3 = parseInt($('#MinorNCCount').val());
+        var input4 = parseInt($('#OBSERVATIONCount').val());
+        var input5 = parseInt($('#ConcernCount').val());
+        var input6 = parseInt($('#OFICount').val());
+
+
+        if (isNaN(input1) || isNaN(input2) || isNaN(input3) || isNaN(input4) || isNaN(input5) || isNaN(input6)) {
+           
+        } else {
+            $('#TotalFindings').val(input1 + input2 + input3 + input4 + input5 + input6);
+        }
+    };
+
+
+    $(document).ready(function () {
+        updateTotal();
+    });
+</script>
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+    var DTRowCount = 1;
+
+    $(document).ready(function () {
+        debugger;
+        $(document).on("click", ".classAdd", function () { //
+            debugger;
+
+            $('body').on('focus', ".CFromDate", function () {
+                $(this).datepicker({ dateFormat: 'dd/mm/yy' });
+            });
+          
+
+
+
+
+            if ($('#DTestTable tr').length - 1 >= DTRowCount) {
+                var count = $('#DTestTable tr').length - 1;
+                DTRowCount = count;
+            }
+            //if (count < 3) {
+                DTRowCount += 1;
+                var contactdiv = '<tr class="trDomestic">' +
+              '<td>' +
+
+
+         '<input type="text"  style="text-align:center" name="SDate_Of_Audit"  class="form-control CFromDate" id="IDFromDate' + DTRowCount + '" /></td>' +
+         '<td><input type="text"  style="text-align:center" name="OnSiteTime"  class="form-control COnSiteTime" id="IDOnSiteTime' + DTRowCount + '" /></td>' +
+         '<td><input type="text"  style="text-align:center" name="OffSiteTime"  class="form-control COffSiteTime" id="IDOffSiteTime' + DTRowCount + '" /></td>' +
+         '<td><input type="text"  style="text-align:center" name="TravelTime"  class="form-control CTravelTime" id="IDTravelTime' + DTRowCount + '" /></td>' +
+         '<td style="text-align:center"><button type="button" style="text-align:center" id="btnDelete" class="deleteContact btn btn btn-danger btn-xs">Remove</button></td>' +
+              '</tr>';
+
+                $('#DTestTable').append(contactdiv); // Adding these controls to Main table class
+
+
+
+
+
+
+
+
+
+        });
+    });
+</script>
+
+<script>
+    $(document).on("click", ".deleteContact", function () {
+        $(this).closest("tr").remove(); // closest used to remove the respective 'tr' in which I have my controls
+        DTRowCount = DTRowCount - 1;
+        sumIt()
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    // <![CDATA[
+    function addRow() {
+        //copy the table row and clear the value of the input, then append the row to the end of the table
+        $("#DTestTable tbody tr:first").clone().find("input").each(function () {
+            $(this).val('');
+        }).end().appendTo("#DTestTable");
+    }
+</script>
+
+
+<script>
+    $("#btnsave").on('click', function (event) {
+        debugger;
+
+        var a = "1";
+        var DArray = [];
+        var DActivity = [];
+        //var b = $("#btnForm").serialize();
+
+
+        if ($("#Branch").val() == "" || $("#Branch").val() == null) {
+            alert("Please Enter Branch first!");
+            $("#Branch").focus()
+            return false;
+        }
+        if ($("#Plan_ref_No").val() == "" || $("#Plan_ref_No").val() == null) {
+            alert("Please Enter Plan ref Serial No first!");
+            $("#Branch").focus()
+            return false;
+        }
+        if ($("#Auditor").val() == "" || $("#Auditor").val() == null) {
+            alert("Please Enter Auditor first!");
+            $("#Branch").focus()
+            a = "2";
+            return false;
+        }
+        if ($("#Auditee").val() == "" || $("#Auditee").val() == null) {
+            alert("Please Enter Auditee first!");
+            $("#Branch").focus()
+            a = "2";
+            return false;
+        }
+        if ($("#Department").val() == "" || $("#Department").val() == null) {
+            alert("Please Enter Department first!");
+            $("#Branch").focus()
+            a = "2";
+            return false;
+        }
+
+
+        var Branch = $("#Branch").val();
+        var AuditId = $("#AuditId").val();
+        
+
+
+        var IdOBSType = $("#IdOBSType option:selected");
+        var CostCenter = "";
+        IdOBSType.each(function () {
+            CostCenter += $(this).val() + ",";
+        });
+        CostCenter = CostCenter.replace(/,\s*$/, "");
+
+
+        var Plan_ref_No = $("#Plan_ref_No").val();
+
+        var AuditorName = $("#Auditor").val();
+        var AuditorValue = $("#AuditorId").val();
+        //var AuditorValue = "";
+        //Auditor.each(function () {
+        //    AuditorValue += $(this).val() + ",";
+        //});
+        //AuditorValue = AuditorValue.replace(/,\s*$/, "");
+
+
+        var ExAuditor = $("#ExAuditor").val();
+        var Auditee1 = $("#Auditee").val();
+
+        
+        //var Auditee = $("#Auditee option:selected");
+       
+
+        var Auditee1 = $("#Auditee option:selected");
+        var Auditee = "";
+        Auditee1.each(function () {
+            Auditee += $(this).val() + ",";
+        });
+        Auditee = Auditee.replace(/,\s*$/, "");
+
+
+
+        var Department = $("#Department").val();
+
+        var TotalFindings = $("#TotalFindings").val();
+        var CriticalNCCount = $("#CriticalNCCount").val();
+        var MajorNCCount = $("#MajorNCCount").val();
+        var MinorNCCount = $("#MinorNCCount").val();
+        var OBSERVATIONCount = $("#OBSERVATIONCount").val();
+        var ConcernCount = $("#ConcernCount").val();
+        var OFICount = $("#OFICount").val();
+        var AdditionalRemarks = $("#AdditionalRemarks").val();
+        var IsAuditCompleted = $("#IsAuditCompleted  option:selected").val();
+        var AreFindingsClose = $("#AreFindingsClose  option:selected").val();
+
+        var Internal_Audit_Id = $("#Internal_Audit_Id").val();
+        //var PKActivityTypeId = $(".PKActivityTypeId").val();
+        //var EvidenceChecked = $(".EvidenceChecked").val();
+        //var idRemarks = $(".idRemarks").val();
+        //var CriticalNC1 = $(".CriticalNC1").val();
+        //var MajorNC1 = $(".MajorNC1").val();
+        //var MinorNC1 = $(".MinorNC1").val();
+        //var Observation1 = $(".Observation1").val();
+        //var Concern1 = $(".Concern1").val();
+        //var OFI1 = $(".OFI1").val();
+        //var RCA = $(".RCA").val();
+        //var CA = $(".CA").val();
+        //var Correction = $(".Correction").val();
+        //var Auditorremarks = $(".Auditorremarks").val();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+
+        $('.trDomestic').each(function () {
+            var trD = {};
+
+            var TrainingStartDate = $(this).find('.CFromDate').val();
+            var TrainingStartTime = $(this).find('.COnSiteTime').val();
+            var TrainingEndTime = $(this).find('.CTravelTime').val();
+            var OffSiteTime = $(this).find('.COffSiteTime').val();
+
+            if (TrainingStartDate == '') {
+                 a = "3";
+            }
+            if (TrainingStartTime == '') {
+                
+                 a = "4";
+            }
+            if (TrainingEndTime == '') {
+                
+                 a = "5";
+            }
+
+           
+
+            if (a == "1") {
+                trD['SDate_Of_Audit'] = TrainingStartDate;
+                trD['OnSiteTime'] = TrainingStartTime;
+                trD['TravelTime'] = TrainingEndTime;
+                trD['OffSiteTime'] = OffSiteTime;
+
+                DArray.push(trD);
+            }
+            else {
+                
+                return false;
+            }
+
+        });
+
+        $('.trAcivity').each(function () {
+            var trA = {};
+
+            var PKActivityTypeId = $(this).find('.PKActivityTypeId').val();
+            var EvidenceChecked = $(this).find('.EvidenceChecked').val();
+            var idRemarks = $(this).find('.idRemarks').val();
+            var CriticalNC1 = $(this).find('.CriticalNC1').val();
+            var MajorNC1 = $(this).find('.MajorNC1').val();
+            var MinorNC1 = $(this).find('.MinorNC1').val();
+            var Observation1 = $(this).find('.Observation1').val();
+            var Concern1 = $(this).find('.Concern1').val();
+            var OFI1 = $(this).find('.OFI1').val();
+            var RCA = $(this).find('.RCA').val();
+            var CA = $(this).find('.CA').val();
+            var Correction = $(this).find('.Correction').val();
+            var Auditorremarks = $(this).find('.Auditorremarks').val();
+
+            trA['PKActivityTypeId'] = PKActivityTypeId;
+            trA['EvidenceChecked'] = EvidenceChecked;
+            trA['Remarks'] = idRemarks;
+            trA['CriticalNC'] = CriticalNC1;
+            trA['MajorNC'] = MajorNC1;
+            trA['MinorNC'] = MinorNC1;
+            trA['Observation'] = Observation1;
+            trA['Concern'] = Concern1;
+            trA['OFI'] = OFI1;
+            trA['RCA'] = RCA;
+            trA['CA'] = CA;
+            trA['Correction'] = Correction;
+            trA['Auditorremarks'] = Auditorremarks;
+
+
+            DActivity.push(trA);
+
+
+        });
+
+        if (a == "3") {
+            alert("Please Enter Date!");
+            return false;
+        }
+        if (a == "4") {
+            alert("Please Enter Time!");
+            return false;
+        }
+        if (a == "5") {
+            alert("Please Enter Time!");
+            return false;
+        }
+
+        var ModelVisitReport =
+       {
+           Branch: Branch,
+           CostCenter: CostCenter,
+           Plan_ref_No: Plan_ref_No,
+           Auditor: AuditorName,
+           AuditorId: AuditorValue,
+           ExAuditor: ExAuditor,
+           Auditee: Auditee,
+           Department: Department,
+           TotalFindings: TotalFindings,
+           CriticalNCCount: CriticalNCCount,
+           MajorNCCount: MajorNCCount,
+           MinorNCCount: MinorNCCount,
+           OBSERVATIONCount: OBSERVATIONCount,
+           ConcernCount: ConcernCount,
+           OFICount: OFICount,
+           AdditionalRemarks: AdditionalRemarks,
+           IsAuditCompleted: IsAuditCompleted,
+           AreFindingsClose: AreFindingsClose,
+           Internal_Audit_Id: Internal_Audit_Id,
+           AuditId: AuditId,
+           //PKActivityTypeId : PKActivityTypeId ,
+           //EvidenceChecked  : EvidenceChecked  ,
+           //idRemarks        :    idRemarks        ,
+           //CriticalNC1      :    CriticalNC1      ,
+           //MajorNC1         :    MajorNC1         ,
+           //MinorNC1         :    MinorNC1         ,
+           //Observation1     :    Observation1     ,
+           //Concern1         :    Concern1         ,
+           //OFI1             :    OFI1             ,
+           //RCA              :    RCA              ,
+           //CA               :    CA               ,
+           //Correction       :    Correction       ,
+           //Auditorremarks   :    Auditorremarks
+
+
+
+
+       }
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("CreateInternal_Audit_Report", "Internal_Audit_Report")',
+            dataType: 'json',
+            Async: false,
+            data: JSON.stringify({ ObjModelVisitReport: ModelVisitReport, "DArray": DArray, "DActivity": DActivity, }),
+            
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                if (response.result == 'Redirect') {
+                    alert("Details has been Save successfully!!!")
+                    window.location = response.url;
+                }
+
+                if (response.result == 'Update') {
+                    alert("Details has been updated successfully!!!")
+                    window.location = response.url;
+                }
+            }
+        })
+
+
+
+
+
+    });
+</script>
+

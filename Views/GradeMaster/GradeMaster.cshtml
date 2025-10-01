@@ -1,0 +1,117 @@
+﻿@model TuvVision.Models.GradeMaster
+@{
+    ViewBag.Title = "GradeMaster";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+
+    if ((Convert.ToString(TempData["gradeMaster"])) != "" && Convert.ToString(TempData["gradeMaster"]) != null)
+    {
+        TempData["gradeMaster"] = null;
+        <script type="text/javascript" language="javascript">
+         alert("Employee Grade already added!!!!");
+        </script>
+    }
+}
+
+
+@using (Html.BeginForm("Create", "GradeMaster", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+
+
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Grade Master</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Employee Grade:</label>
+                                                            @Html.TextBoxFor(model => model.EmployeeGrade, new { @placeholder = "Employee Grade Here", @class = "form-control" })
+                                                            @*@Html.DropDownListFor(m => m.EmployeeGrade, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="M1", Value = "M1" },
+                                                                     new SelectListItem{ Text="M2", Value = "M2" },
+                                                                     new SelectListItem{ Text="M3", Value = "M3" },
+                                                                     new SelectListItem{ Text="M4", Value = "M4" },
+                                                                     new SelectListItem{ Text="M5", Value = "M5" },
+                                                                     new SelectListItem{ Text="M6", Value = "M6" },
+                                                                     new SelectListItem{ Text="M7", Value = "M7" },
+                                                                     new SelectListItem{ Text="EMPANELLED EMPLOYEE", Value = "EMPANELLEDEMPLOYEE" },
+                                                                     new SelectListItem{ Text="EXCLUSIVE CONTRACT EMPLOYEE", Value = "EXCLUSIVE CONTRACT EMPLOYEE" },
+                                                                     new SelectListItem{ Text="GRADUATE ENGINEER TRAINEE", Value = "GRADUATE ENGINEER TRAINEE" },
+                                                                     new SelectListItem{ Text="ASSOCIATES", Value = "ASSOCIATES" },
+
+
+
+                                                                     }, new { @class = "form-control", @id = "PT" })*@
+                                                            @Html.ValidationMessageFor(m => m.EmployeeGrade, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Car Rate:</label>
+                                                            @Html.TextBoxFor(model => model.CarRate, new { @placeholder = "Car Rate Here", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.CarRate, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Motor Bike Rate:</label>
+                                                            @Html.TextBoxFor(model => model.MotorBikeRate, new { @placeholder = "Motor Bike Rate Here", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.MotorBikeRate, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>OPE Rate:</label>
+                                                            @Html.TextBoxFor(model => model.OPERate, new { @placeholder = "OPE Rate Here", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.OPERate, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                   
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+
+                                                        <div class="form-group">
+                                                            <button type="reset" class="btn btn-default insert-form-btn"> Reset </button>
+                                                            <button type="submit" class="btn btn-default insert-form-btn"> Add </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

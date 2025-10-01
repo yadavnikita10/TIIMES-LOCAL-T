@@ -1,0 +1,368 @@
+﻿@model TuvVision.Models.CompanyMaster
+@{
+    ViewBag.Title = "ContactDetailsPartial";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@{
+    var CompanyName = ViewBag.SelectedCompanyName as string;
+    var ActionType = ViewBag.ActionType as string;
+    var CompId = ViewBag.CompanyId as string;
+}
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+@using (Html.BeginForm("ContactDetails", "CompanyMasters", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form" }))
+{
+    @Html.Hidden("PK_ContID")
+    <!--Start of main content 3-->
+    <div class="main-content3 xs-max-height grey-bg-f3">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+
+                        <div class="col-xs-12 text-right">
+                            <a href="@Url.Action("ContactDashBoard","CompanyMasters")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                @if (Model == null)
+                                {
+                                    <h3 class="form-page-title">Add New Contact</h3>
+                                }
+                                else
+                                {
+                                    <h3 class="form-page-title">Edit Contact</h3>
+                                }
+                                <div class="row">
+
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Contact Name: <span style="color:#ff0000;">*</span></label>
+                                                        @Html.TextBoxFor(model => model.ContactName, new { @placeholder = "Enter Contact Name", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ContactName, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Customer Name:<span style="color:#ff0000;">*</span></label>
+                                                        @if (ViewBag.SelectedCompanyName == null)
+                                                        {
+                                                            @Html.TextBoxFor(model => model.CompanyName, new { placeholder = "Enter Company Name", @class = "form-control form-control-custom CompanyName" })
+                                                            <input type="hidden" id="hfCompanyName" name="CustomerId" />
+                                                            @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+                                                        }
+                                                        else
+                                                        {
+                                                            @*<span class="form-control">@CompanyName</span>*@
+                                                            @*<span class="form-control">@Model.CompanyName</span>*@
+                                                            @Html.TextBoxFor(model => model.CompanyName, new { placeholder = "Enter Company Name", @class = "form-control form-control-custom CompanyName", @readonly = "readonly" })
+
+                                                        }
+                                                        <input type="hidden" name="CompId" id="CompId" />
+                                                        @*@{
+                                                                if (Model != null)
+                                                                {
+                                                                    if (ViewBag.CompanyName != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.CompanyName, new SelectList(@ViewBag.CompanyName, "Code", "Name"), "---Select Company---", new { @id = "ddlCompanyName", @class = "form-control" })
+                                                                    }
+                                                                }
+                                                                if (ViewData["CompanyNameItems"] != null)
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.CompanyName, (IEnumerable<SelectListItem>)ViewData["CompanyNameItems"], "---Select Company---", new { @id = "ddlCompanyName", @class = "form-control" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.CompanyName, new SelectList(@ViewBag.CompanyName, "Code", "Name"), "---Select Company---", new { @id = "ddlCompanyName", @class = "form-control" })
+                                                                }
+
+                                                            }*@
+                                                    </div>
+                                                    @Html.Hidden("hidCompany")
+                                                </div>
+                                                @*<div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Designation:<span style="color:#ff0000;">*</span></label>
+                                                        @{
+                                                            if (Model != null)
+                                                            {
+                                                                if (ViewBag.TitleName != null)
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.TitleName, new SelectList(@ViewBag.TitleName, "Code", "Name"), "---Select Title---", new { @id = "ddlTitle", @class = "form-control" })
+                                                                }
+                                                            }
+                                                            if (ViewData["TitleNameItems"] != null)
+                                                            {
+                                                                @Html.DropDownListFor(model => model.TitleName, (IEnumerable<SelectListItem>)ViewData["TitleNameItems"], "---Select Title---", new { @id = "ddlTitle", @class = "form-control" })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.DropDownListFor(model => model.TitleName, new SelectList(@ViewBag.TitleName, "Code", "Name"), "---Select Title---", new { @id = "ddlTitle", @class = "form-control" })
+                                                            }
+
+                                                        }
+                                                    </div>
+                                                </div>*@
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Landline: <span style="color:#ff0000;">*</span></label>
+                                                        @Html.TextBoxFor(model => model.HomePhone, new { @placeholder = "Enter Landline Number", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.HomePhone, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                @*<div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Pan Number: <span style="color:#ff0000;">*</span></label>
+                                                            @*<input type="text" class="form-control" placeholder="PAN Here">
+                                                            @Html.TextBoxFor(model => model.Pan_No, new { @placeholder = "Pan Card Number Here", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Pan_No, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>*@
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Mobile: <span style="color:#ff0000;">*</span></label>
+                                                        @Html.TextBoxFor(model => model.Mobile, new { @placeholder = "Enter Mobile Number", @class = "form-control", @type = "number" })
+                                                        @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Fax:<span style="color:#ff0000;">*</span></label>
+                                                        @Html.TextBoxFor(model => model.Fax_No, new { @placeholder = "Enter Fax Number", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.Fax_No, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Primary Contact (check if yes):</label>
+                                                        @if (Model != null)
+                                                        {
+                                                            if (Model.IsMainContact == true)
+                                                            {
+                                                                <div>
+                                                                    <label>
+                                                                        <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" checked="checked" />isPrimary Contact
+                                                                    </label>
+                                                                </div>
+                                                            }
+                                                            else if (Model.IsMainContact == false)
+                                                            {
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                        <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" />isPrimary Contact
+                                                                    </label>
+                                                                </div>
+                                                            }
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" /> isPrimary Contact
+                                                                    <input name="IsMainContact" type="hidden" value="false" />
+                                                                </label>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Status:<span style="color:#ff0000;">*</span></label>
+                                                        @*@{
+
+                                                                if (ViewData["StatusNameItems"] != null)
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.ContactStatus, (IEnumerable<SelectListItem>)ViewData["StatusNameItems"], "---Select Status---", new { @id = "ddlStatusName", @class = "form-control col-md-7 col-xs-12 form-control-custom-ddl" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.ContactStatus, new SelectList(@ViewBag.StatusName, "Code", "Name"), "---Select Status---", new { @id = "ddlStatusName", @class = "form-control form-control-custom-ddl" })
+                                                                }
+                                                                @Html.ValidationMessageFor(model => model.ContactStatus, "", new { @class = "text-danger" })
+                                                            }*@
+                                                        @Html.DropDownListFor(m => m.ContactStatus, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="Active", Value = "Active" },
+                                                                     new SelectListItem{ Text="In-Active", Value = "In-Active" },
+
+
+
+                                                       }, new { @class = "form-control", @id = "PT" })
+                                                        @Html.ValidationMessageFor(m => m.ContactStatus, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12">
+                                                    <div class="form-group">
+                                                        <label>Address:</label>
+                                                        @Html.TextAreaFor(model => model.Address, new { @placeholder = "Enter Address", @class = "form-control", @rows = "3" })
+                                                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="Actiontype" id="ActionType" value="@ActionType" />
+                                                <div class="col-xs-12 text-center">
+                                                    <button type="button" class="btn btn-default news-btn" id="btnReset" value="Reset" title="Reset">Reset</button>
+                                                    <button type="submit" class="btn btn-default insert-form-btn" id="btnSaveContact"><i class="fa fa-plus-circle"></i> Save Contact</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.col -->
+
+                    </div><!-- /.row -->
+                </div><!-- /.data table col -->
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+  <!--End of main content 3-->
+                                                            }
+
+@***************************************************************************Script Started Here**************************************************************************@
+<script type="text/javascript">
+    $(document).ready(function () {
+        Reset()
+        //$("#btnSaveContact").click(function myfunction() {
+        //    debugger;
+        //    if (ValidateForm() == false) {
+        //        return false;
+        //    }
+        //    else {
+        //        $("#form1").submit()
+        //    }
+        //});
+    });
+    function Reset() {
+        $("#btnReset").click(function myfunction() {
+
+            location.reload();
+        });
+    }
+
+    function ValidateForm() {
+        //if ($("#ContactName").val() == "" || $("#ContactName").val() == null) {
+        //    alert("Please Enter Contact Name First!!!");
+        //    $("#ContactName").focus()
+        //    return false;
+        //}
+        //if ($("#ddlCompanyName")[0].selectedIndex == 0) {
+        //    alert("Please select Company Name First!!!");
+        //    $("#CompanyName").focus()
+        //    return false;
+        //}
+        //if ($("#ddlTitle")[0].selectedIndex == 0) {
+        //    alert("Please select Title Name!!!");
+        //    $("#TitleName").focus()
+        //    return false;
+        //}
+        //if ($("#Pan_No").val() == "" || $("#Pan_No").val() == null) {
+        //    alert("Please Enter Pan Number!!!");
+        //    $("#Pan_No").focus()
+        //    return false;
+        //}
+        //if ($("#Mobile").val() == "" || $("#Mobile").val() == null) {
+        //    alert("Please Enter Mobile Number!!!");
+        //    $("#Mobile").focus()
+        //    return false;
+        //}
+
+
+        //else
+        //{
+        return true;
+        //}
+    }
+</script>
+
+@**************************************************************************************@
+<script>
+
+    $(document).ready(function () {
+        $("#ddlCompanyName").change(function () {
+            debugger;
+            varcityText = $("#ddlCompanyName option:selected").text();
+            var CompanyId = $("#ddlCompanyName option:selected").val();
+            $("#hidCompany").val(varcityText);
+            $('#CompId').val(CompanyId);
+        });
+    });
+    debugger
+    $('#CompId').val('@ViewBag.CompanyId');
+    $('#Actiontype').val('@ViewBag.ActionType')
+    $(function () {
+        $(".CompanyName").autocomplete({
+            source: function (request, response) {
+
+                $.ajax({
+                    url: '@Url.Action("GetCompanyName", "EnquiryMaster")',
+                    data: "{ 'prefix': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.CompanyName, value: item.CompanyName };
+                        }));
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                //if (u.item.val == -1) {
+                //    return false;
+                //}
+                //$("#hfCompanyName").val(i.item.val);
+            },
+            minLength: 2
+        });
+
+    });
+
+    $(document).ready(function () {
+        $("#CompanyName").change(function () {
+            if ($("#CompanyName").val() != "") {
+                var Address = {};
+                Address.url = "/CompanyMasters/GetAddressOfCompany";
+                Address.type = "Get";
+                Address.data = { Company_Name: $("#CompanyName").val() };
+                Address.datatype = "json";
+                Address.ContentType = "application/json";
+                Address.success = function (address) {
+                    $("#Address").val(address.Address).val()
+                    //if (address != null && address != "")
+                    //{
+                    //    //$("#Address").append("<option value=" + address.Address + ">" + address.Address + "</option>");
+                    //    $("#Address").append( + address.Address + "</option>");
+                    //}
+                    //$("#Address").prop("disabled", false);
+                };
+                Address.error = function () { alert("Error in Getting Address !"); };
+                $.ajax(Address);
+            }
+            else {
+                $("#Address").empty();
+                $("#Address").prop("disabled", true);
+            }
+        });
+    });
+</script>
+

@@ -1,0 +1,98 @@
+﻿@model IEnumerable<TuvVision.Models.TopicList> 
+@{
+    ViewBag.Title = "TopicList";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int i = 0;
+}
+
+@using (Html.BeginForm())
+{
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-5">
+
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+                            @*<div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                <br />
+                                <a href="@Url.Action("AddQuiz", "Quiz")" class="btn btn-success standalone-btn"><i class="fa fa-plus-circle"></i> Add New Question</a>
+                            </div>*@
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Training Topic List</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            @*@Html.HiddenFor(model => model.PK_TrainingScheduleId)*@
+                                                        </div>
+                                                    </div>
+
+                                                    @*<h3 class="form-page-title">@ViewBag.TrngNm</h3>*@
+                                                    <div>
+                                                        @{
+                                                            if (Convert.ToString(TempData["Success"]) != null && Convert.ToString(TempData["Success"]) != "")
+                                                            {
+                                                                <h5 style="color:green;font-weight:bold;">@Convert.ToString(TempData["Success"])</h5>
+                                                            }
+                                                            if (Convert.ToString(TempData["Deleted"]) != null && Convert.ToString(TempData["Deleted"]) != "")
+                                                            {
+                                                                <h5 style="color:red;font-weight:bold;">@Convert.ToString(TempData["Deleted"])</h5>
+                                                            }
+                                                            if (Convert.ToString(TempData["Error"]) != null && Convert.ToString(TempData["Error"]) != "")
+                                                            {
+                                                                <h5 style="color:red;font-weight:bold;">@Convert.ToString(TempData["Error"])</h5>
+                                                            }
+                                                        }
+                                                    </div>
+
+                                                    <div class="col-xs-12">
+                                                        @*<table id="example" class="display" cellspacing="0" width="100%">*@
+                                                        <table id="example" class="display" cellspacing="0" width="100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Sr.No</th>
+                                                                    <th>Topic Name</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                @*@Html.HiddenFor(m => m.RTrainingScheduleId, new { Value = ViewBag.Data })*@
+
+                                                                @foreach (var v in ViewBag.AllTopicList as IEnumerable<TuvVision.Models.TopicList>)
+                                                                {
+                                                                    i = i + 1;
+                                                                    <tr>
+                                                                        <td scope="row"> @i </td>
+                                                                        <td>
+                                                                            @v.Name
+                                                                        </td>
+                                                                        <td>
+                                                                            <a href="@Url.Action("QuestionList", "Quiz", new { @sid = v.TopicID })" title="Question List"><i class="fa fa-pencil"></i></a>
+                                                                            <a href="@Url.Action("ResultList", "Quiz", new { @rid = v.TopicID })" title="Result List"><i class="fa fa-check"></i></a>
+                                                                            <a href="@Url.Action("FeedbackList", "Quiz", new { @fid = v.TopicID })" title="Feedback List"><i class="fa fa-info"></i></a>
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

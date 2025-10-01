@@ -1,0 +1,249 @@
+﻿@model TuvVision.Models.CallsModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "CoordinatorIndividualPerformance";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+ <!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<!-- Include DataTables JavaScript -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+
+
+
+@*DATEPICKER*@
+@*<script src="https://code.jquery.com/jquery-1.10.2.js"></script>*@
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+
+
+   
+
+
+
+
+
+<style>
+    td, th {
+        border: 1px solid black;
+        padding: 8px; /* Adding some padding for better appearance */
+    }
+
+    .equal-height-table td {
+        height: 30px; /* Adjust this value as needed */
+        /* vertical-align: middle; /* To vertically center content if desired */
+        border: 1px solid #000;
+    }
+</style>
+
+
+@*calender control*@
+
+<script>
+
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+@using (Html.BeginForm("CoordinatorIndividualPerformance", "MISOPEReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+    <div class="main-content3 xs-max-height">
+        <div class="container-fluid">
+
+            <!--Start of header-->
+
+
+            <div class="col-xs-12">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left"><b>Coordinator's Individual Performance </b></h3>
+                    <br />
+
+                   
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>From Date:</label>
+                                @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>To Date:</label>
+                                @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-2">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-info dynamic-function-btn dynamic-function-btn-2">Search</button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br />
+
+
+            </div>
+
+
+            <div class="form-group" style="padding-left:25px;">
+                <hr class="custom-hr1">
+            </div>
+
+
+            <div class="col-lg-12">
+                @*<div class="col-xs-12" style="overflow:auto;height:500px;width:100%">
+            <table id="example" class="equal-height-table table-bordered table-striped" style="border: 1px solid black;font-size:13px; padding:0px; margin:5px;" width="100%">*@
+                <div class="col-xs-12" style="overflow:auto;height:500px;width:99%">
+                    <table class="display dataTable no-footer" style="width:180%;" id="example">
+                        <thead>
+                            @*<tr style="padding:0px 0px; background-color: #050585; color: white; text-align:center;">*@
+                            <tr style="background-color: #050585; color: white; text-align:center;">
+                                <th>Coordinator's Name</th>
+                                <th>Branch Name</th>
+                                <th>Call Generated</th>
+                                <th>Ontime</th>
+                                <th>%</th>
+                                <th>Delay</th>
+                                <th>%</th>
+                                <th>No action by Coordinators</th>
+                                <th>%</th>
+                                <th>No action by Inspectors</th>
+                                <th>%</th>
+                                <th>Wrong received date</th>
+                                <th>%</th>
+                                <th>Wrong request date</th>
+                                <th>%</th>
+                                <th>Performance </th>
+
+                            </tr>
+                        </thead>
+                        @{
+                            var items = ViewData["ListData"] as IList<TuvVision.Models.CallsModel>;
+
+
+                            if (items != null)
+                            {
+
+                                <tbody>
+                                    @foreach (var obj in ViewData["ListData"] as IEnumerable<TuvVision.Models.CallsModel>)
+                                    {
+                                        <tr>
+                                            <td>@obj.CoordinatorName</td>
+                                            <td>@obj.Branch_Name</td>
+                                            <td>@obj.TotalCalls</td>
+                                            <td>@obj.Ontime</td>
+                                            <td>@obj.OnTimePercentage</td>
+                                            <td>@obj.DelayCount</td>
+                                            <td>@obj.DelayCountPercentage</td>
+                                            <td>@obj.NoactionbyCoordinators</td>
+                                            <td>@obj.NoactionbyCoordinatorsPercentage</td>
+                                            <td>@obj.NoactionbyInspectors</td>
+                                            <td>@obj.NoactionbyInspectorsPercentage</td>
+                                            <td>@obj.WrongReceiveDateCount</td>
+                                            <td>@obj.WrongReceiveDateCountPercentage</td>
+                                            <td>@obj.WrongRequestDateCount</td>
+                                            <td>@obj.WrongRequestDateCountPercentage</td>
+                                            <td>@obj.Performance</td>
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            }
+                        }
+
+                        @if (Model.GrandTotal != null)
+                        {
+                            <tfoot>
+                                <tr>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.Branch_Name</td>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.Branch_Name</td>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.GrandTotalTotalCalls</td>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.GrandTotalOntime</td>
+                                    <td style="font-size: small; background-color: grey;">@(Model.GrandTotal.GrandTotalOnTimePercentage.ToString("0.##"))%</td>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.GrandTotalDelayCount</td>
+                                    <td style="font-size: small; background-color: grey;">@(Model.GrandTotal.GrandTotalDelayCountPercentage.ToString("0.##"))%</td>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.GrandTotalNoactionbyCoordinators</td>
+                                    <td style="font-size: small; background-color: grey;">@(Model.GrandTotal.GrandTotalNoactionbyCoordinatorsPercentage.ToString("0.##"))%</td>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.GrandTotalNoactionbyInspectors</td>
+                                    <td style="font-size: small; background-color: grey;">@(Model.GrandTotal.GrandTotalNoactionbyInspectorsPercentage.ToString("0.##"))%</td>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.GrandTotalWrongReceiveDateCount</td>
+                                    <td style="font-size: small; background-color: grey;">@(Model.GrandTotal.GrandTotalWrongReceiveDateCountPercentage.ToString("0.##"))%</td>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.GrandTotalWrongRequestDateCount</td>
+                                    <td style="font-size: small; background-color: grey;">@(Model.GrandTotal.GrandTotalWrongRequestDateCountPercentage.ToString("0.##"))%</td>
+                                    <td style="font-size: small; background-color: grey;">@Model.GrandTotal.GrandTotalPerformance</td>
+                                </tr>
+                            </tfoot>
+                        }
+
+                   </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+                        }
+
+
+
+
+
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            "searching": true, // Enable search functionality
+            "ordering": true,   // Enable sorting functionality
+            "paging": false
+        });
+    });
+</script>

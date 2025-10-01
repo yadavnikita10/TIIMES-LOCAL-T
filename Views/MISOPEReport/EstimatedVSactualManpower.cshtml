@@ -1,0 +1,167 @@
+﻿@model TuvVision.Models.CallsModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "EstimatedVSactualManpower";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js"></script>
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+@*DATEPICKER*@
+@*<script src="https://code.jquery.com/jquery-1.10.2.js"></script>*@
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+@*calender control*@
+
+<script>
+
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+@using (Html.BeginForm("EstimatedVSactualManpower", "MISOPEReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+
+        <div class="col-xs-12">
+
+            
+            @*@Html.HiddenFor(m =>m.p)*@
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left"> Estimated VS Actual Man Hours </h3>
+
+            </div>
+            <br/>
+            <br />
+
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>From Date:</label>
+                        @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                        @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>To Date:</label>
+                        @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                        @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                    </div>
+
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-top: 22px;">Search</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+            <div class="form-group" style="padding-left:25px;">
+                <hr class="custom-hr1">
+            </div>
+            <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td id="example">
+
+
+
+                        @(Html.Grid(Model.lstComplaintDashBoard1)
+                    .Build(columns =>
+                    {
+
+                        columns.Add(c => c.Call_No).Titled("Call No ");
+                        columns.Add(c => c.Actual_Visit_Date).Titled("Actual Visit Date");
+                        columns.Add(c => c.Originating_Branch).Titled("Originating Branch");
+                        columns.Add(c => c.CoordinatorName).Titled("Coordinator Name");
+                        columns.Add(c => c.Executing_Branch).Titled("Executing Branch");
+                        columns.Add(c => c.Inspector).Titled("Inspector Name");
+                        columns.Add(c => c.Estimatedbycoordinator).Titled("Estimated by Coordinator");
+                        columns.Add(c => c.actualbyinspector).Titled("Actual by Inspector");
+                        columns.Add(c => c.Accuracytime).Titled("Match %");
+
+                    })
+                    .Pageable(pager =>
+                    {
+
+                        pager.ShowPageSizes = true;
+
+                        pager.CurrentPage = 1;
+                        pager.RowsPerPage = 2;
+                    })
+                    .UsingFilterMode(GridFilterMode.Row)
+                    .Empty("No data found")
+                    .Filterable()
+                    .Sortable()
+
+                        )
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+}
+
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>
+

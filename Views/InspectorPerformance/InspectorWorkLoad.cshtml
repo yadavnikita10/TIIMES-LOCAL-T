@@ -1,0 +1,246 @@
+﻿@model TuvVision.Models.InspectorWorkload
+@{
+    ViewBag.Title = "InspectorWorkLoad";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+}
+
+<!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<!-- Include DataTables JavaScript -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+
+<!-- Bootstrap -->
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+
+<!-- Start Other stylesheets -->
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+
+
+<script>
+
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+
+
+<style>
+    .table-container {
+        width: 1300px; /* Adjust the width as needed */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        overflow-y: hidden;
+    }
+
+    /* Set the size of the table */
+    .fixed-size-table {
+        width: 100%;
+        table-layout: fixed; /* Fixed table layout */
+    }
+
+        /* Style the table cells (optional) */
+        .fixed-size-table td {
+            border: 1px solid #ccc;
+            padding: 4px 0px;
+            font-size: 13px;
+        }
+</style>
+
+
+
+
+
+
+
+@using (Html.BeginForm("InspectorWorkLoad", "InspectorPerformance", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+    <div class="main-content3 xs-max-height">
+        <div class="container-fluid">
+
+            <!--Start of header-->
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <a href="@Url.Action("Welcome","Login")" class="logo">
+                            <img src="~/AllJsAndCss/images/logoN.png" alt="" style="max-width: 210%;margin-top: -59px;">
+                        </a>
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left:147px;padding-top:10px;font-family:'TNG Pro'; ">TUV India Private Limited <br />Vendor Wise Work Load Analysis </h3>
+                    </div>
+
+                    <div class="col-lg-2" style="padding-right:20px;">
+                        <button type="button" class="btn btn-info" style="margin-top: 16px;margin-left: 37px;width: 150px;background-color: #104193;color:white;border-radius: 0;" onclick="Redirect()">Go Back</button>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-xs-12">
+
+                <div class="col-xs-12">
+
+
+                    @*<button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportToExcel3", "MISOPEReport")'"
+                                style="border:none;">
+                            Export To Excel
+                        </button>*@
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>From Date:</label>
+                                @Html.TextBoxFor(model => model.Fromdate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.Fromdate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>To Date:</label>
+                                @Html.TextBoxFor(model => model.Todate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.Todate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-2">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-top: 22px;">Search</button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br />
+
+
+            </div>
+
+
+
+            <div class="col-lg-12">
+                @*<table id="example" class="equal-height-table table-bordered table-striped" style="border: 1px solid black;font-size:13px; padding:0px; margin:5px;" cellspacing="0">*@
+                <div class="col-xs-12 table-container">
+                    <table class="display dataTable no-footer fixed-size-table table-striped" id="example">
+                        <thead>
+                            <tr style="background-color: #104193; color: #ffffff; text-align:center; border: 1px solid #ccc;">
+
+                                <th>InspectorName</th>
+                                <th>Branch</th>
+                                <th>Total Days</th>
+                                <th>No Of Days Work</th>
+                                <th>Average days</th>
+                                
+
+                            </tr>
+                        </thead>
+                        @{
+                            var items = ViewData["inspectorwiseData"] as IList<TuvVision.Models.InspectorWorkload>;
+
+
+                            if (items != null)
+                            {
+
+                                <tbody>
+                                    @foreach (var obj in ViewData["inspectorwiseData"] as IEnumerable<TuvVision.Models.InspectorWorkload>)
+                                    {
+                                        <tr>
+                                            <td>@obj.InspectorName</td>
+                                            <td>@obj.BranchName</td>
+                                            <td>@obj.DaysCount</td>
+                                            <td>@obj.NoofDays</td>
+                                            <td>@obj.Avgdays</td>
+                                            
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            }
+                        }
+
+                        @if (Model.GrandTotal != null)
+                        {
+                            <tfoot>
+                                <tr>
+                                    <td style="background-color: lightgray;">@Model.GrandTotal.InspectorName</td>
+                                    <td style="background-color: lightgray;">@Model.GrandTotal.BranchName</td>
+                                    <td style="background-color: lightgray;">@Model.GrandTotal.GrandDaysCount</td>
+                                    <td style="background-color: lightgray;">@Model.GrandTotal.GrandNoofDays</td>
+                                    <td style="background-color: lightgray;">@Model.GrandTotal.GrandAvgdays</td>
+                                    
+                                </tr>
+                            </tfoot>
+                        }
+
+
+
+
+                    </table>
+                </div>
+
+            </div>
+
+         
+
+        </div>
+
+
+
+    </div>
+
+
+                            }
+
+
+<script>
+function Redirect() {
+        window.location.href = "@Url.Action("Welcome", "Login")"
+        }
+</script>
+
+
+

@@ -1,0 +1,259 @@
+﻿@model TuvVision.Models.CompanyMaster
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "ContactDashBoard";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@*Ashwini Scripts here for datatable starts here*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+@*Ashwini Scripts here for datatable ends here*@
+
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "SapCustomerContactDetails";
+}
+
+<style>
+     .tooltip-container {
+        position: relative;
+        display: inline-block;
+    }
+
+        .tooltip-container .tooltiptext {
+            visibility: hidden;
+            width: 300px; /* Adjust width as needed */
+            background-color: #555;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position above the element */
+            left: 50%;
+            margin-left: -150px; /* Center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip-container:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+    .tooltip-icon {
+        color: #555;
+        font-size: 16px;
+        margin-left: 5px;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+
+    <!--Start of header-->
+    <div class="container-fluid" style="background-color: white;">
+        <div class="row assignfixedwidth rp-5">
+
+            <div class="col-xs-12 form-col">
+                <div class="row">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Customer Name:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.CustomerSearch, new { @placeholder = "Contact Name Here", @class = "form-control", id = "CustomerSearch" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="col-xs-12 text-center">
+                                <button type="button" class="btn btn-default insert-form-btn" id="btnSearchData" title="Search"><i class="fa fa-search"></i> Search</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <input type="text" id="searchBox" class="form-control" placeholder="Search in results..." style="margin-bottom: 10px;">
+
+                            <table id="customerTable" class="table table-striped mvc-grid" style="width:100%;border:1px solid;">
+                                <thead>
+                                    <tr style="border:27px; background:#001ED2;">
+                                        <th style="color:#FFFFFF">View</th>
+                                        <th style="color:#FFFFFF">Company Code</th>
+                                        <th style="color:#FFFFFF">Company Name</th>
+                                        <th style="color:#FFFFFF">State</th>
+                                        <th style="color:#FFFFFF">Address</th>
+                                        <th style="color:#FFFFFF">GST</th>
+                                        <th style="color:#FFFFFF">Pan</th>
+                                        <th hidden>New custome</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbldataBody"></tbody>
+                            </table>
+                            <!-- Pagination controls -->
+                            <div id="paginationControls" class="text-center"></div>
+                        </div>
+                    </div>
+                    </div>
+  </div>
+  
+</div>
+        </div>
+    </div>
+
+
+<script>
+    $('#btnSearchData').click(function () {
+        var CompanyName = $('#CustomerSearch').val();
+
+        $.ajax({
+            url: '@Url.Action("GetSearchCompanyData", "EnquiryMaster")',
+            data: JSON.stringify({ CompanyName: CompanyName }),
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data === "Failed") {
+                    $('#tbldataBody').empty();
+                    $('#tbldataBody').append('<tr><td colspan="8">No data found</td></tr>');
+                    $('#paginationControls').empty();
+                } else {
+                    allData = data;
+                    var searchQuery = $('#searchBox').val().toLowerCase();
+                    var filteredData = allData.filter(function (item) {
+                        return item.CustomerSearch.toLowerCase().includes(searchQuery) ||
+                               item.CompanyCode.toLowerCase().includes(searchQuery) ||
+                               item.State.toLowerCase().includes(searchQuery) ||
+                               item.Address.toLowerCase().includes(searchQuery) ||
+                               item.GST_NO.toLowerCase().includes(searchQuery) ||
+                               item.Pan_No.toLowerCase().includes(searchQuery);
+                    });
+
+                    var itemsPerPage = 10;
+                    var totalPages = Math.ceil(filteredData.length / itemsPerPage);
+                    displayItems(filteredData, 1, itemsPerPage);
+                    createPaginationControls(totalPages);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error: ' + error);
+            }
+        });
+    });
+
+    $('#searchBox').on('input', function () {
+        var searchQuery = $(this).val().toLowerCase();
+        var filteredData = allData.filter(function (item) {
+            return item.CustomerSearch.toLowerCase().includes(searchQuery) ||
+                   item.CompanyCode.toLowerCase().includes(searchQuery) ||
+                   item.State.toLowerCase().includes(searchQuery) ||
+                   item.Address.toLowerCase().includes(searchQuery) ||
+                   item.GST_NO.toLowerCase().includes(searchQuery) ||
+                   item.Pan_No.toLowerCase().includes(searchQuery);
+        });
+
+        var itemsPerPage = 10;
+        var totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        displayItems(filteredData, 1, itemsPerPage);
+        createPaginationControls(totalPages);
+    });
+
+    // Handle click event for company code link
+    $('#tbldataBody').on('click', '.company-code-link', function (event) {
+        event.preventDefault();
+        var companyCode = decodeURIComponent($(this).data('company-code'));
+        var customerSearch = decodeURIComponent($(this).data('customer-search'));
+
+        handleCompanyCodeClick(companyCode, customerSearch);
+    });
+   
+    function displayItems(data, page, itemsPerPage) {
+        $('#tbldataBody').empty();
+        $('#searchBox').empty();
+        var start = (page - 1) * itemsPerPage;
+        var end = Math.min(start + itemsPerPage, data.length);
+
+        for (var i = start; i < end; i++) {
+            var item = data[i];
+            var companyCode = item.CompanyCode;
+            var customerSearch = item.CustomerSearch;
+            var address = item.Address;
+
+            var actionCell = 
+                 '<td>' +
+                    '<a href="#" class="fa fa-pencil" title="Edit" onclick="getCustomerData(\'' + encodeURIComponent(item.CompanyCode) + '\'); return false;"></a> <br />' +
+                  
+                   '</td>'
+               ;
+
+            $('#tbldataBody').append(
+                '<tr>' +
+                actionCell +
+                '<td>' + item.CompanyCode + '</td>' +
+                '<td>' + item.CustomerSearch + '</td>' +
+               
+                //'<td><a href="#" class="company-code-link" data-company-code="' + encodeURIComponent(item.CompanyCode) + '" data-customer-search="' + encodeURIComponent(item.CustomerSearch) + '">' + item.CustomerSearch + '</a></td>' +
+                '<td>' + item.State + '</td>' +
+                '<td>' +
+                    '<div class="tooltip-container">' +
+                        '<span class="tooltip-icon fa fa-eye"></span>' +
+                        '<span class="tooltiptext">' + address + '</span>' +
+                    '</div>' +
+                '</td>' +
+                '<td>' + item.GST_NO + '</td>' +
+                '<td>' + item.Pan_No + '</td>' +
+                '<td hidden>' + item.New_Cmp + '</td>' +
+                '</tr>'
+            );
+        }
+    }
+
+    // Function to create pagination controls
+    function createPaginationControls(totalPages) {
+        $('#paginationControls').empty();
+
+        for (var page = 1; page <= totalPages; page++) {
+            $('#paginationControls').append(
+                '<button class="btn btn-default pagination-button" data-page="' + page + '">' + page + '</button>'
+            );
+        }
+
+        $('.pagination-button').click(function () {
+            var page = $(this).data('page');
+            var searchQuery = $('#searchBox').val().toLowerCase();
+            var filteredData = allData.filter(function (item) {
+                return item.CustomerSearch.toLowerCase().includes(searchQuery) ||
+                       item.CompanyCode.toLowerCase().includes(searchQuery) ||
+                       item.State.toLowerCase().includes(searchQuery) ||
+                       item.Address.toLowerCase().includes(searchQuery) ||
+                       item.GST_NO.toLowerCase().includes(searchQuery) ||
+                       item.Pan_No.toLowerCase().includes(searchQuery);
+            });
+
+            var itemsPerPage = 10;
+            var totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            displayItems(filteredData, page, itemsPerPage);
+            createPaginationControls(totalPages);
+        });
+    }
+
+</script>
+
+<script>
+    function getCustomerData(CMP_Id) {
+        window.location.href = '@Url.Action("SapContactDashBoard", "CompanyMasters")' + '?CMP_id=' + encodeURIComponent(CMP_Id);
+    }
+
+
+
+
+</script>

@@ -1,0 +1,445 @@
+﻿@model TuvVision.Models.NonInspectionActivity
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "AttendanceSheet";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+@*calender control*@
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+
+@using (Html.BeginForm("AttendanceSheet", "MISOPEReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="container-fluid">
+
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Attendance Sheet</h3>
+                    
+                    <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportAttIndex", "MISOPEReport")'" style="border:none;">
+                        Export To Excel
+                    </button>&nbsp;&nbsp;&nbsp;
+                    <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("GenerateAttExport", "MISOPEReport")'" style="border:none;">
+                        Generate Attendance (With P)
+                    </button>
+                </div><!-- /.col -->
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div>
+
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>From Date:</label>
+                        @Html.TextBoxFor(model => model.FromD, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                    </div>
+                </div>
+
+
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>To Date:</label>
+                        @Html.TextBoxFor(model => model.ToD, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                    </div>
+
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Search:</label>
+                        <input type="submit" value="Search" class="btn btn-primary form-control" />
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+                    <div class="col-xs-12" id="divHistory" style="overflow:auto;width:99%;height:200px;">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <hr class="custom-hr1">
+                            </div>
+                        </div>
+                        <table class="display dataTable no-footer" style="overflow-y:auto;width:1000%;font-size:14px" id="WOSummaryTable" >
+                            @{ 
+                                int colspanno = 0;
+                                int nullcount = 0;
+                                int LeaveCount = 0;
+                                int OTHLeaveCount = 0;
+
+                                int CLeaveCount = 0;
+                                int SLeaveCount = 0;
+                                int PLeaveCount = 0;
+
+                                int WOLeaveCount = 0;
+                                int PHLeaveCount = 0;
+
+                                int SelectDays = 0;
+                                string DayName = string.Empty;
+                                double filledPercentage = 0;
+                                int WorkingDays = 0;
+                            }
+
+
+                            @if (Model.dtUserAttendance != null && Model.dtUserAttendance.Rows.Count != 0)
+                            {
+                                colspanno = Model.dtUserAttendance.Columns.Count + 1;
+                            <tr style="background-color:#f0f0f0">
+
+                                <td style="text-align:left;width:80px;font-size:18px;font-weight:bold" colspan=@colspanno >Attendance Data</td>
+                               
+
+                            </tr>
+                            }
+                            else
+                            {
+                                <tr style="background-color:#f0f0f0">
+
+                                    <td style="text-align:left;width:80px;font-size:smaller;" colspan="34">Attendance Data</td>
+
+
+                                </tr>
+                            }
+
+                            @if (Model.dtUserAttendance != null && Model.dtUserAttendance.Rows.Count != 0)
+                            {
+                                <tr style="background-color:#709eed">
+                                    @for (int colcnt1 = 0; colcnt1 < Model.dtUserAttendance.Columns.Count; colcnt1++)
+                                    {
+                                        if (Model.dtUserAttendance.Columns[colcnt1].ColumnName.ToUpper() == "NAME" || Model.dtUserAttendance.Columns[colcnt1].ColumnName.ToUpper() == "EMAIL")
+                                        {
+                                            <td style="text-align:center;width:250px;font-size:smaller;color:white">@Model.dtUserAttendance.Columns[colcnt1].ColumnName</td>
+                                        }                                        
+                                        else
+                                        {
+                                            <td style="text-align:center;width:150px;font-size:smaller;color:white">@Model.dtUserAttendance.Columns[colcnt1].ColumnName</td>
+                                        }
+                                    }
+                                </tr>
+
+                                for (int cnt = 0; cnt < Model.dtUserAttendance.Rows.Count; cnt++)
+                                {
+                                    System.Data.DataRow row = Model.dtUserAttendance.Rows[cnt];
+
+
+                                    <tr style="background-color:white">
+                                      
+
+
+                                            @for (int colcnt = 0; colcnt < Model.dtUserAttendance.Columns.Count; colcnt++)
+                                            {
+
+                                                if (row[colcnt] != DBNull.Value &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "NAME" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "MOBILENO" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "EMAIL"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "TUV EMPLOYEE CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SAP EMPLOYEE CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "BRANCH"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "DESIGNATION"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SAP VENDOR CODE"
+
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "TS FILLED DAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WORKING DAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SELECTED PERIOD DAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "OTHER LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SICK LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "CASUAL LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "PRIVILEGE LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WEEKLY OFF COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "PUBLIC HOLIDAY COUNT"
+                                                    )
+                                                {
+                                                    if (row[colcnt].ToString() == "CL")
+                                                    {
+                                                        CLeaveCount++;
+                                                        LeaveCount++;
+                                                    }
+                                                    else if (row[colcnt].ToString() == "SL")
+                                                    {
+                                                        // SLeaveCount++;
+                                                        SLeaveCount++;
+                                                        LeaveCount++;
+                                                    }
+                                                    else if (row[colcnt].ToString() == "PL")
+                                                    {
+                                                        // PLeaveCount =
+                                                        PLeaveCount++;
+                                                        LeaveCount++;
+                                                    }
+                                                    else if (row[colcnt].ToString() == "33") // Weekly Off Count
+                                                    {
+                                                        //  WOLeaveCount++;
+                                                        WOLeaveCount++;
+                                                        OTHLeaveCount++;
+                                                    }
+                                                    else if (row[colcnt].ToString() == "35") // Public Holidays
+                                                    {
+                                                        //  PHLeaveCount++;
+                                                        PHLeaveCount++;
+                                                        OTHLeaveCount++;
+                                                    }
+
+                                                    nullcount++;
+
+                                                }
+
+                                            }
+
+
+                                            @for (int colcnt = 0; colcnt < Model.dtUserAttendance.Columns.Count; colcnt++)
+                                            {
+                                                if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "TS FILLED DAYS")
+                                                {
+                                                    filledPercentage = (Convert.ToDouble(nullcount) / Convert.ToDouble(SelectDays)) * 100;
+                                                    if (filledPercentage > 72)
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;">@nullcount</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;background-color:#d659ff;">@nullcount</td>
+                                                    }
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "WORKING DAYS")
+                                                {
+                                                    WorkingDays = nullcount - (LeaveCount + OTHLeaveCount);
+
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:aqua;">@WorkingDays</td>
+
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@LeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "OTHER LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@OTHLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "CASUAL LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@CLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "SICK LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@SLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "PRIVILEGE LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@PLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "WEEKLY OFF COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@WOLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "PUBLIC HOLIDAY COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@PHLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "SELECTED PERIOD DAYS")
+                                                {
+                                                    SelectDays = Convert.ToInt32(row[colcnt]);
+                                                    <td style="text-align:center;width:120px;font-size:smaller;">@SelectDays</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "NAME" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "MOBILENO" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "EMAIL" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "TS FILLED DAYS" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WORKING DAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "TUV EMPLOYEE CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SAP EMPLOYEE CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SELECTED PERIOD DAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "BRANCH"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "DESIGNATION"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SAP VENDOR CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "OTHER LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SICK LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "CASUAL LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "PRIVILEGE LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WEEKLY OFF COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "PUBLIC HOLIDAY COUNT"
+                                                    )
+                                                {
+
+                                                    if (row[colcnt].ToString().ToUpper() == "CL" || row[colcnt].ToString().ToUpper() == "PL" || row[colcnt].ToString().ToUpper() == "SL") /// Leaves
+                                                    {
+                                                            <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@row[colcnt]</td>
+                                                    }
+                                                    else if (row[colcnt].ToString().ToUpper() == "33") /// Weekly off and Public Holidays
+                                                    {
+                                                            <td style="text-align:center;width:120px;font-size:smaller;background-color:yellow;">@row[colcnt]</td>
+                                                    }
+                                                    else if (row[colcnt].ToString().ToUpper() == "35") /// Weekly off and Public Holidays
+                                                    {
+                                                            <td style="text-align:center;width:120px;font-size:smaller;background-color:peachpuff;">@row[colcnt]</td>
+                                                    }
+                                                    else if (row[colcnt].ToString().Contains(",")) /// Multiple Activities with different colour
+                                                    {
+                                                            <td style="text-align:center;width:120px;font-size:smaller;background-color:#00e8ff;">@row[colcnt]</td>
+                                                    }
+                                                    else if (row[colcnt].ToString().ToUpper() == "INSP") /// Weekly off and Public Holidays
+                                                    {
+                                                            <td style="text-align:center;width:120px;font-size:smaller;background-color:white;">@row[colcnt]</td>
+                                                    }
+                                                    else
+                                                    {
+                                                            <td style="text-align:center;width:120px;font-size:smaller;background-color:m;">@row[colcnt]</td>
+                                                    }
+                                                    // }
+                                                }
+                                                else
+                                                {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;">@row[colcnt]</td>
+                                                }
+
+                                            }
+                                    </tr>
+
+
+                                    nullcount = 0;
+                                    LeaveCount = 0;
+                                    OTHLeaveCount = 0;
+
+                                    CLeaveCount = 0;
+                                    SLeaveCount = 0;
+                                    PLeaveCount = 0;
+
+                                    WOLeaveCount = 0;
+                                    PHLeaveCount = 0;
+
+                                    SelectDays = 0;
+
+                                    filledPercentage = 0;
+                                    WorkingDays = 0;
+                                }
+                            }
+                        </table><br />
+
+                    </div>
+
+
+                </div>
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div>
+
+                <div class="row">
+                    <table class="display dataTable no-footer" style="overflow-y:auto;font-size:9px;width:95%" id="WOSummaryTable">
+                        @if (Model.dtActivityMaster != null && Model.dtActivityMaster.Rows.Count != 0)
+                        {
+
+                            int Acrowcnt = 0;
+                            int Accolcnt = 0;
+                            Accolcnt = Model.dtActivityMaster.Rows.Count / 5;
+                            int colspanCnt = Accolcnt * 2;
+
+
+                                <tr style="background-color:#3677e6">
+                                    <td style="text-align:left;width:80px;font-size:11px;font-weight:bold" colspan=@colspanCnt >Activity Code Master</td>
+                                </tr>
+                               
+
+                            for (int row = 0; row < 10; row++)
+                            {
+                                    
+                                    <tr>
+                                        @for (int clcnt = 0; clcnt < Accolcnt; clcnt++)
+                                        {
+                                            if (Acrowcnt < Model.dtActivityMaster.Rows.Count)
+                                            {
+                                            <td><b>@Model.dtActivityMaster.Rows[Acrowcnt]["Code"].ToString()</b></td>
+                                            <td>@Model.dtActivityMaster.Rows[Acrowcnt]["Name"].ToString()</td>
+                                                Acrowcnt++;
+                                            }
+                                        }
+                                    </tr>
+                                
+                            }
+                        }
+                    </table>
+
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+        </div>
+
+</div>
+}
+
+
+
+
+@*Date Picker for From Date*@
+
+<script>
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script src="~/Scripts/MvcGrid/jquery.quicksearch.js"></script>
+<script src="~/Scripts/MvcGrid/dataTables.fixedColumns.min.js"></script>
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+
+           $('.mvc-grid-value').each(function (i)
+           {
+               var j = i ;
+               $(this).quicksearch("#gridMapping tr:not(:has(th))",
+               {
+
+                   'testQuery': function (query, txt, row)
+                   {
+
+                       return $(row).children(":eq(" + j + ")").text().toLowerCase().indexOf(query[0].toLowerCase()) != -1;
+                   }
+               });
+           });
+</script>

@@ -1,0 +1,171 @@
+﻿
+@model TuvVision.Models.Leave
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@using System.Configuration;
+
+@{
+    ViewBag.Title = "Holiday List";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<style>
+    .ifa {
+        pointer-events: none;
+    }
+</style>
+
+
+
+@using (Html.BeginForm("HolidayDetailDashboard", "Leave", FormMethod.Post, new {enctype = "multipart/form-data" }))
+{
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <!-- /.col -->
+            <!--Table was here-->
+            <div class="col-xs-12">
+                <b>Holiday List Details</b>
+
+                <table>
+                
+
+
+                </table>
+            </div>
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+        </div>
+
+
+
+
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-12">
+
+                    
+                    <div class="col-xs-12 col-sm-2">
+                        
+
+                        @*<a class="btn btn-default insert-form-btn" href="~/Excel/template.xlsx" role="button" download="IVRIRNTemplate.xlsx" style="margin-top:0px;">*@
+                        <a class="btn btn-default insert-form-btn" href="@Url.Action("DownloadHolidayTemplate", "Leave")" role="button" download="IVRIRNTemplate.xlsm" style="margin-top:0px;">
+                            <i class="fa fa-download"></i>Download Template
+                        </a>
+                  
+                        </div>
+                    <div class="col-xs-pull-0 col-sm-1">
+                        <label> Date:</label>
+                        </div>
+
+                    <div class="col-xs-12 col-sm-2">
+                        <div>
+                           
+                            @Html.DropDownListFor(model => model.Year, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Date--", new { @class = "form-control", @style = "margin-top:0px; border-color:deepskyblue;", @id = "ddlYears" })
+                            @Html.ValidationMessageFor(Model => Model.Year)
+                        </div>
+                    </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+                                <input type="file" name="FileUpload1" class="form-control" id="FileUpload1">
+                                @Html.HiddenFor(m => m.Year)
+                            </div>
+                        </div>
+                        <div class="col-xs-12  col-sm-2">
+                            <button type="submit" class="btn btn-default insert-form-btn" name="Upload" value="Upload" style="margin-top:0px;">Upload</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <button type="submit" class="btn btn-default insert-form-btn" name="Clear" value="Clear" onclick="return confirm('Are you sure you wish to Clear?');" style="margin-top:0px;">Clear</button>
+                            
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+        <div class="col-xs-12" id="HolidayList">
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        @for (int col = 0; col < Model.dtLeave.Columns.Count; col++)
+                        {
+                            if (Model.dtLeave.Columns[col].ColumnName.ToString().ToUpper() != "ID" && Model.dtLeave.Columns[col].ColumnName.ToString().ToUpper() != "YEAR")
+                            {
+                                <th align="left">@Model.dtLeave.Columns[col].ColumnName.ToString()</th>
+                            }
+                        }
+                        @*<th>Occassion </th>
+                        <th>Date</th>     
+                        <th>AURANGABAD </th>
+                        <th>BANGALORE  </th>
+                        <th>BELGAUM    </th>
+                        <th>CHENNAI    </th>
+                        <th>COIMBATORE </th>
+                        <th>DELHI      </th>
+                        <th>HUBLI     </th>
+                        <th>HYDERABAD </th>
+                        <th>KOLHAPUR  </th>
+                        <th>KOLKATA   </th>
+                        <th>LUDHIANA  </th>
+                        <th>MUMBAI    </th>
+                        <th>NAGPUR    </th>
+                        <th>NASHIK   </th>
+                        <th>PCG Jamnagar</th>
+                        <th>PUNE      </th>
+                        <th>TRICHY    </th>
+                        <th>Vadodara  </th>
+                        <th>VIZAG </th>*@
+                       
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.dtLeave != null && Model.dtLeave.Rows.Count != 0)
+                    {
+                        for (int cnt = 0; cnt < Model.dtLeave.Rows.Count; cnt++)
+                        {
+                            System.Data.DataRow row = Model.dtLeave.Rows[cnt];
+
+                            <tr>
+                                @for (int col = 0; col < Model.dtLeave.Columns.Count; col++)
+                                {
+                                    if (Model.dtLeave.Columns[col].ColumnName.ToString().ToUpper() != "ID" && Model.dtLeave.Columns[col].ColumnName.ToString().ToUpper() != "YEAR")
+                                    {
+                                        <td align="left">@Model.dtLeave.Rows[cnt][Model.dtLeave.Columns[col].ColumnName.ToString()].ToString()</td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+}
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>*@
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+
+
+
+
+
+
+
+
+

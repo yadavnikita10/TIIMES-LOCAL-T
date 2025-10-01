@@ -1,0 +1,792 @@
+﻿@model TuvVision.Models.QuotationMaster
+@{
+    ViewBag.Title = "QuotationDetails";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    var AddEnclosures = Model.AddEnclosures;
+    var EscalationMatrix = Model.EscalationMatrix;
+    var Coordinators = Model.Coordinators;
+}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//cdn.ckeditor.com/4.6.0/full/ckeditor.js"></script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TUV India</title>
+
+   
+
+    <link href="~/AllJsAndCss/css/QuotationPrint.css" rel="stylesheet" />
+    <style>
+         .page-header {
+         height: 90px;
+         }
+         .page-header-space {
+         height: 200px;
+         }
+         .page-footer-space {
+         height: 50px;
+         }
+         thead.report-header {
+         display: table-header-group;
+         }
+         tfoot.report-footer {
+         display: table-footer-group;
+         }
+         .page-footer {
+         height: auto;
+         }
+         .page-footer {
+         position: fixed;
+         bottom: 0;
+         left: 0;
+         width: 100%;
+         padding-top: 10px;
+         border-top: 1px solid #d0d0d0;
+         background: #ffffff;
+         }
+         .add-on{
+         position:relative;
+         }
+         .page-header {
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         right: 0;
+         /* border-bottom: 1px solid #d0d0d0; */
+         background: #ffffff;
+         visibility: hidden;
+         }
+         .page {
+         page-break-after: always;
+         }
+        @@page {
+    margin: 5mm;
+    }
+
+    @@media print {
+    .page-header{visibility: visible;}
+    thead {display: table-header-group;}
+    tfoot {display: table-footer-group;}
+    body {margin: 0;}
+    }
+    </style>
+
+    
+
+</head>
+<body style="padding:0;margin:0;font-size:14px;">
+    <div class="col-xs-12 text-right"><button type="button" class="btn btn-default insert-form-btn printquot" onclick="javascript: window.print()" value="Print Current Page" title="Print">Print</button></div>
+    @*<input name="b_print" type="button" class="ipt" onClick="printdiv('printdives');" value="Print">*@
+
+    <br>
+    <br>
+    <br>
+
+    <div id="printdives">
+        <!--Page 1: Body-->
+        <!--Header start-->
+
+        <div class="container">
+            <div class="add-on">
+
+                <div class="page-header">
+                    @*<img width="100" src="../TuvLogo/logo.png" style="display:block;margin:0 auto;" alt="">*@
+                    @*<div style="text-align: left;">
+                        
+                         <span style="display: block; height: 1px; background-color: #eee; margin-bottom:15px;"></span>
+                    </div>*@
+                    <table cellpadding="7" width="100%">
+                        <tr>
+                            <td style="border:none;" width="50%">
+                                <img src="../TuvLogo/logo.png" style="display:inline-block;width: 80px;margin-top: 10px;margin-bottom:10px;" alt="">
+                            </td>
+                            <td style="border:none; float: right;" width="50%">
+                                <span>
+                                    Registered & Head Office:<br />
+                                    TUV INDIA PRIVATE LIMITED<br />
+                                    801, Raheja Plaza-1,<br />
+                                    L.B.S. Marg, Ghatkopar (W),<br />
+                                    Mumbai - 400 086<br />
+                                    Phone     : (+91) (22) 6647 7000<br />
+                                    Fax       : (+91) (22) 6647 7009<br />
+                                    E-mail     :  mumbai@tuv-nord.com<br />
+                                    Website   :  www.tuvindia.co.in<br />
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="page-footer">
+                    <p>Registered & HO: 801, Raheja Plaza-1, L.B.S. Marg, Ghatkopar (W), Mumbai - 400 086</p>
+                </div>
+
+
+
+
+                <table class="body-content" width="100%">
+                    <thead>
+                        <tr>
+                            <td style="border:none;">
+                                <div class="page-header-space"></div>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="border:none;">
+                                <div class="page">
+                                    <div style="display:block;width:900px;margin:0 auto;background-color:#fff;border:1px solid #dddddd;margin-bottom:30px;" id="printdiv">
+
+
+
+
+                                        <!--Content-->
+                                        <!--Content-->
+                                        <div style="display:block; background-color: #fff; padding: 0 40px 0 40px;">
+                                            <div>
+                                                @*<p style="color:#fff;background-color: #001ED2;text-align:center;text-transform: uppercase;font-family:'TNG Pro';font-size: 18px;font-weight:bold;margin: 0;padding: 18px 10px;">Proposal</p>*@
+                                                <p style="color:#fff;background-color: #001ED2;text-align:center;text-transform: uppercase;font-family:'TNG Pro';font-size: 18px;font-weight:bold;margin: 0;padding: 14px 10px;">Proposal</p>
+
+                                                <span style="display: block; height: 1px; background-color: #001ED2; margin-bottom:20px;"></span>
+                                                <p style="margin:0;text-align:center;font-family:'TNG Pro';font-size:14px;margin-bottom: 15px;margin-top: 30px;">For</p>
+                                                <p style="text-align:center; font-family:'TNG Pro'; font-size:18px; font-weight:bold;margin-top:30px;margin-bottom: 20px;">@Html.DisplayFor(m => m.ThirdPartyInspectionService)@*Third Party Inspection Services*@</p>
+                                                <span style="display: block; height: 1px; background-color: #eee; margin-bottom:15px;"></span>
+
+                                                <p style="margin:0;text-align:center;font-family:'TNG Pro';font-size:14px;margin-bottom: 15px;margin-top: 30px;">@Html.DisplayFor(m => m.Quotation_Description)</p>
+                                                <span style="display: block; height: 1px; background-color: #eee;margin-top:30px;margin-bottom:15px;"></span>
+                                            </div>
+                                            <div style="display: block;background-color: #f3f3f3;padding: 5px 10px;margin-top: 10px;">
+                                                <p style="text-transform:uppercase;font-weight:bold;margin:0;text-align:center;font-family:'TNG Pro';font-size:14px;margin-top:20px;margin-bottom:15px;">To:</p>
+                                                <p style="width:45%;margin:0 auto;text-align:center;font-family:'TNG Pro';font-size:14px;margin-top:5px;margin-bottom:20px;">
+                                                    @Html.TextBoxFor(m => m.QuotationCompanyName, new { @class = "form-control" })
+
+                                                </p>
+                                                <p style="width:40%;margin:0 auto;text-align:center;font-family:'TNG Pro';font-size:14px;margin-top:0;margin-bottom: 30px;">
+                                                    (Associates of : @Html.DisplayFor(m => m.Associates))
+                                                </p>
+                                            </div>
+                                            <span style="display: block; height: 1px; background-color: #eee;margin-top:30px;margin-bottom:15px;"></span>
+
+                                            <div style="display: block;background-color: #f3f3f3;padding: 10px;margin-top: 25px;margin-bottom: 25px;">
+                                                <p style="text-transform:uppercase;font-weight:bold;margin:0;text-align:center;font-family:'TNG Pro';font-size:14px;margin-top:10px;margin-bottom:10px;">From:</p>
+                                                <p style="width:45%;margin:0 auto;text-align:center;font-family:'TNG Pro';font-size:14px;margin-top:5px;margin-bottom:20px;"><img width="100" src="../TuvLogo/logo.png" style="display:block;margin:0 auto;" alt=""><br>@Html.DisplayFor(m => m.FromAddress)</p>
+
+                                            </div>
+
+
+                                            <div>
+                                                <table style="font-family:'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 8px;width:20%;background-color:#f3f3f3;font-weight:bold;">Quotation Ref No:</td>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 8px;width:80%;">@Html.DisplayFor(m => m.QuotationNumber)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 8px;width:20%;background-color:#f3f3f3;font-weight:bold;">Date:</td>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 8px;width:80%;">@Html.DisplayFor(m => m.CreatedDate, "{0:dd MMM yyyy}", new { placeholder = "Est Close Date", @class = "form-control", autocomplete = "off" })</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 8px;width:20%;background-color:#f3f3f3;font-weight:bold;">Kind Attention:</td>
+
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 8px;width:80%;">Mr. @Html.DisplayFor(m => m.ContactName)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;width:20%;background-color:#f3f3f3;font-weight:bold;">E-Mail ID:</td>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;width:80%;">@Html.DisplayFor(m => m.Email)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;width:20%;background-color:#f3f3f3;font-weight:bold;">Mobile No:</td>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;width:80%;">@Html.DisplayFor(m => m.Mobile)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;width:20%;background-color:#f3f3f3;font-weight:bold;">Landline No:</td>
+                                                            <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;width:80%;">@Html.DisplayFor(m => m.Landline)</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                            @*<div style="display: block;background-color: #f3f3f3;padding: 10px;margin-top: 25px;margin-bottom: 25px;">
+                                               <p style="text-transform:uppercase;font-weight:bold;margin:0;text-align:center;font-family:'TNG Pro';font-size:14px;margin-top:10px;margin-bottom:10px;">From:</p>
+                                               <p style="width:45%;margin:0 auto;text-align:center;font-family:'TNG Pro';font-size:14px;margin-top:5px;margin-bottom:20px;"><img width="100" src="../TuvLogo/logo.png" style="display:block;margin:0 auto;" alt=""><br>@Html.DisplayFor(m => m.FromAddress)</p>
+
+                                            </div>*@
+                                        </div>
+                                        <!--Content-->
+                                        <!--Footer-->
+                                        <!--Footer-->
+                                        <!--Ashok first-->
+                                        <div style="display:block;width:900px;margin:0 auto;background-color:#fff;border:1px solid #dddddd;margin-bottom:30px;">
+                                            <!--Content-->
+                                            <div style="display:block; background-color: #fff; padding: 0 40px 0 40px;">
+
+                                                <div>
+                                                    <p style="text-align:center; font-family:'TNG Pro'; font-size:18px; font-weight:bold;margin-top:14px;margin-bottom: 30px;">Introduction</p>
+                                                    <p style="text-align:center; font-family:'TNG Pro'; font-size:18px; font-weight:bold;margin-top:12px;margin-bottom: 30px;">Excellence for your Business: TÜV NORD GROUP </p>
+
+                                                    <span style="display: block; height: 1px; background-color: #eee; margin-bottom:15px;"></span>
+                                                    <p style="width:90%;margin:0 auto;text-align:justify;font-family:'TNG Pro';font-size:14px;margin-bottom: 15px;margin-top: 30px;"></p>
+                                                    <p>
+                                                        The TÜV NORD GROUP is a GLOBAL LEADER in TECHNOLOGY SERVICES with the clear aim of accompanying its clients with prudence & foresight into the future.
+
+                                                        TÜV NORD GROUP’s 14,000 Employees across 70 Countries & 150 Subsidiaries together form an active and vibrant team, equipped with a broad horizon of knowledge and the determination to achieve excellence in their disciplines
+
+                                                        TUV India Private Limited, TÜV NORD GROUP, a leading Testing, Inspection & Certification (TIC) Company with a presence in India since 1989, is at the forefront of providing services for Quality, Safety, Security and Reliability. Over 31 years since the inception, have added 25 Branch Offices with Head Office in the financial capital of India, Mumbai with overall of 2000 Employees across different Business Units & Business Unit Industrial Services contributes to over 900 Inspection Engineers & experts strategically located all across India with exposure to various sector viz. Oil, Gas, Petrochemical, Fertilizer, Power, Defense etc.
+                                                    </p>
+                                                    @*With over 14,000 employees, TUV NORD GROUP is one of the largest technical service
+                                                    providers, offering its advisory, service and inspection expertise in over 70 countries
+                                                    throughout the world. Areas of activity include Industrial Services, Certification, Testing,
+                                                    Product Certification, Mobility, Training, and IT. TÜV NORD GROUP occupies a unique position
+                                                    in the sector based on its work in the fields of natural resources and aerospace and is firmly
+                                                    committed to its guiding principle and watchword: &quot;Expertise for your Success.&quot;*@
+
+                                                    @*<p style="width:90%;margin:0 auto;text-align:justify;font-family:'TNG Pro';font-size:14px;margin-bottom: 15px;margin-top: 30px;">
+                                                        TUV India Pvt Ltd was established in 1989 as a part of German RWTÜV group&#39;s Indian
+                                                        operation is, now the TÜV NORD GROUP, as one of the first Certification Bodies to start
+                                                        operations in India; since then, it has been closely associated with the quality revolution in
+                                                        India. With over 900 employees in more than 25 locations and state-of-the at laboratories
+                                                        across India, TUV India is never far from its customers.
+                                                    </p>*@
+
+                                                </div>
+
+                                            </div>
+                                            <!--Content-->
+                                            <!--Footer-->
+                                            <!--Footer-->
+                                        </div>
+
+                                        <div style="display:block;width:900px;margin:0 auto;background-color:#fff;border:1px solid #dddddd;margin-bottom:30px;">
+                                            <!--Content-->
+                                            <div style="display:block; background-color: #fff; padding: 0 40px 0 40px;">
+
+
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    @*<table style="font-family: arial, sans-serif;border-collapse: collapse;width: 100%;margin-bottom:10px;">*@
+                                                    <table style="font-family: 'TNG Pro';border-color: white;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 20px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Subject: @Html.DisplayFor(m => m.Subject)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 10px 15px;font-weight: bold;border-color: white;" colspan="2">Ref: @Html.TextBoxFor(m => m.Ref, new { @class = "form-control" })</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 10px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Dear Sir,</td>
+                                                            </tr>
+                                                            <tr>
+                                                                @*<td style="text-align: left;padding: 10px 15px 15px 15px;border-color: white;" colspan="2">@Html.TextAreaFor(m=>m.DearSir,new {@placeholder= "We thank you for the interest shown in the services of TUV India Private Limited. We are pleased to submit our offer as follows",@class="form-control",@rows="4" }) </td>*@
+                                                                <td style="text-align: left;padding: 10px 15px 15px 15px;border-color: white;" colspan="2">@Html.TextAreaFor(m => m.ThankYouLetter, new { @class = "form-control", @rows = "4" }) </td>
+
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 10px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Communication Protocol:</td>
+                                                            </tr>
+                                                            <tr>
+                                                                @*<td style="text-align: left;padding: 10px 15px 15px 15px;">@Html.TextAreaFor(m=>m.CommunicationProtocol,new {@class="form-control",@row="2"})</td>*@
+                                                                <td style="text-align: left;padding: 0 15px 10px 15px;border-color: white;" colspan="2">
+                                                                    <p>
+                                                                        @Html.TextAreaFor(m => m.CommunicationProtocol)
+                                                                        <script type="text/javascript">
+                                            CKEDITOR.replace('CommunicationProtocol');
+                                                                        </script>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                            @*<tr>
+                                                                <td style="text-align: left;padding: 10px 15px 15px 15px;border-color: white;">
+                                                                    <span style="display:inline-block;width:50px;"><strong>To:</strong></span>
+                                                                    @Html.TextBoxFor(m => m.To, new { @style = "min-width:500px;padding:0 10px;" })
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 10px 15px 15px 15px;border-color: white;">
+                                                                    <span style="display:inline-block;width:50px;"><strong>CC:</strong></span>
+                                                                    @Html.TextBoxFor(m => m.CC, new { @style = "min-width:500px;padding:0 10px;" })
+                                                                </td>
+                                                            </tr>*@
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 95%;margin:0 auto;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 10px 15px 15px 0;font-weight: bold;border-color: white;">Escalation Matrix</td>
+                                                            </tr>
+                                                            @*<tr>
+                                                                <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;background-color:#f3f3f3;">1. <strong><input type="text" value="" style="padding:0 10px;"></strong> - <input type="text" value="" style="padding:0 10px;"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;background-color:#f3f3f3;">2. <strong><input type="text" value="" style="padding:0 10px;"></strong> - <input type="text" value="" style="padding:0 10px;"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;background-color:#f3f3f3;">3. <strong><input type="text" value="" style="padding:0 10px;"></strong> - <input type="text" value="" style="padding:0 10px;"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="border: 1px solid #dddddd;text-align: left;padding: 10px 15px;background-color:#f3f3f3;">3. <strong><input type="text" value="" style="padding:0 10px;"></strong> - <input type="text" value="" style="padding:0 10px;"></td>
+                                                            </tr>*@
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 10px 15px 10px 15px;border-color: white;" colspan="2">@Html.Raw(EscalationMatrix)  </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 5px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Scope of Work:</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 0 15px 10px 15px;border-color: white;" colspan="2">
+                                                                    <p>
+                                                                        @Html.TextAreaFor(m => m.ScopeOfWork)
+                                                                        <script type="text/javascript">
+                                            CKEDITOR.replace('ScopeOfWork');
+                                                                        </script>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 5px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Deliverable:</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 0 15px 10px 15px;border-color: white;" colspan="2">
+                                                                    <p>
+                                                                        @Html.TextAreaFor(m => m.Deliverable)
+                                                                        <script type="text/javascript">
+                                            CKEDITOR.replace('Deliverable');
+                                                                        </script>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 5px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Fees structure:</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 0 15px 10px 15px;border-color: white;" colspan="2">
+                                                                    <p>
+                                                                        @Html.TextAreaFor(m => m.FeesStructure)
+                                                                        <script type="text/javascript">
+                                            CKEDITOR.replace('FeesStructure');
+                                                                        </script>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 5px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Key notes:</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 0 15px 10px 15px;border-color: white;" colspan="2">
+                                                                    <p>
+                                                                        @Html.TextAreaFor(m => m.KeyNotes)
+                                                                        <script type="text/javascript">
+                                            CKEDITOR.replace('KeyNotes');
+                                                                        </script>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 5px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Payment terms:</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 0 15px 10px 15px;border-color: white;" colspan="2">
+                                                                    <p>
+                                                                        @Html.TextAreaFor(m => m.PaymentTerms)
+                                                                        <script type="text/javascript">
+                                            CKEDITOR.replace('PaymentTerms');
+                                                                        </script>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family:'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 5px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Validity :</td>
+                                                            </tr>
+                                                            <tr>
+                                                                @*<td style="text-align: left;padding: 0 15px 10px 15px;" colspan="2"><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularized in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p></td>*@
+                                                                <td style="text-align: left;padding: 0 15px 10px 15px;border-color: white;" colspan="2"><p>@Html.DisplayFor(m => m.Validity)</p></td>
+
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div style="display:block;width:90%;margin:0 auto;">
+                                                    <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 5px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Terms &amp; Conditions:</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 0 15px 10px 15px;border-color: white;" colspan="2"><p>Other Terms &amp; conditions shall be applicable as per attached annexure "General Terms &amp; conditions of TUV India Private Limited"</p><p>We trust you will find the above offer competitive and realistic to provide required level of service and look forward to be associated with you in this prestigious project.</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left;padding: 0 15px 10px 15px;border-color: white;"><p>In case you need any further clarifications / comments, please contact us, we will be pleased to furnish the same promptly.</p></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        @*<div style="display:block;width:900px;margin:0 auto;background-color:#fff;border:1px solid #dddddd;margin-bottom:30px;">
+
+                                            <div style="display:block; background-color: #fff; padding: 0 40px 0 40px;">
+
+                                            </div>
+
+                                        </div>*@
+
+
+
+                                        <div style="display:block;width:900px;margin:0 auto;background-color:#fff;border:1px solid #dddddd;margin-bottom:30px;">
+                                            <!--Content-->
+                                            @*<div style="display:block; background-color: #fff; padding: 0 40px 0 40px;">
+                                            <div style="text-align: right;">
+                                                <img src="../TuvLogo/logo.png" style="display:inline-block;width: 80px;margin-top: 10px;margin-bottom:10px;" alt="">
+                                                <span style="display: block; height: 1px; background-color: #eee; margin-bottom:15px;"></span>
+                                            </div>*@
+
+
+
+                                            <div style="display:block;width:90%;margin:0 auto;">
+                                                <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <img src="../TuvLogo/logo.png" style="width:100px;margin-left:15px;" alt="">
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;padding: 5px 15px 0 15px;border-color: white;">@Html.DisplayFor(m => m.FaitFully)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;padding: 5px 15px 0 15px;border-color: white;">Yours faithfully,</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;padding: 10px 15px 10px 15px;font-weight: bold;border-color: white;">TUV INDIA PRIVATE LIMITED</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div style="display:block;width:90%;margin:0 auto;">
+                                                <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="text-align: left;padding: 5px 15px 0 15px;font-weight: bold;border-color: white;" colspan="2">Enclosures: </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;padding: 10px 15px 10px 15px;border-color: white;" colspan="2">@Html.Raw(AddEnclosures)  </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;padding: 10px 15px 10px 15px;border-color: white;" colspan="2">Terms and conditions</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div style="display: block;width: 85%;margin: 0 auto;padding: 10px 5px;border: 1px solid #ddd;background-color:#f3f3f3;margin-top:30px;margin-bottom: 30px;">
+                                                <table style="font-family: 'TNG Pro';border-collapse: collapse;width: 100%;margin-bottom:10px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="text-align:left;padding:5px 15px 0 15px;font-weight: bold;text-decoration:underline;border-color: white;" colspan="2">ACCEPTANCE OF QUOTATION</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;padding: 10px 15px 10px 15px;border-color: white;" colspan="2">I/We confirm the acceptance of TUV India's Proposal no. <strong>@Html.DisplayFor(m => m.QuotationNumber)</strong> Dt: <strong>@ViewBag.CreatedDate</strong> General Terms and conditions (attachment-I) accompanying with this proposal.</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;padding: 10px 15px 10px 15px;border-color: white;" colspan="2">Client signature &amp; Company's seal __________________ Date_________________</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;padding: 10px 15px 10px 15px;border-color: white;" colspan="2">Name / Designation: _______________________</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <!--Content-->
+                                        <!--Footer-->
+                                        <!--Footer-->
+                                    </div>
+                                    <div style="display:block;width:900px;margin:0 auto;background-color:#fff;border:1px solid #dddddd;margin-bottom:30px;">
+                                        <!--Content-->
+                                        <head>
+                                            <meta charset="utf-8">
+                                            <title>General Terms and Conditions of TUV India Pvt.</title>
+                                            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                                            <style>
+                                                body {
+                                                    margin: 0;
+                                                    /*font-family: arial;*/
+                                                    font-family:'TNG Pro';
+                                                    font-size: 9px;
+                                                    text-align: justify;
+                                                }
+
+                                                table p {
+                                                    margin: 0;
+                                                }
+
+                                                tbody:before, tfoot:before {
+                                                    line-height: 0.05em;
+                                                    content: ".";
+                                                    color: white;
+                                                    display: block;
+                                                }
+
+                                                td {
+                                                    padding-top: 5px;
+                                                    padding-bottom: 5px;
+                                                    border: 1px solid #000000;
+                                                    vertical-align: top;
+                                                    padding-left: 5px;
+                                                    padding-right: 5px;
+                                                }
+
+                                                .page1 {
+                                                    position: relative;
+                                                    display: inline-block;
+                                                    width: 100%;
+                                                    margin: 0 auto;
+                                                }
+
+                                                    .page1 .footer {
+                                                        position: absolute;
+                                                        bottom: -20px;
+                                                        left: 0px;
+                                                        right: 0;
+                                                        width: 100%;
+                                                        background: #ffffff;
+                                                    }
+                                            </style>
+                                        </head>
+                                        <body style="margin: 10px 20px;font-family:'TNG Pro';height: 100%;">
+                                            <div class="page1">
+                                                <table width="100%" cellpadding="5" style="border-spacing: 0;">
+                                                    <thead>
+                                                        <tr>
+                                                            <td width="25%" style="vertical-align: middle;"><span>F/MR/27 Rev 04</br>Revision date: <strong>@ViewBag.CreatedDate</strong></span><br /><span style="font-size:10px;"><strong>Page 1 of 1</strong></span></td>
+                                                            <td width="50%" style="text-align: center; vertical-align: middle;line-height: 1.5;"><u><strong>GENERAL TERMS AND CONDITIONS<br> OF TUV INDIA PRIVATE LIMITED</strong></u></td>
+                                                            <td width="25%"><img src="~/Content/TnC/Picture1.png" alt="" style="max-width:100px; text-align: center; margin:10px auto; display:block;vertical-align: middle;"></td>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                                <table width="100%" cellpadding="5" style="border-spacing: 0;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td width="50%">
+                                                                <p>
+                                                                    1 GENERAL
+                                                                    TUV India Private Limited established in India in August 1989 provides expert services, including inspection services, in the areas as defined in the Memorandum of Association of the Company.
+                                                                    In all further reference TUV India Pvt. Ltd. is referred to as TUV India.
+                                                                </p>
+                                                                <p>
+                                                                    2 CONTENT OF CONTRACTS
+                                                                    The scope and conditions of contracts concluded by TUV India shall be governed by the related written confirmation of order. Until this written confirmation of order is issued by TUV India no offers shall be binding with regard to performance, price and dates. These General Terms and conditions along with the terms of the TUV India offer letter and any amendments there to shall apply to the contract. Any other terms & conditions or General T&C of other parties shall not be made part of the contract ever though TUV India does not expressly contradict them.
+                                                                    TUV India shall provide its services only in accordance with the applicable standards / codes & scope agreed in the contract/QAP. Unless expressly agreed in writing, TUV India shall not be responsible for checking or for the correctness of the safety regulations and safety programs upon which its inspection and evaluations are based.
+                                                                    No addition, alteration or substitution of these Terms and Conditions will bind TUV India or form part of this Contract unless it is expressly accepted in writing by an authorized TUV India representative who expressly states in writing that TUV India is agreeing to alter these Terms and Conditions. In the event of any conflict between these Terms and Conditions and any document purporting to impose different terms, these Terms and Conditions will Prevail.
+                                                                    TUV India shall report the result of inspections through its own formats such as Inspection report, visit report, Inspection release note or client supplied formats at the agreed stages to the interfaces declared by client.
+                                                                </p>
+                                                                <p>
+                                                                    3 ASSISTANCE
+                                                                    The client shall ensure that all the necessary assistance on his part or on the part of persons he engages to help in performance of the contract shall be provided in good time and at no expense to TUV India.  Such assistance shall include, but not be limited to, access to documented inspection history, safe site access, timely availability of key interface, preparation of items for inspection in good time, permission to carry out necessary audits on TUV India as part of accreditation and approval process by regulatory, certification & accreditation bodies if & when required. Such assistance must be in accordance with relevant applicable standards, safety provisions and accident prevention regulations. The client or the persons/parties he/she engages shall ensure restriction of access to the inspected items and the equipment/facilities used for inspection by unauthorized persons. In case of doubt TUV India shall have the right to confirm the continuing suitability for the intended purpose of the inspected items and the equipment/ facilities used for inspection by means of visual inspection, functional checks, additional tests if required, verification of records and/or recalibration of the equipment/facility.
+                                                                    The client shall be liable for the extra expense entailed by late or improper assistance on his part.  TUV India shall be entitled to charge for this extra expense in addition even if a fixed or maximum price has been agreed.
+                                                                    In the same way, the client shall bear any expenses incurred owing to the fact that work has to be repeated or is delayed because of his late, incorrect or incomplete information or if the inspection cannot be accomplished due to adverse weather conditions or vendor related factors.
+                                                                    The client or the persons/parties he/she engages shall take responsibility to provide a safe place of work for TUV India’s inspectors. If the inspector is exposed to unsafe work conditions, the inspection activity shall not be conducted till the conditions are rectified & considered to be safe.
+                                                                </p>
+                                                                <p>
+                                                                    4 LIABILITY LIMITATION
+                                                                    In providing Services, information, or advice, TUV India does not warrant the accuracy or genuineness of any information or advice supplied or report signed.
+                                                                    Unless otherwise agreed upon specifically and confirmed by TUV India in writing neither TUV India nor its engineers or representatives are liable for any damage, loss or expense arising out of the services or advice provided by TUV India, its engineers and representatives.  Nevertheless, TUV India is liable in case of proven willful misconduct or gross negligence on its part or on the part of its engineers and representatives in the case of loss, damage or expenses incurred due to the advice or service provided by TUV India, its engineers or representatives.  In no case shall the liability exceed the pro - rata fees paid / payable to TUV India for the services or advice provided for that particular equipment, component or part thereof which caused the damage, loss or expense. <strong>
+                                                                        <i>
+                                                                            The aggregate liability of TUV India in respect of this contract, in tort or otherwise, shall not exceed 20% (twenty percent) of the contract price actually received. TUV India, its engineers and representatives are not liable to any person or party with whom there is no direct contract for the particular service. The issue of Inspection report or. The inspection by TUV India Pvt. Ltd., review of Test Certificates / Reports and issue of Inspection Release Note / Certificate does not relieve the Client/ End User/ Supplier / Manufacturer from their responsibility towards the Client / End User to supply / Use  the genuine material / item(s) and document(s) in full compliance with applicable Order, Specification, Technical, Quality, Quantity, Warranty, Guarantee, statutory & regulatory requirements. Supplier / Manufacturer / stockist is wholly legally responsible for genuineness of the material / item (s) supplied and document(s) submitted. TÜV India’s  responsibility is only limited to correctness of inspection results including review of the documents, within its agreed scope against written requirements and neither TUV India nor any of its group companies, associates or employees are in any way/ legally responsible for genuineness of the material / item(s) and document(s). No omission or failure to carry out or observe any stipulation, condition or obligation to be performed by TUV India under this Contract will give rise to any claim against  TUV India or its employees / group companies / associates, or be deemed to be a breach of contract, if the failure or omission arises from causes beyond that entity’s reasonable control.
+                                                                            TUV India, its engineers and representatives are not liable whether in contract, tort, or otherwise for any indirect consequential Loss / damage or expense, including loss of use / production / profits.
+                                                                        </i>
+                                                                    </strong>
+                                                                </p>
+                                                            </td>
+                                                            <td width="50%">
+                                                                <p>
+                                                                    5 INVOICING AND PAYMENT
+                                                                    Unless specifically agreed upon and confirmed in writing by TUV India all fees, charges and expenses payable to TUV India shall be paid within 7 days of receipt of invoice.  In the case of a dispute in the invoice the client shall pay the undisputed portions of the invoice within 7 days.  Disputed invoice or parts thereof shall be brought to the notice of TUV India in writing within 7 days from the date of receipt of invoice. For delayed payments TUV India reserves the right to charge interest at the rate 2% per month for the outstanding amounts.
+                                                                    If a fixed price has been agreed in writing, TUV India shall be able to invoice pro rata installments in accordance with the portion provided of the total services to be paid for.
+                                                                    If the contract is terminated by TUV India or the client before the services under the contract are completed, TUV India’s fees will be calculated on a pro rata basis up to date of termination. Any reasonable costs directly attributed to early termination and any amounts then due to TUV India will immediately become payable. TUV India in its discretion may withhold or withdraw any certificate or report in the event of non-payment of any fee
+                                                                </p>
+                                                                <p>
+                                                                    6 LIMITATIONS OF TIME
+                                                                    This contract will remain valid till the validity date in the offer or the date of termination. TUV India or the client may terminate this contract after giving 30 days notice.
+                                                                    All claims against TUV India shall expire after 6 months from the date of the service provided by TUV India.
+                                                                </p>
+                                                                <p>
+                                                                    7 ASSIGNMENT
+                                                                    Neither the client nor TUV India may assign rights and obligations arising from this contract in whole or in part without the written consent of the other party.
+                                                                </p>
+                                                                <p>
+                                                                    8 COPYRIGHT / CONFIDENTIALITY
+                                                                    All copyright and joint copyright on experts’ reports, inspection results, calculations, presentations etc. drawn up by TUV India shall remain in the hands of TUV India and should not be reproduced, except in full without the consent of TUV India Pvt. Ltd.
+                                                                    Both contracting parties and their employees and persons assisting them in their performance shall be obliged not to provide access for third parties to confidential information and documents visibly or expressly so designated, when required by law or as requested by the client. This obligation will survive termination of the contract. This obligation will not apply to any technical information or operating data that was in the TUV India possession before its disclosure in connection with the services, that is or becomes part of the public domain through no fault of the TUV India or that otherwise becomes available to the TUV India from an independent source not under a confidentiality obligation. TUV India shall have the right to share the inspection records with regulatory, certification & accreditation bodies if & when required. TUV India shall be liable vis-à-vis the client for any willful or grossly negligent violations of this confidentiality obligation subject to the liability clause.
+                                                                </p>
+                                                                <p>
+                                                                    9 ARBITRATION
+                                                                    Every dispute or question which may arise between the parties hereto or any person claiming under them, touching or arising out of our in respect of this contract or the subject matter thereof, shall be referred to two arbitrators, one each to be appointed by each party to the contract.
+                                                                    In case of difference of opinion between the arbitrators, an umpire will be appointed by the arbitrators. The decision of the arbitrators or the umpire, as the case maybe, shall be final and binding on the parties to this contract.  The provisions of the <strong><i>Arbitration and Conciliation Act, 1996 (as latest amended)</i></strong> shall be applicable to the parties in the event of such reference to the arbitrators or the umpire as the case maybe. The place of jurisdiction shall be Mumbai and Indian Law shall be governing.
+                                                                </p>
+                                                                <p>
+                                                                    10 GROUP ENTITY
+                                                                    If the Client requires Services from a TUV Nord Group entity other than TUV India, the Client hereby acknowledges and agrees that these Services will be performed by a subsidiary or affiliates of TUV Nord Group. The Client accepts that, by entering this Agreement, the certificate or other deliverables produced to verify compliance with the requirements of national authorities will be issued on behalf of TUV India by the TUV NORD Group entity, in which the approval or accreditation is vested. In that case the Terms and Conditions of that entity shall also apply.
+                                                                </p>
+                                                                <p>
+                                                                    11 DATES.
+                                                                    The dates given by TUV India for the performance of its services shall be based on estimates of the scope of work derived from information given by the client and shall therefore only be binding if they have been expressly agreed as binding in writing after the presentation of a specification.
+                                                                </p>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br></br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br></br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br>
+                                                                </br></br>
+                                                                <table width="100%" cellpadding="5" style="border-spacing: 0; vertical-align: bottom;">
+                                                                    <tr>
+                                                                        <td width="50%" style="vertical-align: middle;"><strong><i>For TUV India Pvt. Ltd.</i></strong></td>
+                                                                        <td width="50%" style="vertical-align: middle;"><strong><i>For:</i></strong></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="50%" style="vertical-align: middle;">
+                                                                            <p>
+                                                                                <span><img src="~/Content/TnC/Picture2.png" alt="" style="width: 120px; height:auto; float: left;"></span>
+                                                                                <span><img src="~/Content/TnC/Picture3.png" alt="" style="width: 50px; height:auto; float: right;"></span>
+                                                                            </p>
+                                                                        </td>
+                                                                        <td width="50%"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="50%" style="vertical-align: middle;">
+                                                                            <strong><i>Name/Signature/ Date/ Stamp</i></strong>
+                                                                        </td>
+                                                                        <td width="50%" style="vertical-align: middle;">
+                                                                            <strong><i>Name/Signature/ Date/ Stamp</i></strong>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <br>
+                                                <div class="footer">
+                                                    <table style="width: 100%; border-spacing: 0;">
+                                                        <tr>
+                                                            <td width="20%"><strong><i>F/MR/27 Rev. 04</i></strong></td>
+                                                            <td width="80%"><strong><i>Rev. 2 : <strong>@ViewBag.CreatedDate</strong></i></strong></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </body>
+                                        <!--Content-->
+                                    </div>
+
+                                    <!--Ashok Last-->
+                                </div>
+
+
+            </div>
+            </td>
+            </tr>
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td style="border:none;">
+                        <div class="page-footer-space"> </div>
+                    </td>
+                </tr>
+            </tfoot>
+
+            </table>
+        </div>
+    </div>
+        
+
+    </div>
+
+</body>
+</html>
+
+@**************************************************************Printing Document HTML Page Functionality*************@
+
+<script language="javascript">
+    function printdiv(printpage) {
+        var headstr = "<html><head><title></title></head><body>";
+        var footstr = "</body>";
+        var newstr = document.all.item(printpage).innerHTML;
+        var oldstr = document.body.innerHTML;
+        document.body.innerHTML = headstr + newstr + footstr;
+        window.print();
+        document.body.innerHTML = oldstr;
+        return false;
+    }
+</script>

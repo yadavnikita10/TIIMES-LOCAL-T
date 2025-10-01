@@ -1,0 +1,235 @@
+﻿@{
+    ViewBag.Title = "CreateUserBulk";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+<style>
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+    }
+
+
+    .highlight {
+    background-color: yellow;
+    color: black;
+    font-weight: bold;
+}
+
+</style>
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!-- Start of header -->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+                <div class="col-xs-12 form-col">
+                    <div class="row align-items-center">
+                        <div class="col-xs-8 col-sm-8">
+                            <label for="myFile" class="form-label">Choose File</label>
+                            <input type="file" id="FileUpload1" class="form-control d-inline-block" name="filename" required>
+                        </div>
+                        <div class="col-xs-4 col-sm-2 text-right">
+                            <label for="myFile" class="form-label"></label><br />
+                            <button type="submit" class="btn btn-primary mt-2 mt-sm-0" id="btncheck">Check</button>
+                        </div>
+                        <div class="col-xs-4 col-sm-2 text-right">
+                            <label for="myFile" class="form-label"></label><br />
+                            <button type="submit" class="btn btn-primary mt-2 mt-sm-0" id="btn" onclick="InsertData();">Insert Data</button>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="mt-4 table-responsive">
+                        <table id="excelTable" class="table table-bordered table-striped table-condensed">
+                            <thead id="tableHeader">
+                                <!-- Headers will be dynamically populated -->
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Rows will be dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $('#btncheck').click(function () {
+        // Get the selected file
+        debugger;
+        var fileUpload = $("#FileUpload1")[0];
+        if (!fileUpload.files || fileUpload.files.length === 0) {
+            alert("Please select a file.");
+            return;
+        }
+
+        // Create FormData to send the file
+        var formData = new FormData();
+        formData.append("fileData", fileUpload.files[0]);
+
+        // Send an AJAX POST request
+        $.ajax({
+            url: '@Url.Action("BindExcelDataToGrid", "Users")', // Update to your action URL
+            type: 'POST',
+            data: formData,
+            processData: false, // Don't process the file
+            contentType: false, // Set content type to false
+            success: function (response) {
+                debugger;
+                if (response.success) {
+                    bindDataToTable(response.data); // Bind data to the table
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + xhr.responseText || error);
+            }
+        });
+    })
+
+   
+
+
+    //function bindDataToTable(data) {
+    //    debugger;
+    //    // Clear existing table content
+    //    $('#tableHeader').empty();
+    //    $('#tableBody').empty();
+
+    //    // Ensure there's data to display
+    //    if (data.length === 0) {
+    //        alert("No data found in the file.");
+    //        return;
+    //    }
+
+    //    // Add table headers (column names)
+    //    var headers = Object.keys(data[0]); // Get column names from the first row
+    //    headers.forEach(function (header) {
+    //        $('#tableHeader').append(`<th>${header}</th>`);
+    //    });
+
+    //    // Add table rows
+    //    // Add table rows
+    //    data.forEach(function (row) {
+    //        var rowHtml = '<tr>';
+    //        headers.forEach(function (header) {
+    //            rowHtml += `<td>${row[header]}</td>`;
+    //        });
+    //        rowHtml += '</tr>';
+    //        $('#tableBody').append(rowHtml);
+    //    });
+    //        //dataTable = $('#excelTable').DataTable();
+    //        dataTable = $('#excelTable').DataTable({
+    //            destroy: true, // Destroy any existing DataTable instance
+    //            scrollX: true, // Enables horizontal scrolling
+    //        });
+
+    //}
+
+
+    function bindDataToTable(data) {
+        debugger;
+        // Clear existing table content
+        $('#tableHeader').empty();
+        $('#tableBody').empty();
+
+        // Ensure there's data to display
+        if (data.length === 0) {
+            alert("No data found in the file.");
+            return;
+        }
+
+        // Add table headers (column names)
+        var headers = Object.keys(data[0]); // Get column names from the first row
+        headers.forEach(function (header) {
+            $('#tableHeader').append(`<th>${header}</th>`);
+        });
+
+        // Track duplicate values for highlighting
+        let usernameCounts = {};
+        let employeeCodeCounts = {};
+
+        // Count occurrences for `username` and `Employeecode`
+        data.forEach(row => {
+            usernameCounts[row.username] = (usernameCounts[row.username] || 0) + 1;
+            employeeCodeCounts[row.Employeecode] = (employeeCodeCounts[row.Employeecode] || 0) + 1;
+        });
+
+        // Add table rows with highlighting logic
+        data.forEach(function (row) {
+            var rowHtml = '<tr>';
+            headers.forEach(function (header) {
+                let cellValue = row[header];
+                let highlightClass = "";
+
+                // Check for duplicates
+                if (
+                    (header === "username" && usernameCounts[cellValue] > 1) ||
+                    (header === "Employeecode" && employeeCodeCounts[cellValue] > 1)
+                ) {
+                    highlightClass = "highlight"; // Highlight duplicate cells
+                }
+
+                rowHtml += `<td class="${highlightClass}">${cellValue}</td>`;
+            });
+            rowHtml += '</tr>';
+            $('#tableBody').append(rowHtml);
+        });
+
+        // Initialize DataTable with destroy and scrolling options
+        $('#excelTable').DataTable({
+            destroy: true, // Destroy any existing instance
+            scrollX: true, // Enables horizontal scrolling
+        });
+    }
+
+
+
+    function InsertData() {
+        debugger;
+        var fileUpload_ = $("#FileUpload1")[0];
+        if (!fileUpload_.files || fileUpload_.files.length === 0) {
+            alert("Please select a file.");
+            return;
+        }
+
+        // Create FormData to send the file
+        var formData = new FormData();
+        formData.append("file", fileUpload_.files[0]);
+
+        // Send an AJAX POST request
+        $.ajax({
+            url: '@Url.Action("InsertDataIntoDataBase", "UserRole")',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,  // Disable caching
+            success: function (response) {
+                if (response.success) {
+                    alert("Data Inserted SuccessFully!");
+                    $("#FileUpload1").val("");
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + xhr.responseText || error);
+            }
+        })
+    }
+
+
+</script>

@@ -1,0 +1,330 @@
+﻿@model TuvVision.Models.ProcessMeasures
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "ProcessMeasures";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+}
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+    <link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+    <link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/fixedColumns.dataTables.js"></script>
+    <link href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.dataTables.css" rel="stylesheet" />
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.css" rel="stylesheet" />*@
+
+    @*DATEPICKER*@
+
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+    
+
+
+</head>
+
+
+
+
+
+
+<script>
+
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+
+<style>
+    /* Set the table layout to fixed */
+    .table-container {
+        width: 1300px; /* Adjust the width as needed */
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    /* Set the size of the table */
+    .fixed-size-table {
+        width: 100%;
+        table-layout: fixed; /* Fixed table layout */
+    }
+
+        /* Style the table cells (optional) */
+        .fixed-size-table td {
+            border: 1px solid #ccc;
+            font-size: 12px;
+            padding: 4px 0px;
+            text-align: center;
+        }
+
+    .btn-info:hover {
+        background-color: #00003C;
+    }
+
+       th, td { white-space: nowrap; }
+    div.dataTables_wrapper {
+        width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+ 
+    div.container {
+        width: 80%;
+    }
+    
+    .center-text {
+    text-align: center;
+}
+   
+</style>
+
+
+@using (Html.BeginForm("ProcessMeasures", "MISOPEReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div class="main-content3 xs-max-height">
+        <div class="container-fluid">
+
+            <!--Start of header-->
+            @*<a href="@Url.Action("Welcome", "Login")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
+
+
+
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <a href="@Url.Action("Welcome","Login")" class="logo">
+                            <img src="~/AllJsAndCss/images/logoN.png" alt="" style="max-width: 210%;margin-top: -59px;">
+                        </a>
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left:147px;padding-top:10px;font-family:'TNG Pro'; ">TUV India Private Limited <br />Process Measures- Inspection service</h3>
+                    </div>
+
+                    <div class="col-lg-2" style="padding-right:20px;">
+                        <button type="button" class="btn btn-info" style="margin-top: 16px;margin-left: 37px;width: 150px;background-color: #104193;color:white;border-radius: 0;" onclick="Redirect()">Go Back</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+
+
+                @*<button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex2", "MISOPEReport")'"
+                            style="border:none;">
+                        Export To Excel
+                    </button>*@
+
+
+                <div class="row">
+                    <div class="col-xs-3" style="margin-left: 350px;">
+                        <div class="form-group">
+                            <label>From Date:</label>
+                            @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-3">
+                        <div class="form-group">
+                            <label>To Date:</label>
+                            @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                        </div>
+
+                    </div>
+
+                    <div class="col-xs-2">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-top: 22px; background-color:#104193;">Search</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <br />
+
+
+
+
+
+            <div class="form-group" style="padding-left:25px;">
+                <hr class="custom-hr1">
+            </div>
+
+
+            <div class="col-xs-12 table-container" style="overflow-x: auto;">
+                <table id="example" class="stripe row-border order-column center-text" style="width:100%;overflow:auto;">
+                    <thead>
+                        <tr style="background-color: #104193; font-size:13px; color: #ffffff; text-align:left;border: 1px solid black;">
+                            <th style="color: #ffffff;background-color: #104193;">Branch Name</th>
+                            <th style="color: #ffffff;background-color: #104193;">Total Employees</th>
+                            <th style="color: #ffffff;background-color: #104193;">Inspector</th>
+                            <th class="center-text">Others</th>
+                            <th class="center-text">Onsite At Least One Monitoring</th>
+                            <th>Offsite At Least One Monitoring</th>
+                            <th>Offsite At Least Three Monitoring</th>
+                            <th>Complaint Total</th>
+                            <th>Open Complaints</th>
+                            <th>Attribute Complaints</th>
+                            <th>IVR Count</th>
+                            <th>IVR Rev Count</th>
+                            <th>IVR Rev Percentage</th>
+                            <th>IVR Creation On Time Count</th>
+                            <th>IVR Creation On Time Percentage</th>
+                            <th>IRN Count</th>
+                            <th>IRN Rev Count</th>
+                            <th>IRN Rev Percentage</th>
+                            <th>IRN Creation On Time Count</th>
+                            <th>IRN Creation On Time Percentage</th>
+                            @*<th>EVR Count</th>
+                            <th>EVR Rev Count</th>*@
+                            <th>Total NCR</th>
+                            <th>NCR Open</th>
+                            <th>NCR Close</th>
+                            <th>Executed Calls</th>
+                            <th>Executed Own Branch</th>
+                            <th>Executed Other Branch</th>
+                            <th>Executed On Time Count</th>
+                            <th>Executed On Time Percentage</th>
+                            <th>Executed On Time Own Calls</th>
+                            <th>Executed On Time Own Percentage</th>
+                            <th>Executed On Time Other Branches Calls</th>
+                            <th>Executed On Time Other Branches Percentage</th>
+                            <th>Originating Total Call</th>
+                            <th>Originating On Time Count</th>
+                            <th>Originating On Time Percentage</th>
+                            <th>Feedback Received</th>
+                            <th>Feedback score</th>
+                            <th>Total Monitoring Records</th>
+                            <th>Onsite Count</th>
+                            <th>Offsite Monitoring</th>
+                            <th>Mentoring</th>
+                            <th>Monitoring Of Monitors</th>
+                            <th>Onsite Surprise Monitoring</th>
+                            <th>Safety Incident</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var items = Model.lstComplaint as IList<TuvVision.Models.ProcessMeasures>;
+
+                            if (items != null)
+                            {
+                                foreach (var obj in items)
+                                {
+                                    <tr style="border: 1px solid black;">
+                                        <td style="text-align:center">@obj.BranchName</td>
+                                        <td style="text-align:center">@obj.TotalEmp</td>
+                                        <td style="text-align:center">@obj.inspector</td>
+                                        <td style="text-align:center">@obj.OtherEmp</td>
+                                        <td style="text-align:center">@obj.OnsiteoneMonitoring</td>
+                                        <td style="text-align:center">@obj.offsitemonitoringOne</td>
+                                        <td style="text-align:center">@obj.offsitethreeMonitoring</td>
+                                        <td style="text-align:center">@obj.ComplaintTotal</td>
+                                        <td style="text-align:center">@obj.openComplaints</td>                                       
+                                        <td style="text-align:center">@obj.AttributeComplaints</td>
+                                        <td style="text-align:center">@obj.IVRCount</td>
+                                        <td style="text-align:center">@obj.IVRrevCount</td>
+                                        <td style="text-align:center">@obj.IVRRevper</td>
+                                        <td style="text-align:center">@obj.IVRcreationOnTimeCount</td>
+                                        <td style="text-align:center">@obj.IVRcreationOnTimeCountper</td>
+                                        <td style="text-align:center">@obj.IRNCount</td>
+                                        <td style="text-align:center">@obj.IRNRevCount</td>
+                                        <td style="text-align:center">@obj.IRNRevper</td>
+                                        <td style="text-align:center">@obj.IRNcreationOnTimeCount</td>
+                                        <td style="text-align:center">@obj.IRNcreationOnTimeCountPer</td>
+                                        @*<td>@obj.EVRCount</td>
+                                        <td>@obj.EVRRevCount</td>*@
+                                        <td style="text-align:center">@obj.TotalNCR</td>
+                                        <td style="text-align:center">@obj.NCROpen</td>
+                                        <td style="text-align:center">@obj.NCRClose</td>
+                                        <td style="text-align:center">@obj.executedCalls</td>
+                                        <td style="text-align:center">@obj.executedOwnBranch</td>
+                                        <td style="text-align:center">@obj.executedOtherBranch</td>
+                                        <td style="text-align:center">@obj.executedOnTimeCount</td>
+                                        <td style="text-align:center">@obj.executedOnTimePercentage</td>
+                                        <td style="text-align:center">@obj.executedOnTimeOwnCalls</td>
+                                        <td style="text-align:center">@obj.executedOnTimeOwnPercentage</td>
+                                        <td style="text-align:center">@obj.executedOnTimeOtherBranchesCall</td>
+                                        <td style="text-align:center">@obj.executedOnTimeOtherBranchesPercentage</td>
+                                        <td style="text-align:center">@obj.OriginatingTotalCall</td>
+                                        <td style="text-align:center">@obj.OriginatingOnTimeCount</td>
+                                        <td style="text-align:center">@obj.OriginatingOnTimePercentage</td>
+                                        <td style="text-align:center">@obj.FeedbackRec</td>
+                                        <td style="text-align:center">@obj.Feedback</td>
+                                        <td style="text-align:center">@obj.TotalMOnitoringRecords</td>
+                                        <td style="text-align:center">@obj.OnsiteCount</td>
+                                        <td style="text-align:center">@obj.OffSiteMonitoring</td>
+                                        <td style="text-align:center">@obj.Mentoring</td>
+                                        <td style="text-align:center">@obj.MonitoringOfMonitors</td>
+                                        <td style="text-align:center">@obj.specialMonitoring</td>
+                                        <td style="text-align:center">@obj.SafetyReport</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+
+<script>
+function Redirect() {
+        window.location.href = "@Url.Action("Welcome", "Login")"
+        }
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        new DataTable('#example', {
+            fixedColumns: {
+                start: 3
+            },
+            paging: false,
+            scrollCollapse: true,
+            scrollY: true,
+            scrollX: true,
+            dom:'lrtip'
+        });
+    });
+</script>
+

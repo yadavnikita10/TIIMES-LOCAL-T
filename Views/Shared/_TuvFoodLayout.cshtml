@@ -1,0 +1,306 @@
+﻿@*@using BusinessServices*@
+@using TuvVision.BusinessServices
+@*@using BusinessEntities*@
+@using TuvVision.BusinessEntities
+@using Helpers
+
+
+@*@{
+    IUserServices _userService = new UserServices();
+
+
+
+     UserProfileEntity profile = new UserProfileEntity();
+    if (Session["UserProfile"] != null) { profile = Session["UserProfile"] as UserProfileEntity; }
+
+}*@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>@ViewBag.Title</title>
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Bootstrap -->
+    <link href="~/Content/Css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Start Other stylesheets -->
+    <link href="~/Content/Css/style.css" rel="stylesheet">
+    <link href="~/Content/Css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/Css/jquery-ui.css" rel="stylesheet" />
+
+    <!--AOS animate-->
+    <link href="~/Content/Css/aos.css" rel="stylesheet">
+
+    <!-- End Other stylesheets -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/Scripts/Js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="~/Scripts/Js/bootstrap.min.js"></script>
+
+    <!-- Start Other script files -->
+    <!--AOS animate-->
+    <script src="~/Scripts/Js/aos.js"></script>
+    <script src="~/Scripts/Js/aos-call.js"></script>
+
+    <!--Owl JS-->
+    @*<script src="owlCarousel/owl.carousel.js"></script>*@
+
+    <script src="~/Scripts/Js/custom.js"></script>
+    <script src="~/Scripts/Js/scroll-to-top.js"></script>
+    <script src="~/Scripts/Js/navigation-top-fixed.js"></script>
+    <!-- End Other script files -->
+
+    @RenderSection("header", required: false)
+
+</head>
+<body>
+
+    <!--Start of logo header-->
+    <div class="container-fluid white-bg logo-header-main">
+        <div class="row assignfixedwidth rp-10">
+            <div class="col-xs-3 col-sm-7 extreme-xs-pr">
+                <a href="@Url.Action("Index", "Home")" class="logo">
+                    <img src="~/Content/Images/logo.jpg" alt="">
+                </a>
+            </div><!--End of col-->
+            <div class="col-xs-9 col-sm-5 text-right extreme-xs-pr">
+                @Html.Partial("_UserLoginPartial")
+            </div><!--End of col-->
+
+        </div><!--End of row-->
+    </div><!--End of container-fluid-->
+    <!--End of logo header-->
+    <!--Start of navbar-->
+    <nav class="navbar navbar-custom tuv-navbar">
+        <div class="container-fluid">
+            <div class="row assignfixedwidth">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle navbar-toggle-custom collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand navbar-brand-custom" href="@Url.Action("Index", "Home")">Welcome to TIFSA</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right navbar-nav-custom">
+                        <li>
+                            <a href="@Url.Action("Index", "Home")">Home</a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">About Us</a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="@Url.Action("AboutUS","AboutUS")">MD Speak</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ClusterSpeek","AboutUS")">Cluster Head Speak</a>
+                                </li>
+                                <li class="dropdown-submenu">
+                                    <a href="#">Guiding Principle</a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="@Url.Action("Vision","AboutUS")">Vision</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Mission","AboutUS")">Mission</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Values","AboutUS")">Values</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="~/Content/Pdf/12x18 quality policy.pdf?page=hsn#toolbar=0" target="_blank">Quality Policy</a>
+                                </li>
+                                <li>
+                                    <a href="~/Content/Pdf/Quality Objectives - signed by Mr Bhuptani.pdf?page=hsn#toolbar=0" target="_blank">Quality Objectives</a>
+                                </li>
+                                <li>
+                                    <a href="~/Content/Pdf/HSE Policy Document.pdf?page=hsn#toolbar=0" target="_blank">HSE Policy</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            @*<a href="@Url.Action("News","News")">News</a>*@
+                            <a href="@Url.Action("DisplayListNewsContent","DisplayNews")">News</a>
+                        </li>
+
+                        @{
+                            if (Request.IsAuthenticated && Session["UserProfile"] != null)
+                            {
+                                <li>
+                                    <a href="#" class="dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Food Activity</a>
+                                    <ul class="dropdown-menu">
+                                        @{
+                                            var menus = _userService.GetMenusByRoleId(profile.RoleId.ToString(), string.Join(",", (int)CommonFunction.Status.Active));
+                                            if (menus.Any())
+                                            {
+                                                var mainMenu = menus.Where(a => a.FD_FK_Menu_Id != 6 && a.FD_FK_Menu_Id != 7).GroupBy(x => new { x.MenuName }).Select(y => new SubMenuEntity()
+                                                {
+                                                    MenuName = y.Key.MenuName
+                                                });
+
+                                                foreach (var item in mainMenu)
+                                                {
+                                                    <li class="dropdown-submenu">
+                                                        <a>@item.MenuName</a>
+                                                        @{
+                                                            var subMenus = menus.Where(m => m.MenuName == item.MenuName).ToList();
+                                                            if (subMenus.Any())
+                                                            {
+                                                                <ul class="dropdown-menu">
+                                                                    @foreach (var subMenu in subMenus)
+                                                                    {
+                                                                        <li>
+                                                                            <a href="@Url.Action(subMenu.ActionName, subMenu.ControllerName)">@subMenu.SubMenuName</a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                        }
+                                                    </li>
+                                                                }
+                                                            }
+                                        }
+                                    </ul>
+                                </li>
+                                                            }
+                        }
+
+                        @*@{
+                            if (Request.IsAuthenticated && Session["UserProfile"] != null)
+                            {
+                                <li>
+                                    <a href="#" class="dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Training</a>
+                                    <ul class="dropdown-menu">
+                                        @{
+                                            var menus = _userService.GetMenusByRoleId(profile.RoleId.ToString(), string.Join(",", (int)CommonFunction.Status.Active));
+                                            if (menus.Any())
+                                            {
+                                                var mainMenu = menus.Where(a => a.FD_FK_Menu_Id == 6 && a.FD_FK_Menu_Id != 7).GroupBy(x => new { x.MenuName }).Select(y => new SubMenuEntity()
+                                                {
+                                                    MenuName = y.Key.MenuName
+                                                });
+
+                                                foreach (var item in mainMenu)
+                                                {
+                                                    var subMenus = menus.Where(m => m.FD_FK_Menu_Id == 6).ToList();
+                                                    if (subMenus.Any())
+                                                    {
+                                                        foreach (var subMenu in subMenus)
+                                                        {
+                                                            <li>
+                                                                <a href="@Url.Action(subMenu.ActionName, subMenu.ControllerName)">@subMenu.SubMenuName</a>
+                                                            </li>
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                    </ul>
+                                </li>
+                              }
+                        }*@
+                        @*@{
+                            if (Request.IsAuthenticated && Session["UserProfile"] != null)
+                            {
+                                <li>
+                                    <a href="#" class="dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Liabrary</a>
+                                    <ul class="dropdown-menu">
+                                        @{
+                                            var menus = _userService.GetMenusByRoleId(profile.RoleId.ToString(), string.Join(",", (int)CommonFunction.Status.Active));
+                                            if (menus.Any())
+                                            {
+                                                var mainMenu = menus.Where(a => a.FD_FK_Menu_Id == 7).GroupBy(x => new { x.MenuName }).Select(y => new SubMenuEntity()
+                                                {
+                                                    MenuName = y.Key.MenuName
+                                                });
+
+                                                foreach (var item in mainMenu)
+                                                {
+                                                    <li class="dropdown-submenu">
+                                                        <a>@item.MenuName</a>
+                                                        @{
+                                                            var subMenus = menus.Where(m => m.MenuName == item.MenuName).ToList();
+                                                            if (subMenus.Any())
+                                                            {
+                                                                <ul class="dropdown-menu">
+                                                                    @foreach (var subMenu in subMenus)
+                                                                    {
+                                                                        <li>
+                                                                            <a href="@Url.Action(subMenu.ActionName, subMenu.ControllerName)">@subMenu.SubMenuName</a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                        }
+                                                    </li>
+                                                                }
+                                                            }
+                                        }
+                                    </ul>
+                                </li>
+                                                            }
+                        }*@
+                        @*<li><a href="#">Training</a></li>*@
+                        <li>
+                            <a href="@Url.Action("Details","Training")">Training</a>
+                        </li>
+                        <li>
+                                <a href="@Url.Action("UserLibraryFolder","UserLibrary")">Library</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("GetAllYearList","Gallery")">Gallery</a>
+                        </li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <!--End of navbar-->
+
+    @RenderBody()
+
+    <!--Start of footer-->
+    <div class="container-fluid footer-bg rp-15">
+        <div class="row assignfixedwidth">
+            <div class="col-xs-12 xs-text-center col-sm-8">
+
+                <p class="footer-text-2">
+                    © TÜV NORD GROUP. All Rights Reserved.
+                    <a href="http://www.tuv-nord.com/in" target="_blank"><i class="fa fa-globe"></i> TUV India</a>
+                </p>
+            </div><!-- /.col -->
+            <div class="col-xs-12 xs-text-center col-sm-4 text-right">
+                <a href="http://www.facebook.com/tuvindia" target="_blank" class="foo-social"><i class="fa fa-facebook"></i></a>
+                <a href="http://www.linkedin.com/company/tuv-india" target="_blank" class="foo-social"><i class="fa fa-linkedin"></i></a>
+                <a href="http://twitter.com/tuvnordindia" target="_blank" class="foo-social"><i class="fa fa-twitter"></i></a>
+                <a href="http://www.youtube.com/channel/UCf_o6xZ-Wh_0ilUfmz37i_w" target="_blank" class="foo-social"><i class="fa fa-youtube"></i></a>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+    <!--End of footer-->
+    <!--Start of scroll to top button-->
+    <div class='scrolltop'>
+        <div class='scroll icon'>
+            <i class="fa fa-4x fa-angle-up"></i>
+        </div>
+    </div>
+    <!--End of scroll to top button-->
+    @RenderSection("footer", required: false)
+
+</body>
+</html>

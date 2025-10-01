@@ -1,0 +1,162 @@
+﻿@model TuvVision.Models.Login
+@{
+    ViewBag.Title = "KillOtherSession";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>TIIMES - Welcome to TUV India</title>
+
+    <link rel="shortcut icon" href="~/AllJsAndCss/Favicon.svg" type="image/x-icon" style="height:12px;width:12px;">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Bootstrap -->
+    <link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Start Other stylesheets -->
+    <link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+    <link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!--AOS animate-->
+    <link href="~/AllJsAndCss/css/aos.css" rel="stylesheet">
+
+    <!-- End Other stylesheets -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/AllJsAndCss/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="~/AllJsAndCss/js/bootstrap.min.js"></script>
+
+    <!-- Start Other script files -->
+    <!--AOS animate-->
+    <script src="~/AllJsAndCss/js/aos.js"></script>
+    <script src="~/AllJsAndCss/js/aos-call.js"></script>
+
+    <script src="~/AllJsAndCss/js/custom.js"></script>
+    <script src="~/AllJsAndCss/js/scroll-to-top.js"></script>
+    <script src="~/AllJsAndCss/js/navigation-top-fixed.js"></script>
+    <!-- End Other script files -->
+    <style>
+        .alertRedButton{
+            display: inline-block;
+    border: 1px solid #3677e6;
+    padding: 6px 14px;
+    font-size: 14px;
+    border-radius: 0;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    color: #fff;
+    /*font-family: mont-med;*/
+    font-family: 'TNG Pro';
+        background-color : #3677e6 !important;
+    }
+    .alertRedButton:hover{
+        background-color:#3677e6 !important;
+    }
+    .insert-form-btn {
+	display: inline-block;
+    border: 1px solid #3677e6;
+    padding: 6px 14px;
+    font-size: 14px;
+    border-radius: 0;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    background-color: #D9534f;
+    cursor: pointer;
+    color: #fff;
+    /*font-family: mont-med;*/
+    font-family: 'TNG Pro';
+} 
+.insert-form-btn:hover, .insert-form-btn:focus {
+    border: 1px solid #D9534f;
+    background-color: #D9534f;
+    color: #fff;
+}
+    </style>
+</head>
+<body class="main-bg">
+    <div class="overlay"></div>
+    <!--Start of content-->
+
+    <div class="container-fluid min-height-100vh">
+        <div class="row assignfixedwidth">
+
+
+            <div class="col-xs-12 col-md-4">
+                @*<img src="~/AllJsAndCss/images/TUEV-INDIA_Quality-Label_Electric-Blue_sRGB.jpg" class="login-logo" alt="">*@
+                <img src="~/AllJsAndCss/images/TUEV-INDIA_Quality-Label_Electric-Blue_sRGB.SVG" alt="" style="backface-visibility:hidden;height:113px;margin-left:-21px;width:218px;">
+                <div class="login-form-box" data-aos="zoom-in" data-aos-duration="400" data-aos-once="true" style="margin-top:26px;margin-left:-20px;">
+
+                    <label style="color:#D9534f; font-size:20px;">User @Convert.ToString(Session["UserLoginID"]) Already Logged in another system</label>
+                    @*<input type="hidden" value="@userName"  name="UserName" id="UserName"/>
+        <input type="hidden" value="@password" name="Password" id="Password" />
+        <input type="hidden" value="@ipAddr" name="ipAddr" id="ipAddr" />*@
+                    <br /><br />
+                    <label style="color:#000000; ">Click YES to procced with this logon</label>
+                    <label>OR</label>
+                    <label style="color:#000000; ">Click NO to terminate this logon</label>
+                    <br /><br />
+                    <div style="display:flex;margin-left:20px;">
+                        <form action="~/Login/KillOtherSession" method="post">
+                            <input class="alertRedButton" type="submit" value="YES" name="Value" id="Value" />
+                        </form>&nbsp;&nbsp;
+                        <form action="~/Login/KillOtherSession" method="post">
+                            <input class="insert-form-btn" type="submit" value="NO" name="Value" id="Value" />
+                        </form>
+                    </div>
+                </div>
+
+
+            </div><!--End of form col-->
+
+            <div class="row">
+                <div class="col-xs-12 xs-text-center col-sm-12" style="margin-top:-23px;margin-left:28px;">
+                    <a href="http://www.facebook.com/tuvindia" target="_blank" style="font-family:'TNG Pro';"><i><img src="~/AllJsAndCss/images/Icon_facebook.jpg" /></i></a>
+                    <a href="http://www.linkedin.com/company/tuv-india" target="_blank"><i><img src="~/AllJsAndCss/images/linkedin.jpg" /></i></a>
+                    <a href="http://twitter.com/tuvnordindia" target="_blank"><i><img src="~/AllJsAndCss/images/Icon_twitter_white.png" style="margin-top:5px;" /></i></a>
+                    <a href="http://www.youtube.com/channel/UCf_o6xZ-Wh_0ilUfmz37i_w" target="_blank"><i><img src="~/AllJsAndCss/images/Icon_youtube.png" /></i></a>
+                    <label style="color:#001ED2;font-weight:normal;font-family:'TNG Pro';margin-left:870px;">  © TÜV NORD GROUP </label>
+                    <p class="footer-text-2"></p>
+                </div>
+            </div>
+
+
+
+        </div><!--End of row-->
+        @*<div class="row assignfixedwidth floating-bottom-footer">
+                <div class="col-xs-12 xs-text-center col-sm-12">
+                    <a href="http://www.facebook.com/tuvindia" target="_blank"><i><img src="~/AllJsAndCss/images/Icon_facebook.jpg" /></i></a>
+                    <a href="http://www.linkedin.com/company/tuv-india" target="_blank"><i><img src="~/AllJsAndCss/images/linkedin.jpg" /></i></a>
+                    <a href="http://twitter.com/tuvnordindia" target="_blank"><i><img src="~/AllJsAndCss/images/Icon_twitter_white.png" /></i></a>
+                    <a href="http://www.youtube.com/channel/UCf_o6xZ-Wh_0ilUfmz37i_w" target="_blank"><i><img src="~/AllJsAndCss/images/Icon_youtube.png" /></i></a>
+
+                    <p class="footer-text-2"></p>
+                </div>
+
+                <div class="col-xs-12 xs-text-center col-sm-4 text-right">
+
+                   <label style="color:white;font-weight:normal;font-family:Arial;">  © TÜV NORD GROUP </label>
+                </div>
+            </div>*@<!-- /.row -->
+        <!--End of row-->
+    </div><!--End of container-fluid-->
+    <!--End of content-->
+
+</body>
+</html>
+@*****************************************************************************************************************@
+<script>
+    if('@TempData["LoginFailed"]'!='')
+    {
+        alert('@TempData["LoginFailed"]');
+    }
+</script>
+
+

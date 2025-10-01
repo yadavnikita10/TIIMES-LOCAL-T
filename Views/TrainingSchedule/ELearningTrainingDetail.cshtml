@@ -1,0 +1,131 @@
+﻿
+@*@{
+    ViewBag.Title = "ELearningTrainingDetail";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<h2>ELearningTrainingDetail</h2>*@
+
+@model IEnumerable<TuvVision.Models.TrainingScheduleModel>
+@{
+    //ViewBag.Title = "ListScheduleTraining";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">E - Learning Training List</h3>
+                <a href="@Url.Action("TrainingDetails", "TrainingSchedule")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-left:10px;">Conventional</a>
+                <a href="@Url.Action("ELearningTrainingDetail", "TrainingSchedule")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2">E-Learning</a>
+
+                @*<button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("TrainingSchedule", "TrainingSchedule")'">Schedule Training</button>*@
+            </div><!-- /.col -->
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+
+
+            <div class="col-xs-12">
+                @*<a href="@Url.Action("TrainingDetails", "TrainingSchedule")" class="btn btn-default insert-form-btn">Conventional</a>*@
+                @*<a href="@Url.Action("FeedBackList", "TrainingSchedule")" class="btn btn-default insert-form-btn">E-Learning</a>*@
+
+                @*<button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("TrainingSchedule", "TrainingSchedule")'">Schedule Training</button>*@
+            </div>
+
+            <!--Table was here-->
+
+        </div>
+        <div class="col-xs-12">
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="remove-search">Action</th>
+                        <th class="hidden">Id</th>
+                        <th class="hidden">TrainingRecordId</th>
+                        <th class="hidden">TrainingRecordId</th>
+                        <th class="remove-search">Training Topic</th>
+                        <th class="remove-search">Trainer Name</th>
+                        @*<th>Trainee Name</th>*@
+                        @*<th class="remove-search">Branch Name</th>*@
+                        <th class="remove-search">External Trainer Name</th>
+                        <th class="remove-search">Scope</th>
+                        <th class="remove-search">Training Start Date</th>
+                        @*<th class="remove-search">Training End Date</th>
+                        <th class="remove-search">Training Start Time</th>
+                        <th class="remove-search">Training End Time</th>*@
+                        @*<th class="remove-search">Training Type</th>
+                        <th class="remove-search">Venue</th>*@
+                        <th class="remove-search">Video File</th>
+                        <th class="remove-search">Organiser Name</th>
+                        <th class="remove-search">Mobile No.</th>
+                        <th class="remove-search">Quiz Start Date</th>
+                        <th class="remove-search">Quiz End Date</th>
+                        
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var b in ViewBag.TrainingList as IEnumerable<TuvVision.Models.TrainingScheduleModel>)
+                    {
+                        <tr>
+                            <td cRemarkslass="action-btn" style="text-align:center;">
+                                <a href="@Url.Action("GetQuiz", "Quiz", new { @sid = @b.PK_TrainingScheduleId,@Type1='E'})" class="btn btn-info btn-xs" title="Quiz"><i class="fa fa-question"></i></a>
+                                <a href="@Url.Action("TrainingFeedBack", "TrainingSchedule", new { @fid = @b.PK_TrainingScheduleId ,@Type1='E'})" class="btn btn-info btn-xs" title="Feedback"><i class="fa fa-check"></i></a>
+                            </td>
+                            <td class="hidden">@b.PK_TrainingScheduleId</td>
+                            <td class="hidden">@b.TrainingRecordId</td>
+                            <td class="hidden">@b.TrainingId</td>
+                            <td>@b.TrainingName</td>
+                            <td>@b.TrainerName</td>
+                            <td>@b.ExternalTrainer</td>
+                            <td>@b.Scope</td>
+                            <td>@b.TrainingStartDate</td>
+                            @*<td>@b.TrainingEndDate</td>
+                            <td>@b.TrainingStartTime</td>
+                            <td>@b.TrainingEndTime</td>*@
+                            @*<td>@b.TrainType</td>
+                            <td>@b.Venue</td>*@
+                            @if (b.TrainType.ToUpper() == "E-LEARNING")
+                            {
+
+                                <td align="center">
+                                    <a onclick="window.open('@Url.Action("PlayVideo", "MisReport", new {@VideoFile=b.FileName,@Id=b.PK_TrainingScheduleId })')"
+                                       id="btnView1" class="menu_links" align="center">
+                                        &nbsp;&nbsp;&nbsp;<img src="@Url.Content("~/View1.png")" />
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                            <td>@b.CreatedBy</td>
+                            <td>@b.MobileNo</td>
+                            <td>@b.QuizeStartDate</td>
+                            <td>@b.QuizeEndDate</td>
+                            
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+

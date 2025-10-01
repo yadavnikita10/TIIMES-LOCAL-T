@@ -1,0 +1,472 @@
+﻿@model TuvVision.Models.TechnicalCompetencyEvaluation
+@{
+    ViewBag.Title = "TechnicalCompetencyEvalReports";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+
+<!DOCTYPE html>
+@using (Html.BeginForm("TechnicalCompetencyEvalReports", "TechnicalCompetencyEvaluation", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div id="Grid">
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>TECHNICAL COMPETENCY EVALUATION</title>
+
+
+            <style>
+                body {
+                    margin: 0;
+                    /*font-family: arial;*/
+                    font-family:'TNG Pro';
+                    font-size: 12px;
+                }
+
+                table tr td {
+                    vertical-align: top;
+                }
+
+                table.top-header > thead > tr > th {
+                    border-top: 2px solid #000;
+                    border-left: 2px solid #000;
+                    border-bottom: 2px solid #000;
+                    border-right: 2px solid #000;
+                }
+
+                    table.top-header > thead > tr > th:nth-of-type(2) {
+                        border-left: 0px solid #000;
+                        border-right: 0px solid #000;
+                    }
+
+                table.lasttable > thead > tr > td {
+                    border-bottom: 2px solid #565656;
+                }
+
+                table.lasttable > tbody > tr > td {
+                    border-right: 2px solid #565656;
+                }
+
+                table.lasttable > tbody > tr:last-child {
+                    border-right: none;
+                }
+
+                .page1, .page2, .page3, .page4, .page5 {
+                    position: relative;
+                    page-break-after: always;
+                }
+            </style>
+
+        </head>
+        <body style="margin:0 auto;font-family:'TNG Pro';">
+            <div class="page1">
+                <table width="100%" cellpadding="5" cellspacing="0" class="top-header">
+                    <thead>
+                        <tr>
+                            <th width="25%" style="text-align: left; font-weight:normal;">
+                                F/MR/15/09<br>
+                                Effective Date – Sept, 2012<br>
+                                Revision Date – 10 October 2022<br>
+                                Page 1 of  5
+                            </th>
+                            <th width="50%">
+                                <span style="font-size: 18px;">Technical Competency evaluation for Inspectors</span><br>
+                                <span style="font-size: 12px;">NAME OF THE INSPECTOR : <label>@Html.DisplayFor(m => m.InspectorFullName)</label> <br />
+                                    <span style="font-size: 12px;">BRANCH OFFICE : <label>@Html.DisplayFor(m => m.InspectorBranch)</label>               @*@Html.TextBoxFor(m => m.InspectorFullName)*@ @*@Html.LabelFor(m => m.InspectorFullName)*@</span>
+                            </th>
+                            <th width="25%" style="text-align:center;"><img src="~/AllJsAndCss/images/logo.svg" alt="" style="max-width:60px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <br>
+                <table>
+                    <tr>
+                        <td>
+
+                            <table width="100%" border="1" cellpadding="3" cellspacing="0" id="myTable">
+                                <thead>
+                                    @*<tr>
+                        <th style="background: #f3f1f1; text-align: left;" colspan="5">BRANCH OFFICE :</th>
+                    </tr>*@
+                                    <tr style="background: #e2e2e2;">
+                                        <th width="5%">IAF Scope</th>
+                                        <th width="15%">Field of Inspection</th>
+                                        <th width="17%">Range Inspection</th>
+                                        <th width="5%">Minimum Education Qualification</th>
+                                        <th width="5%">Minimum Requirment For Level 3</th>
+                                        <th width="5%">Authorization Level</th>
+                                        <th width="5%" style="font-size:11px;">Basis Of Authorization</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewData["Test"] as IEnumerable<TuvVision.Models.Report>)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.IAFScope
+                                            </td>
+                                            <td>
+                                                @item.InspectionName
+                                            </td>
+                                            <td>
+                                                @item.RangeInspection
+                                            </td>
+                                            <td>
+                                                @item.MinimumEducationQua
+                                            </td>
+                                            <td>
+                                                @item.MinimumRequirmentForLevel3
+                                            </td>
+                                            <td>
+                                                @item.AuthorizationLevel
+                                            </td>
+                                            <td>
+                                                @item.BasisOfAuthorization
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <table width="100%" cellpadding="3" cellspacing="0" class="lasttable" border="1" @*style="border: 2px solid #000;"*@>
+                                <tr>
+                                    <th style="text-align: center; border-bottom: 2px solid #000; border-right: 1px solid  #565656;">Legends</th>
+                                </tr>
+                            </table>
+
+                            <table width="100%" cellpadding="3" cellspacing="0" class="lasttable" border="1">
+                                <thead>
+
+                                    <tr style="background: #e2e2e2;">
+
+                                        <th width="20%" style="text-align: left; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Minimum Educational Qualification</th>
+                                        <th width="20%" style="text-align: left; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Minimum requirement for authorization level 3 </th>
+
+                                        <th width="20%" style="text-align: left; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Authorization level</th>
+                                        <th width="20%" style="text-align: left; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Basis of Authorization</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td width="20%">
+                                            1 – Diploma / Degree in Mechanical / Production / Industrial Engineering OR Equivalent Diploma / Degree.<br />
+                                            2 - Diploma / Degree in Electrical / Electronics / E&TC Engineering OR Equivalent Diploma / Degree.<br />
+                                            3 - Diploma / Degree in Civil / Structural Engineering OR Equivalent Diploma / Degree.<br />
+                                            4 - Diploma / Degree in equivalent field.<br />
+                                            5 - Diploma / Degree in equivalent field with safety / firefighting system certification OR experience.
+                                        </td>
+                                        <td width="20%">
+                                            1 – Minimum education qualification and 3 Months / Training / 1-3 days supervised working.<br />
+                                            2 – Minimum education qualification and 6 Months / Training / 1-3 days supervised working.<br />
+                                            3 – Minimum education qualification and 1 Year / Training / 1-3 days supervised working.
+                                        </td>
+                                        <td width="20%">
+                                            1 – Can work under supervision.<br />
+                                            2 – Can work individually under guidance of seniors.<br />
+                                            3 – Can work independently, guide and monitor others.<br />
+                                            4 – Can train, monitor, guide & evaluate others.
+                                        </td>
+                                        <td width="20%">
+                                            A– Professional Qualification OR Past Experience till date<br />
+                                            B - Interview Assessment<br />
+                                            C - Training Imparted OR Inspection Under Supervision<br />
+                                            D – Supervised Inspection completed<br />
+                                            E – Re-Assessment: Quiz OR Interview
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table width="100%" cellpadding="3" cellspacing="0" class="lasttable" border="1" @*style="border: 2px solid #000;"*@>
+                                <tr>
+                                    <th style="text-align: center; border-bottom: 2px solid #000; border-right: 1px solid  #565656;">Signature</th>
+                                </tr>
+                            </table>
+                            <table width="100%" cellpadding="3" cellspacing="0" class="lasttable" border="1">
+                                <thead>
+                                    <tr style="background: #e2e2e2;">
+
+                                        <th width="50%" style="text-align: center; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Updated by : @Model.CreatedBy - @Model.CreatedDesignation - @Model.ModifiedDate</th>
+                                        <th width="50%" style="text-align: center; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Reviewed and authorized by : @Model.ReportingPerson1Name - @Model.ReportingPerson1Designation - @Model.VerifiedDateTime</th>
+
+                                    </tr>
+                                    <tr style="background: #e2e2e2;">
+                                        <td width="50%" align="center">
+                                            @*@Html.DisplayFor(m => m.CreatedBy)*@
+
+                                            @if (Model.CreatedSignature1 == null)
+                                            {
+                                                <img src="~/Content/Uploads/Images/NoImage.jpg" height="75px" width="75px" />
+                                            }
+                                            else
+                                            {
+                                                @*<img src="data:image/jpg;base64,@Convert.ToBase64String(Model.CreatedSignature)" height="75px" width="75px" />*@
+                                                <img src="~/content/Sign/@Model.CreatedSignature1.ToString()" height="75px" width="75px" />
+                                            }
+
+                                        </td>
+                                        <td  width="50%" align="center">
+                                            @*@if (Model.ReportingPerson1Name != "")
+                                            {
+                                                <u><label>@Html.LabelFor(m => m.ReportingPerson1Name)</label></u>
+                                            }*@
+                                            @if(Model.Verified=="1")
+                                            {
+                                                if (Model.ReportingPerson1Signature == null)
+                                                {
+                                                    <img src="~/Content/Uploads/Images/NoImage.jpg" height="75px" width="75px" />
+                                                }
+                                                else
+                                                {
+                                                    @*<img src="data:image/jpg;base64,@Convert.ToBase64String(Model.ReportingPerson1Signature)" height="75px" width="75px" />*@
+                                                    <img src="~/content/Sign/@Model.ReportingPerson1Signature.ToString()" height="75px" width="75px" />
+                                                }
+                                            }
+                                            
+
+
+                                        </td>
+                                    </tr>
+                                </thead>
+                             </table>
+
+                                        @*<table width="100%" cellpadding="3" cellspacing="0" class="lasttable" border="1">
+                                            <thead>
+                                                <tr style="background: #e2e2e2;">
+                                                    <th width="30%" style="text-align: left; border-bottom: 2px solid #000; border-right: 2px solid  #565656;">Legend  - for Authorization level</th>
+                                                    <th width="30%" style="text-align: left; border-bottom: 2px solid #000; border-right: 2px solid  #565656;">Legend  - for Basis of Authorization</th>
+                                                    <th width="20%" style="text-align: left; border-bottom: 2px solid #000; border-right: 2px solid  #565656;"></th>
+                                                    <th width="20%" style="text-align: left; border-bottom: 2px solid #000;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1 – Can work under supervision.</td>
+                                                    <td>A–  Professional Qualification OR Past Experience till date </td>
+                                                    <td rowspan="2"><u>Updated on (Date):  @Html.DisplayFor(m => m.CreatedDate)</u></td>
+                                                    <td rowspan="2" style="border-right: none;"><u>Reviewed and authorized by  Regional Head:</u></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2 – Can work individually under guidance of seniors. </td>
+                                                    <td>B -  Interview Assessment</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3 – Can work independently & guide others.</td>
+                                                    <td>C -  Training Imparted   OR Inspection Under Supervision</td>
+                                                    <td>
+                                                        <u>Updated by (Name & Signature):<label>@Html.DisplayFor(m => m.CreatedBy)</label></u>
+                                                        <img src="@Url.Content(String.Format("~/{0}", @Html.DisplayFor(model => model.Signature)))" style="width:100px; height:50px;" />
+                                                    </td>
+                                                    <td style="border-right: none;">
+                                                        <u>Name & Signature :<label>@Html.DisplayFor(m => m.FullName)</label></u>
+                                                        <img src="@Url.Content(String.Format("~/{0}", @Html.DisplayFor(model => model.Signature1)))" style="width:100px; height:50px;" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4 - Can train, monitor, guide & evaluate others.</td>
+                                                    <td>D – Supervised Inspection completed</td>
+                                                    <td><u>Designation:   <label>@Html.DisplayFor(m => m.InspectorDesignation)</label></u></td>
+                                                    <td style="border-right: none;"><u>Designation:</u>  <label>@Html.DisplayFor(m => m.AdminDesignation)</label></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>E –  Re-Assessment : Quiz  OR Interview </td>
+                                                    <td></td>
+                                                    <td style="border-right: none;"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>*@
+                                        <br>
+                                        <table width="100%" border="1" cellpadding="3" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="5%"></td>
+                                                    <td width="10%"></td>
+                                                    <td width="50%"></td>
+                                                    <td width="12%"></td>
+                                                    <td width="10%"></td>
+                                                    <td width="13%"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" style="vertical-align: middle;">09</td>
+                                                    <td align="center" style="vertical-align: middle;">October, 2022</td>
+                                                    <td style="vertical-align: middle;">
+                                                        Legends given for minimum education qualification and minimum requirement for level 3.
+                                                    </td>
+                                                    <td align="center" style="vertical-align: middle;">SHRIKANT PATIL</td>
+                                                    <td align="center" style="vertical-align: middle;">PRAVIN KHERDE</td>
+                                                    <td align="center" style="vertical-align: middle;">SANDEEP DESHPANDE</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" style="vertical-align: middle;">08</td>
+                                                    <td align="center" style="vertical-align: middle;">JUNE, 2021</td>
+                                                    <td style="vertical-align: middle;">
+                                                        Added minimum requirement for each inspection Activity.
+                                                    </td>
+                                                    <td align="center" style="vertical-align: middle;">SHRIKANT PATIL</td>
+                                                    <td align="center" style="vertical-align: middle;">PRAVIN KHERDE</td>
+                                                    <td align="center" style="vertical-align: middle;">SANDEEP DESHPANDE</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" style="vertical-align: middle;">07</td>
+                                                    <td align="center" style="vertical-align: middle;">February, 2019</td>
+                                                    <td style="vertical-align: middle;">
+                                                        Extended Authorisation 03 for monitoring.
+                                                    </td>
+                                                    <td align="center" style="vertical-align: middle;">SHRIKANT PATIL</td>
+                                                    <td align="center" style="vertical-align: middle;">PRAVIN KHERDE</td>
+                                                    <td align="center" style="vertical-align: middle;">SANDEEP DESHPANDE</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" style="vertical-align: middle;">06</td>
+                                                    <td align="center" style="vertical-align: middle;">11Sept, 2017</td>
+                                                    <td style="vertical-align: middle;">
+                                                        SCOPE 22 – ROLLING STOCK ACTIVITIES ADDED, BASIS OF AUTHORIZATION ADDED,
+                                                        FIELD OF INSPECTION REVISED IN LINE WITH NABCB CERTIFICATE DETAILS
+                                                    </td>
+                                                    <td align="center" style="vertical-align: middle;">I.P. CHANDNA</td>
+                                                    <td align="center" style="vertical-align: middle;">NATARAJAN</td>
+                                                    <td align="center" style="vertical-align: middle;">AMIT NAIK</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" style="vertical-align: middle;">05</td>
+                                                    <td align="center" style="vertical-align: middle;">APRIL 2016</td>
+                                                    <td style="vertical-align: middle;">SCOPE 28 - CIVIL ACTIVITIES ADDED</td>
+                                                    <td align="center" style="vertical-align: middle;">I.P. CHANDNA</td>
+                                                    <td align="center" style="vertical-align: middle;">AMIT NAIK</td>
+                                                    <td align="center" style="vertical-align: middle;">SANDEEP DESHPANDE</td>
+                                                </tr>
+
+                                                <tr style="background: #e2e2e2;">
+                                                    <th width="5%" style="font-size:10px; vertical-align: middle;">REVISION NUMBER</th>
+                                                    <th width="15%" style="font-size:10px; vertical-align: middle;">DATE</th>
+                                                    <th width="70%" style="font-size:10px; vertical-align: middle;">REASON FOR REVISION</th>
+                                                    <th width="5%" style="font-size:10px; vertical-align: middle;">PREPARED BY</th>
+                                                    <th width="5%" style="font-size:10px; vertical-align: middle;">REVIEWED BY</th>
+                                                    <th width="5%" style="font-size:10px; vertical-align: middle;">APPROVED BY</th>
+                                                </tr>
+                                                <tr style="background: #8bccff;">
+                                                    <td colspan="6" style="font-size:13px; text-align: center; vertical-align: middle;"><strong>REVISION HISTORY</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <a href="javascript:window.print()" class="btn btn-info dynamic-function-btn" id="btnPrint">Print</a>
+            <a href="@Url.Action("ListTechnicalCompetencyEvaluation", "TechnicalCompetencyEvaluation")" class="btn btn-info dynamic-function-btn" id="btnBackToList">Back to List</a>
+        </body>
+    </html>
+
+</div>
+}
+
+<style type="text/css">
+@@media print {
+    #btnPrint {
+        display :  none;
+    }
+}
+
+</style>
+
+<style type="text/css">
+    @@media print {
+        #btnBackToList {
+            display: none;
+        }
+    }
+</style>
+
+    <script>
+        //$(function(){
+
+
+        //  var indexOfColumnToRowSpan = 0;
+        //  var $table = $('#myTable');
+
+        //  var rowSpanMap = {};
+        //  $table.find('tr').each(function(){
+        //    var valueOfTheSpannableCell = $($(this).children('td')[indexOfColumnToRowSpan]).text();
+        //    $($(this).children('td')[indexOfColumnToRowSpan]).attr('data-original-value', valueOfTheSpannableCell);
+        //    rowSpanMap[valueOfTheSpannableCell] = true;
+        //  });
+
+        //  for(var rowGroup in rowSpanMap){
+        //    var $cellsToSpan = $('td[data-original-value="'+rowGroup+'"]');
+        //    var numberOfRowsToSpan = $cellsToSpan.length;
+        //    $cellsToSpan.each(function(index){
+        //      if(index==0){
+        //        $(this).attr('rowspan', numberOfRowsToSpan);
+        //      }else{
+        //        $(this).hide();
+        //      }
+        //    });
+        //  }
+
+
+        //})();
+
+        //function fixit(selector) {
+        //    selector.each(function () {
+        //        var values = $(this).find("tr>td:first-of-type")
+        //        var run = 1
+        //        for (var i = values.length - 1; i > -1; i--) {
+        //            if (values.eq(i).text() === values.eq(i - 1).text()) {
+        //                values.eq(i).remove()
+        //                run++
+        //            } else {
+        //                values.eq(i).attr("rowspan", run)
+        //                run = 1
+        //            }
+        //        }
+        //    })
+        //}
+        //fixit($("#myTable"))
+
+
+    </script>
+
+
+    @*<button id="combine">Combine</button>*@
+
+    @*<script>
+        !function(t,n,e,i){"use strict";function a(n,e){this.element=n,this.settings=t.extend({},o,e),this._defaults=o,this._name=s,this.init()}var s="rowspanizer",o={vertical_align:"top"};t.extend(a.prototype,{init:function(){var n=this,e=t(this.element),i=[];e.find("tr").each(function(n,e){t(this).find("td").each(function(n,e){var a=t(e),s=a.html();if("undefined"!=typeof i[n]&&"dato"in i[n]&&i[n].dato==s){var o=i[n].elem.data("rowspan");("undefined"==o||isNaN(o))&&(o=1),i[n].elem.data("rowspan",parseInt(o)+1).addClass("rowspan-combine"),a.addClass("rowspan-remove")}else i[n]={dato:s,elem:a}})}),t(".rowspan-combine").each(function(e,i){var a=t(this);a.attr("rowspan",a.data("rowspan")).css({"vertical-align":n.settings.vertical_align})}),t(".rowspan-remove").remove()}}),t.fn[s]=function(n){return this.each(function(){t.data(this,"plugin_"+s)||t.data(this,"plugin_"+s,new a(this,n))})}}(jQuery,window,document);
+
+
+        $('#combine').on('click', function() {
+            $("#myTable").rowspanizer({ vertical_align: 'middle' });
+        });
+        </script>*@
+@*<script src="//code.jquery.com/jquery.min.js"></script>*@
+
+
+<script src="~/AllJsAndCss/js/rowspanizer.js"></script>
+    <script>
+        !function (t, n, e, i) { "use strict"; function a(n, e) { this.element = n, this.settings = t.extend({}, o, e), this._defaults = o, this._name = s, this.init() } var s = "rowspanizer", o = { vertical_align: "top" }; t.extend(a.prototype, { init: function () { var n = this, e = t(this.element), i = []; e.find("tr").each(function (n, e) { t(this).find("td").each(function (n, e) { var a = t(e), s = a.html(); if ("undefined" != typeof i[n] && "dato" in i[n] && i[n].dato == s) { var o = i[n].elem.data("rowspan"); ("undefined" == o || isNaN(o)) && (o = 1), i[n].elem.data("rowspan", parseInt(o) + 1).addClass("rowspan-combine"), a.addClass("rowspan-remove") } else i[n] = { dato: s, elem: a } }) }), t(".rowspan-combine").each(function (e, i) { var a = t(this); a.attr("rowspan", a.data("rowspan")).css({ "vertical-align": n.settings.vertical_align }) }), t(".rowspan-remove").remove() } }), t.fn[s] = function (n) { return this.each(function () { t.data(this, "plugin_" + s) || t.data(this, "plugin_" + s, new a(this, n)) }) } }(jQuery, window, document);
+
+
+        $(function () {
+            $("#myTable").rowspanizer({ vertical_align: 'middle' });
+        });
+    </script>
+
+
+
+@*<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+        $(function () {
+            $("#btnPrint").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+</script>*@
+
+

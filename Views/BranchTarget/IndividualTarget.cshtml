@@ -1,0 +1,215 @@
+﻿@model TuvVision.Models.IndividualTarget
+@{
+    ViewBag.Title = "IndividualTarget";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+}
+
+
+<style>
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        /*width: 100%;*/
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        text-align: left;
+        /*padding: 8px;*/
+
+        /*background-clip: padding-box;
+    position: relative;
+    background-color: #104193;
+    color: #fff;*/
+    }
+
+        tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+
+
+
+<div class="grey-bg-f3">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-5">
+
+            <div class="col-xs-12 form-col">
+                <div class="row">
+
+                    @*<div class="col-xs-12 text-right">
+                        <a href="@Url.Action("BranchTarget", "BranchTarget")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                    </div>*@
+
+                    <div class="col-xs-12">
+                        <div class="white-bg section-box-shadow">
+                            <h3 class="form-page-title">Individual Target</h3>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <div class="form-box">
+                                        <form method="post" id="formjc" enctype="multipart/form-data">
+
+                                            <div class="row">
+                                             
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+
+
+                                                        <label> Year:</label>
+
+                                                        @Html.DropDownListFor(m => m.Year, new List<SelectListItem>
+                                                            {
+                                                            new SelectListItem{ Text="--- Select Year ---", Value = "" },
+                                                            new SelectListItem{ Text="2021-2022", Value = "2021-2022" },
+                                                            new SelectListItem{ Text="2022-2023", Value = "2022-2023" },
+
+                                                            },
+                                                            new { @class = "form-control", @id = "IdYear" })
+                                                        @Html.ValidationMessageFor(m => m.Year, "", new { @class = "text-danger validation-msg" })
+
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" id="divTable">
+                                                    <div class="col-xs-12">
+                                                        @*<div class="col-xs-12" style="width: 100%;overflow: auto;">*@
+                                                        <div class="col-xs-12">
+                                                            @*<table style="width: 100%;" id="gridMapping">*@
+                                                            <table>
+
+                                                                <thead>
+                                                                    <tr style="background-color: #104193;text-decoration-color:white;">
+                                                                        <th class="hidden">Id</th>
+                                                                        @*<th style="width:200px;color:white;">Name</th>*@
+                                                                        <th style="color:white;">Name</th>
+                                                                        <th style="color:white;">Branch</th>
+                                                                        <th style="color:white;">Role</th>
+                                                                        <th style="color:white;">Reporting Person Two Name</th>
+                                                                        <th style="color:white;">Order Booking Target</th>
+                                                                        <th style="color:white;">Marketing Visit</th>
+
+
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody>
+
+                                                                    @*@{
+                    int i = 0;
+                }*@
+                                                                    @if (ViewBag.IndividualTarget != null)
+                                                                    {
+                                                                        foreach (var item in ViewBag.IndividualTarget as IEnumerable<TuvVision.Models.IndividualTarget>)
+                                                                        {
+
+                                                                            //i = i + 1;
+                                                                            <tr>
+                                                                                <td class="hidden"> @Html.HiddenFor(model => model.ITarget[j].Id, new { @placeholder = "ID", @Value = item.Id, @class = "form-control" })</td>
+
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.ITarget[j].EmployeeName, new { @placeholder = "Name", @Value = item.EmployeeName, @class = "form-control2", style = "pointer-events:none;" })
+                                                                                    @Html.HiddenFor(model => model.ITarget[j].EmployeeId, new { @placeholder = "Name", @Value = item.EmployeeId, @class = "form-control" })
+
+                                                                                </td>
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.ITarget[j].Branch, new { @placeholder = "Branch", @Value = item.Branch, @class = "form-control2", style = "pointer-events:none;" })
+                                                                                    @Html.HiddenFor(model => model.ITarget[j].BranchId, new { @placeholder = "Branch", @Value = item.BranchId, @class = "form-control" })
+
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.ITarget[j].RoleName, new { @placeholder = "Role Name", @Value = item.RoleName, @class = "form-control2", style = "pointer-events:none;" })
+                                                                                    @Html.ValidationMessageFor(model => model.ITarget[j].RoleName, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.ITarget[j].ReportingPersonTwo, new { @placeholder = "Reporting Person Two", @Value = item.ReportingPersonTwo, @class = "form-control2" })
+                                                                                    @Html.ValidationMessageFor(model => model.ITarget[j].ReportingPersonTwo, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.ITarget[j].OrderBookingTarget, new { @placeholder = "Order Booking Target", @Value = item.OrderBookingTarget, @class = "form-control2" })
+                                                                                    @Html.ValidationMessageFor(model => model.ITarget[j].OrderBookingTarget, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.ITarget[j].MarketingVisits, new { @placeholder = "Marketing Visits", @Value = item.MarketingVisits, @class = "form-control2" })
+                                                                                    @Html.ValidationMessageFor(model => model.ITarget[j].MarketingVisits, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+
+                                                                            </tr>
+                                                                            j++;
+                                                                        }
+
+                                                                    }
+                                                                    @*}*@
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+
+
+                                                        <!--Contact Details By Manoj -->
+
+
+                                                    </div><!-- /.box-shadow -->
+
+                                                </div>
+
+
+
+                                                <div class="col-sm-4" id="divTable">
+                                                    <div class="form-group">
+                                                        <button type="submit" class="btn btn-default insert-form-btn" id="btnAddFl"> Save </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#IdYear').change(function () {
+        debugger;
+
+        var Year = $("#IdYear").val();
+        var CostCenter = $("#Pk_CC_Id").val(); //cost center
+
+
+        $.ajax(
+               {
+                   type: 'POST',
+                   url: '@Url.Action("GetIndividualDataByBranch", "BranchTarget")',
+                   //url: '@Url.Action("BranchTarget", "BranchTarget")',
+                   dataType: 'json',
+                   Async: false,
+                   data: JSON.stringify({ Year: Year, CostCenter: CostCenter }),
+                   enctype: "multipart/form-data",
+                   contentType: "application/json; charset=utf-8",
+                   success: function (response) {
+                       if (response.result == 'Redirect') {
+                           
+                           window.location = response.url;
+                       }
+                       else
+                       {
+                           window.location = response.url;
+                       }
+                       
+                   }
+               });
+
+    });
+</script>

@@ -1,0 +1,447 @@
+﻿@model TuvVision.Models.CostSheet
+
+@{
+    ViewBag.Title = "CostSheet";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+
+}
+
+@*Ashwini Scripts here for datatable starts here*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>*@
+@*<script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+@*Ashwini Scripts here for datatable ends here*@
+
+@*<form method="post" enctype="multipart/form-data">*@
+
+    <div class="white-bg section-box-shadow">
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                <div class="form-box">
+                    <form method="post" enctype="multipart/form-data"> 
+
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            @*<a href="@Url.Action("Quotation", "QuotationMaster", new {@QuotationNumber =  @Session["QT_ID"] })" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
+                            <a href="@Url.Action("Quotation", "QuotationMaster", new { @PK_QM_ID = Session["PK_QTID"] })" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>
+                                    Cost sheet
+
+                                </label>
+
+                                <input type="file" class="inputupload" name="img_Banner" id="img_Banner" required />
+                                <input type="hidden" value="@Session["EQ_ID"]" id="EQ_ID" name="EQ_ID" />
+
+                                @Html.HiddenFor(m => m.Costsheet)
+                                @Html.HiddenFor(m => m.PK_QTID)
+                                @Html.HiddenFor(m => m.QtnNo)
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <a href="~/Content/feedbackExcel1/CALCULATON  manpower.xlsx" target="_blank"> <strong>Cost Sheet Format</strong></a>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+                    <div class="col-xs-12 text-center">
+
+                        <button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i>Upload cost Sheet</button>
+
+                    </div>
+                    </form> 
+                </div>
+            </div>
+        </div>
+        <!--Contact Details By Manoj -->
+
+
+    </div><!-- /.box-shadow -->
+
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <h3 class="form-page-title">Cost Sheet</h3>
+                @*<h3 class="dynamic-page-title dynamic-page-title-2  text-left">Cost Sheet</h3>*@
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+                @{
+                    if ((Convert.ToString(TempData["InsertCostSheet"])) != "" && Convert.ToString(TempData["InsertCostSheet"]) != null)
+                    {
+                        TempData["InsertCostSheet"] = null;
+                        <script type="text/javascript" language="javascript">
+                            alert("Cost Sheet Added Successfully!!!!");
+                        </script>
+                    }
+                    if ((Convert.ToString(TempData["UpdateCostSheet"])) != "" && Convert.ToString(TempData["UpdateCostSheet"]) != null)
+                    {
+                        TempData["UpdateCostSheet"] = null;
+                        <script type="text/javascript" language="javascript">
+                            alert("Cost Sheet Approved Successfully");
+                        </script>
+                    }
+                }
+            </div><!-- /.row -->
+
+
+            <div class="col-xs-12">
+                <table id="example" class="display custom-table" cellspacing="0" width="100%">
+
+                    <thead>
+                        <tr>
+                            <th class="remove-search">Delete</th>
+                            <th >Add Comment</th>
+                            <th>Send for Approval</th>
+                            <th>Quotation No</th>
+                            <th>Cost Sheet</th>
+                            <th>Uploaded By</th>
+                            <th>Date Time</th>
+                            <th>Sender Comment</th>
+                            <th>PC Head Comment</th>
+                            <th>ClusterHead Comment </th>
+                            <th>PC Head Approval Status</th>
+                            
+                            
+                                <th>PC Action</th>                                
+                         
+                            <th>Clusterhead Approval Status</th>
+                            
+                                <th>ClusterHead Action</th>
+                            
+                            <th>Auto Approval</th>
+                            
+
+                        </tr>
+                    </thead>
+
+                    @if (ViewData["CostSheet"] != null)
+                    {
+                        <tbody>
+
+                            @{
+                                int i = 0;
+                                int totalAprCount = (ViewData["CostSheet"] as List<TuvVision.Models.CostSheet>).Where(m => m.Status == "2").Count();
+                                int totalCLAprCount = (ViewData["CostSheet"] as List<TuvVision.Models.CostSheet>).Where(m => m.CLStatus == "2").Count();
+
+                            }
+                            @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.CostSheet>)
+                            {
+                                <tr>
+                                   
+                                    <td>
+                                        @*@if (item.Status == null || item.Status == "" )*@
+        @if (item.SendForApprovel == "Yes" || item.SendForApprovel == "Auto")
+        {
+
+        }
+        else
+        {
+            <a href="@Url.Action("Delete", "CostSheetMaster", new { id = @item.PK_Cs_Id ,PK_QTID = @item.PK_QTID,PK_EQID = @item.EQ_ID})" onclick='return confirm("Are you sure  you want to Delete this Cost Sheet ?")' class="fa fa-trash-o">
+                @*<i class="fa fa-trash-o"></i>&nbsp;Delete*@
+            </a>
+        }
+                                    </td>
+                                    <td>                                      
+                                        <a href="" class="btn btn-warning" data-toggle="modal" data-target="#myModal" data-status1="@item.PK_QTID" data-status="@item.PK_Cs_Id" data-status2="@item.EComment" >Comment</a>
+                                    </td>
+
+
+                                    <td>
+                                        @if (item.SendForApprovel == "Yes" || item.SendForApprovel == "Auto")
+                                        {
+
+                                            <p>✔</p>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("SendForApprovel", "CostSheetMaster", new { id = @item.PK_Cs_Id ,PK_QTID = @item.PK_QTID,PK_EQID = @item.EQ_ID,Comment= Model.SenderComment })" onclick='return confirm("Are you sure  you want send Cost Sheet for approvel?")' class="btn btn-default insert-form-btn">
+                                                &nbsp;Send for Approval
+                                            </a>
+
+                                        }
+
+                                    </td>
+
+                                    <td>@item.RefNo</td>
+
+                                    @if (item.Costsheet != null)
+                                    {
+                                        <td>
+                                            <a href="~/Content/Uploads/Images/@item.Costsheet" download>
+                                                @item.Costsheet
+                                            </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <img src="~/Content/CostSheetStore/no-pdf1.png" />
+                                        </td>
+                                    }
+
+                                    <td>@item.CreatedBy</td>
+                                    <td>@item.Createdate</td>                                   
+                                    <td style="white-space: pre-line;">@item.SenderComment</td>                                    
+                                    <td style="white-space: pre-line;">@item.PCHComment</td>
+                                    <td style="white-space: pre-line;">@Html.Encode(item.CHComment)</td>
+
+                                   
+                                    @*@if (item.SendForApprovel.ToUpper() != "AUTO")
+                                    {*@
+                                    
+                                    @if (item.SendForApprovel == "Auto")
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        if (item.Status == "2")
+                                        {
+                                            <td>Approved</td>
+                                        }
+                                        else if (item.Status == null || item.Status == "")
+                                        {
+                                            <td>Approval Pending</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Not Approved</td>
+                                        }
+                                    }
+
+
+
+                                        @if (ViewBag.Role == "1")
+                                        {
+                                            if (item.Status == "" || @item.Status == null)
+                                            {
+                                                if (item.SendForApprovel == "Yes" && item.SendForApprovel.ToUpper() != "AUTO")
+                                                { 
+                                                    <td class="less-width">
+                                                        <a href="@Url.Action("ChangeStatus", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-times"></span>&nbsp;</a>
+                                                        <a href="@Url.Action("ChangeApproval", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-check"></span>&nbsp;</a>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td></td>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <td class="less-width">
+                                                    <a href="@Url.Action("ChangeStatus", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-times"></span>&nbsp;</a>
+                                                    <a href="@Url.Action("ChangeApproval", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-check"></span>&nbsp;</a>
+                                                </td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td>&nbsp;</td>
+                                        }
+                                        @if (item.CLStatus == "2")
+                                        {
+                                            <td>Approved</td>
+                                        }
+                                        else if (item.CLStatus == "1" )
+                                        {
+                                            <td>Not Approved</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                        @if (ViewBag.Role == "46" || ViewBag.Role == "47" || ViewBag.Role == "48" || ViewBag.Role == "49")
+                                        {
+
+
+                                            if (item.CLStatus == "1")
+                                            {
+                                                if (totalCLAprCount == 0)
+                                                {
+                                                    <td class="less-width">
+                                                        <a href="@Url.Action("ChangeCLStatus", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-times"></span>&nbsp;</a>
+                                                        <a href="@Url.Action("ChangeCLApproval", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-check"></span>&nbsp;</a>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>&nbsp;</td>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <td class="less-width">
+                                                    <a href="@Url.Action("ChangeCLStatus", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-times"></span>&nbsp;</a>
+                                                    <a href="@Url.Action("ChangeCLApproval", "CostSheetMaster", new { @csid = item.PK_Cs_Id, @PK_QTID = item.PK_QTID })" title="Edit"><span class="fa fa-check"></span>&nbsp;</a>
+                                                </td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    @if (item.SendForApprovel.ToUpper() == "AUTO")
+                                    {
+                                        
+                                        <td>Yes</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+
+                                       
+                                    @*}
+                                    else
+                                    {
+
+                                        <td>&nbsp;</td>
+                                       
+                                        
+                                        <td>&nbsp;</td>
+                                        
+                                        <td class="less-width">Yes</td>
+
+
+
+                                        }*@
+                                </tr>
+
+                            }
+                            </tbody>
+                        }
+                        else
+                        {
+
+                        }
+
+
+                </table>
+            </div><!-- /.data table col -->
+
+
+            <script type="text/javascript">
+                var showChar = 10;
+                var ellipsestext = "...";
+                var moretext = "See More";
+                var lesstext = "See Less";
+                $('.comments-space').each(function () {
+                    var content = $(this).html();
+                    if (content.length > showChar) {
+                        var show_content = content.substr(0, showChar);
+                        var hide_content = content.substr(showChar, content.length - showChar);
+                        var html = show_content + '<span class="moreelipses">' + ellipsestext + '</span><span class="remaining-content"><span>' + hide_content + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+                        $(this).html(html);
+                    }
+                });
+
+                $(".morelink").click(function () {
+                    if ($(this).hasClass("less")) {
+                        $(this).removeClass("less");
+                        $(this).html(moretext);
+                    } else {
+                        $(this).addClass("less");
+                        $(this).html(lesstext);
+                    }
+                    $(this).parent().prev().toggle();
+                    $(this).prev().toggle();
+                    return false;
+                });
+            </script>
+
+
+            <script type="text/javascript">
+                $(function () {
+                    debugger;
+            $('#myModal').on('show.bs.modal', function (e) {
+                var button = $(e.relatedTarget) // Button that triggered the modal
+                var ST = button.data('status') // Extract info from data-* attributes data-PK_QTID
+                var PK = button.data('status1')
+                var EComment = button.data('status2')
+                
+                //$(e.currentTarget).find('.modal-title1').text('Change PKId :' + PK);
+                //$(e.currentTarget).find('.modal-title').text('Change Status for Service Tag :' + ST);
+                $(e.currentTarget).find('#PK_Cs_Id').val(ST);
+                $(e.currentTarget).find('#PK_Cs_Id').val(ST);
+                //$(e.currentTarget).find('#SenderComment').val(EComment);
+                //$(e.currentTarget).find('.ST').val(ST);
+            });
+        });
+            </script>
+
+
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                       @using (Html.BeginForm("AddComment", "CostSheetMaster", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                        <div class="modal-header">
+                            @*<h5 class="modal-title custom_align">New message</h5>
+                            <h5 class="modal-title1 custom_align">New message</h5>*@
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                @*<input class="form-control " id="ST" name="ST" type="text" value="">*@
+                                @Html.HiddenFor(model => model.PK_Cs_Id, new { placeholder = "Comment", @class = "form-control form-control-custom" })
+                                @Html.HiddenFor(model => model.PK_QTID, new { placeholder = "Comment", @class = "form-control form-control-custom" })
+                            </div>
+                            <div class="form-group">
+                                @Html.TextAreaFor(model => model.SenderComment, new { placeholder = "Comment", @class = "form-control form-control-custom" })
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Save</button>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+
+@*</form>*@
+                                
+
+<!--End of Ashwini Code-->
+                                        }
+
+
+
+

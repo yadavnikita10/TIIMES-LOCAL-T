@@ -1,0 +1,977 @@
+﻿@model TuvVision.Models.NCR
+@{
+    ViewBag.Title = "CreateNCR";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+<style>
+    /*-- Delete color-profile --*/
+    ul.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+</style>
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+
+                        <div class="col-xs-12 text-right">
+                            @*<a href="@Url.Action("ListNCR", "NCR")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i>Back</a>*@
+                            @Html.HiddenFor(model => model.Type)
+
+                            @*@if (Model.Type == "VisitReport")
+                            {
+
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { PK_Call_ID=Model.PK_Call_Id} )'">Back</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ListNCR", "NCR" )'">Back</button>
+                            }*@
+
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title" style="font-size:14px;"> @Html.DisplayFor(model => model.NCRNo)</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+
+
+                                                <span style="color:#FA3746;">
+                                                    Notes :  *
+                                                </span> Mandatory.
+                                                <div class="row">
+
+                                                    @if (Model.IsCustomerSpecificReportNumber == "Yes")
+                                                    {
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label style="color:#FA3746;">Customer defined NCR Number:</label>
+                                                                @Html.TextBoxFor(model => model.CustomerSpecificReportNumber, new { @placeholder = "Type..", @class = "form-control" })
+                                                                @Html.ValidationMessageFor(model => model.CustomerSpecificReportNumber, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="row">
+                                                    @Html.HiddenFor(model => model.NCRNo)
+                                                    @Html.HiddenFor(model => model.IVRId)
+                                                    @Html.HiddenFor(model => model.Id)
+                                                    @Html.HiddenFor(model => model.PK_Call_Id)
+
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <label style="color:#001ED2;">General:</label>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                        <div class="form-group">
+                                                            <label>Date:</label>
+                                                            @Html.TextBoxFor(model => model.Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Date", @class = "form-control form-control-custom Date", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger validation-msg" })
+
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                        <div class="form-group">
+                                                            <label>TUV India Control No: </label>
+                                                            @Html.TextBoxFor(model => model.TUVControlNo, htmlAttributes: new { placeholder = "TUVI Control No", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.TUVControlNo, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                        <div class="form-group">
+                                                            <label>SAP Number: </label>
+                                                            @Html.TextBoxFor(model => model.SAP, htmlAttributes: new { placeholder = "SAP No", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.SAP, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                        <div class="form-group">
+                                                            <label>Customer Name: </label>
+                                                            @Html.TextBoxFor(model => model.Client, new { @placeholder = "Customer Name:", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Client, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                        <div class="form-group">
+                                                            <label>Project Name: </label>
+                                                            @Html.TextBoxFor(model => model.ProjectName, new { @placeholder = "Project Name", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                        <div class="form-group">
+                                                            <label>Vendor Name:</label>
+                                                            @Html.TextBoxFor(model => model.VenderSubVendor, htmlAttributes: new { placeholder = "Vendor Name:", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.VenderSubVendor, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                        <div class="form-group">
+                                                            <label>PO No. (Client PO on Vendor) :</label>
+                                                            @Html.TextBoxFor(model => model.VendorPoNo, htmlAttributes: new { placeholder = "PO No. (Client PO on Vendor) :", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.VendorPoNo, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                        <div class="form-group">
+                                                            <label>PO Date(Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.date_of_PO, htmlAttributes: new { placeholder = "PO Date(Vendor):", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.date_of_PO, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    @if (Model.SubType == "SubSub Job")
+                                                    {
+                                                        <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                            <div class="form-group">
+                                                                <label>Sub Vendor Name: </label>
+                                                                @Html.TextBoxFor(model => model.SubVendorName, new { @placeholder = "Sub Vendor Name", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.SubVendorName, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                            <div class="form-group">
+                                                                <label>PO No.(Vendor PO on Sub Vendor):  </label>
+                                                                @Html.TextBoxFor(model => model.SubVendorPoNo, new { @placeholder = "PO No.(Vendor PO on Sub Vendor): ", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.SubVendorPoNo, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                            <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                                <div class="form-group">
+                                                                    <label>PO Date(Sub Vendor):</label>
+                                                                    @Html.TextBoxFor(model => model.date_of_POSubVendor, new { @placeholder = "PO Date(Sub Vendor):", @class = "form-control", autocomplete = "off" })
+                                                                    @Html.ValidationMessageFor(model => model.date_of_POSubVendor, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                            <div class="form-group">
+                                                                <label>Sub Vendor Name: </label>
+                                                                @Html.TextBoxFor(model => model.SubVendorName, new { @placeholder = "Sub Vendor Name", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.SubVendorName, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                            <div class="form-group">
+                                                                <label>PO No.(Vendor PO on Sub Vendor):  </label>
+                                                                @Html.TextBoxFor(model => model.SubVendorPoNo, new { @placeholder = "PO No.(Vendor PO on Sub Vendor): ", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.SubVendorPoNo, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                            <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                                <div class="form-group">
+                                                                    <label>PO Date(Sub Vendor):</label>
+                                                                    @Html.TextBoxFor(model => model.date_of_POSubVendor, new { @placeholder = "PO Date(Sub Vendor):", @class = "form-control", autocomplete = "off" })
+                                                                    @Html.ValidationMessageFor(model => model.date_of_POSubVendor, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+
+
+                                                            @*<div class="row">*@
+                                                            <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                                <div class="form-group">
+                                                                    <label>Sub Sub Vendor Name:</label>
+                                                                    @Html.TextBoxFor(model => model.SubSubSubVendor, new { @placeholder = "Sub Vendor Name", @class = "form-control", @readonly = "readonly" })
+
+                                                                    @Html.ValidationMessageFor(model => model.SubSubSubVendor, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                                <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                                    <div class="form-group">
+                                                                        <label>Sub Sub PO No.(Vendor PO on Sub-vendor):</label>&nbsp;<span style="color:#FA3746;">*</span>
+                                                                        @Html.TextBoxFor(model => model.SubSubSubVendorPO, new { @placeholder = "Sub Vendor Name", @class = "form-control", @readonly = "readonly" })
+
+
+                                                                        @Html.ValidationMessageFor(model => model.SubSubSubVendorPO, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-4" style="pointer-events: none;">
+                                                                    <div class="form-group" id="divSubPODate">
+                                                                        <label>Sub Sub PO Date (Sub Vendor):</label>&nbsp;<span style="color:#FA3746;">*</span>
+                                                                        @Html.TextBoxFor(model => model.SubSubSubVendorPODate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "PO Date (Sub Vendor):", @class = "form-control SubSubVendorDate_of_PO", autocomplete = "off", @readonly = "readonly" })
+
+                                                                        @Html.ValidationMessageFor(model => model.SubSubSubVendorPODate, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+
+                                                                @*</div>*@
+
+                                                    }
+
+
+
+
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <label style="color:#001ED2;">Details:</label>
+                                                    </div>
+                                                    
+                                                    @if (Model.IsComfirmation == true|| Model.Status == "Close")
+                                                    {
+                                                        <div class="col-xs-12 col-sm-6" style="pointer-events: none;">
+                                                            <div class="form-group">
+                                                                <label>Item/Equipment Description: </label><span style="color:#FA3746;">*</span>
+                                                                @Html.TextAreaFor(model => model.ItemEquipment, new { @placeholder = "Item/Equipment Description", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.ItemEquipment, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-6" style="pointer-events: none;">
+                                                            <div class="form-group">
+                                                                <label>Reference Documents:</label><span style="color:#FA3746;">*</span>
+                                                                @Html.TextAreaFor(model => model.ReferenceDocument, new { @placeholder = "Reference Documents:", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.ReferenceDocument, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    }
+
+                                                    else
+                                                    {
+
+                                                        <div class="col-xs-12 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Item/Equipment Description: </label><span style="color:#FA3746;">*</span>
+                                                                @Html.TextAreaFor(model => model.ItemEquipment, new { @placeholder = "Item/Equipment Description", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.ItemEquipment, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Reference Documents:</label><span style="color:#FA3746;">*</span>
+                                                                @Html.TextAreaFor(model => model.ReferenceDocument, new { @placeholder = "Reference Documents:", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.ReferenceDocument, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                                    @if (Model.IsComfirmation == true || Model.Status == "Close")
+                                                    {
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12" style="pointer-events: none;">
+                                                        <div class="form-group">
+                                                            <label>Description of the Nonconformity: </label><span style="color:#FA3746;">*</span>
+                                                            @Html.TextAreaFor(model => model.DescriptionOfTheNonconformity, 4, 40, htmlAttributes: new { placeholder = "Description of the Nonconformity", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.DescriptionOfTheNonconformity, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label>Description of the Nonconformity: </label><span style="color:#FA3746;">*</span>
+                                                                    @Html.TextAreaFor(model => model.DescriptionOfTheNonconformity, 4, 40, htmlAttributes: new { placeholder = "Description of the Nonconformity", @class = "form-control", autocomplete = "off" })
+                                                                    @Html.ValidationMessageFor(model => model.DescriptionOfTheNonconformity, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    }
+                                                @if (Model.Status == "Close")
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Closure Remarks:</label><span style="color:#FA3746;">*</span>
+                                                                @Html.TextAreaFor(model => model.ClosedReason, 4, 40, htmlAttributes: new { placeholder = "Closure Remarks", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.ClosedReason, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    @*<div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Closure Remarks:</label><span style="color:#FA3746;">*</span>
+                                                                @Html.TextAreaFor(model => model.ClosedReason, 4, 40, htmlAttributes: new { placeholder = "Closure Remarks", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.ClosedReason, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+
+                                                        </div>
+                                                    </div>*@
+                                                }
+
+                                                @if (Model.IsComfirmation == true || Model.Status == "Close")
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12" style="pointer-events: none;">
+                                                            <div class="form-group">
+                                                                <label>Attached documents:</label>
+                                                                @Html.TextAreaFor(model => model.AttachedDoucment, 4, 40, htmlAttributes: new { placeholder = "", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.AttachedDoucment, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Attached documents:</label><span style="color:#FA3746;">*</span>
+                                                                @Html.TextAreaFor(model => model.AttachedDoucment, 4, 40, htmlAttributes: new { placeholder = "", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.AttachedDoucment, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                }
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    @if (Model.Status == "Close")
+                                                    {
+                                                        <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                                                            <div class="form-group">
+                                                                <label>NCR Status:</label><span style="color:#FA3746;">*</span>
+                                                                @Html.DropDownListFor(m => m.Status, new List<SelectListItem>
+                                                                     {
+                                                                     //new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="Open", Value = "Open" },
+                                                                     new SelectListItem{ Text="Close", Value = "Close" },
+                                                       }, new { @class = "form-control", @id = "PT" })
+                                                                @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>NCR Status:</label><span style="color:#FA3746;">*</span>
+                                                            @Html.DropDownListFor(m => m.Status, new List<SelectListItem>
+                                                                     {
+                                                                     //new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="Open", Value = "Open" },
+                                                                     new SelectListItem{ Text="Close", Value = "Close" },
+                                                       }, new { @class = "form-control", @id = "PT" })
+                                                            @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                    @*<div class="row" style="pointer-events:none;">*@
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>NCR Raised By:</label>
+                                                                @Html.TextBoxFor(model => model.NCRRaisedBy, new { @placeholder = "NCR Raised By", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.NCRRaisedBy, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    @*</div>*@
+                                                   
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>NCR Closed By: </label>
+                                                                @Html.TextBoxFor(model => model.NCRClosedBy, new { @placeholder = "NCR Closed By", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.NCRClosedBy, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <label style="color:#001ED2;">Attachments:</label>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group">
+                                                        <label><i class="fa fa-paperclip" style="color:black;"></i>Photographic Evidences, NCR Closure records etc: <span style="color:#ff0000;">*</span></label>
+                                                        <input type="file" class="filepond" name="filepond" id="FileUpload" multiple>
+                                                        <input hidden="hidden" id="hdfFileUpload" name="FileUpload" class="hidden" />
+                                                    </div>
+                                                </div>
+
+                                                @if (Model != null)
+                                                {
+                                                    if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                    {
+                                                        <div class="row">
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <ul class="Attachment">
+                                                                        @foreach (var item in Model.FileDetails)
+                                                                        {
+                                                                            <li>
+                                                                                <a class="title" href="/NCR/DownloadNCRAttach/?p=@(item.IDS + item.Extension)&d=@item.FileName">@item.FileName</a>
+                                                                                <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem">X</a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">No Files Uploaded</p>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p style="color:red;text-align:center;font-weight:bold;">There are no Attachments !</p>
+                                                }
+                                                <br />
+                                                @if (Model.NCRFirstTime == "Yes")
+                                                {
+
+                                                }
+                                                else if (Model.countrport == "1")
+                                                {
+
+                                                }
+                                                else
+                                                {
+
+                                                    if (Model.NCRNo.Count(c => c == '/') > 4)
+                                                    {
+                                                        
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label style="color:#001ED2;">Revise Reason :<span style="color:#FA3746;">*</span></label>
+                                                                @Html.DropDownListFor(m => m.ddlReviseReason, new List<SelectListItem>
+                                                                {
+                                                                new SelectListItem{ Text="Select", Value = "" },
+                                                                new SelectListItem{ Text="Correction in typing error", Value = "Correction in typing error" },
+                                                                new SelectListItem{ Text="Missing data added", Value = "Missing data added" },
+                                                                new SelectListItem{ Text="Updated / modified data", Value = "Updated / modified data" },
+
+                                                                }, new { @class = "form-control", @id = "ddlReviseReason" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-8">
+                                                            <div class="form-group">
+                                                                <label style="color:#001ED2;">Revise Reason Description:<span style="color:#FA3746;">*</span></label>
+                                                                @*<input type="text" class="form-control" placeholder="Status Here">*@
+                                                                @Html.TextAreaFor(model => model.ReviseReason, new { @placeholder = "Type..", @class = "form-control" })
+                                                                @Html.ValidationMessageFor(model => model.ReviseReason, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                    else
+                                                    {
+
+                                                    }
+                                                }
+
+
+
+
+
+                                                @*<div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            @{
+                                                                if (Model != null)
+                                                                {
+
+                                                                    if (!string.IsNullOrEmpty(Model.Attachment))
+                                                                    {
+                                                                        <div class="cform-group">
+                                                                            @{
+                                                                               string[] words = (Model.Attachment).Split(',');
+                                                                               for (int i = 0; i < words.Count(); i++)
+                                                                               {
+                                                                                   <a id="btnAddToCart" class="btn btn-default insert-form-btn" href="@Url.Content("" + words[i])" role="button" download="@Url.Content("~/Content/Uploads/Images/" + words[i])">
+                                                                                       <i class="fa fa-download"></i>           @words[i]
+                                                                                   </a>
+                                                                               }
+                                                                            }
+                                                                         </div>
+                                                                                 }
+                                                                                 else
+                                                                                 {
+                                                                                     <div class="form-group">
+
+                                                                                     </div>
+                                                                                    }
+                                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>*@
+
+                                                @*@if (Model != null)
+                                                    {
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Download PDF</label>
+
+                                                                @if (!string.IsNullOrEmpty(Model.Pdf))
+                                                                {
+                                                                   <a id="btnPdf" class="btn btn-default insert-form-btn" href="@Url.Content("~/NCRPDF/"+@Model.Pdf)" role="button" download="@Url.Content("~/NCRPDF/" +@Model.Pdf)">
+                                                                        <i class="fa fa-download">@Model.Pdf</i>
+                                                                        @Html.HiddenFor(model => Model.Pdf)
+                                                                    </a>
+
+                                                                }
+
+                                                            </div>
+                                                        </div>
+
+
+                                                    }*@
+
+                                                <br />
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+                                                @if (Model.NCRFirstTime == "Yes")
+                                                {
+
+                                                }
+                                               
+                                                else
+                                                {
+
+                                                    <div class="row">
+                                                        @if (Model.IsComfirmation == true)
+
+                                                        {
+                                                            <div class="col-xs-12 col-sm-12" style="margin-left: -14px;pointer-events:none;">
+                                                                <div class="form-group">
+
+                                                                    @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+                                                                    <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                                                    <label style="margin-left: 21px;">
+
+                                                                        I hereby confirm that I have reviewed the content of the Non-Conformity Report (NCR) and found it accurate and in compliance with TUVI QMS.
+                                                                        <label style="color:#E12F24;">
+                                                                            I authorize TIIMES to affix the digital signature on the NCR PDF.
+                                                                           </label>
+                                                                             <br />
+                                                                            <label style="color:#001ED2;">Note:</label><br />
+                                                                            <label>Once this declaration is submitted, no further modifications will be allowed for this version of the Non-Conformity Report.</label>
+                                                                            @*After above Activity, system will not allow to modify current version.*@
+                                                                        </label>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        @*else if (Model.countrport == "1")
+                                                        {
+                                                            if (Model.ReviseReason != "")
+                                                            {
+                                                            <div class="col-xs-12 col-sm-12" style="margin-left: -14px;">
+                                                                <div class="form-group">
+
+                                                                    @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+                                                                    <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                                                    <label style="margin-left: 21px;">
+                                                                        I hereby confirm that I have reviewed the content of the Non-Conformity Report (NCR) and found it accurate and in compliance with TUVI QMS.<br />
+                                                                        <label style="color:#E12F24;">
+                                                                            I authorize TIIMES to affix the digital signature on the NCR PDF.
+                                                                        </label>
+                                                                        <br />
+                                                                        <label style="color:#001ED2;"> Note:</label><br />
+                                                                        <label>Once this declaration is submitted, no further modifications will be allowed for this version of the Non-Conformity Report.</label>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            }
+                                                        }*@
+                                                        
+                                                        else if (Model.ItemEquipment != "" && Model.ReferenceDocument != "" && Model.DescriptionOfTheNonconformity != "" && Model.ddlReviseReason!= "")
+                                                        {      
+                                                            <div class="col-xs-12 col-sm-12" style="margin-left: -14px;">
+                                                                <div class="form-group">
+                                                                    @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+                                                                    <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                                                    <label style="margin-left: 21px;">
+                                                                        I hereby confirm that I have reviewed the content of the Non-Conformity Report (NCR) and found it accurate and in compliance with TUVI QMS.<br />
+                                                                        <label style="color:#E12F24;">
+                                                                            I authorize TIIMES to affix the digital signature on the NCR PDF.
+                                                                        </label>
+                                                                        <br />
+                                                                        <label style="color:#001ED2;"> Note:</label><br />
+                                                                        <label>Once this declaration is submitted, no further modifications will be allowed for this version of the Non-Conformity Report.</label>
+                                                                        @*After above Activity, system will not allow to modify current version.*@
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                                }
+                                                                else if (Model.countrport != "1")
+                                                                    {
+
+                                                                    }
+                                                                    else if (Model.ItemEquipment != "" && Model.ReferenceDocument != "" && Model.DescriptionOfTheNonconformity != "")
+                                                                    {
+                                                          
+                                                                <div class="col-xs-12 col-sm-12" style="margin-left: -14px;">
+                                                                    <div class="form-group">
+
+                                                                        @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+                                                                        <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                                                        <label style="margin-left: 21px;">
+                                                                            I hereby confirm that I have reviewed the content of the Non-Conformity Report (NCR) and found it accurate and in compliance with TUVI QMS.<br />
+                                                                            <label style="color:#E12F24;">
+                                                                                I authorize TIIMES to affix the digital signature on the NCR PDF.
+                                                                            </label>
+                                                                            <br />
+                                                                            <label style="color:#001ED2;"> Note:</label><br />
+                                                                            <label>Once this declaration is submitted, no further modifications will be allowed for this version of the Non-Conformity Report.</label>
+                                                                            @*After above Activity, system will not allow to modify current version.*@
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                        }
+                                                        else
+                                                        {
+                                                        }
+                                                    </div>
+                                                }
+
+                                                <div class="row text-center">
+                                                    @if (Model != null)
+                                                    {
+                                                        <div class="col-xs-12">
+                                                            <div class="btn-group" role="group" style="display: flex; justify-content: center; gap: 10px;">
+                                                                <!-- Download PDF Button -->
+                                                                <button type="submit" id="btnsave" class="btn btn-default insert-form-btn">Save</button>
+
+                                                                @if (!string.IsNullOrEmpty(Model.Pdf))
+                {
+                                                                    <a id="btnPdf"
+                                                                       class="btn btn-default insert-form-btn"
+                                                                       href="@Url.Content("~/NCRPDF/"+@Model.Pdf)"
+                                                                       role="button"
+                                                                       download="@Url.Content("~/NCRPDF/" +@Model.Pdf)">
+                                                                        <i class="fa fa-download"></i> Download PDF
+                                                                        @Html.HiddenFor(model => Model.Pdf)
+                                                                    </a>
+                                                                }
+
+                                                                <!-- Save Button -->
+
+                                                                <!-- Revise NCR Button -->
+                                                                @if (Model.IsComfirmation == true)
+                {
+                                                                    <button type="button"
+                                                                            class="btn btn-default insert-form-btn"
+                                                                            id="btnRevise"
+                                                                            title="Submit"
+                                                                            style="background-color:#001ED2; color:#FFFFFF;">
+                                                                        Revise NCR
+                                                                    </button>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+
+
+
+
+
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Calender Control*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<script>
+    $(function () {
+        $(".Date").datepicker({
+            dateFormat: 'dd/mm/yy',//check changedateFormat: 'dd/mm/yy'
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+
+        });
+    });
+</script>
+
+
+
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+<script>
+    var SummaryExtension = false;
+    var fileExtension = ["pdf", "PDF", "xls", "xlsx", "doc", "DOC", "docx", "DOCX", "png", "PNG", "jpg", "JPG", "JPEG", "gif"];
+    $("#FileUpload").change(function (e) {
+        debugger;
+        var files = $("#FileUpload input[type='file']").get(0).files;
+        for (var index = 0; index < files.length; index++)
+        {
+            var singleExtension = e.target.files[index].name.split('.').pop();
+            var Condition = fileExtension.includes(singleExtension);
+            if (Condition == true)
+            {
+                SummaryExtension = true;
+            }
+            else
+            {
+                alert("Only formats are allowed : " + fileExtension.join(','));
+                SummaryExtension = false;
+                return;
+            }
+        }
+        if (SummaryExtension == true)
+        {
+            var fileData = new FormData();
+            for (var i = 0; i < files.length; i++)
+            {
+                fileData.append("FileUpload input[type='file']", files[i]);
+            }
+            var xhr = new XMLHttpRequest();
+            var link = '@Url.Action("TemporaryFilePathDocumentAttachment", "NCR")';
+            xhr.open('POST', link, 'true');
+            xhr.send(fileData);
+            xhr.onreadystatechange = function ()
+            {
+                if (xhr.readyState == 4 && xhr.status == 200)
+                {
+                    var data = xhr.responseText;
+                    data = data.replace(/"/g, "");
+                    $("#Attachment").val(data);
+                }
+            }
+            //})
+        }
+
+
+
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $('.deleteItem').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#EQ_ID").val();
+            if (confirm('Do you really want to Delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteFile")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("Something went Wrong, Please try again!");
+                })
+
+            }
+        });
+    });
+
+</script>
+
+
+<script>
+    $("#btnDownload").click(function myfunction() {
+        debugger;
+
+        if (validateform() == false) {
+
+            return false;
+        }
+        else {
+            //$("#btnRevise").prop('disabled', true);
+            var PK_CALL_ID = $("#Id").val();
+
+            if(window.confirm('Do you want to Download this NCR?'))
+            {
+                 window.location.href = '@Url.Action("NCRPrintWithHeaderFooter", "NCR", new { @Id = Model.Id } )' ;
+            }
+            else
+            {
+
+            }
+
+
+        }
+    });
+    function validateform() {
+        debugger;
+
+
+    }
+
+</script>
+
+<script>
+    $("#btnRevise").click(function myfunction() {
+        debugger;
+
+        if (validateform() == false) {
+
+            return false;
+        }
+        else {
+            //$("#btnRevise").prop('disabled', true);
+            var PK_CALL_ID = $("#Id").val();
+
+            if(window.confirm('Do you want to revise this NCR?'))
+            {
+                 window.location.href = '@Url.Action("ReviseReportsNew", "NCR", new { @Id = Model.IVRId } )' ;
+            }
+            else
+            {
+
+            }
+
+
+        }
+    });
+    function validateform() {
+        debugger;
+
+
+    }
+
+
+    $("#btnsave").click(function () {
+        debugger;
+        var Ncrno = '@Html.Raw(Model.NCRNo)';
+        var ReviseReason = $("#ReviseReason").val()//'@Html.Raw(Model.ReviseReason)';
+        var ddlReviseReason = $("#ddlReviseReason").val();//'@Html.Raw(Model.ddlReviseReason)';
+        var slashCount = (Ncrno.match(/\//g) || []).length;
+        if (slashCount > 4) {
+            if (ReviseReason == "") {
+                alert("Please Enter Revise Reason");
+                return false;
+                console.log("ReviseReason is empty.");
+            }
+
+            else if (ddlReviseReason == "") {
+                alert("Please Select Revise Reason");
+                return false;
+            }
+            else {
+                console.log("Both values are populated.");
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+

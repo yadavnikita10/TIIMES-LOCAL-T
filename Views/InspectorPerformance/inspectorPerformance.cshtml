@@ -1,0 +1,306 @@
+﻿@model TuvVision.Models.InspectorPerformance
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "inspectorPerformance";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+}
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+<!-- Bootstrap -->
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+
+<!-- Start Other stylesheets -->
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+
+
+
+
+
+<style>
+    .table-container {
+        width: 1300px; /* Adjust the width as needed */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        overflow-y: hidden;
+    }
+
+    /* Set the size of the table */
+    .fixed-size-table {
+        width: 100%;
+        table-layout: fixed; /* Fixed table layout */
+    }
+
+        /* Style the table cells (optional) */
+        .fixed-size-table td {
+            border: 1px solid #00003C;
+            padding: 4px 0px;
+            font-size: 11px;
+        }
+</style>
+
+
+
+<script>
+
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+
+
+
+@using (Html.BeginForm("inspectorPerformance", "InspectorPerformance", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+    <div class="main-content3 xs-max-height">
+        <div class="container-fluid">
+
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <a href="@Url.Action("Welcome","Login")" class="logo">
+                            <img src="~/AllJsAndCss/images/logoN.png" alt="" style="max-width: 210%;margin-top: -59px;">
+                        </a>
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left:147px;padding-top:10px;font-family:'TNG Pro'; ">TUV India Private Limited <br />Inspector Performance-IVR  </h3>
+                    </div>
+
+                    <div class="col-lg-2" style="padding-right:20px;">
+                        <button type="button" class="btn btn-info" style="margin-top: 16px;margin-left: 37px;width: 150px;background-color: #104193;color:white;border-radius: 0;" onclick="Redirect()">Go Back</button>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="col-xs-12">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left"><b></b></h3>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>From Date:</label>
+                                @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>To Date:</label>
+                                @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-2">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-top: 22px;">Search</button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br />
+
+
+            </div>
+
+
+            <div class="form-group" style="padding-left:25px;">
+                <hr class="custom-hr1">
+            </div>
+
+
+            <div class="col-lg-12">
+                @*<div class="col-xs-12" style="overflow:auto;height:500px;width:100%">
+                    <table id="example" class="equal-height-table table-bordered table-striped" style="border: 1px solid black;font-size:13px; padding:0px; margin:5px;" width="100%">*@
+                <div class="col-xs-12 table-container">
+                    <table class="display dataTable no-footer fixed-size-table" id="example">
+                        <thead>
+                            @*<tr style="padding:0px 0px; background-color: #050585; color: white; text-align:center;">*@
+                            <tr style="background-color: #104193; border:1px solid #00003C; font-size:12px; color: #ffffff; text-align:center;">
+                                <th style="width:80px;">Inspector Name</th>
+                                <th style="width:50px;">Branch Name</th>
+                                <th>Total Calls</th>
+                                <th>Call Closed Count</th>
+                                <th>%</th>
+                                <th>Call Open Count</th>
+                                <th>%</th>
+                                <th>IVR Generated Count</th>
+                                <th>IVR ReqInTUV Format</th>
+                                <th>%</th>
+                                <th>IVR Downloaded Count</th>
+                                <th>%</th>
+                                <th>Actual IVR Generated OnTiimes</th>
+                                <th>%</th>
+                                <th>IVR Creation Ontime Count</th>
+                                <th>%</th>
+                                <th>Supoting Document Count</th>
+                                <th>%</th>
+                                <th>IVR Revise Count</th>
+                                <th>%</th>
+                                <th style="width:50px;">Performance %</th>
+
+
+                            </tr>
+                        </thead>
+                        @{
+                            var items = ViewData["ListData"] as IList<TuvVision.Models.InspectorPerformance>;
+
+
+                            if (items != null)
+                            {
+
+                                <tbody>
+                                    @foreach (var obj in ViewData["ListData"] as IEnumerable<TuvVision.Models.InspectorPerformance>)
+                                    {
+                                        <tr>
+                                            <td>@obj.InspectorName</td>
+                                            <td>@obj.Branch_Name</td>
+                                            <td>@obj.TotalCalls</td>
+                                            <td>@obj.CallClosedCount</td>
+                                            <td>@obj.CallClosedCountPercentage</td>
+                                            <td>@obj.CallOpenCount</td>
+                                            <td>@obj.CallOpenCountPercentage</td>
+                                            <td>@obj.IVRCount</td>
+                                            <td>@obj.IVRReqInTUVFormat</td>
+                                            <td>@obj.IVRReqInTUVFormatPercentage</td>
+                                            <td>@obj.IVRDownloaded</td>
+                                            <td>@obj.IVRDownloadedper</td>
+                                            <td>@obj.ActualIVRGeneratedOnTiimesV</td>
+                                            <td>@obj.ActualIVRGeneratedOnTiimesVper</td>
+                                            <td>@obj.IVRcreationOnTimeCount</td>
+                                            <td>@obj.IVRcreationOnTimeCountper</td>
+                                            <td>@obj.SupDocAttCount</td>
+                                            <td>@obj.SupDocAttCountper</td>
+                                            <td>@obj.IVRRevCount</td>
+                                            <td>@obj.IVRRevCountper</td>
+                                            <td>@obj.Performance</td>
+
+
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            }
+                        }
+
+                        @if (Model.GrandTotal != null)
+                        {
+                            <tfoot>
+                                <tr>
+                                    <td style="font-size: 11px; background-color: lightgray; text-align:left;">@Model.GrandTotal.InspectorName</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.Branch_Name</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrandTotalTotalCalls</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrandCallClosedCount</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@(Model.GrandTotal.GrandCallClosedCountPercentage.ToString("0.##"))</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrandCallOpenCount</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@(Model.GrandTotal.GrandCallOpenCountPercentage.ToString("0.##"))</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrandIVRCount</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrandIVRReqInTUVFormat</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@(Model.GrandTotal.GrandIVRReqInTUVFormatPercentage.ToString("0.##"))</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrnadIVRDownloaded</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@(Model.GrandTotal.GrnadIVRDownloadedPercentage.ToString("0.##"))</td>
+
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrnadActualIVRGeneratedOnTiimesV</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@(Model.GrandTotal.GrnadActualIVRGeneratedOnTiimesVPercentage.ToString("0.##"))</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrnadIVRcreationOnTimeCount</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@(Model.GrandTotal.GrnadIVRcreationOnTimeCountPercentange.ToString("0.##"))</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrnadSupDocAttCount</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@(Model.GrandTotal.GrnadSupDocAttCountPercentage.ToString("0.##"))</td>
+                                    @*<td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandTotalPerformance</td>*@
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@Model.GrandTotal.GrnadIVRRevCount</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@(Model.GrandTotal.GrnadIVRRevCountPercentage.ToString("0.##"))</td>
+                                    <td style="font-size: 11px; background-color: lightgray;text-align:left;">@(Model.GrandTotal.GrandTotalPerformance.ToString("0.##"))</td>
+
+
+                                </tr>
+                            </tfoot>
+                        }
+
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+                            }
+
+
+
+
+
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            "searching": true, // Enable search functionality
+            "ordering": false,   // Enable sorting functionality
+            "paging": false
+
+        });
+    });
+</script>
+
+
+<script>
+function Redirect() {
+        window.location.href = "@Url.Action("Welcome", "Login")"
+        }
+</script>
+
+
+
+

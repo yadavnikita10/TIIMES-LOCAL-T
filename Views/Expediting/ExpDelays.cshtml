@@ -1,0 +1,471 @@
+﻿@model TuvVision.Models.ExpDelays
+
+@{
+    ViewBag.Title = "ExpDelays";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+}
+
+<style>
+    /*.table-product [class^="col-"] {
+    flex-shrink: 1;*/
+
+
+    #customers {
+        font-family: 'TNG Pro';
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 2px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            /*background-color: #04AA6D;*/
+            background-color: #104193;
+            color: white;
+        }
+    /*}*/
+</style>
+
+<script src="~/AllJsAndCss/moment.min.js"></script>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+    $(function () {
+        $("#datepicker").datepicker();
+        $("#format").on("change", function () {
+            $("#datepicker").datepicker("option", "dateFormat", $(this).val());
+        });
+    });
+
+</script>
+
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+
+
+<script>
+    $(function () {
+        $(".CStatusUpdatedOn").datepicker({
+            //dateFormat: 'dd/mm/yy',//check change
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+
+    $(function () {
+        $(".COrderPlacedOn").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+
+
+</script>
+
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            @*class="container-fluid"*@
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                <div class="col-xs-12">
+                    <div class="row">
+
+                        <br />
+
+                        <h5 class="dynamic-page-title dynamic-page-title-2">@Session["ExpeditingType"]/Expediting Report Number : @Session["VisitReportNo"]</h5>
+
+                        <div class="col-xs-12">
+
+
+                            @if (Model.PK_Call_ID != "")
+                            {
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpeditingReport", "Expediting",new { @PK_Call_ID = Model.PK_Call_ID} )'"> General</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpItemDescription", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Item Description</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpProgress", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Progress</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EXp_commercial", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Commercial</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpEngineering", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Engineering</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpMaterial", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Procurement</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpManufacturing", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Manufacturing</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpFinalStage", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Final Stage</button>
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ExpDelays", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Item Wise Delays</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpConcerns", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Concerns</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("PhotoAttachement", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Photo</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Observation", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Observation</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Records", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Records</button>
+                            }
+
+
+
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Item Wise Delays</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+
+                                                <div class="row">
+
+
+
+                                                    @Html.HiddenFor(m => m.PK_Call_ID)
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="col-xs-12" style="width:1044px ;margin-left: -98px; overflow-x:scroll;height:auto">
+                                                                <table id="customers" class="display custom-table" cellspacing="0" width="100%">
+
+                                                                    <thead>
+                                                                        <tr>
+                                                                            
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Po Item No</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">item Code/Tag Number</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">UOM</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">PO Quantity</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Contractual Delivery Date As Per PO</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Estimated Delivery Date</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Planned Start Date</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Planned End Date</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Actual/Estimated Start Date</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Actual/Estimated End Date</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Concerns(Open/Total)</th>
+                                                                            <th colspan="4" class="remove-search" style="text-align:center;">Stage-Wise Delay in Days</th>
+                                                                            <th colspan="4" class="remove-search" style="text-align:center;">Stage-Wise Planned Progress %</th>
+                                                                            <th colspan="4" class="remove-search" style="text-align:center;">Stage-Wise Actual Progress %</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Overall Actual Progress %</th>
+                                                                            <th rowspan="2" class="remove-search" style="text-align:center;">Actual/Estimated Progress status</th>
+
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Engineering</th>
+                                                                            <th>procurement</th>
+                                                                            <th>Manufacturing</th>
+                                                                            <th>Final</th>
+                                                                        
+                                                                            <th>Engineering</th>
+                                                                            <th>procurement</th>
+                                                                            <th>Manufacturing</th>
+                                                                            <th>Final</th>
+                                                                        
+                                                                            <th>Engineering</th>
+                                                                            <th>procurement</th>
+                                                                            <th>Manufacturing</th>
+                                                                            <th>Final</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody id="tblBody">
+
+                                                                        @{
+                                                                            int i = 0;
+                                                                        }
+
+                                                                        @foreach (var item in ViewBag.CostSheet as IEnumerable<TuvVision.Models.ExpDelays>)
+                                                                        {
+
+                                                                            i = i + 1;
+                                                                            <tr>
+                                                                                <td>
+                                                                                    @item.item
+                                                                                    @Html.HiddenFor(model => model.Activity[j].Id, new { @Value = item.Id, @readonly = true })
+                                                                                    @Html.HiddenFor(model => model.Activity[j].pk_expDelayID, new { @Value = item.pk_expDelayID, @class = "form-control" })
+
+                                                                                </td>
+                                                                                <td>
+                                                                               @Html.TextBoxFor(model => model.Activity[j].PoitemCode, new { @Value = item.PoitemCode,style = "pointer-event:none;", @readonly = true })</td>
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].UOM, "{0:dd MMM yyyy}", new { @Value = item.UOM, @class = "ExpEndDate", @readonly = true })
+                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].UOM, "", new { @class = "text-danger validation-msg" })
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].POQuantity, "{0:dd MMM yyyy}", new { @Value = item.POQuantity, @class = "item", @readonly = true })
+                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].POQuantity, "", new { @class = "text-danger validation-msg" })
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].CDD, "{0:dd MMM yyyy}", new { @Value = item.CDD, @class = "ExpDelayBy", @readonly = true })
+                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].CDD, "", new { @class = "text-danger validation-msg" })
+
+                                                                                </td>
+
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].EDD, new
+                                                                               {
+                                                                                   @Value = item.EDD,
+                                                                                   @readonly = true
+
+
+                                                                               })
+                                                                                    
+
+                                                                                </td>
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].ExpstartDate, new
+                                                                               {
+                                                                                   @Value = item.ExpstartDate,
+                                                                                   @readonly = true
+
+                                                                               })
+                                                                                    
+</td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].ExpEndDate, new
+                                                                               {
+                                                                                   @Value = item.ExpEndDate,
+                                                                                   @readonly = true
+
+
+                                                                               })
+                                                                                   
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].ActstartDate, new
+                                                                               {
+                                                                                   @Value = item.ActstartDate,
+                                                                                   @readonly = true
+
+
+                                                                               })
+                                                                                    
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].ActEndDate, new
+                                                                               {
+                                                                                   @Value = item.ActEndDate,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].Concerns, new
+                                                                               {
+                                                                                   @Value = item.Concerns,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                               
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].engDelay, new
+                                                                               {
+                                                                                   @Value = item.engDelay
+                                                                                   
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].ProDelay, new
+                                                                               {
+                                                                                   @Value = item.ProDelay,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].manuDelay, new
+                                                                               {
+                                                                                   @Value = item.manuDelay,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].FinalDelay, new
+                                                                               {
+                                                                                   @Value = item.FinalDelay,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].engExp, new
+                                                                               {
+                                                                                   @Value = item.engExp,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].ProExp, new
+                                                                               {
+                                                                                   @Value = item.ProExp,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].manuExp, new
+                                                                               {
+                                                                                   @Value = item.manuExp,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].FinalExp, new
+                                                                               {
+                                                                                   @Value = item.FinalExp,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].engAct, new
+                                                                               {
+                                                                                   @Value = item.engAct,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].ProAct, new
+                                                                               {
+                                                                                   @Value = item.ProAct,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].manuAct, new
+                                                                               {
+                                                                                   @Value = item.manuAct,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td align="center">
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].FinalAct, new
+                                                                               {
+                                                                                   @Value = item.FinalAct,
+                                                                                   @readonly = true
+
+
+                                                                               })
+
+
+                                                                                </td>
+                                                                                <td width="10%">@item.actualprogress</td>
+
+                                                                                <td width="10%" style="color: @(item.progressStatus == "On Time" ? "#FFEF33" : item.progressStatus == "Delay" ? "#FB5F6B" : item.progressStatus == "Early" ? "#AEF333" : "")">@item.progressStatus</td>
+      
+
+                                                                            </tr>
+
+
+
+
+
+
+                                                                            j++;
+                                                                        }
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+
+
+                                                            <!--Contact Details By Manoj -->
+
+
+                                                        </div><!-- /.box-shadow -->
+
+                                                    </div>
+
+
+
+                                                 
+
+
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

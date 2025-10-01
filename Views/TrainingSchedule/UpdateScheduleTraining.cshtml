@@ -1,0 +1,698 @@
+﻿@model TuvVision.Models.TrainingScheduleModel
+@{
+    ViewBag.Title = "UpdateScheduleTraining";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int k = 0;
+}
+
+@{
+    List<string> EditAccessorName = ViewBag.EditAccessorName as List<string>;
+
+}
+
+@using (Html.BeginForm("UpdateScheduleTraining", "TrainingSchedule", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-5">
+
+                    <div class="col-xs-12 form-col">
+                        <a href="@Url.Action("ListScheduleTraining", "TrainingSchedule")" class="btn btn-default insert-form-btn" style="float:right;"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Update Training</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            @Html.HiddenFor(model => model.PK_TrainingScheduleId)
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Training Name:</label>
+                                                                <div class="editor-field">
+                                                                    @Html.TextBoxFor(model => model.TrainingName, new { @placeholder = "Training Topic Here", @class = "form-control" })
+                                                                    @Html.HiddenFor(model => model.TrainingId, new { id = "hidden" })
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Trainer Name:</label>
+                                                                @Html.TextBoxFor(model => model.TrainerName, new { @placeholder = "Trainer Name Here", @class = "form-control" })
+                                                                @Html.ValidationMessageFor(model => model.TrainerName, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    External Trainer:
+                                                                    <input type="checkbox" id="chkExternalTrainer" />
+                                                                </label>
+                                                                @*<input id="TrainingName" type="text" class="form-control">*@
+                                                                @Html.TextBoxFor(model => model.ExternalTrainer, new { @placeholder = "External Trainer Here", @class = "form-control", disabled = "disabled" })
+                                                                @Html.ValidationMessageFor(model => model.ExternalTrainer, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        @if (ViewBag.AttandanceMarked == "AttendanceMarked")
+                                                        {
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <label>
+                                                                        Trainee: <br />
+                                                                        For all employees @Html.CheckBoxFor(model => model.chkAllEmployee, new { id = "checkBoxAll" })
+                                                                        For Branch employees @Html.CheckBoxFor(model => model.checkBoxBranch, new { id = "checkBoxBranch" }) )
+                                                                    </label>
+
+                                                                    @Html.TextAreaFor(model => model.TraineeName, new { @placeholder = "Trainee Name Here", @disabled = "disabled", @class = "form-control", @rows = "5" })
+                                                                    @Html.ValidationMessageFor(model => model.TraineeName, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <label>
+                                                                        Trainee: <br />
+                                                                        For all employees @Html.CheckBoxFor(model => model.chkAllEmployee, new { id = "checkBoxAll" })
+                                                                        For Branch employees @Html.CheckBoxFor(model => model.checkBoxBranch, new { id = "checkBoxBranch" }) )
+                                                                    </label>
+                                                                    @Html.TextAreaFor(model => model.TraineeName, new { @placeholder = "Trainee Name Here", @class = "form-control", @rows = "5" })
+                                                                    @Html.ValidationMessageFor(model => model.TraineeName, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                        }           
+                                                        @Html.HiddenFor(model => model.TraineeId, new { id = "hidden" }) 
+                                                        @Html.HiddenFor(model => model.TraineeName, new { id = "hidden" })
+                                                        
+                                                                                                    
+                                                    </div>
+
+                                                    <div class="row">                                                 
+
+                                                      
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Proposed Date:</label>
+                                                                @Html.TextBoxFor(model => model.ProposedDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Proposed Date", @class = "form-control form-control-custom ProposedDate", autocomplete = "off" })
+
+
+                                                                @Html.ValidationMessageFor(model => model.ProposedDate, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Start Date:</label>
+                                                                @*@Html.TextBoxFor(model => model.StartDate, htmlAttributes: new { placeholder = "Start Date", @class = "form-control form-control-custom ", autocomplete = "off" })*@
+                                                                @Html.TextBoxFor(model => model.TrainingStartDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom TrainingStartDate", autocomplete = "off" })
+
+
+                                                                @Html.ValidationMessageFor(model => model.TrainingStartDate, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>End Date:</label>
+                                                                @*@Html.TextBoxFor(model => model.StartDate, htmlAttributes: new { placeholder = "Start Date", @class = "form-control form-control-custom ", autocomplete = "off" })*@
+                                                                @Html.TextBoxFor(model => model.TrainingEndDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select End Date", @class = "form-control form-control-custom TrainingStartDate", autocomplete = "off" })
+
+
+                                                                @Html.ValidationMessageFor(model => model.TrainingEndDate, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Total Hours:</label>
+
+                                                                @Html.TextBoxFor(model => model.TotalHours, new { @placeholder = "Total Hours Here", @class = "form-control", @OnKeyPress = "return isNumber(event)" })
+                                                                @*@Html.ValidationMessageFor(model => model.TrainerName, "", new { @class = "text-danger validation-msg" })*@
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Start Time:</label>
+                                                                
+                                                                @Html.TextBoxFor(model => model.TrainingStartTime, htmlAttributes: new { placeholder = "Select Start Time", @class = "form-control", autocomplete = "off" })
+
+
+                                                                @Html.ValidationMessageFor(model => model.TrainingStartTime, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>End Time:</label>
+                                                                @*@Html.TextBoxFor(model => model.StartDate, htmlAttributes: new { placeholder = "Start Date", @class = "form-control form-control-custom ", autocomplete = "off" })*@
+
+                                                                @*<input type="text" id="timepicker">*@
+                                                                @Html.TextBoxFor(model => model.TrainingEndTime, htmlAttributes: new { placeholder = "Select End Time", @class = "form-control", autocomplete = "off" })
+
+
+                                                                @Html.ValidationMessageFor(model => model.TrainingEndTime, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>
+                                                                        Branch:
+                                                                    </label>
+                                                                    
+                                                                    @Html.TextBoxFor(model => model.BranchName, new { @placeholder = "Branch Name Here", @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.BranchName, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Venue:</label>
+                                                                    <div class="form-group">
+                                                                        @Html.TextBoxFor(model => model.Venue, new { @placeholder = "Training Venue Here", @class = "form-control" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Scope:</label>
+                                                                    @Html.TextBoxFor(model => model.Scope, new { @placeholder = "Training Scope Here", @class = "form-control" })
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Remarks:</label>
+                                                                    @Html.TextBoxFor(model => model.Remarks, new { @placeholder = "Remarks Here", @class = "form-control" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Status:</label>
+                                                                    @Html.RadioButtonFor(m => m.Status, "Yes")
+                                                                    <label>Yes</label>&nbsp;&nbsp;
+                                                                    @Html.RadioButtonFor(m => m.Status, "No")
+                                                                    <label>No</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Quiz End Time In Hours:</label>
+                                                                    @Html.TextBoxFor(model => model.QuizeTimeInHours, new { @placeholder = "Quize end Time in Hours Here", @class = "form-control" })
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Attachment: </label>
+                                                                    <input type="file" class="inputupload" name="Image" id="img_Banner" multiple="multiple" />
+
+                                                                    @Html.HiddenFor(m => m.Attachment)
+                                                                    @if (Model != null && Model.Attachment != null && Model.Attachment != "")
+                                                                    {
+                                                                        string[] words = (Model.Attachment).Split(',');
+                                                                        for (int j = 1; j < words.Count(); j++)
+                                                                        {
+                                                                            <a target="_blank" href="@Url.Content("~/TrainingRecordDocument/" + words[j-1])">
+                                                                                @*<img src="~/PDF-Icon.png" width="50" height="50" />*@
+                                                                                <span>Download</span>
+                                                                            </a>
+                                                                            @*<img src="@Url.Content("~/Content/JobDocument/" + words[j-1])" width="50" height="50" />*@
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <button type="reset" class="btn btn-default insert-form-btn"> Reset </button>
+                                                                    <button type="submit" class="btn btn-default insert-form-btn"> Update </button>                                                                                                                                        
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    @*<h3 class="form-page-title">Training Record</h3>*@
+
+                                                    
+
+                                                    
+                                                   
+                                                    @*<div class="col-xs-12">
+                                                        <table id="example" class="display" cellspacing="0" width="100%">
+                                                        <table id="example" class="display" cellspacing="0" width="100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="hidden">Trainee Id:</th>
+                                                                    <th>Trainee Name:</th>
+                                                                    <th>Is Present</th>
+                                                                    <th>Name Of Accessor</th>
+
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                @Html.HiddenFor(m => m.RTrainingScheduleId, new { Value = ViewBag.TrainingScheduleId })
+                                                               
+                                                @foreach (var v in ViewData["TrainingRecord"] as IEnumerable<TuvVision.Models.TrainingRecordList>)
+                                                {
+                                                                    <tr>
+                                                                        <td class="hidden">
+
+
+                                                                        <td>
+                                                                            @v.RTraineeName
+                                                                            @Html.HiddenFor(m => m.TrainingRecordList[k].RTraineeId, new { Value=v.RTraineeId})
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.CheckBoxFor(m => m.TrainingRecordList[k].RIsPresent)
+                                                                            @if(v.RIsPresent == true)
+                                                                            {
+                                                                           @Html.CheckBoxFor(m => m.TrainingRecordList[k].RIsPresent, new { @checked = "checked" })
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                            @Html.CheckBoxFor(m => m.TrainingRecordList[k].RIsPresent)
+                                                                            }
+                                                                           
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.DropDownListFor(model => model.TrainingRecordList[k].AccessorCode, new SelectList(ViewBag.AccessorName, "AccessorCode", "AccessorN",v.AccessorCode), "--Select Accessor Name--", new { @class = "form-control", @AccessorCode = v.AccessorCode, })
+                                                                    
+                                                                        </td>
+
+
+                                                                    </tr>
+                                                                    k++;
+                                                                          }
+                                                            </tbody>
+
+                                                        </table >
+
+                                                    </div>*@
+
+
+
+
+
+                                                        @*<div class="row">
+                                                            <div class="col-xs-12 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <button type="reset" class="btn btn-default insert-form-btn"> Reset </button>
+                                                                    <button type="submit" class="btn btn-default insert-form-btn"> Add </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>*@
+
+
+
+
+
+</form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@*Auto Fill Training Name*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function () {
+    $("#AccessorName").autocomplete({
+           source: function(request,response) {
+               $.ajax({
+                   //url: "/TrainingSchedule/GetRecord",
+                   url: '@Url.Action("GetRecord", "TrainingSchedule")',
+                   type: "POST",
+                   dataType: "json",
+                   data: { Prefix: request.term },
+                   success: function (data) {
+                       response($.map(data, function (item) {
+                           return { label: item.TrainingName, value: item.TrainingName };
+                       }))
+
+                   }
+               })
+           },
+           messages: {
+               noResults: "", results: ""
+           }
+       });
+})
+</script>
+
+<script>
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+</script>
+
+@*Bind Trainer Name*@
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+
+        $("#TrainerName").autocomplete({
+            source: function (req, resp) {
+                $.ajax({
+                    //url: "/TrainingSchedule/GetTrainerName",
+                    url: '@Url.Action("GetTrainerName", "TrainingSchedule")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: GetCurrentSearchTerm(req.term) },
+                    success: function (data) {
+                        resp($.map(data, function (item) {
+                            return { label: item.TrainerName, value: item.TrainerName };
+                        }))
+
+                    }
+                })
+            },
+
+
+
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function () {
+            return false;
+        }
+        });
+        function splitCurrentText(LastTerm) {
+
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+
+            return splitCurrentText(LastTerm).pop();
+        }
+    });
+</script>
+
+@*Bind Trainee Name*@
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+
+        $("#TraineeName").autocomplete({
+            source: function (req, resp) {
+                $.ajax({
+                    //url: "/TrainingSchedule/GetTraineeName",
+
+                    url: '@Url.Action("GetTraineeName", "TrainingSchedule")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: GetCurrentSearchTerm(req.term) },
+                    success: function (data) {
+                        resp($.map(data, function (item) {
+                            return { label: item.TraineeName, value: item.TraineeName };
+                        }))
+
+                    }
+                })
+            },
+
+
+
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function () {
+            return false;
+        }
+        });
+        function splitCurrentText(LastTerm) {
+
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+
+            return splitCurrentText(LastTerm).pop();
+        }
+    });
+</script>
+
+@*Bind Branch Name*@
+@*Bind Trainee Name*@
+
+<script type="text/javascript">
+
+$(document).ready(function () {
+    $("#BranchName").autocomplete({
+           source: function(request,response) {
+               $.ajax({
+                   //url: "/TrainingSchedule/GetBranchName",
+                   url: '@Url.Action("GetBranchName", "TrainingSchedule")',
+                   type: "POST",
+                   dataType: "json",
+                   data: { Prefix: request.term },
+                   success: function (data) {
+                       response($.map(data, function (item) {
+                           return { label: item.BranchName, value: item.BranchName };
+                       }))
+
+                   }
+               })
+           },
+           messages: {
+               noResults: "", results: ""
+           }
+       });
+})
+</script>
+@*<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+
+        $("#BranchName").autocomplete({
+            source: function (req, resp) {
+                $.ajax({
+                    url: "/TrainingSchedule/GetBranchName",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: GetCurrentSearchTerm(req.term) },
+                    success: function (data) {
+                        resp($.map(data, function (item) {
+                            return { label: item.BranchName, value: item.BranchName };
+                        }))
+
+                    }
+                })
+            },
+
+
+
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function () {
+            return false;
+        }
+        });
+        function splitCurrentText(LastTerm) {
+
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+
+            return splitCurrentText(LastTerm).pop();
+        }
+    });
+</script>*@
+
+
+
+@*Bind Accessor Name*@
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+
+        $("#AccessorName").autocomplete({
+            source: function (req, resp) {
+                $.ajax({
+                    //url: "/TrainingSchedule/GetTraineeName",
+                    url: '@Url.Action("GetTraineeName", "TrainingSchedule")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: GetCurrentSearchTerm(req.term) },
+                    success: function (data) {
+                        resp($.map(data, function (item) {
+                            return { label: item.TraineeName, value: item.TraineeName };
+                        }))
+
+                    }
+                })
+            },
+
+
+
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function () {
+            return false;
+        }
+        });
+        function splitCurrentText(LastTerm) {
+
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+
+            return splitCurrentText(LastTerm).pop();
+        }
+    });
+</script>
+
+
+@*If External Trainer*@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#chkExternalTrainer").click(function () {
+            if ($(this).is(":checked")) {
+                $("#ExternalTrainer").removeAttr("disabled");
+                $("#ExternalTrainer").focus();
+            } else {
+                $("#ExternalTrainer").attr("disabled", "disabled");
+            }
+        });
+    });
+</script>
+
+
+@*Calender Control*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<script>
+    $(function () {
+        $(".TrainingStartDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $(".TrainingEndDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+
+        });
+    });
+</script>
+
+@*Time Picker*@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css" type="text/css" />
+<script src="https://code.jquery.com/jquery-2.2.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.1/jquery.timepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.1/jquery.timepicker.min.css" type="text/css" />
+
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+
+        $('#TrainingStartTime').timepicker();
+        $('#TrainingEndTime').timepicker();
+    });
+</script>
+
+
+
+
+
+

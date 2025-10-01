@@ -1,0 +1,1148 @@
+﻿
+@{
+    ViewBag.Title = "GenerateVoucher_UserHistory";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<!--filepond-->
+@*<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />*@
+
+@*<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>*@
+
+@*<script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<style>
+    .height-table {
+        height: auto;
+    }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-family: 'TNG Pro';
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+        font-family: 'TNG Pro';
+        font-weight: normal;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    .label1 {
+        font-weight: normal !important;
+    }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
+
+    .highlight-row {
+        background-color: #FFEB00;
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+
+    .highlight-row_ {
+        background-color: #EFEFEF;
+    }
+
+    .box_ {
+        width: 16%;
+        height: 34px;
+        padding: 0px 15px;
+        font-size: 14px;
+        line-height: 4.428571;
+        color: black;
+        background-color: #fff;
+        background-image: none;
+        border: 0px solid #ccc;
+        border-radius: 0;
+        font-family: 'TNG Pro';
+        /*background-color: #eee;*/
+        /*opacity: 1;*/
+    }
+
+    .box_1 {
+        width: 487px;
+        height: 34px;
+        padding: 0px 15px;
+        font-size: 14px;
+        line-height: 4.428571;
+        color: black;
+        background-color: #fff;
+        background-image: none;
+        border: 0px solid #ccc;
+        border-radius: 0;
+        font-family: 'TNG Pro';
+    }
+      .ui-widget-header {
+        background: #001ED2 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+      a.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        a.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            a.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            a.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #FF0000;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+</style>
+
+@*<style>
+         .box_{
+        width: 16%;
+        height: 34px;
+        padding: 0px 15px;
+        font-size: 14px;
+        line-height: 4.428571;
+        color: black;
+        background-color: #fff;
+        background-image: none;
+        border: 0px solid #ccc;
+        border-radius: 0;
+        font-family:'TNG Pro';
+        /*background-color: #eee;*/
+        /*opacity: 1;*/
+        }
+
+        .height-table{
+            height: auto;
+        }
+
+            body {
+                font-family: 'TNG Pro';
+                font-weight:normal;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+                font-family:'TNG Pro';
+                font-weight:normal;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+                font-family:'TNG Pro';
+                font-weight:normal;
+            }
+
+            th {
+                background-color: #001ED2;
+                color: #ffffff;
+                font-family:'TNG Pro';
+                font-weight:normal;
+            }
+
+            @@media (max-width: 600px) {
+                table {
+                    border: 0;
+                }
+
+                table thead {
+                    display: none;
+                    font-weight:normal;
+                    font-family:'TNG Pro';
+                }
+
+                table tr {
+                    margin-bottom: 10px;
+                    display: block;
+                    border-bottom: 2px solid #ddd;
+                    font-family:'TNG Pro';
+                    font-weight:normal;
+                }
+
+                table td {
+                    display: block;
+                    text-align: right;
+                    font-family:'TNG Pro';
+                    font-weight:normal;
+                }
+
+                table td:last-child {
+                    border-bottom: 0;
+                    font-family:'TNG Pro';
+                    font-weight:normal;
+                }
+            }
+
+        .box_1 {
+            width: 1039px;
+            height: 34px;
+            padding: 0px 15px;
+            font-size: 14px;
+            line-height: 4.428571;
+            color: black;
+            background-color: #fff;
+            background-image: none;
+            border: 0px solid #ccc;
+            border-radius: 0;
+            font-family:'TNG Pro';
+        }
+    </style>*@
+
+@*New added Code*@
+@*<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />*@
+<link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+            <form method="post">
+
+                <div class="col-xs-12">
+
+                    <b style="padding-left: 0px;margin-left: -52px">Expense Voucher No :  </b><input type="text" id="txtVoucherNo" name="txtVoucherNo" class="box_" value="@ViewBag.VoucherNo" readonly />
+                    <b style="padding-left: 30px;">Name:</b><input type="text" id="txtname" class="box_" readonly />
+                    <b style="padding-left: 10px;">Employee Code :  </b><input type="text" id="txtemployeecode" class="box_" readonly />
+                    <button type="button" id="btnBack" value="Back" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"
+                            style="border:none;" onclick=@Url.Action("GenerateVoucherApproval", "GenerateVoucher")>
+                        Go Back
+                    </button>
+                    @*<button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ConvertToPdf","GenerateVoucher", new { VoucherNo = @ViewBag.VoucherNo })'"
+                                style="border:none;">
+                            Export To Excel
+                        </button>*@
+                    <button type="button" value="ExportToPDF" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" id="btnpdf" onclick="location.href='@Url.Action("GeneratePDF","GenerateVoucher", new { VoucherNo = @ViewBag.VoucherNo })'"
+                            style="border:none;margin-top: 0px;">
+                        Export To PDF
+                    </button>
+                    @*<input id="btnExportToExcel" type="button" value="Export To Excel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="border:none;" />*@
+                    @*<a href="@Url.Action("ConvertToPdf", new { VoucherNo = @ViewBag.VoucherNo })" hidden>Convert to PDF</a>*@
+                    <input type="hidden" id="previousUrl" value="@ViewBag.PreviousUrl" />
+                </div><!-- /.col -->
+
+            </form>
+
+
+            <!--Table was here-->
+
+        </div><!-- /.row -->
+
+        <div class="col-xs-12">
+
+        </div><!-- /.data table col -->
+        @*<div class="row">
+                <input type="text" id="txtVoucherNo" name="txtVoucherNo" class="box_" value="@ViewBag.VoucherNo" readonly />
+                <input type="text" id="txtname" class="box_" readonly />
+                <input type="text" id="txtemployeecode" class="box_" readonly />
+            </div>*@
+        <div class="row">
+            <b style="padding-left: 89px;margin-left: -52px">Residence Address :  </b><input type="text" id="txtAddress" class="box_1" readonly />
+            <b style="padding-left: 89px;">Period :</b><input type="text" id="txtperiod" class="box_1" readonly />
+
+        </div>
+        <div class="col-xs-12 height-table" style="overflow-y:auto;width:101%;">
+
+            @*<table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>*@
+            <input type="hidden" id="hdnVoucherNo" name="hdnVoucherNo" value="@ViewBag.VoucherNo" />
+            <input type="hidden" id="hdnIsApproval" name="hdnIsApproval" value="@ViewBag.IsApproval" />
+            <input type="hidden" id="hdndatediff" name="hdndatediff" value="@ViewBag.datediff" />
+            <input type="hidden" id="hdnPKExpenseId" name="hdnPKExpenseId" />
+
+            @*<table class="display dataTable" style="overflow-y:auto" id="example">
+                <thead class="thead-dark" style="background-color: #001ED2;color: #ffffff;">
+                    <tr>*@
+            @*<th class="remove-search">Action</th>
+                <th><label>Date</label></th>
+                <th><label>Type</label></th>
+                <th><label>ExpenseType</label></th>
+                <th><label>Description</label></th>
+                <th><label>Country</label></th>
+                <th><label>City</label></th>
+                <th><label>Currency</label></th>
+                <th><label>ExchRate</label></th>
+                <th><label>Amount</label></th>
+                <th><label>Kilometer</label></th>
+                <th><label>SubJobNo</label></th>
+                <th><label>SAP No</label></th>
+                <th><label>User CostCenter</label></th>
+                <th><label>TotalAmount</label></th>
+                <th><label>Approved Amount</label></th>
+                @*<th><label>VoucherNo</label></th>*@
+            @*<th><label>UIN</label></th>*@
+            @*<th class="remove-search"><label>Attachment</label></th>*@*
+            @*<th><label>Name</label></th>
+                <th><label>Employee Code</label></th>*@
+
+
+            @*<th><label>ApprovalOne Description</label></th>
+                <th><label>PCH Description</label></th>
+                <th><label>CH Description</label></th>
+                <th><label>Accountant Description</label></th>
+
+                <th><label>ExchRate</label></th>
+                <th><label>ExchRate</label></th>*@
+
+
+
+            @*</tr>
+                    </thead>
+                </table>*@
+
+
+            <table class="display" style="width:131%;" id="example">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="remove-search">Action</th>
+                        <th><label>Date</label></th>
+                        <th><label>Type</label></th>
+                        <th><label>ExpenseType</label></th>
+                        <th><label>Description</label></th>
+                        <th><label>Country</label></th>
+                        <th><label>City</label></th>
+                        <th><label>Currency</label></th>
+                        <th><label>ExchRate</label></th>
+                        <th><label>Amount</label></th>
+                        <th><label>Kilometer</label></th>
+                        <th><label>Sub Job No</label></th>
+                        <th><label>SAP No</label></th>
+                        <th><label>User CostCenter</label></th>
+                        <th><label style="text-align:right;">Total Amount (INR)</label></th>
+                        <th><label style="text-align:right;">Approved Amount (INR)</label></th>
+                        @*<th class="remove-search"><label>Attachment</label></th>*@
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add table rows and data here -->
+                </tbody>
+            </table>
+        </div>
+
+
+        @*</td>
+                </tr>
+
+            </table>
+
+
+
+            </div>*@
+
+        <div class="col-xs-12">
+            <br />
+            <textarea rows="4" style="resize: none;width: 500px;height: 86px;" id="txtRemarks"></textarea>
+            <input type="button" id="btnApprove" value="Approve" class="btn btn-default insert-form-btn" style="margin-bottom: 40px;background-color: #001ED2;color:white;" />
+        </div>
+        <div class="col-xs-12">
+            <div class="col-xs-6">
+                <div id="divAttachments" class="form-group">
+                    <label><i class="fa fa-paperclip" style="color:black;"></i> Related Documents (Please attach files here): <span style="color:#ff0000;">*</span></label>
+                    <input type="file" class="filepond" name="filepond" id="FileUpload" multiple>
+                    <input hidden="hidden" id="hdfFileUpload" name="FileUpload" class="hidden" />
+                    <div id="attachedFileLink"></div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>Delay Remarks:</label><br />
+                    <textarea rows="3" style="resize: none;width: 500px;height: 86px;" id="txtdelarremarks"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <br />
+            <input type="button" id="btnsave" value="Click here to Save Attachment" class="btn btn-default insert-form-btn" style="margin-bottom: 40px;background-color: #001ED2;color:white;margin-left: 18px;" onclick="SaveAttachment()" />
+        </div>
+    </div>
+
+    <!--======================================-->
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <!-- Modal -->
+    <div id="pdfModal" class="modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">PDF Viewer</h5>
+                    <button type="button" id="pdfModalclose" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <a id="downloadLink" href="path/to/file.pdf" download>Download</a>
+                    <iframe id="pdfIframe" src="" width="100%" height="400"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="excelModal" class="modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Excel Viewer</h5>
+                    <button type="button" id="excelModalclose" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <a id="ExceldownloadLink" href="path/to/file.pdf" download>Download</a>
+                    <iframe id="excelIframe" src="" width="100%;" height="400"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $("#pdfModalclose").on("click", function () {
+            $("#pdfModal").hide();
+        });
+
+        $("#excelModalclose").on("click", function () {
+            $("#excelModal").hide();
+        });
+
+        function ViewPdf(_pdfUrl) {
+            var downloadLink = $("#downloadLink");
+            var pdfUrl = _pdfUrl; // Default PDF URL from the model
+
+            // You can dynamically change the PDF URL based on your logic here
+            // Example:
+            // var pdfUrl = "http://example.com/path/to/dynamic.pdf";
+            var modifiedString = _pdfUrl;
+
+            if (modifiedString.charAt(0) === "~") {
+                pdfUrl = "https://tiimes.tuv-india.com/" + modifiedString.substring(1);
+            }
+            downloadLink.attr("href", pdfUrl);
+            $("#pdfIframe").attr("src", pdfUrl);
+            $("#pdfModal").show();
+        };
+
+        function ExcelView(excelUrl) {
+            //var excelUrl = "path/to/excel_file.xlsx"; // Replace with the actual URL of the Excel file
+            var modifiedString = excelUrl;
+            var downloadLink = $("#ExceldownloadLink");
+            if (modifiedString.charAt(0) === "~") {
+                excelUrl = "https://tiimes.tuv-india.com/" + modifiedString.substring(1);
+            }
+            downloadLink.attr("href", excelUrl);
+            // Load the Excel file
+            var oReq = new XMLHttpRequest();
+            oReq.open("GET", excelUrl, true);
+            oReq.responseType = "arraybuffer";
+
+            oReq.onload = function (e) {
+                var arraybuffer = oReq.response;
+
+                // Convert the Excel file to HTML
+                var data = new Uint8Array(arraybuffer);
+                var workbook = XLSX.read(data, { type: "array" });
+                var htmlData = XLSX.write(workbook, { type: "string", bookType: "html" });
+
+                // Set the HTML content as the source of the iframe
+                $("#excelIframe").contents().find("body").html(htmlData);
+            };
+
+            oReq.send();
+            $("#excelModal").show();
+        }
+
+
+
+    </script>
+
+
+
+    <!--===========================================================-->
+    <!--filepond-->
+    <!-- Load FilePond library -->
+    <script src="~/AllJsAndCss/js/filepond.js"></script>
+
+    <!-- Turn all file input elements into ponds -->
+    <script>
+        FilePond.parse(document.body);
+    </script>
+    <script>
+    FilePond.registerPlugin(
+    FilePondPluginFileEncode,
+    FilePondPluginFileValidateSize,
+    FilePondPluginImageExifOrientation,
+    FilePondPluginImagePreview
+    );
+    FilePond.create(document.querySelector('.filepond'));
+    </script>
+    <script>
+
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment", "ExpenseItem")'
+    });
+    </script>
+    @{
+        var UrlLink = System.Configuration.ConfigurationManager.AppSettings["UrlLink"];
+    }
+    <script type="text/javascript">
+    @*<input type="hidden" id="hdnVoucherNo" value="@ViewBag.VoucherNo"/>*@
+
+        var isSendForApproval;
+        $(document).ready(function () {
+            var VoucherNo = $("#hdnVoucherNo").val();
+            var IsApproval = $("#hdnIsApproval").val();
+            var IsApproval = $("#hdnIsApproval").val();
+            var datediff = $("#hdndatediff").val();
+            VoucherHistory(VoucherNo, IsApproval, datediff);
+            BindDescription();
+            GetAttachment();
+
+        });
+
+        function formatDateToDDMMYYYY(inputDate) {
+            // Parse the input date string into a Date object
+            const dateObj = new Date(inputDate);
+
+            // Extract day, month, and year from the Date object
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = String(dateObj.getFullYear());
+
+            // Construct the final formatted date string in "DD/MM/yyyy" format
+            const formattedDate = `${day}/${month}/${year}`;
+
+            return formattedDate;
+        }
+
+        function VoucherHistory(VoucherNo, IsApproval, datediff) {
+            debugger;
+            var UrlLink = '@UrlLink';
+            $.ajax({
+                type: "GET",
+                url: UrlLink + "/GenerateVoucher/Voucher_History",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { VoucherNo: VoucherNo, IsApproval: IsApproval },
+                success: function (response) {
+                    debugger;
+                    var a = JSON.parse(response);
+                    var aa = JSON.stringify(response);
+                    var employeeName = a[0].Name;
+                    var EmployeeCode = a[0].EmployeeCode;
+                    var address = a[0].address;
+                    var IsSendForApproval = a[0].IsSendForApproval;
+                    isSendForApproval = IsSendForApproval;
+                    var DelayRemarks = a[0].DelayRemarks;
+                    $("#txtdelarremarks").val(DelayRemarks);
+                    $("#txtname").val(employeeName);
+                    $("#txtemployeecode").val(EmployeeCode);
+                    $("#txtAddress").val(address);
+
+                    var TransferToFI = a[0].TransferToFI;
+
+                    if (IsSendForApproval == "1" && TransferToFI!="" && datediff>65) {
+                        $("#btnpdf").hide();                       
+                    }
+
+                    else if (IsSendForApproval == "1" && datediff>65) {
+                        //                        if (datediff>90){
+                        
+                        //}
+                        $("#btnpdf").hide();
+                       
+
+
+                    }
+                    else if (IsSendForApproval == "1" )
+                    {
+                        $("#btnpdf").show();
+                    }
+
+                    else {
+                        $("#btnpdf").hide();
+
+                    }
+                    //added by nikita on 25122023
+
+                    let dateArray = [];
+                    let dateRange = '';
+                    // Assume 'Date' is the column name containing date values
+                    for (let i = 0; i < a.length; i++) {
+                        let currentDate = a[i].Date_;
+
+                        // Check if the date is defined and not null
+                        if (currentDate) {
+                            dateArray.push(currentDate);
+                        }
+                    }
+
+                    // Ensure the array is not empty
+                    if (dateArray.length > 0) {
+                        // Sort the date strings in ascending order
+                        dateArray.sort((a, b) => {
+                            const dateA = new Date(a);
+                            const dateB = new Date(b);
+                            return dateA - dateB;
+                        });
+
+                        // Get the minimum and maximum dates
+                        const minDate = dateArray[0];
+                        const maxDate = dateArray[dateArray.length - 1];
+
+                        // Display the result
+                        dateRange = minDate + " - " + maxDate;
+                        //console.log(dateRange);
+                    } else {
+                        console.log("The date array is empty or contains only undefined/null values.");
+                    }
+                    $("#txtperiod").val(dateRange);
+                    if (a == "Error") {
+
+                    }
+                    else {
+
+                        var Isreadonly = '';
+                        $("#example tbody").empty();
+                        //var TotalApprovalAmount = '';  //added by nikita on 07112023
+                        //var TotalApprovalAmount1 = 0;  //added by nikita on 07112023
+                        var TotalApprovalAmount = 0;  //added by nikita on 07112023
+                        var TotalApprovalAmount1 = 0;  //added by nikita on 07112023
+
+                        for (var i = 0; i < a.length; i++) {
+                            //if (a[i].StageName == QuestionSet) {
+
+
+                            TotalApprovalAmount1 = TotalApprovalAmount1 + parseFloat(a[i].TotalAmount);
+                            TotalApprovalAmount = TotalApprovalAmount + parseFloat(a[i].ApprovedAmount);
+
+
+                        }
+
+                        for (var i = 0; i < a.length; i++) {
+                            //if (a[i].StageName == QuestionSet) {
+
+                            var parts = a[i].Date.split("T");
+                            const formattedDate = formatDateToDDMMYYYY(parts[0]);
+                            var c = i + 1;
+                            //TotalApprovalAmount1 = TotalApprovalAmount + a[i].TotalAmount;
+                            //TotalApprovalAmount = TotalApprovalAmount + a[i].ApprovedAmount;
+                            tr = $('<tr/>');
+                            $("#hdnPKExpenseId").val($.trim(a[i].PKExpenseId));
+                            @*'@Url.Action("CreateExpenseItem", "ExpenseItem",new { FKId = Model.PK_IVR_ID,Type="VSR" ,SubJobNo=Model.SubJob_No,PK_Call_Id=Model.PK_Call_ID } )'"*@
+                            if (a[i].IsVisibleCheckBox == 1) {
+                                Isreadonly = '';
+                                $("#txtRemarks").show();
+                                $("#btnApprove").show();
+                                //  tr.append("<td style='text-align:center;'>-</td>");
+                                tr.append("<td style='text-align:center;'>-<label id='V_Total' hidden>" + a[i].PKExpenseId + "</label></td>");
+                            }
+                            else {
+                                Isreadonly = 'readonly';
+                                if (a[i].IsSendForApproval == 1) {
+                                    tr.append("<td style='text-align:center;'>-</td>");
+                                    Isreadonly = 'readonly';
+                                }
+                                else {
+                                    var Type = $.trim(a[i].Type);
+
+                                    if (Type === 'Inspection') {
+                                        Type = 'IVR';
+                                    }
+
+                                    //tr.append("<td cRemarkslass='action-btn' style='text-align:center;'>"
+                                    //                            + "<a href='" + UrlLink + "/ExpenseItem/CreateExpenseItem?FKId=" + $.trim(a[i].FkId)
+                                    //                            + "&Type=" + Type + "&SubJobNo=" + $.trim(a[i].SubJobNo) + "&PK_Call_Id=" + $.trim(a[i].pk_call_id)
+                                    //                            + " id=" + a[i].UIN + "  class='btn btn-info btn-xs' title='Edit'>"
+                                    //                            + "<i class='fa fa-pencil'></i></a></td>");
+                                    var url = UrlLink + "/ExpenseItem/CreateExpenseItem?FKId=" + encodeURIComponent($.trim(a[i].FkId))
+                                               + "&Type=" + encodeURIComponent(Type)
+                                               + "&SubJobNo=" + encodeURIComponent($.trim(a[i].SubJobNo))
+                                               + "&PK_Call_Id=" + encodeURIComponent($.trim(a[i].pk_call_id));
+
+                                    tr.append("<td class='action-btn' style='text-align:center;'>"
+                                      + "<a href='" + url + "' id='" + a[i].UIN + "' class='btn btn-info btn-xs' title='Edit'>"
+                                      + "<i class='fa fa-pencil'></i></a></td>");
+                                }
+
+                                $("#txtRemarks").hide();
+                                $("#btnApprove").hide();
+                            }
+                            tr.append("<td>" + formattedDate + "</td>");
+                            tr.append("<td>" + a[i].Type + "</td>");
+                            tr.append("<td>" + a[i].ExpenseType + "</td>");
+                            tr.append("<td>" + a[i].Description + "</td>");
+                            tr.append("<td>" + a[i].Country + "</td>");
+                            tr.append("<td>" + a[i].City + "</td>");
+                            tr.append("<td>" + a[i].Currency + "</td>");
+                            tr.append("<td>" + a[i].ExchRate + "</td>");
+                            tr.append("<td>" + a[i].Amount + "</td>");
+                            tr.append("<td>" + a[i].Kilometer + "</td>");
+                            tr.append("<td>" + a[i].SubJobNo + "</td>");
+                            tr.append("<td>" + a[i].SAP_No + "</td>");
+                            tr.append("<td>" + a[i].usercostcenter + "</td>");
+                            tr.append("<td>" + a[i].TotalAmount + "</td>"); //TotalAmount
+                            tr.append("<td>" + "<input type='text' id='V_Approved_Amount_" + i + "'  class='textbox' value ='" + a[i].ApprovedAmount
+                                    + "' onkeypress='return AllowWithOneDecimal(event);' onblur='return TotalApprovedAmount();' ondrop='return false;' onpaste='return false;'></input> " + "</td>");
+                            $('#example').append(tr);
+
+                            //}
+                        }
+
+                        tr = $('<tr/>');
+                        tr.append("<td colspan='14' style='background-color: #104193;color: #ffffff;text-align: end;'><label id='V_Total'>Total Amount</label> </td>");
+                        tr.append("<td style='background-color: #104193;'>"
+                                    + "<input type='text' id='V_TotalAmount' value ='" + TotalApprovalAmount1
+                                    + "' onkeypress='return AllowWithOneDecimal(event);'  ondrop='return false;' onpaste='return false;' readonly></input> "
+                                + "</td>");
+                        //$('#example').append(tr);
+
+                        //tr = $('<tr/>');
+                        //tr.append("<td colspan='16' style='background-color: #104193;color: #ffffff;text-align: end;'><label id='V_Total'>Approval Amount</label> </td>");
+                        tr.append("<td style='background-color: #104193'>"
+                                    + "<input type='text' id='V_Approved_' value ='" + TotalApprovalAmount
+                                    + "' onkeypress='return AllowWithOneDecimal(event);' ondrop='return false;'readonly onpaste='return false;' " + Isreadonly + "></input> "
+                                + "</td>");
+                        $('#example').append(tr);
+                    }
+                    $("#example_info").hide();
+                    $("#example_paginate").hide();
+
+
+                },
+                error: function (xhr, status, error) {
+                }
+
+            });
+
+        };
+
+
+        $('#btnBack').click(function () {
+            var previousUrl = $('#previousUrl').val(); // Get the previous URL from the hidden field
+            window.location.href = previousUrl; // Redirect to the previous URL
+        });
+        $('#chkChkAll').click(function (e) {
+            var table = $(e.target).closest('table');
+            $('td input:checkbox', table).prop('checked', this.checked);
+        });
+
+        $("#btnExportToExcel").click(function (e) {
+            var UrlLink = '@UrlLink';
+            var VoucherNo = $("#hdnVoucherNo").val();
+            $.ajax({
+                type: "Get",
+                url: UrlLink + "/GenerateVoucher/ExportIndex",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { VoucherNo: VoucherNo },
+                success: function (response) {
+                    var a = JSON.parse(response);
+                    var aa = JSON.stringify(response);
+
+                },
+                error: function (xhr, status, error) {
+                    // Code to handle errors goes here
+                }
+
+            });
+        })
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $('#btnApprove').click(function (e) {
+            debugger;
+            var UrlLink = '@UrlLink';
+            var IsApproval = $("#hdnIsApproval").val();
+
+            var VoucherNo = $("#hdnVoucherNo").val();
+            var Remarks = $("#txtRemarks").val();
+            var ApprovedAmount = $("#V_Approved_").val();
+            var TotalAmount = $("#V_TotalAmount").val();
+            var PKExpenseId = $("#hdnPKExpenseId").val();
+
+            debugger;
+            var data1 = [];
+            //alert("1");
+
+            const table = document.getElementById('example');
+
+            for (let i = 1; i < (table.rows.length - 1) ; i++) {
+                const PKExpenseIdValue = table.rows[i].querySelector('label').textContent;
+
+                const ApprovedAmountValue = table.rows[i].querySelector('input[type="text"]').value;
+                //const TotalAmountValue = table.rows[i].querySelector('input[type="hidden"]').value;
+
+                var item = {};
+                item["VoucherNo"] = VoucherNo;
+                item["ApprovedAmount"] = ApprovedAmountValue;
+                item["TotalAmount"] = TotalAmount;
+                //item["ApprovedAmount_V"] = ApprovedAmount;
+                item["Remarks"] = Remarks;
+                item["PKExpenseId"] = PKExpenseIdValue;
+                //item["ApprovedAmount"] = ApprovedAmountValue;
+
+                data1.push(item);
+
+                //console.log('Row ' + (i + 1) + ' Label Value: ' + labelValue);
+                //console.log('Row ' + (i + 1) + ' Textbox Value: ' + textboxValue);
+            }
+
+            var approvedata = JSON.stringify(data1);
+
+
+            $.ajax(
+                  {
+                      type: 'POST',
+                      url: '@Url.Action("ApproveVoucher", "GenerateVoucher")',
+                      dataType: 'json',
+                      Async: false,
+                      /// data: JSON.stringify(data1),
+                      data: JSON.stringify({ "input": data1, ApprovedAmounttotal: ApprovedAmount }),
+                      //data: { input: approvedata, ApprovedAmounttotal: ApprovedAmount },
+
+                      ////  data: { strdata: approvedata },
+                      enctype: "multipart/form-data",
+                      contentType: "application/json; charset=utf-8",
+                      success: function (response) {
+                          //document.getElementById("divPOtable").style.display = "none";
+                          //document.getElementById("divPOSave").style.display = "none";
+                          //document.getElementById("divdisplaytable").style.display = "none";
+                          var a = JSON.parse(response);
+                          var aa = JSON.stringify(response);
+                          var url = '';
+                          if (IsApproval == "Yes") {
+                              url = "/GenerateVoucher/GenerateVoucherApproval"; //commented by nikita on 16112023
+
+                          }
+                          else {
+                              //url = "/GenerateVoucher/GenerateVoucher";   //commented by nikita on 16112023
+                              url = "/GenerateVoucher/GenerateVoucherApproval";
+
+                          }
+                          window.location.href = url;
+
+
+
+
+                      }
+                  });
+
+            @*$.ajax({
+            type: "POST",
+            url: '@Url.Action("ApproveVoucher", "GenerateVoucher")',
+            contentType: "application/json; charset=utf-8",
+            enctype: "multipart/form-data",
+            dataType: "json",
+            data: { strdata: approvedata },
+            success: function (response)
+            {
+                var a = JSON.parse(response);
+                var aa = JSON.stringify(response);
+                var url = '';
+                if (IsApproval == "Yes") {
+                    url = "/GenerateVoucher/GenerateVoucherApproval";
+                }
+                else {
+                    url = "/GenerateVoucher/GenerateVoucher";
+                }
+                window.location.href = url;
+            },
+            error: function (xhr, status, error) {
+                // Code to handle errors goes here
+            }
+
+        });*@
+
+        });
+
+        var specialKeys = new Array();
+        specialKeys.push(8); //Backspace
+        function IsNumeric(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if (!(keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1) {
+                return false;
+            };
+
+        }
+
+        function TotalApprovedAmount() {
+            debugger;
+            let sum = 0;
+
+            $('.textbox').each(function () {
+                sum += parseFloat($(this).val()) || 0;
+            });
+
+            $('#V_Approved_').val(sum);
+
+        }
+
+        function AllowWithOneDecimal(event) {
+            var key = event.keyCode || event.which;
+            var keyChar = String.fromCharCode(key);
+            var input = event.target.value;
+
+            // Check if the pressed key is a number or decimal point
+            var isNumber = /[0-9]/.test(keyChar);
+            var isDecimalPoint = keyChar === "." && input.indexOf(".") === -1;
+
+            // Allow the key if it's a number or the first decimal point
+            if (isNumber || isDecimalPoint) {
+                return true;
+            } else {
+                event.preventDefault(); // Prevent the key from being entered
+                return false;
+            }
+        }
+    </script>
+
+ 
+    <script>
+        function BindDescription() {
+            debugger;
+            var VoucherNo = $("#hdnVoucherNo").val();
+            var UrlLink = '@UrlLink';
+
+            $.ajax({
+                ////url: UrlLink + "/GenerateVoucher/Voucher_History_Description",
+                url: "@Url.Action("Voucher_History_Description", "GenerateVoucher")",
+                type: "get",
+                DataType: "json",
+                async: false,
+                contenttype: "application/json; charset=utf-8",
+                data: { VoucherNo: VoucherNo },
+                success: function (result) {
+                    debugger;
+                    var a = JSON.parse(result);
+
+                    let date = [a[0].Date, a[0].PCH_Approval_Date, a[0].CH_Approval_Date, a[0].Account_Approval_Date, a[0].FI_Approval_Date]
+
+                    let Name_ = [a[0].Name, a[0].PCH_Name, a[0].CH_Approval, a[0].Account_Approval, a[0].FI_Approval]
+
+                    let Amount = [a[0].Approval_One_Approval_Amount, a[0].Pch_ApprovalAmount, a[0].Ch_Approval_Amount, a[0].Accountant_Approval_Amount, a[0].FI_Approval_Amount]
+
+                    let Data = ["ApprovalOne/ApprovalTwo", "PCH", "Cluster Head", "Accountant", "Finance"]
+                    let k = 0;
+                    var myArray = [];
+                    for (var i = 0; i < a.length; i++) {
+                        if (!!a[i].ApprovalOne_Description) {
+                            myArray.push(a[i].ApprovalOne_Description);
+                            k++;
+                        }
+                        if (!!a[i].PCH_Approval_Description) {
+                            myArray.push(a[i].PCH_Approval_Description);
+                            k++;
+
+                        }
+                        if (!!a[i].CH_Approval_Description) {
+                            myArray.push(a[i].CH_Approval_Description);
+                            k++;
+
+                        }
+                        if (!!a[i].Accountant_Description) {
+                            myArray.push(a[i].Accountant_Description);
+                            k++;
+                        }
+                        if (!!a[i].Finance_Description) {
+                            myArray.push(a[i].Finance_Description);
+                            k++;
+                        }
+
+                        for (var j = 0; j < myArray.length; j++) {
+                            //const approvalName = Name[j] == undefined ? "-" : Name[j];
+                            // changes added by nikita on 22112023
+                            $("#tblusers").append('<tr><td>' + date[j] + '</td><td>' + Data[j] + '</td><td>' + Name_[j] + '</td><td>' + myArray[j] + '</td><td>' + Amount[j] + '</td></tr>')
+                        }
+
+
+                    }
+                },
+                error: function (result) {
+                    debugger;
+                    (result + "something went wrong");
+                }
+            });
+        }
+
+        function SaveAttachment() {
+            debugger;
+            var VoucherNo = $("#txtVoucherNo").val();
+            var Attachment = $("#Attachment").val();
+            var IsApproval = $("#hdnIsApproval").val();
+            var datediff = $("#hdndatediff").val();
+            $.ajax({
+                url: "@Url.Action("SaveAttachment","GenerateVoucher")",
+                type: "POST",
+                dataType: 'json',
+                data: { VoucherNo: VoucherNo, file: Attachment },
+                success: function (Results) {
+                    debugger;
+                    if (Results === true) {
+                        VoucherHistory(VoucherNo, IsApproval, datediff);
+                        GetAttachment();
+
+                    } else {
+                        alert("Something went wrong.");
+                    }
+                },
+                error: function (result) {
+                    debugger;
+                    alert("Error occurred while saving the attachment.");
+                    console.error(result);
+                }
+            });
+        }
+
+
+        function GetAttachment() {
+            debugger;
+            var UrlLink = '@UrlLink';
+            var VoucherNo = $("#txtVoucherNo").val();
+            var IsApproval = $("#hdnIsApproval").val();
+            var datediff = $("#hdndatediff").val();
+
+            $.ajax({
+                type: "GET",
+                //url: "/GenerateVoucher/GetAttachment",
+                url: "@Url.Action("GetAttachment", "GenerateVoucher")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { VoucherNo: VoucherNo },
+                success: function (result) {
+                        if (result.success === false) {
+                            alert("Error: " + result.message);
+                            return;
+                        }
+                        if (result && result.length > 0) {
+                            var fileContainer = $("#attachedFileLink");
+                            fileContainer.empty();
+                            result.forEach(function (item) {
+                                var fileURL = ""+UrlLink+"/ExpenseItem/Download/?p=" + item.IDS + item.Extension + "&d=" + item.FileName;
+                                var fileLink = $("<a class='Attachment'>").attr("href", fileURL).text(item.FileName);
+                                if (isSendForApproval == 1) {
+
+                                }
+                                else {
+                                    var deleteLink = $("<a>").attr("href", "javascript:void(0);").attr("data-id", item.IDS).addClass("deleteItem").text(" X").on("click", function () {
+                                        deleteFile(item.PK_ID, $(this).closest('li'));
+                                    });
+                                }
+                                var listItem = $("<li>").append(fileLink).append(" ").append(deleteLink);
+                                fileContainer.append(listItem);
+                            });
+
+                        $('.deleteItem').on('click', function (e) {
+                                e.preventDefault();
+                            $(this).closest('li').remove();
+                            });
+                        } else {
+                            //alert("No attachments found.");
+                        }
+                        VoucherHistory(VoucherNo, IsApproval,datediff);
+                    },
+                error: function (xhr, status, error) {
+                        alert("Something went wrong: " + error);
+                        console.log("XHR:", xhr);
+                        console.log("Status:", status);
+                        console.log("Error:", error);
+                    }
+                });
+        }
+
+        function deleteFile(fileId, listItem) {
+            var datediff = $("#hdndatediff").val();
+
+            $.ajax({
+                url: "@Url.Action("DeleteAttachment", "GenerateVoucher")", // Adjust the URL to your DeleteFile action
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ fileid: fileId }),
+                success: function (result) {
+                    if (result == true) {
+                        listItem.remove(); // Remove the list item from the DOM
+                        alert("File deleted successfully.");
+                        VoucherHistory(VoucherNo, IsApproval, datediff);
+                        GetAttachment();
+                    } else {
+                        alert("Error deleting file: " + result.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Something went wrong while deleting the file: " + error);
+                    console.log("XHR:", xhr);
+                    console.log("Status:", status);
+                    console.log("Error:", error);
+                }
+            });
+        }
+    </script>
+
+

@@ -1,0 +1,929 @@
+﻿@model TuvVision.Models.Dashboard
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+@*<style>
+    td.dashboard-head {
+        background: #e6e8ec;
+        color: #000;
+        font-weight: 600;
+    }
+
+    table.table-bordered.dashboard tr td {
+        padding: 15px;
+    }
+
+    table.table-bordered.dashboard tbody tr td {
+        border: 1px solid #000 !important;
+    }
+
+    td.dashboard-head {
+        width: 380px;
+        font-size: 14px;
+    }
+
+    td.dasboard-value {
+       
+        width: -20px;
+    }
+</style>*@
+
+<style>
+    
+#div1 {
+  /*max-width: 40em;*/
+  max-width: 80em;
+  /*max-height: 20em;*/
+  max-height: 25em;
+  overflow: scroll;
+  position: relative;
+}
+
+table {
+  position: relative;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  padding: 0.25em;
+}
+
+thead th {
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  top: 0;
+  background: #001ED2;
+  color: #fff;
+ font-size:12px;
+  font-family:'TNG Pro';
+}
+
+thead th:first-child {
+  left: 0;
+  z-index: 1;
+}
+
+/*tbody th {
+  position: -webkit-sticky; 
+  position: sticky;
+  left: 0;
+  background: #fff;
+  border-right: 1px solid #CCC;
+  
+}*/
+
+tbody #th1 {
+  position: -webkit-sticky; 
+  position: sticky;
+  left: 0;
+  background: #fff;
+  border-right: 1px solid #CCC;
+  font-weight:normal;
+  font-size:12px;
+  font-family:'TNG Pro';
+}
+
+tbody #th2 {
+ 
+  font-size:12px;
+  font-family:'TNG Pro';
+}
+
+tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+@*<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css"></script>*@
+<link href="~/AllJsAndCss/css/Dashboard.css" rel="stylesheet" />
+@*<div class="main-content3 xs-max-height">*@
+    <div style="min-height:600px;padding-bottom:20px;">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+
+
+                <div class="col-xs-12">
+                    @*<hr class="custom-hr">*@
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+            <div id="tabs">
+
+                <ul>
+                    <li><a href="#tabs-2">Action Required</a></li>
+                    <li><a href="#tabs-3">Auto Approvals</a></li>
+                    <li><a href="#tabs-4">Order Status (Won/Lost)</a></li>
+                    <li><a href="#tabs-5">Regret Enquiries</a></li>
+                    
+
+                </ul>
+
+                <div id="tabs-2">
+                    @foreach (var item in ViewBag.Quotation1 as IEnumerable<TuvVision.Models.ListQuotationDashboard>)
+
+                    {
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 boxBdr">
+
+
+                                <table class="table-bordered dashboard">
+                                    <tbody>
+
+
+                                        <tr>
+                                            @if (item.Role == "1")
+                                            {
+                                                if (item.SendForApprovel != "Auto" && item.SendForApprovel != "")
+                                                {
+                                                    
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> @item.Name  has Sent you request to approve  cost sheet of quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName . </p>
+                                                    
+                                                }
+
+                                                
+                                                if (item.QuotationStatus == "3")//Won
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name bagged order against quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName</p>
+
+                                                }
+                                                if (item.QuotationStatus == "4")//Lost
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  We have not received order against Quotation Number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by  @item.Name due to reason @item.LostReason.  </p>
+
+                                                }
+                                                if (item.CHComment != "" && item.CHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CHCommentDate - </span> @item.ClusterHeadName has commented on cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name as @item.CHComment.</p>
+                                                }
+
+                                                
+                                                if (item.CostSheetCHStatus == "1")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                }
+
+                                            }
+                                            else if (item.Role == "46" || item.Role == "47" || item.Role == "48" || item.Role == "49" || item.Role == "51")
+                                            {
+                                                if (item.RegretStatus == "Regret")
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    if (item.SendForApprovel != "Auto" && item.SendForApprovel != "" && item.SendForApprovel != "NA")
+                                                    {
+                                                        if (item.EstimatedAmount > 1000000)
+                                                        {
+                                                            <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate - </span>@item.Name has Sent you a quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> @item.CompanyName for approval. </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.SendForApprovelDate - </span> @item.Name has sent request to approve cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName to Mr. @item.BranchHeadName </p>
+                                                        }
+                                                    }
+
+                                                }
+
+
+                                               
+                                                if (item.QuotationStatus == "3")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.CreatedDate - </span> @item.Name bagged order against quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName</p>
+
+                                                }
+                                                if (item.QuotationStatus == "4")//Lost
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> We have not received order against Quotation Number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a>for @item.CompanyName created by  @item.Name due to reason @item.LostReason.  </p>
+
+                                                }
+                                                if (item.PCHComment != "" && item.PCHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.PCHCommentDate -</span> @item.BranchHeadName has commented on cost sheet (@item.costsheettype) of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName created by @item.Name as @item.PCHComment.</p>
+                                                }
+
+                                                if (item.CostSheetPCHStatus == "2")
+                                                {
+                                                    if (item.PCHComment != "" && item.PCHComment != null)
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH -</span> @item.BranchHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a>for @item.CompanyName created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.CostSheetPCHStatus == "1")
+                                                {
+                                                    if (item.PCHComment != "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH -</span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                               
+
+                                            }
+                                            else
+                                            {
+                                                if ((item.PCHComment != null) && (item.PCHComment != ""))
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.PCHCommentDate - </span>  @item.BranchHeadName has commented on cost sheet (@item.costsheettype) of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName as @item.PCHComment .</p>
+
+
+                                                }
+                                                if (item.CHComment != "" && item.CHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.CHCommentDate - </span> @item.ClusterHeadName has commented on cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName as @item.CHComment . </p>
+                                                }
+                                                if (item.CostSheetPCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName.  @*created by @item.Name .*@</p>
+                                                }
+                                                if (item.CostSheetCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName.  @*created by @item.Name .*@</p>
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate -</span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber  </span></a> for @item.CompanyName created by @item.Name.</p>
+                                                }
+                                                if (item.CostSheetPCHStatus == "1")
+                                                {
+                                                    if (item.PCHComment != "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.CostSheetCHStatus == "1")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                }
+
+                                            }
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    }
+
+
+
+                </div>
+
+                <div id="tabs-3">
+                    @foreach (var item in ViewBag.Quotation2 as IEnumerable<TuvVision.Models.ListQuotationDashboard>)
+
+                    {
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 boxBdr">
+
+
+                                <table class="table-bordered dashboard">
+                                    <tbody>
+
+
+                                        <tr>
+                                            @if (item.Role == "1")
+                                            {
+                                                if (item.SendForApprovel != "Auto" && item.SendForApprovel != "")
+                                                {
+                                                    if (item.RegretStatus == "Regret")
+                                                    {
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> @item.Name  has Sent you request to approve  cost sheet of quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName . </p>
+                                                    }
+                                                }
+
+                                                if (item.RegretStatus == "Regret")
+                                                {
+                                                    if (item.RegretReason == "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber</span></a> for @item.CompanyName</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber for </span></a> @item.CompanyName with reason @item.RegretReason </p>
+                                                    }
+                                                }
+                                                if (item.QuotationStatus == "3")//Won
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name bagged order against quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName</p>
+
+                                                }
+                                                if (item.QuotationStatus == "4")//Lost
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  We have not received order against Quotation Number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by  @item.Name due to reason @item.LostReason.  </p>
+
+                                                }
+                                                if (item.CHComment != "" && item.CHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CHCommentDate - </span> @item.ClusterHeadName has commented on cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name as @item.CHComment.</p>
+                                                }
+
+                                                if (item.CostSheetCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue">@item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name .</p>
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate -</span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName  created by @item.Name.</p>
+                                                }
+                                                if (item.CostSheetCHStatus == "1")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                }
+
+                                            }
+                                            else if (item.Role == "46" || item.Role == "47" || item.Role == "48" || item.Role == "49" || item.Role == "51")
+                                            {
+                                                if (item.RegretStatus == "Regret")
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    if (item.SendForApprovel != "Auto" && item.SendForApprovel != "" && item.SendForApprovel != "NA")
+                                                    {
+                                                        if (item.EstimatedAmount > 1000000)
+                                                        {
+                                                            <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate - </span>@item.Name has Sent you a quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> @item.CompanyName for approval. </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.SendForApprovelDate - </span> @item.Name has sent request to approve cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName to Mr. @item.BranchHeadName </p>
+                                                        }
+                                                    }
+
+                                                }
+
+
+                                                if (item.RegretStatus == "Regret")
+                                                {
+                                                    if (item.RegretReason == "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber </span></a> for @item.CompanyName</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.CreatedDate - </span> @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber </span></a> for @item.CompanyName with reason @item.RegretReason </p>
+                                                    }
+
+                                                }
+                                                if (item.QuotationStatus == "3")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.CreatedDate - </span> @item.Name bagged order against quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName</p>
+
+                                                }
+                                                if (item.QuotationStatus == "4")//Lost
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> We have not received order against Quotation Number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a>for @item.CompanyName created by  @item.Name due to reason @item.LostReason.  </p>
+
+                                                }
+                                                if (item.PCHComment != "" && item.PCHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.PCHCommentDate -</span> @item.BranchHeadName has commented on cost sheet (@item.costsheettype) of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName created by @item.Name as @item.PCHComment.</p>
+                                                }
+
+                                                if (item.CostSheetPCHStatus == "2")
+                                                {
+                                                    if (item.PCHComment != "" && item.PCHComment != null)
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH -</span> @item.BranchHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a>for @item.CompanyName created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.CostSheetPCHStatus == "1")
+                                                {
+                                                    if (item.PCHComment != "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH -</span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate - </span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName created by @item.Name.</p>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                if ((item.PCHComment != null) && (item.PCHComment != ""))
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.PCHCommentDate - </span>  @item.BranchHeadName has commented on cost sheet (@item.costsheettype) of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName as @item.PCHComment .</p>
+
+
+                                                }
+                                                if (item.CHComment != "" && item.CHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.CHCommentDate - </span> @item.ClusterHeadName has commented on cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName as @item.CHComment . </p>
+                                                }
+                                                if (item.CostSheetPCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName.  @*created by @item.Name .*@</p>
+                                                }
+                                                if (item.CostSheetCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName.  @*created by @item.Name .*@</p>
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate -</span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber  </span></a> for @item.CompanyName created by @item.Name.</p>
+                                                }
+                                                if (item.CostSheetPCHStatus == "1")
+                                                {
+                                                    if (item.PCHComment != "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.CostSheetCHStatus == "1")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                }
+
+                                            }
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    }
+
+
+
+                </div>
+
+                
+                <div id="tabs-4">
+                    @foreach (var item in ViewBag.Quotation3 as IEnumerable<TuvVision.Models.ListQuotationDashboard>)
+
+                    {
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 boxBdr">
+
+
+                                <table class="table-bordered dashboard">
+                                    <tbody>
+
+
+                                        <tr>
+                                            @if (item.Role == "1")
+                                            {
+                                                if (item.SendForApprovel != "Auto" && item.SendForApprovel != "")
+                                                {
+                                                    if (item.RegretStatus == "Regret")
+                                                    {
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> @item.Name  has Sent you request to approve  cost sheet of quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName . </p>
+                                                    }
+                                                }
+
+                                                if (item.RegretStatus == "Regret")
+                                                {
+                                                    if (item.RegretReason == "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber</span></a> for @item.CompanyName</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber for </span></a> @item.CompanyName with reason @item.RegretReason </p>
+                                                    }
+                                                }
+                                                if (item.QuotationStatus == "3")//Won
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name bagged order against quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName</p>
+
+                                                }
+                                                if (item.QuotationStatus == "4")//Lost
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  We have not received order against Quotation Number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by  @item.Name due to reason @item.LostReason.  </p>
+
+                                                }
+                                                if (item.CHComment != "" && item.CHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CHCommentDate - </span> @item.ClusterHeadName has commented on cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name as @item.CHComment.</p>
+                                                }
+
+                                                if (item.CostSheetCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue">@item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name .</p>
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate -</span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName  created by @item.Name.</p>
+                                                }
+                                                if (item.CostSheetCHStatus == "1")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                }
+
+                                            }
+                                            else if (item.Role == "46" || item.Role == "47" || item.Role == "48" || item.Role == "49" || item.Role == "51")
+                                            {
+                                                if (item.RegretStatus == "Regret")
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    if (item.SendForApprovel != "Auto" && item.SendForApprovel != "" && item.SendForApprovel != "NA")
+                                                    {
+                                                        if (item.EstimatedAmount > 1000000)
+                                                        {
+                                                            <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate - </span>@item.Name has Sent you a quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> @item.CompanyName for approval. </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.SendForApprovelDate - </span> @item.Name has sent request to approve cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName to Mr. @item.BranchHeadName </p>
+                                                        }
+                                                    }
+
+                                                }
+
+
+                                                if (item.RegretStatus == "Regret")
+                                                {
+                                                    if (item.RegretReason == "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber </span></a> for @item.CompanyName</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.CreatedDate - </span> @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber </span></a> for @item.CompanyName with reason @item.RegretReason </p>
+                                                    }
+
+                                                }
+                                                if (item.QuotationStatus == "3")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.CreatedDate - </span> @item.Name bagged order against quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName</p>
+
+                                                }
+                                                if (item.QuotationStatus == "4")//Lost
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> We have not received order against Quotation Number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a>for @item.CompanyName created by  @item.Name due to reason @item.LostReason.  </p>
+
+                                                }
+                                                if (item.PCHComment != "" && item.PCHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.PCHCommentDate -</span> @item.BranchHeadName has commented on cost sheet (@item.costsheettype) of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName created by @item.Name as @item.PCHComment.</p>
+                                                }
+
+                                                if (item.CostSheetPCHStatus == "2")
+                                                {
+                                                    if (item.PCHComment != "" && item.PCHComment != null)
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH -</span> @item.BranchHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a>for @item.CompanyName created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.CostSheetPCHStatus == "1")
+                                                {
+                                                    if (item.PCHComment != "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH -</span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate - </span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName created by @item.Name.</p>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                if ((item.PCHComment != null) && (item.PCHComment != ""))
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.PCHCommentDate - </span>  @item.BranchHeadName has commented on cost sheet (@item.costsheettype) of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName as @item.PCHComment .</p>
+
+
+                                                }
+                                                if (item.CHComment != "" && item.CHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.CHCommentDate - </span> @item.ClusterHeadName has commented on cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName as @item.CHComment . </p>
+                                                }
+                                                if (item.CostSheetPCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName.  @*created by @item.Name .*@</p>
+                                                }
+                                                if (item.CostSheetCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName.  @*created by @item.Name .*@</p>
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate -</span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber  </span></a> for @item.CompanyName created by @item.Name.</p>
+                                                }
+                                                if (item.CostSheetPCHStatus == "1")
+                                                {
+                                                    if (item.PCHComment != "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.CostSheetCHStatus == "1")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                }
+
+                                            }
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    }
+
+
+
+                </div>
+
+
+
+                <div id="tabs-5">
+                    @foreach (var item in ViewBag.Quotation4 as IEnumerable<TuvVision.Models.ListQuotationDashboard>)
+
+                    {
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 boxBdr">
+
+
+                                <table class="table-bordered dashboard">
+                                    <tbody>
+
+
+                                        <tr>
+                                            @if (item.Role == "1")
+                                            {
+                                                if (item.SendForApprovel != "Auto" && item.SendForApprovel != "")
+                                                {
+                                                    if (item.RegretStatus == "Regret")
+                                                    {
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> @item.Name  has Sent you request to approve  cost sheet of quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName . </p>
+                                                    }
+                                                }
+
+                                                if (item.RegretStatus == "Regret")
+                                                {
+                                                    if (item.RegretReason == "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber</span></a> for @item.CompanyName</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber for </span></a> @item.CompanyName with reason @item.RegretReason </p>
+                                                    }
+                                                }
+                                                if (item.QuotationStatus == "3")//Won
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  @item.Name bagged order against quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName</p>
+
+                                                }
+                                                if (item.QuotationStatus == "4")//Lost
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span>  We have not received order against Quotation Number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by  @item.Name due to reason @item.LostReason.  </p>
+
+                                                }
+                                                if (item.CHComment != "" && item.CHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CHCommentDate - </span> @item.ClusterHeadName has commented on cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name as @item.CHComment.</p>
+                                                }
+
+                                                if (item.CostSheetCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue">@item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name .</p>
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate -</span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName  created by @item.Name.</p>
+                                                }
+                                                if (item.CostSheetCHStatus == "1")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                }
+
+                                            }
+                                            else if (item.Role == "46" || item.Role == "47" || item.Role == "48" || item.Role == "49" || item.Role == "51")
+                                            {
+                                                if (item.RegretStatus == "Regret")
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    if (item.SendForApprovel != "Auto" && item.SendForApprovel != "" && item.SendForApprovel != "NA")
+                                                    {
+                                                        if (item.EstimatedAmount > 1000000)
+                                                        {
+                                                            <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate - </span>@item.Name has Sent you a quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> @item.CompanyName for approval. </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.SendForApprovelDate - </span> @item.Name has sent request to approve cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName to Mr. @item.BranchHeadName </p>
+                                                        }
+                                                    }
+
+                                                }
+
+
+                                                if (item.RegretStatus == "Regret")
+                                                {
+                                                    if (item.RegretReason == "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber </span></a> for @item.CompanyName</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.CreatedDate - </span> @item.Name has regretted the enquiry number <a href="@Url.Action("Enquiry", "EnquiryMaster", new { EQ_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.EnquiryNumber </span></a> for @item.CompanyName with reason @item.RegretReason </p>
+                                                    }
+
+                                                }
+                                                if (item.QuotationStatus == "3")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"> <span style="color:blue;">@item.CreatedDate - </span> @item.Name bagged order against quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName</p>
+
+                                                }
+                                                if (item.QuotationStatus == "4")//Lost
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.CreatedDate - </span> We have not received order against Quotation Number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a>for @item.CompanyName created by  @item.Name due to reason @item.LostReason.  </p>
+
+                                                }
+                                                if (item.PCHComment != "" && item.PCHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.PCHCommentDate -</span> @item.BranchHeadName has commented on cost sheet (@item.costsheettype) of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName created by @item.Name as @item.PCHComment.</p>
+                                                }
+
+                                                if (item.CostSheetPCHStatus == "2")
+                                                {
+                                                    if (item.PCHComment != "" && item.PCHComment != null)
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH -</span> @item.BranchHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a>for @item.CompanyName created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has approved the cost sheet of Quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for @item.CompanyName created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.CostSheetPCHStatus == "1")
+                                                {
+                                                    if (item.PCHComment != "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH -</span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate - </span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName created by @item.Name.</p>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                if ((item.PCHComment != null) && (item.PCHComment != ""))
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.PCHCommentDate - </span>  @item.BranchHeadName has commented on cost sheet (@item.costsheettype) of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName as @item.PCHComment .</p>
+
+
+                                                }
+                                                if (item.CHComment != "" && item.CHComment != null)
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.CHCommentDate - </span> @item.ClusterHeadName has commented on cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName as @item.CHComment . </p>
+                                                }
+                                                if (item.CostSheetPCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;"> @item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName.  @*created by @item.Name .*@</p>
+                                                }
+                                                if (item.CostSheetCHStatus == "2")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName.  @*created by @item.Name .*@</p>
+                                                }
+                                                if (item.SendForApprovel == "Auto")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.SendForApprovelDate -</span> Tiimes has auto - approved the quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber  </span></a> for @item.CompanyName created by @item.Name.</p>
+                                                }
+                                                if (item.CostSheetPCHStatus == "1")
+                                                {
+                                                    if (item.PCHComment != "")
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name with @item.PCHComment.</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDatePCH - </span> @item.BranchHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                    }
+
+                                                }
+                                                if (item.CostSheetCHStatus == "1")
+                                                {
+                                                    <p style="font-size:14px;font-family:'TNG Pro';margin-bottom: 2px;"><span style="color:blue;">@item.ApprovedOrNotApprovedDateCH - </span> @item.ClusterHeadName has not approved the cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber </span></a> for @item.CompanyName Created by @item.Name .</p>
+                                                }
+
+                                            }
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    }
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+                
+
+               
+    </div>
+
+
+            <script>
+            $(function () {
+                $("#tabs").tabs();
+            });
+            </script>
+        </div>
+    </div>

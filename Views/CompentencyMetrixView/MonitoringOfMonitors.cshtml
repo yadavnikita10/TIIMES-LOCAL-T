@@ -1,0 +1,2002 @@
+﻿@model TuvVision.Models.MonitoringOfMonitors
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+
+@{
+    ViewBag.Title = "MonitoringOfMonitors";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    List<string> EditCompCategory = ViewBag.EditCompCategory as List<string>;
+    List<string> EditProdName = ViewBag.lstScope as List<string>;
+    List<string> EditScopeName = ViewBag.EditproductName as List<string>;
+    List<string> EditProdName1 = ViewBag.EditproductName1 as List<string>;
+    var a = Session["LoginName"].ToString();
+}
+
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+        table th, td {
+            padding: 10px;
+        }
+
+    th {
+        background-color: #001ED2;
+    }
+
+    colgroup {
+        width: 250px;
+    }
+
+    .addCSS {
+        pointer-events: none;
+    }
+
+    ul.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+</style>
+
+
+
+
+@using (Html.BeginForm("MonitoringOfMonitoring", "CompentencyMetrixView", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    <input type="hidden" id="hdnDateValidation" />
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                    @Html.HiddenFor(m => m.Id)
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+
+                            <div class="col-xs-12 text-right">
+                                <div class="col-xs-12">
+
+                                    <a href="@Url.Action("MonitoringList", "CompentencyMetrixView")" class="btn btn-default insert-form-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+
+
+                                    @*@if (Model.Report_No != null)
+                                        {
+                                           //Added By shrutika  salve on 10 June 2023
+
+                                            <button id="btnAddExpenses" class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem",new { FKId = Model.Id,Type="MOM",SubJobNo=Model.TUVI_control_number,PK_Call_Id="" } )'">Add Expenses</button>
+
+                                        }*@
+                                    @if (Model.Report_No != null && Model.Report_No.Trim().StartsWith("ONS"))
+                                    {
+                                        if (a == Model.Monitor_Name)
+                                        {
+                                        <button id="btnAddExpenses" class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem", new { FKId = Model.Id, Type = "MOM", SubJobNo = Model.TUVI_control_number, PK_Call_Id = "" })'"><i class="fa fa-inr" aria-hidden="true" style="margin-left:-11px;"></i>Add Expenses</button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <button id="btnAddExpenses" class="btn btn-default news-btn hidden" type="button" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem", new { FKId = Model.Id, Type = "MOM", SubJobNo = Model.TUVI_control_number, PK_Call_Id = "" })'"><i class="fa fa-inr" aria-hidden="true" style="margin-left:-11px;"></i>Add Expenses</button>
+
+                                    }
+                                </div>
+
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Monitoring Of Monitors Report:F/MR/18 C Rev. 1 Dated 01.04.2023</h3>
+                                    <br>
+                                    <br>
+
+
+                                    @*<div class="col-xs-12 text-center">*@
+                                    <div class="col-xs-12">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <label>UIN :</label>
+                                                    @Html.TextBoxFor(model => model.UIN, htmlAttributes: new { placeholder = "UIN Number", @class = "form-control CallRecivedate ", autocomplete = "off", @readonly = "readonly" })
+                                                    @*@Html.TextBoxFor(model => model.Date_Of_Inspection, new { @placeholder = "Date Of Inspection", @class = "form-control" })*@
+                                                    @Html.ValidationMessageFor(model => model.UIN, "", new { @class = "text-danger validation-msg" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Report No :</label>
+                                                    @if (Session["UIDNO"].ToString() == "True")
+                                                    {
+                                                        @Html.TextBoxFor(model => model.Report_No, htmlAttributes: new { placeholder = "UIN Number", @class = "form-control CallRecivedate ", autocomplete = "off", @readonly = "readonly" })
+                                                        @*@Html.TextBoxFor(model => model.Date_Of_Inspection, new { @placeholder = "Date Of Inspection", @class = "form-control" })*@
+                                                        @Html.ValidationMessageFor(model => model.Report_No, "", new { @class = "text-danger validation-msg" })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.TextBoxFor(model => model.Report_No, htmlAttributes: new { placeholder = "UIN Number", @class = "form-control CallRecivedate ", autocomplete = "off" })
+                                                        @*@Html.TextBoxFor(model => model.Date_Of_Inspection, new { @placeholder = "Date Of Inspection", @class = "form-control" })*@
+                                                        @Html.ValidationMessageFor(model => model.Report_No, "", new { @class = "text-danger validation-msg" })
+                                                    }
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-xs-12 col-sm-4">
+                                                <div class="form-group" style="margin-bottom:0;margin-top: 2px;">
+                                                    @if (Session["UIDNO"].ToString() == "True")
+                                                    {
+                                                        <input type="search" value="Search" class="btn btn-default insert-form-btn hidden" id="btnSearch1" style="margin-top:25px;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="search" value="Search" class="btn btn-default insert-form-btn" id="btnSearch1" style="margin-top:25px; " />
+                                                    }
+                                                </div>
+
+
+
+
+
+
+                                            </div>
+                                            @*</div>
+                                                    </div>
+
+                                                </div>*@
+                                            <div>
+                                                @Html.HiddenFor(m => m.PK_CALL_ID)
+                                            </div>
+
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <hr class="custom-hr1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    @*Copy End*@
+
+
+                                    <div class="row">
+                                        <div class="col-xs-12 ">
+
+
+
+
+                                            <div class="form-box" id="textid">
+                                                <span style="color:#E12F24;">
+                                                    <strong>&nbsp;&nbsp;&nbsp;Notes </strong> :
+                                                </span>
+                                                <span>
+                                                    1) <span style="color:#ff0000;">*</span> -<b>Mandatory</b>
+
+                                                </span>
+                                                <br>
+                                                <br>
+                                                @*@Html.HiddenFor(m => m.Sap_And_Controle_No)*@
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Date :</label>
+                                                            @Html.TextBoxFor(model => model.Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Date", @class = "form-control CallRecivedate ", autocomplete = "off" })
+                                                            @*@Html.TextBoxFor(model => model.Date, new { @placeholder = "Date Of Inspection", @class = "form-control" })*@
+                                                            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+                                                    @Html.HiddenFor(m => m.inspectorId)
+
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            @*//Rahul Code did not Bind SubJob_No*@
+                                                            <label>Monitor1 Name:</label>
+
+                                                            @Html.TextBoxFor(model => model.Inspector_Name, new { @placeholder = "Monitor1 Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Inspector_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 ">
+                                                        <div class="form-group">
+                                                            <label>MOnitor1 Level of authorisation:<span style="color:#ff0000;">*</span></label>
+
+
+                                                            @Html.DropDownListFor(m => m.Inspector_Level_of_authorisation, new List<SelectListItem>
+                                {
+                                //new SelectListItem{ Text="---SELECT---", Value = "" ,Selected =true},
+                                new SelectListItem {Text="3",Value="3" },
+                                new SelectListItem{ Text="1", Value = "1" },
+                                new SelectListItem{ Text="2", Value = "2" },
+                                new SelectListItem {Text="4",Value="4" },
+
+
+
+                                }, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Inspector_Level_of_authorisation, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="row">
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Item Inspected:<span style="color:#ff0000;">*</span></label>
+                                                            @if (ViewBag.check == "productcheck")
+                                                            {
+
+                                                                <select id="BrAuditee1" class="form-control form-multiselect-city" multiple="multiple" name="BrAuditee1" placeholder="Select Option" required="required">
+                                                                    @foreach (var item in ViewBag.ProjectTypeItems)
+                                                                    {
+                                                                        if (EditProdName1.Contains(item.Text))
+                                                                        {
+                                                                            <option value="@item.Value" selected> @item.Text </option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@item.Value"> @item.Text </option>
+                                                                        }
+
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            else
+                                                            {
+                                                                <select id="BrAuditee1" class="form-control form-multiselect-city" multiple="multiple" name="BrAuditee1" placeholder="Select Option" required="required">
+
+                                                                    @{
+                                                                        foreach (var item in ViewBag.ProjectTypeItems)
+                                                                        {
+
+                                                                            <option value="@item.Value"> @item.Value </option>
+
+
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                        }
+                                                        </div>
+                                                    </div>
+
+
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Monitor2 Name:</label>
+                                                            @Html.TextBoxFor(model => model.Monitor_Name, new { @placeholder = "Monitor2 Name", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Monitor_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Monitor2 level of authorisation:<span style="color:#ff0000;">*</span></label>
+                                                            @Html.DropDownListFor(m => m.Monitor_level_of_authorisation, new List<SelectListItem>
+                                {
+                                //new SelectListItem{ Text="---SELECT---", Value = "" ,Selected =true},
+                                new SelectListItem{ Text="3", Value = "3" },
+                                new SelectListItem{ Text="4", Value = "4" },
+
+
+
+                                }, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Monitor_level_of_authorisation, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Report No :</label>
+                                                            @if (Model.ReportNo == null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.ReportNo, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "ReportNo", @class = "form-control CallRecivedate " })
+                                                                @*@Html.TextBoxFor(model => model.Date, new { @placeholder = "Date Of Inspection", @class = "form-control" })*@
+                                                                @Html.ValidationMessageFor(model => model.ReportNo, "", new { @class = "text-danger validation-msg" })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.ReportNo, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "ReportNo", @class = "form-control CallRecivedate", style = "color: blue; background-color: lightblue;" })
+                                                                @*@Html.TextBoxFor(model => model.Date, new { @placeholder = "Date Of Inspection", @class = "form-control" })*@
+                                                                @Html.ValidationMessageFor(model => model.ReportNo, "", new { @class = "text-danger validation-msg" })
+                                                            }
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    @Html.HiddenFor(m => m.inspectorId)
+
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            @*//Rahul Code did not Bind SubJob_No*@
+                                                            <label>Inspector Name:</label>
+
+                                                            @Html.TextBoxFor(model => model.MonitorinspectorName, new { @placeholder = "Monitor inspector Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.MonitorinspectorName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 ">
+                                                        <div class="form-group">
+                                                            <label> Inspector level of authorisation:</label>
+                                                            @Html.TextBoxFor(model => model.InspectorLevelauthorisation, new { @placeholder = "Inspector level of authorisation", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.InspectorLevelauthorisation, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>TUVI control number:</label>
+                                                            @*<input type="text" class="form-control" placeholder="Fax Here">*@
+                                                            @Html.TextBoxFor(model => model.TUVI_control_number, new { @placeholder = "TUV control Number", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.TUVI_control_number, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label> Customer Name:</label>
+                                                            @Html.TextBoxFor(model => model.Customer_Name, new { @placeholder = "Customer Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Customer_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>End Customer Name:</label>
+                                                            @Html.TextBoxFor(model => model.EndCustomerName, new { @placeholder = "End Customer Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.EndCustomerName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Project Name:</label>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextBoxFor(model => model.ProjectName, new { @placeholder = "Vendor Name Location", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                @* Added Shrutika salve 12/05/2022*@
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label> DEC/PMC/EPC Name:</label>
+                                                            @Html.TextBoxFor(model => model.DEC_PMC_EPC_Name, new { @placeholder = "DEC PMC EPC Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.DEC_PMC_EPC_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label> DEC/PMC/EPC Assignment No:</label>
+                                                            @Html.TextBoxFor(model => model.DEC_PMC_EPC_Assignment_No, new { @placeholder = "DEC PMC EPC Assignment No", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.DEC_PMC_EPC_Assignment_No, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Vendor Name:</label>
+                                                            @Html.TextBoxFor(model => model.Vendor_Name, new { placeholder = "Enter Vendor Name", @class = "form-control form-control-custom dateofjoinings", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Vendor_Name, "", new { @class = "text-danger" })
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO No.(Client PO on Vendor) :</label>
+                                                            @Html.TextBoxFor(model => model.Po_No, new { @placeholder = "PO No", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Po_No, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO Date(Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.Date_of_PO, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control Date_of_PO1", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Date_of_PO, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Sub Vendor Name:</label>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextBoxFor(model => model.Sub_Vendor_Name, new { @placeholder = "Sub Vendor Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Sub_Vendor_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO No.(Vendor PO on Sub-vendor):</label>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextBoxFor(model => model.Po_No_SubVendor, new { @placeholder = "Sub Vendor PO No", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Po_No_SubVendor, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO Date (Sub Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.SubSubVendorDate_of_PO, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control SubSubVendorDate_of_PO", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubSubVendorDate_of_PO, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+
+
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Vendor Location:<span style="color:#ff0000;">*</span></label>
+                                                            @Html.TextBoxFor(model => model.Vendor_Location, htmlAttributes: new { placeholder = "Select Vendor Location", @class = "form-control Date_of_PO1", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Vendor_Location, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+
+
+                                                  
+
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Outdoor / On-Site Time (Hrs.):<span style="color:#ff0000;">*</span></label>
+
+                                                            @Html.TextBoxFor(model => model.on_site_time, htmlAttributes: new { placeholder = "Outdoor / On-Site Time (Hrs.)", @class = "form-control", autocomplete = "off", @OnKeyPress = "return isNumber(event)" @*@id = "txtonsite"*@ })
+                                                            @Html.ValidationMessageFor(model => model.on_site_time, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+
+                                                        <div class="form-group">
+                                                            <label>Office / Off-Site Time (Hrs.):<span style="color:#ff0000;">*</span></label>
+                                                            @Html.TextBoxFor(model => model.off_site_time, htmlAttributes: new { placeholder = "Office / Off-Site Time (Hrs.)", @class = "form-control", autocomplete = "off", @OnKeyPress = "return isNumber(event)" @*, @id = "txtoffsite"*@ })
+                                                            @Html.ValidationMessageFor(model => model.off_site_time, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+
+                                                        <div class="form-group">
+                                                            <label>Travel Time (Hrs.):<span style="color:#ff0000;">*</span></label>
+                                                            @Html.TextBoxFor(model => model.travel_time, htmlAttributes: new { placeholder = "Travel Time (Hrs.)", @class = "form-control", autocomplete = "off", @OnKeyPress = "return isNumber(event)" @*, @id = "txttraveltime"*@ })
+                                                            @Html.ValidationMessageFor(model => model.travel_time, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                               
+                                                
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label>Scope:<span style="color:#ff0000;">*</span></label>
+
+                                                                @if (ViewBag.check == "productcheck")
+                                                                {
+                                                                    <select id="BrScope" class="form-control form-multiselect-city" multiple="multiple" name="BrScope" placeholder="Select Option" required="required">
+
+                                                                        @foreach (var item in ViewBag.Scope)
+                                                                        {
+                                                                            if (EditScopeName.Contains(item.Name))
+                                                                            {
+                                                                                <option value="@item.Code" selected> @item.Name </option>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@item.Code"> @item.Name </option>
+                                                                            }
+
+                                                                        }
+                                                                    </select>
+
+                                                                }
+                                                                else
+                                                                {
+
+
+
+                                                                    //  foreach (var item in ViewData["Scopes"] as IEnumerable<TuvVision.Models.monitors>)
+                                                                    <select id="BrScope" class="form-control form-multiselect-city" multiple="multiple" name="BrScope" placeholder="Select Option" required="required">
+                                                                        @foreach (var item in ViewBag.Scope)
+                                                                        {
+
+                                                                            <option value="@item.Code"> @item.Name </option>
+
+
+                                                                        }
+
+                                                                    </select>
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(model => model.chkMan, new { @onclick = "return false;" })
+                                                                <label for="InActive" style="color:black;padding-top:24px;">Man-Month asgmt.</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Type Of Assignments:</label>
+                                                                @*@Html.TextBoxFor(model => model.OPE, new { placeholder = "Enter OPE", @class = "form-control form-control-custom" })*@
+                                                                @Html.DropDownListFor(m => m.CurrentAssignment, new List<SelectListItem>
+                                                {
+                                                    new SelectListItem{ Text="---SELECT---", Value = "" },
+
+                                                    new SelectListItem{ Text="Regional - Daily inspection at different location.", Value = "Regional - Daily inspection at different location." },
+                                                    new SelectListItem{ Text="Site/fixed location Deputed at single vendor/customer location for inspection/QA activity.", Value = "Site/fixed location Deputed at single vendor/customer location for inspection/QA activity." },
+                                                    new SelectListItem{ Text="Office - Major work performed from office (Coodinators/Managers/PCH)", Value = "Office - Major work performed from office (Coodinators/Managers/PCH)" },
+                                                    new SelectListItem{ Text="Marketing - Marketing On-Site/off-Site", Value = "Marketing - Marketing On-Site/off-Site" },
+                                                    new SelectListItem{ Text="QA - Quality Assurance", Value = "QA - Quality Assurance" },
+                                                    new SelectListItem{ Text="ASME/PED/Special assignments", Value = "ASME/PED/Special assignments" },
+                                                },
+
+                                                                     new { @class = "form-control", @id = "CA" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+
+
+
+                                                            <div class="form-group">
+
+
+                                                                @Html.CheckBoxFor(model => model.specialMonitoring)
+                                                                <label for="InActive" style="color:black;padding-top:24px;">surprise Monitoring:</label>
+
+
+
+
+                                                            </div>
+
+                                                        </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+
+                                                        <div class="col-xs-12">
+                                                            <h5 style="margin-top:10px;margin-bottom:8px; color:blue;">Upload Template:</h5>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-2">
+
+
+                                                            @*<a class="btn btn-default insert-form-btn" href="~/Excel/template.xlsx" role="button" download="IVRIRNTemplate.xlsx" style="margin-top:0px;">*@
+                                                            <a class="btn btn-default insert-form-btn" href="~/Excel/Monitoring_of_Monitors.xlsx" role="button" download="Monitoring_of_Monitors.xlsx" style="margin-top:0px;">
+                                                                <i class="fa fa-download"></i>Download Format
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <div class="form-group">
+                                                                <input type="file" name="FileUpload1" class="form-control" id="FileUpload1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <button type="button" class="btn btn-default insert-form-btn" style="margin-top:0px;" onclick="uploadFile()"> Upload </button>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+
+                                                            <label>Item Description:<span style="color:#ff0000;">*</span></label>
+                                                            @Html.TextAreaFor(model => model.itemDescription, new { placeholder = "Enter item Description", @class = "form-control form-control-custom CPIN", @rows = "3", style = "height: 109px;" })
+                                                            @Html.ValidationMessageFor(model => model.itemDescription, "", new { @class = "text-danger", @required = "required" })
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group">
+                                                        <div class="col-xs-12">
+                                                            <table id="example" class="display table table-bordered table-striped" cellspacing="0">
+                                                                <thead>
+                                                                    <tr class="hidden">
+
+                                                                        <th width="3%"></th>
+                                                                        <th width="67%">question</th>
+                                                                        <th width="40%"></th>
+
+
+
+                                                                    </tr>
+                                                                </thead>
+                                                                @{
+                                                                    int j = 0;
+                                                                }
+
+                                                                @if (ViewBag.QuestionNo3 != null)
+                                                                {
+                                                                    <tbody>
+                                                                        <tr class="hidden">
+                                                                            <td id="QuestionNO">Question No</td>
+                                                                            <td class="question">question</td>
+                                                                            <td class="ans"></td>
+
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td width="5%" class="form-page-title">Sr.No</td>
+                                                                            <td width="67%" class="form-page-title">Parameters</td>
+                                                                            <td width="40%" class="form-page-title">Finding</td>
+
+                                                                        </tr>
+
+
+                                                                        @foreach (var b in ViewData["QuestionNo4"] as IEnumerable<TuvVision.Models.MonitoringOfMonitors>)
+                                                                        {
+
+                                                                            <tr class="trQuestion">
+
+                                                                                <td style="text-align: center;">@b.QuestionNo</td>
+                                                                                @Html.HiddenFor(m => m.lstCallDashBoard4[j].QuestionNo, new { Value = b.QuestionNo })
+                                                                                <td>@b.Question <span style="color:#ff0000;">*</span></td>
+
+
+                                                                                @if (b.OptButton == "1")
+                                                                                {
+
+                                                                                    <td>
+                                                                                        <div id="myRadioGroup">
+                                                                                            @if (!String.IsNullOrEmpty(b.Ans))
+                                                                                            {
+
+                                                                                                @Html.RadioButtonFor(m => m.lstCallDashBoard4[j].Ans, "YES", b.Ans == "YES" ? new { id = "AuthLevel1" + j, Checked = "checked" } : null)
+                                                                                                <label for="Active">YES&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                                                                @Html.RadioButtonFor(m => m.lstCallDashBoard4[j].Ans, "NO", b.Ans == "NO" ? new { id = "AuthLevel2" + j, Checked = "checked" } : null)
+                                                                                                <label for="InActive">NO&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                                                                @Html.RadioButtonFor(m => m.lstCallDashBoard4[j].Ans, "NA", b.Ans == "NA" ? new { id = "AuthLevel3" + j, Checked = "checked" } : null)
+                                                                                                <label for="InActive">NA&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                                                                @Html.ValidationMessageFor(model => model.lstCallDashBoard4[j].Ans, "", new { @class = "text-danger" })
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                @Html.RadioButtonFor(m => m.lstCallDashBoard4[j].Ans, "Yes", new { id = "AuthLevel1_" + @b.QuestionNo, @class = "optionNo", @name = @b.QuestionNo })
+                                                                                                <label for="Active">YES&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+                                                                                                @Html.RadioButtonFor(m => m.lstCallDashBoard4[j].Ans, "No", new { id = "AuthLevel2_" + @b.QuestionNo, @class = "optionNo", @name = @b.QuestionNo })
+                                                                                                <label for="InActive">No&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+
+                                                                                                @Html.RadioButtonFor(m => m.lstCallDashBoard4[j].Ans, "NA", new { id = "AuthLevel3_" + @b.QuestionNo, @class = "optionNo", @name = @b.QuestionNo })
+                                                                                                <label for="InActive">NA&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                                                                @Html.ValidationMessageFor(model => model.lstCallDashBoard4[j].Ans, "", new { @class = "text-danger" })
+                                                                                            }
+
+                                                                                        </div>
+
+                                                                                    </td>
+
+                                                                                }
+
+                                                                                else if (b.checkbox == "1")
+                                                                                {
+
+
+                                                                                    <td>
+                                                                                        @if (Session["Operation"].ToString() == "I")
+                                                                                        {
+                                                                                            @Html.CheckBoxFor(m => m.Checkbox1, new { @class = "DCheckBox" })
+
+                                                                                            @Html.HiddenFor(m => m.lstCallDashBoard4[j].Checkbox1)
+
+
+                                                                                        }
+                                                                                        else if (Session["Operation"].ToString() == "U")
+                                                                                        {
+                                                                                            if (Convert.ToString(b.cheboxans) == "1")
+                                                                                            {
+                                                                                                bool Checkbox1 = true;
+                                                                                                @Html.CheckBoxFor(m => Checkbox1, new { @Checked = true, @class = "DCheckBox" })
+                                                                                                @Html.HiddenFor(m => m.Checkbox1)
+                                                                                            }
+                                                                                            else
+                                                                                            {
+
+                                                                                                bool Checkbox1 = false;
+                                                                                                @Html.CheckBoxFor(m => Checkbox1, new { @Checked = true })
+                                                                                                @Html.HiddenFor(m => m.Checkbox1)
+                                                                                            }
+
+                                                                                        }
+
+
+                                                                                    </td>
+
+                                                                                }
+                                                                                else if (b.FreeText == "1")
+                                                                                {
+                                                                                    <td>
+                                                                                        @if (b.QuestionNo == "11")
+                                                                                        {
+                                                                                            @*@Html.TextBoxFor(model => model.lstCallDashBoard4[j].FreeText1, new { @Value = b.FreeText1, style = "width: 500px; height: 50px;" })*@
+                                                                                            @Html.TextAreaFor(model => model.lstCallDashBoard4[j].FreeText1, new { @Value = b.FreeText1, @class = "form-control form-control-custom CPIN", @rows = "5", @columns = "30", @cols = "20", style = "width: 400px; height: 300px; resize:none;" })
+                                                                                            @Html.ValidationMessageFor(model => model.lstCallDashBoard4[j].FreeText1, "", new { @class = "text-danger", @required = "required" })
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            @Html.TextAreaFor(model => model.lstCallDashBoard4[j].FreeText1, new { @Value = b.FreeText1, @class = "form-control form-control-custom CPIN", @rows = "4", @columns = "30", @cols = "20", style = "width: 400px; height: 150px; resize:none;" })
+                                                                                            @Html.ValidationMessageFor(model => model.lstCallDashBoard4[j].FreeText1, "", new { @class = "text-danger", @required = "required" })
+                                                                                        }
+                                                                                    </td>
+                                                                                }
+
+                                                                                else if (b.QuestionNo == "11a")
+                                                                                {
+                                                                                    <td>
+                                                                                        @if (b.Ans != "" || b.Ans != null)
+                                                                                        {
+                                                                                            // Dropdown for Question 33 with a specific height
+                                                                                            @Html.DropDownListFor(model => model.lstCallDashBoard1[j].Ans,
+                                                                                                      new SelectList(new[] { "Non-Conformity (NC)", "Concern (C)", "Opportunity for Improvement (OFI)", "Observations (OBS)", "Excellent Practices (EP)" }, b.Ans),
+                                                                                                      "Select an option",
+                                                                                                    new { @class = "form-control FreeTextBox1", style = "width: 400px; height: 40px;" })
+                                                                                            @Html.ValidationMessageFor(model => model.lstCallDashBoard1[j].Ans, "", new { @class = "text-danger", @required = "required" })
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            // General Dropdown for other cases
+                                                                                            @Html.DropDownListFor(model => model.lstCallDashBoard1[j].Ans,
+                                                                                                      new SelectList(new[] { "Non-Conformity (NC)", "Concern (C)", "Opportunity for Improvement (OFI)", "Observations (OBS)", "Excellent Practices (EP)" }, b.Ans),
+                                                                                                                                      "Select an option",
+                                                                                                              new { @class = "form-control FreeTextBox1", style = "width: 400px; height: 150px;" })
+                                                                                            @Html.ValidationMessageFor(model => model.lstCallDashBoard1[j].Ans, "", new { @class = "text-danger" })
+                                                                                        }
+
+
+
+                                                                                    </td>
+                                                                                }
+
+                                                                            </tr>
+                                                                            j++;
+                                                                        }
+
+
+                                                                    </tbody>
+                                                                }
+
+                                                            </table>
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="form-group">
+                                                        <div class="col-xs-12">
+                                                            <table id="example" class="display table table-bordered table-striped" cellspacing="0">
+                                                                <thead>
+
+                                                                    <tr style="color:#FFFFFF">
+                                                                        <th class="hidden"></th>
+                                                                        <th style="width:60%;">Rate Inspector</th>
+                                                                        <th>1</th>
+                                                                        <th>2</th>
+                                                                        <th>3</th>
+                                                                        <th>4</th>
+                                                                        <th>5</th>
+
+                                                                    </tr>
+
+                                                                </thead>
+                                                                @{
+                                                                    int i = 0;
+                                                                }
+
+
+                                                                <tbody>
+
+                                                                    @*<tr>
+                                                                            @Html.Hidden(m => m.Qidrate, "1")
+                                                                            <td>@Html.RadioButton(m => m.Status)</td>
+                                                                        </tr>*@
+                                                                    @foreach (var c in ViewData["RateQuestionMom"] as IEnumerable<TuvVision.Models.MonitoringOfMonitors>)
+                                                                    {
+                                                                        <tr>
+
+                                                                            @*<td class="hidden">@Html.HiddenFor(m => m.Qidrate, "1")</td>*@
+
+
+
+                                                                            @*<td class="hidden">@c.Qidrate</td>*@
+                                                                            @Html.HiddenFor(m => m.lstQuestionrate[i].Qidrate, new { Value = c.Qidrate, @class = "QuestionNo", })
+                                                                            <td>@c.RateQuestion</td>
+                                                                            @if (c.Status != null && c.Status != 0)
+                                                                            {
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 1, c.Status == 1 ? new { id = "Auth1" + i, Checked = "checked", @class = "optionNo1" } : null)</td>
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 2, c.Status == 2 ? new { id = "Auth2" + i, Checked = "checked", @class = "optionNo2" } : null)</td>
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 3, c.Status == 3 ? new { id = "Auth3" + i, Checked = "checked", @class = "optionNo3" } : null)</td>
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 4, c.Status == 4 ? new { id = "Auth4" + i, Checked = "checked", @class = "optionNo4" } : null)</td>
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 5, c.Status == 5 ? new { id = "Auth5" + i, Checked = "checked", @class = "optionNo5" } : null)</td>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 1, new { id = "Auth1_" + @c.Qidrate, @class = "optionNo1", @name = @c.Qidrate })</td>
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 2, new { id = "Auth2_" + @c.Qidrate, @class = "optionNo2", @name = @c.Qidrate })</td>
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 3, new { id = "Auth3_" + @c.Qidrate, @class = "optionNo3", @name = @c.Qidrate })</td>
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 4, new { id = "Auth4_" + @c.Qidrate, @class = "optionNo4", @name = @c.Qidrate })</td>
+                                                                                <td>@Html.RadioButtonFor(m => m.lstQuestionrate[i].Status, 5, new { id = "Auth5_" + @c.Qidrate, @class = "optionNo5", @name = @c.Qidrate })</td>
+                                                                            }
+
+                                                                        </tr>
+
+                                                                        i++;
+                                                                    }
+
+                                                                    <tr>
+
+                                                                        <td><b>Rating scale:1-Poor, 2-Average, 3-Good, 4-Very Good, 5-Excellent</b></td>
+
+                                                                    </tr>
+                                                                    @if (Model.RatingAvg != null && Model.RatingAvg != 0)
+                                                                    {
+                                                                        <tr>
+                                                                            <td style="border:none;"></td>
+                                                                            <td>
+                                                                                <b>Scale:</b>
+                                                                            </td>
+                                                                            <td colspan="4">
+                                                                                @Html.TextBoxFor(model => model.RatingAvg)out 5
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                    }
+                                                                </tbody>
+
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+
+
+                                                @* Added By shrutika salve 07092023*@
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label><i class="fa fa-paperclip" style="color:black;"></i> @*Related Documents*@ Attachements : </label> <br />
+                                                            <input type="file" class="filepond" name="FileUpload" id="FileUpload" multiple>
+
+                                                            <input hidden="hidden" id="FileUpload" name="FileUpload" class="hidden" />
+                                                        </div>
+                                                    </div>
+
+                                                    @if (Model != null)
+                                                    {
+                                                        if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                        {
+                                                            <input type="hidden" value="Yes" name="testing" id="testing" />
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <ul class="Attachment">
+                                                                        @foreach (var item in Model.FileDetails)
+                                                                        {
+                                                                            <li>
+                                                                                @*<a class="title" href="@Url.Action("Download1", "VisitReport", new { @p = item.IDS + item.Extension, @d= item.PK_ID })">@item.FileName</a>*@
+                                                                                @*<a class="title1" href="~/VisitReport/Download1/?d=@item.FileName">@item.FileName</a>*@
+                                                                                <a class="title1" href="~/CompentencyMetrixView/Download/?d=@item.PK_ID">@item.FileName</a>
+                                                                                <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem">X</a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="hidden" value="" name="testing" id="testing" />
+                                                            <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">There is no attachments !!!</p>
+                                                    }
+                                                </div>
+
+
+
+
+                                            </div>
+
+
+
+                                            <br />
+
+                                            <br />
+
+                                            <div class="form-group">
+                                                <div class="col-xs-12">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <label for="sel-options">Comments by Monitor1:</label>
+                                                            <div>
+                                                                @if (Session["fullName"].ToString() == Model.Inspector_Name)
+                                                                {
+                                                                    @Html.TextAreaFor(model => model.InspectorComment, new { placeholder = "Enter Comments by Inspector", @class = "form-control form-control-custom CPIN", @rows = "3", style = "height: 109px;" })
+                                                                    @*@Html.TextBoxFor(model => model.InspectorComment, new { style = "width: 1300PX; height: 60px;", placeholder = "Enter Comments by Inspector" })*@
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.TextAreaFor(model => model.InspectorComment, new { placeholder = "Enter Comments by Inspector", @class = "form-control form-control-custom CPIN", @rows = "3", @readonly = "readonly", style = "height: 109px;" })
+                                                                    @*@Html.TextBoxFor(model => model.InspectorComment, new { style = "width: 1300PX; height: 60px;", placeholder = "Enter Comments by Inspector", @readonly = "readonly" })*@
+                                                                }
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <br />
+                                            <div class="form-group">
+                                                <div class="col-xs-12">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <label for="sel-options">Reporting manager comments:</label>
+                                                            <div>
+                                                                @if (Session["Branch"].ToString() == "True")
+                                                                {
+                                                                    @Html.TextAreaFor(model => model.Reporting_manager_comments, new { placeholder = "Enter Reporting Manager Comments", @class = "form-control form-control-custom CPIN", @rows = "3", style = " height: 109px;" })
+                                                                    @*@Html.TextBoxFor(model => model.Reporting_manager_comments, new { style = "width: 1300px; height: 60px;", placeholder = "Enter Reporting Manager Comments" })*@
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.TextAreaFor(model => model.Reporting_manager_comments, new { placeholder = "Enter Reporting Manager Comments", @class = "form-control form-control-custom CPIN", @rows = "3", @readonly = "readonly", style = " height: 109px;" })
+                                                                    @*@Html.TextBoxFor(model => model.Reporting_manager_comments, new { style = "width: 1300px; height: 60px;", placeholder = "Enter Reporting Manager Comments", @readonly = "readonly" })*@
+                                                                }
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+
+                                            @*<div class="col-xs-12 text-center">
+                                                <label><span class="text-danger"></span></label>
+
+                                                @*<input type="submit" name="save" value="Save" id="btnUserSave1" class="btn btn-primary insert-form-btn" style="padding-top:10px; width:1300PX; margin-left: 19px;" />*@
+
+                                            @*<button type="submit" id="btnUserSave1" class="btn btn-default inssert-form-btn"><i class="fa fa-plus-circle"></i> Save </button>*@
+
+                                            <div class="col-xs-12 text-center">
+
+
+                                                <button type="submit" id="btnUserSave1" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Save </button>
+
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+
+                                                <div id="dynamicTableContainer"></div>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <!--Contact Details By Manoj -->
+                                </div><!-- /.box-shadow -->
+                                <!-- /.col -->
+                                <!-- /.row -->
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container-fluid -->
+                    <!--End of header-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                                    }
+
+
+
+
+
+
+
+
+<script>
+    $(function () {
+        $("#Report_No").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '@Url.Action("MonitoringOfMonitors", "CompentencyMetrixView")',
+                    data: JSON.stringify({ "input": request.term }),
+                    datatype: "json",
+                    type: "POST",
+                    contentType: "application/json;charset-utf-8",
+                    success: function (data) {
+
+                        response($.map(data, function (item) {
+                            //alert(JSON.stringify(data))
+                            return { label: item.Report_No, value: item.Report_No };
+
+                        })
+                    )
+                    },
+                    error: function (req, status, err) {
+                        console.log('Something went wrong', status, err);
+                    },
+                    minlength: 3
+                });
+            }
+        });
+    });
+</script>
+
+<script>
+
+    function uploadFile() {
+        debugger;
+        var formData = new FormData();
+        var fileInput = document.getElementById("FileUpload1");
+
+        if (fileInput.files.length > 0) {
+            formData.append("FileUpload1", fileInput.files[0]);
+
+            $.ajax({
+                url: '/CompentencyMetrixView/MOMsiteExcelUpload',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        // Process the answers dictionary
+                        $.each(response.answers, function (questionNumber, answer) {
+                           // alert(questionNumber);
+                            //alert(questionNumber , answer);
+                            var id;
+                            // Generate the radio button ID dynamically based on question number and answer
+                            if (answer === 'Yes') {
+                                id = "1";
+                            }
+                            else if(answer === 'No')
+                            {
+                                id = "2";
+                            }
+                            else
+                            {
+                                id = "3";
+                            }
+                            if (answer === 'Yes' || answer === 'No' || answer === 'NA') {
+
+                                var radioId = 'AuthLevel' + id + '_' + questionNumber;
+                                //alert(radioId + "-");
+                                $("#" + radioId).prop('checked', true);
+
+                            }
+                            if (questionNumber === '12') {
+                                //alert(questionNumber);
+                                //if (answer === 'Yes') {
+                                    //alert(answer);
+                                    $("#Checkbox1").prop('checked', true)
+                                //}
+                            }
+
+
+
+                            if (questionNumber === '14a') {
+                                newQue = "1";
+
+                                if (answer === '1') {
+
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+                                    //alert(radioIdNew);
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '2') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '3') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '4') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '5') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                            }
+
+                            else if (questionNumber === '14b') {
+                                newQue = "2";
+
+                                if (answer === '1') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '2') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '3') {
+
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                }
+                                else if (answer === '4') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '5') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                               // alert(radioIdNew);
+                            }
+                            else if (questionNumber === '14c') {
+                                newQue = "3";
+                                if (answer === '1') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '2') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '3') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '4') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '5') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                            }
+                            else if (questionNumber === '14d') {
+                                newQue = "4";
+                                if (answer === '1') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '2') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '3') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '4') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '5') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                            }
+                            else if (questionNumber === '14e') {
+                                newQue = "5";
+                                if (answer === '1') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '2') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '3') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '4') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '5') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                            }
+                            else if (questionNumber === '14f') {
+                                newQue = "6";
+                                if (answer === '1') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '2') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '3') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '4') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                                else if (answer === '5') {
+                                    radioIdNew = 'Auth' + answer + '_' + newQue;
+
+                                    $("#" + radioIdNew).prop('checked', true);
+                                }
+                            }
+
+
+                            if (response.values) {
+
+                                $("#itemDescription").val(response.values.itemDescription);
+                                $("#lstCallDashBoard4_22__FreeText1").val(response.values.trainingtopic);
+                                $("#lstCallDashBoard4_23__FreeText1").val(response.values.observation);
+                                $("#lstCallDashBoard1_24__Ans").val(response.values.obscat);
+                            }
+
+
+                        });
+
+                        //alert(JSON.stringify(response.tablehtml));
+
+                        if (response.tablehtml) {
+                            // Parse the tablehtml JSON (it should be an array of arrays)
+                            const tableData = JSON.parse(response.tablehtml);
+
+                            // Create a <p> tag with the text "Observations Category" and add it above the table
+                            const pTag = document.createElement('p');
+                            pTag.textContent = 'Observations Category';  // Set the text of the <p> tag
+                            pTag.style.fontWeight = 'bold';  // Optional: make the text bold
+                            pTag.style.textAlign = 'left';
+                            pTag.style.marginLeft = '20px'; // Optional: center the text
+
+                            // Create a new HTML table element
+                            const table = document.createElement('table');
+                            table.style.border = '1px solid black';
+                            table.style.borderCollapse = 'collapse';
+                            table.style.marginLeft = '20px';
+                            table.style.width = '80%';
+
+                            // Populate the table rows and cells
+                            tableData.forEach(row => {
+                                const tr = document.createElement('tr');
+
+                                row.forEach(cellText => {
+                                    const td = document.createElement('td');
+                                    td.textContent = cellText; // Add cell text
+                                    td.style.border = '1px solid black'; // Add cell border
+                                    td.style.padding = '5px'; // Add padding for better readability
+                                    tr.appendChild(td); // Add cell to row
+                                });
+
+                                table.appendChild(tr); // Add row to table
+                            });
+
+                            // Append the table to a container on the page
+                            const container = document.getElementById('dynamicTableContainer'); // Ensure this element exists in your HTML
+                            container.innerHTML = ''; // Clear existing content
+                            container.appendChild(pTag);
+                            container.appendChild(table); // Add the new table
+                        }
+
+                        // Process other fields (e.g., itemDescription, Reference_Document)
+
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + xhr.responseText);
+                }
+            });
+        } else {
+            alert("Please select a file to upload.");
+        }
+    }
+</script>
+
+@*<script>
+        $(document).ready(function () {
+            debugger
+            if ('@Session["fullName"].ToString()' != '@Model.Monitor_Name') {
+                $("#textid").addClass('addCSS');
+            }
+
+
+        })
+    </script>*@
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        var a = '@Session["fullName"].ToString()';
+        var b = '@Model.Monitor_Name';
+
+        if (a.toUpperCase() != b.toUpperCase()) {
+
+            $("#textid").addClass('addCSS');
+        }
+
+    })
+</script>
+
+
+
+
+<script>
+    function DateValidation() {
+        debugger;
+        var Date = $("#Date").val();
+        var Onsite = $("#on_site_time").val();
+        var Offsite = $("#off_site_time").val();
+        var TravelTime = $("#travel_time").val();
+        var monitor = $("#Monitor_Name").val();
+        debugger;
+        $.ajax({
+            url: '@Url.Action("validation", "CompentencyMetrixView")',
+            type: "POST",
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify({ "Onsite": Onsite, "Offsite": Offsite, "TravelTime": TravelTime, "monitor": monitor, "Date": Date }),
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger;
+                //alert(response);
+                var Result = response.split('_');
+                if (Result[0] == 'Failed') {
+                    alert(Result);
+                    $("#hdnDateValidation").val("1");
+                }
+                else {
+                    // Validation passed, submit the form
+                    $("#hdnDateValidation").val("0");
+                }
+            },
+            error: function () {
+                alert("Error in getting data!");
+                $("#hdnDateValidation").val("1");
+                return false;
+            }
+        });
+
+        // Prevent the form from being submitted immediately
+    }
+</script>
+
+
+<script>
+    $('#btnSearch1').click(function () {
+        debugger;
+
+        $('#partialtabledata').html('');
+        var Report_No = $('#Report_No').val();
+        debugger;
+
+        $.ajax({
+            url: '@Url.Action("GetdataMonitoringofmonitor", "CompentencyMetrixView")',
+            type: "post",
+            datatype: 'json',
+            data: { Report_No: Report_No },
+            success: function (address) {
+                //alert(address.TUVIConrolNumber);
+                // $('#CNNO').val(ObjModelQuotationMast.Sap_And_Controle_No).val()
+                debugger
+                if (address.PK_CALL_ID == 0) {
+                    alert("please select another Report No");
+                }
+
+                $("#Date").val(address.Date).val();
+                $("#Inspector_Name").val(address.Inspector_Name).val();
+                var myArray1 = address.Scope.split(",");
+                for (var i = 0; i < myArray1.length; i++) {
+                    if (address.Scope.indexOf(myArray1[i]) >= 0) {
+                        //multi.options[i].selected = true;
+                        $("#BrScope").multiselect('select', myArray1[i])
+                    }
+                }
+                $("#TUVI_control_number").val(address.TUVI_control_number).val();
+                $("#Customer_Name").val(address.Customer_Name).val();
+                $("#EndCustomerName").val(address.EndCustomerName).val();
+                $("#ProjectName").val(address.ProjectName).val();
+                $("#Vendor_Name").val(address.Vendor_Name).val();
+                $("#Vendor_Location").val(address.Vendor_Location).val();
+                $("#inspectorId").val(address.inspectorId).val();
+                $("#PK_CALL_ID").val(address.PK_CALL_ID).val();
+                $("#DEC_PMC_EPC_Name").val(address.DEC_PMC_EPC_Name).val();
+                $("#Po_No").val(address.Po_No).val();
+                $("#DEC_PMC_EPC_Assignment_No").val(address.DEC_PMC_EPC_Assignment_No).val();
+                $("#Date_of_PO").val(address.Date_of_PO).val();
+                $("#Sub_Vendor_Name").val(address.Sub_Vendor_Name).val();
+                $("#Po_No_SubVendor").val(address.Po_No_SubVendor).val();
+                $("#SubSubVendorDate_of_PO").val(address.SubSubVendorDate_of_PO).val();
+                var myArray = address.Item_Inspected.split(",");
+                for (var i = 0; i < myArray.length; i++) {
+                    if (address.Item_Inspected.indexOf(myArray[i]) >= 0) {
+                        //multi.options[i].selected = true;
+                        $("#BrAuditee1").multiselect('select', myArray[i])
+                    }
+                }
+                $("#InspectorLevelauthorisation").val(address.InspectorLevelauthorisation).val();
+                $("#MonitorinspectorName").val(address.MonitorinspectorName).val();
+                $("#ReportNo").val(address.ReportNo).val();
+
+                if (address.chkMan === true) {
+                    $("#chkMan").prop("checked", true);
+                } else {
+                    $("#chkMan").prop("checked", false);
+                }
+
+                alert("Data Added Successfully!")
+            }
+        });
+
+
+
+    });
+</script>
+
+<script>
+
+    $(function () {
+        $('.form-multiselect-city').multiselect({
+            enableFiltering: true,
+            includeSelectAllOption: true,
+            enableCaseInsensitiveFiltering: true
+        });
+    });
+</script>
+
+<script>
+    function AllValidation() {
+        if (validateform()) {
+            //alert("Form Validation True");
+            DateValidation();
+            debugger;
+            if ($("#hdnDateValidation").val() == '0') {
+                //alert("DateValidation True");
+                if (validation()) {
+                    //alert("Validation True");
+                    return true;
+                }
+                else {
+                    //alert("Validation False");
+                    return false;
+                }
+
+            }
+            else {
+                //alert("Date Validation False");
+                return false;
+            }
+        }
+        else {
+            // alert("Form Validation False");
+            return false;
+        }
+    }
+    $("#btnUserSave1").click(function myfunction() {
+
+        if (AllValidation()) {
+            // alert("all Validation Are True");
+            $("#form1").submit();
+        }
+        else {
+            //alert("all Validation False");
+            return false;
+        }
+
+    });
+
+
+    function validation() {
+        debugger;
+        if (!$("#example").valid()) {
+            return false;
+        }
+    }
+
+
+
+
+
+
+
+    function validateform() {
+        debugger
+
+        var Scope = $("#BrScope").val();
+        var ItemName = $("#BrAuditee1").val();
+        var Inspector_Level_of_authorisation = $("#Inspector_Level_of_authorisation").val();
+        var itemDescription = $("#itemDescription").val();
+        // var travel_time = $("#travel_time").val();
+        var TT = parseInt($("#travel_time").val());// $("#TravelTime").val();
+        var ODT = $("#on_site_time").val();
+        var ET = $("#off_site_time").val();
+        var TravelTime = $("#travel_time").val();
+        //var Reference_Document = $("#Reference_Document").val();
+        var Monitor_level_of_authorisation = $("#Monitor_level_of_authorisation").val();
+        //var on_site_time = $("#on_site_time").val();
+        //var Details_of_inspection_activity = $("#Details_of_inspection_activity").val();
+
+        var Vendor_Location = $("#Vendor_Location").val();
+        var checkboxes = $('input.DCheckBox:checked').length;
+
+
+        //var a;
+
+
+        //$("#example tr").each(function (index, row) {
+        //    $(row).find("td").each(function (cellIndex, cell) {
+
+        //        var value = $(cell).text();
+        //        if (value == "13") {
+        //            debugger;
+        //            //$("input:radio.someClass:checked");
+        //            var className = "lstCallDashBoard4[25].Ans";
+        //            //var groupname = $('input[name="' + className + '"]:unchecked').val();
+        //            var selectedOption = $('input[name="' + className + '"]:checked').val();
+        //            if (selectedOption === undefined) {
+        //                // alert("Please Check Q. No 35");
+        //                a = '1';
+
+        //                return false;
+        //            }
+
+
+
+
+        //        }
+        //    });
+        //});
+
+
+        //if (a == '1') {
+        //    alert("Please select Q.No 13 ANS")
+        //    return false;
+        //}
+
+
+
+        if (0 <= parseInt(ODT) && parseInt(ODT) <= 14) {
+
+        }
+        else {
+            alert("Please select On site Time between 0 to 14!");
+            $("#on_site_time").focus()
+            return false;
+        }
+        if (0 <= parseInt(ET) && parseInt(ET) <= 14) {
+
+        }
+        else {
+            alert("Please select Office Time between 0 to 14!");
+            $("#off_site_time").focus()
+            return false;
+        }
+        if (0 <= parseInt(TT) && parseInt(TT) <= 14) {
+
+        }
+        else {
+            alert("Please select Travel Time between 0 to 14!");
+            $("#travel_time").focus()
+            return false;
+        }
+        if (parseInt(ODT) == 0 && parseInt(TT) == 0 && parseInt(ET) == 0) {
+            alert("At least one Value should be more than 0!");
+            $("#on_site_time").focus()
+            return false;
+        }
+
+
+        if ((itemDescription == null || itemDescription == "")) {
+            alert("Please Enter item Description");
+            $("#Scope").focus();
+            return false;
+        }
+
+
+
+
+
+        if ((Scope == null || Scope == "")) {
+            alert("Please Select Scope");
+            $("#Scope").focus();
+            return false;
+        }
+
+        if ((Inspector_Level_of_authorisation == null || Inspector_Level_of_authorisation == "")) {
+            alert("Please Select Inspector Level of authorisation");
+            $("#Inspector_Level_of_authorisation").focus();
+            return false;
+        }
+
+        if ((ItemName == null || ItemName == "")) {
+            alert("Please select Item Name");
+            $("#ItemName").focus();
+            return false;
+        }
+
+        if ((Vendor_Location == null || Vendor_Location == "")) {
+            alert("Please Enter Vendor Location");
+            $("#Vendor_Location").focus();
+            return false;
+        }
+
+        if ((Monitor_level_of_authorisation == null || Monitor_level_of_authorisation == "")) {
+            alert("Please Enter Monitor level of authorisation");
+            $("#Monitor_level_of_authorisation").focus();
+            return false;
+        }
+        if (TravelTime == "" || TravelTime == null) {
+            alert("Select Travel Time!");
+            $("#travel_time").focus()
+            return false;
+        }
+
+        if (checkboxes == "0") {
+            alert("Please Fill CheckBox.");
+            $("#Checkbox1").focus();
+            return false;
+        }
+
+
+        return true;
+
+
+    }
+
+
+</script>
+
+
+<script>
+    $('#ReportNo').click(function () {
+        debugger;
+
+        debugger;
+        var ReportNo = $("#Report_No").val();
+        var Type = "";
+        if (ReportNo.substring(0, 3) === 'ONS') {
+            Type = "Onsite Monitoring"
+        }
+        else if (ReportNo.substring(0, 3) === 'MEN') {
+            Type = "Mentoring"
+        }
+        else if (ReportNo.substring(0, 3) === 'OFS') {
+            Type = "Offsite Monitoring"
+        }
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ReportData", "CompentencyMetrixView")', //
+            data: { ReportNo: ReportNo, Type: Type },
+            dataType: 'json',
+            success: function (response) {
+                debugger;
+                //alert(response);
+                if (response.msg) {
+                    //window.location.href = response.msg;
+                    window.open(response.msg, "_blank");
+                }
+                //alert(Type)
+            },
+            error: function () {
+                console.log('Error in retrieving monitor details');
+            }
+        });
+    });
+
+    // Example usage
+
+
+</script>
+
+@****************************************************************************************Script Started Here******************************************************************@
+<!--filepond-->
+<!-- Load FilePond library -->
+
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+
+<script>
+    FilePond.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(document.querySelector('.filepond'));
+</script>
+
+<script>
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment", "CompentencyMetrixView")'
+    });
+</script>
+
+
+@*//added by nikita on 06052024*@
+<script>
+
+    $(document).ready (function(){
+        debugger;
+        var ReportNo = $("#Report_No").val();
+        var UIN=@Html.Raw(Json.Encode(Model.UIN)); // Accessing model value
+        var Type = "";
+        if (ReportNo.substring(0, 3) === 'ONS') {
+            Type = UIN;
+        }
+        else {
+
+        }
+        $.ajax({
+            url:"@Url.Action("CheckSendForApproval_monitoring", "CompentencyMetrixView")",
+            Type:"get",
+            datetype:"json",
+            data: { pkcallid: Type },
+            success:function(result){
+                debugger;
+                var parsed = $.parseJSON(result);
+                var stage = parsed[0].Stage;
+                var issendforapproval = parsed[0].IsSendForApproval;
+
+                //var stage = ds[0].val();
+                if (stage != 0 || issendforapproval!="true") {
+                    $("#on_site_time").attr("readonly", true);
+                    $("#off_site_time").attr("readonly", true);
+                    $("#travel_time").attr("readonly", true);
+                    $("#Date").attr("readonly",true);
+                    $("#btnAddExpenses").hide();
+                }
+            }
+
+        })        
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.deleteItem').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#PK_ID").val();
+            if (confirm('Do you really want to Delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteConFile")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("Something went Wrong, Please try again!");
+                })
+            }
+        });
+    });
+</script>
+
+
+
+
+
+@{
+
+
+
+
+    if ((Convert.ToString(TempData["UpdateData"])) != "")//&& Convert.ToString(TempData["UpdateData"]) != null)
+    {
+
+        <script type="text/javascript" language="javascript">
+            var msg = '@TempData["UpdateData"]';
+
+            alert(msg);
+        </script>
+        TempData["UpdateData"] = null;
+    }
+
+}
+
+

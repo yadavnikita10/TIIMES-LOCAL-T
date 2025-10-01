@@ -1,0 +1,37 @@
+﻿@model TuvVision.Models.Product
+
+@{
+    ViewBag.Title = "getdrpdown";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+}
+<link href="~/Content/css/select2.min.css" rel="stylesheet" />
+<script src="~/Scripts/select2.min.js"></script>
+<h2>getdrpdown</h2>
+<select class="mySelect2">
+    <option>djvhfju</option>
+    <option>fgrtfghth</option>
+</select>
+<script type="text/javascript">
+
+    $(function() {
+        $(".mySelect2").select2({
+            placeholder: "select category",
+            allowClear: true,
+            theme: "classic",
+            ajax: {
+                url: "/Virtual_Call/getdrpdown",
+                datatype: 'json',
+                delay: 250,
+                data: function (params) {
+                    return { searchterm: params.term };
+                },
+                processResults: function (data, params) {
+                    return {
+                        results: data.results
+                    };
+                }
+            }
+        });
+    });
+</script>

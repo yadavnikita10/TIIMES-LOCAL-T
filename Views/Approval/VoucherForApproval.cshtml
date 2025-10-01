@@ -1,0 +1,332 @@
+﻿@model TuvVision.Models.Approval
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+
+
+@helper CustomRenderingOfColumn1(TuvVision.Models.Approval Approval)
+{
+    @*<a href="@Url.Action("Approval", "Approval", new { LFKExpenseId = @Approval.LFKExpenseId ,LVoucherId=@Approval.LVoucherId})" title="Edit"> @Approval.LVoucherId</a>*@
+    <a href="@Url.Action("Approval", "Approval", new { LFKExpenseId = @Approval.LFKExpenseId ,LVoucherId=@Approval.LVoucherId})" title="Edit"> @Approval.LFKExpenseId</a>
+
+
+}
+@helper CustomRenderingOfColumn2(TuvVision.Models.Approval Approval)
+{
+if (Approval.TransferToFI == "Transfer To FI")
+{
+    
+        <span style = "color:blue">@Approval.TransferToFI</span>
+}
+else
+{
+        <span>@Approval.TransferToFI</span>
+}
+
+}
+
+@{
+    ViewBag.Title = "VoucherForApproval";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int k = 0;
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+@*calender control*@
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+@using (Html.BeginForm("VoucherForApproval", "Approval", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formiid" }))
+    {
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12 col-sm-12">
+                    <div class="form-group">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Approval</h3>
+                        @*@Html.TextBoxFor(model => model.FromDate, new { placeholder = "Select From Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off" })*@
+                       
+                        @*<button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex","Approval")'">
+                            Export To Excel
+                        </button>*@
+                    </div>
+
+                </div>
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="form-group">
+                        <label>From Date:</label>
+                        @*@Html.TextBoxFor(model => model.FromDate, new { placeholder = "Select From Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off" })*@
+                        @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                    </div>
+                </div>
+
+
+                <div class="col-xs-3">
+                    <div class="form-group">
+                        <label>To Date:</label>
+                        @*@Html.TextBoxFor(model => model.FromDate, new { placeholder = "Select From Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off" })*@
+                        @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                    </div>
+
+                </div>
+
+                <div class="col-xs-12 col-sm-3">
+
+
+                    @if (@ViewBag.Name != null)
+                    {
+                        <div class="form-group">
+                            <label>Inspector Name:</label>
+                            @Html.DropDownListFor(model => model.Inspector, new SelectList(@ViewBag.Name, "Code", "Name"), "---Select Title---", new { @id = "ddlTitle", @class = "form-control" })
+
+                            @*@Html.ValidationMessageFor(model => model.Inspector, "", new { @class = "text-danger validation-msg" })*@
+                        </div>
+                    }
+
+                </div>
+                <div class="col-xs-12 col-sm-3">
+                    <label>Search:</label>
+                    <input type="submit" id="btniid" value="Search" class="btn btn-primary form-control" />
+                    </div>
+                </div>
+            <div class="col-xs-12">
+                @*<h3 class="dynamic-page-title dynamic-page-title-2  text-left">Approval</h3>*@
+            </div><!-- /.col -->
+
+            <div class="col-xs-12">
+                <table id="example" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+
+                            <th> Voucher ID </th>
+                            <th>Inspector</th>
+                            <th>Date</th>
+                            <th>Approval Status 1</th>
+                            <th>Approval Status 2</th>
+                            <th>Total Amount</th>
+                            <th>Aprovel Amount</th>
+                            <th>Transfer To FI</th>
+                        </tr>
+                    </thead>
+@if (ViewData["InspectorVoucherDetail"] != null )
+{
+    <tbody>
+        <tr class="hidden">
+            <td> Voucher ID </td>
+            <td>Inspector</td>
+            <td>Date</td>
+            <td>Approval Status 1</td>
+            <td>Approval Status 2</td>
+            <td>Total Amount</td>
+            <td>Aprovel Amount</td>
+            <td>Transfer To FI</td>
+        </tr>
+        <tr class="hidden">
+            <td>  </td>
+            <td> </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        @foreach (var b in ViewData["InspectorVoucherDetail"] as IEnumerable<TuvVision.Models.Approval>)
+        {
+            <tr>
+                <td>
+                    
+                    <a href="@Url.Action("Approval", "Approval", new { LFKExpenseId = @b.LFKExpenseId ,LVoucherId=@b.LVoucherId})" title="Edit">@b.LVoucherId</a>
+
+                </td>
+                <td>@b.Inspector</td>
+                <td>@b.Date</td>
+                <td>@b.ApprovalStatus1</td>
+                <td>@b.ApprovalStatus2</td>
+                <td>@b.TotalAmount</td>
+                <td>@b.AprovelAmount</td>
+                <td>@b.TransferToFI</td>
+               
+
+
+
+            </tr>
+        }
+    </tbody>
+}
+                </table>
+
+            </div>
+
+            <div class="col-lg-12">
+               
+            </div>
+            
+
+        </div>
+
+    </div>
+}
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+    <!--export to excel-->
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+    <script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+
+
+    Date Picker for From Date*@
+
+<script>
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script>
+$(document).ready(function () {
+    $("#ckbCheckAll").click(function () {
+        $(".checkBoxClass").prop('checked', $(this).prop('checked'));
+    });
+});
+</script>
+
+<script>
+$("a[data-form-method='post']").click(function (event) {
+    event.preventDefault();
+    var element = $(this);
+    var action = element.attr("href");
+    element.closest("form").each(function () {
+        var form = $(this);
+        form.attr("action", action);
+        form.submit();
+    });
+});
+</script>
+<script>
+    $(document).ready(function () {
+        $("#example td:nth-child(1)").each(function () {
+            var col_val = $(this).find("td:eq(1)").text();
+            if (col_val == "Transfer To FI") {
+                $(this).parent("tr").css("background-color", "red");
+            }
+        });
+    });
+</script>
+@*<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+</script>*@
+<style>
+    table.evaluation > tbody {
+        width: 100% !important;
+        display: table;
+    }
+
+        table.evaluation > tbody > tr td table {
+            width: 100% !important;
+            display: table;
+        }
+</style>
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+
+    $("#btniid").click(function myfunction() {
+        if (validateform() == false) {
+            return false;
+        }
+        else {
+            $("#formiid").submit();
+        }
+    });
+
+    function validateform() {
+        
+        var FromD = $("#FromD").val();
+        var ToD = $("#ToD").val();    
+
+
+    
+
+        if ((FromD == null || FromD == "") && (ToD == null || ToD == "")) {
+            alert("Please Enter From and To Date");
+            $("#FromD").focus();
+            return false;
+        }
+
+     
+
+
+
+    }
+</script>
+
+
+
+
+

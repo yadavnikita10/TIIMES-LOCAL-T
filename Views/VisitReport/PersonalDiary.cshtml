@@ -1,0 +1,923 @@
+﻿@model TuvVision.Models.VisitMonitoringRecord
+@{
+    ViewBag.Title = "PersonalDiary";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+
+}
+
+
+<script src="~/AllJsAndCss/jquery-1.10.2.js"></script>
+<script src="~/AllJsAndCss/jquery-ui.js"></script>
+<link href="~/AllJsAndCss/jquery-ui.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/ValidateTimeSheet.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+
+<style>
+    #example {
+        font-family: 'TNG Pro';
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #example td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #example tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #example tr:hover {
+            background-color: #ddd;
+        }
+
+        #example th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #001ED2;
+            color: white;
+        }
+
+
+        .col-xs-12 img {
+   -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE10+ */
+  user-select: none;         /* Standard */
+  cursor: move;   
+}
+
+</style>
+<style>
+    .editor-wrapper {
+        width: 230px;
+        height: 210px;
+        border: 1px solid #ccc;
+        padding: 5px;
+        overflow-y: auto;
+        background-color: white;
+    }
+
+    .editor {
+        width: 100%;
+        height: 100%;
+        outline: none;
+    }
+</style>
+
+
+<style>
+    .special-table-container {
+        position: sticky;
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    .special-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .special-table th,
+        .special-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+            .special-table th:nth-child(2),
+            .special-table td:nth-child(2),
+            .special-table th:nth-child(3),
+            .special-table td:nth-child(3) {
+                /*position: sticky;*/
+                left: 0;
+                background-color: white;
+                z-index: 1;
+            }
+
+            .special-table th.rotate-header {
+                writing-mode: vertical-lr;
+                transform: rotate(180deg);
+                white-space: nowrap;
+            }
+
+        .special-table thead th {
+            position: sticky;
+            background-color: white;
+            z-index: 1;
+        }
+
+        .special-table tr:first-child th:nth-child(2),
+        .special-table tr:first-child,
+        .special-table tr:first-child th:nth-child(2),
+        .special-table tr:first-child {
+            z-index: 2;
+        }
+
+    .scrollable-div {
+        height: 800px;
+        overflow: auto;
+        border: 1px solid #000;
+    }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+    }
+
+    .table-scroll-wrapper {
+    max-height: 400px;  /* Adjust height as needed */
+    overflow-y: auto;   /* Enables vertical scroll */
+    overflow-x: auto;   /* Enables horizontal scroll */
+    border: 1px solid #ccc;
+}
+
+/* Optional: make the table header sticky */
+.table-scroll-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background: #f9f9f9; /* Or your preferred background */
+    z-index: 1;
+}
+
+</style>
+
+
+<script>
+    $(function () {
+        $(".Date_of_PO").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+@Html.HiddenFor(m => m.pk_call_id)
+@Html.HiddenFor(m => m.Pk_id)
+@Html.HiddenFor(m => m.PK_IVR_ID)
+@Html.HiddenFor(m => m.DateofInspection)
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <br />
+    <!--Start of header-->
+
+
+    <div class="container-fluid">
+        <div class="col-xs-12">
+            <div class="white-bg section-box-shadow">
+                <h3 class="form-page-title">Competent Person's Diary</h3>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                        <input type="text" hidden value="@Model.pk_call_id" />
+                        <input type="text" hidden value="@Model.Pk_id" />
+                        <input type="text" hidden value="@Model.PK_IVR_ID" />
+                        <input type="text" hidden value="@Model.DateofInspection" />
+
+                        <br />
+                        <br />
+                        <div class="col-xs-12">
+                            <a href="@Url.Action("VisitReportForm", "VisitReport", new { PK_Call_ID = Model.pk_call_id, PK_RM_ID = Model.Pk_id })"
+                               class="btn btn-default news-btn" style="float:right;">
+                                Go Back
+                            </a>
+                        </div>
+                        <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                            <div class="form-group">
+                                <label style="font-family:'TNG Pro'"><b>IVR Ref No</b></label>
+                                @Html.TextBoxFor(model => model.IVRRefNo, new { @placeholder = "", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.IVRRefNo, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                            <div class="form-group">
+                                <label style="font-family:'TNG Pro'"><b>Name of the Manufacturer</b> </label>
+                                @Html.TextBoxFor(model => model.VendorName, new { @placeholder = "", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.inspectingAuthority, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        <div>
+                            <div class="row col-xs-12">
+                                <div class="col-xs-12 col-sm-4">
+                                    <label><b>Shop Approved</b></label>
+                                    @Html.RadioButtonFor(model => model.ShopApproved, true, new { @class = "ShopApproved" }) <span>Yes</span>
+                                    @Html.RadioButtonFor(model => model.ShopApproved, false, new { @class = "ShopApproved" }) <span>No</span>
+                                </div>
+
+                                <div class="form-group col-sm-4" id="txtshowdiv">
+                                    <label style="font-family:'TNG Pro'"><b>IBR Approval Certificate No.</b><span style="color:red;">*</span></label>
+                                    @Html.TextBoxFor(model => model.ShopApproved_Number, new { @placeholder = "", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ShopApproved_Number, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                                <div class="form-group col-sm-4" id="txtshowdiv1">
+                                    <label style="font-family:'TNG Pro'"><b>Validity Date</b><span style="color:red;">*</span></label>
+                                    @Html.TextBoxFor(model => model.Validity, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control Date_of_PO", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(model => model.Validity, "", new { @class = "text-danger validation-msg" })
+
+
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.IsComfirmation == true)
+                        {
+                            <div class="col-xs-12" style="pointer-events:none;">
+                                <div class="col-xs-12 col-sm-4">
+                                    <label><b>BOILER OWNER</b></label>
+                                    @Html.CheckBoxFor(model => model.BolierOwner, new { @class = "boiler-role BolierOwner" })
+                                </div>
+                                <div class="col-xs-12 col-sm-4">
+                                    <label><b>BOILER MANUFACTURER</b></label>
+                                    @Html.CheckBoxFor(model => model.BoilerManufacturer, new { @class = "boiler-role BoilerManufacturer" })
+                                </div>
+                                <div class="col-xs-12 col-sm-4">
+                                    <label><b>BOILER COMPONENT MANUFACTURER</b></label>
+                                    @Html.CheckBoxFor(model => model.BoilerComponentManufacturer, new { @class = "boiler-role BoilerComponentManufacturer" })
+                                </div>
+
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="col-xs-12">
+                                <div class="col-xs-12 col-sm-4">
+                                    <label><b>BOILER OWNER</b></label>
+                                    @Html.CheckBoxFor(model => model.BolierOwner, new { @class = "boiler-role BolierOwner" })
+                                </div>
+                                <div class="col-xs-12 col-sm-4">
+                                    <label><b>BOILER MANUFACTURER</b></label>
+                                    @Html.CheckBoxFor(model => model.BoilerManufacturer, new { @class = "boiler-role BoilerManufacturer" })
+                                </div>
+                                <div class="col-xs-12 col-sm-4">
+                                    <label><b>BOILER COMPONENT MANUFACTURER</b></label>
+                                    @Html.CheckBoxFor(model => model.BoilerComponentManufacturer, new { @class = "boiler-role BoilerComponentManufacturer" })
+                                </div>
+
+                            </div>
+                        }
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1 line">
+                        </div>
+                       
+                        <div class="col-xs-12">
+                            <p style="font-size: 1.2em; color: red;font-family:'TNG Pro'">
+                                Note: You can drag the icons to use them on Activities Events Column.
+                            </p>
+                            <img src="~/low stress.png" style="width:40px;" draggable="true"
+                                 ondragstart="drag(event)" data-value="(low stress round stamp)" oncopy="return false" oncut="return false" onpaste="return false">
+
+                            <img src="~/Oval.png" style="width:40px;height:35px;" draggable="true"
+                                 ondragstart="drag(event)" data-value="(oval shape stamp)" oncopy="return false" oncut="return false" onpaste="return false">
+
+                            <img src="~/round.png" style="width:40px;height:35px;" draggable="true"
+                                 ondragstart="drag(event)" data-value="(round stamp)" oncopy="return false" oncut="return false" onpaste="return false">
+                        </div>
+
+                        <input type="hidden" id="htmlField" name="Activities_EventsHtml" />
+                        <input type="hidden" id="valueField" name="Activities_EventsValues" />
+                        <div class="table-scroll-wrapper">
+                            <table class="special-table" id="example">
+                                <thead>
+                                    <tr>
+                                        <th style="font-family: 'TNG Pro';">Date</th>
+                                        <th style="font-family: 'TNG Pro';">Inspection Authority Reference No.(if any)</th>
+                                        <th style="font-family: 'TNG Pro';" width="31%">Boilers Makers's No. / Manufacturer's Indetification No</th>
+                                        <th style="font-family: 'TNG Pro';" width="21%">Activities/Events</th>
+                                        <th style="font-family: 'TNG Pro';" width="21%">Form No</th>
+                                        <th style="font-family: 'TNG Pro';">Certificate No</th>
+                                        <th style="font-family: 'TNG Pro';">Size</th>
+                                        <th style="font-family: 'TNG Pro';">Quantity offered in final Inspection</th>
+                                        <th style="font-family: 'TNG Pro';">No of lot for invoicing  in final Inspection</th>
+                                    </tr>
+                                </thead>
+
+                                @{
+                                    var rows = ViewData["PersonsDiary"] as List<TuvVision.Models.VisitMonitoringRecord>;
+                                }
+
+                                <tbody id="inspectionTableBody">
+                                    @if (rows != null && rows.Any())
+                                    {
+                                        foreach (var row in rows)
+                                        {
+                                            <tr class="data-row" data-id="@row.ID_">
+
+                                                <td>
+                                                    <textarea class="form-control date-cell" style="height: 210px;width:150%;">@row.Date.ToString()</textarea>
+                                                </td>
+
+                                                <td>
+                                                    <textarea @*@(!string.IsNullOrEmpty(row.Inspection_Authority_ReferenceNo) ? row.Inspection_Authority_ReferenceNo : Model.Inspection_Authority_ReferenceNo)*@ class="form-control  date-referenceno" style="height: 210px;">@(row.Inspection_Authority_ReferenceNo ?? "")</textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea @*@(!string.IsNullOrEmpty(row.Boliers_Maker_No) ? row.Boliers_Maker_No : Model.Boliers_Maker_No)*@ class="form-control data-boilermakerno" style="width: 225px; height: 210px;" rows="5" cols="10">@(row.Boliers_Maker_No ?? "")</textarea>
+                                                </td>
+                                                @*<td>
+                                        <textarea class="form-control Activities_Events" style="width: 300px; height: 210px;" rows="5" cols="10" id="display">
+                                            @(row.Activities_Events ?? "")
+                                        </textarea>
+                                    </td>*@
+                                                <td>
+                                                    <div class="editor-wrapper">
+                                                        <div class="Activities_Events editor"
+                                                             contenteditable="true"
+                                                             ondrop="dropIntoEditor(event)"
+                                                             ondragover="allow(event)">
+                                                            @Html.Raw(row.Activities_Events ?? "")
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <select id="formDropdown" class="form-control data-formno" style="width:85px;">
+                                                        <option value="">-- Select Form --</option>
+                                                        <option value="I" @(row.Form_no_Certificate_No == "I" ? "selected" : "")>I</option>
+                                                        <option value="II(1) , III , IV-A" @(row.Form_no_Certificate_No == "II(1) , III , IV-A" ? "selected" : "")>II(1) , III , IV-A</option>
+                                                        <option value="II(2) , III , IV-A" @(row.Form_no_Certificate_No == "II(2) , III , IV-A" ? "selected" : "")>II(2) , III , IV-A</option>
+                                                        <option value="II-A" @(row.Form_no_Certificate_No == "II-A" ? "selected" : "")>II-A</option>
+                                                        <option value="II-B" @(row.Form_no_Certificate_No == "II-B" ? "selected" : "")>II-B</option>
+                                                        <option value="II-C" @(row.Form_no_Certificate_No == "II-C" ? "selected" : "")>II-C</option>
+                                                        <option value="III , IV-A" @(row.Form_no_Certificate_No == "III , IV-A" ? "selected" : "")>III , IV-A</option>
+                                                        <option value="III-A" @(row.Form_no_Certificate_No == "III-A" ? "selected" : "")>III-A</option>
+                                                        <option value="III-B" @(row.Form_no_Certificate_No == "III-B" ? "selected" : "")>III-B</option>
+                                                        <option value="III-C" @(row.Form_no_Certificate_No == "III-C" ? "selected" : "")>III-C</option>
+                                                        <option value="III-F" @(row.Form_no_Certificate_No == "III-F" ? "selected" : "")>III-F</option>
+                                                        <option value="III-G" @(row.Form_no_Certificate_No == "III-G" ? "selected" : "")>III-G</option>
+                                                        <option value="III-H" @(row.Form_no_Certificate_No == "III-H" ? "selected" : "")>III-H</option>
+                                                        <option value="III-I" @(row.Form_no_Certificate_No == "III-I" ? "selected" : "")>III-I</option>
+                                                        <option value="IV" @(row.Form_no_Certificate_No == "IV" ? "selected" : "")>IV</option>
+                                                        <option value="IV-A" @(row.Form_no_Certificate_No == "IV-A" ? "selected" : "")>IV-A</option>
+                                                        <option value="V" @(row.Form_no_Certificate_No == "V" ? "selected" : "")>V</option>
+                                                        <option value="VI" @(row.Form_no_Certificate_No == "VI" ? "selected" : "")>VI</option>
+                                                        <option value="VII" @(row.Form_no_Certificate_No == "VII" ? "selected" : "")>VII</option>
+                                                        <option value="VIII" @(row.Form_no_Certificate_No == "VIII" ? "selected" : "")>VIII</option>
+                                                        <option value="IX" @(row.Form_no_Certificate_No == "IX" ? "selected" : "")>IX</option>
+                                                        <option value="X" @(row.Form_no_Certificate_No == "X" ? "selected" : "")>X</option>
+                                                        <option value="XI" @(row.Form_no_Certificate_No == "XI" ? "selected" : "")>XI</option>
+                                                        <option value="XII" @(row.Form_no_Certificate_No == "XII" ? "selected" : "")>XII</option>
+                                                        <option value="XIII" @(row.Form_no_Certificate_No == "XIII" ? "selected" : "")>XIII</option>
+                                                        <option value="XIV" @(row.Form_no_Certificate_No == "XIV" ? "selected" : "")>XIV</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <textarea class="form-control data-Certificateno" style="width: 85px; height: 210px;" rows="5" cols="10">
+                                                        @(row.CertificateNo ?? "")
+                                                    </textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea @*@(!string.IsNullOrEmpty(row.Size) ? row.Size : Model.Size)*@ class="form-control data-size" style="height: 210px;">@(row.Size ?? "")</textarea>
+                                                </td>
+
+                                                <td>
+                                                    <textarea @*@(!string.IsNullOrEmpty(row.Quality_offered_Final_Inspection) ? row.Quality_offered_Final_Inspection : Model.Quality_offered_Final_Inspection)*@ class="form-control data-Qualityoffered" style="height: 210px;">@(row.Quality_offered_Final_Inspection ?? "")</textarea>
+                                                </td>
+
+                                                <td>
+                                                    <textarea @*@(!string.IsNullOrEmpty(row.No_For_lot_invoicing) ? row.No_For_lot_invoicing : Model.No_For_lot_invoicing)*@ class="form-control data-finalinspection" style="height: 210px;">@(row.No_For_lot_invoicing ?? "")</textarea>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger btn-sm delete-row">Delete</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr class="data-row">
+                                            <td>
+                                                <textarea class="form-control date-cell" style="height:210px;width:150%">@Model.DateofInspection.ToString()</textarea>
+                                            </td>
+
+                                            <td><textarea class="form-control date-referenceno" style="height:210px;"></textarea></td>
+                                            <td><textarea class="form-control data-boilermakerno" style="width:225px; height: 210px;"></textarea></td>
+                                            @*<td><textarea class="form-control Activities_Events" style="width:230px;height: 210px;"  ondrop="dropIntoTextarea(event)"ondragover="allow(event)"></textarea></td>*@
+
+                                            @*<td>
+                                    <div id="dropDiv"
+                                         class="form-control Activities_Events"
+                                         contenteditable="true"
+                                         style="width:230px;height:210px;padding:5px;overflow:auto;"
+                                         ondrop="dropImage(event)"
+                                         ondragover="allow(event)">
+                                    </div>
+                                </td>*@
+                                            <td>
+                                                <div class="editor-wrapper">
+                                                    <div class="Activities_Events editor"
+                                                         contenteditable="true"
+                                                         ondrop="dropIntoEditor(event)"
+                                                         ondragover="allow(event)"
+                                                         onpaste="handlePaste(event)">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <select id="formDropdown" class="form-control data-formno" style="width:85px;">
+                                                    <option value="">-- Select Form --</option>
+                                                    <option>I</option>
+                                                    <option>II(1) , III , IV-A</option>
+                                                    <option>II(2) , III , IV-A</option>
+                                                    <option>II-A</option>
+                                                    <option>II-B</option>
+                                                    <option>II-C</option>
+                                                    <option>III , IV-A</option>
+                                                    <option>III-A</option>
+                                                    <option>III-B</option>
+                                                    <option>III-C</option>
+                                                    <option>III-F</option>
+                                                    <option>III-G</option>
+                                                    <option>III-H</option>
+                                                    <option>III-I</option>
+                                                    <option>IV</option>
+                                                    <option>IV-A</option>
+                                                    <option>V</option>
+                                                    <option>VI</option>
+                                                    <option>VII</option>
+                                                    <option>VIII</option>
+                                                    <option>IX</option>
+                                                    <option>X</option>
+                                                    <option>XI</option>
+                                                    <option>XII</option>
+                                                    <option>XIII</option>
+                                                    <option>XIV</option>
+                                                </select>
+
+                                            </td>
+                                            <td><textarea class="form-control data-Certificateno" style="height: 210px;width:120px;"></textarea></td>
+                                            <td><textarea class="form-control data-size" style="height: 210px;"></textarea></td>
+                                            <td><textarea class="form-control data-Qualityoffered" style="height: 210px;"></textarea></td>
+                                            <td><textarea class="form-control data-finalinspection" style="height: 210px;"></textarea></td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+
+                            </table>
+                            @if (Model.IsComfirmation == true)
+                            {
+
+                            }
+                            else
+                            {
+                                <button type="button" id="addRowBtn" class="btn btn-default insert-form-btn mt-3">Add Row</button>
+                            }
+                        </div>
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1 line">
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                                <div class="form-group">
+                                    <label><b>Name Of the Competent Person</b></label>
+                                    @Html.TextBoxFor(model => model.Person, new { @placeholder = "", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                                <div class="form-group">
+                                    <label><b>CBB Authorisation Number :</b></label>
+                                    @Html.TextBoxFor(model => model.DiaryNo, new { @placeholder = "", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.DiaryNo, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1 line">
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12" style="margin-left: -14px;" id="hidecomfirmation">
+                            <div class="form-group">
+
+                                @if (Model.IsComfirmation != true)
+                                {
+                                    @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+
+                                    <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                    <label style="margin-left: 21px;">
+
+                                        I hereby confirm that I have reviewed the content and found it accurate. <br />
+
+                                        <label style="color:#E12F24;">
+                                            I authorize TIIMES to affix the signature.
+                                        </label><br />
+                                        <label style="color:#001ED2;"> Note:</label><br />
+                                        <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                }
+                                else
+                                {
+                                    <div style="pointer-events:none;">
+                                        @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+                                        <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                        <label style="margin-left: 21px;">
+
+                                            I hereby confirm that I have reviewed the content and found it accurate. <br />
+
+                                            <label style="color:#E12F24;">
+                                                I authorize TIIMES to affix the signature.
+                                            </label><br />
+                                            <label style="color:#001ED2;"> Note:</label><br />
+                                            <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
+                                        </label>
+                                        @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 text-center">
+                            @if (Model.IsComfirmation == true)
+                            {
+                                <button type="button" id="saveDataBtn" class="btn btn-default insert-form-btn" style="pointer-events:none;" onclick="saveDataBtn()"> Save</button>
+                            }
+                            else
+                            {
+                                <button type="button" id="saveDataBtn" class="btn btn-default insert-form-btn" onclick="saveDataBtn()"> Save</button>
+
+                            }
+                            <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF_PersonDiary", "VisitReport", new { pk_call_id = Model.pk_call_id,PK_RM_ID=Model.Pk_id })">
+                                Export to PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+
+    $(document).ready(function () {
+        debugger;
+        var ShopApproved = $(".ShopApproved:checked").val();//$(".ShopApproved").is(':checked');
+        if (ShopApproved.toLowerCase() == "true") {
+            $("#txtshowdiv").show();
+            $("#txtshowdiv1").show();
+        }
+        else {
+            $("#txtshowdiv").hide();
+            $("#txtshowdiv1").hide();
+        }
+    });
+    $('.boiler-role').on('change', function () {
+        if (this.checked) {
+            $('.boiler-role').not(this).prop('checked', false);
+        }
+    });
+
+
+    function saveDataBtn() {
+        debugger;
+        $("body").prepend('<div id="preloader"></div>');
+        const data = [];
+        $("#example tbody tr.data-row").each(function () {
+            debugger;
+            const row = $(this);
+            const date = row.find('.date-cell').val();
+            const reference_no = row.find('.date-referenceno').val();
+            const Bolier_no = row.find('.data-boilermakerno').val();
+            const formno = row.find('.data-formno').val();
+            const size = row.find('.data-size').val();
+            const Qualityoffered = row.find('.data-Qualityoffered').val();
+            var finalinspection = row.find('.data-finalinspection').val();
+            //var Activities_Events = row.find('.Activities_Events').html();//row.find('.Activities_Events').val();
+            // Get the contenteditable Activities_Events div
+            const activitiesEditor = row.find('.Activities_Events');
+            const activitiesHTML = activitiesEditor.html();
+
+            // Clean version by replacing images with their data-value
+            const activitiesClean = extractCleanText(activitiesHTML);
+
+            var Certificateno = row.find('.data-Certificateno').val();
+            const id = row.data("id");
+            var VendorName = $("#VendorName").val();
+            data.push({
+                ID_: id,
+                Date: date,
+                Inspection_Authority_ReferenceNo: reference_no,
+                Boliers_Maker_No: Bolier_no,
+                //Activities_Events: Activities_Events,
+                Form_no_Certificate_No: formno,
+                Quality_offered_Final_Inspection: Qualityoffered,
+                Size: size,
+                No_For_lot_invoicing: finalinspection,
+                //Activities_Events: Activities_Events,
+                Activities_Events: activitiesHTML,
+                Activities_Events_Value: activitiesClean,
+                VendorName: VendorName,
+                CertificateNo: Certificateno,
+            });
+        });
+            var pk_call_id = $("#pk_call_id").val();
+            var BoilerComponentManufacturer = $('.BoilerComponentManufacturer').is(':checked');
+            var BolierOwner = $('.BolierOwner').is(':checked');
+            var BoilerManufacturer = $('.BoilerManufacturer').is(':checked');
+            var IsComfirmation = $('.checkBox_').is(':checked');
+
+            var PK_IVR_ID = $("#PK_IVR_ID").val();
+            var PK_RM_ID = $("#Pk_id").val();
+
+            var ShopApproved = $(".ShopApproved:checked").val();// $(".ShopApproved").is(':checked');
+            var ShopApproved_Number = $("#ShopApproved_Number").val();
+            var ValidityDate = $("#Validity").val();
+            if (IsComfirmation) {
+                if (!BoilerComponentManufacturer && !BolierOwner && !BoilerManufacturer) {
+                    alert("Please select at least one: Boiler Component Manufacturer, Boiler Owner, or Boiler Manufacturer.");
+                    $('.checkBox_').prop('checked', false);
+                    $("#preloader").remove();
+                    return false;
+                }
+                
+                if (ShopApproved.toLowerCase() == "true") {
+                    if (ShopApproved_Number == null || ShopApproved_Number == "") {
+                        alert("Please enter Shop Approved Number.");
+                        $("#preloader").remove();
+                        return false;
+                    }
+                }
+
+                if (ShopApproved.toLowerCase() == "true") {
+                    if (ValidityDate == "") {
+                        alert("Please Select Validity Date");
+                        $("#preloader").remove();
+                        return false;
+                    }
+
+                }
+            }
+
+
+            $.ajax({
+                url: '@Url.Action("SaveDiaryData", "VisitReport")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    data: data,
+                    pk_call_id: pk_call_id,
+                    BoilerComponentManufacturer: BoilerComponentManufacturer,
+                    BolierOwner: BolierOwner,
+                    BoilerManufacturer: BoilerManufacturer,
+                    IsComfirmation: IsComfirmation,
+                    PK_IVR_ID : PK_IVR_ID,
+                    PK_RM_ID: PK_RM_ID,
+                    ShopApproved: ShopApproved,
+                    ShopApproved_Number: ShopApproved_Number,
+                    ValidityDate: ValidityDate
+                }),
+                success: function (response) {
+                    alert(response.message || "Saved successfully!");
+                    window.location.reload();
+                    $("#preloader").remove();
+
+                },
+                error: function () {
+                    alert("Error saving data.");
+                    $("#preloader").remove();
+                }
+            });
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#addRowBtn').click(function () {
+            const defaultDate = '@Model.DateofInspection.ToString()';
+
+            const newRow = `
+                <tr class ="data-row">
+                    <td>
+                        <textarea class ="form-control date-cell" style="height: 210px;width:150%;">${defaultDate}</textarea>
+                    </td>
+                    <td><textarea class ="form-control date-referenceno" style="height: 210px;"></textarea></td>
+                    <td><textarea class ="form-control data-boilermakerno" style="width: 225px; height: 210px;"></textarea></td>
+                       <td>
+                                                <div class ="editor-wrapper">
+                                                    <div class ="Activities_Events editor"
+                                                         contenteditable="true"
+                                                          onpaste="handlePaste(event)"
+                                                         ondrop="dropIntoEditor(event)"
+                                                         ondragover="allow(event)">
+                                                    </div>
+                                                </div>
+                                            </td>
+                      <td>
+
+                                                                                   <select id="formDropdown" class ="form-control data-formno"  style="width:85px;">
+                                                                                        <option value="">--Select Form--</option>
+                                                                                        <option>I</option>
+                                                                                        <option>II(1), III, IV-A</option>
+                                                                                        <option>II(2), III, IV-A</option>
+                                                                                        <option>II-A</option>
+                                                                                        <option>II-B</option>
+                                                                                        <option>II-C</option>
+                                                                                        <option>III, IV-A</option>
+                                                                                        <option>III-A</option>
+                                                                                        <option>III-B</option>
+                                                                                        <option>III-C</option>
+                                                                                        <option>III-F</option>
+                                                                                        <option>III-G</option>
+                                                                                        <option>III-H</option>
+                                                                                        <option>III-I</option>
+                                                                                        <option>IV</option>
+                                                                                        <option>IV-A</option>
+                                                                                        <option>V</option>
+                                                                                        <option>VI</option>
+                                                                                        <option>VII</option>
+                                                                                        <option>VIII</option>
+                                                                                        <option>IX</option>
+                                                                                        <option>X</option>
+                                                                                        <option>XI</option>
+                                                                                        <option>XII</option>
+                                                                                        <option>XIII</option>
+                                                                                        <option>XIV</option>
+                                                                                    </select>
+
+                                                                                </td>
+                    <td><textarea class ="form-control data-Certificateno" style="height: 210px;width:85px;"></textarea></td>
+                    <td><textarea class ="form-control data-size" style="height: 210px;"></textarea></td>
+                    <td><textarea class ="form-control data-Qualityoffered" style="height: 210px;"></textarea></td>
+                    <td><textarea class ="form-control data-finalinspection" style="height: 210px;"></textarea></td>
+                     <td class ="text-center align-middle">
+                        <button type="button" class ="btn btn-danger btn-sm delete-row">Delete</button>
+                    </td>
+                </tr>
+            `;
+            $('#inspectionTableBody').append(newRow);
+        });
+    });
+    $('#inspectionTableBody').on('click', '.delete-row', function () {
+        $(this).closest('tr').remove();
+    });
+
+  
+
+    $(".ShopApproved").change(function () {
+        debugger;
+        var ShopApproved = $(".ShopApproved:checked").val(); // This returns a string: "true" or "false"
+
+        if (ShopApproved === "True") {
+            $("#txtshowdiv").show();
+            $("#txtshowdiv1").show();
+        } else {
+            $("#txtshowdiv").hide();
+            $("#txtshowdiv1").hide();
+            $("#ShopApproved_Number").val('');
+            $("#Validity").val('');
+        }
+    });
+
+</script>
+
+
+<script>
+function drag(event) {
+    const value = event.target.getAttribute('data-value');
+    event.dataTransfer.setData("text/plain", event.target.src);
+    event.dataTransfer.setData("text/value", value); 
+}
+
+function allow(event) {
+    event.preventDefault();
+}
+
+function dropIntoEditor(event) {
+    event.preventDefault();
+    const fullSrc = event.dataTransfer.getData("text/plain");
+    const stampValue = event.dataTransfer.getData("text/value") || "(stamp)";
+    const editor = event.target;
+
+    const img = document.createElement('img');
+    img.src = fullSrc;
+    img.setAttribute('data-value', stampValue); 
+    img.style.width = '40px';
+    img.style.height = '36px';
+    img.style.marginRight = '5px';
+
+    editor.appendChild(img);
+}
+
+
+
+//function insertImageAtCaret(img) {
+//    const sel = window.getSelection();
+//    if (!sel.rangeCount) return;
+//    const range = sel.getRangeAt(0);
+//    range.deleteContents();
+//    range.insertNode(img);
+//    range.collapse(false);
+//    sel.removeAllRanges();
+//    sel.addRange(range);
+//}
+</script>
+
+
+
+
+<script>
+    //function handlePaste(e) {
+    //    const clipboard = e.clipboardData || window.clipboardData;
+    //    if (!clipboard) return;
+
+    //    e.preventDefault();
+
+    //    const items = clipboard.items || [];
+
+    //    for (let i = 0; i < items.length; i++) {
+    //        const item = items[i];
+
+    //        if (item.kind === "file" && item.type.startsWith("image/")) {
+    //            const file = item.getAsFile();
+    //            const reader = new FileReader();
+
+    //            reader.onload = function (event) {
+    //                const dataURL = event.target.result;
+
+    //                const img = document.createElement("img");
+    //                img.src = dataURL;
+    //                img.style.width = "40px";
+    //                img.style.height = "36px";
+    //                img.style.marginRight = "5px";
+
+    //                const value = getStampValueFromSrc(dataURL);
+    //                img.setAttribute("data-value", value);
+
+    //                insertImageAtCaret(img);
+    //            };
+
+    //            reader.readAsDataURL(file);
+    //            return; // only handle one item
+    //        }
+    //    }
+
+    //    const text = clipboard.getData("text/plain");
+    //    document.execCommand("insertText", false, text);
+    //}
+
+
+    //document.addEventListener("DOMContentLoaded", function () {
+    //    document.querySelectorAll('.Activities_Events.editor').forEach(editor => {
+    //        editor.addEventListener('paste', handlePaste, false);
+    //    });
+    //});
+
+
+    //function insertImageAtCaret(imgElement, imagePath, container) {
+    //    const sel = window.getSelection();
+    //    if (!sel || !sel.rangeCount) return;
+
+    //    const range = sel.getRangeAt(0);
+    //    range.deleteContents();
+
+    //    const imgClone = imgElement.cloneNode();
+    //    const fragment = document.createDocumentFragment();
+    //    fragment.appendChild(imgClone);
+
+    //    range.insertNode(fragment);
+    //    range.collapse(false);
+    //    sel.removeAllRanges();
+    //    sel.addRange(range);
+    //}
+    function extractCleanText(htmlContent) {
+        const temp = document.createElement("div");
+        temp.innerHTML = htmlContent;
+
+        temp.querySelectorAll("img").forEach(img => {
+            const value = img.getAttribute("data-value") || "";
+            const textNode = document.createTextNode(value);
+            img.parentNode.replaceChild(textNode, img);
+        });
+
+        return temp.textContent || temp.innerText || "";
+    }
+
+    const imageValueMap = {
+        "Picture1.jpg": "(hard stamp)",
+        "Picture2.jpg": "(soft stamp)",
+        "Picture3.jpg": "(signature)"
+    };
+
+
+    //function getStampValueFromSrc(src) {
+    //    for (let file in imageValueMap) {
+    //        if (src.includes(file)) return imageValueMap[file];
+    //    }
+    //    return "(stamp)"; // fallback
+    //}
+
+    document.addEventListener('keydown', function (e) {
+        // Ctrl+C (copy), Ctrl+X (cut), Ctrl+V (paste)
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'x' || e.key === 'v')) {
+            e.preventDefault();
+        }
+    });
+
+</script>

@@ -1,0 +1,285 @@
+﻿@{
+    ViewBag.Title = "UploadBulkNDT";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
+
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+<style>
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+    }
+
+    .highlight {
+        background-color: #ffcccc !important; /* Ensure the color applies even with DataTable styling */
+        font-weight: bold;
+    }
+</style>
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!-- Start of header -->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+                <div class="col-xs-12 form-col">
+                    <div class="row align-items-center">
+                        <div class="col-xs-4 col-sm-4">
+                            <label for="myFile" class="form-label">Choose File</label>
+                            <input type="file" id="FileUpload1" class="form-control d-inline-block" name="filename" required>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 text-right">
+                            <label for="myFile" class="form-label"></label><br />
+                            <button type="submit" class="btn btn-primary mt-2 mt-sm-0" id="btncheck">Check</button>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 text-right" style="display:none;">
+                            <label for="myFile" class="form-label"></label><br />
+                            <button type="submit" class="btn btn-primary mt-2 mt-sm-0" id="btn" onclick="InsertData();">Insert Data</button>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 text-right">
+                            <label for="myFile" class="form-label"></label><br />
+                            <button type="submit" class="btn btn-primary mt-2 mt-sm-0" id="btn" onclick="ClearData();">Clear</button>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 text-right">
+                            <label for="myFile" class="form-label"></label><br />
+                            <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportNDTIndex","Internal_Audit_Report")'">
+                                Export To Excel
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="mt-4 table-responsive">
+                        <table id="excelTable" class="table table-bordered table-striped table-condensed">
+                            <thead id="tableHeader">
+                                <!-- Headers will be dynamically populated -->
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Rows will be dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $('#btncheck').click(function () {
+        // Get the selected file
+        debugger;
+        var fileUpload = $("#FileUpload1")[0];
+        if (!fileUpload.files || fileUpload.files.length === 0) {
+            alert("Please select a file.");
+            return;
+        }
+
+        // Create FormData to send the file
+        var formData = new FormData();
+        formData.append("fileData", fileUpload.files[0]);
+
+        // Send an AJAX POST request
+        $.ajax({
+            url: '@Url.Action("BindNdtExcelDataToGrid", "Internal_Audit_Report")', // Update to your action URL
+            type: 'POST',
+            data: formData,
+            processData: false, // Don't process the file
+            contentType: false, // Set content type to false
+            success: function (response) {
+                debugger;
+                if (response.success) {
+                    bindDataToTable(response.data); // Bind data to the table
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + xhr.responseText || error);
+            }
+        });
+    })
+
+    
+
+    function bindDataToTable(data) {
+        debugger;
+        // Clear existing table content
+        $('#tableHeader').empty();
+        $('#tableBody').empty();
+
+        // Ensure there's data to display
+        if (data.length === 0) {
+            alert("No data found in the file.");
+            return;
+        }
+
+        // Add table headers (column names)
+        var headers = Object.keys(data[0]); // Get column names from the first row
+        headers.forEach(function (header) {
+            $('#tableHeader').append(`<th>${header}</th>`);
+        });
+
+        // Find duplicates in the username column
+        var usernameCounts = {};
+        data.forEach(function (row) {
+            const username = row["UserName"]; // Ensure column name matches
+            if (username) {
+                usernameCounts[username] = (usernameCounts[username] || 0) + 1;
+            }
+        });
+
+        // Add table rows and mark duplicates
+        data.forEach(function (row) {
+            const isDuplicate = usernameCounts[row["UserName"]] > 1;
+            var rowHtml = `<tr ${isDuplicate ? 'class="highlight"' : ''}>`;
+            headers.forEach(function (header) {
+                rowHtml += `<td>${row[header]}</td>`;
+            });
+            rowHtml += '</tr>';
+            $('#tableBody').append(rowHtml);
+        });
+
+        // Initialize or reinitialize DataTable
+        dataTable = $('#excelTable').DataTable({
+            destroy: true, // Destroy any existing DataTable instance
+            scrollX: true, // Enables horizontal scrolling
+        });
+
+        // Reapply highlight class (in case DataTable overrides styles)
+        $('#tableBody tr.highlight').each(function () {
+            $(this).addClass('highlight');
+        });
+    }
+
+
+    function InsertData() {
+        debugger;
+        var fileUpload_ = $("#FileUpload1")[0];
+        if (!fileUpload_.files || fileUpload_.files.length === 0) {
+            alert("Please select a file.");
+            return;
+        }
+
+        // Create FormData to send the file
+        var formData = new FormData();
+        formData.append("file", fileUpload_.files[0]);
+
+        // Send an AJAX POST request
+        $.ajax({
+            url: '@Url.Action("InsertNDTDataIntoDataBase", "Internal_Audit_Report")',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,  // Disable caching
+            success: function (response) {
+                debugger;
+                if (response.success) {
+                    // Parse the JSON string in 'data' to an array of objects
+                    var parsedData = JSON.parse(response.data);
+                    alert(parsedData);
+                    // Check if the status in the parsed data is "Exception"
+                    if (parsedData.length > 0 && parsedData[0].Status === "Exception") {
+                        //var UserNames = parsedData[0].UserNames;
+                        //var EmployeeCodes = parsedData[0].EmployeeCodes;
+                        alert("Duplicate EmployeeCode Found");
+                    } else {
+                        alert("Data Inserted Successfully!");
+                        $("#FileUpload1").val("");
+                        BindInsertedData();
+                    }
+                } else {
+                    alert("Error: " + response.message);
+                }
+
+                //if (response.success) {
+
+
+                //} else {
+                //    alert("Error: " + response.message);
+                //}
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + xhr.responseText || error);
+            }
+        })
+    }
+
+
+    function BindInsertedData() {
+    debugger;
+    $.ajax({
+        url: "@Url.Action("GetDataInserted", "UserRole")",
+        type: "GET",
+        dataType: "json",
+        success: function (result) {
+            debugger;
+
+            // Parse the JSON result
+            var data = JSON.parse(result);
+
+            if (data === "Error") {
+                // Handle the case where no data is returned
+                $("#excelTable tbody").empty();
+                var tr = $('<tr/>');
+                tr.append('<td colspan="18" style="text-align: center;">No Record Found</td>'); // Adjust colspan based on total columns
+                $('#excelTable tbody').append(tr);
+            } else {
+                // Clear table headers and body
+                $("#tableHeader").empty();
+                $("#tableBody").empty();
+
+                // Extract headers from the first row of data
+                var headers = Object.keys(data[0]);
+
+                // Dynamically generate table headers from the data keys
+                var headerRow = $('<tr/>');
+                headers.forEach(function (header) {
+                    headerRow.append(`<th>${header}</th>`);
+                });
+                $("#tableHeader").append(headerRow);
+
+                // Dynamically generate table rows
+                data.forEach(function (row) {
+                    var tr = $('<tr/>');
+                    headers.forEach(function (header) {
+                        var value = row[header] || ""; // Default to empty if key is missing
+                        tr.append(`<td>${value}</td>`);
+                    });
+                    $("#tableBody").append(tr);
+                });
+
+
+                $('#excelTable').DataTable({
+                    destroy: true, // Destroy any existing DataTable instance
+                    scrollX: true, // Enables horizontal scrolling
+                });
+            }
+        },
+        error: function (result) {
+            console.error("Error fetching data:", result);
+        },
+    });
+}
+
+
+
+    function ClearData() {
+        $("#FileUpload1").val("");
+        $("#tableHeader").empty();
+        $("#tableBody").empty();
+    }
+
+
+</script>

@@ -1,0 +1,236 @@
+﻿@model TuvVision.Models.TrainingCreationModel
+@{
+    ViewBag.Title = "UpdateTraining";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@*DATEPICKER*@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $(".Fromdate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+@using (Html.BeginForm("UpdateTraining", "TrainingCreation", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-5">
+
+                    <div class="col-xs-12 form-col">
+                        <a href="@Url.Action("ListTrainingCreation", "TrainingCreation")" class="btn btn-default insert-form-btn" style="float:right;"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                        <br />
+                        <br />
+                        <div class="row">
+
+
+
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Update Training</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            @Html.HiddenFor(model => model.Id)
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Training Topic:</label>
+                                                                @Html.TextBoxFor(model => model.TrainingTopic, new { @placeholder = "Training Topic Here", @class = "form-control" })
+                                                                @Html.ValidationMessageFor(model => model.TrainingTopic, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Evaluation Method:</label>
+                                                                @Html.DropDownListFor(m => m.EvaluationMethod, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="Quiz", Value = "Quiz" },
+                                                                     new SelectListItem{ Text="None", Value = "None" },
+                                                                     new SelectListItem{ Text="On site Monitoring", Value = "On site Monitoring" },
+                                                                     new SelectListItem{ Text="Interview assessment / Face to face interaction.", Value = "Interview assessment / Face to face interaction." },
+
+
+
+
+                                                                     }, new { @class = "form-control" })
+                                                                @Html.ValidationMessageFor(m => m.EvaluationMethod, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Branch Name:</label>
+                                                                @*if (ViewData["BranchName"] != null)
+                    {*@
+                                                                @Html.DropDownListFor(model => model.BranchId, (IEnumerable<SelectListItem>)ViewData["BranchName"], "---Select Branch---", new { @id = "ddlBranch", @class = "form-control" })
+                                                                @Html.ValidationMessageFor(m => m.BranchId, "", new { @class = "text-danger validation-msg" })                                                            
+    @*}
+                    else
+                    {
+                    @Html.DropDownListFor(model => model.ContactName, new SelectList(@ViewBag.ContactType, "Code", "Name"), "---Select Contact---", new { @id = "ddlContactType", @class = "form-control" })
+                    }*@
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Category:</label>
+                                                                @Html.DropDownListFor(m => m.Category, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="Technical", Value = "Technical" },
+                                                                     new SelectListItem{ Text="NDE", Value = "NDE" },
+                                                                     new SelectListItem{ Text="QMS Awareness", Value = "QMS Awareness" },
+                                                                     new SelectListItem{ Text="BOSIET", Value = "BOSIET" },
+                                                                     new SelectListItem{ Text="Safety at work", Value = "Safety at work" },
+                                                                     new SelectListItem{ Text="Communication skills", Value = "Communication skills" },
+                                                                     new SelectListItem{ Text="Inter personal", Value = "Inter personal" },
+
+                                                                      new SelectListItem{ Text="Other", Value = "Other" },
+
+
+
+
+
+                                                                     }, new { @class = "form-control" })
+                                                                @Html.ValidationMessageFor(m => m.Category, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Other:</label>
+                                                                @Html.TextBoxFor(model => model.Other, new { @placeholder = "Other Category Here", @class = "form-control" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Training Type:</label>
+                                                                @Html.DropDownListFor(m => m.TrainType, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="ClassRoom", Value = "ClassRoom" },
+                                                                     new SelectListItem{ Text="OnJob", Value = "OnJob" },
+                                                                     new SelectListItem{ Text="WorkJob", Value = "WorkJob" },
+                                                                     new SelectListItem{ Text="WorkShop", Value = "WorkShop" },
+                                                                     new SelectListItem{ Text="Webx-Online", Value = "Webx" },
+                                                                     }, new { @class = "form-control" })
+                                                                @Html.ValidationMessageFor(m => m.TrainType, "", new { @class = "text-danger validation-msg" })
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+
+                                                                <label>Remark:</label>
+                                                                @Html.TextBoxFor(model => model.Remarks, new { @placeholder = "Remark Here", @class = "form-control" })
+
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Proposed Date:</label>
+                                                                @Html.TextBoxFor(model => model.ProposedDate, "{0:yyyy-MM-dd}", htmlAttributes: new { placeholder = "From Date", @class = "form-control Fromdate", autocomplete = "off" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+
+                                                            <div class="form-group">
+                                                                @*<button type="reset" class="btn btn-default insert-form-btn"> Reset </button>*@
+                                                                <button type="submit" class="btn btn-default insert-form-btn"> Update </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+@*Auto Fill Text Box*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function () {
+    $("#TrainingTopic").autocomplete({
+           source: function(request,response) {
+               $.ajax({
+                   url: "/TrainingCreation/GetRecord",
+                   type: "POST",
+                   dataType: "json",
+                   data: { Prefix: request.term },
+                   success: function (data) {
+                       response($.map(data, function (item) {
+                           return { label: item.TrainingTopic, value: item.TrainingTopic };
+                       }))
+
+                   }
+               })
+           },
+           messages: {
+               noResults: "", results: ""
+           }
+       });
+})
+</script>
+
+@*Enable textBox On Category Change Value*@
+<script type="text/javascript">
+    var $Category = $('#Category'),
+    $Other = $('#Other');
+    $Category.change(function () {
+        if ($Category.val() == 'Other') {
+            $Other.removeAttr('disabled');
+    } else {
+            $Other.attr('disabled', 'disabled').val('');
+    }
+}).trigger('change'); // added trigger to calculate initial state
+</script>
+

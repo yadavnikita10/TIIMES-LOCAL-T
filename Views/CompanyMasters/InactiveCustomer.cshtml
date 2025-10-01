@@ -1,0 +1,327 @@
+﻿
+@model TuvVision.Models.EnquiryMaster
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "InactiveCustomer";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+@*<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>*@
+<style>
+    .height-table {
+        height: auto;
+    }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+</style>
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-4">
+                    <div class="form-group">
+                        <label><b>SAP Customer:</b><span style="color:#ff0000;">*</span></label>
+                        <input type="text" placeholder="Enter SAP Customer" class="form-control" id="CustomerSearch" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                    <label></label>
+                    <button id="btnSearchData" class="btn btn-primary form-control" onclick="btnSearch();">Search</button>
+                </div>
+            </div>
+
+
+            <div class="col-xs-12" id="txttable1">
+
+
+                <table class="display" style="" id="example">
+                    <thead>
+                        <tr>
+                            @*<th style="width:15%;"><label>Action</label></th>*@
+                            <th><label>Company Name</label></th>
+                            <th><label>SAP Customer</label></th>
+                            <th><label>Action</label></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+
+
+            <div class="col-xs-12" id="txttable2">
+
+
+                <table class="display" style="" id="example2">
+                    <thead>
+                        <tr>
+                            @*<th style="width:15%;"><label>Action</label></th>*@
+                            <th><label>Company Name</label></th>
+                            <th><label>Job Number</label></th>
+                            <th><label>SAP NO</label></th>
+                            <th><label>Customer Po No</label></th>
+                            <th><label>Customer Po Date</label></th>
+                            <th><label>Customer Po Amount</label></th>
+                            @*<th><label>Customer Po No</label></th>*@
+                            <th><label>Amount</label></th>
+                            <th><label>Estimated Mandays</label></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+
+
+
+            <div class="row">
+                <hr class="custom-hr1">
+            </div>
+
+            <h5>InActive Customers</h5>
+            <div class="row">
+                    <div class="col-xs-12">
+
+
+                        <table class="display" style="" id="txtgetdata">
+                            <thead>
+                                <tr>
+
+                                    <th><label>Company Name</label></th>
+                                    <th><label>SAP Customer</label></th>
+                                    <th><label>Action Taken By</label></th>
+                                    <th><label>Action Taken Date</label></th>
+                                    <th><label>Status</label></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+        GetCustomerData();
+        $("#txttable1").hide();
+        $("#txttable2").hide();
+    })
+
+                function btnSearch() {
+                    var CompanyName = $("#CustomerSearch").val();
+                    $.ajax({
+                        url: "@Url.Action("GetSearchCompanyData", "CompanyMasters")",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ CompanyName: CompanyName }),
+                        success: function (result) {
+                            debugger;
+                            $("#txttable1").show();
+                            $("#example tbody").empty();
+                            var a = JSON.parse(result);
+                            if (result === "Error" || result.length === 0) {
+                                var tr = $('<tr/>');
+                                tr.append('<td colspan="3" style="text-align: center;">No Records Found</td>');
+                                $("#example tbody").append(tr);
+                            } else {
+                                var c = 0;
+                                for (var i = 0; i < a.length; i++) {
+                                    var tr = $('<tr/>');
+                                    tr.append("<td><label>" + a[i].Company_Name + "</label></td>");
+                                    tr.append("<td><label>" + a[i].sapcustomer + "</label></td>");
+
+                                    if (a[i].Status == 'Active') {
+                                        tr.append("<td><input type='button' class='btn btn-warning' value='Change Status to InActive' onclick=\"InactiveCustomer('" + a[i].sapcustomer + "')\"></td>");
+                                    } else {
+                                        tr.append("<td><input type='button' class='btn btn-warning' value='Change Status to Active' onclick=\"InactiveCustomer('" + a[i].sapcustomer + "')\"></td>");
+                                    }
+
+                                    $("#example tbody").append(tr);
+                                };
+                            }
+                            GetJobDetails();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX error:", error);
+                        }
+                    });
+                }
+
+
+                function InactiveCustomer(sapcustomer) {
+                    var sap_customer = sapcustomer;
+                    debugger;
+                    $.ajax({
+                        url: "@Url.Action("UpdateCustomer","CompanyMasters")",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ sapcustomer: sapcustomer }),
+                        success:function(result){
+                            debugger;
+                            var a = JSON.parse(result);
+                            if (a[0].Message == "true") {
+                                alert("Company has been Updated Sucessfully");
+                                $("#txttable1").hide();
+                                GetCustomerData();
+                            }
+                            else {
+                                alert("Something went wrong");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX error:", error);
+                        }
+                    })
+
+                }
+
+
+
+                function GetCustomerData() {
+                    $.ajax({
+                    url: "@Url.Action("GetCompanyData", "CompanyMasters")",
+                    type: "Get",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        debugger;
+                        $("#txtgetdata tbody").empty();
+                        var a = JSON.parse(result);
+                        if (result === "Error" || result.length === 0) {
+                            var tr = $('<tr/>');
+                            tr.append('<td colspan="3" style="text-align: center;">No Records Found</td>');
+                            $("#txtgetdata tbody").append(tr);
+                        } else {
+                            var c = 0;
+                            for (var i = 0; i < a.length; i++) {
+                                var tr = $('<tr/>');
+                                tr.append("<td><label>" + a[i].Company_Name + "</label></td>");
+                                tr.append("<td><label>" + a[i].SAPCustomer + "</label></td>");
+                                tr.append("<td><label>" + a[i].Active_Inactive_by + "</label></td>");
+                                tr.append("<td><label>" + a[i].Active_Inactive_Date + "</label></td>");
+                                tr.append("<td><label>" + a[i].Status + "</label></td>");
+                                $("#txtgetdata tbody").append(tr);
+                            };
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX error:", error);
+                    }
+                });
+                }
+
+
+
+    function GetJobDetails() {
+        debugger;
+        var Company_Name = $("#CustomerSearch").val();
+        $.ajax({
+            url: "@Url.Action("GetCustomerJobData", "CompanyMasters")",
+            type: "Get",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: { CompanyName: Company_Name },
+            success:function(result){
+                debugger;
+                debugger;
+                $("#txttable2").show();
+                $("#example2 tbody").empty();
+                var a = JSON.parse(result);
+                if (result === "Error" || result.length === 0) {
+                    var tr = $('<tr/>');
+                    tr.append('<td colspan="3" style="text-align: center;">No Records Found</td>');
+                    $("#example2 tbody").append(tr);
+                } else {
+                    var c = 0;
+                    for (var i = 0; i < a.length; i++) {
+                        var tr = $('<tr/>');
+                        tr.append("<td><label>" + a[i].Client_Name + "</label></td>");
+                        tr.append("<td><label>" + a[i].Job_Number + "</label></td>");
+                        tr.append("<td><label>" + a[i].SAP_No + "</label></td>");
+                        tr.append("<td><label>" + a[i].Customer_PoNo_PoDate + "</label></td>");
+                        tr.append("<td><label>" + a[i].Customer_PoDate + "</label></td>");
+                        tr.append("<td><label>" + a[i].Customer_PO_Amount + "</label></td>");
+                        tr.append("<td><label>" + a[i].Amount + "</label></td>");
+                        tr.append("<td><label>" + a[i].Estimate_ManDays_ManMonth + "</label></td>");
+                        $("#example2 tbody").append(tr);
+                    };
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", error);
+            }
+        });
+    }
+
+
+</script>
+
+
+

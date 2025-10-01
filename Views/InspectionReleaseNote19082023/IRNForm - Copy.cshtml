@@ -1,0 +1,1609 @@
+﻿@model TuvVision.Models.InspectionvisitReportModel
+
+@{
+    ViewBag.Title = "IRNForm";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<link href="~/AllJsAndCss/css/extrastyles.css" rel="stylesheet" />
+@*DATEPICKER*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+
+<style>
+
+    .CircleRow ul li{
+      display: inline-block;
+      padding-right: 15px;
+      }
+      .circle-one {
+        display: inline-block;
+        padding: 8px;
+        /* border-radius: 42px; */
+        /* border: 2px solid #af6b05; */
+        /* width: 60px; */
+        background-color: #f6a731;
+        color: white;
+        padding: 8px 15px 8px 40px;
+        position: relative;
+      }
+      .CircleRow .active .circle-one {
+        /* border: 2px solid #2d1c03; */
+        background-color: #4e3105;
+        color: #f5f5f7;
+        position: relative;
+      }
+
+
+      .circle-one:before {
+        position: absolute;
+        content: "";
+        width: 0px;
+        height: 0px;
+        border-top: 19px solid transparent;
+        border-bottom: 19px solid transparent;
+        border-left: 20px solid #f1f1f1;
+        left: 0px;
+        top: -1px;
+      }
+      .circle-one:after {
+        position: absolute;
+        content: "";
+        width: 0px;
+        height: 0px;
+        border-top: 19px solid transparent;
+        border-bottom: 19px solid transparent;
+        border-left: 20px solid #f6a731;
+        right: -18px;
+        top: -1px;
+      }
+
+
+      .CircleRow .active .circle-one:before {
+
+      }
+      .CircleRow .active .circle-one:after {
+        border-left: 20px solid #4e3105;
+      }
+      .CircleRow  h4 {
+        color: #847d7d;
+      }
+      .CircleRow .active h4 {
+        color: #000000;
+      }
+</style>
+
+
+<style>
+    .ui-widget-header {
+        background: #3677e6 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+</style>
+<script>
+    $(function () {
+        $(".CallRecivedate").datepicker({
+            dateFormat: 'dd/mm/y',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<style>
+    /*-- Delete color-profile --*/
+    ul.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+</style>
+
+<form method="post" enctype="multipart/form-data">
+    @Html.HiddenFor(m => m.abcid)
+    @Html.HiddenFor(m => m.Report_No)
+
+    @Html.HiddenFor(m => m.UserBranch)
+
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+
+                            <div class="col-xs-12">
+                                @if (Model.PK_IVR_ID != 0)
+                                {
+                                    <h3 class="dynamic-page-title dynamic-page-title-2  ">Inspection Release Note : @ViewBag.LatestRep</h3>
+                                    <a href="@Url.Action("IRNReports","InspectionReleaseNote")" class="btn btn-default news-btn" style="float:right;"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                                    <br />
+                                    <br />
+                                }
+                                else
+                                {
+
+                                }
+
+
+                                @if (Model != null)
+                                {
+                                    if (Model.PK_IVR_ID != 0)
+                                    {
+                                        <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("IRNForm", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">General</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Item Description</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Reference Documents</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Stage Witnessed</button>
+                                        @*<button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Inspection Activities</button>*@
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Document Reviewed</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Conclusion</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">List Of Open Issues</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EarlierIssuedQuantity", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Earlier Issued Quantity</button>
+
+                                        @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("IRNReportGanrate", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID} )'">Print Revise Report</button>*@
+                                    }
+                                }
+
+
+                            </div>
+                            @if (Model.PK_IVR_ID == 0)
+                            {
+
+                                <div class="col-xs-12">
+                                    <div class="row">
+
+                                        <div class="col-xs-12 col-sm-offset-2 col-sm-2">
+                                            <div class="form-group" style="text-align: center;margin-top: 8px;">
+                                                <label style="color:#104193;">Search IVR:</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-2">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" style="border-color:deepskyblue;" name="SubJobNo" id="SubJobNo" placeholder="Sub Job No..." />
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-2">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" style="border-color:deepskyblue; " name="PoNo" id="PoNo" placeholder="Po No...." />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-2">
+                                            <div class="form-group">
+                                                <button type="button" id="filter1" style="margin-top:0;" class="btn btn-default insert-form-btn"><i class="fa "></i> Search</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                //Old Copy start
+
+                                @*<div class="col-xs-12">
+                                        <div class="row">
+
+                                            <div class="col-xs-12 text-center">
+                                                <div class="form-group" style="margin-top: 0;margin-bottom: 5px;">
+                                                    <label style="color:#104193;">Search the IRN Report to Copy From old Code:</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-2">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" style="border-color:deepskyblue;" id="Client" name="Client" placeholder="Client" />
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-2">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" style="border-color:deepskyblue; " id="Vendor" name="Vendor" placeholder="Vendor" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-2">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" style="border-color:deepskyblue; " id="ProjectName" name="ProjectName" placeholder="Project Name" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-2">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" style="border-color:deepskyblue; " name="IRNReport" id="IRNReport" placeholder="IRN Report" />
+                                                </div>
+                                            </div>
+                                            @if (ViewBag.ReportList != null)
+                                            {
+
+                                                <div class="col-xs-12 col-sm-2" id='Others' style='display:none;'>
+                                                    <div class="form-group">
+                                                        @Html.DropDownListFor(model => model.ReportName, ViewBag.ReportList as IEnumerable<SelectListItem>, "--Select Report--", new { @class = "form-control ", @style = "border-color:deepskyblue;", @id = "ddlContactType" })
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-xs-12 col-sm-2" id='Systemhide'>
+                                                    <div class="form-group">
+                                                        @Html.DropDownListFor(model => model.ReportName, ViewBag.ReportList as IEnumerable<SelectListItem>, "--Select Report--", new { @class = "form-control", @style = "border-color:deepskyblue;", @id = "ddlContactType" })
+                                                    </div>
+                                                </div>
+
+                                            }
+
+                                            <div class="col-xs-12 col-sm-2">
+                                                <div class="form-group">
+                                                    <button type="button" id="filter2" class="btn btn-default insert-form-btn" style="margin-top: 0;"><i class="fa "></i> Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+
+                                //Old Copy End
+                            }
+                            @*<div class="col-sm-12 text-center CircleRow">
+                                    <ul>
+                                        <li class="active"><h4><span class="circle-one">Upload Excel</span> </h4></li>
+
+                                    </ul>
+                                </div>*@
+                            @if (Model.PK_IVR_ID != 0)
+                            {
+                                <div class="col-xs-12">
+                                    
+                                    <div class="col-xs-12">
+                                        <h5 style="margin-top:10px;margin-bottom:8px; color:blue;">Upload Template:</h5>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-2">
+                                        <a class="btn btn-default insert-form-btn" href="~/Excel/template.xlsx" role="button" download="IVRIRNTemplate.xlsx" style="margin-top:0px;">
+                                            <i class="fa fa-download"></i>Download Format
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-3">
+                                        <div class="form-group">
+                                            @*<label>Upload Excel :</label>*@
+                                            <input type="file" name="FileUpload1" class="form-control" id="FileUpload1">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-3">
+
+                                        <button type="submit" class="btn btn-default insert-form-btn" style="margin-top:0px;"><i class="fa fa-plus-circle"></i> Upload </button>
+                                    </div>
+
+                                </div>
+                            }
+                            @*<div class="col-sm-12 text-center CircleRow">
+                                    <ul>
+                                        <li class="active"><h4><span class="circle-one">Copy Report</span> </h4></li>
+
+                                    </ul>
+                                </div>*@
+                            @*Copy New*@
+
+                            @if (Model.PK_IVR_ID != 0)
+                            {
+                                @*<div class="col-xs-12 text-center">*@
+                                <div class="col-xs-12">
+                                    <div class="col-xs-12">
+                                        <h5 style="margin-top:10px;margin-bottom:8px; color:blue;">Copy Report:</h5>
+                                    </div>
+
+                                    <div class="col-xs-12" id="visible">
+                                        <div class="row">
+
+                                            <div class="col-xs-2">
+                                                <div class="row" style="margin-bottom:8px;">
+                                                    @Html.DropDownListFor(m => m.Type, new List<SelectListItem>
+                                {
+                                new SelectListItem{ Text="---SELECT---", Value = "" ,Selected =true},
+                                new SelectListItem{ Text="IVR", Value = "IVR" },
+                                new SelectListItem{ Text="IRN", Value = "IRN" },
+
+
+
+                                }, new { @class = "form-control", @id = "Type"  })
+                                                    @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger" })
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-2">
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <input type="text" class="form-control" name="SubJobNo" id="SubJobNo" placeholder="SubJobNo.." />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-2">
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <input type="text" class="form-control" name="VisitReport" id="VisitReport" placeholder="Report No.." />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-1">
+                                                <div class="form-group" style="margin-bottom:0;margin-top: 2px;">
+                                                    <button type="button" id="SearchNew" class="btn btn-default insert-form-btn" style="margin-top: 0px;"><i class="fa "></i> Search</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-2">
+                                                <div class="form-group" style="margin-bottom:8;">
+
+
+
+                                                    @Html.DropDownListFor(m => m.ReportName, new List<SelectListItem>
+                                {
+                                new SelectListItem{ Text="---SELECT---", Value = "" ,Selected =true},
+
+
+
+                                }, new { @class = "form-control", @id = "ddlReport" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <button type="button" id="btnCopyNew" class="btn btn-default insert-form-btn" style="margin-top:0px;"><i class="fa "></i> Copy </button>
+                                                    <button type="button" id="btnClearNew" class="btn btn-default insert-form-btn" style="margin-top:0px;background-color:#e63646"><i class="fa "></i> Clear Content</button>
+
+
+                                                </div>
+                                            </div>
+                                        </div><!--End of search fields-->
+                                        <!--25 Aug-->
+                                        @*<div class="col-xs-12">
+
+                                                @if (ViewBag.SubCatlist != null)
+                                                {
+                                                    <div class="row" style="margin-bottom:8px;">
+                                                        <div class="col-xs-12 col-md-offset-5 col-md-2 text-center" id='Others' style='display:none;'>
+
+                                                            <div class="form-group" style="margin-bottom:0;">
+                                                                @Html.DropDownListFor(model => model.ReportName, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Report--", new { @class = "form-control ", @style = "margin-top:15px; border-color:deepskyblue;", @id = "ddlReport" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4 text-center" id='Systemhide'>
+
+                                                            <div class="form-group" style="margin-bottom:0;">
+                                                                @Html.DropDownListFor(model => model.ReportName, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Report--", new { @class = "form-control", @style = "margin-top:15px; border-color:deepskyblue;", @id = "ddlReport" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4 text-center">
+
+
+                                                            <div class="form-group" style="display:inline-block;margin-bottom:0;">
+                                                                <button type="button" id="btnCopyNew" class="btn btn-default insert-form-btn" style="margin-top:5px;"><i class="fa "></i> Copy </button>
+                                                                <button type="button" id="btnClearNew" class="btn btn-default insert-form-btn" style="margin-top:5px;" onclick="return confirm('Are you sure you want to delete record?')"><i class="fa "></i> Clear </button>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            </div>*@
+                                        <!--25 Aug-->
+
+
+                                    </div>
+
+                                </div>
+                            }
+
+                            <br /><br />
+
+                            @*Copy End*@
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">General</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                @*<form>*@
+
+
+                                                @Html.HiddenFor(m => m.PK_Call_ID)
+                                                @Html.HiddenFor(m => m.PK_IVR_ID)
+                                                @Html.HiddenFor(m => m.arrey)
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <span style="color:#E12F24;">
+                                                                <strong>&nbsp;&nbsp;&nbsp;Notes </strong> :
+                                                            </span> 1)  Verify each auto filled data on this page. For corection of data, contact Originating Branch Coordinator's.<br />
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) Read thoroughly
+
+                                                            @*class="btn btn-default insert-form-btn"*@
+                                                            <a href="~/Excel/Guidelines to prepare IVR-IRN WI-INSP-36-Annex 1 Rev 01.docx" role="button" download="Guidelines to prepare IVR-IRN WI-INSP-36-Annex 1 Rev 01.docx" style="margin-top:0px;">
+                                                                Guidelines to prepare IVR-IRN WI-INSP-36-Annex 1 Rev 01 <i class="fa fa-download"></i>
+                                                            </a>
+                                                            before preparing IRN.
+                                                            <br /><br />
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*@Html.HiddenFor(m => m.Sap_And_Controle_No)*@
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Date of release IRN </label>
+                                                            @Html.TextBoxFor(model => model.Date_Of_Inspection, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Date of release IRN", @class = "form-control CallRecivedate ", autocomplete = "off" })
+                                                            @*@Html.TextBoxFor(model => model.Date_Of_Inspection, new { @placeholder = "Date Of Inspection", @class = "form-control" })*@
+                                                            @Html.ValidationMessageFor(model => model.Date_Of_Inspection, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                
+                                                    </div>
+
+                                                <div class="row">
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            @*//Rahul Code did not Bind SubJob_No*@
+                                                            <label>TUV India Control (With Sub Job) No.:</label>
+
+                                                            @Html.TextBoxFor(model => model.SubJob_No, new { @placeholder = "TUV India SubJobNo", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubJob_No, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 hidden">
+                                                        <div class="form-group">
+                                                            <label>TUV India Control No:</label>
+
+
+                                                            @Html.TextBoxFor(model => model.Sap_And_Controle_No, new { @placeholder = "TUV India Control No", @class = "form-control xyz", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Sap_And_Controle_No, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Executing Branch:</label>
+                                                            @*<input type="email" class="form-control" placeholder="Email Here">*@
+                                                            @*@Html.TextBoxFor(model => model.Branch, new { @placeholder = "Branch", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger validation-msg" })*@
+                                                            @if (ViewBag.SubCatlist != null)
+                                                            {
+                                                                @Html.DropDownListFor(model => model.Br_Id, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Branch--", new { @class = "form-control", @id = "ddlBranchName", @disabled = "disabled" })
+
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Customer Name:</label>
+                                                            @Html.TextBoxFor(model => model.Client_Name, new { @placeholder = "Customer Name:", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Client_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                    @*<div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+            <label>Notification No:</label>
+
+            @Html.TextBoxFor(model => model.Notification_Name_No_Date, new { @placeholder = "Notification No", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Notification_Name_No_Date, "", new { @class = "text-danger validation-msg" })
+            </div>
+            </div>*@
+                                                <div class="row">
+
+
+
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>End Customer Name:</label>
+                                                            @Html.TextBoxFor(model => model.End_user_Name, new { @placeholder = "End Customer Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.End_user_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label> Project Name & Location:</label>
+                                                            @*<input type="text" class="form-control" placeholder="Fax Here">*@
+                                                            @Html.TextBoxFor(model => model.Project_Name_Location, new { @placeholder = "Project Name & Location", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Project_Name_Location, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                    @*<div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+            <label>Inspection Location:</label>
+
+            @Html.TextBoxFor(model => model.Address_Of_Inspection, new { @placeholder = "Inspection Location", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Address_Of_Inspection, "", new { @class = "text-danger validation-msg" })
+            </div>
+            </div>*@
+
+
+
+
+
+
+
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label> DEC/PMC/EPC Name:</label>
+                                                            @Html.TextBoxFor(model => model.DEC_PMC_EPC_Name, new { @placeholder = "DEC PMC EPC Name", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.DEC_PMC_EPC_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label> DEC/PMC/EPC Assignment No:</label>
+                                                            @Html.TextBoxFor(model => model.DEC_PMC_EPC_Assignment_No, new { @placeholder = "DEC PMC EPC Assignment No", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.DEC_PMC_EPC_Assignment_No, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Vendor Name Location:</label>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextBoxFor(model => model.Vendor_Name_Location, new { @placeholder = "Vendor Name Location", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Vendor_Name_Location, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO No.(Client PO on Vendor) :</label>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextBoxFor(model => model.Po_No, new { @placeholder = "PO No", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Po_No, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO Date(Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.Date_of_PO, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control Date_of_PO1", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Date_of_PO, "", new { @class = "text-danger validation-msg" })
+
+
+                                                        </div>
+                                                    </div>
+                                                    </div>
+
+
+                                                <div class="row">
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Sub Vendor Name:</label>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextBoxFor(model => model.Sub_Vendor_Name, new { @placeholder = "Sub Vendor Name", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Sub_Vendor_Name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO No.(Vendor PO on Sub-vendor):</label>
+                                                            @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                                                            @Html.TextBoxFor(model => model.Po_No_SubVendor, new { @placeholder = "Sub Vendor PO No", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Po_No_SubVendor, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO Date (Sub Vendor):</label>
+                                                            @Html.TextBoxFor(model => model.SubSubVendorDate_of_PO, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control SubSubVendorDate_of_PO", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Date_of_PO, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                    <div class="col-xs-12">
+                                                        <table id="partialtable" class="hidden table table-bordered" cellspacing="0" width="100%">
+                                                            <tr style="background-color:blue; color:white;">
+                                                                <th class="remove-search less-width" width="5%">Select IVR's</th>
+                                                                @*<th class="remove-search less-width">Visit Report No</th>*@
+                                                                <th class="remove-search less-width" width="40%">Visit Report Number</th>
+                                                                <th class="remove-search less-width" width="45%">Inspection Date</th>
+                                                                <th class="remove-search less-width" width="10%">Creation Date</th>
+                                                                @*<th class="remove-search less-width" width="10%">Project Name</th>*@
+                                                            </tr>
+                                                            <tbody id="partialtabledata"></tbody>
+                                                        </table>
+                                                    </div>
+                                                    @if (ViewData["IvrList"] != null)
+                                                    {
+                                                        <div class="col-xs-12">
+                                                            <table id="example" class="display" cellspacing="0" width="100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        @*<th class="remove-search less-width">Check Box</th>*@
+
+                                                                        <th class="remove-search less-width" width="50%">Visit Report Number</th>
+                                                                        @*<th class="remove-search less-width">Visit Report File</th>*@
+                                                                        <th class="remove-search less-width" width="30%">Inspection Date</th>
+                                                                        <th class="remove-search less-width" width="20%">Creation Date</th>
+                                                                        @*<th class="remove-search less-width" width="20%">Project Name</th>*@
+                                                                </thead>
+                                                                <tbody id="partialtabledata">
+
+                                                                    @if (ViewData["IvrList"] != null)
+                                                                    {
+                                                                        foreach (var item in ViewData["IvrList"] as IEnumerable<TuvVision.Models.ReportModel>)
+                                                                        {
+                                                                            <tr>
+                                                                                @*<td><input type="checkbox" class="checkBox" value="@item.PK_RM_ID" /></td>*@
+                                                                                @*<td> <a href="~/IRNReports/@item.Report"></td>*@
+                                                                                @*<td>
+                                        <a href="~/IRNReports/@item.Report" download="download">
+
+                                        <img src="~/PDF-Icon.png" height="50px" width="50px" />
+                                        </a>
+                                        </td>*@
+                                                                                <input type="hidden" value="@item.PK_RM_ID" class="chkSelectIftrue">
+                                                                                <td>@item.ReportName</td>
+                                                                                @*<td>@item.Report</td>*@
+                                                                                <td>@item.inspectionDate</td>
+                                                                                <td>@item.CraetedDate</td>
+                                                                                @*<td>@item.ProjectName</td>*@
+                                                                            </tr>
+                                                                        }
+                                                                    }
+
+                                                                </tbody>
+                                                            </table>
+                                                            <button type="button" id="EditDate" style="margin-top:0;" class="btn btn-default insert-form-btn"><i class="fa "></i> Edit</button>
+                                                        </div>
+                                                    }
+
+                                                    <!-- /.data table col -->
+                                                    @*<div class="col-xs-12">
+            <div class="form-group">
+            <label>Conclusion:</label>
+            @Html.TextAreaFor(model => model.Conclusion, new { @placeholder = "Conclusion", @class = "form-control", @rows = "3" })
+            @Html.ValidationMessageFor(model => model.Conclusion, "", new { @class = "text-danger validation-msg" })
+            </div>
+            </div>
+
+
+            <div class="col-xs-12">
+            <div class="form-group" >
+            <label>Identification Of Inspected Item:</label>
+            <label>Insert List Option:</label><button type="button" class="btn btn-default news-btn" style="margin-bottom:15px;margin-left:10px;" data-toggle="modal" data-target="#myModal">Edit</button>
+            <div class="textcontent">
+
+            </div>
+            </div>
+            </div>*@
+
+
+
+                                                    @*<div class="col-xs-4">
+            <div class="form-group">
+            <label>
+            Identification Of Inspection (Image)
+            </label>
+            <input type="file" class="inputupload" name="img_Banner" id="img_Banner" required />
+            @Html.HiddenFor(m => m.Signatures)
+            @if (Model != null)
+            {
+            <a href="~/ImageUpload/@Html.DisplayFor(m => m.Signatures)">
+            <img src="@Url.Content("~/Content/Uploads/Images/"+@Html.DisplayFor(m => m.Signatures))" width="75" height="75" />
+            @Html.ValidationMessageFor(m => m.Signatures, "", new { @class = "text-danger", })
+            </a>
+            }
+            </div>
+            </div>*@
+
+                                                    @*<div class="col-md-6">
+            <div class="col-md-5">
+            <div class="form-group">
+            <label>Order Status:</label>
+            </div>
+            </div>
+            <div class="col-md-6">
+            <div class="form-group">
+            <label for="Active">Complete</label>
+            @Html.RadioButtonFor(m => m.OrderStatus, "Active", new { id = "Active" })
+            <label for="InActive">InComplete</label>
+            @Html.RadioButtonFor(m => m.OrderStatus, "InActive", new { id = "InActive" })
+            @Html.ValidationMessageFor(m => m.OrderStatus, "", new { @class = "text-danger" })
+            </div>
+            </div>
+            </div>
+            <div class="col-md-6">
+            <div class="col-md-5">
+            <div class="form-group">
+            <label>Sub Order Status:</label>
+            </div>
+            </div>
+            <div class="col-md-6">
+            <div class="form-group">
+            <label for="Active">Complete</label>
+            @Html.RadioButtonFor(m => m.Sub_Order_Status, "Active", new { id = "Active" })
+            <label for="InActive">InComplete</label>
+            @Html.RadioButtonFor(m => m.Sub_Order_Status, "InActive", new { id = "InActive" })
+            @Html.ValidationMessageFor(m => m.Sub_Order_Status, "", new { @class = "text-danger" })
+            </div>
+            </div>
+            </div>*@
+                                                    <div class="col-xs-12 col-sm-12" hidden>
+                                                        <div class="form-group">
+                                                            <label style="color:red;">Email Distribution:</label>
+
+                                                            @Html.TextAreaFor(model => model.Emails_Distribution, new { @placeholder = "Type Emails..", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Emails_Distribution, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4" hidden>
+                                                        <div class="form-group">
+                                                            <label style="color:red;">Client Email :</label>@Html.CheckBoxFor(m => m.client_EmailSend)
+
+                                                            @Html.TextBoxFor(model => model.client_Email, new { @placeholder = "Client Email", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Emails_Distribution, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4" hidden>
+                                                        <div class="form-group">
+                                                            <label style="color:red;">Vendor Email:</label>@Html.CheckBoxFor(m => m.Vendor_EmailSend)
+
+                                                            @Html.TextBoxFor(model => model.Vendor_Email, new { @placeholder = "Vendor Email", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Vendor_Email, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4" hidden>
+                                                        <div class="form-group">
+                                                            <label style="color:red;">TUV Branch Email :</label>@Html.CheckBoxFor(m => m.Tuv_BranchSend)
+
+                                                            @Html.TextBoxFor(model => model.Tuv_Branch, new { @placeholder = "Tuv Branch", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Tuv_Branch, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+                                                   
+
+
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label><i class="fa fa-paperclip" style="color:black;"></i> @*Related Documents*@ Inspection Records / Reports : <br /> <span style="color:#ff0000;">Note: 1) Attach customer acceptance on raised concerns / waivers and Inspections records.<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2) Do not attach inspection records, which are already uploaded in IVR conclusion page. </span></label>
+                                                            <input type="file" class="inputupload" name="Image" id="img_Banner" multiple="multiple" />
+
+
+                                                            @Html.HiddenFor(m => m.IVRIRNAttachment)
+                                                            @*@if (Model != null && Model.IVRIRNAttachment != null && Model.IVRIRNAttachment != "")
+                    {
+                        string[] words = (Model.IVRIRNAttachment).Split(',');
+                        for (int j = 1; j < words.Count(); j++)
+                        {
+                            <a target="_blank" href="@Url.Content("~/Content/JobDocument/" + words[j-1])">
+                                @*<img src="@Url.Content("~/Content/JobDocument/" + words[j-1])" width="50" height="50" />
+                                <i class="fa fa-download"></i> Download
+                            </a>
+                            @*<img src="@Url.Content("~/Content/JobDocument/" + words[j-1])" width="50" height="50" />
+                        }
+                    }*@
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                @if (Model != null)
+                                                                {
+                                                                    if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                                    {
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <div class="form-group">
+                                                                                    <ul class="Attachment">
+                                                                                        @foreach (var item in Model.FileDetails)
+                                                                                        {
+                                                                                            <li>
+                                                                                                <a class="title" href="/InspectionReleaseNote/Download/?p=@(item.IDS + item.Extension)&d=@item.FileName">@item.FileName</a>
+                                                                                                <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem">X</a>
+                                                                                            </li>
+                                                                                        }
+                                                                                    </ul>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <p style="color:red;text-align:left;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Files Uploaded</p>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p style="color:red;text-align:center;font-weight:bold;">There are no Attachments !</p>
+                                                                }
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label style="color:red;">Revise Reason (If Applicable):</label>
+                                                        @*<input type="text" class="form-control" placeholder="Status Here">*@
+                                                        @Html.TextAreaFor(model => model.ReviseReason, new { @placeholder = "Type..", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ReviseReason, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+
+
+
+                                                    @Html.HiddenFor(m => m.Identification_Of_Inspected)
+                                                    <div class="col-xs-12 text-center">
+                                                        @if (Model.PK_IVR_ID == 0)
+                                                        {
+                                                            <button type="submit" id="Chk" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Save </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            
+                                                            @*<button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("IRNReportGanrate", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @DName=Model.DEC_PMC_EPC_Name, @DNo=Model.DEC_PMC_EPC_Assignment_No, @PNo=Model.Po_No, @SPNo=Model.Po_No_SubVendor, @RReason=Model.ReviseReason  })'">Revise Release Note</button>*@
+                                                            <button class="btn btn-default insert-form-btn" type="button" id="btnrevise">Revise Release Note</button>
+                                                            @*<button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("PrintReport", "InspectionReleaseNote", new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID = Model.abcid })'">Print</button>*@
+                                                            @*<button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("UpdateIRNReport", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID} )'">Print</button>*@
+                                                           
+                                                            @*<img src="~/PDF-Icon.png" height="50px" width="50px" />*@
+
+                                                            @*<button class="btn btn-default insert-form-btn" type="button" id="ddlInspectionLocation">Download Print</button>*@
+
+
+                                                            <a href="@Url.Action("IRNReportsBySubjob","SubJobMaster",new {@SubJob_No=Model.SubJob_No })" class="btn btn-default news-btn"> IRN List</a>
+
+
+                                                            @*<button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("UpdateReports", "VisitReport", new { @PK_CALL_ID = Model.PK_Call_ID ,@Flag="Print"})'">Print</button>*@
+                                                            @*<button class="btn btn-default insert-form-btn" type="button" id="ddlInspectionLocation" onclick="location.href='@Url.Action("PrintReport", "InspectionReleaseNote", new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID = Model.abcid })'">Print</button>*@
+                                                        }
+                                                    </div>
+
+@if (Model.PK_IVR_ID == 0)
+{
+}
+else
+{
+    <div class="col-xs-12 text-center">
+        <button type="submit" id="Chk" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Update </button>
+        @Html.HiddenFor(model => model.DownloadPrint)
+        <button class="btn btn-default insert-form-btn" type="button" id="ddlInspectionLocation">Print</button>
+    </div>
+}
+                                             
+
+                                                    @*</form>*@
+                                                </div>
+                                                    </div>
+                                                </div>
+                                                <!--Contact Details By Manoj -->
+                                            </div><!-- /.box-shadow -->
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+            <!--End of header-->
+        </div>
+    </div>
+</form>
+@*}*@
+<script>
+    $('#filter1').click(function () {
+        debugger;
+        $('#partialtabledata').html('');
+        var SubJobNo = $('#SubJobNo').val();
+        var PONo = $('#PoNo').val();
+        $.ajax({
+            url: '@Url.Action("Searchdata", "InspectionReleaseNote")',
+            type: 'GET',
+            datatype: 'json',
+            data: { SubJobNo: SubJobNo, PoNo: PONo },
+            success: function (lstCompanyDashBoard) {
+                $('#partialtable').removeClass('hidden');
+
+                if (lstCompanyDashBoard.length > 0) {
+
+                    for (var i = 0; i < lstCompanyDashBoard.length; i++) {
+                        // alert(lstCompanyDashBoard[i].CraetedDate)
+                        // var createddate = ToJavaScriptDate(lstCompanyDashBoard[i].CraetedDate);
+                        // alert(12);
+                        console.log(lstCompanyDashBoard[i])
+                        //  alert(23);
+                        
+                        //$('#partialtabledata').append('<tr> <td><input type="checkbox" class="checkBox" value="' + lstCompanyDashBoard[i].PK_RM_ID + '"> </td> <td>' + lstCompanyDashBoard[i].ReportName + '</td> <td>' + '<a href="~/IVRReport/' + lstCompanyDashBoard[i].Report + '" download="download">' + lstCompanyDashBoard[i].Report + ' </a>' + '</td> <td>' + lstCompanyDashBoard[i].inspectionDate + '</td> <td>' + lstCompanyDashBoard[i].CraetedDate + '</td><td>' + lstCompanyDashBoard[i].ProjectName + '</td> </tr>')
+                        $('#partialtabledata').append('<tr> <td><input type="checkbox" class="checkBox" value="' + lstCompanyDashBoard[i].PK_RM_ID + '"> </td>  <td>' + '<a href="~/IVRReport/' + lstCompanyDashBoard[i].Report + '" download="download">' + lstCompanyDashBoard[i].Report + ' </a>' + '</td> <td>' + lstCompanyDashBoard[i].inspectionDate + '</td> <td>' + lstCompanyDashBoard[i].CraetedDate + '</td> </tr>')
+                    }
+                    alert("IVR List Is Ready");
+                }
+                else {
+                    alert("IVR list is not available for this SubJob");
+                }
+
+                function ToJavaScriptDate(value) {
+                    var pattern = /Date\(([^)]+)\)/;
+                    var results = pattern.exec(value);
+                    var dt = new Date(parseFloat(results[1]));
+                    return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+                }
+                $.ajax({
+                    url: '@Url.Action("GetdataCopy", "InspectionReleaseNote")',
+                    type: "post",
+                    datatype: 'json',
+                    data: { SubJobNo: SubJobNo, PoNo: PONo },
+                    success: function (ObjModelVisitReport) {
+                        // alert(ObjModelVisitReport.Sap_And_Controle_No);
+                        // $('#CNNO').val(ObjModelQuotationMast.Sap_And_Controle_No).val()
+                        $('#Sap_And_Controle_No').val(ObjModelVisitReport.Sap_And_Controle_No).val()
+                        alert("Data Copied Successfully");
+                        $('#Notification_Name_No_Date').val(ObjModelVisitReport.Notification_Name_No_Date).val()
+                        $('#Project_Name_Location').val(ObjModelVisitReport.Project_Name_Location).val()
+                        $('#Address_Of_Inspection').val(ObjModelVisitReport.Address_Of_Inspection).val()
+                        $('#Client_Name').val(ObjModelVisitReport.Client_Name).val()
+                        $('#End_user_Name').val(ObjModelVisitReport.End_user_Name).val()
+                        $('#DEC_PMC_EPC_Name').val(ObjModelVisitReport.DEC_PMC_EPC_Name).val()
+                        $('#DEC_PMC_EPC_Assignment_No').val(ObjModelVisitReport.DEC_PMC_EPC_Assignment_No).val()
+                        $('#Vendor_Name_Location').val(ObjModelVisitReport.Vendor_Name_Location).val()
+                        $('#Po_No').val(ObjModelVisitReport.Po_No).val()
+                        $('#Sub_Vendor_Name').val(ObjModelVisitReport.Sub_Vendor_Name).val()
+                        $('#Po_No_SubVendor').val(ObjModelVisitReport.Po_No_SubVendor).val()
+                        $('#Emails_Distribution').val(ObjModelVisitReport.Emails_Distribution).val()
+                        $('#PK_IVR_ID').val(ObjModelVisitReport.PK_IVR_ID).val()
+                        $('#SubJob_No').val(ObjModelVisitReport.SubJob_No).val()
+
+                        $('#client_Email').val(ObjModelVisitReport.client_Email).val()
+                        $('#Vendor_Email').val(ObjModelVisitReport.Vendor_Email).val()
+                        $('#Tuv_Branch').val(ObjModelVisitReport.Tuv_Branch).val()
+                        //var _call_id = ObjModelVisitReport.PK_Call_ID;
+
+                        //$('.CallID').val(ObjModelVisitReport.PK_Call_ID);
+
+                        //$(".ItemDescription").removeAttr("onclick");
+                        //$(".ItemDescription").attr("onclick", "location.href='/VisitReport/ItemDescription?PK_Call_ID=" + _call_id + "'")
+
+                        //$(".ReferenceDocuments").removeAttr("onclick");
+                        //$(".ReferenceDocuments").attr("onclick", "location.href='/VisitReport/ReferenceDocuments?PK_Call_ID=" + _call_id + "'")
+
+                        //$(".InspectionActivites").removeAttr("onclick");
+                        //$(".InspectionActivites").attr("onclick", "location.href='/VisitReport/InspectionActivites?PK_Call_ID=" + _call_id + "'")
+
+                        //$(".DocumentReviewed").removeAttr("onclick");
+                        //$(".DocumentReviewed").attr("onclick", "location.href='/VisitReport/DocumentReviewed?PK_Call_ID=" + _call_id + "'")
+
+                        //$(".EquipmentDetails").removeAttr("onclick");
+                        //$(".EquipmentDetails").attr("onclick", "location.href='/VisitReport/EquipmentDetails?PK_Call_ID=" + _call_id + "'")
+
+                        //$(".Conclusion").removeAttr("onclick");
+                        //$(".Conclusion").attr("onclick", "location.href='/VisitReport/Conclusion?PK_Call_ID=" + _call_id + "'")
+
+                        //$(".ReportImage").removeAttr("onclick");
+                        //$(".ReportImage").attr("onclick", "location.href='/VisitReport/ReportImage?PK_Call_ID=" + _call_id + "'")
+
+                    }
+                });
+
+
+            }
+        });
+
+
+
+    });
+</script>
+
+<script type="text/javascript">
+
+
+    $('#filter2').click(function () {
+        debugger;
+        var IRNReport = $('#IRNReport').val();
+        var ProjectName = $('#ProjectName').val();
+        var Vendor = $('#Vendor').val();
+        var Client = $('#Client').val();
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("GetSubSubSectionType", "InspectionReleaseNote")',
+            //data: { CompanyName: $('#CompanyName').val() },
+            data: { IRNReport: IRNReport, ProjectName: ProjectName, Vendor: Vendor, Client: Client },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                // alert(data)
+                $("#Others").show();
+                $("#Systemhide").hide();
+
+                var district = "<select id='ddlContactType'>";
+                district = district + '<option value="">--Select IVR--</option>';
+                for (var i = 0; i < data.length; i++) {
+                    district = district + '<option value=' + data[i].ReportName + '>' + data[i].ReportName + '</option>';
+                }
+                district = district + '</select>';
+                $('#ddlContactType').html(district);
+            }
+        });
+        //});
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        $("#checkAll").click(function () {
+            $(".checkBox").prop('checked',
+                $(this).prop('checked'));
+        });
+        $("#Chk").click(function () {
+            debugger;
+            var selectedIDs = new Array();
+            $('input:checkbox.checkBox').each(function () {
+                debugger;
+                if ($(this).prop('checked')) {
+                    selectedIDs.push($(this).val());
+                }
+            });
+            //alert(selectedIDs);
+            if (selectedIDs.length > 0) {
+                $('#arrey').val(selectedIDs)
+            }
+            else {
+                $('#arrey').val()
+            }
+
+
+
+            //if ($("#arrey").val() == "" || $("#arrey").val() == null) {
+            //    alert("Please select Dates Of Inspection ..!");
+            //    $("#Mobile").focus()
+            //    return false;
+            //}
+            if ($("#ddlBranchName").val() == "") {
+                alert("Please select Branch ..!");
+                // $("#Branch_Name").focus()
+                return false;
+            }
+            if ($(".xyz").val() == "" || $(".xyz").val() == null) {
+                alert("Please Enter Sap And Control No ..!");
+                // $("#Branch_Name").focus()
+                return false;
+            }
+
+            else {
+                return true;
+            }
+        });
+    });
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#ddlContactType').change(function () {
+            debugger;
+            var IRNReport = $('#ddlContactType').val();
+
+            $.ajax({
+                type: "post",
+                url: '@Url.Action("GetdataCopyByreportId", "InspectionReleaseNote")',
+                //data: { CompanyName: $('#CompanyName').val() },
+                data: { IRNReport: IRNReport },
+                datatype: "json",
+                traditional: true,
+                success: function (ObjModelVisitReport) {
+                    //alert(ObjModelVisitReport.Sap_And_Controle_No);
+                    // $('#CNNO').val(ObjModelVisitReport.Sap_And_Controle_No).val()
+                    $('.xyz').val(ObjModelVisitReport.Sap_And_Controle_No).val()
+
+                    $('#Date_Of_Inspection').val(ObjModelVisitReport.Date_Of_Inspection).val()
+                    $('#Notification_Name_No_Date').val(ObjModelVisitReport.Notification_Name_No_Date).val()
+                    $('#Project_Name_Location').val(ObjModelVisitReport.Project_Name_Location).val()
+                    $('#Address_Of_Inspection').val(ObjModelVisitReport.Address_Of_Inspection).val()
+                    $('#Client_Name').val(ObjModelVisitReport.Client_Name).val()
+                    $('#End_user_Name').val(ObjModelVisitReport.End_user_Name).val()
+                    $('#DEC_PMC_EPC_Name').val(ObjModelVisitReport.DEC_PMC_EPC_Name).val()
+                    $('#DEC_PMC_EPC_Assignment_No').val(ObjModelVisitReport.DEC_PMC_EPC_Assignment_No).val()
+                    $('#Vendor_Name_Location').val(ObjModelVisitReport.Vendor_Name_Location).val()
+                    $('#Po_No').val(ObjModelVisitReport.Po_No).val()
+                    $('#Sub_Vendor_Name').val(ObjModelVisitReport.Sub_Vendor_Name).val()
+                    $('#Po_No_SubVendor').val(ObjModelVisitReport.Po_No_SubVendor).val()
+                    $('#Emails_Distribution').val(ObjModelVisitReport.Emails_Distribution).val()
+                    $('#PK_IVR_ID').val(ObjModelVisitReport.PK_IVR_ID).val()
+                    $('#SubJob_No').val(ObjModelVisitReport.SubJob_No).val()
+
+
+                    //var _call_id = ObjModelVisitReport.PK_Call_ID;
+
+                    //$('.CallID').val(ObjModelVisitReport.PK_Call_ID);
+
+                    //$(".ItemDescription").removeAttr("onclick");
+                    //$(".ItemDescription").attr("onclick", "location.href='/VisitReport/ItemDescription?PK_Call_ID=" + _call_id + "'")
+
+                    //$(".ReferenceDocuments").removeAttr("onclick");
+                    //$(".ReferenceDocuments").attr("onclick", "location.href='/VisitReport/ReferenceDocuments?PK_Call_ID=" + _call_id + "'")
+
+                    //$(".InspectionActivites").removeAttr("onclick");
+                    //$(".InspectionActivites").attr("onclick", "location.href='/VisitReport/InspectionActivites?PK_Call_ID=" + _call_id + "'")
+
+                    //$(".DocumentReviewed").removeAttr("onclick");
+                    //$(".DocumentReviewed").attr("onclick", "location.href='/VisitReport/DocumentReviewed?PK_Call_ID=" + _call_id + "'")
+
+                    //$(".EquipmentDetails").removeAttr("onclick");
+                    //$(".EquipmentDetails").attr("onclick", "location.href='/VisitReport/EquipmentDetails?PK_Call_ID=" + _call_id + "'")
+
+                    //$(".Conclusion").removeAttr("onclick");
+                    //$(".Conclusion").attr("onclick", "location.href='/VisitReport/Conclusion?PK_Call_ID=" + _call_id + "'")
+
+                    //$(".ReportImage").removeAttr("onclick");
+                    //$(".ReportImage").attr("onclick", "location.href='/VisitReport/ReportImage?PK_Call_ID=" + _call_id + "'")
+                    alert("Data Copied Successfully");
+                }
+
+            });
+
+            //});
+        });
+    });
+</script>
+<script>
+    $('#btnrevise').click(function () {
+
+        var x = confirm("Are you sure you want to Revise?");
+        if (x) {
+
+
+            var ReviseReason = $("#ReviseReason").val();
+
+            if (ReviseReason == "" || ReviseReason == null) {
+
+                alert("Please select Revise Reason !");
+                $("#ReviseReason").focus()
+                return false;
+            }
+            else
+            {
+                debugger;
+                alert('Please Wait for a while, Revised IRN getting created ...');
+                var ivrid = $('#PK_IVR_ID').val();
+                var dnm = $('#DEC_PMC_EPC_Name').val();
+                var dnmno = $('#DEC_PMC_EPC_Assignment_No').val();
+                var pono = $('#Po_No').val();
+                var subpono = $('#Po_No_SubVendor').val();
+                var revrsn = $('#ReviseReason').val();
+
+                $.ajax({
+                    url: '@Url.Action("IRNReportGanrate", "InspectionReleaseNote")',
+                    data: { PK_IVR_ID: ivrid, DName: dnm, DNo: dnmno, PNo: pono, SPNo: subpono, RReason: revrsn, },
+                    type: "post",
+                    success: function (savingStatus) {
+                        window.location.href = '@Url.Action("IRNReports", "InspectionReleaseNote")'
+                    },
+                    error: function () {
+                        alert('Something went Wrong !');
+                    }
+                });
+
+            }
+
+
+            
+
+        }
+        else {
+
+        }
+
+
+
+
+
+    });
+</script>
+
+
+
+
+@*<script type="text/javascript">
+
+
+        $('#filter2').click(function ()
+        {
+            debugger;
+            var IRNReport = $('#IRNReport').val();
+            var ProjectName = $('#ProjectName').val();
+            var Vendor = $('#Vendor').val();
+            var Client = $('#Client').val();
+                    $.ajax({
+                        type: "post",
+                        url: '@Url.Action("GetSubSubSectionType", "InspectionReleaseNote")',
+                        //data: { CompanyName: $('#CompanyName').val() },
+                        data: { IRNReport: IRNReport, ProjectName: ProjectName, Vendor: Vendor, Client: Client },
+                        datatype: "json",
+                        traditional: true,
+                        success: function (ObjModelVisitReport)
+                        {
+                           // alert(ObjModelVisitReport.Sap_And_Controle_No);
+                           // $('#CNNO').val(ObjModelQuotationMast.Sap_And_Controle_No).val()
+                            $('#Sap_And_Controle_No').val(ObjModelVisitReport.Sap_And_Controle_No).val()
+                            alert("Data Copy Successfully");
+                            $('#Notification_Name_No_Date').val(ObjModelVisitReport.Notification_Name_No_Date).val()
+                            $('#Project_Name_Location').val(ObjModelVisitReport.Project_Name_Location).val()
+                            $('#Address_Of_Inspection').val(ObjModelVisitReport.Address_Of_Inspection).val()
+                            $('#Client_Name').val(ObjModelVisitReport.Client_Name).val()
+                            $('#End_user_Name').val(ObjModelVisitReport.End_user_Name).val()
+                            $('#DEC_PMC_EPC_Name').val(ObjModelVisitReport.DEC_PMC_EPC_Name).val()
+                            $('#DEC_PMC_EPC_Assignment_No').val(ObjModelVisitReport.DEC_PMC_EPC_Assignment_No).val()
+                            $('#Vendor_Name_Location').val(ObjModelVisitReport.Vendor_Name_Location).val()
+                            $('#Po_No').val(ObjModelVisitReport.Po_No).val()
+                            $('#Sub_Vendor_Name').val(ObjModelVisitReport.Sub_Vendor_Name).val()
+                            $('#Po_No_SubVendor').val(ObjModelVisitReport.Po_No_SubVendor).val()
+                            $('#Emails_Distribution').val(ObjModelVisitReport.Emails_Distribution).val()
+                            $('#PK_IVR_ID').val(ObjModelVisitReport.PK_IVR_ID).val()
+
+
+                            //var _call_id = ObjModelVisitReport.PK_Call_ID;
+
+                            //$('.CallID').val(ObjModelVisitReport.PK_Call_ID);
+
+                            //$(".ItemDescription").removeAttr("onclick");
+                            //$(".ItemDescription").attr("onclick", "location.href='/VisitReport/ItemDescription?PK_Call_ID=" + _call_id + "'")
+
+                            //$(".ReferenceDocuments").removeAttr("onclick");
+                            //$(".ReferenceDocuments").attr("onclick", "location.href='/VisitReport/ReferenceDocuments?PK_Call_ID=" + _call_id + "'")
+
+                            //$(".InspectionActivites").removeAttr("onclick");
+                            //$(".InspectionActivites").attr("onclick", "location.href='/VisitReport/InspectionActivites?PK_Call_ID=" + _call_id + "'")
+
+                            //$(".DocumentReviewed").removeAttr("onclick");
+                            //$(".DocumentReviewed").attr("onclick", "location.href='/VisitReport/DocumentReviewed?PK_Call_ID=" + _call_id + "'")
+
+                            //$(".EquipmentDetails").removeAttr("onclick");
+                            //$(".EquipmentDetails").attr("onclick", "location.href='/VisitReport/EquipmentDetails?PK_Call_ID=" + _call_id + "'")
+
+                            //$(".Conclusion").removeAttr("onclick");
+                            //$(".Conclusion").attr("onclick", "location.href='/VisitReport/Conclusion?PK_Call_ID=" + _call_id + "'")
+
+                            //$(".ReportImage").removeAttr("onclick");
+                            //$(".ReportImage").attr("onclick", "location.href='/VisitReport/ReportImage?PK_Call_ID=" + _call_id + "'")
+
+                        }
+                    });
+                //});
+            });
+    </script>*@
+
+<script>
+    $(document).ready(function () {
+        $('.deleteItem').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#EQ_ID").val();
+            if (confirm('Do you really want to delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteFile")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("There is something wrong. Please try again.");
+                })
+
+            }
+        });
+    });
+
+</script>
+
+
+@*New Search and Copy*@
+
+<script type="text/javascript">
+
+
+    $('#SearchNew').click(function () {
+        debugger;
+        console.log($('#CompanyName').val())
+        $('#ddlContactType').html('');
+        var VisitReport = $('#VisitReport').val();
+        var SubJobNo = $('#SubJobNo').val();
+        var ProjectName = $('#ProjectName').val();
+        var Vendor = $('#Vendor').val();
+        var Client = $('#Client').val();
+        var Type = $('#Type').val();
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("GetReportNoForCopy", "VisitReport")',
+            //data: { CompanyName: $('#CompanyName').val() },
+            data: { VisitReport: VisitReport, SubJobNo: SubJobNo, ProjectName: ProjectName, Vendor: Vendor, Client: VisitReport, Type: Type },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                // alert(data)
+                $("#Others").show();
+                $("#Systemhide").hide();
+                ///alert(data)
+
+                var district = "<select id='ddlReport'>";
+                district = district + '<option value="">--Select IVR--</option>';
+                for (var i = 0; i < data.length; i++) {
+                    district = district + '<option value=' + data[i].PK_RM_ID + '>' + data[i].ReportName + '</option>';
+                }
+                district = district + '</select>';
+                $('#ddlReport').html(district);
+            }
+        });
+        //});
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+        $('#Type').on('change', function () {
+            debugger;
+            var multipleValues = $("#Type").val();
+            if (multipleValues == 'IVR') {
+                $("#visible").show();
+
+            }
+            else if (multipleValues == 'IRN') {
+                $("#visible").show();
+            }
+            else {
+                $("#visible").hide();
+            }
+        })
+    });
+</script>
+
+<script>
+    $('#btnCopyNew').on('click', function () {
+        debugger
+        var CopyIRNNew =
+				{
+				    PK_IVR_ID: $('#PK_IVR_ID').val(),
+				    Type: $("#Type").val(),
+				    ReportNoName: $('#ddlReport').val(),
+
+				}
+
+        $.ajax({
+
+            type: 'POST',
+            url: '@Url.Action("CopyIRNNew", "VisitReport")',
+            dataType: 'json',
+            Async: false,
+            data: JSON.stringify({ CopyIRNNew: CopyIRNNew }),
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger
+
+                if (response.success == 1) {
+                    alert("Data Copy Successfuly");
+                }
+                else {
+                    alert("Something went wrong please try again.");
+                }
+
+
+            }
+        })
+    });
+</script>
+
+<script>
+    $('#btnClearNew').on('click', function () {
+        debugger
+        var x = confirm("Are you sure you want to delete?");
+        if (x) {
+
+            var ClearNew =
+                          {
+                              PK_IVR_ID: $('#PK_IVR_ID').val(),
+                          }
+
+            $.ajax({
+
+                type: 'POST',
+                url: '@Url.Action("ClearIRN", "VisitReport")',
+                dataType: 'json',
+                Async: false,
+                data: JSON.stringify({ ClearNew: ClearNew }),
+                enctype: "multipart/form-data",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    debugger
+
+                    if (response.success == 1) {
+                        alert("Data Clear Successfuly");
+                    }
+                    else {
+                        alert("Something went wrong please try again.");
+                    }
+
+
+                }
+            })
+
+
+        }
+        else {
+
+        }
+
+
+
+
+    });
+</script>
+
+@*Edit Date*@
+<script>
+    //$('#EditDate').click(function () {
+    $("#EditDate").one('click', function (event) {
+        debugger;
+        event.preventDefault();
+        var a = myFunction();
+
+
+        $('#partialtabledata').html('');
+        var SubJobNo = $('#SubJob_No').val();
+        var PONo = $('#PoNo').val();
+        $.ajax({
+            url: '@Url.Action("SearchdataForEditInspectionDate", "InspectionReleaseNote")',
+            type: 'GET',
+            datatype: 'json',
+            data: { SubJobNo: SubJobNo, PoNo: PONo },
+            success: function (lstCompanyDashBoard) {
+                $('#partialtable').removeClass('hidden');
+                $("#partialtabledata").empty();
+                if (lstCompanyDashBoard.length > 0) {
+
+                    for (var i = 0; i < lstCompanyDashBoard.length; i++) {
+
+                        var b = a.indexOf((lstCompanyDashBoard[i].PK_RM_ID).toString());
+                        // var found = a.find(element => element == (lstCompanyDashBoard[i].PK_RM_ID).toString());
+                        if (b == -1) {
+                            //$('#partialtabledata').append('<tr> <td><input type="checkbox" class="checkBox" value="' + lstCompanyDashBoard[i].PK_RM_ID + '"  > </td> <td>' + lstCompanyDashBoard[i].ReportName + '</td> <td>' + '<a href="~/IVRReport/' + lstCompanyDashBoard[i].Report + '" download="download">' + lstCompanyDashBoard[i].Report + ' </a>' + '</td> <td>' + lstCompanyDashBoard[i].inspectionDate + '</td> <td>' + lstCompanyDashBoard[i].CraetedDate + '</td><td>' + lstCompanyDashBoard[i].ProjectName + '</td> </tr>')
+                            $('#partialtabledata').append('<tr> <td><input type="checkbox" class="checkBox" value="' + lstCompanyDashBoard[i].PK_RM_ID + '"  > </td>  <td>' + '<a href="~/IVRReport/' + lstCompanyDashBoard[i].Report + '" download="download">' + lstCompanyDashBoard[i].Report + ' </a>' + '</td> <td>' + lstCompanyDashBoard[i].inspectionDate + '</td> <td>' + lstCompanyDashBoard[i].CraetedDate + '</td> </tr>')
+
+
+                        }
+                        else {
+                            // $('#partialtabledata').append('<tr> <td><input type="checkbox" class="checkBox" value="' + lstCompanyDashBoard[i].PK_RM_ID + '" checked> </td> <td>' + lstCompanyDashBoard[i].ReportName + '</td> <td>' + '<a href="~/IVRReport/' + lstCompanyDashBoard[i].Report + '" download="download">' + lstCompanyDashBoard[i].Report + ' </a>' + '</td> <td>' + lstCompanyDashBoard[i].inspectionDate + '</td> <td>' + lstCompanyDashBoard[i].CraetedDate + '</td><td>' + lstCompanyDashBoard[i].ProjectName + '</td> </tr>')
+                            $('#partialtabledata').append('<tr> <td><input type="checkbox" class="checkBox" value="' + lstCompanyDashBoard[i].PK_RM_ID + '" checked> </td>  <td>' + '<a href="~/IVRReport/' + lstCompanyDashBoard[i].Report + '" download="download">' + lstCompanyDashBoard[i].Report + ' </a>' + '</td> <td>' + lstCompanyDashBoard[i].inspectionDate + '</td> <td>' + lstCompanyDashBoard[i].CraetedDate + '</td> </tr>')
+
+                        }
+
+
+                        console.log(lstCompanyDashBoard[i])
+
+                        // $('#partialtabledata').append('<tr> <td><input type="checkbox" class="checkBox" value="' + lstCompanyDashBoard[i].PK_RM_ID + '"> </td> <td>' + lstCompanyDashBoard[i].ReportName + '</td> <td>' + '<a href="~/IVRReport/' + lstCompanyDashBoard[i].Report + '" download="download">' + lstCompanyDashBoard[i].Report + ' </a>' + '</td> <td>' + lstCompanyDashBoard[i].inspectionDate + '</td> <td>' + lstCompanyDashBoard[i].CraetedDate + '</td><td>' + lstCompanyDashBoard[i].ProjectName + '</td> </tr>')
+                    }
+
+                    alert("IVR List Is Ready");
+                }
+                else {
+                    alert("IVR list is not available for this SubJob");
+                }
+            }
+        });
+    });
+
+    $(this).prop('disabled', true);
+
+    function myFunction() {
+        debugger;
+        //var multipleValues = $("#chkSelectIftrue").val() || [];
+        //var p = multipleValues.join(",");
+        var multipleValues = [];
+        $('.chkSelectIftrue').each(function () {
+
+            multipleValues.push($(this).val());
+
+        });
+        return multipleValues;
+    }
+
+    function alertwhenDownload() {
+        alert("All Issues related to subject Item have been verified and found closed , Kindly Confirm..")
+    }
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#ddlInspectionLocation').on('click', function () {
+            $('#myModal').show();
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.NO').click('change', function () {
+
+            $('#myModal').hide();
+        });
+    });
+</script>
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+                <button type="button" class="close NO" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                All Issues related to subject Item have been verified and found closed , Kindly Confirm..
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                @*<a href="~/IRNReports/@Model.DownloadPrint" download="download">
+                    <button type="button" class="btn btn-danger NO" data-dismiss="modal" style="background-color:green;">Yes</button>
+                    
+                </a>*@
+                <button  class="btn btn-danger NO" type="button" data-dismiss="modal" style="background-color:green;" onclick="location.href='@Url.Action("PrintReport", "InspectionReleaseNote", new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID = Model.abcid })'">Yes</button>
+                <a href="@Url.Action("AllConcern", "InspectionReleaseNote", new { PK_IVR_ID = Model.PK_IVR_ID, PK_RM_ID=Model.abcid })" class="btn btn-danger" title="Edit">No</a>
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,485 @@
+﻿@model TuvVision.Models.Observation
+@{
+    ViewBag.Title = "Observation";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+}
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+<style>
+    #customers {
+        font-family: 'TNG Pro';
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            /*background-color: #04AA6D;*/
+            background-color: #001ED2;
+            color: white;
+        }
+</style>
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            @*class="container-fluid"*@
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                <div class="col-xs-12">
+                    <div class="row">
+
+                        <br />
+
+                        <h5 class="dynamic-page-title dynamic-page-title-2">@Session["ExpeditingType"]Expediting Report Number : @Session["VisitReportNo"]</h5>
+
+                        <div class="col-xs-12">
+
+
+                            @if (Model.PK_Call_ID != "")
+                            {
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpeditingReport", "Expediting",new { @PK_Call_ID = Model.PK_Call_ID} )'"> General</button>
+
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpItemDescription", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Item Description</button>
+
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpProgress", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Progress</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EXp_commercial", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Commercial</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpEngineering", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Engineering</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpMaterial", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Procurement</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpManufacturing", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Manufacturing</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpFinalStage", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Final Stage</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpDelays", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Item Wise Delays</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpConcerns", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Concerns</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("PhotoAttachement", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Photo</button>
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("Observation", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Observation</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Records", "Expediting",new { @PK_Call_Id = Model.PK_Call_ID} )'">Records</button>
+
+
+                            }
+
+
+
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Observation</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+                                                <div class="row">
+                                                </div>
+
+                                                @Html.HiddenFor(m => m.PK_Call_ID)
+
+
+                                                <div class="row">
+                                                    <div id="DomesticCurrency">
+
+
+                                                        <table id="DTestTable" cellspacing="0" cellpadding="3" border="1" style="width: 110%">
+                                                            <tr style="background-color:#104193;color:white">
+                                                                <td width="140px" style="text-align: center;vertical-align:top;">
+                                                                    Stage
+                                                                </td>
+                                                                <td width="900px" style="text-align: center;vertical-align:top;">
+                                                                    Findings
+                                                                </td>
+
+                                                            </tr>
+
+                                                            @{
+                                                                int i = 0;
+                                                            }
+
+                                                            @if (ViewBag.lstObservation != null)
+                                                            {
+                                                                if (ViewBag.lstObservation.Count != 0)
+                                                                {
+                                                                    foreach (var item in ViewBag.lstObservation as IEnumerable<TuvVision.Models.Observation>)
+                                                                    {
+                                                                        i = i + 1;
+                                                                        <tr class="trDomestic" style="background-color:#f0f0f0">
+
+
+                                                                            @Html.HiddenFor(model => model.lstStages[j].PK_Final, new { @style = "text-align:center", @placeholder = "PK_Final", @class = "form-control CPK_Final", @id = "PK_Final", @onkeypress = "return isNumberKey(event);" })
+
+                                                                            <td>
+
+
+                                                                                @Html.DropDownListFor(m => m.lstStages[j].Stage, new SelectList(@ViewBag.BindSatges, "Value", "Text", item.Stage), "--Select--", new { @id = "ddlStage", @class = "form-control CStage" })
+
+
+
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.TextBoxFor(m => m.lstStages[j].Findings, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Findings", @class = "form-control CFindings", autocomplete = "off", @Value = item.Findings })
+                                                                            </td>
+
+
+                                                                            <td>
+                                                                                @if (i == 1)
+                                                                                {
+                                                                                    <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                                    <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                                    <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+                                                                                }
+
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        j++;
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <tr class="trDomestic" style="background-color:#f0f0f0">
+
+
+                                                                        @Html.HiddenFor(model => model.PK_Final, new { @style = "text-align:center", @placeholder = "PK_Final", @class = "form-control CPK_Final", @id = "PK_Final", @onkeypress = "return isNumberKey(event);" })
+
+                                                                        <td>
+                                                                            @if (ViewBag.BindSatges != null)
+                                                                            {
+                                                                                @Html.DropDownListFor(m => m.Stage, new SelectList(@ViewBag.BindSatges, "Value", "Text"), "--Select--", new { @id = "ddlStage", @class = "form-control CStage" })
+                                                                                @Html.HiddenFor(m => m.Stage)
+                                                                            }
+
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.Findings, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Findings", @class = "form-control CFindings", autocomplete = "off" })
+                                                                        </td>
+
+
+                                                                        <td>
+
+                                                                            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+
+                                                                            <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+
+
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr class="trDomestic" style="background-color:#f0f0f0">
+
+
+                                                                    @Html.HiddenFor(model => model.PK_Final, new { @style = "text-align:center", @placeholder = "PK_Final", @class = "form-control CPK_Final", @id = "PK_Final", @onkeypress = "return isNumberKey(event);" })
+
+                                                                    <td>
+                                                                        @if (ViewBag.BindSatges != null)
+                                                                        {
+                                                                            @Html.DropDownListFor(m => m.Stage, new SelectList(@ViewBag.BindSatges, "Value", "Text"), "--Select--", new { @id = "ddlStage", @class = "form-control CStage" })
+                                                                            @Html.HiddenFor(m => m.Stage)
+                                                                        }
+
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(m => m.Findings, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Findings", @class = "form-control CFindings", autocomplete = "off" })
+                                                                    </td>
+
+
+                                                                    <td>
+
+                                                                        <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+
+                                                                        <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+
+
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                        </table><br />
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6 text-center">
+                                                        @*<input type="submit" style="margin-left: 399px" class="btn btn-default insert-form-btn" id="btnsave" name="Save" />*@
+                                                        <button type="button" class="btn btn-default insert-form-btn" id="btnsave">Save </button>
+                                                    </div>
+
+                                                    <div class="col-xs-6 text-center">
+                                                        <button type="button" class="btn btn-default insert-form-btn" id="btnshow">Previous observation</button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr class="custom-hr1">
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row" id="btnobservationshow">
+                                                    <div class="col-xs-12">
+                                                        <div class="col-xs-12">
+                                                            <table id="customers" class="display custom-table" cellpadding="3" border="1" width="100%">
+                                                                <thead>
+                                                                    <tr style="background-color:lightgray;color:black">
+                                                                        <td width="140px" style="text-align: center;vertical-align:top;">Date</td>
+                                                                        <td width="140px" style="text-align: center;vertical-align:top;">Stage</td>
+                                                                        <td width="140px" style="text-align: center;vertical-align:top;">Findings</td>
+
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody>
+
+                                                                    @if (ViewBag.lst != null)
+                                                                    {
+                                                                        foreach (var item in ViewBag.lst as IEnumerable<TuvVision.Models.Observation>)
+                                                                        {
+                                                                            <tr>
+                                                                                <td style="text-align: center;">@item.CreatedDate</td>
+                                                                                <td style="text-align: center;">@item.Stage</td>
+                                                                                <td style="text-align: center;">@item.Findings</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                    }
+
+                                                                </tbody>
+
+                                                            </table>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+
+    var ITRowCount = 1;
+    $(document).ready(function () {
+        $(document).on("click", ".classAdd", function () { //
+
+            debugger
+
+
+            var rowCount = $('.data-contact-person').length + 1;
+
+
+            if ($('#DTestTable tr').length - 1 >= ITRowCount) {
+                var count = $('#DTestTable tr').length - 1;
+                ITRowCount = count;
+            }
+
+            ddlStageMaster(ITRowCount)
+
+
+
+            var contactdiv = '<tr class="trDomestic">' +
+                '<td><select name="CStage" class="form-control CStage" id="ddlStage' + ITRowCount + '" ><option value="">Select</option></select>  </td>' +
+               ' <td><input type="text" name="CFindings"  id="IdCFindings"  class="form-control CFindings"/></td>' +
+                '<td><button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button><button type="button" style="text-align:center" id="IbtnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button> ' +
+
+
+               '</tr>';
+
+            $('#DTestTable').append(contactdiv);
+        });
+    });
+</script>
+
+
+<script>
+    $(document).on("click", ".IdeleteContact", function () {
+        if (confirm("Do you really want to remove this row?")) {
+            ITRowCount = ITRowCount - 1;
+            $(this).closest("tr").remove(); // closest used to remove the respective 'tr' in which I have my controls
+        }
+    });
+</script>
+
+
+<script type="text/javascript">
+    function ddlStageMaster(ITRowCount) {
+        debugger
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetObservationStageJson", "Expediting")',
+            data: "{}",
+            success: function (data) {
+                debugger;
+                var s = '<option value="-1">Please Select</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                }
+                //$("#IdStage").html(s);
+                $("#ddlStage" + ITRowCount).html(s);
+
+            }
+        });
+    }
+</script>
+
+<script>
+    $("#btnsave").on('click', function (event) {
+        debugger;
+
+        var a = "1";
+        var DArray = [];
+
+
+        var PK_Call_Id = $('#PK_Call_ID').val();
+        $('.trDomestic').each(function () {
+            var trD = {};
+
+            //var PK_FinalStage_Id = $(this).find('.CPK_Final').val();
+            var Stage = $(this).find('.CStage').val();
+            var Findings = $(this).find('.CFindings').val();
+            // var Stage = $('.CStage').val();;
+
+
+
+
+            if (Stage == '') { a = "2"; }
+            if (Findings == '') { a = "3"; }
+
+
+
+
+            if (a == "1") {
+
+                var trD = {
+                    'Stage': Stage,
+                    'Findings': Findings,
+
+                };
+                DArray.push(trD);
+
+
+
+            }
+            else {
+
+                return false;
+            }
+
+        });
+
+
+        if (a == "2") {
+            alert("Please Select Stage!");
+            return false;
+        }
+        if (a == "3") {
+            alert("Please Enter Findings!");
+            return false;
+        }
+
+
+
+        var ModelVisitReport =
+       {
+           PK_Call_Id: PK_Call_Id,
+
+
+       }
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Observation", "Expediting")',
+            dataType: 'json',
+            Async: false,
+            data: JSON.stringify({ O: ModelVisitReport, "DArray": DArray }),
+
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+
+                if (response.result == 'Redirect') {
+                    alert("Details has been Save successfully!!!")
+                    window.location = response.url;
+                }
+
+                if (response.result == 'Update') {
+                    alert("Details has been updated successfully!!!")
+                    window.location = response.url;
+                }
+
+            }
+        })
+
+
+
+
+
+    });
+</script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnobservationshow").hide();
+        $("#btnshow").click(function () {
+
+            $("#btnobservationshow").toggle();
+        });
+    });
+</script>

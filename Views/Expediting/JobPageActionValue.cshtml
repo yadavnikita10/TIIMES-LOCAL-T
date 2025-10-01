@@ -1,0 +1,1379 @@
+﻿@model TuvVision.Models.StatusData
+@{
+    ViewBag.Title = "JobPageActionValue";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-10">
+                       
+                    </div>
+
+                    <div class="col-lg-2" style="padding-right:20px;">
+                        <button type="button" class="btn btn-info" style="margin-top: 16px;margin-left: 37px;width: 150px;background-color: #104193;color:white;border-radius: 0;" onclick="Redirect()">Go Back</button>
+
+                    </div>
+                </div>
+            </div>
+            <br/>
+            @*class="container-fluid"*@
+            <div class="col-xs-12">
+                <div class="white-bg section-box-shadow">
+                    <h3 class="form-page-title">Status Management</h3>
+
+
+
+                    <div class="col-xs-2">
+                        <div class="row">
+                            <button type="button" class="btn btn-default news-btn" style="margin-left: 10px;" id="btnclickEngineering">Engineering</button>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="row">
+                            <button type="button" class="btn btn-default news-btn" id="btnclickProcurement">Procurement</button>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="row">
+                            <button type="button" class="btn btn-default news-btn" id="btnclickManufacturing">Manufacturing</button>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="row">
+                            <button type="button" class="btn btn-default news-btn" id="btnclickFinal">Final</button>
+                        </div>
+                    </div>
+                    @*<div class="col-xs-2">
+                        <div class="row">
+                            <button type="button" class="btn btn-default news-btn" id="btnclickFinalStage">Final Stage</button>
+                        </div>
+                    </div>*@
+
+                    <div class="col-xs-2">
+                        <div class="row">
+                            <button type="button" class="btn btn-default news-btn" id="btnclickDocument">Document</button>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => m.PK_JOB_ID)
+                    @*Engineering *@
+                    <div class="modal fade bs-example-modal-lg modal fade" id="AddNewStages" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header text-center" style="background-color: #3677e6;color: #fff;">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Engineering</h4>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-box" style="padding-bottom:0!important;">
+                                        <div class="row" id="EngStatus">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-4">
+
+                                                    <input type="text" class="form-control" id="idbtnstaus" />
+                                                </div>
+                                                <div class="col-xs-12 col-sm-3">
+
+                                                    <button type="button" class="btn btn-default insert-form-btn" onclick="idbtnSave();" title="Add New Status" style="margin-top: 2px">Add</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <hr class="custom-hr1">
+                                            </div>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    @{
+                                                        SelectList subCatlist = ViewBag.SubCatlist as SelectList;
+
+                                                    }
+                                                    @{
+                                                        var s = 1;
+                                                        var valueeng = 1;
+                                                    }
+
+                                                    @if (subCatlist != null)
+                                                    {
+                                                        <div class="text-center mx-auto">
+                                                            <table class="table" style="width: auto; max-width: 70%; border-collapse: collapse; border: 1px solid #000; text-align: center;">
+                                                                <colgroup>
+                                                                    <col style="width: auto; max-width: 70%;" />
+                                                                    <col style="width: auto; max-width: 30%;" />
+                                                                </colgroup>
+                                                                <tr>
+                                                                    <th style="border: 1px solid #000;">Status</th>
+                                                                    <th style="border:1px solid #000;">Action Required by</th>
+                                                                    <th style="border: 1px solid #000;">%</th>
+                                                                    <th style="border: 1px solid #000;"></th>
+                                                                </tr>
+
+                                                                @foreach (var item in subCatlist)
+                                                                {
+
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000; white-space: nowrap;">
+                                                                            <label id="Engstatus_@s" for="@item.Value">@item.Text</label>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select name="ActionValue" id="EngstatusDropdown_@s">
+                                                                                @if (item.Value == "0" || item.Value == "10" || item.Value == "45" || item.Value == "80")
+                                                                                {
+                                                                                    <option value="Vendor/SubVendor" selected>Vendor/Sub Vendor</option>
+                                                                                    <option value="Customer">Customer</option>
+                                                                                                        <option value="TUVI">TUVI</option>
+                                                                                }
+                                                                                else if (item.Value == "30" || item.Value == "60")
+                                                                                {
+                                                                                    <option value="Vendor/SubVendor">Vendor/Sub Vendor</option>
+                                                                                    <option value="Customer" selected>Customer</option>
+                                                                                                        <option value="TUVI">TUVI</option>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="">Select Action</option>
+                                                                                    <option value="Customer">Customer</option>
+                                                                                                        <option value="Vendor/SubVendor">Vendor/Sub Vendor</option>
+                                                                                                            <option value="TUVI">TUVI</option>
+                                                                                }
+
+
+                                                                            </select>
+                                                                        </td>
+                                                                        @if (@item.Value != null)
+                                                                        {
+                                                                            <td style="border: 1px solid #000;">
+                                                                                <input type="text" id="EngstatusNo_@s" class="Test @item.Value" name="@item.Value" value="@item.Value" />
+                                                                            </td>
+                                                                        }
+
+                                                                        <td style="border: 1px solid #000;">
+                                                                            <button type="button" id="btnDelete_@s" class="IdeleteContact btn btn btn-danger btn-xs btneng" onclick="deleteEngineeringForm(@valueeng,@s)">Remove</button>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    s++;
+                                                                }
+                                                            </table>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-center">
+                                                    @*<button type="button" class="btn btn-default insert-form-btn" onclick="showEngineeringForm(@valueeng,@s)" title="Add New Status"><i class="fa fa-plus-circle"></i> Save</button>*@
+                                                    <input type="button" class="btn btn-default insert-form-btn" id="btnClick" onclick="showEngineeringForm(@valueeng,@s)" title="Add New Status" style="width:100px;background-color:#001ED2;" value="Save"/>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*END*@
+
+
+                    @*Procurement*@
+                    <div class="modal fade bs-example-modal-lg modal fade" id="AddNewProcurement" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header text-center" style="background-color: #3677e6;color: #fff;">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Procurement</h4>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-box" style="padding-bottom:0!important;">
+                                        <div class="row" id="EngStatus">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-4">
+
+                                                    <input type="text" class="form-control" id="idbtnstausMaterial" />
+                                                </div>
+                                                <div class="col-xs-12 col-sm-3">
+
+                                                    <button type="button" class="btn btn-default insert-form-btn" onclick="idbtnSaveMaterial();" title="Add New Status" style="margin-top: 2px">Add</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <hr class="custom-hr1">
+                                            </div>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    @{
+                                                        SelectList Material = ViewBag.MaterialStatus as SelectList;
+                                                    }
+                                                    @{
+                                                        var w = 1;
+                                                        var valueMat = 2;
+                                                    }
+
+                                                    @if (subCatlist != null)
+                                                    {
+                                                        <div class="text-center mx-auto">
+                                                            <table class="table" style="width: auto; max-width: 70%; border-collapse: collapse; border: 1px solid #000; text-align: center;">
+                                                                <colgroup>
+                                                                    <col style="width: auto; max-width: 70%;" />
+                                                                    <col style="width: auto; max-width: 30%;" />
+                                                                </colgroup>
+                                                                <tr>
+                                                                    <th style="border: 1px solid #000;">Status</th>
+
+
+                                                                    <th style="border: 1px solid #000;">%</th>
+                                                                    <th style="border: 1px solid #000;"></th>
+                                                                </tr>
+                                                                @foreach (var item in Material)
+                                                                {
+
+                                                                    <tr id="EditData_@w">
+                                                                        <td style="border: 1px solid #000; white-space: nowrap;">
+                                                                            <label id="Materialstatus_@w" for="@item.Value">@item.Text</label>
+                                                                        </td>
+
+                                                                        <td style="border: 1px solid #000;">
+                                                                            <input type="text" id="MaterialNo_@w" class="@item.Value" name="@item.Value" value="@item.Value" />
+                                                                        </td>
+
+
+
+
+                                                                        <td style="border: 1px solid #000;">
+                                                                            <button type="button" id="btnDelete_@w" class="IdeleteContact btn btn btn-danger btn-xs btnMaterial" onclick="deleteEngineeringForm(@valueMat,@w)">Remove</button>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    w++;
+                                                                }
+
+
+                                                            </table>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-center">
+                                                    @*<button type="button" class="btn btn-default insert-form-btn" onclick="showEngineeringForm(@valueMat,@w)" title="Add New Status"><i class="fa fa-plus-circle"></i> Save</button>*@
+                                                    <input type="button" class="btn btn-default insert-form-btn" id="btnClick1" onclick="showEngineeringForm(@valueMat,@w)" title="Add New Status" style="width:100px; background-color:#001ED2;" value="Save">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*END*@
+
+
+                    @*Manufacturing*@
+                    <div class="modal fade bs-example-modal-lg modal fade" id="AddNewManufacturing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header text-center" style="background-color: #3677e6;color: #fff;">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Manufacturing</h4>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-box" style="padding-bottom:0!important;">
+                                        <div class="row" id="EngStatus">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-4">
+
+                                                    <input type="text" class="form-control" id="idbtnstausManufacturing" />
+                                                </div>
+                                                <div class="col-xs-12 col-sm-3">
+
+                                                    <button type="button" class="btn btn-default insert-form-btn" onclick="idbtnSaveManufacturing();" title="Add New Status" style="margin-top: 2px">Add</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <hr class="custom-hr1">
+                                            </div>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    @{
+                                                        SelectList Manufacturing = ViewBag.ManufacturingStatus as SelectList;
+                                                    }
+                                                    @{
+                                                        var t = 1;
+                                                        var valuemanu = 3;
+                                                    }
+
+                                                    @if (subCatlist != null)
+                                                    {
+                                                        <div class="text-center mx-auto">
+                                                            <table class="table" style="width: auto; max-width: 70%; border-collapse: collapse; border: 1px solid #000; text-align: center;">
+                                                                <colgroup>
+                                                                    <col style="width: auto; max-width: 70%;" />
+                                                                    <col style="width: auto; max-width: 30%;" />
+                                                                </colgroup>
+                                                                <tr>
+                                                                    <th style="border: 1px solid #000;">Status</th>
+
+
+                                                                    <th style="border: 1px solid #000;">%</th>
+                                                                    <th style="border: 1px solid #000;"></th>
+                                                                </tr>
+                                                                @foreach (var item in Manufacturing)
+                                                                {
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000; white-space: nowrap;">
+                                                                            <label id="Manufacturingstatus_@t" for="@item.Value">@item.Text</label>
+                                                                        </td>
+
+                                                                        <td style="border: 1px solid #000;">
+                                                                            <input type="text" id="ManufacturingstatusNo_@t" class="@item.Value" name="@item.Value" value="@item.Value" />
+                                                                        </td>
+
+                                                                        <td style="border: 1px solid #000;">
+                                                                            <button type="button" id="btnDelete_@t" class="IdeleteContact btn btn btn-danger btn-xs btnManu" onclick="deleteEngineeringForm(@valuemanu,@t)">Remove</button>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    t++;
+                                                                }
+                                                            </table>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-center">
+                                                    @*<button type="button" class="btn btn-default insert-form-btn" id="btnClick2" onclick="showEngineeringForm(@valuemanu,@t)" title="Add New Status"><i class="fa fa-plus-circle"></i> Save</button>*@
+                                                    <input type="button" class="btn btn-default insert-form-btn" id="btnClick2" onclick="showEngineeringForm(@valuemanu,@t)" title="Add New Status" style="width:100px; background-color:#001ED2;" value="Save">
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*END*@
+
+
+                    @*Final*@
+                    <div class="modal fade bs-example-modal-lg modal fade" id="AddNewFinal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header text-center" style="background-color: #3677e6;color: #fff;">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Final</h4>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-box" style="padding-bottom:0!important;">
+                                        <div class="row" id="EngStatus">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-4">
+
+                                                    <input type="text" class="form-control" id="idbtnstausFinal" />
+                                                </div>
+                                                <div class="col-xs-12 col-sm-3">
+
+                                                    <button type="button" class="btn btn-default insert-form-btn" onclick="idbtnSaveFinal();" title="Add New Status" style="margin-top: 2px">Add</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <hr class="custom-hr1">
+                                            </div>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    @{
+                                                        SelectList Final = ViewBag.DDLFinalStatusMaster as SelectList;
+                                                    }
+                                                    @{
+                                                        var u = 1;
+                                                        var valuefinal = 4;
+                                                    }
+
+                                                    @if (subCatlist != null)
+                                                    {
+                                                        <div class="text-center mx-auto">
+                                                            <table class="table" style="width: auto; max-width: 70%; border-collapse: collapse; border: 1px solid #000; text-align: center;">
+                                                                <colgroup>
+                                                                    <col style="width: auto; max-width: 70%;" />
+                                                                    <col style="width: auto; max-width: 30%;" />
+                                                                </colgroup>
+                                                                <tr>
+                                                                    <th style="border: 1px solid #000;">Status</th>
+
+
+                                                                    <th style="border: 1px solid #000;">%</th>
+                                                                    <th style="border: 1px solid #000;"></th>
+                                                                </tr>
+                                                                @foreach (var item in Final)
+                                                                {
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000; white-space: nowrap;">
+                                                                            <label id="Finalstatus_@u" for="@item.Value">@item.Text</label>
+                                                                        </td>
+
+                                                                        <td style="border: 1px solid #000;">
+                                                                            <input type="text" id="FinalstatusNo_@u" class="@item.Value" name="@item.Value" value="@item.Value" />
+                                                                        </td>
+                                                                        @if (@item.Value != null)
+                                                                        {
+                                                                            <td style="border: 1px solid #000;">
+                                                                                <button type="button" id="btnDelete_@u" class="IdeleteContact btn btn btn-danger btn-xs btnFinal" onclick="deleteEngineeringForm(@valuefinal,@u)">Remove</button>
+                                                                            </td>
+                                                                        }
+
+                                                                    </tr>
+                                                                    u++;
+                                                                }
+                                                            </table>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-center">
+                                                    @*<button type="button" class="btn btn-default insert-form-btn" onclick="showEngineeringForm(@valuefinal,@u);" title="Add New Status"><i class="fa fa-plus-circle"></i> Save</button>*@
+                                                    <input type="button" class="btn btn-default insert-form-btn" id="btnClick3" onclick="showEngineeringForm(@valuefinal,@u)" title="Add New Status" style="width:100px; background-color:#001ED2;" value="Save">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*END*@
+
+                    @*Final Stage*@
+                    <div class="modal fade bs-example-modal-lg modal fade" id="AddNewFinalStage" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header text-center" style="background-color: #3677e6;color: #fff;">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Final Stage</h4>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-box" style="padding-bottom:0!important;">
+                                        <div class="row" id="FinalStage">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-4">
+
+                                                    <input type="text" class="form-control" id="idtblFinalStage" />
+                                                </div>
+
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <hr class="custom-hr1">
+                                            </div>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    @{
+                                                        SelectList subFinalList = ViewBag.SubFinalStage as SelectList;
+
+                                                    }
+                                                    @{
+                                                        var z = 1;
+                                                        var valueFinal = 1;
+                                                    }
+
+                                                    @if (subCatlist != null)
+                                                    {
+                                                        <div class="text-center mx-auto">
+                                                            <table class="table" style="width: auto; max-width: 70%; border-collapse: collapse; border: 1px solid #000; text-align: center;">
+                                                                <colgroup>
+                                                                    <col style="width: auto; max-width: 70%;" />
+                                                                    <col style="width: auto; max-width: 30%;" />
+                                                                </colgroup>
+                                                                <tr>
+                                                                    <th style="border: 1px solid #000;">Status</th>
+
+                                                                    <th style="border: 1px solid #000;"></th>
+                                                                </tr>
+
+                                                                @foreach (var item in subFinalList)
+                                                                {
+
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000; white-space: nowrap;">
+                                                                            <label id="FinalStagestatus_@z" for="@item.Value">@item.Text</label>
+                                                                        </td>
+                                                                        @if (@item.Value != null)
+                                                                        {
+                                                                            <td style="border: 1px solid #000;">
+                                                                                <button type="button" id="btnDelete_@z" class="IdeleteContact btn btn btn-danger btn-xs btnFinalstage" onclick="showDeleteFinalStage(@valueFinal,@z)">Remove</button>
+                                                                            </td>
+                                                                        }
+                                                                    </tr>
+                                                                    z++;
+                                                                }
+                                                            </table>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-center">
+                                                        @*<button type="button" class="btn btn-default insert-form-btn btnfinalstagevalue" onclick="idbtnSaveFinalStage(@z);" title="Add New Status" style="margin-top: 2px">Save</button>*@
+                                                        <input type="button" class="btn btn-default insert-form-btn btnfinalstagevalue" id="btnClick4" onclick="idbtnSaveFinalStage(@z);" title="Add New Status" style="margin-top: 2px;width: 100px; background-color:#001ED2;" Value="Save" />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*END*@
+
+                    @*Document*@
+                    <div class="modal fade bs-example-modal-lg modal fade" id="AddNewDocument" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header text-center" style="background-color: #3677e6;color: #fff;">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Document</h4>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-box" style="padding-bottom:0!important;">
+                                        <div class="row" id="FinalStage">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-4">
+
+                                                    <input type="text" class="form-control" id="idtblDocument" />
+                                                </div>
+
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <hr class="custom-hr1">
+                                            </div>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    @{
+                                                        SelectList subDocument = ViewBag.RefDocument as SelectList;
+
+                                                    }
+                                                    @{
+                                                        var y = 1;
+                                                        var valueDocument = 1;
+                                                    }
+
+                                                    @if (subCatlist != null)
+                                                    {
+                                                        <div class="text-center mx-auto">
+                                                            <table class="table" style="width: auto; max-width: 70%; border-collapse: collapse; border: 1px solid #000; text-align: center;">
+                                                                <colgroup>
+                                                                    <col style="width: auto; max-width: 70%;" />
+                                                                    <col style="width: auto; max-width: 30%;" />
+                                                                </colgroup>
+                                                                <tr>
+                                                                    <th style="border: 1px solid #000;">Status</th>
+
+                                                                    <th style="border: 1px solid #000;"></th>
+                                                                </tr>
+
+                                                                @foreach (var item in subDocument)
+                                                                {
+
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000; white-space: nowrap;">
+                                                                            <label id="DocumentSatus_@y" for="@item.Value">@item.Text</label>
+                                                                        </td>
+                                                                        @if (@item.Value != null)
+                                                                        {
+                                                                            <td style="border: 1px solid #000;">
+                                                                                <button type="button" id="btnDeleteDocument_@y" class="IdeleteContact btn btn btn-danger btn-xs btnFinalstage" onclick="deleteDocument(@valueeng,@y)">Remove</button>
+                                                                            </td>
+                                                                        }
+                                                                    </tr>
+                                                                    y++;
+                                                                }
+                                                            </table>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-center">
+                                                        @*<button type="button" class="btn btn-default insert-form-btn" onclick="idbtnSaveDocument(@y);" title="Add New Status" style="margin-top: 2px">Save</button>*@
+                                                        <input type="button" class="btn btn-default insert-form-btn" id="btnClick5" onclick="idbtnSaveDocument(@y)" title="Add New Status" style="width:100px; background-color:#001ED2;" value="Save">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*END*@
+
+
+
+
+<script>
+    // jQuery script to show/hide modal on button click
+    $(document).ready(function () {
+        $("#btnclickEngineering").click(function () {
+            $("#AddNewStages").modal('show');
+        });
+    });
+</script>
+
+<script>
+    // jQuery script to show/hide modal on button click
+    $(document).ready(function () {
+        $("#btnclickDocument").click(function () {
+            $("#AddNewDocument").modal('show');
+        });
+    });
+</script>
+
+<script>
+    // jQuery script to show/hide modal on button click
+    $(document).ready(function () {
+        $("#btnclickProcurement").click(function () {
+            $("#AddNewProcurement").modal('show');
+        });
+    });
+</script>
+<script>
+    // jQuery script to show/hide modal on button click
+    $(document).ready(function () {
+        $("#btnclickManufacturing").click(function () {
+            $("#AddNewManufacturing").modal('show');
+        });
+    });
+</script>
+<script>
+    // jQuery script to show/hide modal on button click --
+    $(document).ready(function () {
+        $("#btnclickFinalStage").click(function () {
+            $("#AddNewFinalStage").modal('hide');
+        });
+    });
+</script>
+
+<script>
+    // jQuery script to show/hide modal on button click
+    $(document).ready(function () {
+        $("#btnclickFinal").click(function () {
+            $("#AddNewFinal").modal('show');
+        });
+    });
+</script>
+
+
+
+<script>
+    function idbtnSave() {
+        var statusValue = $('#idbtnstaus').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("StatusSave", "Expediting")',
+            data: { status: statusValue },
+            Async: false,// Pass the value of the textbox as data
+            success: function (data) {
+                //alert("Status Added successfully");
+                //location.reload(); // Reload the current page
+            },
+            error: function (error) {
+                console.error('Error saving status:', error);
+            }
+        });
+    }
+</script>
+
+<script>
+    function idbtnSaveMaterial() {
+        var statusValue = $('#idbtnstausMaterial').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("StatusSaveMaterial", "Expediting")',
+            data: { status: statusValue },
+            Async: false,
+            success: function (data) {
+               // alert("Status Added successfully");
+                //location.reload();
+            },
+            error: function (error) {
+                console.error('Error saving status:', error);
+            }
+        });
+    }
+</script>
+
+<script>
+    function idbtnSaveManufacturing() {
+        var statusValue = $('#idbtnstausManufacturing').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("StatusSaveManufacturing", "Expediting")',
+            data: { status: statusValue },
+            Async: false,
+            success: function (data) {
+                //alert("Status Added successfully");
+                //location.reload();
+            },
+            error: function (error) {
+                console.error('Error saving status:', error);
+            }
+        });
+    }
+</script>
+
+<script>
+    function idbtnSaveFinal() {
+        var statusValue = $('#idbtnstausFinal').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("StatusSaveFinal", "Expediting")',
+            data: { status: statusValue },
+            Async: false,
+            success: function (data) {
+               // alert("Status Added successfully");
+                //location.reload();
+            },
+            error: function (error) {
+                console.error('Error saving status:', error);
+            }
+        });
+    }
+</script>
+
+
+<script>
+    function idbtnSaveFinalStage(clickedElement) {
+        debugger;
+        //var statusValue = $('#idtblFinalStage').val();
+        var PK_JOB_ID = $("#PK_JOB_ID").val();
+
+        var userDataArray = [];
+
+        for (var i = 1; i < clickedElement; i++) {
+            var userdata = {
+                Status: $("#FinalStagestatus_" + i).text(),
+            };
+            userDataArray.push(userdata);
+        }
+        debugger;
+        var extraData = {
+            Status: $('#idtblFinalStage').val(),
+        };
+
+        userDataArray.push(extraData);
+
+        var Data1 = JSON.stringify(userDataArray);
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("StatusSaveFinalstage", "Expediting")',
+            data: { myArray: Data1, PK_JOB_ID: PK_JOB_ID },
+            Async: false,
+            success: function (data) {
+                //alert("Status Added successfully");
+                //location.reload();
+            },
+            error: function (error) {
+                console.error('Error saving status:', error);
+            }
+        });
+    }
+</script>
+<script>
+    function idbtnSaveDocument(clickedElement) {
+        debugger;
+        var PK_JOB_ID = $('#PK_JOB_ID').val();
+        var userDataArray = [];
+
+        for (var i = 1; i < clickedElement; i++) {
+            var userdata = {
+                Document: $("#DocumentSatus_" + i).text(),
+            };
+            userDataArray.push(userdata);
+        }
+        debugger;
+        var extraData = {
+            Document: $('#idtblDocument').val(),
+        };
+
+        userDataArray.push(extraData);
+
+        var Data1 = JSON.stringify(userDataArray);
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("StatusSaveDocument", "Expediting")',
+            data: { myArray: Data1, PK_JOB_ID: PK_JOB_ID },
+            Async: false,
+            success: function (data) {
+                //alert("Status Added successfully");
+                //location.reload();
+            },
+            error: function (error) {
+                console.error('Error saving status:', error);
+            }
+        });
+    }
+</script>
+
+
+
+<script>
+    function showEngineeringForm(value, clickedElement) {
+        debugger;
+        var pk_QT_id = $('#PK_QT_ID').val();
+        var PK_JOB_ID = $('#PK_JOB_ID').val();
+        var Stageid = value;
+
+        var userDataArray = [];
+        var TotalENG = 0;
+        var isValid = true;  // Flag to track if any value is more than 100
+
+        for (var i = 1; i < clickedElement; i++) {
+            let userdata;
+            if (Stageid === 1) {
+                userdata = {
+                    status: $("#Engstatus_" + i).text(),
+                    statusValue: $("#EngstatusNo_" + i).val(),
+                    statusActionRequirdby: $("#EngstatusDropdown_" + i).val(),
+                    statusid: i,
+                    Stageid: value,
+                };
+            } else if (Stageid === 2) {
+                userdata = {
+                    status: $("#Materialstatus_" + i).text(),
+                    statusValue: $("#MaterialNo_" + i).val(),
+                    statusid: i,
+                    Stageid: value,
+                };
+            } else if (Stageid === 3) {
+                userdata = {
+                    status: $("#Manufacturingstatus_" + i).text(),
+                    statusValue: $("#ManufacturingstatusNo_" + i).val(),
+
+                    statusid: i,
+                    Stageid: value,
+                };
+            } else if (Stageid === 4) {
+                userdata = {
+                    status: $("#Finalstatus_" + i).text(),
+                    statusValue: $("#FinalstatusNo_" + i).val(),
+
+                    statusid: i,
+                    Stageid: value,
+                };
+            }
+
+            // Check if statusValue is more than 100
+            if (parseFloat(userdata.statusValue) > 100) {
+                alert("Status value cannot exceed 100.");
+                isValid = false;
+                break;  // Exit the loop if validation fails
+            }
+
+            userDataArray.push(userdata);
+        }
+
+        if (isValid) {
+
+            var Data1 = JSON.stringify(userDataArray);
+
+
+        }
+
+
+
+        //if (TotalENG > 100) {
+        //    alert('Sum of percentages must be equal to 100%. Current sum: ' + TotalENG);
+        //    return;
+        //}
+        //else {
+
+        //}
+
+        $.ajax({
+            url: '@Url.Action("StatusSaveInsertData", "Expediting")',
+            type: 'POST',
+            data: {
+                PK_QT_ID: pk_QT_id,
+                myArray: Data1,
+                PK_JOB_ID: PK_JOB_ID
+            },
+            Async: false,
+            success: function (response) {
+                //alert("Status Added successfully");
+                //location.reload();
+                
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+
+        });
+    }
+
+  
+
+
+</script>
+
+
+<script>
+    function deleteEngineeringForm(value, clickedElement) {
+        debugger;
+        var pk_QT_id = $('#PK_QT_ID').val();
+        var Stageid = value;
+        var PK_JOB_ID = $('#PK_JOB_ID').val();
+
+        if (Stageid === 1) {
+
+            var statusName = $("#Engstatus_" + clickedElement).text();
+
+        }
+        if (Stageid === 2) {
+
+            var statusName = $("#Materialstatus_" + clickedElement).text();
+
+        }
+        if (Stageid === 3) {
+
+            var statusName = $("#Manufacturingstatus_" + clickedElement).text();
+
+        }
+        if (Stageid === 4) {
+
+            var statusName = $("#Finalstatus_" + clickedElement).text();
+
+
+        }
+
+        $.ajax({
+            url: '@Url.Action("deleteData", "Expediting")',
+            type: 'POST',
+            data: {
+                PK_QT_ID: pk_QT_id,
+                Stageid: Stageid,
+                Statusid: clickedElement,
+                statusName: statusName,
+                PK_JOB_ID: PK_JOB_ID
+            },
+            Async: false,
+            success: function (response) {
+                alert("Status Delete successfully");
+                //location.reload();
+
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+
+
+
+    }
+</script>
+
+
+<script>
+    function showDeleteFinalStage(value, clickedElement) {
+        debugger;
+        var pk_QT_id = $('#PK_QT_ID').val();
+        var Stageid = clickedElement;
+        var PK_JOB_ID = $('#PK_JOB_ID').val();
+
+        var statusName = $('#FinalStagestatus_' + Stageid).text()
+
+        $.ajax({
+            url: '@Url.Action("deleteDataFinalStage", "Expediting")',
+            type: 'POST',
+            data: {
+                PK_JOB_ID: PK_JOB_ID,
+                Stageid: Stageid,
+                statusName: statusName
+            },
+            Async: false,
+            success: function (response) {
+                alert("Status Delete successfully");
+                //location.reload();
+
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+
+
+
+    }
+</script>
+
+<script>
+    function deleteDocument(value, clickedElement) {
+        debugger;
+        var PK_JOB_ID = $('#PK_JOB_ID').val();
+        var Stageid = clickedElement;
+
+        var statusName = $('#DocumentSatus_' + Stageid).text()
+
+        $.ajax({
+            url: '@Url.Action("deleteDataDocument", "Expediting")',
+            type: 'POST',
+            data: {
+                statusName: statusName,
+                PK_JOB_ID: PK_JOB_ID
+            },
+            Async: false,
+            success: function (response) {
+                alert("Status Delete successfully");
+                //location.reload();
+
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+
+
+
+    }
+</script>
+@*<script> 
+    $(document).ready(function () {
+        debugger;
+        var PK_JOB_ID = $('#PK_JOB_ID').val();
+        $("#btnClick").trigger("click");
+        $("#btnClick1").trigger("click");
+        $("#btnClick2").trigger("click");
+        $("#btnClick3").trigger("click");
+        $("#btnClick4").trigger("click");
+        $("#btnClick5").trigger("click");
+    });
+
+</script>*@
+<script>
+    //old code comment by shrutika salve 20062024
+    //$(document).ready(function () {
+    //    debugger;
+    
+    //        var PK_JOB_ID = $('#PK_JOB_ID').val();
+    //        $("#btnClick").trigger("click").unbind("click");
+    //        $("#btnClick1").trigger("click").unbind("click");
+    //        $("#btnClick2").trigger("click").unbind("click");
+    //        $("#btnClick3").trigger("click").unbind("click");
+    //        $("#btnClick4").trigger("click").unbind("click");
+    //        $("#btnClick5").trigger("click").unbind("click");
+    //        Showdata();
+    //        ShowFinaldata();
+    //        window.top.close();
+        
+    //});
+
+    $(document).ready(function () {
+        debugger;
+
+        var PK_JOB_ID = $('#PK_JOB_ID').val();
+        $("#btnClick").trigger("click");
+        $("#btnClick1").trigger("click");
+        $("#btnClick2").trigger("click");
+        $("#btnClick3").trigger("click");
+        $("#btnClick4").trigger("click");
+        $("#btnClick5").trigger("click");
+
+        // Assuming Showdata and ShowFinaldata return promises
+        //$.when(Showdata(), ShowFinaldata()).done(function () {
+        //    // Ensure this only happens after Showdata and ShowFinaldata complete
+        //    window.top.close();
+        //});
+    });
+
+</script>
+
+
+@*<script>
+    $(document).ready(function () {
+
+        setTimeout(function () {
+            debugger
+            $(showEngineeringForm(value, clickedElement)).trigger('click');
+        }, 10);
+        
+    })
+</script>*@
+<script>
+    function ShowFinaldata() {
+        debugger;
+        var PK_JOB_ID = $('#PK_JOB_ID').val();
+        $.ajax({
+            url: '@Url.Action("GetFinalData", "Expediting")',
+            method: 'GET',
+            dataType: 'json',
+           
+            data: {
+                PK_JOB_ID: PK_JOB_ID
+            },
+            Async: false,
+            success: function (data) {
+                var data1 = JSON.parse(data);
+                debugger;
+
+                var statusid1 = JSON.stringify(data1);
+                for (var i = 0; i < data1.length; i++) {
+                    var item = data1[i];
+                    var Statusid = item.FinalStageid;
+                  if (item.stage === 1) {
+                      $("#FinalStagestatus_" + Statusid).val(item.FinalStageName);
+                  }
+                  if (item.stage === 2) {
+                      $("#DocumentSatus_" + Statusid).val(item.FinalStageName);
+                  }
+                }
+
+                //if (data1.length > 0 && item.stage === 1) {
+                //    $(".btnFinalstage").show();
+                //} else {
+                //    $(".btnFinalstage").hide();
+                //}
+
+            },
+
+
+
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    };
+
+</script>
+@*<script>
+        $(document).ready(function () {
+            debugger;
+            var pk_QT_id = $('#PK_QT_ID').val();
+            $.ajax({
+                url: '@Url.Action("GetMaterialData", "Expediting")',
+                type: 'GET',
+                data: {
+                    PK_QT_ID: pk_QT_id
+                },
+                Async: false,
+                success: function (response) {
+                    debugger;
+                    populateMaterialData(response);
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+
+
+        function populateMaterialData(materialData) {
+
+            $.each(materialData, function (index, item) {
+                debugger;
+                alert(index);
+                alert(item);
+                if (materialData.Stageid === 3) {
+
+
+                var rowId = materialData.Statusid;
+                var statusElement = $('#Materialstatus_' + rowId);
+                var valueElement = $('#MaterialNo_' + rowId);
+
+
+                statusElement.text(item.statusName);
+                valueElement.val(item.statusValue);
+                }
+
+
+            });
+
+            //for(var i=1;i<clickedElement;i++)
+            //{
+            //    let userdata;
+            //    if (Stageid === 1) {
+            //        userdata = {
+            //            status: $("#Engstatus_" + i).text(),
+            //            statusValue: $("#EngstatusNo_" + i).val(),
+            //            statusid: i,
+            //            Stageid:value,
+
+            //        };
+            //    } else if (Stageid===2) {
+            //        userdata = {
+            //            status: $("#Materialstatus_"+ i).text(),
+            //            statusValue: $("#MaterialNo_" + i).val(),
+            //            statusid: i,
+            //            Stageid: value,
+
+            //        };
+            //    } else if (Stageid === 3) {
+            //        userdata = {
+            //            status: $("#Manufacturingstatus_"+i).text(),
+            //            statusValue: $("#ManufacturingstatusNo_"+i).val(),
+            //            statusid: i,
+            //            Stageid: value,
+
+            //        };
+            //    } else if (Stageid === 4) {
+            //        userdata = {
+            //            status: $("#Finalstatus_"+i).text(),
+            //            statusValue: $("#FinalstatusNo_"+i).val(),
+            //            statusid: i,
+            //            Stageid: value,
+
+            //        };
+            //    }
+
+        }
+    </script>*@
+<script>
+    function Showdata() {
+       
+        debugger;
+        var PK_JOB_ID = $('#PK_JOB_ID').val();
+        $.ajax({
+            url: '@Url.Action("GetMaterialData", "Expediting")',
+            method: 'GET',
+            dataType: 'json',
+            data: {
+                PK_JOB_ID: PK_JOB_ID
+            },
+            Async: false,
+            success: function (data) {
+                var data1 = JSON.parse(data);
+                debugger;
+
+                var statusid1 = JSON.stringify(data1);
+                for (var i = 0; i < data1.length; i++) {
+                    var item = data1[i];
+                    var Statusid = item.StatusId;
+
+                    if (item.stage === 1) {
+                        if (item.StatusValue != null && !!item.StatusValue) {
+                            $("#Engstatus_" + Statusid).val(item.StatusName);
+                            //$("#EngstatusNo_" + Statusid).val(item.StatusValue);
+                            $("#EngstatusDropdown_" + Statusid).val(item.ActionRequiredBy);
+                        }
+
+                    } else if (item.stage === 2) {
+                        $("#Materialstatus_" + Statusid).val(item.StatusName);
+                        $("#MaterialNo_" + Statusid).val(item.StatusValue);
+
+
+
+                    } else if (item.stage === 3) {
+                        $("#Manufacturingstatus_" + Statusid).val(item.StatusName);
+                        $("#ManufacturingstatusNo_" + Statusid).val(item.StatusValue);
+
+                    } else if (item.stage === 4) {
+                        $("#Finalstatus_" + Statusid).val(item.StatusName);
+                        $("#FinalstatusNo_" + Statusid).val(item.StatusValue);
+                    }
+
+                }
+
+                //if (data1.length > 0 && item.stage === 1) {
+                //    $(".btneng").show();
+                //} else {
+                //    $(".btneng").hide();
+                //}
+                //if (data1.length > 0 && item.stage === 2) {
+                //    $(".btnMaterial").show();
+                //} else {
+                //    $(".btnMaterial").hide();
+                //}
+                //if (data1.length > 0 && item.stage === 3) {
+                //    $(".btnManu").show();
+                //} else {
+                //    $(".btnManu").hide();
+                //}
+                //if (data1.length > 0 && item.stage === 4) {
+                //    $(".btnFinal").show();
+                //} else {
+                //    $(".btnFinal").hide();
+                //}
+
+
+            },
+
+
+
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    };
+
+</script>
+
+
+<script>
+function Redirect() {
+        window.location.href = "@Url.Action("Welcome", "Login")"
+        }
+</script>
+
+

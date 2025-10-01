@@ -1,0 +1,287 @@
+﻿@model TuvVision.BusinessEntities.Gallery_VM
+
+@{
+    ViewBag.Title = "Add Event Gallery";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/Scripts/Js/jquery-ui.css" rel="stylesheet" />
+
+<style>
+    .field-validation-valid {
+        color: #FA3746;
+    }
+</style>
+
+<div class="main-content2 grey-bg-f3">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-5">
+
+            <div class="col-xs-12 form-col">
+                <div class="row">
+
+                    @*<div class="col-xs-12 text-right">
+                            <a href="@Url.Action("Details", "Question",new { id = Model.FD_FK_Checklist_Log_Id })" clas class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                        </div>*@
+                    <div class="col-xs-12 text-right">
+                        <a href="@Url.Action("GelListOfGallery", "Gallery")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <div class="white-bg section-box-shadow">
+                            <h3 class="form-page-title">Gallery Master</h3>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <div class="form-box">
+                                        @using (Html.BeginForm("AddEventGallery", "Gallery", FormMethod.Post, new { @class = "form-horizontal form-label-left", @enctype = "multipart/form-data", @id = "formaddgal" }))
+                                        {
+                                            @Html.HiddenFor(m => m.PK_GalleryId)
+                                            @Html.HiddenFor(m => m.CreatedDate)
+
+                                            <div class="row">
+
+
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Year: <span style="color:#fb5f6b" class="required">*</span></label>
+                                                        @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.YearList, "value", "text"), "- Select Year -", new { @class = "form-control Projects", @required = "required" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Title: <span style="color:#fb5f6b" class="required">*</span></label>
+                                                        @Html.TextBoxFor(model => model.Title, new { @type = "text", @class = "form-control", @placeholder = "Enter Title", @required = "required", @minlength = "3", @maxlength = "150" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label>Event Date:</label>
+                                                        @Html.TextBoxFor(m => m.EventDate, "{0:dd MMM yyyy}", new { @type = "text", @placeholder = "Select Event Date", @class = "form-control DatePicker", @required = "required", @autocomplete = "off", @readonly = "readonly" })
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-xs-12 col-sm-6">
+                                                    @*@if (Model != null)
+                                                        {
+                                                            if (!string.IsNullOrEmpty(Model.NewsImage))
+                                                            {
+                                                                @Html.HiddenFor(model => model.NewsImage)
+                                                                <img src='@Url.Content(Model.NewsImage)' height=50 width=50 />
+                                                            }
+
+                                                        }*@
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Gallery:</label>
+                                                        @Html.TextBoxFor(model => model.Gallery, new { @type = "file", @id="file", @multiple = "multiple" })
+                                                    </div>
+                                                </div> 
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        @if (Model != null)
+                                                        {
+                                                            if (!string.IsNullOrEmpty(Model.Gallery))
+                                                            {
+                                                                @Html.HiddenFor(model => model.Gallery  )
+                                                                <img src='@Url.Content(Model.Gallery)' height=80 width=80 />
+                                                            }
+
+                                                        }
+                                                    </div>
+                                                 
+
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group text-center">
+                                                        <button type="submit" class="btn btn-default insert-form-btn" id="btnAddGallery">Submit</button>
+                                                    </div>
+                                                </div>
+                                                                                             
+                                            </div>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div><!-- /.row -->
+
+                        </div><!-- /.box-shadow -->
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.col -->
+
+
+
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+    <!--End of header-->
+
+</div>
+
+
+@*@section footer{
+    <script src="~/Scripts/js/tinymce.min.js"></script>
+    <script src="~/Scripts/js/tinymces.js"></script>
+    <script src="~/Scripts/js/jquery-ui-1.12.1.js"></script>
+<script>
+         $(document).ready(function () {
+            $('.DatePicker').datepicker({
+            dateFormat: "dd MM yy",
+            changeYear: true,
+            changeMonth: true
+            });
+         });
+         
+         $("#Gallery").click(function (e) {
+             debugger;
+             var fileExtension = ["png", "PNG", "jpg", "JPG", "JPEG", "gif"];
+             var files = $("#Gallery input[type='file']").get(0).files;
+             for (var index = 0; index < files.length; index++) {
+                 var singleExtension = e.target.files[index].name.split('.').pop();
+                 var Condition = fileExtension.includes(singleExtension);
+                 if (Condition == false) {
+                     alert("please select Images only !");
+                     return false;
+                 }
+             }
+         });
+    
+        $("#btnAddGallery").click(function myfunction() {
+            if (validateform() == false) {
+                return false;
+            }
+            else {
+                $("#formaddgal").submit();
+            }
+        });
+        function validateform() {
+            var fileInput = document.getElementById("file");
+            var filepath = fileInput.value;
+            var allowedExtension = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+
+            if ($("#Year Option:selected").val() == "" || $("#Year Option:selected").val() == null) {
+                alert("Please select Year !");
+                $("#Year").focus()
+                return false;
+            }
+
+            if ($("#Title").val() == "" || $("#Title").val() == null) {
+                alert("Please enter Title !");
+                $("#Title").focus()
+                return false;
+            }
+            if ($("#EventDate").val() == "" || $("#EventDate").val() == null) {
+                alert("Please select Event Date !");
+                $("#EventDate").focus()
+                return false;
+            }
+            if (!allowedExtension.exec(filepath)) {
+                alert("Please select Image file only !");
+                fileInput.value = '';
+                return false;
+            }
+
+            var files = $('#file')[0].files;
+            var len = $('#file').get(0).files.length;
+
+            for (var i = 0; i < len; i++) {
+
+                f = files[i];
+
+                var ext = f.name.split('.').pop().toLowerCase();
+                if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                    alert('Please select Image file only !');
+                    fileInput.value = '';
+                    return false;
+
+                }
+            }
+        }
+
+</script>
+}*@
+
+<script src="~/Scripts/js/tinymce.min.js"></script>
+<script src="~/Scripts/js/tinymces.js"></script>
+<script src="~/Scripts/js/jquery-ui-1.12.1.js"></script>
+<script>
+         $(document).ready(function () {
+            $('.DatePicker').datepicker({
+            dateFormat: "dd MM yy",
+            changeYear: true,
+            changeMonth: true
+            });
+         });
+
+         $("#Gallery").click(function (e) {
+             debugger;
+             var fileExtension = ["png", "PNG", "jpg", "JPG", "JPEG", "gif"];
+             var files = $("#Gallery input[type='file']").get(0).files;
+             for (var index = 0; index < files.length; index++) {
+                 var singleExtension = e.target.files[index].name.split('.').pop();
+                 var Condition = fileExtension.includes(singleExtension);
+                 if (Condition == false) {
+                     alert("please select Images only !");
+                     return false;
+                 }
+             }
+         });
+
+        $("#btnAddGallery").click(function myfunction() {
+            if (validateform() == false) {
+                return false;
+            }
+            else {
+                $("#formaddgal").submit();
+            }
+        });
+        function validateform() {
+            var fileInput = document.getElementById("file");
+            var filepath = fileInput.value;
+            var allowedExtension = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+
+            if ($("#Year Option:selected").val() == "" || $("#Year Option:selected").val() == null) {
+                alert("Please select Year !");
+                $("#Year").focus()
+                return false;
+            }
+
+            if ($("#Title").val() == "" || $("#Title").val() == null) {
+                alert("Please enter Title !");
+                $("#Title").focus()
+                return false;
+            }
+            if ($("#EventDate").val() == "" || $("#EventDate").val() == null) {
+                alert("Please select Event Date !");
+                $("#EventDate").focus()
+                return false;
+            }
+            if (!allowedExtension.exec(filepath)) {
+                alert("Please select Image file only !");
+                fileInput.value = '';
+                return false;
+            }
+
+            var files = $('#file')[0].files;
+            var len = $('#file').get(0).files.length;
+
+            for (var i = 0; i < len; i++) {
+
+                f = files[i];
+
+                var ext = f.name.split('.').pop().toLowerCase();
+                if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                    alert('Please select Image file only !');
+                    fileInput.value = '';
+                    return false;
+
+                }
+            }
+        }
+
+</script>

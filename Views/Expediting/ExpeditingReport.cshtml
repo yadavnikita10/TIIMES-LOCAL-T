@@ -1,0 +1,1136 @@
+﻿@model TuvVision.Models.ExpeditingModel
+@{
+    ViewBag.Title = "ExpeditingReport";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+}
+
+
+<script src="~/AllJsAndCss/jquery-1.10.2.js"></script>
+<script src="~/AllJsAndCss/jquery-ui.js"></script>
+<link href="~/AllJsAndCss/jquery-ui.css" rel="stylesheet" />
+
+<style>
+    .addCSS {
+        pointer-events: none;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+</style>
+
+
+@*DATEPICKER*@
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="~/AllJsAndCss/ValidateTimeSheet.js"></script>
+<script>
+    $(function () {
+        $(".Contractual_DeliveryDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+    $(function () {
+        $(".Expected_DeliveryDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+@using (Html.BeginForm("ExpeditingReport", "Expediting", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1", onsubmit = "return checkForm(this);", }))
+{
+    @Html.HiddenFor(m => m.PK_call_id)
+    @Html.HiddenFor(m => m.PK_Expediting_Id)
+    @Html.HiddenFor(m => m.PK_SubJob_Id)
+    @Html.HiddenFor(m => m.Sub_Job_No)
+    @Html.HiddenFor(m => m.CallIDs)
+    @Html.HiddenFor(m => m.Executing_branchId)
+    @Html.HiddenFor(m => m.ReportName)
+    <input type="hidden" id="setvalue" />
+
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                @*class="container-fluid"*@
+                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <br />
+
+                            <h5 class="dynamic-page-title dynamic-page-title-2">@Html.DisplayFor(m => m.ExpeditingType)Expediting Report Number:@Html.DisplayFor(m => m.ReportName)  </h5>
+
+                            <div class="col-xs-12">
+                                @*text-right*@
+                                @*<br />*@
+                                @if (Model.PK_call_id != "")
+                                {
+                                    <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ExpeditingReport", "Expediting",new { @PK_Call_ID = Model.PK_call_id} )'">General</button>
+                                    if (Model.PK_Expediting_Id != 0)
+                                    {
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpItemDescription", "Expediting",new { @PK_Call_ID = Model.PK_call_id} )'">Item Description</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpProgress", "Expediting",new { @PK_Call_ID = Model.PK_call_id} )'">Progress</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EXp_commercial", "Expediting",new { @PK_Call_Id = Model.PK_call_id} )'">Commercial</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpEngineering", "Expediting",new { @PK_Call_Id = Model.PK_call_id } )'">Engineering</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpMaterial", "Expediting",new { @PK_Call_Id = Model.PK_call_id} )'">Procurement</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpManufacturing", "Expediting",new { @PK_Call_Id = Model.PK_call_id} )'">Manufacturing</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpFinalStage", "Expediting",new { @PK_Call_Id = Model.PK_call_id} )'">Final Stage</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpDelays", "Expediting",new { @PK_Call_Id = Model.PK_call_id} )'">Item Wise Delays</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ExpConcerns", "Expediting",new { @PK_Call_Id = Model.PK_call_id} )'">Concerns</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("PhotoAttachement", "Expediting",new { @PK_Call_Id = Model.PK_call_id} )'">Photo</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Observation", "Expediting",new { @PK_Call_Id = Model.PK_call_id} )'">Observation</button>
+                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Records", "Expediting",new { @PK_Call_Id = Model.PK_call_id} )'">Records</button>
+                                        <button id="btnAddExpenses" class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem",new { FKId = Model.PK_Expediting_Id,Type="Expediting",SubJobNo=Model.Sub_Job_No, PK_Call_Id = Model.PK_call_id } )'">Add Expenses</button>
+
+                                        if (Convert.ToInt32(Model.IsComfirmation) != 1)
+                                        {
+
+                                        }
+                                        else
+                                        {
+                                            <button id="btnsendreport" class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("SendExpeditingReport", "Expediting",new { FKId = Model.PK_Expediting_Id,Type="Expediting",SubJobNo=Model.Sub_Job_No, PK_Call_Id = Model.PK_call_id ,CustomerName=Model.Customer_Name,VendorName=Model.VendorName,SubVendorName=Model.Sub_VendorName,Date_Of_Expediting=Model.Date_Of_Expediting,CMP_ID=Model.CMP_ID} )'">Send EVR</button>
+
+                                        }
+                                    
+
+
+
+                                }
+
+
+                                }
+
+                            </div>
+
+
+
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">General</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+
+                                                <div class="row">
+
+                                                    <div class="row">
+                                                        <div class="col-xs-4 col-sm-12">
+                                                            <label>Date(s) Of Expediting:</label>
+
+                                                            @Html.TextBoxFor(model => model.Date_Of_Expediting, new { @placeholder = "Date Of Inspection", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.Date_Of_Expediting, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>TUVI Control Number:</label>
+                                                                @Html.TextBoxFor(model => model.Controle_No, new { @placeholder = "TUVI Control Number", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Controle_No, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Executing Branch:</label>
+                                                                @*<input type="email" class="form-control" placeholder="Email Here">*@
+                                                                @Html.TextBoxFor(model => model.Executing_branch, new { @placeholder = "Branch", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Executing_branch, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Customer Name:</label>
+                                                                @Html.TextBoxFor(model => model.Customer_Name, new { @placeholder = "Client Name", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Customer_Name, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>End Customer Name:</label>&nbsp;<span style="color:#2EFE2E;">*</span>
+                                                                @Html.TextBoxFor(model => model.End_Customer_Name, new { @placeholder = "End Customer Name", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.End_Customer_Name, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label> Project Name </label>&nbsp;<span style="color:#2EFE2E;">*</span>
+                                                                @Html.TextBoxFor(model => model.Project_Name, new { @placeholder = "Project Name ", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Project_Name, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label> DEC/PMC/EPC Name :</label>&nbsp;<span style="color:#2EFE2E;">*</span>
+                                                                @Html.TextBoxFor(model => model.DEC_PMC_EPC_Name, new { @placeholder = "DEC PMC EPC Name", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.DEC_PMC_EPC_Name, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label> DEC/PMC/EPC Assignment No :</label>&nbsp;<span style="color:#2EFE2E;">*</span>
+                                                                @Html.TextBoxFor(model => model.DEC_PMC_EPC_Assignment_No, new { @placeholder = "DEC PMC EPC Assignment No", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.DEC_PMC_EPC_Assignment_No, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+
+                                                        <div class="col-xs-12 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Notification No:</label>&nbsp;<span style="color:#FA3746;">*</span>
+                                                                @Html.TextBoxFor(model => model.NotificationNumber, new { @placeholder = "Notification No", @class = "form-control" })
+                                                                @Html.ValidationMessageFor(model => model.NotificationNumber, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Expediting Location:</label>&nbsp;<span style="color:#FA3746;">*</span>
+                                                                @Html.TextBoxFor(model => model.ExpeditingLocation, new { @placeholder = "Expediting Location", @class = "form-control" })
+                                                                @Html.ValidationMessageFor(model => model.ExpeditingLocation, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Vendor Name:</label>
+
+                                                                @Html.TextBoxFor(model => model.VendorName, new { @placeholder = "Vendor Name", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.VendorName, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                                                            <div class="form-group">
+                                                                <label>PO Number (Customer PO on Vendor) : @*(In case of PO Amendments/Revision inform coordinators immediately)*@</label>
+                                                                @Html.TextBoxFor(model => model.Po_No, new { @placeholder = "Po No", @class = "form-control" })
+                                                                @Html.ValidationMessageFor(model => model.Po_No, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>PO Date (Customer PO on Vendor) : @*(In case of PO Amendments/Revision inform coordinators immediately)*@</label>
+                                                                @Html.TextBoxFor(model => model.Po_Date, new { @placeholder = "Po Date", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Po_Date, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Sub Vendor Name:</label>
+                                                                @Html.TextBoxFor(model => model.Sub_VendorName, new { @placeholder = "Sub Vendor Name", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Sub_VendorName, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>PO No.(Vendor PO on Sub-vendor):</label>
+                                                                @Html.TextBoxFor(model => model.SubPo_No, new { @placeholder = "Sub Vendor Name", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.SubPo_No, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group" id="divSubPODate">
+                                                                <label>PO Date (Sub Vendor):</label>
+                                                                @Html.TextBoxFor(model => model.SubPo_Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "PO Date (Sub Vendor):", @class = "form-control SubSubVendorDate_of_PO", autocomplete = "off", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.SubPo_Date, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Contractual Delivery Date:</label>&nbsp;<span style="color:#FA3746;">*</span>
+                                                                @Html.TextBoxFor(model => model.Contractual_DeliveryDate, new { @placeholder = "Contractual Delivery Date", @class = "form-control Contractual_DeliveryDate" })
+                                                                @Html.ValidationMessageFor(model => model.Contractual_DeliveryDate, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Expected delivery date given by Vendor:</label>&nbsp;<span style="color:#FA3746;">*</span>
+                                                                @Html.TextBoxFor(model => model.Expected_DeliveryDate, new { @placeholder = "Expected Delivery Date DeliveryDate", @class = "form-control Expected_DeliveryDate", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Expected_DeliveryDate, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group" id="divSubPODate">
+                                                                <label>Current Overall PO Status:</label>
+                                                                @Html.TextBoxFor(model => model.SubPo_Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Current Overall PO Status:", @class = "form-control SubPo_Date", autocomplete = "off", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.SubPo_Date, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-5">
+                                                            <div class="form-group" id="divSubPODate">
+                                                                <label>Previous Expediting assignment Number(s):</label>
+                                                                @Html.TextBoxFor(model => model.AssignmentNumber, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Previous Expediting assignment Number(s):", @class = "form-control SubPo_Date", autocomplete = "off", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.AssignmentNumber, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label>Concerns Open%:</label>
+                                                                @Html.TextBoxFor(model => model.OverAll, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Concerns Open:", @class = "form-control SubPo_Date", autocomplete = "off", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.OverAll, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Last Expediting type and date:</label>
+                                                                @Html.TextBoxFor(model => model.LastExpeditingtypeandDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Last Expediting type and date:", @class = "form-control SubPo_Date", autocomplete = "off", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.LastExpeditingtypeandDate, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div id="DomesticCurrency">
+                                                                <h3 class="form-page-title">Attendess in this assignment</h3>
+
+                                                                <table id="DTestTable" cellspacing="0" cellpadding="3" border="1">
+
+                                                                    <tr>
+                                                                        <td width="160px" style="text-align: center;vertical-align:top;">
+                                                                            Representing
+                                                                        </td>
+                                                                        <td width="210px" style="text-align: center;vertical-align:top;">
+                                                                            Name
+                                                                        </td>
+                                                                        <td width="180px" style="text-align: center;vertical-align:top;">
+                                                                            Designation
+                                                                        </td>
+                                                                        <td width="210px" style="text-align: center;vertical-align:top;">
+                                                                            Email Id
+                                                                        </td>
+
+                                                                    </tr>
+
+                                                                    @{
+                                                                        int i = 0;
+                                                                    }
+
+                                                                    @if (ViewBag.lstObservation != null)
+                                                                    {
+                                                                        if (ViewBag.lstObservation.Count != 0)
+                                                                        {
+                                                                            foreach (var item1 in ViewBag.lstObservation as IEnumerable<TuvVision.Models.ExpeditingModel>)
+                                                                            {
+                                                                                i = i + 1;
+                                                                                <tr class="trDomestic" style="background-color:#f0f0f0">
+
+                                                                                    <td>
+
+
+                                                                                        @Html.DropDownListFor(m => m.Emp[j].Represting, new List<SelectListItem>
+                                                                                        {
+                                                                                                      new SelectListItem{ Text="Select Action", Value = "" },
+                                                                                                     new SelectListItem{ Text="Vendor/Sub Vendor", Value = "Vendor/Sub Vendor" , Selected = (item1.Represting == "Vendor/Sub Vendor") ?true : false} ,
+
+                                                                                                     new SelectListItem{ Text="TUVI", Value = "TUVI" , Selected = (item1.Represting == "TUVI") ?true : false} ,
+                                                                                                      new SelectListItem{ Text="Customer", Value = "Customer" , Selected = (item1.Represting == "Customer") ?true : false} ,
+
+
+
+                                                                                        },
+                                                                                                     new { @class = "form-control CRepresting", @id = "IDRepresting" })
+
+
+
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @Html.TextBoxFor(m => m.Emp[j].Name, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Name", @class = "form-control CName", autocomplete = "off", @Value = item1.Name })
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @Html.TextBoxFor(m => m.Emp[j].Designation, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Designation", @class = "form-control CDesignation", autocomplete = "off", @Value = item1.Designation })
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        @Html.TextBoxFor(m => m.Emp[j].Email, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Email", @class = "form-control CEmail", autocomplete = "off", @Value = item1.Email })
+                                                                                    </td>
+
+
+                                                                                    <td>
+                                                                                        @if (i == 1)
+                                                                                        {
+                                                                                            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                                            <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+                                                                                            <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+                                                                                        }
+
+                                                                                    </td>
+                                                                                </tr>
+
+
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <tr class="trDomestic" style="background-color:#f0f0f0">
+
+
+                                                                                @Html.DropDownListFor(m => m.Emp[j].Represting, new List<SelectListItem>
+                                                                                        {
+                                                                                             new SelectListItem{ Text="Select Action", Value = "" },
+                                                                                                     new SelectListItem{ Text="Vendor/Sub Vendor", Value = "Vendor/Sub Vendor"} ,
+
+                                                                                                     new SelectListItem{ Text="TUVI", Value = "TUVI"} ,
+                                                                                                      new SelectListItem{ Text="Customer", Value = "Customer"} ,
+
+
+
+                                                                                        },
+                                                                                                     new { @class = "form-control CRepresting", @id = "IDRepresting" })
+
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(m => m.Emp[j].Name, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Name", @class = "form-control CName", autocomplete = "off" })
+
+                                                                                </td>
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(m => m.Emp[j].Designation, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Designation", @class = "form-control CDesignation", autocomplete = "off" })
+                                                                                </td>
+                                                                                <td>
+                                                                                    @Html.TextBoxFor(m => m.Emp[j].Email, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Email", @class = "form-control CEmail", autocomplete = "off" })
+                                                                                </td>
+
+
+                                                                                <td>
+
+                                                                                    <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+
+                                                                                    <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+
+
+                                                                                </td>
+                                                                            </tr>
+
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <tr class="trDomestic" style="background-color:#f0f0f0">
+
+
+
+
+                                                                            <td>
+                                                                                @Html.DropDownListFor(m => m.Emp[j].Represting, new List<SelectListItem>
+                                                                                        {
+                                                                                             new SelectListItem{ Text="Select Action", Value = "" },
+                                                                                                     new SelectListItem{ Text="Vendor/Sub Vendor", Value = "Vendor/Sub Vendor"} ,
+
+                                                                                                     new SelectListItem{ Text="TUVI", Value = "TUVI"} ,
+                                                                                                      new SelectListItem{ Text="Customer", Value = "Customer"} ,
+
+
+
+                                                                                        },
+                                                                                                     new { @class = "form-control CRepresting", @id = "IDRepresting" })
+
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.TextBoxFor(m => m.Emp[j].Name, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Name", @class = "form-control CName", autocomplete = "off" })
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.TextBoxFor(m => m.Emp[j].Designation, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Designation", @class = "form-control CDesignation", autocomplete = "off" })
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.TextBoxFor(m => m.Emp[j].Email, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Email", @class = "form-control CEmail", autocomplete = "off" })
+                                                                            </td>
+
+
+                                                                            <td>
+
+                                                                                <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button>
+
+                                                                                <button type="button" id="btnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button>
+
+
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+
+
+
+                                                                </table>
+                                                                <br />
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <hr class="custom-hr1">
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xs-12">
+                                                        <div class="row">
+                                                            <h3 class="form-page-title">Distribution</h3>
+
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    @Html.CheckBoxFor(model => model.checkCustomer, new { @class = "checkBox1" })
+                                                                    <label for="InActive" style="color:black;">Customer /End User</label>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    @Html.CheckBoxFor(model => model.Vendor)
+                                                                    <label for="InActive" style="color:black;">Vendor / Sub Vendor</label>
+
+
+                                                                </div>
+                                                            </div>
+                                                            @*Added by shrutika salve*@
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        @Html.CheckBoxFor(model => model.TUVI, new { @class = "checkBox2" })
+                                                                        <label for="InActive" style="color:black;">TUVI Executing / Originating Branch</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="col-xs-12">
+                                                        <div class="row">
+                                                            <h3 class="form-page-title">Closure Remarks</h3>
+
+                                                            <div class="col-xs-12 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label style="color:black;">Expediting Visit closure remarks after join discussion with customer and vendor:</label>
+                                                                    @Html.TextAreaFor(model => Model.closureRemarks, new { @class = "CClosureRemarks", @rows = "5", @columns = "30", @cols = "20", style = "width: 825px; height: 150px;" })
+                                                                    @Html.ValidationMessageFor(model => model.closureRemarks, "", new { @class = "text-danger" })
+
+
+                                                                </div>
+                                                            </div>
+
+
+
+                                                        </div>
+
+                                                    </div>
+
+
+
+
+
+                                                    @*Activity Start*@
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div>
+
+
+                                                                @if (ViewBag.Dates != null)
+                                                                {
+                                                                    var dates = "";
+
+                                                                    <h3 class="form-page-title">Time Sheet</h3>
+                                                                    foreach (var item in ViewBag.Dates as IEnumerable<TuvVision.Models.NonInspectionActivity>)
+                                                                    {
+
+
+                                                                        @Html.HiddenFor(model => model.Activity[j].Id, new { @Value = item.Id })
+                                                                        @Html.HiddenFor(model => model.Activity[j].CallId, new { @Value = item.CallId })
+
+                                                                        dates = Convert.ToDateTime(item.DateSE).ToString("yyyy-MM-dd") + "," + dates;
+
+                                                                        <div class="row">
+
+                                                                            <div class="col-xs-12 col-sm-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Start Date:</label>
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].StartDate, "{0:dd MMM yyyy}", htmlAttributes: new
+                                                                               {
+                                                                                   placeholder = "Select Start Date",
+                                                                                   @Value = item.DateSE,
+                                                                                   @class = "form-control form-control-custom ",
+                                                                                   autocomplete = "off",
+                                                                                   @readonly = "readonly"
+                                                                               })
+                                                                                    @Html.HiddenFor(model => model.Activity[j].StartDate, "{0:dd MMM yyyy}")
+                                                                                    @*@Html.HiddenFor(m => m.Activity[j].StartDate, new { Value = item })*@
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                            <div class="col-xs-12 col-sm-2">
+                                                                                <div class="form-group">
+                                                                                    <label>On Site Time:</label>
+
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].StartTime, new
+                                                                               {
+                                                                                   @placeholder = "Enter On Site Time",
+                                                                                   @Value = item.StartTime @*@Value = item.EstimatedTime*@,
+                                                                                   @class = "form-control"
+                                                                               })
+                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].StartTime, "", new { @class = "text-danger validation-msg" })
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-xs-12 col-sm-2">
+                                                                                <div class="form-group">
+                                                                                    <label>off Site Time:</label>
+
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].EndTime, new { @placeholder = "Enter Off Site Time", @Value = item.EndTime, @class = "form-control" })
+                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].EndTime, "", new { @class = "text-danger validation-msg" })
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-xs-12 col-sm-2">
+                                                                                <div class="form-group">
+                                                                                    <label>Travel Time:</label>
+
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].TravelTime, new { @placeholder = "Enter Travel Time", @Value = item.TravelTime, @class = "form-control" })
+                                                                                    @Html.ValidationMessageFor(model => model.Activity[j].TravelTime, "", new { @class = "text-danger validation-msg" })
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-xs-12 col-sm-4">
+                                                                                <div class="form-group">
+                                                                                    <label>Description:</label>
+
+                                                                                    @Html.TextBoxFor(model => model.Activity[j].Description, new
+                                                                               {
+                                                                                   @placeholder = "Enter Description",
+                                                                                   @Value = item.Description @*@Value = item.Vendor_Name*@,
+                                                                                   @class = "form-control"
+                                                                               })
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+
+
+
+                                                                        j++;
+                                                                    }
+                                                                    TempData["VisitedDates"] = dates;
+                                                                    //if(TempData["VisitedDates"]!=null)
+                                                                    //{
+
+                                                                    //}
+
+                                                                }
+
+
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+
+
+
+                                                    @*Activity End*@
+
+
+                                                    @*//added by nikita on 08102024*@
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.IsComfirmation, new { @type = "checkbox", @class = "checkBox_" })
+                                                            <label for="checksuggetion" style="margin-left: 21px;margin-top: -23px;line-height:1">
+                                                                I hereby confirm that I have reviewed the content mentioned in the EVR and found it to be accurate and in compliance with the guidelines for preparing EVR.&nbsp;<br />
+                                                                <br />  <label style="color:#E12F24;"> Note:</label><br />
+                                                                <label>
+                                                                    After the above declaration, no further modifications will be allowed for this version of the Expediting Visit Report.
+                                                                </label>
+                                                            </label>
+                                                            @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 text-center">
+                                                        <button type="submit" id="myButton" class="btn btn-default insert-form-btn"> Update ER </button>
+                                                        <button type="button" id="GenerateReport" class="btn btn-default insert-form-btn" onclick="GenerateExpeditingReport()">Download ER</button>
+                                                    </div>
+
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="chartDiv1" style="width:650px;height:220px;" hidden></div>
+
+
+
+    <script  type="text/javascript">
+
+        $(document).ready(function () {
+            debugger;
+            @*var isConfirmation = @Model.IsComfirmation ? 1 : 0; // Convert bool to 1 or 0*@
+            var isConfirmation = @(Model.IsComfirmation ? 1 : 0); // Convert bool to 1 or 0
+
+            // Check if isConfirmation is not 1 (i.e., false)
+            if (isConfirmation !== 1) {
+                $("#btnsendreport").hide(); // Hide the button if the condition is met
+            }
+
+            if ($("#IsConfirmation").prop("checked") === true) {
+                $("#IsConfirmation").addClass("pointer-cursor");
+                $("#IsConfirmation").on("click", function (e) {
+                    e.preventDefault(); // Prevent unchecking
+                });
+            }
+
+            // When checkbox is checked, make it readonly
+            $("#IsConfirmation").change(function () {
+                if ($(this).prop("checked") === true) {
+                    $(this).addClass("pointer-cursor");
+                    $(this).on("click", function (e) {
+                        e.preventDefault(); // Prevent unchecking
+                    });
+                }
+            });
+
+
+            //if($("#IsComfirmation").prop("checked")==true){ //added by nikita yadav
+            //    //$("#myButton").hide();
+            //    $("#IsComfirmation").prop("disabled", true); // Make checkbox readonly
+
+            //}
+        })
+
+
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+        var ITRowCount = 1;
+
+        $(document).on("click", ".classAdd", function () {
+            var rowCount = $('.data-contact-person').length + 1;
+            if ($('#DTestTable tr').length - 1 >= ITRowCount) {
+                var count = $('#DTestTable tr').length - 1;
+                ITRowCount = count;
+            }
+
+            var contactdiv = '<tr class="trDomestic">' +
+                '<td><select name="Emp[' + ITRowCount + '].Represting" class="form-control CRepresting" id="IDRepresting' + ITRowCount + '"> <option value="">Select Action</option> <option value="Vendor/Sub Vendor">Vendor/Sub Vendor</option> <option value="TUVI">TUVI</option> <option value="Customer">Customer</option> </select>  </td>' +
+                '<td><input type="text" name="Emp[' + ITRowCount + '].Name" class="form-control CName"/></td>' +
+                '<td><input type="text" name="Emp[' + ITRowCount + '].Designation" class="form-control CDesignation"/></td>' +
+                '<td><input type="text" name="Emp[' + ITRowCount + '].Email" class="form-control CEmail"/></td>' +
+                '<td><button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">Add</button><button type="button" style="text-align:center" id="IbtnDelete" class="IdeleteContact btn btn btn-danger btn-xs">Remove</button> </td>' +
+
+                '</tr>';
+
+            $('#DTestTable').append(contactdiv);
+            ITRowCount++;
+        });
+
+        $('#myForm').submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ExpeditingReport", "Expediting")',
+                data: formData,
+                success: function (response) {
+
+                },
+                error: function (error) {
+
+                }
+            });
+        });
+    });
+
+        function GenerateExpeditingReport() {
+            // Function to trigger file download
+
+            var text = document.getElementsByClassName("CClosureRemarks")[0].value;
+
+            var letterCount = text.replace(/\s/g, '').length; // Counting all non-whitespace characters as letters
+
+            if (letterCount < 50) {
+                alert("Please enter at least 50 letters in the closure remarks.");
+                return false;
+            }
+            else {
+                
+            }
+
+
+            var PK_call_id = $("#PK_call_id").val();
+            CreateGanttChart(PK_call_id);
+            var chartData = encodeURIComponent($('#chartDiv1').html());
+
+            //Create a form element
+            var form = $('<form></form>');
+            //form.attr('action', 'https://tiimes.tuv-india.com/Expediting/GenerateExpeditingReport');
+            form.attr('action', 'http://localhost:54895/Expediting/GenerateExpeditingReport');
+            form.attr('method', 'POST');
+            form.attr('target', 'download-iframe'); // Target an iframe to handle the download response
+
+            // Append hidden input fields with necessary data
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'PK_call_id',
+                value: PK_call_id
+            }).appendTo(form);
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'chartData',
+                value: chartData
+            }).appendTo(form);
+
+            // Append the form to the document body
+            form.appendTo('body');
+
+            // Create an iframe to handle the download response
+            var iframe = $('<iframe name="download-iframe" style="display: none;"></iframe>');
+            iframe.appendTo('body');
+
+            // Submit the form
+            form.submit();
+
+            // Remove the form and iframe from the DOM after download
+            setTimeout(function () {
+                form.remove();
+                iframe.remove();
+            }, 600000); // Adjust timeout as needed
+        }
+
+        function CreateGanttChart(PK_call_id) {
+            var ExpeditingDate = moment($('#Date_Of_Expediting').val(), 'DD/MM/YYYY').format('MM/DD/YYYY');
+           // ExpeditingDate = ExpeditingDate[1] + '/' + ExpeditingDate[0] + '/' + ExpeditingDate[2];
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("CreateGanttChart", "Expediting")',
+                data: { PK_Call_Id: PK_call_id },
+                async: false,
+                success: function (response) {
+                    debugger;
+                    var costSheetData = JSON.parse(response);
+
+                    var chartData = [];
+
+                    // Loop through your costSheetData
+                    for (var i = 0; i < costSheetData.length; i++) {
+                        var activity = costSheetData[i];
+                        var stageName = activity.Stages;
+
+                        var expectedStartDate = moment(activity.ExpectedStartDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+                        var expectedEndDate = moment(activity.ExpectedEndDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+                        var actualStartDate = moment(activity.Actual_Start_Date, 'DD/MM/YYYY').format('MM/DD/YYYY');
+                        var actualEndDate = moment(activity.Actual_End_Date, 'DD/MM/YYYY').format('MM/DD/YYYY');
+
+                        var expectedProgressPer = parseFloat(activity.Expected_Progressper) / 100;
+                        var actualProgressPer = parseFloat(activity.Actual_Progressper) / 100;
+
+                        //expectedProgressPer = parseFloat(expectedProgressPer.toFixed(2));
+                        //actualProgressPer = parseFloat(actualProgressPer.toFixed(2));
+
+                        chartData.push({
+                            stageName: stageName,
+                            expected: {
+                                startDate: expectedStartDate,
+                                endDate: expectedEndDate,
+                                progress: expectedProgressPer
+                            },
+                            actual: {
+                                startDate: actualStartDate,
+                                endDate: actualEndDate,
+                                progress: actualProgressPer
+                            }
+                        });
+                    }
+
+                    var seriesData = [
+                        {
+                            name: 'Planned days',
+                            points: [],
+                            color: '#6678E4'
+                        },
+                        {
+                            name: 'Actual/Estimated days',
+                            points: [],
+                            color: '#FC8790'
+
+                        }, {
+                            name: 'Progress (Planned/Actual/Estimated)',
+                            color: '#000000'
+
+                           // background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 1) 0px, rgba(0, 0, 0, 1) 2px, transparent 2px, transparent 4px);
+                        }
+
+                    ];
+
+                    // Create series data for the chart
+                    chartData.forEach(function (data) {
+                        seriesData[0].points.push({
+                            name: data.stageName,
+                            y: [data.expected.startDate, data.expected.endDate],
+                            complete: data.expected.progress,
+                            color: '#6678E4', // Set color for expected stages
+                            label: {
+                                text: (data.expected.progress * 100).toFixed(2) + '%', // Show completion percentage
+                                align: 'right',
+                                style: {
+                                    fontSize: '10px',
+                                    color: 'black',
+                                    textOutline: '1px contrast',
+                                    padding: '2px',
+                                    offsetX: 15
+                                },
+                               // position: 'right'
+                            },
+                            defaultPoint_opacity: 0.6
+
+                        });
+
+                        seriesData[1].points.push({
+                            name: data.stageName,
+                            y: [data.actual.startDate, data.actual.endDate],
+                            complete: data.actual.progress,
+                            color: '#FC8790', // Set color for actual stages
+                            label: {
+                                text: (data.actual.progress * 100).toFixed(2) + '%', // Show completion percentage
+                                align: 'right',
+                                style: {
+                                    fontSize: '10px',
+                                    color: 'black',
+                                    textOutline: '1px contrast',
+                                    padding: '2px',
+                                    offsetX: 15
+                                }
+                            },
+                            defaultPoint_opacity: 0.6
+                        });
+                    });
+
+                    // Initialize the chart
+                    var chart = JSC.chart('chartDiv1', {
+                        debug: false, // Debug mode should be set to false for production
+                        type: 'horizontal column',
+                        zAxis_scale_type: 'stackedFull',
+                        height: 210,
+                        width: 650,
+                        yAxis_scale_type: 'time',
+                        yAxis_formatString: '',
+                        xAxis_defaultTick_label_style: { fontSize: 8, fontWeight: 'bold' },
+                       // defaultPoint_opacity: 0.6,
+                        legend: {
+                            template: '%icon %name', position: 'outside top',
+                            align: 'center'
+                            //position: 'outside top right'
+                        },
+                        yAxis: {
+                            markers: [
+                              {
+                                  value: ExpeditingDate,
+                                  color: '#FF9900',
+                                  label_text: 'Expediting Date(' + ExpeditingDate  + ')'
+                              }
+                            ]
+                        },
+                        series: seriesData,
+                        toolbar_visible: false,
+                        defaultSeries_bar_spacing: 8,// Set the bar spacing to 8 pixels,
+                        defaultPoint_label_autoHide: false
+
+                    });
+
+                },
+                error: function (error) {
+                    debugger;
+                    alert("Something went wrong");
+                }
+            });
+        }
+
+    </script>
+
+
+
+    @*<script>
+        $(document).on("click", ".IdeleteContact", function () {
+            ITRowCount = ITRowCount - 1;
+            $(this).closest("tr").remove(); // closest used to remove the respective 'tr' in which I have my controls
+
+        });
+        </script>*@
+                                                                        <script>
+                                                                                $(document).on("click", ".IdeleteContact", function () {
+                                                                                    $(this).closest("tr").remove(); // Remove the closest <tr> (row) to the clicked button
+                                                                                });
+                                                                        </script>
+
+
+                                                                        }
+
+<script>
+    $('#myButton').on('click', function () {
+        var checkbox1 = $('input.checkBox1:checked').length;
+        var checkbox2 = $('input.checkBox2:checked').length;
+        //var Contractual_DeliveryDate = $('#Contractual_DeliveryDate').val();
+        //var Expected_DeliveryDate = $('#Expected_DeliveryDate').val();
+
+        if (checkbox1 == "0") {
+            alert("Select TUV India Customer / End User Checkbox");
+            $("#Checkbox1").focus();
+            return false;
+        }
+        else {
+
+        }
+
+
+        if (checkbox2 == "0") {
+            alert("Select TUVI Executing Branch / TUV Originating Branch Checkbox");
+            $("#Checkbox1").focus();
+            return false;
+        }
+        else {
+
+        }
+
+        //-- added by satish yadav
+        let status = ChkTimesheet();
+        if (status == false) {
+            event.preventDefault();
+            return false;
+        }
+        //end satish
+
+        //if (Contractual_DeliveryDate == null && Contractual_DeliveryDate == '') {
+        //    alert("Select Contractual Delivery Date");
+        //    $("#Contractual_DeliveryDate").focus();
+        //    return false;
+        //}
+        //else {
+
+        //}
+        //if (Expected_DeliveryDate == null && Expected_DeliveryDate == '') {
+        //    alert("Select Expected Delivery Date");
+        //    $("#Expected_DeliveryDate").focus();
+        //    return false;
+        //}
+        //else {
+
+        //}
+
+    });
+</script>
+
+@*added by satish yadav*@
+<script>
+    function ChkTimesheet()
+    {
+        debugger;
+        $("#setvalue").val('false');
+        var arrayOfTimesheet = [];
+        var previousDate;
+        var id;
+        let totalStartTime = 0;
+        let totalEndTime = 0;
+        let totalTravelTime = 0;
+
+        var statesAvailable = '@ViewBag.Dates.Count';
+        for(var i=0;i<statesAvailable;i++)
+        {
+            var valId=document.getElementById("Activity_"+i+"__Id").value;
+            const dateSE=$("#Activity_"+i+"__StartDate").val();
+            if(i==0)
+            {
+                previousDate = dateSE;
+                id = valId;
+            }
+            if(previousDate==dateSE)
+            {
+                totalStartTime +=parseFloat($("#Activity_"+i+"__StartTime").val());
+                totalEndTime +=parseFloat($("#Activity_"+i+"__EndTime").val());
+                totalTravelTime +=parseFloat($("#Activity_"+i+"__TravelTime").val());
+            }
+            else {
+                let status= ValidateTimeSheet(totalStartTime,totalEndTime,totalTravelTime);
+                if(status==false)
+                {
+                    event.preventDefault()
+                    return false;
+                }
+                arrayOfTimesheet.push({ dateSE: previousDate, totalStartTime, totalEndTime, totalTravelTime,Id:id });
+                previousDate = dateSE;
+                id = valId;
+                totalStartTime = parseFloat($("#Activity_" + i + "__StartTime").val());
+                totalEndTime = parseFloat($("#Activity_" + i + "__EndTime").val());
+                totalTravelTime = parseFloat($("#Activity_" + i + "__TravelTime").val());
+            }
+        }
+        let timeSheetstatus=ValidateTimeSheet(totalStartTime,totalEndTime,totalTravelTime);
+        if(timeSheetstatus==false)
+        {
+            event.preventDefault()
+            return false;
+        }
+        arrayOfTimesheet.push({ dateSE: previousDate, totalStartTime, totalEndTime, totalTravelTime,Id:id });
+        CommonajaxCallForTimeSheet(arrayOfTimesheet);
+        const ajaxstatus=$("#setvalue").val();
+        if(ajaxstatus=='true')
+        {
+            event.preventDefault()
+            return false;
+        }
+
+    }
+    ////added by satish check totalcount
+</script>
+

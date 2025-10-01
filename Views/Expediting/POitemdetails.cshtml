@@ -1,0 +1,345 @@
+﻿
+@{
+    ViewBag.Title = "POitemdetails";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+<style>
+    /* Add your styles here */
+    .filter-container {
+        margin-bottom: 20px;
+    }
+
+    .filter-button {
+        margin: 0 5px;
+    }
+       .form-group {
+    cursor: not-allowed; /* Cursor shows a "not allowed" symbol */
+}
+     #pie-chart-container {
+            width: 300px;
+            height: 300px;
+        }
+</style>
+
+
+
+
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <br />
+            <br />
+            <div class="col-xs-12">
+                <div class="white-bg section-box-shadow">
+                    <h3 class="form-page-title">PO Item Wise Progress Status</h3>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                            <div class="form-box">
+                                <form method="post" enctype="multipart/form-data">
+
+                                    <div>
+                                        <label class="small" style="margin-left: 459px;font-size: 24px;color:#001ED2">Summary</label>
+
+                                    </div>
+                                    <div class="col-lg-12">
+                                        @*<label class="small" style="margin-left: 10px;font-size: 24px;color:#001ED2;">Summary-</label>*@
+                                        <label class="small" style="font-size: 24px;color:#001ED2;margin-left: 306px;">Total: </label>
+                                        <button type="button" class="form-group" style="background-color:#808080;border: none;font-size:18px;">
+                                            @(Model != null ? Model.Total.ToString() : "N/A")
+                                        </button>
+                                        @*<label style="font-size: 14px">@(Model != null ? Model.Total.ToString() : "N/A")</label>*@
+                                        <label class="small" style="font-size: 24px; color:#001ED2;">On time: </label>
+                                        <button type="button" class="form-group" style="background-color:rgb(255, 239, 51);border: none;font-size:18px;">
+                                            @(Model != null ? Model.OntimeCount.ToString() : "N/A")
+                                        </button>
+                                        @*<label style="font-size: 14px">@(Model != null ? Model.OntimeCount.ToString() : "N/A")</label>*@
+                                        <label style="font-size: 24px;color:#001ED2;">Early: </label>
+                                        <button type="button" class="form-group" style="background-color:rgb(174, 243, 51);border: none;font-size:18px;">
+                                            @(Model != null ? Model.earlycount.ToString() : "N/A")
+                                        </button>
+                                        @*<label style="font-size: 14px">@(Model != null ? Model.earlycount.ToString() : "N/A")</label>*@
+                                        <label style="font-size: 24px;color:#001ED2;">Delay: </label>
+                                        <button type="button" class="form-group" style="background-color:rgb(251, 95, 107);border: none;font-size:18px;">
+                                            @(Model != null ? Model.DelayCount.ToString() : "N/A")
+                                        </button>
+
+                                        <div id="pie-chart-container" style="margin-left: 360px;">
+                                            <canvas id="pie-chart"></canvas>
+                                        </div>
+                                    </div>
+                                    @*<button type="button" onclick="exportToExcel()" style="display: inline-block; background-color: #104193; color: white; border-radius: 0; padding: 8px; margin-left: 153px; margin-left: 1050px; width:auto">
+                                            Export to Excel
+                                        </button>*@
+                                    <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="exportToExcel()">
+                                        Export To Excel
+                                    </button>
+
+
+                                   
+
+
+                                    <div class="row">
+                                        <div id="DomesticCurrency" style="margin-left: inherit;width:inherit;margin-left: -68px;height: auto;width:1200px;overflow-x:auto">
+
+
+                                            <table id="Datatable" cellspacing="0" cellpadding="3" border="1" style="width: 130%">
+                                                <thead>
+                                                    <tr style="background-color:#104193;color:white">
+                                                        <th>PO Item Number</th>
+                                                        <th>Item Code OR Tag Number</th>
+                                                        <th>Item Description</th>
+                                                        <th>UOM</th>
+                                                        <th>PO Quantity</th>
+                                                        <th>Vendor Name</th>
+                                                        <th>Vendor Po Number</th>
+                                                        <th>Expediting Visit Date</th>
+                                                        <th>Expected Start Date</th>
+                                                        <th>Expected End Date</th>
+                                                        <th>Actual/Estimated Start Date</th>
+                                                        <th>Actual/Estimated End Date</th>
+                                                        <th>Expected Progress %</th>
+                                                        <th>Actual_Progress %</th>
+                                                        <th>Progress_Status</th>
+
+
+                                                    </tr>
+                                                    <tr class="fixed-width-column search-row" style="border:1px solid;  background:#001ED2;" id="searchRow">
+
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        var Obj = ViewData["POItemDetails"] as IList<TuvVision.Models.Progress>;
+
+                                                        foreach (var item in Obj)
+                                                        {
+                                                            <tr>
+
+                                                                <td>@item.itemnumbar</td>
+                                                                <td>@item.itemtag</td>
+                                                                <td>@item.ItemDescription</td>
+                                                                <td>@item.Unit</td>
+                                                                <td>@item.Quantity</td>
+                                                                <td>@item.vendor</td>
+                                                                <td>@item.VendorPO</td>
+                                                                <td>@item.ExpeditingDate</td>
+                                                                <td>@item.ExpectedStartDate</td>
+                                                                @*<td>@item.ExpectedStartDate</td>*@
+                                                                <td>@item.ExpectedEndDate</td>
+                                                                <td>@item.Actual_Start_Date</td>
+                                                                <td>@item.Actual_End_Date</td>
+                                                                <td>@item.Expected_Progressper</td>
+                                                                <td>@item.Actual_Progressper</td>
+                                                                <td>@item.ProgressStatus</td>
+
+
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+
+
+
+
+
+                                        </div>
+
+                                    </div>
+
+
+
+
+
+
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        let table = $('#Datatable').DataTable({
+            paging: true,
+            pageLength: 10,
+            initComplete: function () {
+                let api = this.api();
+
+                // For each column, add a search input
+                api.columns().every(function () {
+                    var that = this;
+
+                    $('input', this.header()).on('keyup change clear', function () {
+                        if (that.search() !== this.value) {
+                            that
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+
+
+                });
+            },
+            columnDefs: [
+                 {
+                     orderable: true,
+                     targets: [0, 1]
+                 },
+                 {
+                     orderable: true,
+                     targets: '_all'
+                 }
+            ]
+        });
+
+
+
+    });
+
+</script>
+
+
+<script>
+    //function exportToExcel() {
+       
+    //    document.querySelector('.search-row').style.display = 'none';
+
+    //    var wb = XLSX.utils.table_to_book(document.getElementById('Datatable'), { sheet: "Sheet1" });
+    //    XLSX.writeFile(wb, 'PO_Item_Details.xlsx');
+
+        
+    //    document.querySelector('.search-row').style.display = '';
+    //}
+
+    
+    function exportToExcel() {
+        var ws_data = [];
+        
+        var headers = [
+           'PO Item Number',
+           'Item Code OR Tag Number',
+           'Item Description',
+           'UOM',
+           'PO Quantity',
+           'Vendor Name',
+           'Vendor Po Number',
+           'Expediting Visit Date',
+           'Expected Start Date',
+           'Expected End Date',
+           'Actual/Estimated Start Date',
+           'Actual/Estimated End Date',
+           'Expected Progress %',
+           'Actual_Progress %',
+           'Progress_Status'
+        ];
+
+        ws_data.push(headers);
+
+        var rows = document.querySelectorAll('#Datatable tbody tr');
+        rows.forEach(function (row) {
+            var cells = row.querySelectorAll('td');
+            var rowData = Array.from(cells).map(cell => {
+                var text = cell.textContent.trim();
+
+               
+                if (cells[0] === cell) {
+                    return text; 
+                }
+                return text;
+            });
+            ws_data.push(rowData);
+        });
+
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, 'PO_Item_Details.xlsx');
+    }
+
+</script>
+
+<script>
+
+        var total = @((Model != null ? Model.Total.ToString() : "0"));
+        var onTime = @((Model != null ? Model.OntimeCount.ToString() : "0"));
+        var early = @((Model != null ? Model.earlycount.ToString() : "0"));
+        var delay = @((Model != null ? Model.DelayCount.ToString() : "0"));
+
+        // Convert these values to numbers
+        total = parseInt(total, 10);
+        onTime = parseInt(onTime, 10);
+        early = parseInt(early, 10);
+        delay = parseInt(delay, 10);
+
+        // Data for the pie chart
+        var ctx = document.getElementById('pie-chart').getContext('2d');
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['On Time', 'Early', 'Delay'],
+                datasets: [{
+                    data: [onTime, early, delay],
+                    backgroundColor: ['rgb(255, 239, 51)', 'rgb(174, 243, 51)', 'rgb(251, 95, 107)']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                var label = tooltipItem.label || '';
+                                if (label) {
+                                    label += ': ' + tooltipItem.raw;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+</script>
+
+
+

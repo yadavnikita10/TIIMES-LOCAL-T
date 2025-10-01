@@ -1,0 +1,1140 @@
+﻿@model TuvVision.Models.SubJobs
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "CreatSubJob";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<!--multiselect
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+filepond
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />-->
+
+
+@helper CustomRenderingOfColumn1(TuvVision.Models.SubJobs SubJobsmodel)
+{
+if (SubJobsmodel.Type == "SubSub Job")
+{
+        <a href="@Url.Action("CreatSubSubJob", "SubJobMaster", new {@PK_SubJob_Id = SubJobsmodel.PK_SubJob_Id,@SubType = SubJobsmodel.Type })" title="Edit">@SubJobsmodel.SubSubJob_No</a>
+
+}
+else
+{
+        <a href="@Url.Action("CreatSubSubJob", "SubJobMaster", new {@PK_SubJob_Id = SubJobsmodel.PK_SubJob_Id, @SubType = SubJobsmodel.Type })" title="Edit">@SubJobsmodel.SubJob_No</a>
+}
+}
+
+<style>
+    /*-- Delete color-profile --*/
+    ul.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+</style>
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+@*DATEPICKER*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.js" data-modules="effect effect-bounce effect-blind effect-bounce effect-clip effect-drop effect-fold effect-slide"></script>*@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script>
+
+    $(function () {
+        $(".PoDates").datepicker({
+            dateFormat: 'dd/mm/yy',//check change 'dd/MM/yy'
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+@*<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+    <script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+    <script src="~/AllJsAndCss/js/datatable-custom2.js"></script>*@
+<style>
+    .ui-widget-header {
+        background: #3677e6 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+</style>
+
+<!--Start of main content 3-->
+<div class="grey-bg-f3">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-5">
+            <div class="col-xs-12 form-col">
+
+                <div class="row">
+
+                    <!----  Dropdown Code---->
+                    @*<div class="col-xs-12 col-sm-3">
+                            <div class="form-group">
+                                <label>Sub Jobs No:</label>
+
+                                @if (ViewBag.SubCatlist != null)
+                                {
+                                    @Html.DropDownListFor(m => m.PK_SubJob_Id, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Sub Jobs--", new { @class = "form-control", @id = "PK_SubJob_Id", })
+
+                                }
+
+                                @Html.ValidationMessageFor(m => m.PK_SubJob_Id, "", new { @class = "text-danger", })
+
+                            </div>
+                        </div>*@
+
+                    <!---- End Dropdown Code---->
+                    @if (Convert.ToString(Session["CallLimit"]) != null && Convert.ToString(Session["CallLimit"]) != "")
+                    {
+                        <p style="color:red;font-weight:bold;text-align:center;">@Convert.ToString(Session["CallLimit"])</p>
+                        Session["CallLimit"] = null;
+                    }
+                    <div class="col-xs-12 text-right">
+                        <a href="@Url.Action("SubJobList", "SubJobMaster")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <div class="white-bg section-box-shadow">
+                            @if (Model.SubSubJob_No == "" || Model.SubSubJob_No == null)
+                            {
+                                <h3 class="form-page-title">Sub-Job Management</h3>
+                            }
+                            else
+                            {
+                                <h3 class="form-page-title">Sub-Sub-Job Management</h3>
+                            }                            
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <div class="form-box">
+                                        <form method="post" enctype="multipart/form-data" id="formcsj">
+
+                                            @Html.HiddenFor(m => m.PK_JOB_ID)
+                                            @Html.HiddenFor(m => m.PK_QTID)
+                                            @Html.HiddenFor(m => m.PK_SubJob_Id)
+                                            @Html.HiddenFor(m => m.SubSubJob_No)
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label>Service Type:</label>
+                                                        @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+
+                                                        @Html.TextBoxFor(model => model.Service_type, new { @placeholder = "Service Type", @class = "form-control", @readonly = "readonly" })
+                                                        @Html.ValidationMessageFor(model => model.Service_type, "", new { @class = "text-danger validation-msg" })
+
+                                                        @*<input type="text" class="form-control" placeholder="Service type" required>*@
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-6">
+                                                    @if (Model.PK_SubJob_Id == 0)
+                                                    {
+                                                        <div class="form-group">
+                                                            <label>Sub-Job Type:</label>
+                                                            @Html.DropDownListFor(m => m.Type, new List<SelectListItem>
+                                                              {
+                                                                new SelectListItem{ Text="Sub-Job", Value = "Sub Job" },
+                                                                new SelectListItem{ Text="SubSub-Job", Value = "SubSub Job" },
+
+                                                             }, new { @class = "form-control", @id = "Type", @disabled = "disabled" })
+                                                            @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="form-group">
+                                                            <label>Sub-Job Type:</label>
+                                                            @Html.DropDownListFor(m => m.Type, new List<SelectListItem>
+                                                      {
+                                                        new SelectListItem{ Text="Sub-Job", Value = "Sub Job" },
+                                                        new SelectListItem{ Text="SubSub-Job", Value = "SubSub Job" },
+
+
+                                                     }, new { @class = "form-control", @id = "Type", @disabled = "disabled" })
+                                                            @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>TUV India Control number:</label>
+                                                        @*<input type="text" class="form-control" placeholder="Control Number" required>*@
+                                                        @Html.TextBoxFor(model => model.Control_Number, new { @placeholder = "TUV India Control number", @class = "form-control", @readonly = "readonly" })
+                                                        @Html.ValidationMessageFor(model => model.Control_Number, "", new { @class = "text-danger validation-msg" })
+
+                                                    </div>
+                                                </div>
+                                                @if (Model.SubSubJob_No == "" || Model.SubSubJob_No == null)
+                                                {
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>TUV India Control (With Sub Job) No.:</label>
+                                                            @*<input type="text" class="form-control" placeholder="SubSub-Job-No">*@
+
+                                                            @Html.TextBoxFor(model => model.SubJob_No, new { @placeholder = "TUV India Control (With Sub Job) No.:", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubJob_No, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>TUV India Control (With Sub Job) No.:</label>
+                                                            @Html.TextBoxFor(model => model.SubSubJob_No, new { @placeholder = "TUV India Control (With Sub Job) No.:", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubJob_No, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>SAP Number:</label>
+
+                                                        @Html.TextBoxFor(model => model.SAP_No, new { @placeholder = "SAP Number", @class = "form-control", @readonly = "readonly" })
+                                                        @Html.ValidationMessageFor(model => model.SAP_No, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Customer Name:</label>
+                                                        @Html.TextBoxFor(model => model.Company_Name, new { @placeholder = "Company Name", @class = "form-control", @readonly = "readonly" })
+                                                        @Html.ValidationMessageFor(model => model.Company_Name, "", new { @class = "text-danger validation-msg" })
+                                                        @*<input type="text" class="form-control" placeholder="Company Here" required>*@
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>End Customer Name:</label>
+                                                        @if (Model.chkArc == true)
+                                                        {
+                                                            @Html.TextBoxFor(model => model.End_User, new { @placeholder = "End Customer Name", @class = "form-control" })
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.TextBoxFor(model => model.End_User, new { @placeholder = "End Customer Name", @class = "form-control", @readonly = "readonly" })
+                                                        }
+                                                        @Html.ValidationMessageFor(model => model.End_User, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label>Project Name:</label>
+                                                        @*<input type="text" class="form-control" placeholder="Project Name" required>*@
+                                                        @if (Model.chkArc == true)
+                                                        {
+                                                            @Html.TextBoxFor(model => model.Project_Name, new { @placeholder = "Project Name", @class = "form-control" })
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.TextBoxFor(model => model.Project_Name, new { @placeholder = "Project Name", @class = "form-control",@readonly="readonly" })
+                                                        }
+                                                        @Html.ValidationMessageFor(model => model.Project_Name, "", new { @class = "text-danger validation-msg" })
+                                                    </div>
+                                                </div>
+                                               
+                                            </div>
+                                            <div class="row">
+                                                
+                                           
+                                               
+                                                
+                                              
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>DEC/PMC/EPC Name :</label>
+                                                            @if (Model.chkArc == true)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.DECName, new { @placeholder = "DEC/PMC/EPC Name", @class = "form-control" })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.DECName, new { @placeholder = "DEC/PMC/EPC Name", @class = "form-control", @readonly = "readonly" })
+                                                            }
+
+                                                            @Html.ValidationMessageFor(model => model.DECName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>DEC/PMC/EPC Assignment No :</label>
+                                                            @if (Model.chkArc == true)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.DECNumber, new { @placeholder = "DEC/PMC/EPC Assignment No :", @class = "form-control" })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.DECNumber, new { @placeholder = "DEC/PMC/EPC Assignment No :", @class = "form-control", @readonly = "readonly" })
+                                                            }
+
+                                                            @Html.ValidationMessageFor(model => model.DECNumber, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <hr class="custom-hr1">
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <div class="form-group">
+                                                        @Html.CheckBoxFor(model => model.checkIFCustomerSpecific)
+                                                        <label for="InActive" style="color:black;">Report required in Customer Specific Format</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                    <div class="form-group">
+                                                        @Html.CheckBoxFor(model => model.chkArc, new { @onclick = "return false;" })
+                                                        <label for="InActive" style="color:black;">ARC Job</label>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                                <div class="row">
+                                                   
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label> Vendor Name:</label>
+
+                                                            @Html.TextBoxFor(model => model.vendor_name, new { placeholder = "Vendor Name", @class = "form-control form-control-custom vendor_name", onchange = "CheckValidCompany()" })
+                                                            @Html.ValidationMessageFor(model => model.vendor_name, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO No. (Client PO on Vendor) :</label>
+
+                                                            @Html.TextBoxFor(model => model.Vendor_Po_No, new { @placeholder = "PO No. (Client PO on Vendor)", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Vendor_Po_No, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>PO Date(Vendor):</label>
+
+                                                            @Html.TextBoxFor(model => model.Date_Of_PoDateTime, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "PO Date(Vendor)", @class = "form-control PoDates", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Date_Of_PoDateTime, "", new { @class = "text-danger validation-msg" })
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>PO Amount (INR) - Mandatory for % Job:</label>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.TextBoxFor(model => model.VendorPO_Amount, new { @placeholder = "Vendor PO Amount", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.VendorPO_Amount, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Vendor Address:</label>
+                                                        @Html.TextAreaFor(model => model.VendorAddress, new { @placeholder = "Vendor/Sub Vendor Address", @class = "form-control", @readonly = "readonly" })
+                                                        @Html.ValidationMessageFor(model => model.VendorAddress, "", new { @class = "text-danger validation-msg" })
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Vendor Contact Details:</label>
+
+                                                        @Html.TextAreaFor(model => model.Vendor_Contact, new { @placeholder = "Vender Contact Details", @class = "form-control" })
+                                                        @*@Html.TextAreaFor(model => model.vendor_name, new { @placeholder = "vendor name", @class = "form-control" })*@
+                                                        @Html.ValidationMessageFor(model => model.Vendor_Contact, "", new { @class = "text-danger validation-msg" })
+                                                        @*<textarea rows="3" class="form-control" placeholder="Type Vendor Contact details..."></textarea>*@
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12 hide">
+                                                    <div class="form-group">
+                                                        <label>Sub-Vendor Contact Details:</label>
+
+                                                        @Html.TextAreaFor(model => model.Sub_Vendor_Contact, new { @placeholder = "Sub-Vender Contact Details", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.Sub_Vendor_Contact, "", new { @class = "text-danger validation-msg" })
+                                                        @*<textarea rows="3" class="form-control" placeholder="Sub-Vendor Contact details...."></textarea>*@
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Customer Contact Details:</label>
+                                                        @Html.TextAreaFor(model => model.Client_Contact, new { @placeholder = "Client Contact Details", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.Client_Contact, "", new { @class = "text-danger validation-msg" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                                <div class="row">
+                                                    
+                                                    
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>TUVI Email ID:</label>
+
+                                                            @Html.TextAreaFor(model => model.Tuv_Email, new { @placeholder = "TUV Email", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Tuv_Email, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Customer Email ID:</label>
+
+                                                            @Html.TextAreaFor(model => model.Client_Email, new { @placeholder = "Client Email", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Client_Email, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Vendor Email ID:</label>
+
+                                                            @Html.TextAreaFor(model => model.Vendor_Email, new { @placeholder = "Vendor Email", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Vendor_Email, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                         
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <hr class="custom-hr1">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+
+                                                <div class="col-xs-12">
+                                                    <div class="form-group">
+                                                        @*<label>Attachment </label>*@
+                                                        <label><i class="fa fa-paperclip" style="color:black;"></i> Attachment: <span style="color:#ff0000;">*</span></label><br/>
+
+                                                        <span style="color:#E12F24;">
+                                                            <strong>&nbsp;&nbsp;&nbsp;Notes </strong> :
+                                                        </span>
+
+                                                        <span>
+                                                            1) Attach PO, QAP and Drawings etc. Related to this Sub/Sub-Sub job.<br />
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2) These attachments will be readily available to inspector on call page of this Sub/Sub-Sub Job.
+                                                        </span>
+
+                                                        @*<input type="file" class="inputupload" name="img_Banner" id="img_Banner" />*@
+                                                        @*<input type="file" class="inputupload" name="Image" id="img_Banner" multiple="multiple" />*@
+
+                                                        <input type="file" class="filepond" name="filepond" multiple id="FileUpload">
+                                                        <input hidden="hidden" id="hdfFileUpload" name="FileUpload" class="hidden" />
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <div class="row">
+                                                    @if(Model != null)
+                                                    {
+                                                        if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                        {
+
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <ul class="Attachment">
+                                                                        @foreach (var item in Model.FileDetails)
+                                                                        {
+                                                                            <li>
+                                                                                @*<a class="title" href="~/jobMaster/Download/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>*@
+                                                                                <a class="title" href="~/jobMaster/DownloadSubJobAttachement/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                                <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem">X</a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="color:red;text-align:center;font-weight:bold;">No Files Uploaded</p>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">There are no Attachments !</p>
+                                                    }
+                                                </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <hr class="custom-hr1">
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Sub Job Status (Final IRN issued):</label>
+
+                                                        @if (Model.PK_SubJob_Id == 0)
+                                                        {
+                                                            @Html.RadioButtonFor(m => m.Status, "Complete", new { id = "Complete" })
+                                                            <label for="Active" style="color:red;">Complete</label>
+                                                            @Html.RadioButtonFor(m => m.Status, "InComplete", new { @id = "InComplete", @Checked = "checked" })
+                                                            <label for="InActive" style="color:red;">InComplete</label>
+                                                        }
+                                                        else
+                                                        {
+                                                            if (Model.Status.ToString().ToUpper() == "COMPLETE")
+                                                            {
+                                                                @Html.RadioButtonFor(m => m.Status, "Complete", new { @id = "Complete", @Checked = "checked" })
+                                                                <label for="Active" style="color:red;">Complete</label>
+                                                                @Html.RadioButtonFor(m => m.Status, "InComplete", new { @id = "InComplete" })
+                                                                <label for="InActive" style="color:red;">InComplete</label>
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.RadioButtonFor(m => m.Status, "Complete", new { @id = "Complete" })
+                                                                <label for="Active" style="color:red;">Complete</label>
+                                                                @Html.RadioButtonFor(m => m.Status, "InComplete", new { @id = "InComplete", @Checked = "checked" })
+                                                                <label for="InActive" style="color:red;">InComplete</label>
+
+                                                            }
+                                                        }
+
+                                                        @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                    
+                                                </div>
+                                                
+                                            </div>
+
+
+
+
+
+                                                <div class="col-xs-12 text-center">
+
+                                                    @*<button type="reset" class="btn btn-default news-btn">Reset</button>*@
+                                                    @if (Model.PK_SubJob_Id == 0)
+                                                    {
+                                                        @*<button type="reset" class="btn btn-default news-btn"> Reset</button>*@
+                                                        <button type="submit" class="btn btn-default insert-form-btn" id="btncsj"><i class="fa fa-plus-circle"></i> Save </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        @*<button type="button" class="btn btn-default news-btn" data-toggle="modal" data-target="#myModal"></button>*@
+                                                        <a href="@Url.Action("IRNReportsBySubjob","SubJobMaster",new {@SubJob_No=Model.SubJob_No, @PK_SubJob_Id=Model.PK_SubJob_Id })" class="btn btn-default news-btn"> IRN List</a>
+                                                        <a href="@Url.Action("IVRReportsBySubjob","SubJobMaster",new {@SubJob_No=Model.SubJob_No, @PK_SubJob_Id=Model.PK_SubJob_Id })" class="btn btn-default news-btn"> IVR List</a>
+                                                        @*<a href="@Url.Action("NCRReportBySubjob","SubJobMaster",new {@SubJob_No=Model.SubJob_No, @PK_SubJob_Id=Model.PK_SubJob_Id })" class="btn btn-default news-btn"> NCR List</a>*@
+                                                       
+                                                    }
+
+                                                </div>
+@if (Model.PK_SubJob_Id == 0)
+{
+
+}
+else
+{
+    <div class="col-xs-12 text-center">
+        <button type="submit" class="btn btn-default insert-form-btn" id="btncsj"><i class="fa fa-plus-circle"></i> Update </button>
+    </div>
+}
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <hr class="custom-hr1">
+                                                </div>
+                                            </div>
+
+
+                                            @*<div class="col-xs-12 col-sm-offset-0 col-sm-10">
+                                                <span style="text-align:right;"><b>Consumed : @Model.Consume  Remaining: @Model.Remaining</b></span>
+
+                                                @Html.HiddenFor(m => m.Consume)
+                                                @Html.HiddenFor(m => m.Remaining)
+                                            </div><br />
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <hr class="custom-hr1">
+                                                </div>
+                                            </div>*@
+                                            
+                                            <table width="105%">
+                                                <tr>
+                                                    <td width="42%">
+                                                        <table class="display dataTable no-footer" style="overflow-y:auto;" id="MandaySummaryTable">
+                                                            <tr style="background-color:lightgray">
+                                                                <td colspan="4" style="text-align:center"><b>Workorder Mandays Summary</b></td>
+                                                            </tr>
+                                                          
+                                                            <tr style="background-color:#f0f0f0">
+                                                                <td style="text-align:center;width:50px;">PO</td>
+                                                                <td style="text-align:center;width:50px;">Estimated</td>
+                                                                <td style="text-align:center;width:50px;">Consumed</td>
+                                                                <td style="text-align:center;width:50px;">Remaining</td>
+                                                            </tr>
+
+                                                            <tr style="background-color:white">
+                                                                <td style="text-align:center;width:50px;">@Model.POMandays</td>
+                                                                <td style="text-align:center;width:50px;">@Model.ProposedCall</td>
+                                                                <td style="text-align:center;width:50px;">@Model.Consume</td>
+                                                                <td style="text-align:center;width:50px;">@Model.Remaining</td>
+                                                            </tr>
+
+                                                            @Html.HiddenFor(m => m.Consume)
+                                                            @Html.HiddenFor(m => m.Remaining)
+                                                            @Html.HiddenFor(m => m.ProposedCall)
+
+
+                                                        </table>
+                                                    </td>
+                                                    <td width="2%">&nbsp;</td>
+                                                    <td width="70%">
+                                                        @if (Model.lstCallSummary != null)
+                                                        {
+                                                            <table class="display dataTable no-footer" style="overflow-y:auto" id="CallSummaryTable">
+                                                                <tr style="background-color:lightgray">
+                                                                    <td colspan="5" style="text-align:center"><b>Sub Job Call Summary</b></td>
+                                                                </tr>
+                                                                <tr style="background-color:#f0f0f0">
+                                                                    <td style="text-align:center">Assigned</td>
+                                                                    <td style="text-align:center">Open</td>
+                                                                    <td style="text-align:center">Closed</td>
+                                                                    <td style="text-align:center">Not Done</td>
+                                                                    <td style="text-align:center">Cancelled</td>
+                                                                </tr>
+                                                                @foreach (var item in Model.lstCallSummary)
+                                                                {
+                                                                    <tr style="background-color:white">
+                                                                        <td style="text-align:center">@item.AssignedCalls</td>
+                                                                        <td style="text-align:center">@item.OpenCalls</td>
+                                                                        <td style="text-align:center">@item.ClosedCalls</td>
+                                                                        <td style="text-align:center">@item.NotDoneCalls</td>
+                                                                        <td style="text-align:center">@item.CancelledCalls</td>
+                                                                    </tr>
+                                                                }
+                                                            </table>
+                                                        }
+                                                    </td>
+
+                                                </tr>
+
+                                            </table>
+
+                                        </form>
+
+                                </div>
+
+                                </div>
+                            </div><!-- /.row -->
+                            @*<div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                <span style="text-align:right;"><b>Consumed : @Model.Consume  Remaining: @Model.Remaining</b></span>
+
+                                @Html.HiddenFor(m => m.Consume)
+                                @Html.HiddenFor(m => m.Remaining)
+                            </div><br />
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <hr class="custom-hr1">
+                                </div>
+                            </div>*@
+                            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                <h2 class="dynamic-page-title dynamic-page-title-2"><i class="fa fa-address-book"></i>List of Calls</h2>
+                                @if (Model.CostsheetApproval != null)
+                                {
+                                    if (Model.CostsheetApproval == "2")
+                                    {
+                                        <a href="@Url.Action("InsertCalls","CallsMaster",new {@PK_SubJob_Id=Model.PK_SubJob_Id })" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-plus-circle"></i> Add Calls</a>
+                                    }
+                                }
+                                else
+                                {
+                                    if (Model.Status == "InComplete")
+                                    {
+                                        <a href="@Url.Action("InsertCalls","CallsMaster",new {@PK_SubJob_Id=Model.PK_SubJob_Id })" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-plus-circle"></i> Add Calls</a>
+                                    }
+                                    else
+                                    {
+                                        <a onclick="myFunction()" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-plus-circle"></i> Add Calls</a>
+                                    }
+                                }
+
+                                
+
+                            </div>
+                          
+                            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                                    <tr>
+                                        <td>
+                                            @(Html
+                                                .Grid(Model.callListDashboard)
+                                                .Build(columns =>
+                                                {
+
+                                                    columns.Add().Titled("Call No").Encoded(false).RenderedAs(c => Html.ActionLink(c.Call_No, "GetCallsInfo", new { PK_Call_ID = c.PK_Call_ID })).Filterable(true).FilteredAs("custom").Sortable(true).Css("aa");
+
+                                                    @Html.HiddenFor(c => c.PK_SubJob_Id, new { id = "PK_SubJob_Id" });
+                                                    columns.Add(c => c.Actual_Visit_Date).Titled("Actual Visit Date");
+
+                                                    if (Model.SubSubJob_No != "")
+                                                    {
+                                                        columns.Add(c => c.SubSubJob_No).Titled("SubSub-Job No");
+                                                    }
+                                                    else
+                                                    {
+                                                        columns.Add(c => c.Sub_Job).Titled("Sub-Job No");
+                                                    }
+                                                    columns.Add(c => c.Inspector).Titled("Inspector Name");
+                                                    columns.Add(c => c.ItemsToBeInpsected).Titled("Items To Be Inspected");
+                                                    columns.Add(c => c.Status).Titled("Call Status");
+                                                    columns.Add().Titled("Action").Encoded(false).RenderedAs(c => Html.ActionLink(" ", "DeleteCallsData", new { PK_Call_ID = c.PK_Call_ID }, new { @class = "fa fa-trash", title = "Delete", onclick = "return confirm('Are you sure you wish to Delete this Record ?');" }));
+
+                                                })
+                                                .Pageable(pager =>
+                                                {
+                                                    //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                                    pager.ShowPageSizes = true;
+                                                    pager.PagesToDisplay = 3;
+                                                    pager.CurrentPage = 1;
+                                                    pager.RowsPerPage = 2;
+                                                })
+                                                .UsingFilterMode(GridFilterMode.Row)
+                                                .Empty("No Data Found")
+                                                .Filterable()
+                                                .Sortable()
+
+                                            )
+
+
+                                        </td>
+
+                                    </tr>
+                                </table><br />
+
+                            </div>
+                            
+                            <div class="row">
+                                <hr>
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <h2 class="dynamic-page-title dynamic-page-title-2"><i class="fa fa-address-book"></i>List of Sub SubJob Nos</h2>
+                                    @if (Model.CostsheetApproval != null)
+                                    {
+                                        if (Model.CostsheetApproval == "2")
+                                        {
+                                            <a href="@Url.Action("CreatSubSubJob", "SubJobMaster", new { @PK_SubJob_Id = Model.PK_SubJob_Id, @SubType = Model.Type })" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-plus-circle"></i> Add Sub SubJob</a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.Status == "InComplete")
+                                        {
+
+                                            <a href="@Url.Action("CreatSubSubJob", "SubJobMaster", new { @PK_SubJob_Id = Model.PK_SubJob_Id, @SubType = Model.Type })" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-plus-circle"></i> Add Sub SubJob</a>
+
+                                        }
+                                        else
+                                        {
+                                            <a onclick="myFunction()" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-plus-circle"></i>Add Sub SubJob</a>
+                                        }
+                                    }
+
+                                </div>
+
+                               
+                                
+                              
+
+                                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                    <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                                        <tr>
+                                            <td>
+                                                @(Html                                                
+                                                .Grid(Model.ListDashboard)
+                                                .Build(columns =>
+                                                {
+
+
+                                                    columns.Add(c => c.SubSubJob_No).Titled("Sub Sub-Job No").RenderedAs(c => CustomRenderingOfColumn1(c)).Sortable(true);
+                                                    columns.Add(c => c.V1).Titled("Vendor Name");
+                                                    columns.Add(c => c.V2).Titled("Sub Vendor Name");
+                                                    columns.Add(c => c.Company_Name).Titled("Customer Name");
+
+                                                    columns.Add(c => c.P1).Titled("Customer PO No on Vendor");
+                                                    columns.Add(c => c.P2).Titled("Vendor PO No on Sub Vendor");
+
+                                                    columns.Add(c => c.Status).Titled("Order Status");
+
+
+                                                    
+
+                                                })
+                                                .Pageable(pager =>
+                                                {
+                                                    pager.ShowPageSizes = true;
+                                                    pager.PagesToDisplay = 3;
+                                                    pager.CurrentPage = 1;
+                                                    pager.RowsPerPage = 2;
+                                                })
+                                                .UsingFilterMode(GridFilterMode.Row)
+                                                .Empty("No Data Found")
+                                                .Filterable()
+                                                .Sortable()
+
+                                                )
+
+
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <hr>
+                                </div>
+
+
+                               
+
+
+
+                            </div>
+
+                        </div><!-- /.box-shadow -->
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.col -->
+
+
+
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+    <!--End of header-->
+
+</div>
+<!--End of main content 3-->
+<script>
+    function myFunction() {
+        alert("Final IRN issued,You can't create call for this Sub-Job/Po Number..");
+    }
+</script>
+
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+
+<script>
+FilePond.registerPlugin(
+// encodes the file as base64 data
+FilePondPluginFileEncode,
+// validates the size of the file
+FilePondPluginFileValidateSize,
+// corrects mobile image orientation
+FilePondPluginImageExifOrientation,
+// previews dropped images
+FilePondPluginImagePreview
+);
+// Select the file input and use create() to turn it into a pond
+FilePond.create( document.querySelector('.filepond'));
+</script>
+
+<script>
+FilePond.setOptions({
+server: '@Url.Action("SaveFile", "SubJobMaster")'
+});
+</script>
+
+<script>
+    var SummaryExtension = false;
+    var fileExtension = ["msg", "MSG", "pdf", "PDF", "xls", "xlsx", "doc", "DOC", "docx", "DOCX", "png", "PNG", "jpg", "JPG", "jpeg", "JPEG", "gif", "GIF"];
+    $("#FileUpload").change(function (e) {
+        debugger;
+        var files = $("#FileUpload input[type='file']").get(0).files;
+
+        for (var index = 0; index < files.length; index++) {
+            var singleExtension = e.target.files[index].name.split('.').pop();
+            var Condition = fileExtension.includes(singleExtension);
+            if (Condition == true) {
+                SummaryExtension = true;
+            }
+            else {
+                alert("Only formats are allowed : " + fileExtension.join(','));
+                SummaryExtension = false;
+
+                return;
+            }
+        }
+            var fileData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                fileData.append("FileUpload input[type='file']", files[i]);
+            }
+            var xhr = new XMLHttpRequest();
+            var link = '@Url.Action("TemporaryFilePathDocumentAttachment", "SubJobMaster")';
+            xhr.open('POST', link, 'true');
+            xhr.send(fileData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var data = xhr.responseText;
+                    data = data.replace(/"/g, "");
+                    $("#DocumentAttached").val(data);
+                }
+        }
+    })
+</script>
+
+
+<script>
+    $("#btncsj").click(function myfunction() {
+        if (validateform() == false) {
+            return false;
+        }
+        else {
+            $("#formcsj").submit();
+        }
+    });
+    function validateform() {
+
+        var PODate = $("#Date_Of_PoDateTime").val();
+        var Type = $("#Type").val();
+        var chkArc ="";
+        if ($('#chkArc').prop('checked'))
+        {
+            chkArc = "1"
+        }
+        else {
+            chkArc = "0"
+        }
+
+        
+
+        if ($("#vendor_name").val() == "" || $("#vendor_name").val() == null) {
+            alert("Please enter Vendor Name !");
+            $("#vendor_name").focus()
+            return false;
+        }
+        if (chkArc == "0") {
+            if (Type == "Sub Job") {
+                if ($("#Vendor_Po_No").val() == "" || $("#Vendor_Po_No").val() == null) {
+                    alert("Please enter Vendor PO No !");
+                    $("#Vendor_Po_No").focus()
+                    return false;
+                }
+
+                if (PODate == "" || PODate == null) {
+                    alert("Please select PO Date !");
+                    $("#Date_Of_PoDateTime").focus()
+                    return false;
+                }
+            }
+        }
+  
+    }
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $(".vendor_name").autocomplete({
+            source: function (request, response) {
+
+                $.ajax({
+                    url: '@Url.Action("GetCompanyName", "subJobMaster")',
+                    data: "{ 'prefix': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        response($.map(data, function (item) {
+                            debugger
+                            return { label: item.vendor_name, value: item.vendor_name };
+
+
+                        }));
+                    },
+                    error: function (response) {
+                       // alert(response.responseText);
+                    },
+                    failure: function (response) {
+                     //   alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                //if (u.item.val == -1) {
+                //    return false;
+                //}
+                //$("#hfCompanyName").val(i.item.val);
+            },
+            minLength: 2
+        });
+
+    });
+
+    $('#vendor_name').blur(function () {
+      //  alert(this.value);
+        //$('#EndCustomer').val($('#CompanyName').val())
+        $.ajax({
+            url: '@Url.Action("GetCompanyAddress", "subJobMaster")',
+            data: "{ 'Prefix': '" + this.value + "'}",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                  //  alert(response);
+                    $('#VendorAddress').val(response);
+               
+            },
+            error: function (response) {
+                // alert(response.responseText);
+            },
+            failure: function (response) {
+                //   alert(response.responseText);
+            }
+        });
+    })
+
+</script>
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.deleteItem').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#EQ_ID").val();
+            if (confirm('Do you really want to delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteFile", "SubJobMaster")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("There is something wrong. Please try again.");
+                })
+
+            }
+        });
+    });
+
+</script>
+
+
+<script>
+    function CheckValidCompany() {
+            debugger;
+            // $("#Status").html('<font color="blue">Checking ...</font>'),
+            $.post("@Url.Action("CheckValidCompany", "EnquiryMaster")",
+                {
+                    companyname: $("#vendor_name").val()
+                },
+                function (data) {
+                    debugger;
+                    if (data == 0) {
+
+                        alert("Vendor Name is not Valid !! Please select Vendor Name from suggestion")
+                        $('#vendor_name').val("");
+
+                        //$("#Status").html('<font color="red">Coupan Code is  already Use !</font>');
+                    }
+                    if (data == 1) {
+
+
+
+
+                    }
+
+
+
+                });
+
+
+        }
+</script>

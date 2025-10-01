@@ -1,0 +1,575 @@
+﻿@model TuvVision.Models.InvoiceInstructionModel
+
+@{
+    ViewBag.Title = "InvoiceInstructionDetails";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+}
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+
+
+
+<script type="text/javascript">
+  
+
+    function updateTextArea() {
+        var allVals = [];
+        $('#table1 :checked').each(function () {
+            if ($(this).val() != 'on') {
+                allVals.push($(this).val());
+            }
+
+        });
+        $('#hdnContent').val(allVals);
+    }
+
+    $(function () {
+        $('#table1 input').click(updateTextArea);
+        updateTextArea();
+    });
+
+$(document).ready(function () {
+    $("#ckbCheckAll").click(function () {
+        $(".checkBoxClass").prop('checked', $(this).prop('checked'));
+        updateTextArea();
+    });
+});
+</script>.
+
+
+
+<div class="white-bg section-box-shadow">
+
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+            <div class="form-box">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                        <a href="@Url.Action("JobCreation", "JobMaster", new { @PK_JOB_ID = Model.PK_JOB_ID })" class="btn btn-default insert-form-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                    </div>
+                    <div class="col-xs-12">
+                        @*<h3 class="dynamic-page-title dynamic-page-title-2  ">Invoice Instruction Details</h3>*@
+                        <div class="row assignfixedwidth rp-15">
+                            <h3 class="form-page-title">Invoice Instruction Details</h3>
+                            <div class="col-xs-12">
+                                <hr class="custom-hr">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form method="post" enctype="multipart/form-data" id="formiid">
+                    <div class="row">
+
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+                                <label>Job Number:</label>
+                                @Html.TextBoxFor(model => model.InvoiceAmount2, new { @class = "form-control hide" })
+                                @Html.TextBoxFor(model => model.PK_JOB_ID, new { @class = "form-control hide", @readonly = "readonly" })
+                                @Html.TextBoxFor(model => model.Job_Number, new { @class = "form-control", @readonly = "readonly" })
+
+                            </div>
+                        </div>
+
+                      
+
+                        
+                        
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+                                <label> Order Type:</label>
+                                @Html.TextBoxFor(model => model.OrderType, new { @placeholder = "Order Type", @class = "form-control", @readonly = "readonly" })
+
+                                @Html.ValidationMessageFor(model => model.OrderType, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+                                <label>Order Rate(%):</label>
+
+                                @Html.TextBoxFor(model => model.OrderRate, new { @placeholder = "Order Rate", @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.OrderRate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+                                <label>GST Detail:</label>
+
+                                @Html.TextBoxFor(model => model.GSTDetail, new { @placeholder = "GST Detail", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.GSTDetail, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+                                <label>PO Amount:</label>
+                                @Html.TextBoxFor(model => model.PoAmount, new { @placeholder = "PO Amount", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PoAmount, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+                                <label> Balance:</label>
+
+                                @Html.TextBoxFor(model => model.Balance, new { @placeholder = "Balance", @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Balance, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        @if (ViewData["SubJob_NoByJobNo"] != null)
+                        {
+                            <div class="col-xs-12 col-sm-3" id="autoUpdate">
+                                <div class="form-group">
+                                    <label>Multiple Sub Job No :</label>
+                                    @Html.CheckBoxFor(model => model.ChkMultipleSubJobNo, new { @id = "chkPassport", @onclick = "ShowHideDiv(this)" })
+                                    <select id="Auditee" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName" placeholder="Select Option">
+                                        @{
+                                            foreach (var item in ViewData["SubJob_NoByJobNo"] as IEnumerable<TuvVision.Models.CallsModel>)
+                                            {
+                                                if (ViewData["ListPKSubJobChecked"] != null)
+                                                {
+                                                    if (Convert.ToString(ViewData["ListPKSubJobChecked"]).Contains(item.DPK_SubJob_Id.ToString()))
+                                                    {
+                                                        <option selected="selected" value="@item.DPK_SubJob_Id">@item.DSubJob_No&nbsp; &nbsp;</option>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.DPK_SubJob_Id">@item.DSubJob_No&nbsp; &nbsp;</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.DPK_SubJob_Id">@item.DSubJob_No&nbsp; &nbsp;</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-xs-12 col-sm-3">
+                            <div class="form-group">
+                                <label>From Date:</label>
+                                @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "From Date", @class = "form-control Fromdate", autocomplete = "off" ,@id= "FromDate" })
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                            <div class="form-group">
+                                <label>To Date:</label>
+                                @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "To Date", @class = "form-control ToDate", autocomplete = "off", @id = "ToDate" })
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                            <div class="form-group">
+                             
+                                <button type="submit" class="btn btn-default insert-form-btn" id="btnSearch" value="Search" name="Command"><i class="fa fa-plus-circle"></i> Search</button>
+                            </div>
+                        </div>
+                        
+                        @*<input hidden="hidden" id="hdnContent" name="hdnContent" class="hidden" />*@
+                        <input type="text" id="hdnContent" name="hdnContent" class="hidden" />
+
+                    </div>
+                @{
+                    if (ViewData["NoReport"] != null)
+                    {
+                        <label style="color:red;">@Convert.ToString(ViewData["NoReport"])</label>
+                    }
+
+
+                    var viewDataProd = ViewData["ListDashboard"] as IList<TuvVision.Models.InvoiceList>;
+                }
+                
+                @if (viewDataProd != null)
+                {
+                    <div class="row">
+                        
+                        <div class="col-xs-12" style="overflow:scroll">
+                            <table id="table1" class="table table-bordered " style="border:1px" cellspacing="0" width="100%">
+                                <thead style="background-color:#001ED2;border:1px;color:white;">
+                                    <tr>
+                                        <th><input type="checkbox" id="ckbCheckAll" /></th>
+                                        <th>Id</th>
+
+                                        <th>Report Name</th>
+                                        <th>Inspection Date</th>
+                                        <th>Created By</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var asset in ViewData["ListDashboard"] as IList<TuvVision.Models.InvoiceList>)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @Html.CheckBoxFor(m => m.IVRListData[j].IVRChekbox, new { @class = "checkBoxClass", @value=asset.Id })
+                                            </td>
+                                            <td>@asset.Id</td>
+                                            <td>@asset.reportName</td>
+                                            <td>@asset.Inspectiondate</td>
+                                            <td>@asset.CreatedBy</td>
+
+                                        </tr>
+                                        j++;
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+
+
+                        </div>
+                      
+                    </div>
+}   
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Cost Center:</label>
+                                @if (ViewBag.SubCatlist != null)
+                                {
+                                    @Html.DropDownListFor(m => m.ServiceCode, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Cost Center--", new { @class = "form-control", @id = "Pk_CC_Id" })
+                                    @Html.ValidationMessageFor(model => model.ServiceCode, "", new { @class = "text-danger validation-msg" })
+                                }
+                            </div>
+                        </div>
+
+                      
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Invoice Number:</label>
+
+                                @Html.TextBoxFor(model => model.InvoiceNumber, new { @placeholder = "Invoice Number", @class = "form-control", @id = "InvoiceNumber", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+                                <label>Invoice Date:</label>
+
+                                @*@Html.TextBoxFor(model => model.InvoiceDate, "{0:dd MMM yyyy}", new { @placeholder = "Invoice Date", @class = "form-control", @type = "date"  })*@
+                                @Html.TextBoxFor(model => model.InvoiceDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Invoice Date", @class = "form-control form-control InvoiceDate", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-2">
+                            <div class="form-group">
+                                <label>Invoice Amount:</label>
+
+                                @Html.TextBoxFor(model => model.InvoiceAmount, new { @placeholder = "Invoice Amount", @class = "form-control", @id = "InvoiceAmount" })
+                                @Html.ValidationMessageFor(model => model.InvoiceAmount, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        
+                       
+
+                     
+                        <div class="col-xs-12 col-sm-8">
+                            <div class="form-group">
+                                <label>Invoice Details:</label>
+
+                                @*@Html.TextBoxFor(model => model.Invoicetext, new { @placeholder = "Text", @class = "form-control", @id = "InvoiceText" })*@
+                                @Html.TextAreaFor(model => model.Invoicetext, new { @placeholder = "Text", @class = "form-control", @id = "InvoiceText" })
+                                @Html.ValidationMessageFor(model => model.Invoicetext, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                        <div class="col-xs-12 text-center">
+
+                            <button type="submit" class="btn btn-default insert-form-btn" id="btniid"><i class="fa fa-plus-circle"></i> Save</button>
+
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Contact Details By Manoj -->
+
+
+</div><!-- /.box-shadow -->
+
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div>   @*class="container-fluid"*@
+        <br />
+        @*<div class="row assignfixedwidth rp-15">
+
+                <h3 class="form-page-title">Item Description</h3>
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div>
+            </div>*@
+
+        <div class="col-xs-12">
+            <table id="example" class="display custom-table" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Job No</th>
+                        <th>Subjob/Sub Subjob No</th>
+                        <th>Invoice No</th>
+                        <th>Po Amount</th>
+                        <th>Invoice Amount</th>
+                        <th>Balance</th>
+                        <th>Invoice Date</th>                        
+                        <th>Order Type</th>
+                        <th>Cost Center</th>
+                        <th>SAP Invoice</th>
+                        <th>Order Rate(%)</th>                        
+                        <th>GST Details</th>
+                        <th class="remove-search">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+
+                    @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.InvoiceInstructionModel>)
+                    {
+                        <tr>
+                            <td>@item.JobNo</td>
+                            <td>@item.SubJobNo</td>
+                            <td>@item.InvoiceNumber</td>
+                            <td>@item.PoAmount</td>
+                            <td>@item.InvoiceAmount</td>
+                            <td>@item.Balance</td>
+                            <td>@item.InvoiceDate</td>
+                            <td>@item.OrderType</td>
+                            <td>@item.ServiceCode</td>
+                            <td>@item.SAPInvNo</td>
+
+                            <td>@item.OrderRate</td>
+                      
+                            <td>@item.GSTDetail</td>
+                            <td class="less-width">
+                                <a href="@Url.Action("InvoiceInstructionDetails", "InvoiceInstruction", new {@INV_ID = item.INV_ID, @PK_JOB_ID = item.PK_JOB_ID })" title="Edit"><span class="fa fa-pencil"></span>&nbsp;</a>
+                                <a href="@Url.Action("DeleteInstructionDetails", "InvoiceInstruction", new {@INV_ID = item.INV_ID, @sid = item.PK_JOB_ID, @blnamt = Model.Balance, @invamt = item.InvoiceAmount})" onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
+                                @{
+                                    if ((Convert.ToString(TempData["InsertCompany"])) != "" && Convert.ToString(TempData["InsertCompany"]) != null)
+                                    {
+                                        TempData["InsertCompany"] = null;
+                                        <script type="text/javascript" language="javascript">
+                                            alert("Item Description Added Successfully!!!!");
+                                        </script>
+                                    }
+                                    if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
+                                    {
+                                        TempData["UpdateCompany"] = null;
+                                        <script type="text/javascript" language="javascript">
+                                            alert("Invoice Amount Updated Successfully");
+                                        </script>
+                                    }
+                                }
+                            </td>
+
+                        </tr>
+                                    }
+
+                </tbody>
+
+            </table>
+        </div><!-- /.data table col -->
+
+
+    </div><!-- /.container-fluid -->
+    <!--End of header-->
+
+</div>
+
+<!--End of Ashwini Code-->
+}
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#Auditee').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        
+       // alert($("#chkPassport").checked);
+        
+        if (chkPassport.checked)
+        {            
+            $('.form-multiselect-city').multiselect('enable');
+        }
+        else
+        {
+            $('.form-multiselect-city').multiselect('disable');            
+        } 
+    });
+
+    $("#chkPassport").click(function () {
+        if ($(this).is(":checked")) {
+            $('.form-multiselect-city').multiselect('enable');
+        } else {
+            $('.form-multiselect-city').multiselect('disable');
+        }
+    });
+
+    
+    $("#btnSearch").click(function myfunction() {
+        var Fromdt = $("#FromDate").val();
+        var Todt = $("#ToDate").val();
+     
+        
+        if (Fromdt == null || Fromdt == "")
+        {
+            alert("Please Enter From Date and ToDate both");
+            $("#FromDate").focus();
+            return false;
+
+        }
+
+        if (Todt == null || Todt == "") {
+            alert("Please Enter From Date and ToDate both");
+            $("#ToDate").focus();
+            return false;
+
+        }
+     
+        
+        $("#formiid").submit();
+        
+    });
+
+
+    $("#btniid").click(function myfunction() {
+      //  alert(1);
+        if (validateform() == false) {
+            return false;
+        }
+        else {
+            $("#formiid").submit();
+        }
+    });
+
+
+    function validateform() {
+      //  alert(2);
+        var invAmt = $("#InvoiceAmount").val();
+        var invdt = $("#InvoiceDate").val();
+        var invNumber = $("#InvoiceNumber").val();
+        var IVRReport = $('#hdnContent').val();
+        
+        if (IVRReport == null || IVRReport == "") {
+            alert("Please select Visit / IRN Reports");
+            $("#FromDate").focus();
+            return false;
+
+        }
+      //  alert(3);
+        if (chkPassport.checked)
+        {
+            var subjob = $('.form-multiselect-city').multiselect().val();
+           
+            if (subjob == "" || subjob == null)
+            {
+                alert("Please select atleast 1 Sub Job Number");
+                $('.form-multiselect-city').multiselect().focus();
+                return false;
+            }               
+        }
+       // alert(4);
+        if(invAmt==null || invAmt =="")
+        {
+            alert("Please Enter Invoice Amount");
+            InvoiceAmount.focus();
+            return false;
+
+        }
+       // alert(5);
+        if (invdt == null || invdt == "") {
+            alert("Please Enter Invoice Date");
+            $("#InvoiceDate").focus();
+            return false;
+        }
+      //  alert(6);
+        if(invNumber==null || invNumber == "")
+        {
+            alert("Please Enter Invoice Number");
+            InvoiceNumber.focus();
+            return false;
+
+        }
+
+      //  alert(7);
+        
+
+
+        
+    }
+</script>
+
+@*DATEPICKER*@
+@*<script src="https://code.jquery.com/jquery-1.10.2.js"></script>*@
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script>
+
+    $(function () {
+        $(".InvoiceDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+
+    $(function () {
+        $(".Fromdate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+
+    $(function () {
+        $(".ToDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+
+</script>

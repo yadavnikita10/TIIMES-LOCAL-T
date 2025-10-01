@@ -1,0 +1,265 @@
+﻿
+@{
+    ViewBag.Title = "ClientFeedbackHistory";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+}
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link href="~/AppJS/CSS/CustomStyle.css" rel="stylesheet" />
+<script src="~/AppJS/FeedbackDashboard.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+<!-- Bootstrap -->
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+
+<!-- Start Other stylesheets -->
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+
+<style>
+    .table-container {
+        width: 1300px; /* Adjust the width as needed */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        overflow-y: hidden;
+    }
+
+    /* Set the size of the table */
+    .fixed-size-table {
+        width: 100%;
+        table-layout: fixed; /* Fixed table layout */
+    }
+
+        /* Style the table cells (optional) */
+        .fixed-size-table td {
+            border: 1px solid #00003C;
+            font-size: 13px;
+            text-transform: initial;
+    word-break: break-all;
+    padding: 8px 10px;
+        }
+       
+</style>
+
+
+<div class="main-content3 xs-max-height">
+    <div class="container-fluid">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-10">
+                    <a href="@Url.Action("Welcome","Login")" class="logo">
+                        <img src="~/AllJsAndCss/images/logoN.png" alt="" style="max-width: 210%;margin-top: -59px;">
+                    </a>
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left:147px;padding-top:10px;font-family:'TNG Pro'; ">TUV India Private Limited <br />Client Feedback History</h3>
+                </div>
+
+                <div class="col-lg-2" style="padding-right:20px;">
+                    <button type="button" class="btn btn-info" style="margin-top: 16px;margin-left: 37px;width: 150px;background-color: #104193;color:white;border-radius: 0;" onclick="Redirect()">Go Back</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <form>
+                <div class="row form-group">
+                    <div>
+                        <div class="col-sm-2">
+                            <label for="ClientName" style="font-family:'TNG Pro';font-size:13px;">Client Name :</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" style="font-family:'TNG Pro';font-size:13px;" class="form-control" id="txtClientName">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-sm-2">
+                            <label for="ClientAddress" style="font-family:'TNG Pro';font-size:13px;">Client Address:</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" style="font-family:'TNG Pro';font-size:13px;" id="txtClientAddress">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div>
+                        <div class="col-sm-2">
+                            <label for="JobNo" style="font-family:'TNG Pro';font-size:13px;">Job No :</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" style="font-family:'TNG Pro';font-size:13px;" id="txtJobNo">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-sm-2">
+                            <label for="Remarks" style="font-family:'TNG Pro';font-size:13px;">Feedback Remarks :</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" style="font-family:'TNG Pro';font-size:13px;" id="txtRemarks">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-12 table-container">
+            <div class="row">
+
+               
+                    <table id="tblFeedbackHistory" class="display dataTable no-footer fixed-size-table">
+                        <thead class="thead-dark">
+                            <tr style="background-color: #104193; border:1px solid #00003C; color: #ffffff; text-align:center;">
+                                <th>ID</th>
+                                <th class="hidden">Job No</th>
+                                <th>Email ID</th>
+                                <th>Received  Date</th>
+                                <th>Stage Name</th>
+                                <th>Question</th>
+                                <th>Ans</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                
+                </div>
+            </div>
+                <div class="row divCenter">
+                    <div class="col-lg-6">
+                        <input type="button" class="btn btn-primary" name="Ok" value="Ok" onclick="Redirect()" style="align-content:flex-end; background-color: #001ED2;color:white;" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                debugger;
+                // Get the query string from the current URL
+                var queryString = window.location.search;
+
+                // Check if the query string contains a specific parameter
+                if (queryString.indexOf("tkn_key") >= 0) {
+                    var searchParams = new URLSearchParams(queryString);
+                    var paramValue = searchParams.get("tkn_key");
+                    if (paramValue != "") {
+                        GetFeedbackHistory(paramValue);
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'info',
+                            //title: 'Oops...',
+                            text: 'Kindly Use Link to fill Feedback.... Link Send on email....'
+                        });
+                        window.location.href = '/Feedback/Message_Stage';
+                        //Swal.fire('Kindly Use Link to fill Feedback.... Link Send on email....');
+                        //alert("Kindly Use Link to fill Feedback.... Link Send on email....")
+                    }
+                }
+                else {
+                    Swal.fire({
+                        icon: 'info',
+                        //title: 'Oops...',
+                        text: 'Kindly Use Link to fill Feedback.... Link Send on email....'
+                    });
+                    window.location.href = '/Feedback/Message_Stage';
+                    //Swal.fire('Kindly Use Link to fill Feedback.... Link Send on email....');
+                    //alert("Kindly Use Link to fill Feedback.... Link Send on email....")
+                }
+
+
+            });
+
+        </script>
+
+
+        <script>
+
+            function GetFeedbackHistory(tkn_key) {
+                debugger;
+                $.ajax({
+                    type: "GET",
+                    //url: "/Customer/FeedbackDashboard/Get_ClientFeedbackHistory",
+                    url: "/FeedbackDashboard/Get_ClientFeedbackHistory",
+                    //url: '@Url.Action("Get_ClientFeedbackHistory", "FeedbackDashboard")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: { tkn_key: tkn_key },
+                    success: function (response) {
+
+                        debugger;
+
+
+                        var a = JSON.parse(response);
+                        var aa = JSON.stringify(response);
+
+
+                        if (a == "Error") {
+                        }
+                        else {
+                            var ID = a[0].ID;
+                            $("#txtClientName").val(a[0].NameOfOrg);
+                            $("#txtClientAddress").val(a[0].AddressOfOrg);
+                            $("#txtJobNo").val(a[0].JobNo);
+                            $("#txtRemarks").val(a[0].FeedbackRemarks);
+
+
+                            var Id = '';
+
+                            for (var i = 0; i < a.length; i++) {
+
+                                var c = i + 1;
+                                tr = $('<tr/>');
+                                if (Id == a[i].ID) {
+
+                                    tr.append("<td class='tdLeft'>" + a[i].ID + "</td>");
+                                    tr.append("<td class='tdLeft' hidden>" + a[i].JobNo + "</td>");
+                                    tr.append("<td class='tdLeft'>" + a[i].EmailId + "</td>");
+                                    tr.append("<td class='tdLeft'>" + a[i].CreatedDate + "</td>");
+                                    tr.append("<td class='tdLeft'>" + a[i].StageName + "</td>");
+                                    tr.append("<td class='tdLeft'>" + a[i].Question + "</td>");
+                                    tr.append("<td class='tdLeft'>" + a[i].Answer + "</td>");
+                                }
+                                else {
+                                    Id = a[i].ID;
+                                    tr.append("<td class='tdLeft' colspan='6' style='background: #001ED2;color: white;'>" + a[i].NameOfRespondant + "</td>");
+                                    i--
+                                }
+                                $('#tblFeedbackHistory').append(tr);
+
+                            }
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Code to handle errors goes here
+                    }
+                });
+
+
+            }
+        </script>
+
+
+
+        <script>
+            function Redirect() {
+                window.location.href = "@Url.Action("Dashboard","FeedbackDashboard")"
+            }
+        </script>

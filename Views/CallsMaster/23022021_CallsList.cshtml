@@ -1,0 +1,221 @@
+﻿@model TuvVision.Models.CallsModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "CallsList";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+@*DATEPICKER*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script>
+    $(function () {
+        $(".Fromdate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script>
+
+    $(function () {
+        $(".ToDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+
+
+</script>
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet"/>
+
+
+
+
+@using (Html.BeginForm())
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Call List</h3>
+                    
+                    <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportCallList","CallsMaster")'">
+                        Export To Excel
+                    </button>
+                
+                
+                 </div><!-- /.col -->
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <label>From Date:</label>
+                            @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "From Date", @class = "form-control Fromdate", autocomplete = "off" })
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <label>To Date:</label>
+                            @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "To Date", @class = "form-control ToDate", autocomplete = "off" })
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default insert-form-btn"><i class="fa "></i> Search</button>
+                        @*</div>
+                        <div class="form-group">*@
+                            @Html.ActionLink("Reset", "CallsList", "CallsMaster", new { @class = "btn btn-default insert-form-btn" })
+                        </div>
+                    </div>
+                    
+                </div>
+                    <div class="col-xs-12">
+                        <hr class="custom-hr">
+                    </div><!-- /.col -->
+                    <!--Table was here-->
+
+                </div><!-- /.row -->
+
+        
+
+            <div class="col-xs-12">
+                <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                    <tr>
+                        <td>
+                            @(Html
+                            .Grid(Model.lstCallsModel1)
+                            .Build(columns =>
+                            {
+                                columns.Add().Titled("Delete").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "DeleteCallsData", new { PK_Call_ID = o.PK_Call_ID }, new { @class = "fa fa-trash-o", title = "Delete", onclick = "return confirm('Are you sure you wish to delete ?');" }));
+                                //columns.Add(c => c.Call_No).Titled("Call No").Encoded(false).RenderedAs(c => Html.ActionLink(c.Call_No, "InsertCalls", new { PK_Call_ID = c.PK_Call_ID }, new {  title = "Call No" })).Filterable(true).FilteredAs("custom").Sortable(true);
+                                //columns.Add(c => c.Call_No).Titled("Call No").Encoded(false).RenderedAs(c => Html.ActionLink(c.Call_No, "InsertCalls", new { PK_Call_ID = c.PK_Call_ID }, new { title = "Call No" })).Filterable(true).FilteredAs("custom").Sortable(true);
+                                columns.Add(c => c.Call_No).Titled("Call No").RenderedAs(c => Html.ActionLink(c.Call_No, "InsertCalls", new { PK_Call_ID = c.PK_Call_ID }, new { title = "Call No" }));
+								columns.Add().Titled("Call Extension").Encoded(false).RenderedAs(o => Html.ActionLink("Extend" , "ExtendCalls", new { PK_Call_ID = o.PK_Call_ID }, new { title = "Call No" })).Css("aa");
+							
+                                columns.Add(c => c.Call_Request_Date).Titled("Call Requested Date");
+                                columns.Add(c => c.Call_Recived_date).Titled("Call Received Date");
+                                columns.Add(c => c.CreatedDate).Titled("Call Creation Date");
+                                columns.Add(c => c.CreatedBy).Titled("Call Created By");
+                                columns.Add(c => c.Actual_Visit_Date).Titled("Actual Visit Date");
+                                columns.Add(c => c.Call_Type).Titled("Call Type");
+                                columns.Add(c => c.Sub_Job).Titled("Sub-Job Number");
+                                columns.Add(c => c.Company_Name).Titled("Customer Name");
+                                columns.Add(c => c.Project_Name).Titled("Project Name");
+                                columns.Add(c => c.V1).Titled("Vendor Name");
+                                columns.Add(c => c.V2).Titled("Sub Vendor Name");
+                                columns.Add(c => c.P1).Titled("Customer PO No on Vendor");
+                                columns.Add(c => c.P2).Titled("Vendor PO No on Sub Vendor");
+
+                                columns.Add(c => c.Originating_Branch).Titled("Originating Branch");
+                                columns.Add(c => c.Excuting_Branch).Titled("Executing Branch");
+
+                                if (Model.Status == "Open")
+                                {
+
+                                    columns.Add(c => c.Status).Titled("Call Status");
+                                }
+                                else
+                                {
+
+                                    columns.Add(c => c.Status).Titled("Call Status");
+                                }
+
+
+                                if (Model.ExtendCall_Status == "Extend")
+                                {
+                                    columns.Add(c => c.ExtendCall_Status).Titled("Call Extension Status");
+                                }
+                                else
+                                {
+
+                                    columns.Add(c => c.ExtendCall_Status).Titled("Call Extension Status");
+                                }
+
+
+                                columns.Add(c => c.Urgency).Titled("Priority");
+
+                                columns.Add(c => c.Inspector).Titled("Inspector Name");
+                                
+
+
+
+
+
+                            })
+                            .Pageable(pager =>
+                            {
+                                //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                            )
+
+
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+
+        </div>
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+
+
+}
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+</script>
+
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>
+
+

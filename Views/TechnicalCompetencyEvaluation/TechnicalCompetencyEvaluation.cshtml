@@ -1,0 +1,801 @@
+﻿@model TuvVision.Models.TechnicalCompetencyEvaluation
+@{
+    ViewBag.Title = "TechnicalCompetencyEvaluation";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int k = 0;
+    string strSkill = string.Empty;
+    List<string> EditProdName = ViewBag.EditproductName as List<string>;
+}
+
+
+
+
+@*<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.8.0.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.22/jquery-ui.js"></script>*@
+
+<link href="~/Content/css/bootstrap-multiselect.css" rel="stylesheet" />
+@*<script src="~/Scripts/bootstrap-multiselect.js"></script>*@
+<script src="~/Scripts/bootstrap-multiselect.js"></script>
+
+
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+<style>
+    ul.Attachment > li a.deleteItem {
+        color: white;
+        font-size: 10px;
+        background: #e91e1e;
+        padding: 2px 4px;
+        border-radius: 50%;
+        vertical-align: text-top;
+    }
+</style>
+
+
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+
+                        <div class="col-xs-12 text-right">
+                            <a href="@Url.Action("ListTechnicalCompetencyEvaluation", "TechnicalCompetencyEvaluation")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title" style="font-size:14px;">Technical Competency Evaluation</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+
+
+
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+
+
+
+                                                        <div class="form-group">
+                                                            <label>Inspector Name</label>
+                                                            @Html.DropDownListFor(model => model.InspectorName, new SelectList(@ViewBag.Name, "Code", "Name"), "---Select Title---", new { @id = "ddlTitle", @class = "form-control" })
+
+                                                            @Html.ValidationMessageFor(model => model.InspectorName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+
+                                                        @*@Html.DropDownList("DropDownProductList", ViewData["ProductList"] as MultiSelectList, new { @style = "width: 200px", @onchange = "DropDownProductList();" })*@
+
+
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+
+                                                            <a href="@Url.Action("CreateUser", "Users", new { UserID = Model.InspectorName })"
+                                                               target="_blank"
+                                                               class="btn btn-info dynamic-function-btn" style="margin-top:24px;">
+                                                                User Details
+                                                            </a>
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+
+                                                            <input type="button" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-left:10px;" value="Training Details" onclick="GetdataTraining();" />
+
+                                                            @*<a href="@Url.Action("CreateUser", "Users", new { UserID = Model.InspectorName })"
+                                                               target="_blank"
+                                                               class="btn btn-info dynamic-function-btn" style="margin-top:24px;">
+                                                                Training Details
+                                                            </a>*@
+
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12">
+                                                        <table id="example" cellspacing="0" width="100%" class="table table-bordered">
+                                                            <thead>
+                                                                <tr style="background-color:blue; color:white;">
+                                                                    @*<th class="hidden">Id</th>*@
+                                                                    <th class="hidden">PKId</th>
+                                                                    <th class="hidden">Id</th>
+                                                                    <th>IAF Scope</th>
+                                                                    <th>IAF Scope Name </th>
+                                                                    <th>Field Of Inspection</th>
+                                                                    
+                                                                    <th class="remove-search less-width">Type/Range Of Inspection</th>
+                                                                    <th>Minimum Education Qualification required</th>
+                                                                    <th>Minimum Requirement For Authorization Level 3</th>
+                                                                    <th class="remove-search less-width">Authorization Level</th>
+                                                                    <th class="remove-search less-width">Basis of Authorization</th>
+                                                                    <th class="remove-search less-width">Remarks</th>
+
+                                                            </thead>
+                                                            <tbody id="partialtabledata">
+
+
+                                                                @if (ViewBag.TitleName != null)
+                                                                {
+                                                                    foreach (var item in ViewData["TitleName"] as IEnumerable<TuvVision.Models.RangeOfInspectionList>)
+                                                                    {
+                                                                        <tr>
+                                                                            <td class="hidden">
+                                                                                @Html.HiddenFor(m => m.RangeOfInspectionList[k].PK_TechnicalCompetencyEvaluation, new { Value = item.PK_TechnicalCompetencyEvaluation })
+                                                                                @item.PK_TechnicalCompetencyEvaluation
+                                                                            </td>
+
+                                                                            <td class="hidden">
+
+
+
+                                                                                @item.LFK_RangeInspectionId
+                                                                                @Html.HiddenFor(m => m.RangeOfInspectionList[k].LFK_RangeInspectionId, new { Value = item.LFK_RangeInspectionId })
+                                                                            </td>
+
+                                                                            <td>@item.LIAFScopeNumber</td>
+                                                                            <td>@item.LIAFScopeName</td>
+                                                                            <td>@item.LFieldOfInspection</td>
+                                                                            
+
+
+                                                                            <td width="60%">@item.LFK_RangeInspectionName</td>
+                                                                            <td>@item.MinimumEducationQualification</td>
+                                                                            <td>@item.MinimumRequirementForLevel3</td>
+                                                                            <td width="10%">
+
+
+
+                                                                                @Html.RadioButtonFor(m => m.RangeOfInspectionList[k].LAutharizationLevel, "1", item.LAutharizationLevel == "1" ? new { id = "AuthLevel1" + k, Checked = "checked" } : null)
+                                                                                <label for="Active">1</label><br />
+                                                                                @Html.RadioButtonFor(m => m.RangeOfInspectionList[k].LAutharizationLevel, "2", item.LAutharizationLevel == "2" ? new { id = "AuthLevel2" + k, Checked = "checked" } : null)
+                                                                                <label for="InActive">2</label><br />
+                                                                                @Html.RadioButtonFor(m => m.RangeOfInspectionList[k].LAutharizationLevel, "3", item.LAutharizationLevel == "3" ? new { id = "AuthLevel3" + k, Checked = "checked" } : null)
+                                                                                <label for="InActive">3</label><br />
+                                                                                @Html.RadioButtonFor(m => m.RangeOfInspectionList[k].LAutharizationLevel, "4", item.LAutharizationLevel == "4" ? new { id = "AuthLevel4" + k, Checked = "checked" } : null)
+                                                                                <label for="InActive">4</label><br />
+                                                                                @Html.RadioButtonFor(m => m.RangeOfInspectionList[k].LAutharizationLevel, "NA", item.LAutharizationLevel == "NA" ? new { id = "AuthLevelNA" + k, Checked = "checked" } : null)
+                                                                                <label for="InActive">NA</label><br />
+                                                                                @Html.ValidationMessageFor(m => m.RangeOfInspectionList[k].LAutharizationLevel, "", new { @class = "text-danger" })
+
+
+
+                                                                            </td>
+
+                                                                            <td width="40%">
+                                                                                <div class="form-group" id="div" @k>
+                                                                                    @foreach (var skill in ViewBag.lstSkills)
+                                                                                    {
+                                                                                        if (item.skillID != null)
+                                                                                        {
+                                                                                            strSkill = item.skillID.ToString();
+
+                                                                                            if (item.skillID.ToString().Contains(skill.BasicAuthValue))
+                                                                                            {
+                                                                                                <input id="@skill.SkillID" type="checkbox" name="skill" value="@skill.BasicAuthValue" onclick="chkbox(this, @k);" checked="checked" />
+
+                                                                                                <label for="@skill.SkillID">
+                                                                                                    @skill.BasicAuthValue
+                                                                                                </label><br />
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <input id="@skill.SkillID" type="checkbox" name="skill" value="@skill.BasicAuthValue" onclick="chkbox(this, @k);" />
+
+                                                                                                <label for="@skill.SkillID">
+                                                                                                    @skill.BasicAuthValue
+                                                                                                </label><br />
+                                                                                            }
+                                                                                        }
+                                                                                    }
+
+                                                                                    @Html.HiddenFor(model => model.RangeOfInspectionList[k].skillID, new { @id = "SkillID" + k, @name = "SkillID" + k, @Value = item.skillID })
+                                                                                    @Html.ValidationMessageFor(m => m.RangeOfInspectionList[k].skillID, "", new { @class = "text-danger validation-msg" })
+                                                                                    @Html.ValidationMessageFor(m => m.RangeOfInspectionList[k].LBasicAuthorization, "", new { @class = "text-danger validation-msg" })
+                                                                                </div>
+                                                                            </td>
+
+
+                                                                            @*<td width="40%">
+
+                                                                                @if (item.LBasicAuthorizationName != null)
+                                                                                {
+                                                                                    @Html.DropDownListFor(m => m.RangeOfInspectionList[k].ListBasicAuthorizationName, new List<SelectListItem>
+                                                                                     {
+
+                                                                                     new SelectListItem{ Text="A – Professional Qualification OR Past Experience till date", Value = "A", Selected = (item.LBasicAuthorizationName.Contains("A")) ?true : false },
+                                                                                     new SelectListItem{ Text="B - Interview Assessment", Value = "B" , Selected = (item.LBasicAuthorizationName.Contains("B")) ? true : false },
+                                                                                     new SelectListItem{ Text="C - Training Imparted   OR Inspection Under Supervision", Value = "C" , Selected = (item.LBasicAuthorizationName.Contains("C")) ? true : false },
+                                                                                     new SelectListItem{ Text="D – Supervised Inspection completed", Value = "D" , Selected = (item.LBasicAuthorizationName.Contains("D")) ?true : false },
+                                                                                     new SelectListItem{ Text="E – Re-Assessment: Quiz OR Interview", Value = "E" , Selected = (item.LBasicAuthorizationName.Contains("E")) ?true : false },
+
+                                                                                    }, new { @class = "form-control", @multiple = "multiple", @size = "60", @style = "height:130px;width:200px;" })
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    @Html.DropDownListFor(m => m.RangeOfInspectionList[k].ListBasicAuthorizationName, new List<SelectListItem>
+                                                                                     {
+
+                                                                                     new SelectListItem{ Text="A–  Professional Qualification OR Past Experience till date", Value = "A" },
+                                                                                     new SelectListItem{ Text="B -  Interview Assessment", Value = "B" },
+                                                                                     new SelectListItem{ Text="C -  Training Imparted   OR Inspection Under Supervision", Value = "C" },
+                                                                                     new SelectListItem{ Text="D – Supervised Inspection completed", Value = "D" },
+                                                                                     new SelectListItem{ Text="E – Re-Assessment: Quiz OR Interview", Value = "E" },
+                                                                                    }, new { @class = "form-control", @multiple = "multiple", @size = "60", @style = "height:130px;width:200px;" })
+
+                                                                                }
+                                                                                @Html.ValidationMessageFor(m => m.RangeOfInspectionList[k].LBasicAuthorization, "", new { @class = "text-danger validation-msg" })
+
+
+
+                                                                            </td>*@
+
+                                                                            <td>
+                                                                                @Html.TextBoxFor(m => m.RangeOfInspectionList[k].Remarks, new { Value = item.Remarks })
+                                                                            </td>
+
+
+                                                                        </tr>
+                                                                        k++;
+                                                                    }
+                                                                }
+
+                                                            </tbody>
+                                                        </table>
+
+
+
+                                                    </div>
+
+
+
+
+
+
+
+                                                    
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+
+                                                        <table width="109%" cellpadding="3" cellspacing="0" class="lasttable" border="1" @*style="border: 2px solid #000;"*@>
+                                                            <tr>
+                                                                <th style="text-align: center; border-bottom: 2px solid #000; border-right: 1px solid  #565656;">Legends</th>
+                                                            </tr>
+                                                        </table>
+
+                                                        <table width="109%" cellpadding="3" cellspacing="0" class="lasttable" border="1">
+                                                            <thead>
+
+                                                                <tr style="background: #e2e2e2;">
+
+                                                                    <th width="20%" style="text-align: left; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Minimum Educational Qualification</th>
+                                                                    <th width="20%" style="text-align: left; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Minimum requirement for authorization level 3 </th>
+
+                                                                    <th width="20%" style="text-align: left; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Authorization level</th>
+                                                                    <th width="20%" style="text-align: left; border-bottom: 1px solid #000; border-right: 2px solid  #565656;">Basis of Authorization</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="20%">
+                                                                        1 – Diploma / Degree in Mechanical / Production / Industrial Engineering OR Equivalent Diploma / Degree.<br />
+                                                                        2 - Diploma / Degree in Electrical / Electronics / E&TC Engineering OR Equivalent Diploma / Degree.<br />
+                                                                        3 - Diploma / Degree in Civil / Structural Engineering OR Equivalent Diploma / Degree.<br />
+                                                                        4 - Equivalent Diploma / Degree.
+                                                                    </td>
+                                                                    <td width="20%">
+                                                                        1 – Minimum education qualification and 3 Months / Training / 1-3 days supervised working.<br />
+                                                                        2 – Minimum education qualification and 6 Months / Training / 1-3 days supervised working.<br />
+                                                                        3 – Minimum education qualification and 1 Year / Training / 1-3 days supervised working.
+                                                                    </td>
+                                                                    <td width="20%">
+                                                                        1 – Can work under supervision.<br />
+                                                                        2 – Can work individually under guidance of seniors.<br />
+                                                                        3 – Can work independently, guide and monitor others.<br />
+                                                                        4 – Can train, monitor, guide & evaluate others.
+                                                                    </td>
+                                                                    <td width="20%">
+                                                                        A– Professional Qualification OR Past Experience till date<br />
+                                                                        B - Interview Assessment<br />
+                                                                        C - Training Imparted OR Inspection Under Supervision<br />
+                                                                        D – Supervised Inspection completed<br />
+                                                                        E – Re-Assessment: Quiz OR Interview
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label><i class="fa fa-paperclip" style="color:black;"></i>Attachment: </label><br />
+
+                                                            <input type="file" class="filepond" name="FileUpload" id="FileUpload" multiple>
+                                                            <input hidden="hidden" id="FileUpload" name="FileUpload" class="hidden" />
+                                                        </div>
+                                                    </div>
+
+                                                    @if (Model != null)
+                                                    {
+                                                        if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                        {
+                                                            <input type="hidden" value="Yes" name="testing" id="testing" />
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <ul class="Attachment">
+                                                                        @foreach (var item in Model.FileDetails)
+                                                                        {
+                                                                            <li>
+                                                                                <a class="title1" href="~/TechnicalCompetencyEvaluation/Download/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                                <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem">X</a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="hidden" value="" name="testing" id="testing" />
+                                                            <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">There is no attachments !!!</p>
+                                                    }
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12" style="pointer-events:none;">
+                                                        <div class="form-group">
+                                                            <label>Form Filled</label>
+                                                            @Html.CheckBoxFor(model => model.isFormFilled)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @if (Model.PCH == "Yes")
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Verified</label>
+                                                                @Html.CheckBoxFor(model => model.isVerified)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="row" style="pointer-events:none">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label>Verified</label>
+                                                                @Html.CheckBoxFor(model => model.isVerified)
+                                                            </div>
+                                                        </div>
+                                                    </div>                                              
+                                                }
+
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-sm-12">
+                                                                    <div class="form-group">
+                                                                        @*<button type="reset" class="btn btn-default insert-form-btn"> Reset </button>*@
+                                                                        <button type="submit" class="btn btn-default insert-form-btn"> Save </button>
+                                                                        @*<a href="@Url.Action("ListRangeInspectionMaster", "RangeInspectionMaster")" class="btn btn-default insert-form-btn">Add Range Of Inspection</a>*@
+                                                                        @*<button type="submit" class="btn btn-default insert-form-btn"> Print </button>*@
+
+                                                                        @*<a href="@Url.Action("TechnicalCompetencyEvalReports", "TechnicalCompetencyEvaluation")" class="btn btn-info dynamic-function-btn">Print</a>*@
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="remarksModalLabel">Training Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Table to display remarks -->
+                <div class="table">
+                    <table class="table table-condensed table-responsive " id="tblusersmodal" style="border:1px;font-size:12px;">
+                        <thead style="background-color:#001ED2;color:white;border:1px solid;">
+                            <tr class="" style="background-color:#001ED2;font-family:'TNG Pro';color:white;">
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Training Date</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Hours</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Topic</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Scope</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Categray</th>
+                                @*<th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount approved</th>*@
+                            </tr>
+                        </thead>
+                        <tbody id="userbody" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: black;"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+    <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+    <script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+
+
+
+
+@*...Calender Control...*@
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $(".EfectiveDate").datepicker({
+            dateFormat: 'dd/MM/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".RevisionDate").datepicker({
+            dateFormat: 'dd/MM/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>*@
+
+
+
+
+@*<script type="text/javascript">
+
+    $(function () {
+        $('.multicls').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+    $(document).ready(function () {
+        $(".changeOnload").each(function (index) {
+            debugger;
+            var id = $(this).attr("arr");
+            var list = $(this).val();
+            if (list != "" && id!="") {
+                var re = list.split(",");
+                $("#" + id).multiselect('select', re);
+                $('#' + id).multiselect('rebuild');
+                $('#' + id).trigger('change');
+            }
+
+        });
+    });
+
+</script>*@
+<script type="text/javascript">
+
+    $(function () {
+        $('.multicls').multiselect({
+            includeSelectAllOption: true,
+            buttonWidth: '200px'
+        });
+
+    });
+
+    $(document).ready(function () {
+        $(".changeOnload").each(function (index) {
+            debugger;
+            var id = $(this).attr("arr");
+            var a = $(this).attr("xyz");
+            // var list = $(this).val();
+            //var list = $("#abc").val();
+            var list =a;
+            if (list != "" && id!="") {
+                var re = list.split(",");
+                $("#" + id).multiselect('select', re);
+                $('#' + id).multiselect('rebuild');
+                $('#' + id).trigger('change');
+            }
+
+
+            //var list = $("#changeOnload").val();
+            //if (list != "") {
+            //    var re = list.split(",");
+            //    $("#ListBasicAuthorizationName").multiselect('select', re);
+            //    $('#ListBasicAuthorizationName').multiselect('rebuild');
+            //    $('#ListBasicAuthorizationName').trigger('change');
+            //}
+
+
+
+        }
+
+
+
+
+
+
+        );
+    });
+
+</script>
+
+<script>
+    var string = 'A';
+    var opts = string.split(",");
+    function selectOptions() {
+        var obj = $('#multicls');
+        for (var i in opts) {
+            obj.find('option[value=' + i + ']').prop('selected', true);
+        }
+    }
+    selectOptions();
+</script>
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#ddlTitle').change(function () {
+
+            var catid = $('#ddlTitle :selected').val();
+
+            $.ajax({
+                url: '@Url.Action("Productsview", "TechnicalCompetencyEvaluation")',
+                type: 'GET',
+                dataType: 'json',
+                data: { categoryid: catid },
+                cache: false,
+
+                success: function (Data) {
+                    if (Data.ok) {
+                        //redirect current page to new view products->action method, jquery->controller.
+                        var link = "@Url.Action("Tcv", "TechnicalCompetencyEvaluation", new { categoryid = "catid" })";
+                        link = link.replace("catid", Data.catid);
+                      
+                        window.location.href = link;
+
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+
+<script>
+    FilePond.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(document.querySelector('.filepond'));
+</script>
+
+<script>
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathDocumentAttachment", "TechnicalCompetencyEvaluation")'
+    });
+</script>
+
+
+
+
+<script type="text/javascript">
+
+    //function chkbox(this1, intk )
+    //{
+
+    //    var d = new Array();
+    //    var s = this1.value;
+
+
+    //    if ($('#SkillID' + intk).val() != '')
+    //    {
+    //        d.push($('#SkillID' + intk).val());
+    //    }
+
+
+
+    //    if (this1.checked)
+    //    {
+    //        d.push(s);
+    //    }
+    //    else
+    //    {
+
+    //        //var index = searchStringInArray(s, d.toString());
+    //        let result = d.toString().replace(s.toString() +",", "");
+    //        d.splice(0,10);
+    //        d.push(result);
+
+
+    //    }
+
+
+
+    //    //alert(d);
+    //    $('#SkillID' + intk).val(d);
+
+    //   // alert("Changed Value  " + $('#SkillID' + intk).val());
+
+    //}
+
+    //function chkbox(this1, intk) {
+    //    debugger;
+    //    var d = [];
+    //    var s = this1.value;
+
+    //    if ($('#SkillID' + intk).val() != '') {
+    //        d.push($('#SkillID' + intk).val());
+    //    }
+
+    //    if (this1.checked) {
+    //        d.push(s);
+    //    } else {
+    //        // Remove the unchecked checkbox value from the array
+    //        var index = d.indexOf(s);
+    //        if (index !== -1) {
+    //            d.splice(index, 1);
+    //        }
+    //    }
+
+    //    // Update the value in the SkillID field
+    //    $('#SkillID' + intk).val(d);
+
+    //    // alert("Changed Value  " + $('#SkillID' + intk).val());
+    //}
+
+
+    //satish yadav added new 
+
+    function chkbox(this1, intk) {
+        debugger;
+        var d = [];
+        var currentVal = $('#SkillID' + intk).val();
+
+        if (currentVal != '') {
+            d = currentVal.split(',');
+        }
+
+        var s = this1.value;
+
+        if (this1.checked) {
+            if (!d.includes(s)) {
+                d.push(s);
+            }
+        } else {
+            var index = d.indexOf(s);
+            if (index !== -1) {
+                d.splice(index, 1);
+            }
+        }
+
+        $('#SkillID' + intk).val(d.join(','));
+    }
+
+
+
+</script>
+
+<script>
+    function GetdataTraining(){
+        debugger;
+        var Users=@Html.Raw(Json.Encode(Model.InspectorName));
+        $.ajax({
+            type: "GET",
+            url: "/TechnicalCompetencyEvaluation/GetTrainingData",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data:{InspectorName:Users},
+            success: function (response) {
+                if (!!response) {
+                    var a = JSON.parse(response);
+                    var aa = JSON.stringify(response);
+
+                    if (a == "Error") {
+                        $("#tblusersmodal tbody").empty();
+                    }
+                    else {
+
+                        $("#tblusersmodal tbody").empty();
+                        for (var i = 0; i < a.length; i++) {
+
+                            tr = $('<tr/>');
+                            tr.append("<td><label'>" + a[i].TrainingStartDate + "</label> </td>");
+                            tr.append("<td><label'>" + a[i].TotalHours + "</label> </td>");
+                            tr.append("<td><label'>" + a[i].TrainingTopic + "</label> </td>");
+                            tr.append("<td><label'>" + a[i].Scope + "</label> </td>");
+                            tr.append("<td><label'>" + a[i].Category + "</label> </td>");
+                            $('#tblusersmodal').append(tr);
+
+                        }
+
+                        $('#remarksModal').modal('show');
+                    }
+
+                }
+                    //check response is null or empty
+                else {
+                    $("#tblusersmodal tbody").empty();
+                    $('#remarksModal').modal('show');
+
+
+                }
+            },
+
+            error: function (xhr, status, error) {
+                debugger;
+
+            }
+        });
+
+    }
+</script>
+

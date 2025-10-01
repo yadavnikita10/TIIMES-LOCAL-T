@@ -1,0 +1,1047 @@
+﻿@model TuvVision.Models.ObswiseUtilisationSummary
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "OBSWiseUtilisationSummary";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+    List<string> EditProdName1 = ViewBag.AuditorNameName as List<string>;
+}
+
+
+@*<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">*@
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@*<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />*@
+
+
+@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">*@
+<link href="~/AllJsAndCss/css/BootstrapcssOBS.css" rel="stylesheet" />
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+
+
+
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+
+
+<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+
+
+@*<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+
+
+
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+@*<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />*@
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">*@
+
+
+
+
+
+
+
+
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#BrAuditee1').multiselect({
+            enableFiltering: true,
+            includeSelectAllOption: true,
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 450, 
+            buttonText: function(options, select) {
+                var selectedOptions = $('#BrAuditee1 option:selected');
+                
+                if (selectedOptions.length === 0) {
+                    return 'Selected: 0';
+                } else if (selectedOptions.length > 3) {
+                    return selectedOptions.length + ' options selected';
+                } else {
+                    var selected = '';
+                    selectedOptions.each(function () {
+                        selected += $(this).text() + ', ';
+                    });
+                    return selected.substr(0, selected.length - 2); // Remove the trailing comma and space
+                }
+            }
+        });
+
+        // Retrieve and set selected options from localStorage on page load
+        var selectedValues = localStorage.getItem('selectedValues');
+        if (selectedValues) {
+            $('#BrAuditee1').multiselect('select', selectedValues.split(','));
+        }
+
+        // Store selected options in localStorage when an option is selected
+        $('#BrAuditee1').on('change', function () {
+            var selectedOptions = $('#BrAuditee1 option:selected');
+            var selectedValues = [];
+            selectedOptions.each(function () {
+                selectedValues.push($(this).val());
+            });
+            localStorage.setItem('selectedValues', selectedValues.join(','));
+        });
+    });
+
+    
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#BrAuditee').multiselect({
+            enableFiltering: true,
+            includeSelectAllOption: true,
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 350,
+            buttonText: function (options, select) {
+                var selectedOptions1 = $('#BrAuditee option:selected');
+
+                if (selectedOptions1.length === 0) {
+                    return 'Selected: 0';
+                } else if (selectedOptions1.length > 3) {
+                    return selectedOptions1.length + ' options selected';
+                } else {
+                    var selected = '';
+                    selectedOptions1.each(function () {
+                        selected += $(this).text() + ', ';
+                    });
+                    return selected.substr(0, selected.length - 2); // Remove the trailing comma and space
+                }
+            }
+        });
+
+        // Retrieve and set selected options from localStorage on page load
+        var selectedValues1 = localStorage.getItem('selectedValues1');
+        if (selectedValues1) {
+            $('#BrAuditee').multiselect('select', selectedValues1.split(','));
+        }
+
+        // Store selected options in localStorage when an option is selected
+        $('#BrAuditee').on('change', function () {
+            var selectedOptions1 = $('#BrAuditee option:selected');
+            var selectedValues1 = [];
+            selectedOptions1.each(function () {
+                selectedValues1.push($(this).val());
+            });
+            localStorage.setItem('selectedValues1', selectedValues1.join(','));
+        });
+    });
+
+    
+</script>
+
+
+
+<script>
+
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<style>
+    .Size{
+        width:220px;
+    }
+</style>
+
+
+@using (Html.BeginForm("OBSWiseUtilisationSummary", "MISOPEReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+    <div class="main-content3 xs-max-height">
+        <div class="container-fluid">
+
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <a href="@Url.Action("Welcome", "Login")" class="logo">
+                            <img src="~/AllJsAndCss/images/logoN.png" alt="" style="max-width: 210%;margin-top: -59px;">
+                        </a>
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left:147px;padding-top:10px;font-family:'TNG Pro'; ">TUV India Private Limited <br />OBS Wise Utilisation Summary </h3>
+                    </div>
+
+                    <div class="col-lg-2" style="padding-right:20px;">
+                        <button type="button" class="btn btn-info" style="margin-top: 16px;margin-left: 37px;width: 150px;background-color: #104193;color:white;border-radius: 0;" onclick="Redirect()">Go Back</button>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="col-xs-12">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left"><b></b></h3>
+
+                    <div class="row">
+
+
+                        <div class="col-xs-12">
+
+
+
+
+                            <div class="col-xs-2">
+                                <div class="form-group">
+                                    <label>From Date:</label>
+                                    @Html.TextBoxFor(model => model.FromDate, "{0:dd/mm/yy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" , Type = "date" })
+                                    @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+
+
+                            <div class="col-xs-2">
+                                <div class="form-group">
+                                    <label>To Date:</label>
+                                    @Html.TextBoxFor(model => model.ToDate, "{0:dd/mm/yy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off",Type = "date" })
+                                    @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                                </div>
+
+                            </div>
+
+
+                            @*<div class="col-xs-2">
+                <div class="form-group">
+                    <label>User Role:</label>
+                    @Html.DropDownListFor(m => m.UserRole, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select User Role--", new { @class = "form-control", @id = "Pk_Roleid", })
+                    @Html.ValidationMessageFor(model => model.UserRole, "", new { @class = "text-danger validation-msg" })
+
+
+                </div>
+            </div>*@
+                            <div class="col-xs-3">
+                                <div class="form-group">
+                                    <label>User Role:</label><br />
+
+
+
+
+                                    @if (ViewBag.Jobcheck == "JobCheck")
+            {
+
+                    <select id="BrAuditee1" class="form-control form-multiselect-city" multiple="multiple" name="BrAuditee1" placeholder="Select Option" style="width:250px;">
+                        @foreach (var item in ViewBag.ProjectTypeItems)
+                    {
+                        if (EditProdName1.Contains(item.Text))
+                        {
+                    <option value="@item.Value" selected style="width:250px;"> @item.Text </option>
+                        }
+                        else
+                        {
+                    <option value="@item.Value" style="width:250px;"> @item.Text </option>
+                        }
+
+                    }
+                    </select>
+            }
+            else
+            {
+                    <select id="BrAuditee1" class="form-control form-multiselect-city" multiple="multiple" name="BrAuditee1" placeholder="Select Option" style="width:250px;">
+
+                        @{
+
+                        foreach (var item in ViewBag.ProjectTypeItems)
+                        {
+
+                    <option value="@item.Value" style="width:250px;"> @item.Text </option>
+
+
+                        }
+
+                        }
+
+                    </select>
+                        }
+
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-xs-3">
+                                <div class="form-group">
+                                    <label>Employee Category:</label>
+
+
+
+
+                                    @if (ViewBag.Jobcheck1 == "JobCheck1")
+            {
+
+                    <select id="BrAuditee" class="form-control form-multiselect-city" multiple="multiple" name="BrAuditee" placeholder="Select Option">
+                        @foreach (var item in ViewBag.EmployeeCategory)
+                    {
+                        if (EditProdName1.Contains(item.Text))
+                        {
+                    <option value="@item.Value" selected> @item.Text </option>
+                        }
+                        else
+                        {
+                    <option value="@item.Value"> @item.Text </option>
+                        }
+
+                    }
+                    </select>
+            }
+            else
+            {
+                    <select id="BrAuditee" class="form-control form-multiselect-city" multiple="multiple" name="BrAuditee" placeholder="Select Option">
+
+                        @{
+
+                        foreach (var item in ViewBag.EmployeeCategory)
+                        {
+
+                    <option value="@item.Code"> @item.Name </option>
+
+
+                        }
+
+                        }
+
+                    </select>
+                        }
+
+
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+                            <div class="col-xs-2">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-top: 22px;">Search</button>
+
+                                </div>
+
+                            </div>
+
+
+
+                            </div>
+                        </div>
+
+
+
+                        </div>
+
+                        <br />
+
+                    </div>
+
+            </div>
+
+
+
+
+            <div class="col-lg-12">
+                @*<div class="col-xs-12" style="overflow:auto;height:500px;width:100%">
+                <table id="example" class="equal-height-table table-bordered table-striped" style="border: 1px solid black;font-size:13px; padding:0px; margin:5px;" width="100%">*@
+                <div class="col-xs-12 table-container" style="overflow:auto;width:99%;height:auto;">
+                    <table class="display dataTable no-footer fixed-size-table" id="example" style="overflow-y:auto;width:320%;font-size:14px">
+                        <thead>
+                            <tr style="border-color:#FFFFFF;">
+                                <th colspan="2"></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>Grand Total (PTI),(ISIM) & (SPECIAL SERVICE ISIM)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>Process Technology (PTI)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>Manufacturing Technology (ISIM)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>Manufacturing Technology SPECIAL SERVICE (ISIM)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>Design Verfication Services (DVS)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>Renewable (ISET)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>Building (ISGB)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>Railway (ISGR)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>PETROLEUM, CHEMICAL & GASES CARGO INSPECTION SERVICES (PCG)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>PRODUCT CERTIFICATION (PC)</b></th>
+                                <th colspan="4" style="background-color: #00003C; border:1px solid #FFFFFF; border-bottom-color:#FFFFFF; font-size:13px; color: #ffffff;"><b>Grand Total</b></th>
+
+                            </tr>
+
+                            @*<tr style="padding:0px 0px; background-color: #050585; color: white; text-align:center;">*@
+                            <tr style="background-color: #104193; border:1px solid #00003C; font-size:13px; color: #ffffff; text-align:center;">
+                                <th style="width:300px;">Branch Name</th>
+                                <th>Expected work Day's</th>
+                                @*PTI*@
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's</th>
+                                <th style="width:50px;">Actual work Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+                                @*added by shruti50 salve 19102023*@
+                                <th style="width:50px;">Employee Number</th>
+                                <th style="width:50px;">Expected work Day's </th>
+                                <th style="width:50px;">Actual work  Day's</th>
+                                <th style="width:50px;">% Utilisation</th>
+
+
+                            </tr>
+                        </thead>
+                        @{
+                            var items = ViewData["ListData"] as IList<TuvVision.Models.ObswiseUtilisationSummary>;
+
+
+                            if (items != null)
+                            {
+
+                                <tbody>
+                                    @foreach (var obj in ViewData["ListData"] as IEnumerable<TuvVision.Models.ObswiseUtilisationSummary>)
+                                    {
+                                        <tr>
+
+                                            <td>@obj.branchName</td>
+                                            <td>@obj.ExpectedWork</td>
+                                            <td>@obj.TotalPT_ISIMEMPCount</td>
+                                            <td>@obj.TotalPT_ISIMexceptedWork</td>
+                                            <td>@obj.TotalPT_ISIMactuallywork</td>
+                                            <td>@obj.PercentageTotalPT_ISIMexceptedWork%</td>
+
+                                            <td>@obj.PTIEMPCount</td>
+                                            <td>@obj.PTIexceptedWork</td>
+                                            <td>@obj.PTIactuallywork</td>
+                                            <td>@obj.PercentagePTIexceptedWork%</td>
+
+                                            <td>@obj.ISIMEMPCount</td>
+                                            <td>@obj.ISIMexceptedWork</td>
+                                            <td>@obj.ISIMactuallywork</td>
+                                            <td>@obj.PercentageISIMexceptedWork%</td>
+
+                                            <td>@obj.ISIMSPEMPCount</td>
+                                            <td>@obj.ISIMSPexceptedWork</td>
+                                            <td>@obj.ISIMSPactuallywork</td>
+                                            <td>@obj.PercentageISIMSPexceptedWork%</td>
+
+                                            @*added by shrutika salve 19102023*@
+                                           
+
+                                            <td>@obj.DVSEMPCount</td>
+                                            <td>@obj.DVSexceptedWork</td>
+                                            <td>@obj.DVSactuallywork</td>
+                                            <td>@obj.PercentageDVSexceptedWork%</td>
+
+                                            <td>@obj.ISETEMPCount</td>
+                                            <td>@obj.ISETexceptedWork</td>
+                                            <td>@obj.ISETMactuallywork</td>
+                                            <td>@obj.PercentageISETexceptedWork%</td>
+
+                                            <td>@obj.ISGBEMPCount</td>
+                                            <td>@obj.ISGBexceptedWork</td>
+                                            <td>@obj.ISGBactuallywork</td>
+                                            <td>@obj.PercentageISGBexceptedWork%</td>
+
+                                            <td>@obj.ISGREMPCount</td>
+                                            <td>@obj.ISGRexceptedWork</td>
+                                            <td>@obj.ISGRactuallywork</td>
+                                            <td>@obj.PercentageISGRexceptedWork%</td>
+
+                                            <td>@obj.PCGEMPCount</td>
+                                            <td>@obj.PCGexceptedWork</td>
+                                            <td>@obj.PCGactuallywork</td>
+                                            <td>@obj.PercentagePCGexceptedWork%</td>
+
+                                            <td>@obj.PCEMPCount</td>
+                                            <td>@obj.PCexceptedWork</td>
+                                            <td>@obj.PCactuallywork</td>
+                                            <td>@obj.PercentagePCexceptedWork%</td>
+
+
+                                            <td>@obj.EMPcount</td>
+                                            <td>@obj.EMPexceptedWork</td>
+                                            <td>@obj.EMPactuallywork</td>
+                                            <td>@obj.PercentageEMPexceptedWork</td>
+
+
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            }
+                        }
+
+                        @if (Model.GrandTotal != null)
+                        {
+                            <tfoot>
+                                <tr>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.branchName</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandExpectedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandTotalPT_ISIMEMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandTotalPT_ISIMexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandTotalPT_ISIMactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentageTotalPT_ISIMexceptedWork.ToString("0.##"))%</td>
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandPTIEMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandPTIexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandPTIactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentagePTIexceptedWork.ToString("0.##"))%</td>
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISIMEMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISIMexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISIMactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentageISIMexceptedWork.ToString("0.##"))%</td>
+
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISETSPEMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISETSPexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISETMSPactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentageISETSPexceptedWork.ToString("0.##"))%</td>
+
+
+                                    
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandDVSEMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandDVSexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandDVSactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentageDVSexceptedWork.ToString("0.##"))%</td>
+
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISETEMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISETexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISETMactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentageISETexceptedWork.ToString("0.##"))%</td>
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISGBEMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISGBexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISGBactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentageISGBexceptedWork.ToString("0.##"))%</td>
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISGREMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISGRexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandISGRactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentageISGRexceptedWork.ToString("0.##"))%</td>
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandPCGEMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandPCGexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandPCGactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentagePCGexceptedWork.ToString("0.##"))%</td>
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandPCEMPCount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandPCexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandPCactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentagePCexceptedWork.ToString("0.##"))%</td>
+
+
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandEMPcount</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandEMPexceptedWork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@Model.GrandTotal.GrandEMPactuallywork</td>
+                                    <td style="font-size: small; background-color: lightgray;">@(Model.GrandTotal.GrandPercentageEMPexceptedWork.ToString("0.##"))%</td>
+
+
+                                </tr>
+                            </tfoot>
+                        }
+
+
+                    </table>
+
+
+                </div>
+
+            </div>
+            <br />
+            <br />
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Attendance Sheet</h3>
+
+                <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportOBS", "MISOPEReport")'" style="border:none;">
+                    Export To Excel
+                </button>&nbsp;&nbsp;&nbsp;
+             </div>
+
+
+            <br />
+            <br />
+                    @* table 2*@
+
+                    <div class="row">
+                        <div class="col-xs-12" id="divHistory" style="overflow:auto;width:99%;height:200px;">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <hr class="custom-hr1">
+                                </div>
+                            </div>
+                            <table class="display dataTable no-footer" style="overflow-y:auto;width:1000%;font-size:14px" id="WOSummaryTable">
+                                @{
+                                    int colspanno = 0;
+                                    int nullcount = 0;
+                                    int LeaveCount = 0;
+                                    int OTHLeaveCount = 0;
+
+                                    int CLeaveCount = 0;
+                                    int SLeaveCount = 0;
+                                    int PLeaveCount = 0;
+
+                                    int WOLeaveCount = 0;
+                                    int PHLeaveCount = 0;
+                                    int WKDLeaveCount = 0;
+                                    int Exceptedworkingdays = 0;
+
+                                    int SelectDays = 0;
+                                    string DayName = string.Empty;
+                                    double filledPercentage = 0;
+                                    int WorkingDays = 0;
+                                    int Holidaydays = 0;
+                                    double Tstilledpercantage = 0;
+                                    double PercentageOfWork = 0;
+                                }
+
+
+                                @if (Model.dtUserAttendance != null && Model.dtUserAttendance.Rows.Count != 0)
+                                {
+                                    colspanno = Model.dtUserAttendance.Columns.Count + 1;
+                                    <tr style="background-color:#f0f0f0">
+
+                                        <td style="text-align:left;width:80px;font-size:18px;font-weight:bold" colspan=@colspanno>Attendance Data</td>
+
+
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr style="background-color:#f0f0f0">
+
+                                        <td style="text-align:left;width:80px;font-size:smaller;" colspan="34">Attendance Data</td>
+
+
+                                    </tr>
+                                }
+
+                                @if (Model.dtUserAttendance != null && Model.dtUserAttendance.Rows.Count != 0)
+                                {
+                                    <tr style="background-color:#709eed">
+                                        @for (int colcnt1 = 0; colcnt1 < Model.dtUserAttendance.Columns.Count; colcnt1++)
+                                        {
+                                            if (Model.dtUserAttendance.Columns[colcnt1].ColumnName.ToUpper() == "NAME" || Model.dtUserAttendance.Columns[colcnt1].ColumnName.ToUpper() == "EMAIL")
+                                            {
+                                                <td style="text-align:center;width:250px;font-size:smaller;color:white">@Model.dtUserAttendance.Columns[colcnt1].ColumnName</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center;width:150px;font-size:smaller;color:white">@Model.dtUserAttendance.Columns[colcnt1].ColumnName</td>
+                                            }
+                                        }
+                                    </tr>
+
+                                    for (int cnt = 0; cnt < Model.dtUserAttendance.Rows.Count; cnt++)
+                                    {
+                                        System.Data.DataRow row = Model.dtUserAttendance.Rows[cnt];
+
+
+                                        <tr style="background-color:white">
+
+
+
+                                            @for (int colcnt = 0; colcnt < Model.dtUserAttendance.Columns.Count; colcnt++)
+                                            {
+
+                                                if (row[colcnt] != DBNull.Value &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "NAME" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "MOBILENO" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "EMAIL"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "TUV EMPLOYEE CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SAP EMPLOYEE CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "MAINBRANCH"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "OBSTYPE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "EMPLOYEMENTCATEGORY"
+                                                     && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "FKROLEID"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "DESIGNATION"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SAP VENDOR CODE"
+
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "TS FILLED DAYS"
+
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WORKING DAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "HOLIDAYDAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SELECTED PERIOD DAYS"
+                                                     && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "EXCEPTED WORKING DAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "OTHER LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SICK LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "CASUAL LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "PRIVILEGE LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WEEKLY OFF COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "PUBLIC HOLIDAY COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WEEKEND LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "%"
+                                                     && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "UTILISATION"
+
+
+
+
+                                                )
+                                                {
+                                                    DayName = System.Threading.Thread.CurrentThread.CurrentUICulture.DateTimeFormat.GetDayName(DateTime.Parse(Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString()).DayOfWeek);
+
+                                                    if (row[colcnt].ToString() == "CL")
+                                                    {
+                                                        CLeaveCount++;
+                                                        LeaveCount++;
+                                                        if ((DayName.ToUpper() == "SUNDAY" || DayName.ToUpper() == "SATURDAY"))
+                                                        {
+                                                            WKDLeaveCount++;
+                                                        }
+                                                    }
+                                                    else if (row[colcnt].ToString() == "SL")
+                                                    {
+                                                        // SLeaveCount++;
+                                                        SLeaveCount++;
+                                                        LeaveCount++;
+                                                        if ((DayName.ToUpper() == "SUNDAY" || DayName.ToUpper() == "SATURDAY"))
+                                                        {
+                                                            WKDLeaveCount++;
+                                                        }
+                                                    }
+                                                    else if (row[colcnt].ToString() == "PL")
+                                                    {
+                                                        // PLeaveCount =
+                                                        PLeaveCount++;
+                                                        LeaveCount++;
+                                                        if ((DayName.ToUpper() == "SUNDAY" || DayName.ToUpper() == "SATURDAY"))
+                                                        {
+                                                            WKDLeaveCount++;
+                                                        }
+                                                    }
+                                                    else if (row[colcnt].ToString() == "33") // Weekly Off Count
+                                                    {
+                                                        //  WOLeaveCount++;
+                                                        WOLeaveCount++;
+                                                        OTHLeaveCount++;
+                                                    }
+                                                    else if (row[colcnt].ToString() == "35") // Public Holidays
+                                                    {
+                                                        //  PHLeaveCount++;
+                                                        PHLeaveCount++;
+                                                        OTHLeaveCount++;
+                                                    }
+
+
+                                                    nullcount++;
+
+                                                }
+
+                                            }
+
+
+                                            @for (int colcnt = 0; colcnt < Model.dtUserAttendance.Columns.Count; colcnt++)
+                                            {
+                                                if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "TS FILLED DAYS")
+                                                {
+                                                    filledPercentage = (Convert.ToDouble(nullcount) / Convert.ToDouble(SelectDays)) * 100;
+                                                    if (filledPercentage > 72)
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;">@nullcount</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;background-color:#d659ff;">@nullcount</td>
+                                                    }
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "WORKING DAYS")
+                                                {
+                                                    WorkingDays = nullcount - (LeaveCount + OTHLeaveCount);
+
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:aqua;">@WorkingDays</td>
+
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "HOLIDAYDAYS")
+                                                {
+                                                    Holidaydays = Convert.ToInt32(row[colcnt]);
+
+                                                    <td style="text-align:center;width:120px;font-size:smaller;">@Holidaydays</td>
+
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@LeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "OTHER LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@OTHLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "CASUAL LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@CLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "SICK LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@SLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "PRIVILEGE LEAVE COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@PLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "WEEKLY OFF COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@WOLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "PUBLIC HOLIDAY COUNT")
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@PHLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "SELECTED PERIOD DAYS")
+                                                {
+                                                    SelectDays = Convert.ToInt32(row[colcnt]);
+                                                    <td style="text-align:center;width:120px;font-size:smaller;">@SelectDays</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "EXCEPTED WORKING DAYS")
+                                                {
+                                                    Exceptedworkingdays = Convert.ToInt32(row[colcnt]);
+                                                    <td style="text-align:center;width:120px;font-size:smaller;">@Exceptedworkingdays</td>
+
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "WEEKEND LEAVE COUNT")
+                                                {
+
+
+                                                    <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@WKDLeaveCount</td>
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "%")
+                                                {
+                                                    Tstilledpercantage = (Convert.ToDouble(nullcount) / Convert.ToDouble(SelectDays)) * 100;
+                                                    string formattedPercentage = Tstilledpercantage.ToString("0.00");
+                                                    <td style="text-align:center;width:120px;font-size:smaller;">@formattedPercentage</td>
+
+                                                }
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() == "UTILISATION")
+                                                {
+                                                    PercentageOfWork = (Convert.ToDouble(WorkingDays) * 100 / Convert.ToDouble(Exceptedworkingdays));
+                                                    string formatted = PercentageOfWork.ToString("0.00");
+                                                    <td style="text-align:center;width:120px;font-size:smaller;">@formatted</td>
+
+                                                }
+
+                                                else if (Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "NAME" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "MOBILENO" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "EMAIL" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "TS FILLED DAYS" &&
+                                                    Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WORKING DAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "HOLIDAYDAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "TUV EMPLOYEE CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SAP EMPLOYEE CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SELECTED PERIOD DAYS"
+                                                     && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "EXCEPTED WORKING DAYS"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "MAINBRANCH"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "OBSTYPE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "EMPLOYEMENTCATEGORY"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "FKROLEID"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "DESIGNATION"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SAP VENDOR CODE"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "OTHER LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "SICK LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "CASUAL LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "PRIVILEGE LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WEEKLY OFF COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "PUBLIC HOLIDAY COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "WEEKEND LEAVE COUNT"
+                                                    && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "%"
+                                                     && Model.dtUserAttendance.Columns[colcnt].ColumnName.ToString().ToUpper() != "UTILISATION"
+
+                                                    )
+                                                {
+
+                                                    if (row[colcnt].ToString().ToUpper() == "CL" || row[colcnt].ToString().ToUpper() == "PL" || row[colcnt].ToString().ToUpper() == "SL") /// Leaves
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;background-color:#ff7575;">@row[colcnt]</td>
+                                                    }
+                                                    else if (row[colcnt].ToString().ToUpper() == "33") /// Weekly off and Public Holidays
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;background-color:yellow;">@row[colcnt]</td>
+                                                    }
+                                                    else if (row[colcnt].ToString().ToUpper() == "35") /// Weekly off and Public Holidays
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;background-color:peachpuff;">@row[colcnt]</td>
+                                                    }
+                                                    else if (row[colcnt].ToString().Contains(",")) /// Multiple Activities with different colour
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;background-color:#00e8ff;">@row[colcnt]</td>
+                                                    }
+                                                    else if (row[colcnt].ToString().ToUpper() == "INSP") /// Weekly off and Public Holidays
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;background-color:white;">@row[colcnt]</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style="text-align:center;width:120px;font-size:smaller;background-color:m;">@row[colcnt]</td>
+                                                    }
+                                                    // }
+                                                }
+                                                else
+                                                {
+                                                    <td style="text-align:center;width:120px;font-size:smaller;">@row[colcnt]</td>
+                                                }
+
+                                            }
+                                        </tr>
+
+
+                                        nullcount = 0;
+                                        LeaveCount = 0;
+                                        OTHLeaveCount = 0;
+
+                                        CLeaveCount = 0;
+                                        SLeaveCount = 0;
+                                        PLeaveCount = 0;
+
+                                        WOLeaveCount = 0;
+                                        PHLeaveCount = 0;
+
+                                        SelectDays = 0;
+                                        Exceptedworkingdays = 0;
+
+                                        filledPercentage = 0;
+                                        WorkingDays = 0;
+                                        Holidaydays = 0;
+                                        Tstilledpercantage = 0;
+                                        PercentageOfWork = 0;
+                                    }
+                                }
+                            </table><br />
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+       
+}
+
+
+
+
+@*<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+
+
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />*@
+
+<script>
+
+    $(function () {
+        $('.form-multiselect-city').multiselect({
+            enableFiltering: true,
+            includeSelectAllOption: true,
+            enableCaseInsensitiveFiltering: true
+        });
+
+    });
+</script>
+
+
+<script>
+function Redirect() {
+        window.location.href = "@Url.Action("Welcome", "Login")"
+        }
+</script>

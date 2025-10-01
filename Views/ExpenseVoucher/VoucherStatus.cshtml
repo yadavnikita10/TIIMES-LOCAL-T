@@ -1,0 +1,209 @@
+﻿@model TuvVision.Models.ExpenseItem
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@helper CustomRenderingOfColumn1(TuvVision.Models.ExpenseItem ExpenseItem)
+{
+    @*<a href="@Url.Action("Voucher", "ExpenseVoucher", new {FKVoucherId = @ExpenseItem.FKExpenseId })" title="Edit">@ExpenseItem.VoucherId</a>*@
+    <a href="@Url.Action("Voucher", "ExpenseVoucher", new {FKVoucherId = @ExpenseItem.FKExpenseId })" title="Edit">@ExpenseItem.VoucherId</a>
+}
+
+@helper CustomRenderingOfColumn3(TuvVision.Models.ExpenseItem ExpenseItem)
+{
+if (ExpenseItem.TransferToFI == "Transfer To FI")
+{
+
+        <span style="color:blue">@ExpenseItem.TransferToFI</span>
+}
+else
+{
+        <span>@ExpenseItem.TransferToFI</span>
+}
+
+}
+
+@{
+    ViewBag.Title = "VoucherStatus";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Voucher Status</h3>
+                <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExpenseVoucher", "ExpenseVoucher")'">Generate Voucher</button>
+                
+            </div><!-- /.col -->
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+            <!--Table was here-->
+
+        </div>
+        @*<div class="col-xs-12">
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th> Voucher Generated </th>
+                        <th> Activity Type     </th>
+                        <th> Approval Status1  </th>
+                        <th> Approval Status2  </th>
+                        <th> Total Amount      </th>
+                        <th> Approved Amount   </th>
+                        <th> Expense Type      </th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var b in Model)
+                    {
+                        <tr>
+                            <td>@b.Date.ToString("yyyy-MM-dd")</td>
+                            <td>  @b.VoucherGenerated    </td>
+                            <td>  @b.ActivityType      </td>
+                            <td>  @b.ApprovalStatus1   </td>
+                            <td>  @b.ApprovalStatus2   </td>
+                            <td>  @b.TotalAmount       </td>
+                            <td>  @b.ApprovedAmount    </td>
+                            <td>  @b.ExpenseType       </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>*@
+
+        @*<div class="col-xs-12">
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        
+                        <th> Voucher Generated </th>
+                        <th>Date</th>
+                        <th class="hidden">FKExpenseId</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var b in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("VisitReportForm", "VisitReport", new {@PK_Call_ID = item.PK_Call_ID })" title="Edit">@b.VoucherId</a>
+                                <a href="@Url.Action("Voucher", "ExpenseVoucher", new {FKVoucherId = @b.FKExpenseId })" title="Edit">@b.VoucherId</a>
+                               
+                             </td>
+                            <td>  @b.VoucherId    </td>
+                            <td>@b.Date.ToString("yyyy-MM-dd")</td>
+                            <td class="hidden">@b.FKExpenseId</td>
+                           
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>*@
+        <div class="col-lg-12">
+            <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>
+                        @(Html
+                            .Grid(Model.LstDashboard)
+                            .Build(columns =>
+                            {
+                                Html.HiddenFor(c => c.FKExpenseId, new { id = "PK_Call_ID" });
+                                // columns.Add().Titled("Voucher Generated").Encoded(false).RenderedAs(c => Html.ActionLink(c.FKExpenseId, "Voucher", "ExpenseVoucher", new { FKExpenseId = c.FKExpenseId })).Filterable(true).FilteredAs("custom").Sortable(true).Css("aa");
+
+                                columns.Add(c => c.FKExpenseId).Titled("Voucher Generated").RenderedAs(c => CustomRenderingOfColumn1(c)).Sortable(true);
+
+                                columns.Add(c => c.Date).Titled("Date");
+                                ////columns.Add(c => c.EndCity).Titled("End City");
+
+                                columns.Add(c => c.ApprovalStatus1).Titled("Approval Status 1");
+                                columns.Add(c => c.ApprovalStatus2).Titled("Approval Status 2");
+                                columns.Add(c => c.TotalAmount).Titled("Total Amount");
+                                columns.Add(c => c.ApprovedAmount).Titled("Aprovel Amount");
+                                columns.Add(c => c.TransferToFI).Titled("Transfer To FI").RenderedAs(c => CustomRenderingOfColumn3(c)).Sortable(true);
+
+
+
+                            }).Pageable(pager =>
+                            {
+                                //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No Data Found")
+                            .Filterable()
+                            .Sortable()
+                        )
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+@*<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+</script>*@
+
+
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>*@
+
+<style>
+    table.evaluation > tbody {
+        width: 100% !important;
+        display: table;
+    }
+
+        table.evaluation > tbody > tr td table {
+            width: 100% !important;
+            display: table;
+        }
+</style>
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>

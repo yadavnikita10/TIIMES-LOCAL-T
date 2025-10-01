@@ -1,0 +1,554 @@
+﻿
+@{
+    ViewBag.Title = "CreateAllUser";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- Add Bootstrap JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<style>
+    .height-table {
+        height: auto;
+    }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-family: 'TNG Pro';
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+        font-family: 'TNG Pro';
+        font-weight: normal;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    .label1 {
+        font-weight: normal !important;
+    }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
+
+    .highlight-row {
+        background-color: #FFEB00;
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+
+    .highlight-row_ {
+        background-color: #EFEFEF;
+    }
+
+    .box_ {
+        width: 16%;
+        height: 34px;
+        padding: 0px 15px;
+        font-size: 14px;
+        line-height: 4.428571;
+        color: black;
+        background-color: #fff;
+        background-image: none;
+        border: 0px solid #ccc;
+        border-radius: 0;
+        font-family: 'TNG Pro';
+        /*background-color: #eee;*/
+        /*opacity: 1;*/
+    }
+
+    .box_1 {
+        width: 487px;
+        height: 34px;
+        padding: 0px 15px;
+        font-size: 14px;
+        line-height: 4.428571;
+        color: black;
+        background-color: #fff;
+        background-image: none;
+        border: 0px solid #ccc;
+        border-radius: 0;
+        font-family: 'TNG Pro';
+    }
+
+
+    .ui-widget-header {
+        background: #001ED2 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+    /*-- Delete color-profile --*/
+    a.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+        font-size: 18px;
+    }
+
+        a.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+            font-family: 'TNG Pro';
+        }
+
+            a.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+    a.deleteItem {
+        color: white;
+        font-size: 15px;
+        background: #e91e1e;
+        /*padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;*/
+        margin-left: 12px;
+        font-weight: bold;
+    }
+</style>
+
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <div class="container-fluid">
+            <div class="col-xs-12 col-sm-10">
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+
+                        @*<button type="button" class="btn btn-primary" style="float:right;" data-toggle="modal"  data-target="#AddNewContactDetails">
+        Add Single User
+    </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *@
+                        @*<button type="button" class="btn btn-primary"
+                                style="float: right; margin-right: 30px;"
+                                data-toggle="modal"
+                                data-target="#AddNewContactDetails"
+                                onclick="location.href='@Url.Action("CreateUserBulk", "CreateInternationalUser")'">
+                            Add Bulk User
+                        </button>*@
+
+                        
+                    </div>
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+
+                            <table class="display" style="width:120%;" id="example">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="remove-search">Pk_User ID</th>
+                                        <th><label>Firts Name</label></th>
+                                        <th><label>Last Name</label></th>
+                                        <th><label>UserName</label></th>
+                                        <th><label>UserRole</label></th>
+                                        @*<th><label>Qualification</label></th>*@
+                                        <th><label>Core field Of Study</label></th>
+                                        <th><label>Profile</label></th>
+                                        <th><label>TCE</label></th>
+                                        <th><label>Status</label></th>
+                                        <th><label>Reset Password</label></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Add table rows and data here -->
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddNewContactDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @*<h4 class="modal-title" id="myModalLabel">Add new User</h4>*@
+            </div>
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span style="color:#E12F24;">
+                                <strong>Notes </strong> :
+                            </span> 1) <span style="color:#ff0000;">*</span> - Mandatory.<br /><br />
+                        </div>
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>First Name:<span style="color:#ff0000;">*</span></label>
+                                <input type="text" class="form-control"  id="txtfirstname" onkeydown="this.value = this.value.trim()" onkeyup="this.value = this.value.trim()" />
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+
+                            <div class="form-group">
+                                <label>Last name:</label>
+                                <input type="text" class="form-control" id="txtlastname" onkeydown="this.value = this.value.trim()" onkeyup="this.value = this.value.trim()"/>
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Date Of Joining:<span style="color:#ff0000;">*</span></label>
+
+                                <input type="date" class="form-control"  id="txtdate"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Role:<span style="color:#ff0000;">*</span></label>
+                                <select name="cars"  class="form-control" id="ddlrole">
+                                    <option>--select--</option>
+                                    <option value="61">OperationO</option>
+                                    <option value="62">InspectionO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Core Field of Study:<span style="color:#ff0000;">*</span></label>
+                                <select name="CoreField" class="form-control" id="ddlCoreStudy">
+                                    <option>--select--</option>
+                                    <option value="1">Mechanical</option>
+                                    <option value="2">Electrical</option>
+                                    <option value="3">Civil</option>
+                                    <option value="4">Management</option>
+                                    <option value="5">IT</option>
+                                    <option value="6">Commerce</option>
+                                    <option value="7">Arts</option>
+                                    <option value="8">Science</option>
+                                    <option value="9">Chemical</option>
+                                    <option value="10">Medical</option>
+                                    <option value="11">Electrical</option>
+                                    <option value="12">Hr</option>
+                                    <option value="13">Instrumentation</option>
+                                    <option value="14">E & I</option>
+                                    <option value="15">Mechatronics</option>
+                                    <option value="16">Data</option>
+                                    <option value="17">Biomedical</option>
+                                    <option value="18">Pharma</option>
+                                    <option value="19">Agriculture</option>
+                                    <option value="20">Robotics</option>
+                                    <option value="20">Ceremic</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        @*<div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Qualification:<span style="color:#ff0000;">*</span></label>
+                                <select name="Qualification" class="form-control" id="ddlQualification">
+                                    <option>--select--</option>
+                                    <option value="Diploma">Diploma</option>
+                                    <option value="Graduate">Graduate</option>
+                                    <option value="PGD">PGD</option>
+                                    <option value="PG">PG</option>
+                                </select>
+                            </div>
+                        </div>*@
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <button type="button" class="btn btn-default insert-form-btn " id="btnAddNewContact" title="Add New Contact"><i class="fa fa-plus-circle"></i>Add User</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 10px 15px;">
+                <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalCloseButton_"><span aria-hidden="true">&times;</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#btnAdduser").click(function () {
+        debugger;
+        $("#AddNewContactDetails").modal('show');
+    })
+
+
+
+
+
+    $("#btnAddNewContact").click(function () {
+        debugger;
+
+        var Firstname = $("#txtfirstname").val();
+        var lastname = $("#txtlastname").val();
+        var DOB = $("#txtdate").val();
+        var Role = $('#ddlrole :selected').val();
+        var CoreStudy = $("#ddlCoreStudy option:selected").val();
+        //var Qualification = $("#ddlQualification option:selected").val();
+
+
+        if (Firstname == "" || Firstname == null) {
+            alert("please Enter firstname");
+            return false;
+        }
+        else if (lastname == "" || lastname == null) {
+            alert("please Enter lastname");
+            return false;
+        }
+        else if (DOB == "" || DOB == null) {
+            alert("please Enter Date Of Joining");
+            return false;
+        }
+        else if (Role == "" || Role == null) {
+            alert("please Enter User Role");
+            return false;
+        }
+        else if (CoreStudy == "" || CoreStudy == null) {
+            alert("please Select Core Field Of Study");
+            return false;
+        }
+        //else if (Qualification == "" || Qualification == null) {
+        //    alert("please Select Qualification");
+        //    return false;
+        //}
+        $.ajax({
+            url: "@Url.Action("CreateInternationalUser", "CreateInternationalUser")",
+            type: "post",
+            dataType: 'json',
+            data: { Firstname: Firstname, lastname: lastname, DOB: DOB, Role: Role, CoreStudy: CoreStudy},
+            success: function (result) {
+                debugger;
+                //var data = JSON.stringify(result);
+                //if (data=="Success") {
+                    $('#AddNewContactDetails').modal('hide');
+                    $("#modalCloseButton_").click();
+                    $('.modal-backdrop').removeClass('in');
+                    $("#btncosenew").click();
+                    //alert(result.message); // Alert the success message from the server
+                    GetData(); // Call the function to get the updated data
+                //} else {
+                //    alert(result.message); // Show the error message from the server
+                //}
+            },
+            error: function (result) {
+                alert("Something Went Wrong:" + result);
+            }
+        })
+    })
+
+    $("#AddNewContactDetails").on('shown.bs.modal', function () {
+        $('.modal-backdrop').addClass('in');
+    });
+
+    $(document).ready(function () {
+        GetData();
+    });
+
+    function GetData() {
+        debugger;
+        $.ajax({
+            url: "@Url.Action("GetData", "Users")",
+            dataType: 'json',
+            data: "get",
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                debugger;
+                var a = JSON.parse(result);
+                var aa = JSON.stringify(result);
+                if (a == "Error") {
+                    $("#exampleExp tbody").empty();
+                    tr = $('<tr/>');
+                    tr.append('<td colspan=10 style="text-align: center;">No Record Found</td>');
+                    $('#exampleExp').append(tr);
+                }
+                else {
+                    $("#example tbody").empty();
+                    for (var i = 0; i < a.length; i++) {
+                        var c = i + 1;
+                        var isActive = a[i].IsActive;
+                        tr = $('<tr/>');
+                        tr.append("<td><label  id='V_" + c + "'>" + a[i].PK_UserID + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].FirstName + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].LastName + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].UserName + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].RoleName + "</label> </td>");
+                        //tr.append("<td><label id='V_" + c + "'>" + a[i].Qualification + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].CoreFieldName + "</label> </td>");
+                        //if (a[i].IsActive == '1')
+                        tr.append("<td><input type='button' id='btn_" + c + "'  value='Profile' onclick=\"CV('" + a[i].PK_UserID + "')\"></td>");
+                        tr.append("<td><input type='button' id='btn_" + c + "'  value='TCE' onclick=\"TCE('" + a[i].PK_UserID + "')\"></td>");
+                        tr.append("<td><input type='button' id='btn_" + c + "' value='" + isActive + "' onclick=\"Active_DeActive_User('" + a[i].PK_UserID + "', '" + isActive + "')\"></td>");
+
+                        //tr.append("<td><input type='button' id='btn_" + c + "'  value='Active' onclick=\"Active_DeActive_User('" + a[i].PK_UserID + "')\"></td>");
+                            tr.append("<td><input type='button' id='btn_" + c + "'  value='Reset Password' onclick=\"ForgetPassword('" + a[i].PK_UserID + "')\"></td>");
+                        //else
+                            //tr.append("<td style='width:20%;'><label id='V_" + c + "'>" + a[i].Status + "</label></td>");
+                            $('#example').append(tr);
+                    }
+                }
+                //$("#example_info").hide();
+                //$("#example_paginate").hide();
+            },
+            error:function(result){
+
+            }
+        })
+    }
+
+    function Active_DeActive_User(PK_UserID, isActive) {
+        debugger;
+        $.ajax({
+            url: "@Url.Action("UserActivateDeactivate", "CreateInternationalUser")",
+            type: "post",
+        datatype: 'json',
+        data: { PK_UserID: PK_UserID, isActive: isActive },
+        success: function (result) {
+            debugger;
+            if (result == true) {
+                alert("User Activated Successfully");
+                GetData();
+            }
+            else {
+                alert("Something Went wrong");
+            }
+        },
+        error:function (result){
+            alert("something went wrong");
+        }
+    });
+    }
+
+  function CV(PK_UserID) {
+    debugger;
+    // Base URL from Razor
+    const baseUrl = '@Url.Action("CreateUser", "Users")';
+    // Append the query string with the dynamic ID
+      const url = `${baseUrl}?UserID=${encodeURIComponent(PK_UserID)}`;
+    // Redirect to the constructed URL
+    window.location.href = url;
+}
+
+    function TCE(PK_UserID) {
+    debugger;
+    // Construct the URL with multiple query parameters
+    const url = `@Url.Action("TechnicalCompetencyEvaluation", "TechnicalCompetencyEvaluation")` +
+        `?Id=${encodeURIComponent(PK_UserID)}`;
+    // Redirect to the constructed URL
+    window.location.href = url;
+}
+
+
+    @*function TCE(PK_UserID) {
+    debugger;
+    const url = `@Url.Action("TechnicalCompetencyEvalReports", "TechnicalCompetencyEvaluation")?InspectorId=${PK_UserID}`;
+    // Redirect to the URL
+    window.location.href = url;
+}*@
+
+    function ForgetPassword(PK_UserID) {
+        debugger;
+        $.ajax({
+            url: "@Url.Action("PasswordReset", "Users")",
+            type: "post",
+            datatype: 'json',
+            data: { userid: PK_UserID },
+            success: function (result) {
+            debugger;
+            if (result == true) {
+                alert("Password Reset Successfully");
+                GetData();
+            }
+            else {
+                alert("Something Went wrong");
+            }
+        },
+        error:function (result){
+            alert("something went wrong");
+        }
+    });
+    }
+</script>
+
+
+
+

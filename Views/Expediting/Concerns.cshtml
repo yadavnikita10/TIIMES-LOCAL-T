@@ -1,0 +1,306 @@
+﻿@model TuvVision.Models.Concerns
+
+@{
+    ViewBag.Title = "Concerns";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+    int k = 0;
+}
+
+@*DATEPICKER*@
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+
+
+
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        margin: 20px 0;
+    }
+
+    thead {
+        background-color: #104193;
+        color: white;
+    }
+
+    th, td {
+        padding: 4px;
+        text-align: left;
+        border: 1px solid #ddd;
+        font-size:13px;
+        font-family:'TNG Pro';
+    }
+
+    th {
+        font-weight: bold;
+         font-size:14px;
+        font-family:'TNG Pro';
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:hover {
+        background-color: #e1e1e1;
+    }
+
+    .form-control {
+        width: 100%;
+        box-sizing: border-box;
+    }
+</style>
+
+<script>
+   
+    $(function () {
+        $(".CStatusUpdatedOn").datepicker({
+            //dateFormat: 'dd/mm/yy',//check change
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            //maxDate: "+60d",
+            //minDate: "-60d"
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Replace 'datepicker' with the class you added to your TextBoxFor element
+        $('.datepicker').datepicker({
+            dateFormat: 'dd/mm/yy' // Specify the desired date format
+        });
+    });
+</script>
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <br />
+            <br />
+            <div class="col-xs-12">
+                <div class="white-bg section-box-shadow">
+                    <h3 class="form-page-title">Concerns</h3>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                            <div class="form-box">
+                                <form method="post" enctype="multipart/form-data">
+
+
+
+                                    
+                                    <div class="row">
+                                        <div id="DomesticCurrency" style="margin-left: inherit;width:inherit;margin-left: -68px;height: auto;overflow-x:auto;width:1200px;">
+
+
+                                            <table  id="Datatable" cellspacing="0" cellpadding="3" border="1" style="width: 130%">
+                                                <thead>
+                                                    <tr style="background-color:#104193;color:white">
+                                                        <th></th>
+                                                        <th class="hidden"></th>
+                                                        <th class="hidden"></th>
+                                                        
+                                                        <th>Vendor PO Number</th>
+                                                        <th>Date</th>
+                                                        <th>PO Item Number</th>
+                                                        <th>Action Required By</th>
+                                                        <th>Stage</th>
+                                                        <th>Area Of Concerns</th>
+                                                       
+                                                        <th>Responsible Person</th>
+                                                        <th>Expected Closure Date</th>
+                                                        <th>Status</th>
+                                                        <th>Status Updated On</th>
+                                                        <th>Remark</th>
+                                                        <th>Corrective Action</th>
+
+                                                    </tr>
+                                                    <tr class="fixed-width-column" style="border:1px solid;  background:#001ED2;" id="searchRow">
+                                                        <th><input type="text" style="width:28px;" /></th>
+                                                        <th class="hidden" style="width:7px;"><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th class="hidden" style="width:7px;"><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        <th><input type="text" placeholder="Search Name" style="color:black;" /></th>
+                                                        </tr>
+</thead>
+                                                <tbody>
+@{
+    var Obj = ViewData["lstConcernData"] as IList<TuvVision.Models.Concerns>;
+
+                                                        foreach (var item in Obj)
+                                                        {
+                                                            <tr>
+                                                                <td style='text-align: center;'>
+                                            <input type='checkbox' class="chk" />
+                                        </td>
+                                                                <td class="hidden">@item.PK_Call_ID</td>
+                                                                <td class="hidden">@item.PK_Concern_Id</td>
+                                                                <td>@item.VendorPONumber</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@item.Item</td>
+                                                                <td>@item.ActionReq</td>
+                                                                <td>@item.Stage</td>
+                                                                @*<td>@item.Details</td>*@
+                                                                <td style="width: 160px;">@Html.TextBoxFor(m => m.Details, "{0:dd MMM yyyy}", htmlAttributes: new { @id = "Details_" + item.PK_Concern_Id, placeholder = "Details", @class = "form-control Details", autocomplete = "off", @Value = item.Details })</td>
+                                                                @*<td>@item.MitigationBy</td>*@
+                                                                <td>@item.ResponsiblePerson</td>
+                                                                <td>@item.ExpectedClosureDate</td>
+                                                               <td style="width: 160px;">@Html.DropDownListFor(m => m.Status, new SelectList(@ViewBag.DDLConcernStatus, "Value", "Text", item.Status), "--Select--", new { @id = "ddlStatus", @class = "form-control CStatus", @Value = item.Status })</td>
+                                                                @*<td>@item.Status</td>*@
+                                                                <td style="width: 160px;">@Html.TextBoxFor(m => m.StatusUpdatedOn, "{0:dd MMM yyyy}", htmlAttributes: new { @id = "statusUpdatedOn_" + item.PK_Concern_Id, placeholder = "StatusUpdatedOn", @class = "form-control datepicker", autocomplete = "off", @Value = item.StatusUpdatedOn })</td>
+                                                                @*<td>@item.StatusUpdatedOn</td>*@
+                                                                @*<td>@item.Comment</td>*@
+                                                                <td style="width: 160px;">@Html.TextBoxFor(m => m.Comment, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Remarks", @class = "form-control Comment", autocomplete = "off", @Value = item.Comment })</td>
+                                                                <td style="width: 160px;">@Html.TextBoxFor(m => m.MitigationBy, "{0:dd MMM yyyy}", htmlAttributes: new { @id = "MitigationBy_" + item.PK_Concern_Id, placeholder = "Mitigation By", @class = "form-control Mitigation", autocomplete = "off", @Value = item.MitigationBy })</td>
+
+                                                            </tr>
+                                                        }
+    }
+</tbody>
+                                            </table>
+
+                                            
+
+                                           
+
+                                        </div>
+
+                                    </div>
+
+
+
+
+                                    <div class="col-xs-12 text-center">
+                                        <button type="button" class="btn btn-default insert-form-btn" id="btnsave">Save</button>
+                                    </div>
+
+                                   
+
+                                    <input type="hidden" id="pkuserId" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        let table = $('#Datatable').DataTable({
+            paging: true,
+            pageLength: 10,
+            initComplete: function () {
+                let api = this.api();
+
+                // For each column, add a search input
+                api.columns().every(function () {
+                    var that = this;
+
+                    $('input', this.header()).on('keyup change clear', function () {
+                        if (that.search() !== this.value) {
+                            that
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+
+
+                });
+            },
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: '_all'
+                },
+
+            ]
+        });
+
+
+
+    });
+
+</script>
+
+
+<script>
+   $(document).ready(function () {
+    $('#btnsave').click(function () {
+        var selectedData = [];
+
+        // Iterate over each selected checkbox
+        $('#Datatable').find('.chk:checked').each(function () {
+            var $row = $(this).closest('tr');
+
+            var data = {
+                Id: $(this).data('row-id'),
+                PK_Call_ID: $row.find('td.hidden').eq(0).text().trim(),
+                PK_Concern_Id: $row.find('td.hidden').eq(1).text().trim(),
+                VendorPONumber: $row.find('td').eq(3).text().trim(),
+                Date: $row.find('td').eq(4).text().trim(),
+                Item: $row.find('td').eq(5).text().trim(),
+                ActionReq: $row.find('td').eq(6).text().trim(),
+                Stage: $row.find('td').eq(7).text().trim(),
+                Details: $row.find('td').eq(8).text().trim(),
+                MitigationBy: $row.find('td').eq(9).text().trim(),
+                ResponsiblePerson: $row.find('td').eq(10).text().trim(),
+                ExpectedClosureDate: $row.find('td').eq(11).text().trim(),
+                Status: $row.find('select.CStatus').val(),
+                StatusUpdatedOn: $row.find('input.datepicker').val(),
+                Comment: $row.find('input.Comment').val()
+            };
+
+            selectedData.push(data);
+        });
+
+        console.log(selectedData);  // Log the data to ensure it's correct
+
+        // Send selected data to the controller via AJAX
+        $.ajax({
+            url: '@Url.Action("UpdateSelectedRows", "Expediting")', // Update URL as needed
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(selectedData),
+            success: function (response) {
+                alert('Data updated successfully!');
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);  // Log error to console
+                alert('An error occurred: ' + error);
+            }
+        });
+    });
+});
+
+
+</script>

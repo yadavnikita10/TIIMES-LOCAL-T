@@ -1,0 +1,180 @@
+﻿@model TuvVision.Models.ProfileUser
+
+@{
+    ViewBag.Title = "Myprofile";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<!--Start of profile-->
+<div class="container-fluid white-bg">
+    <div class="row assignfixedwidth rp-20">
+        <div class="col-xs-12 white-bg">
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-3">
+                    <div class="profile-box-left">
+                        @if(Model.Image == null || Model.Image =="")
+                        {
+                            <img src="~/Content/Uploads/Images/NoImage.jpg" />
+
+                        }
+                        else
+                        {
+                            <img src="~/Content/Uploads/Images/@Model.Image" />
+                        }
+
+                        @*<img src="~/AllJsAndCss/images/blankhead.jpg" alt="">*@
+                        <h3 class="user-name"> @Model.FirstName @Model.LastName</h3>
+                        @*<a href="@Model.EmailID" class="user-email">*@@Model.EmailID@*</a>*@
+                        <hr>
+                        <h4 class="profile-title-without">IDENTIFICATION DOC</h4>
+                        <p class="profile-desc"><span class="profile-desc-1">PAN:</span> <span class="profile-desc-2">@Model.PanNo</span></p>
+                        <p class="profile-desc"><span class="profile-desc-1">Aadhar:</span> <span class="profile-desc-2">@Model.AadharNo</span></p>
+                        <hr>
+                        <h4 class="profile-title-without">RESUME</h4>
+                        <a href="~/Content/Uploads/Images/@Model.CV" class="user-email">@Model.CV</a>
+                    </div>
+                </div><!--End of left col-->
+                <div class="col-xs-12 col-sm-9">
+
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            <div class="btn-box-right">
+                                @*<a href="@Url.Action("UpdateProfile", "Users")" class="btn btn-warning btn-dark-blue text-right"><i class="fa fa-pencil"></i> EDIT</a>*@
+                                <a href="@Url.Action("CreateUser", "Users")" class="btn btn-warning btn-dark-blue text-right"><i class="fa fa-pencil"></i> EDIT</a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="profile-box-right">
+                                <h4 class="profile-title">Work Profile</h4>
+                                <div class="table-responsive table-responsive-custom">
+                                    <table class="table table-custom borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td>TUV India Email:</td>
+                                                <td>@*<a href="@Model.EmailID">*@@Model.TuvEmailId@*</a>*@</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Employee Code:</td>
+                                                <td>@Model.EmployeeCode</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Date of Joining:</td>
+                                                <td>@Model.DateOfJoining</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Branch:</td>
+                                                <td>@Model.Branch</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Designation:</td>
+                                                <td>@Model.Designation</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Years of Experience:</td>
+                                                <td>@Model.TotalyearofExprience</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cost Center:</td>
+                                                <td>@Model.Cost_Center</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Employee Grade:</td>
+                                                <td>@Model.EmployeeGrade</td>
+                                            </tr>
+                                            @*<tr>
+                                                <td>Employee Status:</td>
+                                                <td>@Model.Status</td>
+                                            </tr>*@
+                                            <tr>
+                                                <td>Office:</td>
+                                                <td>@Model.OfficeNo</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mobile:</td>
+                                                <td>@Model.MobileNo</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Soft Signature:</td>
+                                                <td><a href="~/Content/Sign/@Model.Signature" class="user-email">@Model.Signature</a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div><!--End of table-->
+                                <hr>
+                                <h4 class="profile-title">Educational Qualification: <span>@Model.Qualification</span></h4>
+                                <hr>
+                                <h4 class="profile-title">Professional Qualification: <span>@Model.Additional_Qualification</span></h4>
+                                <hr>
+                                <h4 class="profile-title">Personal Details</h4>
+                                <div class="table-responsive table-responsive-custom">
+                                    <table class="table table-custom borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td>Email ID:</td>
+                                                <td>@Model.EmailID</td>
+                                            </tr>
+                                            <tr>
+                                                <td>DOB:</td>
+                                                <td>@Model.DOB</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Gender:</td>
+                                                <td>@Model.Gender</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Marital Status:</td>
+                                                <td>@Model.Marital_Status</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Blood Group:</td>
+                                                <td>@Model.BloodGroup</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Medical History:</td>
+                                                <td>@Model.Medical_History</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Allergies:</td>
+                                                <td>@Model.Allergies</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Residential Contact:</td>
+                                                <td>@Model.ResidenceNo</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mobile(Emergency):</td>
+                                                <td>@Model.EmergencyMobile_No</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Address:</td>
+                                                <td>@Model.Address1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Pincode:</td>
+                                                <td>@Model.ZipCode</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Shoes Size:</td>
+                                                <td>@Model.ShoesSize</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Shirt Size:</td>
+                                                <td>@Model.ShirtSize</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div><!--End of table-->
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!--End of right col-->
+            </div><!--End of row-->
+
+        </div><!--End of col-->
+    </div><!--End of row-->
+</div><!--End of container fluid-->
+<!--End of profile-->
+
+

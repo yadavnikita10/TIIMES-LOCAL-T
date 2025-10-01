@@ -1,0 +1,444 @@
+﻿@model TuvVision.Models.Users
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "MentorList";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+
+
+<style>
+    #customers {
+        /*font-family: Arial, Helvetica, sans-serif;*/
+        font-family: 'TNG Pro';
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            /*background-color: #04AA6D;*/
+            background-color: #001ED2;
+            color: white;
+        }
+</style>
+
+<style>
+    #myInput {
+        background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 100%; /* Full-width */
+        font-size: 14px; /* Increase font-size */
+        /*padding: 12px 20px 12px 40px;*/ /* Add some padding */
+        padding: 6px 19px 5px 16px;
+        border: 1px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+    }
+
+    table {
+        /*font-family: arial, sans-serif;*/
+        font-family: 'TNG Pro';
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    /*td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }*/
+    td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        /*background-color: #04AA6D;*/
+        background-color: #001ED2;
+        color: white;
+        font-size: 14px;
+    }
+
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+
+
+
+
+
+
+
+@using (Html.BeginForm("MentorList1", "MisReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left"><b>Mentee & Mentor list </b></h3>
+                    <div>
+                        <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex1", "MisReport")';">
+                            Export To Excel
+                        </button>
+                    </div>
+                </div><!-- /.col -->
+                @*<div class="col-xs-12 col-sm-9">
+                        <div class="form-group" style="padding-top:23px;">
+                            <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex1", "CompentencyMetrixView")';">
+                                Export To Excel
+                            </button>
+                        </div>
+                    </div>*@
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr1">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+            <div class="row">
+
+
+
+                @*<div class="col-xs-12 col-sm-3">
+
+
+                    <div class="form-group">*@
+                        @*<label> Mentor Name</label>*@
+                        @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                        @*@Html.DropDownListFor(m => m.FullName, ViewBag.Employees as IEnumerable<SelectListItem>, "--Select Mentor's Name--", new { @class = "form-control FirstName", @id = "mantor" })
+                        @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger validation-msg" })*@
+                    @*</div>
+                </div>*@
+
+                @*<div class="col-xs-12 col-sm-6">
+                    <div class="form-group checkbox-dropdown">
+                        <label>Mentee's<span class="text-danger">*</span></label>
+
+
+                        <select id="BrAuditee" class="form-control form-multiselect-city" multiple="multiple" name="BrAuditee" placeholder="Select Option">
+                            @{
+                                foreach (var item in ViewData["Employees"] as IEnumerable<SelectListItem>)
+                                {
+
+                                    if (ViewData["ListBranchchecked"] != null)
+                                    {
+                                        if (Convert.ToString(ViewData["ListBranchchecked"]).Split(',').Contains(item.Value.ToString()))
+                                        {
+                                            <option selected="selected" value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Value">@item.Text&nbsp; &nbsp;</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>*@
+                @*<div class="col-xs-12 col-sm-3">
+                    <div class="form-group" style="padding-top:23px;">
+                        <label><span class="text-danger"></span></label>
+                        <input type="submit" name="save" value="Save" id="btnic" class="btn btn-primary" />
+
+                    </div>
+                </div>*@
+
+
+
+
+
+                <div class="col-xs-12">
+                    <table id="example" class="display dataTable no-footer" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="hidden">Id </th>
+                                <th style="text-align: center;" width="15%">Employee Name </th>
+                                <th style="text-align: center;" width="10%">Is Mentor</th>
+                                <th style="text-align: center;" width="10%">Mentor's Name</th>
+                                <th style="text-align: center;" width="50%">Mentee's List</th>
+                                <th style="text-align: center;" width="15%">Clear</th>
+
+                            </tr>
+                        </thead>
+                        @{
+                            var items = ViewData["EmployeesDetails"] as IList<TuvVision.Models.Users>;
+
+
+                            if (items != null)
+                            {
+                                <tbody>
+                                    @foreach (var obj in ViewData["EmployeesDetails"] as IEnumerable<TuvVision.Models.Users>)
+                                    {
+                                        <tr>
+                                            <td class="hidden">@obj.Id</td>
+                                            <td>@obj.ManteeName</td>
+                                            <td style="text-align: center;">@obj.IsMentor</td>
+                                            <td style="text-align: center;">@obj.MentorName</td>
+                                            <td>@obj.MentorListName</td>
+                                            <td>
+                                                @if (obj.IsMentor == "Yes")
+                                                {
+                                                    <a href="@Url.Action("DeleteDataRecord", "CompentencyMetrixView", new { @Id = obj.Id })" o onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
+                                                }
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            }
+                        }
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+                            }
+
+
+<!--End ofshrutika Code-->
+
+
+<script>
+
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#BrAuditeeName').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+</script>
+<script>
+    var selected = $("#BrAuditee option:selected");
+    var ddlCountryValue = "";
+    selected.each(function () {
+        ddlCountryValue += $(this).val() + ",";
+    });
+    ddlCountryValue = ddlCountryValue.replace(/,\s*$/, "");
+</script>
+
+
+@*
+    <script>
+            $("#btnic").click(function myfunction() {
+                if (validateform() == false) {
+                    return false;
+                }
+                else {
+                    $("#form1").submit();
+                }
+            });
+    </script>*@
+
+
+<script>
+    $("#btnic").on('click', function (event) {
+        debugger;
+
+        var Mentor = $("#mantor option:selected").val();
+        var MentorList = $("#BrAuditee option:selected").val();
+        var ddlCountryValue = "";
+        selected.each(function () {
+            ddlCountryValue += $(this).val() + ",";
+        });
+        ddlCountryValue = ddlCountryValue.replace(/,\s*$/, "");
+        debugger;
+        var user =
+               {
+                   Mentor: $("#mantor option:selected").val(),
+                   MentorList: ddlCountryValue
+               }
+        debugger;
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("MentorList1", "CompentencyMetrixView")",
+            data: { user: user },
+            dataType: "json",
+            cache: false,
+            success: function (response) {
+                if (response == "Success") {
+                    window.location = response.url;
+
+                }
+            },
+            error: function (response) {
+                alert("Insert Data Successfully!");
+            }
+        });
+    });
+</script>
+
+
+
+
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            $("#mantor").change(function () {
+                var userid = $(this).val();
+
+                debugger;
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("Checkbox", "CompentencyMetrixView")",
+                    data: { userid: userid },
+                    dataType: "json",
+                    cache: false,
+                    success: function (response) {
+
+                        if (response != null) {
+
+                            var Result = JSON.parse(response);
+                            if (Result.Table.length > 0) {
+
+
+                                if (userid !== "") {
+
+
+
+                                    for (var i = 0; i < Result.Table.length; i++) {
+                                        var myArray = Result.Table[i];
+
+                                        if (Result.Table[i].PK_UserID != '') {
+                                            //multi.options[i].selected = true;
+                                            $("#BrAuditee").multiselect('select', myArray.PK_UserID)
+                                        }
+                                        else
+                                            $("#BrAuditee").prop("selected", false);
+
+
+
+                                    };
+                                }
+                                else {
+                                    //$(".checkbox-dropdown").hide();
+                                }
+                            }
+                            else
+                            {
+
+
+                                    $("#BrAuditee option:selected").each(function () {
+                                        $(this).prop("selected", false);
+                                    });
+
+
+                                //if (myArray === undefined) {
+                                //   this.options.onChange($option, false);
+                                //    $("#BrAuditee").prop('selected', false);
+                                //}
+                                //$("#BrAuditee").hide();
+                                ////$("#BrAuditee").prop("disabled", true);
+
+                                //$(".checkbox").each(function () {
+                                //    //alert($(this).find("option:selected").val());
+                                //    $(this).find("option:selected").multiselect("selected", false);
+                                //});
+
+                            }
+
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+
+
+
+            });
+
+        });
+    </script>*@
+
+<script>
+$(document).ready(function() {
+    $("#mantor").change(function() {
+        var userid = $(this).val();
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Checkbox", "CompentencyMetrixView")",
+            data: { userid: userid },
+            dataType: "json",
+            cache: false,
+            success: function(response) {
+            if (response != null) {
+            var Result = JSON.parse(response);
+            if (Result.Table.length > 0) {
+            var selectedValues = [];
+
+            for (var i = 0; i < Result.Table.length; i++) {
+            var myArray = Result.Table[i];
+            selectedValues.push(myArray.PK_UserID);
+            }
+
+            // Set the selected values in #BrAuditee dropdown
+            $("#BrAuditee").val(selectedValues);
+
+            // Refresh the multiselect dropdown
+            $("#BrAuditee").multiselect("refresh");
+            } else {
+            // Clear the selected values in #BrAuditee dropdown
+            $("#BrAuditee").val([]);
+
+            // Refresh the multiselect dropdown
+            $("#BrAuditee").multiselect("refresh");
+            }
+            }
+            },
+            error: function(response) {
+            //alert(response.responseText);
+            }
+            });
+            });
+            });
+</script>

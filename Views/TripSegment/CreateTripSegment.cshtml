@@ -1,0 +1,213 @@
+﻿@model TuvVision.Models.TripSegment
+
+@{
+    ViewBag.Title = "CreateTripSegment";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { PK_Call_ID=Model.PK_Call_Id} )'">Back</button>
+                        </div>
+                        @*<div class="col-xs-12 text-right">
+                            <a href="@Url.Action("ListNCR", "NCR")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+
+                        </div>*@
+
+
+                        @Html.HiddenFor(m => m.PK_Call_Id)
+
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title"> Trip Segment</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Start City:</label>
+                                                            @Html.TextBoxFor(model => model.StartCity, htmlAttributes: new { placeholder = "Start City", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.StartCity, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>End City:</label>
+                                                            @Html.TextBoxFor(model => model.EndCity, new { @placeholder = "End City", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.EndCity, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Date:</label>
+
+
+                                                            @Html.TextBoxFor(model => model.Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select  Date", @class = "form-control form-control-custom Date", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger validation-msg" })
+
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Vehicle Type: </label>
+                                                            @Html.DropDownListFor(m => m.ExpenseType, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="Car", Value = "Car" },
+                                                                     new SelectListItem{ Text="Motor Bike", Value = "MotorBike" },
+                                                                     
+
+
+                                                       }, new { @class = "form-control", @id = "PT" })
+                                                            @Html.ValidationMessageFor(m => m.ExpenseType, "", new { @class = "text-danger validation-msg" })
+
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Kilometer: </label>
+                                                            @Html.TextBoxFor(model => model.Kilometer, new { @placeholder = "Kilometer", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Kilometer, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Description: </label>
+                                                            @Html.TextAreaFor(model => model.Description, new { @placeholder = "Description", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Sub Job No </label>
+                                                            @Html.TextBoxFor(model => model.SubJobNo, new { @placeholder = "Sub Job No", @class = "form-control", autocomplete = "off", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(model => model.SubJobNo, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    @Html.HiddenFor(m => m.SubJobNo)
+                                                </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+
+                                                                <button type="submit" class="btn btn-default insert-form-btn"> Save </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12">
+                                                        <table id="example" class="display" cellspacing="0" width="100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="hidden">PKExpenseId</th>
+                                                                    <th class="hidden">Type</th>
+                                                                    <th class="hidden">FKId</th>
+                                                                    <th>Expense Type</th>
+                                                                    <th>Start City</th>
+                                                                    <th>End City</th>
+                                                                    <th>Date</th>
+                                                                    <th>Total Amount</th>
+                                                                    <th class="remove-search">Action</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                @foreach (var b in ViewBag.TripSegment)
+                                                                {
+
+                                                                    <tr>
+                                                                        <td class="hidden">@b.PKExpenseId</td>
+                                                                        <td class="hidden">@b.Type</td>
+                                                                        <td class="hidden">@b.FKId</td>
+                                                                        <td>@b.ExpenseType</td>
+                                                                        <td>@b.StartCity</td>
+                                                                        <td>@b.EndCity</td>
+                                                                        <td>@b.Date</td>
+                                                                        <td>@b.TotalAmount</td>
+                                                                        <td cRemarkslass="action-btn" style="text-align:center;">
+                                                                            <a href="@Url.Action("CreateTripSegment", "TripSegment", new { PKExpenseId = @b.PKExpenseId, Type = @b.Type, FKId = @b.FKId })" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>
+
+                                                                            <a href="@Url.Action("Delete", "TripSegment", new { PKExpenseId = @b.PKExpenseId })" class="delete" onclick="return confirm('Are you sure you wish to Delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+
+                                                        </table>
+                                                    </div>
+
+
+
+</form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+
+@*...Calender Control...*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.js" data-modules="effect effect-bounce effect-blind effect-bounce effect-clip effect-drop effect-fold effect-slide"></script>*@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<script>
+$(function () {
+    $(".Date").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>

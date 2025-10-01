@@ -1,0 +1,646 @@
+﻿@using NonFactors.Mvc.Grid;
+@{
+    ViewBag.Title = "GenerateVoucher";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+ 
+<!--filepond-->
+    <link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<script>
+    FilePond.parse(document.body);
+</script>
+<style>
+    .highlight-row {
+        /*background-color: #FFFF00;*/
+        background-color: #FFEB00;
+    }
+
+    /* Add styles for the table */
+    #example {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border: 1px solid #000; /* Black border for the table */
+        font-family: 'TNG Pro';
+    }
+
+        #example th, #example td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-family: 'TNG Pro';
+        }
+
+        #example th {
+            background-color: #001ED2; /* Electric blue color for the header background */
+            color: #fff; /* White text color for the header */
+            font-family: 'TNG Pro';
+        }
+
+    /* Style the checkbox */
+    .custom-checkbox {
+        margin-top: -2px;
+    }
+
+    /* Style the header row with the checkbox */
+    #example thead tr:first-child th:first-child {
+        padding-left: 15px;
+        font-family: 'TNG Pro';
+    }
+
+    /* Add a hover effect to the table rows */
+    #example tbody tr:hover {
+        /*background-color: #ffcccc;*/
+    }
+    label{
+        font-weight:normal;
+        font-family:'TNG Pro';
+    }
+</style>
+@*//added by nikita*@
+<style>
+    .highlight {
+        background-color: yellow;
+    }
+
+    .fixedsize {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        .fixedsize td {
+            /*border:1px solid;*/
+            padding: 4px 0px;
+            font-size: 12px;
+        }
+
+        .fixedsize th {
+            /*border:1px solid;*/
+            padding: 4px 0px;
+            font-size: 12px;
+        }
+
+    .table-con {
+        width: 1334px;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+</style>
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+            <form method="post">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="margin-left:-56px;">Travel Expenses Voucher(s) List</h3>
+                    <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex","VisitReport")'"
+                            style="border:none;display:none;font-family:'TNG Pro';">
+                        Export To Excel
+                    </button>
+                    <button type="button" value="Approved" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("GenerateVoucher", "GenerateVoucher")'"
+                            style="border:none;display:none;font-family:'TNG Pro';">
+                        Approved List
+                    </button>
+
+                </div><!-- /.col -->
+            </form>
+        </div><!-- /.row -->
+
+        <div class="col-xs-12">
+
+        </div><!-- /.data table col -->
+
+        <div class="col-xs-12 table-con">
+            <table class="display custom-table no-footer" style="overflow-y:auto" id="example">
+                <thead style="font-family:'TNG Pro';">
+                    <tr>
+                        <th style="font-family:'TNG Pro';"><label>Number</label></th>
+                        <th style="font-family:'TNG Pro';"><label>Month</label></th>
+                        <th style="font-family:'TNG Pro';"><label>Days</label></th>
+                        <th style="font-family:'TNG Pro';"><label>Total Amount (INR)</label></th>
+                        <th style="font-family:'TNG Pro';"><label>Approved Amount (INR)</label></th>
+                        <th style="font-family:'TNG Pro';" class="remove-search"><label>Status</label></th>
+                        <th style="font-family:'TNG Pro';" class="remove-search"><label>Year/Remarks</label></th>
+                    </tr>
+                </thead>
+            </table>         
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="remarksModalLabel" style="font-family:'TNG Pro';color:#FB5F6B;font-size:20px;">Please provide a reason for the delay in claiming the expenses after 7 days in the box below.</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <textarea id="txtarea" name="txtarea" rows="6" cols="90"></textarea>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="DelayRemark()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="remarksModal1" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="remarksModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Table to display remarks -->
+                <div class="table">
+                    <table class="table table-condensed table-responsive " id="tblusersmodal" style="border:1px;font-size:12px;">
+                        <thead style="background-color:#001ED2;color:white;border:1px solid;">
+                            <tr class="" style="background-color:#001ED2;font-family:'TNG Pro';color:white;">
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Date</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Approval Stage</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Approver Name</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Remarks</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Approved Amount (INR)</th>                               
+                                 @*<th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount approved</th>*@
+                            </tr>
+                        </thead>
+                        <tbody id="userbody" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: black;"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    var UrlLink = System.Configuration.ConfigurationManager.AppSettings["UrlLink"];
+}
+<script type="text/javascript">
+    var currentvoucherno;
+    $(document).ready(function () {
+        debugger;
+        GetVoucherList();
+        var UrlLink = '@UrlLink';
+    });
+    function GetVoucherList() {
+        debugger;
+        var UrlLink = '@UrlLink';
+        $.ajax({
+            type: "GET",
+            url: UrlLink + "/GenerateVoucher/GetVoucherList",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var a = JSON.parse(response);
+                var aa = JSON.stringify(response);
+
+                if (a == "Error") {
+                    $("#example tbody").empty();
+                    tr = $('<tr/>');
+                    tr.append('<td colspan=14>No Record Found</td>');
+                    $('#example').append(tr);
+                }
+                else {
+
+
+                    $("#example tbody").empty();
+                    for (var i = 0; i < a.length; i++) {
+                        var c = i + 1;
+                        var splitResult = a[i].VoucherNo.split('-');
+                        var date = new Date();
+                        var currentMonth = date.getMonth();
+                        var nextMonth = currentMonth + 1;
+                        if (nextMonth > 11) {
+                            nextMonth = 0;
+                        }
+                        var monthNames = [
+                          "Jan", "Feb", "Mar", "Apr",
+                          "May", "Jun", "Jul", "Aug",
+                          "Sep", "Oct", "Nov", "Dec"
+                        ];
+                        var nextMonthAbbreviation = monthNames[nextMonth];
+                        var CurrentMonthAbbreviation = monthNames[currentMonth];
+                        tr = $('<tr/>');
+                        tr.append("<td><a href=" + UrlLink + "'/GenerateVoucher/GenerateVoucher_UserHistory?VoucherNo=" + a[i].VoucherNo +"&Datedidd=" + a[i].diff + "'>" + a[i].VoucherNo + "</a></td>");
+                        //added by nikita on 22112023
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].Month_Name + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].DaysPresent + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].TotalAmount + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].ApprovedAmount + "</label> </td>");
+
+                       
+
+                        if (a[i].Status == 'Send For Approval')
+                            if (a[i].diff > 90) {
+                                tr.append("<td>-</td>");
+                            }
+                            else {
+                                tr.append("<td style='width:20%;'><input type='button' id='btn_" + c + "'  value='Send For Approval' onclick=SendForApproval('" + a[i].VoucherNo + "')></td>");
+                            }
+                        else
+                            tr.append("<td style='width:20%;'><label id='V_" + c + "'>" + a[i].Status + "</label></td>");
+                        tr.append("<td><label id='V_" + c + "'>(" + a[i].YearDate + ")/<i class='fas fa-info-circle' id='icon_" + i + "' style='cursor: pointer;' onclick='BindDescription(\"" + a[i].VoucherNo + "\")'></i></label></td>");
+
+                        $('#example').append(tr);
+                    }
+                    $("#example_info").hide();
+                    $("#example_paginate").hide();
+                }
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+
+    };
+
+    function GetVoucherApprovalList() {
+        debugger;
+        var UrlLink = '@UrlLink';
+        $.ajax({
+            type: "GET",
+            url: UrlLink + "/GenerateVoucher/GetVoucherApprovalList",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var a = JSON.parse(response);
+                var aa = JSON.stringify(response);
+
+                if (a == "Error") {
+
+                }
+                else {
+
+                    $("#example1 tbody").empty();
+                    for (var i = 0; i < a.length; i++) {
+                        var c = i + 1;
+                        tr = $('<tr/>');
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].VoucherNo + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].Month_Name + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].DaysPresent + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].TotalAmount + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].ApprovedAmount + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].Status + "</label> </td>");
+
+                        $('#example1').append(tr);
+                    }
+
+
+                }
+            },
+            error: function (xhr, status, error) {
+                // Code to handle errors goes here
+            }
+        });
+
+    };
+
+    $('#chkChkAll').click(function (e) {
+        var table = $(e.target).closest('table');
+        $('td input:checkbox', table).prop('checked', this.checked);
+    });
+
+
+    @*function SendForApproval(VoucherNo) {
+        debugger;
+        Validate_Days(VoucherNo, function (isvalid, MINMAXDate) {
+            if (isvalid) {
+                        if (confirm('Do you want to proceed with voucher(s) approval?')) {
+                            if (confirm('Kindly note after clicking on Yes you are not able to change anything. Please confirm you want to proceed.')) {
+                                var UrlLink = '@UrlLink';
+                                $.ajax({
+                                    type: "GET",
+                                    url: UrlLink + "/GenerateVoucher/SendForApproval",
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    data: { VoucherNo: VoucherNo },
+                                    success: function (response) {
+                                        var a = JSON.parse(response);
+                                        GetVoucherList();
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error("Error occurred while sending voucher for approval:", status, error);
+                                    }
+                                });
+                            }
+                        }
+            }
+            else {
+
+                alert('TimesSheet not fully filled for period ' + MINMAXDate);
+
+            }
+        });
+
+
+    }*@
+
+
+    function SendForApproval(VoucherNo) {
+        debugger;
+        $("#txtarea").val('');
+        currentvoucherno = VoucherNo;
+        DelayFlag(currentvoucherno, function (isvalid, DelayFlag) {
+            if (isvalid) {
+                proceedWithApproval(currentvoucherno);
+                $('#remarksModal').modal('hide');
+            }
+            else {
+                validateDate_MAxDate(VoucherNo, function (isValid, MaxOverallDate) {
+
+                    if (!isValid || !MaxOverallDate) {
+                        console.error("MaxOverallDate is undefined or invalid.");
+                        return;
+                    }
+
+                    const parsedMaxDate = new Date(MaxOverallDate);
+                    if (isNaN(parsedMaxDate.getTime())) {
+                        console.error("MaxOverallDate could not be parsed into a valid Date.");
+                        return;
+                    }
+                    var someDate = new Date();
+                    var numberOfDaysToAdd = MaxOverallDate;
+                    const endDate = new Date(parsedMaxDate.getTime());
+                    endDate.setDate(parsedMaxDate.getDate() + 7);
+                    const currentDate = new Date();
+                    if (currentDate > endDate) {
+                        $('#remarksModal').modal('show');
+                        $('#remarksModal').on('hidden.bs.modal', function () {
+                            proceedWithApproval(currentvoucherno);
+                        });
+                    } else {
+                        proceedWithApproval(currentvoucherno);
+                    }
+                });
+            }
+        })
+    }
+
+    function proceedWithApproval(VoucherNo, Delayflag) {
+        debugger;
+        //DelayFlag(VoucherNo, function (isvalid) {
+        //    console.log("DelayFlag result: ", DelayFlag);
+
+        //    if (!isvalid) {
+        //        console.log("Stopping execution as DelayFlag is false.");
+        //        $('#remarksModal').modal('hide');
+        //        return;
+        //    }
+        //else {
+        Validate_Days(VoucherNo, function (isvalid, MINMAXDate) {
+            if (isvalid) {
+                ValidateVoucherAttachment(VoucherNo, function (attachmentsValid) {
+                    if (attachmentsValid) {
+                        if (confirm('Do you want to proceed with voucher(s) approval?')) {
+                            if (confirm('Kindly note after clicking on Yes you are not able to change anything. Please confirm you want to proceed.')) {
+                                var UrlLink = '@UrlLink';
+                                $.ajax({
+                                    type: "GET",
+                                    url: UrlLink + "/GenerateVoucher/SendForApproval",
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    data: { VoucherNo: VoucherNo },
+                                    success: function (response) {
+                                        var a = JSON.parse(response);
+                                        GetVoucherList();
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error("Error occurred while sending voucher for approval:", status, error);
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+                        alert('Attachments are missing or invalid. Cannot proceed with approval.');
+                    }
+                });
+            }
+            else {
+
+                alert('TimesSheet not fully filled for period ' + MINMAXDate);
+            }
+        });
+        //}
+        //})
+    }
+
+
+    function ValidateVoucherAttachment(VoucherNo, callback) {
+        debugger;
+        $.ajax({
+            url: "@Url.Action("ValidateVoucherAttachments", "GenerateVoucher")",
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: { Voucherno: VoucherNo },
+            success: function (response) {
+                debugger;
+                var attachments = JSON.parse(response);
+                var Data = attachments[0].Result
+                if (Data === "Yes") {
+                    callback(true);
+                }
+                else {
+                    callback(false);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error occurred while validating voucher attachments:", status, error);
+                if (callback) callback(false);
+            }
+        });
+    }
+
+
+    function Validate_Days(VoucherNo, callback) {
+        debugger;
+        $.ajax({
+            url: "@Url.Action("ValidateSendForapproval", "GenerateVoucher")",
+            type: 'Get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            data: { VoucherNo: VoucherNo },
+            success: function (result) {
+                debugger;
+                var data = JSON.parse(result);
+                var Result_ = data[0].DateCounts;
+                var MINMAXDate = data[0].MINMAXDate;
+
+                if (Result_ === "Yes") {
+                    callback(true, MINMAXDate);
+                }
+                else {
+                    callback(false, MINMAXDate);
+                }
+            },
+            error: function (result) {
+                alert("something went wrong");
+            }
+
+        })
+    }
+
+
+    function validateDate_MAxDate(Voucherno, callback) {
+        debugger;
+        var Voucherno = Voucherno;
+        $.ajax({
+            url: "@Url.Action("validateDate_MAxDate", "GenerateVoucher")",
+            type: 'Get',
+            dataType: 'json',
+            data: { Voucherno: Voucherno },
+            success: function (result) {
+                debugger;
+                const parsedResponse = JSON.parse(result);
+                if (parsedResponse && parsedResponse.length > 0) {
+                    const data = parsedResponse[0];
+                    const MaxOverallDate = data.MaxOverallDate ? new Date(data.MaxOverallDate) : undefined;
+                    console.log("Parsed MaxOverallDate:", MaxOverallDate);
+                    if (!MaxOverallDate || isNaN(MaxOverallDate.getTime())) {
+                        console.error("MaxOverallDate is invalid or not present.");
+                        callback(false, undefined);
+                    } else {
+                        callback(true, MaxOverallDate);
+                    }
+                } else {
+                    console.error("Response array is empty or invalid.");
+                    callback(false, undefined);
+                }
+            },
+            error: function (result) {
+                debugger;
+            }
+        })
+    }
+
+    function DelayRemark() {
+        debugger;
+        var Voucherno = currentvoucherno;
+        var remark = $("#txtarea").val();
+        if (remark == null || remark == "") {
+            alert("Please Enter Remark");
+            $('#remarksModal').modal('show');
+            $("#txtarea").focus();
+            return false;
+        }
+        $.ajax({
+            url: "@Url.Action("DelayRemark", "GenerateVoucher")",
+            type: 'post',
+            dataType: 'json',
+            data: { Voucherno: Voucherno, Remarks: remark },
+            success: function (result) {
+                debugger;
+            },
+            error: function (result) {
+                debugger;
+            }
+        })
+    }
+
+
+    function DelayFlag(Voucherno, callback) {
+        debugger;
+        var Voucherno = Voucherno;
+        $.ajax({
+            url: "@Url.Action("Delayflag", "GenerateVoucher")",
+            type: 'post',
+            dataType: 'json',
+            async: false,
+            data: { Voucherno: Voucherno },
+            success: function (result) {
+                debugger;
+                var data = JSON.parse(result);
+                var Result_ = data[0].Delayflag;
+                if (Result_ == "1") {
+                    callback(true);
+                }
+                else {
+                    callback(false);
+                }
+            },
+            error: function (result) {
+                debugger;
+                console.error("Error fetching DelayFlag:", error);
+                callback(false, null);
+
+            }
+        })
+    }
+
+
+
+    function BindDescription(d) {
+        debugger;
+        var VoucherNo = d;
+        var UrlLink = '@UrlLink';
+        $.ajax({
+            ////url: UrlLink + "/GenerateVoucher/Voucher_History_Description",
+            url: "@Url.Action("Voucher_History_Description", "GenerateVoucher")",
+            type: "get",
+            DataType: "json",
+            async: false,
+            contenttype: "application/json; charset=utf-8",
+            data: { VoucherNo: VoucherNo },
+            success: function (result) {
+                debugger;
+                $("#tblusersmodal tbody").empty();
+                var a = JSON.parse(result);
+                let date = [a[0].Date, a[0].PCH_Approval_Date, a[0].CH_Approval_Date, a[0].Account_Approval_Date, a[0].FI_Approval_Date]
+                let Name_ = [a[0].Name, a[0].PCH_Name, a[0].CH_Approval, a[0].Account_Approval, a[0].FI_Approval]
+                let Amount = [a[0].Approval_One_Approval_Amount, a[0].Pch_ApprovalAmount, a[0].Ch_Approval_Amount, a[0].Accountant_Approval_Amount, a[0].FI_Approval_Amount]
+                let Data = ["ApprovalOne/ApprovalTwo", "PCH", "Cluster Head", "Accountant", "Finance"]
+                let k = 0;
+                var myArray = [];
+                for (var i = 0; i < a.length; i++) {
+                    if (!!a[i].ApprovalOne_Description) {
+                        myArray.push(a[i].ApprovalOne_Description);
+                        k++;
+                    }
+                    if (!!a[i].PCH_Approval_Description) {
+                        myArray.push(a[i].PCH_Approval_Description);
+                        k++;
+
+                    }
+                    if (!!a[i].CH_Approval_Description) {
+                        myArray.push(a[i].CH_Approval_Description);
+                        k++;
+
+                    }
+                    if (!!a[i].Accountant_Description) {
+                        myArray.push(a[i].Accountant_Description);
+                        k++;
+                    }
+                    if (!!a[i].Finance_Description) {
+                        myArray.push(a[i].Finance_Description);
+                        k++;
+                    }
+                    for (var j = 0; j < myArray.length; j++) {
+
+                        $("#tblusersmodal").append('<tr><td>' + date[j] + '</td><td>' + Data[j] + '</td><td>' + Name_[j] + '</td><td>' + myArray[j] + '</td><td>' + Amount[j] + '</td></tr>')
+                    }
+                }
+                $('#remarksModal1').modal('show');
+            },
+            error: function (result) {
+                debugger;
+                (result + "something went wrong");
+            }
+        });
+    }
+</script>
+

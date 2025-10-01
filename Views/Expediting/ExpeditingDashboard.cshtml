@@ -1,0 +1,3507 @@
+﻿@model TuvVision.Models.Progress
+@{
+    //ViewBag.Title = "Finalinspectionperformance";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+}
+
+    padding: 7px;
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+<!-- Bootstrap -->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet" />
+
+<script src="~/AllJsAndCss/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+
+
+
+
+
+<!-- Start Other stylesheets -->
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+@*<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />*@
+    <link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+<style>
+    .table-container {
+        width: 1300px; /* Adjust the width as needed */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+        overflow-y: hidden;
+    }
+
+    /* Set the size of the table */
+    .fixed-size-table {
+        width: 100%;
+        table-layout: fixed; /* Fixed table layout */
+    }
+
+        /* Style the table cells (optional) */
+        .fixed-size-table td {
+            border: 1px solid #00003C;
+            padding: 4px 0px;
+            font-size: 12px;
+        }
+        td, th {
+
+}
+ .custom-md-6 {
+            width: 75%; /* Adjust as needed */
+        }
+
+        /* Adjust height of the chart canvas */
+        #myChart {
+            /*height: 400px; /* Adjust height as needed */
+            /* Optionally, adjust width */
+            /*width: 100%;*/
+            height: 339px; 
+            width: 595px;
+        }
+
+     .scrollable-section {
+            max-height: 500px; 
+            overflow-y: auto;
+            overflow-x: hidden; 
+            padding-right: 15px; 
+        }
+      
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .custom-table td, .custom-table th {
+            border: 1px solid #ddd;
+            padding: 4px;
+        }
+        
+        .custom-table th {
+            background-color: #104193;
+            color: white;
+        }
+        
+        /* Style for HR */
+        .custom-hr1 {
+            border-top: 2px solid #104193;
+        }
+        .formHeading{
+    margin: 1px;
+    font-size: 14px;
+    font-weight: 50px;
+    text-align: center;
+    background-color: #EEEEEE;
+    padding-top: 4px;
+    padding-bottom: 3px;
+    color: #00003C;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    /* font-family: arial; */
+    font-family: 'TNG Pro';
+        }
+        .form-control{
+            border-radius: 0px;
+        }
+        .font{
+            font-size:13px;
+
+        }
+     .vl {
+  border-left: 2px solid #104193;
+  height: 300px;
+}
+ 
+   
+</style>
+
+<div class="main-content3 xs-max-height">
+    <div class="container-fluid">
+
+        <!--Start of header-->
+        <div class="container-fluid" style="overflow-x:hidden;">
+            <div class="row">
+                <div class="col-lg-8" style="margin-top:29px">
+                    <a href="@Url.Action("Welcome","Login")" class="logo">
+                        <img src="~/AllJsAndCss/images/logoN.png" alt="" style="max-width: 210%;margin-top: -59px;">
+                    </a>
+                    @*<h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left:147px;padding-top:10px;font-family:'TNG Pro'; ">TUV India Private Limited-Expediting Dashboard</h3>*@
+                    <div style="margin-top: -40px;margin-left: 89px;">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left:147px;padding-top:10px;font-family:'TNG Pro'; ">TUV India Private Limited - Expediting Dashboard</h3>
+                    </div>
+                </div>
+
+                          
+                <div class="col-lg-12" style="margin-left:970px">
+
+
+                    <button type="button" onclick="openVendorDetails()" style="display: inline-block; background-color: #104193; color: white; border-radius: 0; padding: 8px; margin-left: 153px; margin-top: -39px; margin-left: 10px;">
+                        @*statistics Vendor*@ Vendor Status
+                    </button>
+
+                    <button type="button" onclick="openitemDetails()" style="display: inline-block; background-color: #104193; color: white; border-radius: 0; padding: 8px;">
+                        Po Item Status
+                    </button>
+                    <button onclick="clearData()" style="display: inline-block; background-color: #104193; color: white; border-radius: 0; padding: 8px; margin-top: 10px;">
+                        Clear
+                    </button>
+                    <button type="button" style="background-color: #104193;display: inline-block; color: white; border-radius: 0;padding: 8px; margin-top: -3px;" onclick="Redirect()">Back</button>
+                </div>
+
+            </div>
+        </div>
+
+       
+
+        @*<div class="row">
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label for="ddlCompany" style="width:400px">Customer Name</label>
+                    <select class="form-control" id="ddlCompany" onchange="BindAll()"></select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                    <label for="ddlProject" style="width:400px">Project Name</label>
+                    <select class="form-control" id="ddlProject" onchange="ProjectChange()"></select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                    <label for="ddlSubVendorName" style="width:400px">Vendor Name</label>
+                    @Html.DropDownListFor(model => model.vendor, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlSubVendorName", @class = "form-control form-multiselect-city", @multiple = "multiple", onchange = "SubVendorChange()" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                    <label for="ddlPONumber" style="width:400px">PO Number</label>
+                    @Html.DropDownListFor(model => model.VendorPO, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlPONumber", @class = "form-control form-multiselect-city poemp", @multiple = "multiple", onchange = "POChange()" })
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                    <label for="ddlItemNumber" style="width:400px">PO Item Number</label>
+                    @Html.DropDownListFor(model => model.itemnumbar, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlItemNumber", @class = "form-control form-multiselect-city iemp", @multiple = "multiple", onchange = "ItemChange()" })
+
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                    <label for="ddlItemTagNo" style="width:400px">Item Code/Tag No</label>
+                   @Html.DropDownListFor(model => model.itemtag, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlItemTagNo", @class = "form-control form-multiselect-city inemp", @multiple = "multiple", onchange= "Itemcodechange()" })
+
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                    <label for="ddlItemName" style="width:400px">Item Name</label>
+                    @Html.DropDownListFor(model => model.ItemName, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlItemName", @class = "form-control form-multiselect-city inemp", @multiple = "multiple", onchange = "ItemNamechange()" })
+
+                </div>
+            </div>
+            </div>*@
+
+        <div class="container" style="margin-left: -13px; margin-top:15px;">
+            <div class="row">
+                <div class="col-xs-12 col-sm-2">
+                    <div class="form-group">
+                        <label for="ddlCompany" style="width:100%;text-align:center;">Customer Name</label>
+                        <select class="form-control" id="ddlCompany" onchange="BindAll()" style="height: 38px;"></select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2" style="margin-left:-10px;">
+                    <div class="form-group">
+                        <label for="ddlProject" style="width:100%;text-align:center;">Project Name</label>
+                        <select class="form-control" id="ddlProject" onchange="ProjectChange()" style="height: 38px;"></select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                    <div class="form-group">
+                        <label for="ddlSubVendorName" style="width:100%;text-align:center;">Vendor Name</label>
+                        @Html.DropDownListFor(model => model.vendor, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlSubVendorName", @class = "form-control form-multiselect-city", @multiple = "multiple", onchange = "SubVendorChange()" })
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                    <div class="form-group">
+                        <label for="ddlPONumber" style="width:100%;text-align:center;">PO Number</label>
+                        @Html.DropDownListFor(model => model.VendorPO, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlPONumber", @class = "form-control form-multiselect-city poemp", @multiple = "multiple", onchange = "POChange()" })
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                    <div class="form-group">
+                        <label for="ddlItemNumber" style="width:100%;text-align:center;">PO Item Number</label>
+                        @Html.DropDownListFor(model => model.itemnumbar, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlItemNumber", @class = "form-control form-multiselect-city iemp", @multiple = "multiple", onchange = "ItemChange()" })
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                    <div class="form-group">
+                        <label for="ddlItemTagNo" style="width:100%;text-align:center;">Item Code/Tag No</label>
+                        @Html.DropDownListFor(model => model.itemtag, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlItemTagNo", @class = "form-control form-multiselect-city inemp", @multiple = "multiple", onchange = "Itemcodechange()" })
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2" style="margin-top: -78px;margin-left: 1148px;">
+                    <div class="form-group">
+                        <label for="ddlItemName" style="width:100%;text-align:center;">Item Name</label>
+                        @Html.DropDownListFor(model => model.ItemName, new MultiSelectList(Enumerable.Empty<MultiSelectList>()), new { @id = "ddlItemName", @class = "form-control form-multiselect-city inemp", @multiple = "multiple", onchange = "ItemNamechange()" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+            
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="form-group col-md-3" style="padding: 2px;">
+                    <label for="txtTotal" style="font-size:13px;text-align:center;margin-left: 45px;">Total Visits</label>
+                    <input id="txtTotal" class="form-control" onclick="TotalVisit()" value="0" readonly style="text-align:center;" />
+                </div>
+                <div class="form-group col-md-2" style="padding: 2px;">
+                    <label for="txtOnsiteVisit" style="font-size:13px;text-align:center;margin-left: 10px;">Onsite Visits</label>
+                    <input id="txtOnsiteVisit" class="form-control" onclick="OnsiteVisit()" value="0" readonly style="text-align:center;"/>
+                </div>
+                <div class="form-group col-md-2" style="padding: 2px;">
+                    <label for="txtDeskVisit" style="font-size:13px;text-align:center;margin-left: 10px;">Desk Visits</label>
+                    <input id="txtDeskVisit" class="form-control" value="0" onclick="DeskVisit()" readonly style="text-align:center;"/>
+                </div>
+                <div class="form-group col-md-2" style="padding: 2px;">
+                    <label for="txtOverallStatus" style="font-size:13px;text-align:center;margin-left: 14px;">Overall Status</label>
+                    <input id="txtOverallStatus" style="width: 130px;text-align:center;" class="form-control"  value="0" readonly/>
+                </div>
+                <div class="form-group col-md-3" style="padding: 2px;">
+                    <label for="txtPlannedProgress" style="margin-left: 32px;text-align:center; font-size:13px;margin-left: 37px;">Planned Progress%</label>
+                    <input id="txtPlannedProgress" style="margin-left: 30px; text-align:center;" class="form-control" value="0" readonly />
+                </div>
+               
+            </div>
+            <div class="col-md-6">
+                <div class="form-group col-md-3" style="padding: 2px;">
+                    <label for="txtOverallProgress" style="font-size:13px;text-align:center;margin-left: 14px;">Overall Progress%</label>
+                    <input id="txtOverallProgress"  class="form-control" value="0" readonly style="text-align:center;" />
+                </div>
+                <div class="form-group col-md-3" style="padding: 2px;">
+                    <label for="txtOpenConcerns" style="font-size:13px;text-align:center;margin-left: 22px;">Open Concerns</label>
+                    <input id="txtOpenConcerns" class="form-control" value="0" readonly style="text-align:center;" />
+                </div>
+                <div class="form-group col-md-3" style="padding: 2px;">
+                    <label for="txtClosedConcerns" style="font-size:13px;text-align:center;margin-left: 25px;">Closed Concerns%</label>
+                    <input id="txtClosedConcerns" class="form-control" value="0" readonly style="text-align:center;" />
+                </div>
+                <div class="form-group col-md-3" style="padding: 2px;">
+                    <label for="txtNumVendors" style="font-size:13px;text-align:center;margin-left: 26px;">No. of Vendors</label>
+                    <input id="txtNumVendors" class="form-control" value="0" readonly style="text-align:center;" />
+                </div>
+                @*<div class="form-group col-md-3" style="padding: 2px;">
+                    <label for="txtNumEnggDoc">No. of Engg Doc</label>
+                    <input id="txtNumEnggDoc" class="form-control" value="0" readonly />
+                </div>*@
+            </div>
+        </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <hr class="custom-hr1">
+                    </div>
+                </div>
+        <div class="scrollable-section" style="max-height: 500px; overflow-y: auto; overflow-x: hidden; padding-right: 15px;">
+
+
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="col-md-6" style="margin-top: -7px;margin-left: -18px">
+                        <div id="chartDiv">
+
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6" style="margin-top:-10px; border-left:2px solid #104193; margin-left:18px">
+                        @*<h1 id="chartTitle" style="font-family:'TNG Pro';font-size:14px;margin-left: 191px;"></h1>*@
+                        <canvas id="myChart"></canvas>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <hr class="custom-hr1">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">                   
+                    <div class="col-md-6">
+                        <h3 class="formHeading" style="margin-left: -2px;">Stage Wise Concerns Summary</h3> @*Counts*@
+                        <table id="Concerns" class="display custom-table" cellpadding="3" border="1" style="width: 100%; margin-left: -2px;">
+                            <thead>
+                                <tr style="background-color:#104193;color:white">
+                                    <td style="text-align: center;vertical-align:top;" class="font">Stage</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Open</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Closed</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Total</td>
+                                </tr>
+                            </thead>
+                            <tbody id="ConcernsValue"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h3 class="formHeading">Action Points Summary</h3>
+                        <table id="Action" class="display custom-table" cellpadding="3" border="1" style="width: 100%;">
+                            <thead>
+                                <tr style="background-color:#104193;color:white">
+                                    <td style="text-align: center;vertical-align:top;font-size:14px;" class="font">Stage</td>
+                                    <td style="text-align: center;vertical-align:top;font-size:14px;" class="font">Vendor/Sub Vendor</td>
+                                    <td style="text-align: center;vertical-align:top;font-size:14px;" class="font">Customer</td>
+                                    <td style="text-align: center;vertical-align:top;font-size:14px;" class="font">TUVI</td>
+                                    <td style="text-align: center;vertical-align:top;font-size:14px;" class="font">Total</td>
+                                </tr>
+                            </thead>
+                            <tbody id="ActionValue"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <hr class="custom-hr1">
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6" style="overflow-x:auto;overflow-y:auto; margin-left: -2px">
+                        <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="exportToExcel()" style="width: 87px;font-size: 10px;height: 23px;">
+                            Export To Excel
+                        </button>
+                        <h3 class="formHeading" style="margin-left: -2px;">Stage Wise Concerns Details</h3>
+                        <table id="ConcernsvalueID" class="display custom-table" cellpadding="3" border="1" style="width: 100%; margin-left: -2px;">
+                            <thead>
+                                <tr style="background-color:#104193;color:white">
+                                    <td style="text-align: center;vertical-align:top;" class="font">Date</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Area Of Concerns</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Corrective Action</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Responsible person</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Vendor Name</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">PO No</td>
+
+                                </tr>
+                            </thead>
+                            <tbody id="ConcernsData"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-6" style="overflow-x:auto;overflow-y:auto">
+                        <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="exportToExcelActionValue()" style="width: 87px;font-size: 10px;height: 23px;">
+                            Export To Excel
+                        </button>
+                        <h3 class="formHeading" style="margin-left: -2px;">Action Points Details</h3>
+                        <table id="ActionID" class="display custom-table" cellpadding="3" border="1" style="width: 100%; margin-left: -2px;">
+                            <thead>
+                                <tr style="background-color:#104193;color:white">
+                                    <td style="text-align: center;vertical-align:top;" class="font">Date</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Name</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Details</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Status</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Vendor Name</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Vendor PO Number</td>                                   
+                                    <td style="text-align: center;vertical-align:top;" class="font">Action Required By</td>                                 
+                                </tr>
+                            </thead>
+                            <tbody id="ActionData"></tbody>
+                        </table>
+                    </div>
+                    </div>
+                </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <hr class="custom-hr1">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 class="formHeading" style="margin-left: -2px;">Expediting Reports</h3>
+                        <table id="Total" class="display custom-table" cellpadding="3" border="1" style="width: 100%; margin-left: -2px;">
+                            <thead>
+                                <tr style="background-color:#104193;color:white">
+                                    <td style="text-align: center;vertical-align:top;" class="hidden font">pk_call_id</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Date Of Expediting</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Expediting Type</td>                                    
+                                    <td style="text-align: center;vertical-align:top;" class="font">Expediting Report</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Issued By</td>
+
+                                </tr>
+                            </thead>
+                            <tbody id="TotalValues"></tbody>
+                        </table>
+                    </div>
+
+                    @*<div class="col-md-4">
+                        <h3 class="formHeading" style="margin-left: -2px;">Onsite Report Details</h3>
+                        <table id="Onsite" class="display custom-table" cellpadding="3" border="1" style="width: 100%; margin-left: -2px;">
+                            <thead>
+                                <tr style="background-color:#104193;color:white">
+                                    <td style="text-align: center;vertical-align:top;" class="hidden font">pk_call_id</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Date Of Expediting</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Expediting Report</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Issued By</td>
+
+                                </tr>
+                            </thead>
+                            <tbody id="OnsiteValues"></tbody>
+                        </table>
+                    </div>*@
+
+                    @*<div class="col-md-4">
+                        <h3 class="formHeading" style="margin-left: -2px;">Desk Report Details</h3>
+                        <table id="DeskSite" class="display custom-table" cellpadding="3" border="1" style="width: 100%; margin-left: -2px;">
+                            <thead>
+                                <tr style="background-color:#104193;color:white">
+                                    <td style="text-align: center;vertical-align:top;" class="hidden font">pk_call_id</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Date Of Expediting</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Expediting Report</td>
+                                    <td style="text-align: center;vertical-align:top;" class="font">Issued By</td>
+
+                                </tr>
+                            </thead>
+                            <tbody id="DeskValues"></tbody>
+                        </table>
+                    </div>*@
+                </div>
+
+            </div>
+
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+
+
+
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+
+
+
+@*<script>
+    $("#ddlSubVendorName").select2({
+        maximumSelectionSize: 4
+    });
+</script>*@
+
+@*<script>
+    $(document).ready(function () {
+        $('.subvendorName').select2();
+        $('.ddlPONumber').select2();
+        $('.ddlItemNumber').select2();
+        $('.ddlitemtag').select2();
+    });
+</script>*@
+
+<script>
+$(document).ready(function () {
+    initializeMultiselect();
+});
+
+function initializeMultiselect() {
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+}
+
+function Multiselect() {
+    $('#ddlSubVendorName').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'Select All',
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        maxHeight: 300
+       
+       
+    });
+}
+function PONumberMultiselect() {
+    $('#ddlPONumber').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'Select All',
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        maxHeight: 300
+
+    });
+}
+function itemNumberMultiselect() {
+    $('#ddlItemNumber').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'Select All',
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        maxHeight: 300
+
+    });
+}
+function ItemTagMultiselect() {
+    $('#ddlItemTagNo').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'Select All',
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        maxHeight: 300
+
+    });
+}
+
+function ItemNameMultiselect() {
+    $('#ddlItemName').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'Select All',
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        maxHeight: 300
+
+    });
+}
+ </script>
+
+<script>
+
+    $(document).ready(function () {
+        //$('.select2').select2({ minimumResultsForSearch: -1 });
+        //$(function () {
+        //    $('#ddlProject').multiselect({
+        //        includeSelectAllOption: true
+        //    });
+
+        //});
+        $('.select2').select2();
+        FillDrop('ddlCompany', 'Company', '');
+        //FillDrop('ddlProject', 'Project');
+        //Fill
+
+
+    })
+
+
+    //function CreateChart(gantchart) {
+    //    debugger
+    //    var costSheetData = gantchart;
+
+    //    var chartData = [];
+    //   // var customerName = Name;
+    //    // Loop through your costSheetData
+    //    for (var i = 0; i < costSheetData.length; i++) {
+    //        var activity = costSheetData[i];
+    //        var stageName = activity.Stages;
+
+    //        var expectedStartDate = moment(activity.ExpectedStartDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+    //        var expectedEndDate = moment(activity.ExpectedEndDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+    //        var actualStartDate = moment(activity.Actual_Start_Date, 'DD/MM/YYYY').format('MM/DD/YYYY');
+    //        var actualEndDate = moment(activity.Actual_End_Date, 'DD/MM/YYYY').format('MM/DD/YYYY');
+    //        var ExpeditingDate = moment(activity.ExpeditingDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+
+    //        var expectedProgressPer = parseFloat(activity.Expected_Progressper) / 100;
+    //        var actualProgressPer = parseFloat(activity.Actual_Progressper) / 100;
+            
+           
+           
+
+
+    //        if (isNaN(expectedProgressPer) || expectedProgressPer < 0 || expectedProgressPer > 1) {
+    //            expectedProgressPer = 0; 
+    //        }
+    //        if (isNaN(actualProgressPer) || actualProgressPer < 0 || actualProgressPer > 1) {
+    //            actualProgressPer = 0; 
+    //        }
+
+    //        chartData.push({
+    //            stageName: stageName,
+    //            expected: {
+    //                startDate: expectedStartDate,
+    //                endDate: expectedEndDate,
+    //                progress: expectedProgressPer
+    //            },
+    //            actual: {
+    //                startDate: actualStartDate,
+    //                endDate: actualEndDate,
+    //                progress: actualProgressPer
+    //            }
+    //        });
+    //    }
+
+       
+
+    //    var seriesData = [
+    //        {
+    //            name: 'Planned days',
+    //            points: [],
+    //            color: '#100ED2',
+                
+    //        },
+    //        {
+    //            name: 'Actual/Estimated days',
+    //            points: [],
+    //            color: '#FB5F6B'
+
+    //        }
+
+    //    ];
+
+    //    // Create series data for the chart
+    //    chartData.forEach(function (data) {
+    //        seriesData[0].points.push({
+    //            name: data.stageName,
+    //            y: [data.expected.startDate, data.expected.endDate],
+    //            complete: data.expected.progress,
+    //            color: '#100ED2', // Set color for expected stages
+    //            label: {
+    //                // text: (data.expected.progress * 100) + '%', 
+    //                text: (data.expected.progress * 100).toFixed(2) + '%',
+    //                align: 'right',
+    //                style: {
+    //                    fontSize: '10px',
+    //                    color: 'black',
+    //                    textOutline: '1px contrast',
+    //                    padding: '2px',
+    //                    offsetX: 15
+    //                },
+    //                defaultPoint_opacity: 0.6
+    //            }
+
+    //        });
+
+    //        seriesData[1].points.push({
+    //            name: data.stageName,
+    //            y: [data.actual.startDate, data.actual.endDate],
+    //            complete: data.actual.progress,
+    //            color: '#FB5F6B', // Set color for actual stages
+    //            label: {
+    //                //text: (data.actual.progress * 100) + '%', // Show completion percentage
+    //                text: (data.actual.progress * 100).toFixed(2) + '%',
+    //                align: 'right',
+    //                style: {
+    //                    fontSize: '10px',
+    //                    color: 'black',
+    //                    textOutline: '1px contrast',
+    //                    padding: '2px',
+    //                    offsetX: 15
+    //                }
+    //            },
+    //            defaultPoint_opacity: 0.6
+    //        });
+    //    });
+
+       
+       
+    //    //var chart = JSC.chart('chartDiv', {
+    //    //    debug: false, // Debug mode should be set to false for production
+    //    //    type: 'horizontal column',
+    //    //    zAxis_scale_type: 'stackedFull',
+    //    //    height: 220,
+    //    //    width: 650,
+    //    //    yAxis_scale_type: 'time',
+    //    //    yAxis_formatString: '',
+    //    //    xAxis_defaultTick_label_style: { fontSize: 8, fontWeight: 'bold' },
+    //    //    //title: {
+    //    //    //    label_text: 'Expediting Gantt chart Data: (' + customerName + ')',
+    //    //    //    position: 'center',
+    //    //    //    style_fontSize: 16,
+    //    //    //    style_color: '#001ED2', 
+    //    //    //    style_fontFamily: 'Tng Pro', 
+    //    //    //    style_fontWeight: 'bold', 
+    //    //    //    margin_bottom: 15
+    //    //    //},
+    //    //    legend: {
+    //    //        template: '%icon %name', position: 'outside top',
+    //    //        align: 'center'
+    //    //        //position: 'outside top right'
+    //    //    },
+    //    //    //yAxis: {
+    //    //    //    markers: [
+    //    //    //      {
+    //    //    //          value: ExpeditingDate,
+    //    //    //          color: '#FF9900',
+    //    //    //          label_text: 'Expediting Date'
+    //    //    //      }
+    //    //    //    ]
+    //    //    //},
+    //    //    series: seriesData,
+    //    //    toolbar_visible: false,
+    //    //    defaultSeries_bar_spacing: 8,
+    //    //    defaultPoint_label_autoHide: false,
+    //    //    yAxis: {
+    //    //        markers: [
+    //    //          {
+    //    //              value: ExpeditingDate,
+    //    //              color: '#FF9900',
+    //    //              label_text: 'Expediting Date(' + ExpeditingDate + ')'
+    //    //          }
+    //    //        ]
+    //    //    },
+
+    //    //});
+
+    //    var numDataPoints = chartData.length;
+    //    var minWidth = 650;  // Minimum width to ensure readability
+    //    var minHeight = 300;  // Minimum height to ensure readability
+    //    var width = Math.max(minWidth, numDataPoints * 20);  // Adjust multiplier as needed
+    //    var height = Math.max(minHeight, numDataPoints * 10);  // Adjust multiplier as needed
+
+    //    // Initialize the chart configuration
+    //    var chartConfig = {
+    //        type: 'horizontal column',
+    //        height: height,
+    //        width: width,
+    //        yAxis_scale_type: 'time',
+    //        yAxis_formatString: '',
+    //        xAxis_defaultTick_label_style: { fontSize: 8, fontWeight: 'bold' },
+    //        legend: {
+    //            template: '%icon %name',
+    //            position: 'outside top',
+    //            align: 'center'
+    //        },
+    //        series: seriesData,
+    //        defaultSeries_bar_spacing: 8,
+    //        defaultPoint_label_autoHide: false,
+    //        yAxis: {
+    //            markers: [
+    //                {
+    //                    value: ExpeditingDate,
+    //                    color: '#FF9900',
+    //                    label_text: '(' + ExpeditingDate + ')'
+    //                }
+    //            ]
+    //        },
+    //    };
+
+    //    // Initialize the chart
+    //    var chart = JSC.Chart('chartDiv', chartConfig);
+    //}
+    
+
+    function CreateChart(gantchart) {
+        var costSheetData = gantchart;
+
+        var chartData = [];
+        for (var i = 0; i < costSheetData.length; i++) {
+            var activity = costSheetData[i];
+            var stageName = activity.Stages;
+
+            var expectedStartDate = moment(activity.ExpectedStartDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+            var expectedEndDate = moment(activity.ExpectedEndDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+            var actualStartDate = moment(activity.Actual_Start_Date, 'DD/MM/YYYY').format('MM/DD/YYYY');
+            var actualEndDate = moment(activity.Actual_End_Date, 'DD/MM/YYYY').format('MM/DD/YYYY');
+            var ExpeditingDate = moment(activity.ExpeditingDate, 'DD/MM/YYYY').format('MM/DD/YYYY');
+
+            var expectedProgressPer = parseFloat(activity.Expected_Progressper) / 100;
+            var actualProgressPer = parseFloat(activity.Actual_Progressper) / 100;
+
+            if (isNaN(expectedProgressPer) || expectedProgressPer < 0 || expectedProgressPer > 1) {
+                expectedProgressPer = 0;
+            }
+            if (isNaN(actualProgressPer) || actualProgressPer < 0 || actualProgressPer > 1) {
+                actualProgressPer = 0;
+            }
+
+            chartData.push({
+                stageName: stageName,
+                expected: {
+                    startDate: expectedStartDate,
+                    endDate: expectedEndDate,
+                    progress: expectedProgressPer
+                },
+                actual: {
+                    startDate: actualStartDate,
+                    endDate: actualEndDate,
+                    progress: actualProgressPer
+                }
+            });
+        }
+
+        var seriesData = [
+            {
+                name: 'Planned',
+                points: [],
+                color: '#100ED2'
+            },
+            {
+                name: 'Actual/Estimated',
+                points: [],
+                color: '#FB5F6B'
+            }
+        ];
+
+        chartData.forEach(function (data) {
+            seriesData[0].points.push({
+                name: data.stageName,
+                y: [data.expected.startDate, data.expected.endDate],
+                complete: data.expected.progress,
+                color: '#100ED2',
+                label: {
+                    text: (data.expected.progress * 100).toFixed(2) + '%',
+                    align: 'center',
+                    style: {
+                        fontSize: '10px',
+                        color: 'black',
+                        textOutline: '1px contrast',
+                        padding: '2px',
+                        offsetX: 15,
+                        fontFamily: 'TNG Pro',
+                        fontWeight: 'bold'
+                    }
+                }
+            });
+
+            seriesData[1].points.push({
+                name: data.stageName,
+                y: [data.actual.startDate, data.actual.endDate],
+                complete: data.actual.progress,
+                color: '#FB5F6B',
+                label: {
+                    text: (data.actual.progress * 100).toFixed(2) + '%',
+                    align: 'center',
+                    style: {
+                        fontSize: '10px',
+                        color: 'black',
+                        textOutline: '1px contrast',
+                        padding: '2px',
+                        offsetX: 15,
+                        fontFamily: 'TNG Pro',
+                        fontWeight: 'bold'
+                    }
+                }
+            });
+        });
+
+        var numDataPoints = chartData.length;
+        var minWidth = 650;
+        var minHeight = 300;
+        var width = Math.max(minWidth, numDataPoints * 20);
+        var height = Math.max(minHeight, numDataPoints * 10);
+
+        var chartConfig = {
+            type: 'horizontal column',
+            height: height,
+            width: width,
+            yAxis_scale_type: 'time',
+            xAxis: {
+                defaultTick: {
+                    label: {
+                        style: {
+                            fontSize: '14px',
+                            fontFamily: 'TNG Pro'
+                        }
+                    }
+                }
+            },
+            yAxis: {
+                markers: [
+                    {
+                        value: ExpeditingDate,
+                        color: '#FF9900',
+                        line: {
+                            width: 1,
+                            color: '#FF9900'
+                        },
+                        label: {
+                            text: 'Expediting Date (' + ExpeditingDate + ')',
+                            style: {
+                                fontSize: '10px',
+                                fontWeight: 'bold',
+                                fontFamily: 'TNG Pro',
+                                color: '#FF9900'
+                            },
+                            visible: false // Start hidden
+                        },
+                        events: {
+                            mouseover: function (e) {
+                                e.target.label.visible = true; // Show label on hover
+                                e.chart.update();
+                            },
+                            mouseout: function (e) {
+                                e.target.label.visible = false; // Hide label when not hovering
+                                e.chart.update();
+                            }
+                        }
+                    }
+                ],
+                label: {
+                    style: {
+                        fontSize: '8px',
+                        fontWeight: 'bold',
+                        fontFamily: 'TNG Pro'
+                    }
+                }
+            },
+            legend: {
+                template: '%icon %name',
+                position: 'outside top',
+                align: 'center',
+                label: {
+                    style: {
+                        fontSize: '10px',
+                        fontWeight: 'bold',
+                        fontFamily: 'TNG Pro'
+                    }
+                }
+            },
+            series: seriesData,
+            defaultSeries_bar_spacing: 8,
+            defaultPoint_label_autoHide: false
+        };
+
+        var chart = JSC.Chart('chartDiv', chartConfig);
+    }
+
+    function FillDrop(FieldID, Field) {
+        debugger
+        $.ajax({
+            url: '@Url.Action("FillCompany", "Expediting")',
+            method: 'GET',
+            data: { Field: Field },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                if (response.length > 0) {
+                    $('#' + FieldID).removeAttr('disabled')
+                }
+                $('#' + FieldID).empty();
+                var data = JSON.parse(response);
+                $('#' + FieldID).append('<option value="0">-- Select --</option>')
+                $.each(data, function (key, val) {
+                    $('#' + FieldID).append('<option value="' + data[key].ID + '">' + data[key].Value + '</option>')
+                })
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+    function BindAll() {
+        debugger
+        var Company = $('#ddlCompany').val();
+
+        $.ajax({
+            url: '@Url.Action("FillALLDropdown", "Expediting")',
+            method: 'GET',
+            data: { Company: Company },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                $('.empty').empty();
+
+                var Projectlst = JSON.parse(response.Projlst);
+
+                var SubVendorlst = JSON.parse(response.SubVendorlst);
+                var POlst = JSON.parse(response.POlst);
+                var Itemlst = JSON.parse(response.Itemlst);
+                var actionValues = JSON.parse(response.actionValuelst);
+                var Onsite = response.Onsite;
+                var Desk = response.Desk;
+                var TotalVisit = response.TotalVisit;
+                var gantchart = JSON.parse(response.gantchart);
+                var Actual_Progressper = response.Actual_Progressper;
+                var Expected_Progressper = response.Expected_Progressper;
+                var overAll = response.overAll;
+                var Openconcern = response.Openconcern;
+                var closeconcerns = response.closeconcerns;
+                var VendorCount = response.vendorCount;
+
+                var Concernsvalue = JSON.parse(response.Concernslit);
+                var chartData = JSON.parse(response.gantchart1);
+                $('#ddlProject').empty();
+
+                $('.empty').append('<option value="0">-- Select --</option>');
+
+                $('#ddlProject').append('<option value="0">-- Select --</option>');
+
+                $.each(Projectlst, function (key, val) {
+
+                    //$('#ddlProject').append('<option id="' + Projectlst[key].ID + '">' + Projectlst[key].Value + '</option>')
+                    $('#ddlProject').append('<option value="' + Projectlst[key].ID + '">' + Projectlst[key].Value + '</option>');
+
+                })
+                ProjectChange();
+
+                $('#txtOnsiteVisit').val(Onsite);
+                $('#txtDeskVisit').val(Desk);
+                $('#txtTotal').val(TotalVisit).css("color", "#4285f4");
+                $('#txtOverallStatus').val(overAll);
+                applyColor(overAll);
+                $('#txtPlannedProgress').val(Expected_Progressper);
+                $('#txtOverallProgress').val(Actual_Progressper);
+                $('#txtOpenConcerns').val(Openconcern);
+                $('#txtClosedConcerns').val(closeconcerns);
+                $('#txtNumVendors').val(VendorCount);
+
+
+                
+
+
+                $('#ActionValue').empty();
+
+                actionValues.forEach(function (value) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(value.stageBy).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px','font-size': '13px' }));
+                    row.append($('<td>').text(value.vendorSubVendor).css({ 'text-align': 'center', 'vertical-align': 'top','font-size': '13px' }));
+                    row.append($('<td>').text(value.customer).css({ 'text-align': 'center', 'vertical-align': 'top','font-size': '13px' }));
+                    row.append($('<td>').text(value.tuvi).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px','font-size': '13px' }));
+                    //row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top','font-size': '13px' }));
+                    row.append(
+   $('<td>')
+       .text(value.total)
+       .css({
+           'text-align': 'center',
+           'vertical-align': 'top',
+           'font-size': '13px',
+           'color': '#4285f4'
+       })
+       .click(function () {
+
+           ShowEngData(value.stageBy);
+
+
+       }));
+                    $('#ActionValue').append(row);
+
+                });
+
+                $('#ConcernsValue').empty();
+
+                Concernsvalue.forEach(function (value) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(value.Stages).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                  //row.append($('<td>').text(value.Openconcern).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append(
+    $('<td>')
+        .text(value.Openconcern)
+        .css({
+            'text-align': 'center',
+            'vertical-align': 'top',
+            'font-size': '13px',
+            'color' :'#4285f4'
+        })
+        .click(function () {
+            
+            ShowConcernsData(value.Stages);
+            //ConcernsOpenCloseData(value.Stages);
+           
+            
+        })
+);
+
+                    row.append($('<td>').text(value.closeconcerns).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                    $('#ConcernsValue').append(row);
+                });
+
+                var Name = "by Customer Name"
+                CreateChart(gantchart);
+                createLineChart(chartData);
+
+                $('.multiselect-container').css('width', '400.125px');
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+
+
+    function ProjectChange() {
+        debugger
+        var Company = $("#ddlCompany :selected").text()
+        var Project = $('#ddlProject').val();
+        //var Vendorname = $('#ddlVendorName').val();      
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+        //var PONumber = $('#ddlPONumber').val();
+        var Number = $('#ddlPONumber').val();
+        var PONumber = Number.join(', ');
+        //var ItemNumber = $('#ddlItemNumber').val();
+        //var ItemCodeNumber = $('#ddlItemTagNo').val();
+        var Number = $('#ddlItemNumber').val();
+        var ItemNumber = Number.join(', ');
+        var ItemCodeNumber = $('#ddlItemTagNo').val();
+        var TagNumber = Number.join(', ');
+        var name = $('#ddlItemName').val();
+        var itemName = name.join(', ');
+
+      
+
+        
+        $.ajax({
+            url: '@Url.Action("FillOnProjectChange", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, itemName: itemName },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                $('.vEmp').empty();
+                $('.poemp').empty();
+                $('.iemp').empty();
+                $('.inemp').empty();
+                $('#ActionValue').empty();
+                $('#ConcernsValue').empty();
+                $('#OnsiteValues').empty();
+                $('#TotalValues').empty();
+                $('#DeskValues').empty();
+                $('#ConcernsData').empty();
+                $('#ActionData').empty();
+
+               // var Vendorlst = JSON.parse(response.Vendorlst);
+                var SubVendorlst = JSON.parse(response.SubVendorlst);
+                var Onsite = response.Onsite;
+                var Desk = response.Desk;
+                var TotalVisit = response.TotalVisit;
+                var gantchart = JSON.parse(response.gantchart);
+                var Actual_Progressper = response.Actual_Progressper;
+                var Expected_Progressper = response.Expected_Progressper;
+                var overAll = response.overAll;
+                var Openconcern = response.Openconcern;
+                var closeconcerns = response.closeconcerns;
+                var actionValues = JSON.parse(response.actionValuelst);
+                var VendorCount = response.vendorCount;
+                var Concernsvalue = JSON.parse(response.Concernslit);
+                //var POlst = JSON.parse(response.POlst);
+                var chartData = JSON.parse(response.gantchart1); 
+
+                var VendorPoNumber = response.VendorPoNumber ? JSON.parse(response.VendorPoNumber) : [];
+                var PoNumber = response.PoNumber ? JSON.parse(response.PoNumber) : [];
+                var itemCodeNumber = response.itemtagNumber ? JSON.parse(response.itemtagNumber) : [];
+                var ItemName = response.ItemName ? JSON.parse(response.ItemName) : [];
+
+                
+                $('#ddlSubVendorName').empty();
+                // Add new options
+                var options = '';
+                $.each(SubVendorlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlSubVendorName").html(options);
+
+               $('#ddlSubVendorName').multiselect('destroy');
+
+                Multiselect();
+
+
+                if (SubVendorname != '0') {
+                    $('#ddlSubVendorName').multiselect('select', SubVendorname);
+                }
+
+//vendor po number Multiselect 
+                $('#ddlPONumber').empty();
+                // Add new options
+                var options = '';
+                $.each(VendorPoNumber, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlPONumber").html(options);
+
+                $('#ddlPONumber').multiselect('destroy');
+
+                PONumberMultiselect();
+
+
+                if (VendorPoNumber != '0') {
+                    $('#ddlPONumber').multiselect('select', VendorPoNumber);
+                }
+
+                // po number Multiselect 
+                $('#ddlItemNumber').empty();
+               
+                var options = '';
+                $.each(PoNumber, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemNumber").html(options);
+
+                $('#ddlItemNumber').multiselect('destroy');
+
+                itemNumberMultiselect();
+
+
+                if (PoNumber != '0') {
+                    $('#ddlItemNumber').multiselect('select', PoNumber);
+                }
+
+
+                // po item number Multiselect 
+                $('#ddlItemTagNo').empty();
+
+                var options = '';
+                $.each(itemCodeNumber, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemTagNo").html(options);
+
+                $('#ddlItemTagNo').multiselect('destroy');
+
+                ItemTagMultiselect();
+
+
+                if (ItemCodeNumber != '0') {
+                    $('#ddlItemTagNo').multiselect('select', ItemCodeNumber);
+                }
+
+
+                //item name multiselect
+
+               
+                $('#ddlItemName').empty();
+
+                var options = '';
+                $.each(ItemName, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemName").html(options);
+
+                $('#ddlItemName').multiselect('destroy');
+
+                ItemNameMultiselect();
+
+
+                if (ItemCodeNumber != '0') {
+                    $('#ddlItemName').multiselect('select', ItemCodeNumber);
+                }
+
+                $('#txtOnsiteVisit').val(Onsite);
+                $('#txtDeskVisit').val(Desk);
+                $('#txtTotal').val(TotalVisit).css("color", "#4285f4");
+                $('#txtOverallStatus').val(overAll);
+                $('#txtPlannedProgress').val(Expected_Progressper);
+                $('#txtOverallProgress').val(Actual_Progressper);
+                applyColor(overAll);
+                $('#txtOpenConcerns').val(Openconcern);
+                $('#txtClosedConcerns').val(closeconcerns);
+                $('#txtNumVendors').val(VendorCount);
+
+              
+
+                $('#ActionValue').empty();
+
+                actionValues.forEach(function (value) {
+                    debugger;
+                    var row = $('<tr>');
+                    row.append($('<td>').text(value.stageBy).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.vendorSubVendor).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.customer).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.tuvi).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                    //row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append(
+   $('<td>')
+       .text(value.total)
+       .css({
+           'text-align': 'center',
+           'vertical-align': 'top',
+           'font-size': '13px',
+           'color': '#4285f4'
+       })
+       .click(function () {
+
+           ShowEngData(value.stageBy);
+
+
+       }));
+
+                    $('#ActionValue').append(row);
+                });
+
+               
+
+                //Concernsvalue.forEach(function (value) {
+                //    var row = $('<tr>');
+                //    row.append($('<td>').text(value.Stages).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                //    row.append($('<td>').text(value.Openconcern).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                //    row.append($('<td>').text(value.closeconcerns).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                //    row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                //    $('#ConcernsValue').append(row);
+                //});
+
+                $('#ConcernsValue').empty();
+
+                Concernsvalue.forEach(function (value) {
+                    debugger
+                    var row = $('<tr>');
+                    row.append($('<td>').text(value.Stages).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                    //row.append($('<td>').text(value.Openconcern).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append(
+    $('<td>')
+        .text(value.Openconcern)
+        .css({
+            'text-align': 'center',
+            'vertical-align': 'top',
+            'font-size': '13px',
+            'color': '#4285f4'
+        })
+        .click(function () {
+
+            ShowConcernsData(value.Stages);
+            //ConcernsOpenCloseData(value.Stages);
+
+
+        })
+);
+
+                    row.append($('<td>').text(value.closeconcerns).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                    $('#ConcernsValue').append(row);
+                });
+
+                var Name = "by Customer and Project"
+                CreateChart(gantchart);
+                createLineChart(chartData);
+
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+
+
+
+
+
+    function SubVendorChange() {
+        debugger
+        var Company = $("#ddlCompany :selected").text()
+        var Project = $('#ddlProject').val();
+        //var Vendorname = $('#ddlVendorName').val();
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+        //var SubVendorname = $('#ddlSubVendorName').val();
+        var PONumber = $('#ddlPONumber').val();
+       // var PONumber = vendorpoNumber.join(', ');
+        var ItemNumber = $('#ddlItemNumber').val();
+        //var ItemNumber = Number.join(', ');
+        var ItemCodeNumber = $('#ddlItemTagNo').val();
+        var itemname = $('#ddlItemName').val();
+        //var ItemCodeNumber = CodeNumber.join(', ');
+        //var SubVendorname = $('#ddlSubVendorName').val().split(', ');    
+        $.ajax({
+            url: '@Url.Action("FillOnSubVendorChange", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, Vendorname: Vendorname, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, ItemCodeNumber: ItemCodeNumber, itemname:itemname },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                $('#ConcernsData').empty();
+                $('#ActionData').empty();
+                $('#TotalValues').empty();
+
+                //$('.poemp').empty();
+                //$('.ddlItemNumber').empty();
+                //$('.inemp').empty();
+
+               // var Projectlst = JSON.parse(response.Projlst);
+                //var Vendorlst = JSON.parse(response.Vendorlst);
+                var POlst = JSON.parse(response.POlst);
+                var Onsite = response.Onsite;
+                var Desk = response.Desk;
+                var TotalVisit = response.TotalVisit;
+                
+               
+               
+                var PoNumber = JSON.parse(response.PoNumber);
+                var itemCodeNumber = JSON.parse(response.itemtagNumber);
+                var ItemName = JSON.parse(response.ItemName);
+                //var selectedpo = JSON.parse(response.selectedponumber);
+                //var poitemnumber = JSON.parse(response.selectedpoitem);
+                //var itemcode = JSON.parse(response.selecteditemcode);
+
+                var selectedpo = response.selectedponumber ? JSON.parse(response.selectedponumber) : [];
+                var poitemnumber = response.selectedpoitem ? JSON.parse(response.selectedpoitem) : [];
+                var itemcode = response.selecteditemcode ? JSON.parse(response.selecteditemcode) : [];
+                var selectitemName = response.SelectdItemName ? JSON.parse(response.SelectdItemName) : [];
+
+                
+                
+                var options = '';
+                $.each(POlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlPONumber").html(options);
+
+                // Destroy and reinitialize the multiselect plugin
+                $('#ddlPONumber').multiselect('destroy');
+                PONumberMultiselect();
+
+                
+                var selectedpoStrings = selectedpo.map(String);
+
+              
+                if (selectedpo && selectedpo.length > 0) {
+                    var selectedIds = selectedpo.map(function (item) {
+                        return item.ID.toString(); 
+                    });
+                    $('#ddlPONumber').multiselect('select', selectedIds); 
+                }
+
+                
+                
+
+
+                // po number Multiselect 
+                $('#ddlItemNumber').empty();
+                debugger
+                var options = '';
+                $.each(PoNumber, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemNumber").html(options);
+
+                $('#ddlItemNumber').multiselect('destroy');
+
+                itemNumberMultiselect();
+
+                var selectedpoNumber = poitemnumber.map(String);
+
+
+                if (poitemnumber && poitemnumber.length > 0) {
+                    var selected = poitemnumber.map(function (item) {
+                        return item.ID.toString(); // Map each ID to string
+                    });
+                    $('#ddlItemNumber').multiselect('select', selected); 
+                }
+
+
+
+               
+
+
+                // po item number Multiselect 
+                $('#ddlItemTagNo').empty();
+                debugger
+                var options = '';
+                $.each(itemCodeNumber, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemTagNo").html(options);
+
+                $('#ddlItemTagNo').multiselect('destroy');
+
+                ItemTagMultiselect();
+
+
+                var selectedpoitem = itemcode.map(String);
+
+
+                if (itemcode && itemcode.length > 0) {
+                    var selecteditem = itemcode.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemTagNo').multiselect('select', selecteditem); 
+                }
+
+                //item name multiselect
+
+
+                // po item number Multiselect 
+                $('#ddlItemName').empty();
+                debugger
+                var options = '';
+                $.each(ItemName, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemName").html(options);
+
+                $('#ddlItemName').multiselect('destroy');
+
+                ItemNameMultiselect();
+
+
+                var selected = selectitemName.map(String);
+
+
+                if (selectitemName && selectitemName.length > 0) {
+                    var selecteditemName = selectitemName.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemName').multiselect('select', selecteditemName);
+                }
+
+
+
+
+                $('#txtOnsiteVisit').val(Onsite);
+                $('#txtDeskVisit').val(Desk);
+                $('#txtTotal').val(TotalVisit).css("color","#4285f4");             
+               
+                
+
+
+              
+
+                GetGantChartData();              
+                //$('.multiselect-container').css('width', '306.125px');
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+
+
+    function POChange() {
+        debugger;
+        var Company = $("#ddlCompany :selected").text()
+        var Project = $('#ddlProject').val();     
+        var SubVendorname = $('#ddlSubVendorName').val();
+        //var SubVendorname = Vendorname.join(', ');       
+        var Number = $('#ddlPONumber').val();
+        var PONumber = Number.join(', ');
+       // var PONumber = $('#ddlPONumber').val();
+        var ItemNumber = $('#ddlItemNumber').val();
+        var TagNumber = $('#ddlItemTagNo').val();
+        var itemname = $('#ddlItemName').val();
+        $.ajax({
+            url: '@Url.Action("FillOnPONumberChange", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, itemname: itemname },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                $('#ConcernsData').empty();
+                $('#ActionData').empty();
+                $('#TotalValues').empty();
+
+                //$('#ddlItemNumber').empty();
+                //$('.inemp').empty();
+
+
+                //var Projectlst = JSON.parse(response.Projlst);
+                //var Vendorlst = JSON.parse(response.Vendorlst);
+                //var SubVendorlst = JSON.parse(response.SubVendorlst);
+                var Itemlst = JSON.parse(response.Itemlst);
+                var Taglst = JSON.parse(response.Taglst);
+               
+                var Onsite = response.Onsite;
+                var Desk = response.Desk;
+                var TotalVisit = response.TotalVisit;
+                var ItemName = JSON.parse(response.ItemName);
+
+
+
+                var OnsiteValue = JSON.parse(response.OnsiteValuelst);
+
+                var SubVendorlst = JSON.parse(response.TotalSubVendor);
+                
+                
+                //var selectedpo = JSON.parse(response.selectedponumber);
+
+                var selectedpo = response.selectedponumber ? JSON.parse(response.selectedponumber) : [];
+                var poitemnumber = response.selectedpoitem ? JSON.parse(response.selectedpoitem) : [];
+                var itemcode = response.selecteditemcode ? JSON.parse(response.selecteditemcode) : [];
+                var selectitemName = response.SelectdItemName ? JSON.parse(response.SelectdItemName) : [];
+
+
+
+               // $('#ddlItemNumber').empty();
+                //// Add new options
+                //var options = '';
+                //$.each(Itemlst, function (key, val) {
+                //    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                //});
+                //$("#ddlItemNumber").html(options);
+
+                //// Destroy and reinitialize the multiselect
+                //$('#ddlItemNumber').multiselect('destroy');
+
+                //itemNumberMultiselect();
+
+
+                //if (ItemNumber != '0') {
+                //    $('#ddlItemNumber').multiselect('select', ItemNumber);
+                //}
+
+
+                $('#ddlSubVendorName').empty();
+
+                var options = '';
+                $.each(SubVendorlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlSubVendorName").html(options);
+
+                // Destroy and reinitialize the multiselect plugin
+                $('#ddlSubVendorName').multiselect('destroy');
+                Multiselect();
+
+
+                var selectedpoStrings = selectedpo.map(String);
+
+
+                if (selectedpo && selectedpo.length > 0) {
+                    var selectedIds = selectedpo.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlSubVendorName').multiselect('select', selectedIds);
+                }
+
+
+
+
+
+                // po number Multiselect 
+                $('#ddlItemNumber').empty();
+                debugger
+                var options = '';
+                $.each(Itemlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemNumber").html(options);
+
+                $('#ddlItemNumber').multiselect('destroy');
+
+                itemNumberMultiselect();
+
+                var selectedpoNumber = poitemnumber.map(String);
+
+
+                if (poitemnumber && poitemnumber.length > 0) {
+                    var selected = poitemnumber.map(function (item) {
+                        return item.ID.toString(); // Map each ID to string
+                    });
+                    $('#ddlItemNumber').multiselect('select', selected);
+                }
+
+
+
+
+                // po item number Multiselect 
+                $('#ddlItemTagNo').empty();
+                debugger
+                var options = '';
+                $.each(Taglst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemTagNo").html(options);
+
+                $('#ddlItemTagNo').multiselect('destroy');
+
+                ItemTagMultiselect();
+
+
+                var selectedpoitem = itemcode.map(String);
+
+
+                if (itemcode && itemcode.length > 0) {
+                    var selecteditem = itemcode.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemTagNo').multiselect('select', selecteditem);
+                }
+
+
+                // po item number Multiselect 
+                $('#ddlItemName').empty();
+                debugger
+                var options = '';
+                $.each(ItemName, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemName").html(options);
+
+                $('#ddlItemName').multiselect('destroy');
+
+                ItemNameMultiselect();
+
+
+                var selected = selectitemName.map(String);
+
+
+                if (selectitemName && selectitemName.length > 0) {
+                    var selecteditemName = selectitemName.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemName').multiselect('select', selecteditemName);
+                }
+
+
+
+
+               // $('.select2-container').css('width', '306.125px');
+                $('#txtOnsiteVisit').val(Onsite);
+                $('#txtDeskVisit').val(Desk);
+                $('#txtTotal').val(TotalVisit).css("color","#4285f4");
+                
+
+              
+
+
+                GetGantChartData();
+                
+
+
+
+                //$('#OnsiteValues').empty();
+
+                //OnsiteValue.forEach(function (value) {
+                //    var row = $('<tr>');
+
+
+                //    row.append($('<td>').text(value.Date_Of_Expediting).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+
+                //    var reportCell = $('<td>').css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' });
+                //    var reportLink = $('<a>').attr('href', '~/CV/' + value.ReportName).attr('download', '~/CV/' + value.ReportName).css({ 'color': '#001ED2' });
+                //    reportLink.text(value.ReportName);
+                //    reportCell.append(reportLink);
+                //    row.append(reportCell);
+                //    -
+
+                //    row.append($('<td>').text(value.Createdby).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+
+                //    $('#OnsiteValues').append(row);
+                //});
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+
+    function ItemChange() {
+        var Company = $("#ddlCompany :selected").text()
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlVendorName').val();
+        var SubVendorname = $('#ddlSubVendorName').val();
+        var PONumber = $('#ddlPONumber').val();
+       // var PONumber = Number1.join(', ');
+        var Number = $('#ddlItemNumber').val();
+        var ItemNumber = Number.join(', ');
+        var TagNumber = $('#ddlItemTagNo').val();
+        var itemname = $('#ddlItemName').val();
+        $.ajax({
+            url: '@Url.Action("FillOnItemNumberChange", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, Vendorname: Vendorname, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, itemname: itemname },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                $('.inemp').empty();
+                $('#ConcernsData').empty();
+                $('#ActionData').empty();
+                $('#TotalValues').empty();
+
+
+                //var Projectlst = JSON.parse(response.Projlst);
+                //var Vendorlst = JSON.parse(response.Vendorlst);
+                var Taglst = JSON.parse(response.Taglst);
+                var Onsite = response.Onsite;
+                var Desk = response.Desk;
+                var TotalVisit = response.TotalVisit;
+                var ItemName = JSON.parse(response.ItemName);
+                
+                //var Projectlst = JSON.parse(response.Projlst);
+                //var Vendorlst = JSON.parse(response.Vendorlst);
+                var SubVendorlst = JSON.parse(response.TotalSubVendor);
+                var POlst = JSON.parse(response.TotalPovendor);
+
+                var selectedVendor = response.selectedvendorName ? JSON.parse(response.selectedvendorName) : [];
+                var poitemnumber = response.selectedPONumber ? JSON.parse(response.selectedPONumber) : [];
+                var itemcode = response.selecteditemcode ? JSON.parse(response.selecteditemcode) : [];
+                var selectitemName = response.SelectdItemName ? JSON.parse(response.SelectdItemName) : [];
+
+
+
+                //$('#ddlItemTagNo').empty();
+                //// Add new options
+                //var options = '';
+                //$.each(Taglst, function (key, val) {
+                //    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                //});
+                //$("#ddlItemTagNo").html(options);
+
+                //// Destroy and reinitialize the multiselect
+                //$('#ddlItemTagNo').multiselect('destroy');
+
+                //ItemTagMultiselect();
+
+
+                //if (TagNumber != '0') {
+                //    $('#ddlItemTagNo').multiselect('select', TagNumber);
+                //}
+
+                var options = '';
+                $.each(POlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlPONumber").html(options);
+
+                // Destroy and reinitialize the multiselect plugin
+                $('#ddlPONumber').multiselect('destroy');
+                PONumberMultiselect();
+
+
+                var selectedpoStrings = poitemnumber.map(String);
+
+
+                if (poitemnumber && poitemnumber.length > 0) {
+                    var selectedIds = poitemnumber.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlPONumber').multiselect('select', selectedIds);
+                }
+
+
+
+
+
+                $('#ddlSubVendorName').empty();
+
+                var options = '';
+                $.each(SubVendorlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlSubVendorName").html(options);
+
+                // Destroy and reinitialize the multiselect plugin
+                $('#ddlSubVendorName').multiselect('destroy');
+                Multiselect();
+
+
+                var selectedpoStrings = selectedVendor.map(String);
+
+
+                if (selectedVendor && selectedVendor.length > 0) {
+                    var selectedIds = selectedVendor.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlSubVendorName').multiselect('select', selectedIds);
+                }
+
+               
+
+
+
+                // po item number Multiselect 
+                $('#ddlItemTagNo').empty();
+                debugger
+                var options = '';
+                $.each(Taglst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemTagNo").html(options);
+
+                $('#ddlItemTagNo').multiselect('destroy');
+
+                ItemTagMultiselect();
+
+
+                var selectedpoitem = itemcode.map(String);
+
+
+                if (itemcode && itemcode.length > 0) {
+                    var selecteditem = itemcode.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemTagNo').multiselect('select', selecteditem);
+                }
+
+                // po item number Multiselect 
+                $('#ddlItemName').empty();
+                debugger
+                var options = '';
+                $.each(ItemName, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemName").html(options);
+
+                $('#ddlItemName').multiselect('destroy');
+
+                ItemNameMultiselect();
+
+
+                var selected = selectitemName.map(String);
+
+
+                if (selectitemName && selectitemName.length > 0) {
+                    var selecteditemName = selectitemName.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemName').multiselect('select', selecteditemName);
+                }
+
+                // po item number Multiselect 
+
+                $('.select2-container').css('width', '306.125px');
+
+                $('#txtOnsiteVisit').val(Onsite);
+                $('#txtDeskVisit').val(Desk);
+                $('#txtTotal').val(TotalVisit).css("color","#4285f4");
+                
+
+                GetGantChartData();
+
+
+               
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+
+
+
+
+
+    function Itemcodechange() {
+        debugger
+        var Company = $("#ddlCompany :selected").text()
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlVendorName').val();
+        var SubVendorname = $('#ddlSubVendorName').val();
+        var PONumber = $('#ddlPONumber').val();
+        // var PONumber = Number1.join(', ');
+        var ItemNumber = $('#ddlItemNumber').val();
+        var Number = $('#ddlItemTagNo').val();
+        var TagNumber = Number.join(', ');
+        var itemName = $('#ddlItemName').val();
+        //var itemName = name.join(', ');
+        $.ajax({
+            url: '@Url.Action("FillOnItemCodeChange", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, Vendorname: Vendorname, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, TagNumber: TagNumber, itemName: itemName },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                $('#ConcernsData').empty();
+                $('#ActionData').empty();
+                $('#TotalValues').empty();
+
+                //$('.inemp').empty();
+
+                //var Projectlst = JSON.parse(response.Projlst);
+                //var Vendorlst = JSON.parse(response.Vendorlst);
+                var itempolst = JSON.parse(response.POlst);
+                var Onsite = response.Onsite;
+                var Desk = response.Desk;
+                var TotalVisit = response.TotalVisit;
+                var ItemName = JSON.parse(response.ItemName);
+                
+              
+                var SubVendorlst = JSON.parse(response.TotalSubVendor);
+                var POlst = JSON.parse(response.TotalPovendor);
+
+                var selectedVendor = response.selectedvendorName ? JSON.parse(response.selectedvendorName) : [];
+                var poitemnumber = response.selectedPONumber ? JSON.parse(response.selectedPONumber) : [];
+                var itemcode = response.selecteditemcode ? JSON.parse(response.selecteditemcode) : [];
+                var selectitemName = response.SelectdItemName ? JSON.parse(response.SelectdItemName) : [];
+
+
+                //$('#ddlItemTagNo').empty();
+                //// Add new options
+                //var options = '';
+                //$.each(Taglst, function (key, val) {
+                //    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                //});
+                //$("#ddlItemTagNo").html(options);
+
+                //// Destroy and reinitialize the multiselect
+                //$('#ddlItemTagNo').multiselect('destroy');
+
+                //ItemTagMultiselect();
+
+
+                //if (TagNumber != '0') {
+                //    $('#ddlItemTagNo').multiselect('select', TagNumber);
+                //}
+
+                var options = '';
+                $.each(POlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlPONumber").html(options);
+
+                
+                $('#ddlPONumber').multiselect('destroy');
+                PONumberMultiselect();
+
+
+                var selectedpoStrings = poitemnumber.map(String);
+
+
+                if (poitemnumber && poitemnumber.length > 0) {
+                    var selectedIds = poitemnumber.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlPONumber').multiselect('select', selectedIds);
+                }
+
+
+
+
+
+
+
+                $('#ddlSubVendorName').empty();
+
+                var options = '';
+                $.each(SubVendorlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlSubVendorName").html(options);
+
+                // Destroy and reinitialize the multiselect plugin
+                $('#ddlSubVendorName').multiselect('destroy');
+                Multiselect();
+
+
+                var selectedpoStrings = selectedVendor.map(String);
+
+
+                if (selectedVendor && selectedVendor.length > 0) {
+                    var selectedIds = selectedVendor.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlSubVendorName').multiselect('select', selectedIds);
+                }
+
+
+
+
+
+                // po item number Multiselect 
+                $('#ddlItemNumber').empty();
+                debugger
+                var options = '';
+                $.each(itempolst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemNumber").html(options);
+
+                $('#ddlItemNumber').multiselect('destroy');
+
+                ItemTagMultiselect();
+
+
+                var selectedpoitem = itemcode.map(String);
+
+
+                if (itemcode && itemcode.length > 0) {
+                    var selecteditem = itemcode.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemNumber').multiselect('select', selecteditem);
+                }
+
+
+
+                //// po item number Multiselect 
+                //$('#ddlItemTagNo').empty();
+                //debugger
+                //var options = '';
+                //$.each(Taglst, function (key, val) {
+                //    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                //});
+                //$("#ddlItemTagNo").html(options);
+
+                //$('#ddlItemTagNo').multiselect('destroy');
+
+                //ItemTagMultiselect();
+
+
+                //var selectedpoitem = itemcode.map(String);
+
+
+                //if (itemcode && itemcode.length > 0) {
+                //    var selecteditem = itemcode.map(function (item) {
+                //        return item.ID.toString();
+                //    });
+                //    $('#ddlItemTagNo').multiselect('select', selecteditem);
+                //}
+
+                // po item number Multiselect 
+
+                // po item number Multiselect 
+                $('#ddlItemName').empty();
+                debugger
+                var options = '';
+                $.each(ItemName, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemName").html(options);
+
+                $('#ddlItemName').multiselect('destroy');
+
+                ItemNameMultiselect();
+
+
+                var selected = selectitemName.map(String);
+
+
+                if (selectitemName && selectitemName.length > 0) {
+                    var selecteditemName = selectitemName.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemName').multiselect('select', selecteditemName);
+                }
+
+
+
+                $('.select2-container').css('width', '306.125px');
+                $('#txtOnsiteVisit').val(Onsite);
+                $('#txtDeskVisit').val(Desk);
+                $('#txtTotal').val(TotalVisit).css("color", "#4285f4");
+                
+
+                GetGantChartData();
+
+
+//                $('#ActionValue').empty();
+
+//                actionValues.forEach(function (value) {
+//                    var row = $('<tr>');
+//                    row.append($('<td>').text(value.stageBy).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+//                    row.append($('<td>').text(value.vendorSubVendor).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+//                    row.append($('<td>').text(value.customer).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+//                    row.append($('<td>').text(value.tuvi).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+//                    //row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+//                    row.append(
+//   $('<td>')
+//       .text(value.total)
+//       .css({
+//           'text-align': 'center',
+//           'vertical-align': 'top',
+//           'font-size': '13px',
+//           'color': '#4285f4'
+//       })
+//       .click(function () {
+
+//           ShowEngData(value.stageBy);
+
+
+//       }));
+
+//                    $('#ActionValue').append(row);
+//                });
+
+//                $('#ConcernsValue').empty();
+
+
+
+//                Concernsvalue.forEach(function (value) {
+//                    var row = $('<tr>');
+//                    row.append($('<td>').text(value.Stages).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+//                    //row.append($('<td>').text(value.Openconcern).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+//                    row.append(
+//    $('<td>')
+//        .text(value.Openconcern)
+//        .css({
+//            'text-align': 'center',
+//            'vertical-align': 'top',
+//            'font-size': '13px',
+//            'color': '#4285f4'
+//        })
+//        .click(function () {
+
+//            ShowConcernsData(value.Stages);
+
+
+//        })
+//);
+
+//                    row.append($('<td>').text(value.closeconcerns).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+//                    row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+//                    $('#ConcernsValue').append(row);
+//                });
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+
+
+    function ItemNamechange() {
+        debugger
+        var Company = $("#ddlCompany :selected").text()
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlVendorName').val();
+        var SubVendorname = $('#ddlSubVendorName').val();
+        var PONumber = $('#ddlPONumber').val();
+        // var PONumber = Number1.join(', ');
+        var ItemNumber = $('#ddlItemNumber').val();
+        var TagNumber = $('#ddlItemTagNo').val();
+       // var TagNumber = Number.join(', ');
+        var name = $('#ddlItemName').val();
+        var itemName = name.join(', ');
+        $.ajax({
+            url: '@Url.Action("FillItemNameChange", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, Vendorname: Vendorname, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, TagNumber: TagNumber, itemName: itemName },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                //$('.inemp').empty();
+
+                //var Projectlst = JSON.parse(response.Projlst);
+                //var Vendorlst = JSON.parse(response.Vendorlst);
+                var itempolst = JSON.parse(response.POlst);
+                var Onsite = response.Onsite;
+                var Desk = response.Desk;
+                var TotalVisit = response.TotalVisit;
+                var Taglst = JSON.parse(response.Taglst);
+
+
+                var SubVendorlst = JSON.parse(response.TotalSubVendor);
+                var POlst = JSON.parse(response.TotalPovendor);
+
+                var selectedVendor = response.selectedvendorName ? JSON.parse(response.selectedvendorName) : [];
+                var poitemnumber = response.selectedPONumber ? JSON.parse(response.selectedPONumber) : [];
+                var itemcode = response.POItemCode ? JSON.parse(response.POItemCode) : [];
+                var itemponumber = response.selectedpoitem ? JSON.parse(response.selectedpoitem) : [];
+
+
+
+
+                var options = '';
+                $.each(POlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlPONumber").html(options);
+
+
+                $('#ddlPONumber').multiselect('destroy');
+                PONumberMultiselect();
+
+
+                var selectedpoStrings = poitemnumber.map(String);
+
+
+                if (poitemnumber && poitemnumber.length > 0) {
+                    var selectedIds = poitemnumber.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlPONumber').multiselect('select', selectedIds);
+                }
+
+
+
+
+
+
+
+                $('#ddlSubVendorName').empty();
+
+                var options = '';
+                $.each(SubVendorlst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlSubVendorName").html(options);
+
+                // Destroy and reinitialize the multiselect plugin
+                $('#ddlSubVendorName').multiselect('destroy');
+                Multiselect();
+
+
+                var selectedpoStrings = selectedVendor.map(String);
+
+
+                if (selectedVendor && selectedVendor.length > 0) {
+                    var selectedIds = selectedVendor.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlSubVendorName').multiselect('select', selectedIds);
+                }
+
+
+
+                // po item number Multiselect 
+                $('#ddlItemNumber').empty();
+                debugger
+                var options = '';
+                $.each(itempolst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemNumber").html(options);
+
+                $('#ddlItemNumber').multiselect('destroy');
+
+                itemNumberMultiselect();
+
+
+                var selectedpoitempo = itemponumber.map(String);
+
+
+                if (itemponumber && itemponumber.length > 0) {
+                    var selecteditempo = itemponumber.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemNumber').multiselect('select', selecteditempo);
+                }
+
+
+
+                // po item number Multiselect 
+                // po item number Multiselect 
+                $('#ddlItemTagNo').empty();
+                debugger
+                var options = '';
+                $.each(Taglst, function (key, val) {
+                    options += '<option value="' + val.ID + '">' + val.Value + '</option>';
+                });
+                $("#ddlItemTagNo").html(options);
+
+                $('#ddlItemTagNo').multiselect('destroy');
+
+                ItemTagMultiselect();
+
+
+                var selectedpoitem = itemcode.map(String);
+
+
+                if (itemcode && itemcode.length > 0) {
+                    var selecteditem = itemcode.map(function (item) {
+                        return item.ID.toString();
+                    });
+                    $('#ddlItemTagNo').multiselect('select', selecteditem);
+                }
+
+
+
+                // po item number Multiselect 
+
+
+
+
+
+                $('.select2-container').css('width', '306.125px');
+                $('#txtOnsiteVisit').val(Onsite);
+                $('#txtDeskVisit').val(Desk);
+                $('#txtTotal').val(TotalVisit).css("color", "#4285f4");
+
+
+                GetGantChartDataItemName();
+
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+
+
+    function GetGantChartData() {
+        debugger
+        var Company = $("#ddlCompany :selected").text();
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+        var Number = $('#ddlPONumber').val();
+        var PONumber = Number.join(', ');
+        var item = $('#ddlItemNumber').val();
+        var ItemNumber = item.join(', ');
+        var Number1 = $('#ddlItemTagNo').val();
+        var TagNumber = Number1.join(', ');
+        var name = $('#ddlItemName').val();
+        var itemName = name.join(', ');
+        $.ajax({
+            url: '@Url.Action("FillGantChartData", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, Vendorname: Vendorname, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, TagNumber: TagNumber, itemName: itemName },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                //$('.inemp').empty();
+
+               
+                
+                var gantchart = JSON.parse(response.gantchart);
+                var Actual_Progressper = response.Actual_Progressper;
+                var Expected_Progressper = response.Expected_Progressper;
+                var overAll = response.overAll;
+               
+
+                var Openconcern = response.Openconcern;
+                var closeconcerns = response.closeconcerns;
+                var actionValues = JSON.parse(response.actionValuelst);
+                var VendorCount = response.vendorCount;
+                var Concernsvalue = JSON.parse(response.Concernslit);
+                var chartData = JSON.parse(response.gantchart1);
+
+                $('#txtOverallStatus').val(overAll);
+                $('#txtPlannedProgress').val(Expected_Progressper);
+                $('#txtOverallProgress').val(Actual_Progressper);
+                applyColor(overAll);
+                $('#txtOpenConcerns').val(Openconcern);
+                $('#txtClosedConcerns').val(closeconcerns);
+                $('#txtNumVendors').val(VendorCount);
+
+
+                $('#ActionValue').empty();
+
+                actionValues.forEach(function (value) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(value.stageBy).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.vendorSubVendor).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.customer).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.tuvi).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                    //row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append(
+   $('<td>')
+       .text(value.total)
+       .css({
+           'text-align': 'center',
+           'vertical-align': 'top',
+           'font-size': '13px',
+           'color': '#4285f4'
+       })
+       .click(function () {
+
+           ShowEngData(value.stageBy);
+
+
+       }));
+
+                    $('#ActionValue').append(row);
+                });
+
+                //$('#ConcernsValue').empty();
+
+                //Concernsvalue.forEach(function (value) {
+                //    var row = $('<tr>');
+                //    row.append($('<td>').text(value.Stages).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                //    row.append($('<td>').text(value.Openconcern).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                //    row.append($('<td>').text(value.closeconcerns).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                //    row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                //    $('#ConcernsValue').append(row);
+                //});
+                $('#ConcernsValue').empty();
+
+                Concernsvalue.forEach(function (value) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(value.Stages).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                    //row.append($('<td>').text(value.Openconcern).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append(
+    $('<td>')
+        .text(value.Openconcern)
+        .css({
+            'text-align': 'center',
+            'vertical-align': 'top',
+            'font-size': '13px',
+            'color': '#4285f4'
+        })
+        .click(function () {
+
+            ShowConcernsData(value.Stages);
+            //ConcernsOpenCloseData(value.Stages);
+
+
+        })
+);
+
+                    row.append($('<td>').text(value.closeconcerns).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                    $('#ConcernsValue').append(row);
+                });
+
+                var Name = "by Over All"
+                CreateChart(gantchart);
+
+                createLineChart(chartData);
+
+
+               
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+
+    function GetGantChartDataItemName() {
+        debugger
+        var Company = $("#ddlCompany :selected").text();
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+        var Number = $('#ddlPONumber').val();
+        var PONumber = Number.join(', ');
+        var item = $('#ddlItemNumber').val();
+        var ItemNumber = item.join(', ');
+        var Number1 = $('#ddlItemTagNo').val();
+        var TagNumber = Number1.join(', ');
+        var name = $('#ddlItemName').val();
+        var itemName = name.join(', ');
+        $.ajax({
+            url: '@Url.Action("FillGantChartDataItemName", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, Vendorname: Vendorname, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, TagNumber: TagNumber, itemName: itemName },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+                //$('.inemp').empty();
+
+
+
+                var gantchart = JSON.parse(response.gantchart);
+                var Actual_Progressper = response.Actual_Progressper;
+                var Expected_Progressper = response.Expected_Progressper;
+                var overAll = response.overAll;
+
+
+                var Openconcern = response.Openconcern;
+                var closeconcerns = response.closeconcerns;
+                var actionValues = JSON.parse(response.actionValuelst);
+                var VendorCount = response.vendorCount;
+                var Concernsvalue = JSON.parse(response.Concernslit);
+                var chartData = JSON.parse(response.gantchart1);
+
+                $('#txtOverallStatus').val(overAll);
+                $('#txtPlannedProgress').val(Expected_Progressper);
+                $('#txtOverallProgress').val(Actual_Progressper);
+                applyColor(overAll);
+                $('#txtOpenConcerns').val(Openconcern);
+                $('#txtClosedConcerns').val(closeconcerns);
+                $('#txtNumVendors').val(VendorCount);
+
+
+                $('#ActionValue').empty();
+
+                actionValues.forEach(function (value) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(value.stageBy).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.vendorSubVendor).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.customer).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.tuvi).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                    //row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append(
+   $('<td>')
+       .text(value.total)
+       .css({
+           'text-align': 'center',
+           'vertical-align': 'top',
+           'font-size': '13px',
+           'color': '#4285f4'
+       })
+       .click(function () {
+
+           ShowEngData(value.stageBy);
+
+
+       }));
+
+                    $('#ActionValue').append(row);
+                });
+
+                //$('#ConcernsValue').empty();
+
+                //Concernsvalue.forEach(function (value) {
+                //    var row = $('<tr>');
+                //    row.append($('<td>').text(value.Stages).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                //    row.append($('<td>').text(value.Openconcern).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                //    row.append($('<td>').text(value.closeconcerns).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                //    row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                //    $('#ConcernsValue').append(row);
+                //});
+                $('#ConcernsValue').empty();
+
+                Concernsvalue.forEach(function (value) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(value.Stages).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                    //row.append($('<td>').text(value.Openconcern).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append(
+    $('<td>')
+        .text(value.Openconcern)
+        .css({
+            'text-align': 'center',
+            'vertical-align': 'top',
+            'font-size': '13px',
+            'color': '#4285f4'
+        })
+        .click(function () {
+
+            ShowConcernsData(value.Stages);
+            //ConcernsOpenCloseData(value.Stages);
+
+
+        })
+);
+
+                    row.append($('<td>').text(value.closeconcerns).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.total).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                    $('#ConcernsValue').append(row);
+                });
+
+                var Name = "by Over All"
+                CreateChart(gantchart);
+
+                createLineChart(chartData);
+
+
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        });
+    }
+
+
+    function Redirect() {
+        window.location.href = "@Url.Action("Welcome", "Login")"
+    }
+
+    function applyColor(overAll) {
+        debugger;
+        switch (overAll.toLowerCase()) { // Convert to lower case to handle case-insensitive comparison
+            case 'early':
+                $('#txtOverallStatus').css('background-color', '#AEF333');
+                break;
+            case 'delay':
+                $('#txtOverallStatus').css('background-color', '#FB5F6B');
+                break;
+            case 'on time':
+                $('#txtOverallStatus').css('background-color', '#FFEF33');
+                break;
+            default:
+                $('#txtOverallStatus').css('background-color', '');
+                break;
+        }
+    }
+
+
+
+    ////var myChart; // Global variable to hold the chart instance
+
+    ////function createLineChart(chartData) {
+    ////    // Check if chartData is defined and not empty
+    ////    if (!chartData || chartData.length === 0) {
+    ////        console.error('Chart data is empty or undefined.');
+    ////        return;
+    ////    }
+
+    ////    // Arrays to hold data
+    ////    var dates = [];
+    ////    var expectedValues = [];
+    ////    var actualValues = [];
+    ////    var openConcerns = [];
+    ////    var closeConcerns = [];
+
+    ////    chartData.forEach(item => {
+    ////        if (item && item.MaxDate) {
+    ////            // Parse MaxDate assuming "dd/mm/yyyy" format
+    ////            var parts = item.MaxDate.split('/');
+    ////            var formattedDate = new Date(parts[2], parts[1] - 1, parts[0]); 
+    ////            dates.push(formattedDate); // Store Date object
+
+    ////            // Push other values
+    ////            expectedValues.push(item.Expected_Progressper ? parseFloat(item.Expected_Progressper) : 0);
+    ////            actualValues.push(item.Actual_Progressper ? parseFloat(item.Actual_Progressper) : 0);
+    ////            openConcerns.push(item.Openconcerns ? parseFloat(item.Openconcerns) : 0);
+    ////            closeConcerns.push(item.closeconcerns ? parseFloat(item.closeconcerns) : 0);
+               
+
+    ////        }
+    ////    });
+      
+
+    ////        if (window.myChart) {
+    ////        window.myChart.destroy();
+    ////    }
+
+    ////    // Using Chart.js to create a line chart
+    ////    var ctx = document.getElementById('myChart').getContext('2d');
+    ////    window.myChart = new Chart(ctx, {
+    ////        type: 'line',
+    ////        data: {
+    ////            labels: dates.map(date => date.toLocaleDateString('en-GB')), // Format dates for display
+    ////            datasets: [
+    ////                {
+    ////                    label: 'Expected Progress (%)',
+    ////                    data: expectedValues,
+    ////                    backgroundColor: 'rgba(16, 14, 210, 0.2)',
+    ////                    borderColor: 'rgba(16, 14, 210, 1)',
+    ////                    borderWidth: 1
+    ////                },
+    ////                {
+    ////                    label: 'Actual Progress (%)',
+    ////                    data: actualValues,
+    ////                    backgroundColor: 'rgba(251, 95, 107, 0.2)',
+    ////                    borderColor: 'rgba(251, 95, 107, 1)',
+    ////                    borderWidth: 1
+    ////                },
+    ////                {
+    ////                    label: 'Open Concerns (%)',
+    ////                    data: openConcerns,
+    ////                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+    ////                    borderColor: 'rgba(75, 192, 192, 1)',
+    ////                    borderWidth: 1
+    ////                },
+    ////                {
+    ////                    label: 'Close Concerns (%)',
+    ////                    data: closeConcerns,
+    ////                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+    ////                    borderColor: 'rgba(153, 102, 255, 1)',
+    ////                    borderWidth: 1
+    ////                }
+    ////            ]
+    ////        },
+    ////        options: {
+    ////            scales: {
+    ////                xAxes: [{
+    ////                    type: 'time',
+    ////                    time: {
+    ////                        unit: 'day',
+    ////                        tooltipFormat: 'DD/MM/YYYY', // Tooltip format for dates
+    ////                        displayFormats: {
+    ////                            day: 'DD/MM/YYYY' // Format for x-axis labels
+    ////                        }
+    ////                    }
+    ////                }],
+    ////                yAxes: [{
+    ////                    ticks: {
+    ////                        beginAtZero: true
+    ////                    }
+    ////                }]
+    ////            },
+    ////            tooltips: {
+    ////                callbacks: {
+    ////                    title: function (tooltipItem, data) {
+    ////                        // Display the x-axis label (date) as the tooltip title
+    ////                        var date = data.labels[tooltipItem[0].index];
+    ////                        return date;
+    ////                    },
+    ////                    label: function (tooltipItem, data) {
+    ////                        var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+    ////                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+
+    ////                        // Handle null values
+    ////                        if (value === null || isNaN(value)) {
+    ////                            return datasetLabel + ': N/A';
+    ////                        } else {
+    ////                            return datasetLabel + ': ' + value;
+    ////                        }
+    ////                    }
+    ////                }
+    ////            }
+
+    ////        }
+
+
+
+    ////    });
+    ////}
+
+
+    var myChart; // Global variable to hold the chart instance
+
+    function createLineChart(chartData) {
+        // Check if chartData is defined and not empty
+        if (!chartData || chartData.length === 0) {
+            console.error('Chart data is empty or undefined.');
+            return;
+        }
+
+        // Arrays to hold data
+        var dates = [];
+        var expectedValues = [];
+        var actualValues = [];
+        var openConcerns = [];
+        //var closeConcerns = [];
+
+        chartData.forEach(item => {
+            if (item && item.MaxDate) {
+                // Parse MaxDate assuming "dd/mm/yyyy" format
+                var parts = item.MaxDate.split('/');
+                var formattedDate = new Date(parts[2], parts[1] - 1, parts[0]);
+                dates.push(formattedDate); // Store Date object
+
+                // Push other values
+                expectedValues.push(item.Expected_Progressper ? parseFloat(item.Expected_Progressper) : 0);
+                actualValues.push(item.Actual_Progressper ? parseFloat(item.Actual_Progressper) : 0);
+                openConcerns.push(item.Openconcerns ? parseFloat(item.Openconcerns) : 0);
+                //closeConcerns.push(item.closeconcerns ? parseFloat(item.closeconcerns) : 0);
+            }
+        });
+
+        // Sort dates and corresponding values in ascending order
+        var sortedIndices = dates.map((date, index) => index)
+                                 .sort((a, b) => dates[a] - dates[b]);
+        dates = sortedIndices.map(index => dates[index]);
+        expectedValues = sortedIndices.map(index => expectedValues[index]);
+        actualValues = sortedIndices.map(index => actualValues[index]);
+        openConcerns = sortedIndices.map(index => openConcerns[index]);
+       // closeConcerns = sortedIndices.map(index => closeConcerns[index]);
+
+        if (window.myChart) {
+            window.myChart.destroy();
+        }
+
+        // Using Chart.js to create a line chart
+        var ctx = document.getElementById('myChart').getContext('2d');
+        window.myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates.map(date => date.toLocaleDateString('en-GB')), // Format dates for display
+                datasets: [
+                    {
+                        label: 'Expected Progress (%)',
+                        data: expectedValues,
+                        backgroundColor: 'rgba(16, 14, 210, 0.2)',
+                        borderColor: 'rgba(16, 14, 210, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Actual Progress (%)',
+                        data: actualValues,
+                        backgroundColor: 'rgba(251, 95, 107, 0.2)',
+                        borderColor: 'rgba(251, 95, 107, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Open Concerns (%)',
+                        data: openConcerns,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    //{
+                    //    label: 'Close Concerns (%)',
+                    //    data: closeConcerns,
+                    //    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    //    borderColor: 'rgba(153, 102, 255, 1)',
+                    //    borderWidth: 1
+                    //}
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            tooltipFormat: 'DD/MM/YYYY', // Tooltip format for dates
+                            displayFormats: {
+                                day: 'DD/MM/YYYY', // Format for x-axis labels
+                                month: 'MMM YYYY' // Format for x-axis labels when displaying month
+                            }
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 20 // Adjust this value based on the number of dates
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        title: function (tooltipItem, data) {
+                            // Display the x-axis label (date) as the tooltip title
+                            var date = data.labels[tooltipItem[0].index];
+                            return date;
+                        },
+                        label: function (tooltipItem, data) {
+                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                            var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+
+                            // Handle null values
+                            if (value === null || isNaN(value)) {
+                                return datasetLabel + ': N/A';
+                            } else {
+                                return datasetLabel + ': ' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        //var chartTitleElement = document.getElementById('chartTitle');
+        //if (chartTitleElement) {
+        //    chartTitleElement.innerText = 'Expediting Line Data : (' + chartTitle + ')';
+        //} else {
+        //    console.error('Chart title element not found.');
+        //}
+    }
+
+
+
+        
+</script>
+
+<script>
+
+    function OnsiteVisit() {
+        debugger
+
+        var Company = $("#ddlCompany :selected").text();
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+        var Number = $('#ddlPONumber').val();
+        var PONumber = Number.join(', ');
+        var Number = $('#ddlItemNumber').val();
+        var ItemNumber = Number.join(', ');
+        var TagNumber = $('#ddlItemTagNo').val();
+        var name = $('#ddlItemName').val();
+        var itemName = name.join(', ');
+
+        $.ajax({
+            url: '@Url.Action("FillOnsiteReportData", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, itemName: itemName },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+               
+                var OnsiteValue = JSON.parse(response.OnsiteValuelst);
+
+                @*$('#OnsiteValues').empty();
+
+                OnsiteValue.forEach(function (value) {
+                    var row = $('<tr>');
+                    var editCell = $('<td>').css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' });
+                    var editLink = $('<a>').attr('href', '@Url.Action("ExpeditingReport", "Expediting")?PK_CALL_ID=' + value.PK_Call_ID).attr('title', 'Edit').attr('target', '_blank');
+                    editLink.append($('<i>').addClass('fa fa-pencil'));
+                    editCell.append(editLink);
+                    row.append(editCell);
+                    row.append($('<td>').text(value.ReportName).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    $('#OnsiteValues').append(row);
+                });*@
+
+                //$('#OnsiteValues').empty();
+
+                //OnsiteValue.forEach(function (value) {
+                //    var row = $('<tr>');
+
+                    
+                //    row.append($('<td>').text(value.Date_Of_Expediting).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+
+                //                       var reportCell = $('<td>').css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' });
+                //                       var reportLink = $('<a>').attr('href', '~/CV/' + value.ReportName).attr('download', '~/CV/' + value.ReportName).css({ 'color': '#001ED2' });
+                //                       reportLink.text(value.ReportName);
+                //    reportCell.append(reportLink);
+                //    row.append(reportCell);
+                //    -
+                    
+                //    row.append($('<td>').text(value.Createdby).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+
+                //    $('#OnsiteValues').append(row);
+                //});
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        })
+
+    }
+
+</script>
+
+<script>
+    function ShowConcernsData(stageData) {
+        debugger
+        var Company = $("#ddlCompany :selected").text()
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+        var Number = $('#ddlPONumber').val();
+        var PONumber = Number.join(', ');
+        var Number = $('#ddlItemNumber').val();
+        var ItemNumber = Number.join(', ');
+        var TagNumber = $('#ddlItemTagNo').val();
+        var Stage = stageData;
+        var name = $('#ddlItemName').val();
+        var itemName = name.join(', ');
+
+
+        $.ajax({
+            url: '@Url.Action("FillConcernsData", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, Stage: Stage, itemName: itemName },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                var ConcernsValue = JSON.parse(response.ConcernsValuedata);
+
+                $('#ConcernsData').empty();
+
+                ConcernsValue.forEach(function (value) {
+                    var row = $('<tr>');
+                    row.append($('<td>').text(value.concernsDate).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.Details).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.MitigationBy).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.ResponsiblePerson).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '90px', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.VendorName).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.Po_No).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+
+                    $('#ConcernsData').append(row);
+                });
+
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        })
+    }
+</script>
+
+
+<script>
+   function ShowEngData(stageData) {
+    var Company = $("#ddlCompany :selected").text();
+    var Project = $('#ddlProject').val();
+    var Vendorname = $('#ddlSubVendorName').val();
+    var SubVendorname = Vendorname.join(', ');
+   // var Number = $('#ddlPONumber').val();
+    var PONumber = $('#ddlPONumber').val();
+   // var Number = $('#ddlItemNumber').val();
+    var ItemNumber = $('#ddlItemNumber').val();
+    var TagNumber = $('#ddlItemTagNo').val();
+    var Stage = stageData;
+    var name = $('#ddlItemName').val();
+    var itemName = name.join(', ');
+
+    $.ajax({
+        url: '@Url.Action("FillEngData", "Expediting")',
+        method: 'GET',
+        data: { Company: Company, Project: Project, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, Stage: Stage, itemName: itemName },
+        async: false,
+        contentType: "application/json",
+        success: function (response) {
+            debugger
+            var EngValuedata = JSON.parse(response.EngValuedata);
+
+            $('#ActionData').empty();
+            debugger
+            EngValuedata.forEach(function (value) {
+                var row = $('<tr>');
+                row.append($('<td>').text(value.Date).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                row.append($('<td>').text(value.stageBy).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                row.append($('<td>').text(value.Details).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                row.append($('<td>').text(value.Status).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                row.append($('<td>').text(value.VendorName).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+                row.append($('<td>').text(value.VendorPO).css({ 'text-align': 'center', 'vertical-align': 'top', 'width': '100px', 'font-size': '13px' }));
+
+                row.append($('<td>').text(value.ActionReq).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                
+                $('#ActionData').append(row);
+            });
+        },
+        error: function (xhr, status, error) {
+            
+            alert('Something went wrong');
+        }
+    });
+}
+
+</script>
+
+<script>
+    function TotalVisit() {
+        debugger
+
+        var Company = $("#ddlCompany :selected").text()
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+        var Number = $('#ddlPONumber').val();
+        var PONumber = Number.join(', ');
+        var ItemNumber = $('#ddlItemNumber').val();
+        //var ItemNumber = Number.join(', ');
+        var TagNumber = $('#ddlItemTagNo').val();
+        var itemName = $('#ddlItemName').val();
+        //var itemName = name.join(', ');
+
+        $.ajax({
+            url: '@Url.Action("FillTotalReportData", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, itemName: itemName },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+               
+                var TotalValuelst = JSON.parse(response.TotalValuelst);
+
+                
+
+           
+                $('#TotalValues').empty();
+
+                TotalValuelst.forEach(function (value) {
+                    var row = $('<tr>');
+
+                    
+                    row.append($('<td>').text(value.Date_Of_Expediting).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    row.append($('<td>').text(value.ExpeditingType).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+                    var reportCell = $('<td>').css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' });
+                    var reportLink = $('<a>').attr('href', '~/ExpeditingDocument/' + value.ReportName).attr('download', '~/ExpeditingDocument/' + value.ReportName).css({ 'color': '#001ED2' });
+                    reportLink.text(value.ReportName);
+                    reportCell.append(reportLink);
+                    row.append(reportCell);
+                    -
+                    
+                    row.append($('<td>').text(value.Createdby).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+
+                    $('#TotalValues').append(row);
+                });
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        })
+
+    }
+
+
+    function DeskVisit() {
+        debugger
+
+        var Company = $("#ddlCompany :selected").text()
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+        var Number = $('#ddlPONumber').val();
+        var PONumber = Number.join(', ');
+        var Number = $('#ddlItemNumber').val();
+        var ItemNumber = Number.join(', ');
+        var TagNumber = $('#ddlItemTagNo').val();
+        var name = $('#ddlItemName').val();
+        var itemName = name.join(', ');
+
+        $.ajax({
+            url: '@Url.Action("FillDeskReportData", "Expediting")',
+            method: 'GET',
+            data: { Company: Company, Project: Project, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, itemName: itemName },
+            async: false,
+            contentType: "application/json",
+            success: function (response) {
+                debugger
+
+                var DeskValue = JSON.parse(response.DeskValuelst);
+
+
+
+
+                $('#DeskValues').empty();
+
+                DeskValue.forEach(function (value) {
+                    var row = $('<tr>');
+
+
+                    row.append($('<td>').text(value.Date_Of_Expediting).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+
+                    var reportCell = $('<td>').css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' });
+                    var reportLink = $('<a>').attr('href', '~/CV/' + value.ReportName).attr('download', '~/CV/' + value.ReportName).css({ 'color': '#001ED2' });
+                    reportLink.text(value.ReportName);
+                    reportCell.append(reportLink);
+                    row.append(reportCell);
+                    -
+
+                    row.append($('<td>').text(value.Createdby).css({ 'text-align': 'center', 'vertical-align': 'top', 'font-size': '13px' }));
+
+                    $('#DeskValues').append(row);
+                });
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                alert('Something went wrong');
+            }
+        })
+
+    }
+</script>
+
+<script>
+
+  
+    function clearData() {
+        $('#ddlCompany').val('0');
+        $('#ddlProject').val('0');
+        $('#ddlSubVendorName').multiselect('clearSelection');
+        $('#ddlPONumber').multiselect('clearSelection');
+        $('#ddlItemNumber').multiselect('clearSelection');
+        $('#ddlItemTagNo').multiselect('clearSelection');
+        $('#ddlItemName').multiselect('clearSelection');
+        
+        $('#chartDiv').empty();
+        $('#myChart').hide();
+        $('#txtOnsiteVisit').val('');
+        $('#txtDeskVisit').val('');
+        $('#txtTotal').val('');
+        $('#txtOverallStatus').val('').css('background-color', '');
+        
+        $('#txtPlannedProgress').val('');
+        $('#txtOverallProgress').val('');
+        $('#txtOpenConcerns').val('');
+        $('#txtClosedConcerns').val('');
+        $('#txtNumVendors').val('');
+        $('#ConcernsValue').empty();
+        $('#ActionValue').empty();
+        $('#ConcernsData').empty();
+        $('#ActionData').empty();
+        $('#TotalValues').empty();
+
+
+    }
+</script>
+  
+
+<script>
+@*function ConcernsOpenCloseData(Stage) {
+    var Company = $("#ddlCompany :selected").text();
+    var Project = $('#ddlProject').val();
+    var Vendorname = $('#ddlSubVendorName').val();
+    var SubVendorname = Vendorname.join(', ');
+    var Number = $('#ddlPONumber').val();
+    var PONumber = Number.join(', ');
+    var ItemNumber = $('#ddlItemNumber').val();
+    var TagNumber = $('#ddlItemTagNo').val();
+
+    $.ajax({
+        url: '@Url.Action("ConcernsOpenClose", "Expediting")',
+        method: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({
+            Company: Company,
+            Project: Project,
+            SubVendorname: SubVendorname,
+            PONumber: PONumber,
+            ItemNumber: ItemNumber,
+            Stage: Stage
+        }),
+        dataType: 'json',
+        success: function (response) {
+
+            var concernsData = JSON.parse(response.Concernslit);
+            var concernsDataJson = JSON.stringify(concernsData);
+
+            var concernsUrl = '@Url.Action("Concerns", "Expediting")' + '?concernsData=' + concernsDataJson;
+
+           window.open(concernsUrl, '_blank');
+
+        },
+        error: function(xhr, status, error) {
+            console.error('POST Error:', error);
+            alert('Something went wrong');
+        }
+    });
+}*@
+
+
+    function ConcernsOpenCloseData(Stage) {
+        debugger;
+        var Company = $("#ddlCompany :selected").text();
+        var Project = $('#ddlProject').val();
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+        var Number = $('#ddlPONumber').val();
+        var PONumber = Number.join(', ');
+        var item = $('#ddlItemNumber').val();
+        var ItemNumber = item.join(', ');
+        var Number1 = $('#ddlItemTagNo').val();
+        var TagNumber = Number1.join(', ');
+        var stage = Stage;
+
+    $.ajax({
+        url: '@Url.Action("ConcernsOpenClose", "Expediting")',
+        method: 'GET',
+        contentType: 'application/json; charset=utf-8',
+        data: { Company: Company, Project: Project, Vendorname: Vendorname, SubVendorname: SubVendorname, PONumber: PONumber, ItemNumber: ItemNumber, stage: stage },
+        dataType: 'json',
+        success: function (response) {
+            var concernsData = JSON.stringify(response.Concernslit);
+           
+
+            var concernsUrl = '@Url.Action("Concerns", "Expediting")';
+
+            window.open(concernsUrl, '_blank');
+
+        },
+        error: function(xhr, status, error) {
+            console.error('POST Error:', error);
+            alert('Something went wrong');
+        }
+    });
+}
+
+
+
+</script>
+
+<script>
+    function openitemDetails() {
+        debugger
+        var Project = $('#ddlProject').val();
+        var item = $('#ddlItemNumber').val();
+        var ItemNumber = item.join(', ');
+
+        if (Project == "0") {
+            alert("Please Select Po Project Name !!")
+            return false;
+        }
+
+        
+        window.open('@Url.Action("POitemdetails", "Expediting")' + '?Project=' + encodeURIComponent(Project), '_blank');
+    }
+</script>
+
+<script>
+    function openVendorDetails() {
+        debugger
+        var Project = $('#ddlProject').val();
+
+        var Vendorname = $('#ddlSubVendorName').val();
+        var SubVendorname = Vendorname.join(', ');
+
+        if (Project == "") {
+            alert("Please Select Project Name !!")
+            return false;
+        }
+
+
+        window.open('@Url.Action("Vendordetails", "Expediting")' + '?Project=' + encodeURIComponent(Project), '_blank');
+    }
+</script>
+<script>
+    function exportToExcel() {
+        var ws_data = [];
+        var headers = ['Date', 'Area Of Concerns', 'Corrective Action', 'Responsible person', 'Vendor Name', 'PO No'];
+        ws_data.push(headers);
+
+        var rows = document.querySelectorAll('#ConcernsvalueID tbody tr');
+        rows.forEach(function (row) {
+            var cells = row.querySelectorAll('td');
+            var rowData = Array.from(cells).map(cell => {
+                var text = cell.textContent.trim();
+
+
+                if (cells[0] === cell) {
+                    return text;
+                }
+                return text;
+            });
+            ws_data.push(rowData);
+        });
+
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, 'Concerns_Details.xlsx');
+    }
+
+    function exportToExcelActionValue() {
+        var ws_data = [];
+        var headers = ['Date', 'Name', 'Action Required By'];
+        ws_data.push(headers);
+
+        var rows = document.querySelectorAll('#ActionID tbody tr');
+        rows.forEach(function (row) {
+            var cells = row.querySelectorAll('td');
+            var rowData = Array.from(cells).map(cell => {
+                var text = cell.textContent.trim();
+
+
+                if (cells[0] === cell) {
+                    return text;
+                }
+                return text;
+            });
+            ws_data.push(rowData);
+        });
+
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, 'Action_Points_Details.xlsx');
+    }
+</script>
+
+
+
+
+
+   
+

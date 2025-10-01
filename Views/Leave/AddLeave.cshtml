@@ -1,0 +1,526 @@
+﻿@model TuvVision.Models.Leave
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "AddLeave";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+@*...Calender Control...*@
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>*@
+
+
+@helper CustomRenderingOfColumnAttachment(TuvVision.Models.Leave LeaveModel)
+{
+if (LeaveModel.Attachment == null || LeaveModel.Attachment == "")
+{
+
+}
+else
+{
+    string[] words = (LeaveModel.Attachment).Split(',');
+    for (int j = 1; j < words.Count(); j++)
+    {
+            <a target="_blank" href="@Url.Content("~/NonInspectionActivityDocument/" + words[j-1])">
+
+                <span>@words[j - 1].ToString()</span>
+            </a>
+    }
+}
+}
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+<script>
+$(function () {
+    $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+});
+$(function () {
+    $(".ToD").datepicker({
+        dateFormat: 'dd/mm/yy',//check change
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+50"
+    });
+});
+</script>
+
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+@*DATEPICKER*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.js" data-modules="effect effect-bounce effect-blind effect-bounce effect-clip effect-drop effect-fold effect-slide"></script>*@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+
+
+
+@using (Html.BeginForm("AddLeave", "Leave", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+
+                <div class="row assignfixedwidth rp-5">
+                    <a href="@Url.Action("LeaveDetail","Leave")" class="btn btn-default news-btn" style="float:right;"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+
+                    <br />
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+
+
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Add Leave</h3>
+                                    <div class="row">
+
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+                                                    @Html.HiddenFor(m=>m.Id)
+
+                                                    <div class="row">
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label> Employee Name:</label>
+
+                                                                @if (ViewBag.Userlist != null)
+                                                            {
+
+                                                                    @Html.DropDownListFor(m => m.FirstName, ViewBag.Userlist as IEnumerable<SelectListItem>, "--Select Employee Name--", new { @class = "form-control FirstName", id = 'a' })
+
+                                                            }
+                                                                @*@Html.TextBoxFor(model => model.FirstName, new { @placeholder = "Inspector", @class = "form-control"  })*@
+                                                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Start Date:</label>
+
+                                                                @Html.TextBoxFor(model => model.StartDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        @if (Model.Id == null)
+                                                        {
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>End Date:</label>
+                                                                    @Html.TextBoxFor(model => model.EndDate, "{0:dd MMM yyyy}", new { @placeholder = "End Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                                                                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                        }
+
+
+                                                        <div class="col-xs-12 col-sm-4">
+
+
+                                                            <div class="form-group">
+                                                                <label>Select Leave:</label>
+                                                                @Html.DropDownListFor(m => m.ActivityType, new List<SelectListItem>
+                                                                     {
+                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                      new SelectListItem{ Text="Privilege Leave", Value = "Privilege Leave" },
+                                                                     new SelectListItem{ Text="Casual Leave", Value = "Casual Leave" },
+                                                                     new SelectListItem{ Text="Sick Leave", Value = "Sick Leave" },
+
+                                                                     },
+
+                                                                     new { @class = "form-control", @id = "PT" })
+                                                                @Html.ValidationMessageFor(m => m.ActivityType, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 col-sm-8">
+                                                            <div class="form-group">
+                                                                <label>Reason for Leave: @*<span class="text-danger">*</span>*@</label>
+                                                                @Html.TextAreaFor(model => model.Reason, new { @placeholder = "Reason for Leave", @class = "form-control Reason", @rows="3" })
+                                                                @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+
+                                                                <label>Attachments (Attach Approved Leave Application Form):</label>
+                                                                <input type="file" class="inputupload" name="img_Banner" id="img_Banner" />
+
+                                                                <input hidden="hidden" id="img_Banner" name="img_Banner" class="hidden" />
+
+                                                                @Html.HiddenFor(m => m.Attachment)
+                                                                @if (Model != null && Model.Attachment != null && Model.Attachment != "")
+                                                                    {
+                                                                        string[] words = (Model.Attachment).Split(',');
+                                                                        for (int j = 1; j <= words.Count(); j++)
+                                                                        {
+                                                                        <a target="_blank" href="@Url.Content("~/NonInspectionActivityDocument/" + words[j-1])">
+
+                                                                            <span>@words[j - 1].ToString()</span>
+                                                                        </a>
+
+                                                                        }
+                                                                    }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4" style="height: 75px;">
+                                                            <div class="form-group">
+
+                                                                <div class="form-group">
+                                                                    @Html.CheckBoxFor(model => model.ChkLTILeave, new { @id = "chkPassport" })
+                                                                    <label for="InActive" style="color:red;">Leave for Lost Time Incidents</label>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-xs-12 col-sm-4">
+
+                                                            <div class="form-group">
+
+                                                                <button type="submit" class="btn btn-default insert-form-btn" id="btnAddFl"> Save </button>
+
+
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </form>
+
+                                            @*</div>
+
+                                        </div>*@
+
+
+                                        @using (Html.BeginForm("LeaveDetail", "Leave", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+                                        {
+                                            <form>
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                            <label>From Date:</label>
+                                                            @Html.TextBoxFor(model => model.FromD, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.FromD, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                            <label>To Date:</label>
+                                                            @Html.TextBoxFor(model => model.ToD, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.ToD, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-xs-2">
+                                                        <div class="form-group">
+                                                            @*<label>Search:</label>*@
+                                                            @*<input type="submit" value="Search" class="btn btn-primary form-control" id="btnSearch"/>*@
+                                                            <input type="submit" value="Search" class="btn btn-default insert-form-btn" id="btnSearch" style="margin-top:25px;" />
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                @if (Convert.ToString(TempData["Error"]) != "")
+                                                {
+                                                <div class="col-xs-12">
+
+                                                    @{
+                                                            if (Convert.ToString(TempData["Error"]) != null && Convert.ToString(TempData["Error"]) != "")
+                                                            {
+                                                        <h4 style="color:red;font-weight:bold;">@Convert.ToString(TempData["Error"])</h4>
+                                                            }
+                                                    }
+                                                </div>
+                                                }
+                                                @if (Convert.ToString(TempData["Success"]) != "")
+                                                {
+                                                <div class="col-xs-12">
+
+                                                    @{
+                                                                        if (Convert.ToString(TempData["Success"]) != null && Convert.ToString(TempData["Success"]) != "")
+                                                                        {
+                                                                    <h4 style="color:green;font-weight:bold;">@Convert.ToString(TempData["Success"])</h4>
+                                                            }
+                                                    }
+                                                </div>
+                                                }
+
+                                                @if (Convert.ToString(TempData["Failure"]) != "")
+                                                {
+                                                <div class="col-xs-12">
+
+                                                    @{
+                                                                                    if (Convert.ToString(TempData["Failure"]) != null && Convert.ToString(TempData["Failure"]) != "")
+                                                                                    {
+                                                                                <h4 style="color:red;font-weight:bold;">@Convert.ToString(TempData["Failure"])</h4>
+                                                            }
+                                                    }
+                                                </div>
+                                                }
+
+                                                @if (Convert.ToString(TempData["MsgCallAssigned"]) != "")
+                    {
+
+                                                    <div class="col-xs-12">
+
+                                                        @{
+                                                            if (Convert.ToString(TempData["MsgCallAssigned"]) != null && Convert.ToString(TempData["MsgCallAssigned"]) != "")
+                                                            {
+                                                                <h4 style="color:red;font-weight:bold;">@Convert.ToString(TempData["MsgCallAssigned"])</h4>
+                                                                @*<script>
+                                                                        alert(TempData["MsgCallAssigned"])
+                                                                </script>*@
+                                                                TempData["MsgCallAssigned"] = "";
+                                                            }
+                                                        }
+                                                    </div>
+                                                            }
+
+                                                @if (Convert.ToString(TempData["MsgIfLeaveExist"]) != "")
+                    {
+                                                    <div class="col-xs-12">
+
+                                                        @{
+                                                            if (Convert.ToString(TempData["MsgIfLeaveExist"]) != null && Convert.ToString(TempData["MsgIfLeaveExist"]) != "")
+                                                            {
+                                                                <h4 style="color:red;font-weight:bold;">@Convert.ToString(TempData["MsgIfLeaveExist"])</h4>
+
+                                                                TempData["MsgIfLeaveExist"] = "";
+                                                            }
+                                                        }
+                                                    </div>
+                                                            }
+
+                                                <div class="row">
+
+
+
+                                                    <div class="col-xs-12  col-sm-offset-1 col-sm-10">
+                                                       
+
+
+                                                        <table id="example" class="display custom-table" cellspacing="0" width="100%">
+
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Id</th>
+                                                                    <th>Name</th>
+                                                                    <th>Leave Detail</th>
+
+
+                                                                    <th>Activity Type</th>
+                                                                    <th>LTI Leave</th>
+                                                                    <th>Attchments</th>
+                                                                    <th>Edit</th>
+                                                                    <th>Delete</th>
+
+
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                @{
+                                                                    if (ViewData["BranchList"] != null)
+                                                                    {
+                                                                        foreach (var item in ViewData["BranchList"] as IEnumerable<TuvVision.Models.Leave>)
+                                                                        {
+
+                                                                <tr>
+
+
+                                                                    <td>@item.Id</td>
+                                                                    <td>@item.FirstName</td>
+                                                                    <td>@item.DateSE</td>
+
+
+                                                                    <td>@item.ActivityType</td>
+                                                                    <td>@item.LTILeave</td>
+                                                                    <td>
+                                                                        @if (item.Attachment == null || item.Attachment == "")
+                                                                                    {
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                    string[] words = (item.Attachment).Split(',');
+                                                                                    for (int j = 1; j < words.Count(); j++)
+                                                                                    {
+                                                                                    <a target="_blank" href="@Url.Content("~/NonInspectionActivityDocument/" + words[j-1])">
+
+                                                                                        <span>@words[j - 1].ToString()</span>
+                                                                                    </a>
+                                                                                    }
+                                                                                    }
+
+                                                                    </td>
+                                                                    <td>
+                                                                        @*columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "AddLeave", new { @id = o.Id }, new { @class = "fa fa-pencil", title = "Edit" }));*@
+
+                                                                        <a href="@Url.Action("AddLeave", "Leave", new {id = item.Id })" title="Edit" class="fa fa-pencil"></a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="@Url.Action("Delete", "Leave", new {id = item.Id, onclick = "return confirm('Are you sure you wish to delete this Record?');" })" title="Edit" class="fa fa-trash-o"></a>
+                                                                    </td>
+                                                                </tr>
+                                                                        }
+                                                                    }
+
+                                                                }
+
+                                                            </tbody>
+
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </form>
+
+
+
+
+
+                                                        }
+                                        </div>
+
+            </div>
+                                     
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+}
+
+
+@*...Calender Control...*@
+
+
+<script>
+
+    $("#btnAddFl").click(function myfunction() {
+        if (validateform() == false)
+        {
+            return false;
+        }
+        else {
+            $("#form1").submit();
+        }
+    });
+
+
+   
+
+    function validateform()
+    {
+        debugger
+        var FromD = $("#StartDate").val();
+        var ToD = $("#EndDate").val();
+
+        var ActivityType = $("#PT").val();
+        var FirstName = $("#a").val();
+        var Reason = $("#Reason").val();
+        
+
+      
+        if ((FirstName == null || FirstName == "")) {
+            alert("Please Select Inspector Name");
+            $("#a").focus();
+            return false;
+        }
+
+        if ((FromD == null || FromD == "") || (ToD == null || ToD == "")) {
+            alert("Please Enter From Date and To Date");
+            $("#FromD").focus();
+            return false;
+        }
+
+        if ((ToD == null || ToD == "")) {
+            alert("Please Enter To Date ");
+            $("#ToD").focus();
+            return false;
+        }
+
+        if ((ActivityType == null || ActivityType == ""))
+        {
+            alert("Please Select Leave Type");
+            $("#ActivityType").focus();
+            return false;
+        }
+
+        if ((Reason == null || Reason == "")) {
+            alert("Please Enter Reason for Leave");
+            $("#Reason").focus();
+            return false;
+        }
+
+        var LeaveFile = $("[name='img_Banner']").val();
+      if (LeaveFile == "") {
+            alert("Please attach approved Leave Application Form");
+            $("#img_Banner").focus();
+            return false;
+        }
+
+       
+
+
+        return true;
+
+
+    }
+
+
+</script>
+<script>
+
+    $("#btnSearch").on('click', function (event) {
+
+    });
+</script>

@@ -1,0 +1,124 @@
+﻿@model TuvVision.Models.TrainingScheduleModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "Play Video";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<style>
+
+    .video-frame {    
+            width: 100%;    
+            height: 195px;    
+            border: 4px solid ;    
+            box-shadow: 1px 2px 3px;    
+            border-radius: 3px;    
+        }    
+        .title {    
+            font-weight: 500;    
+            font-size: 14px;    
+            text-align: center;    
+            margin-bottom: 10px;    
+            margin-top: 10px;    
+            background-color: #dc3545;    
+            color: white;    
+            box-shadow: 1px 2px 4px #dc3545;    
+        }    
+
+</style>
+
+
+    @using (Html.BeginForm("PlayVideo", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+    {
+
+
+        <div class="main-content3 xs-max-height" style="padding-left:100px">
+
+            <!--Start of header-->
+
+            <br />
+
+            @Html.HiddenFor(m => m.PK_TrainingScheduleId)
+            @Html.HiddenFor(m => m.TrainingName)
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">@Model.TrainingName.ToString()</h3>
+                </div><!-- /.col -->
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div>
+
+
+
+
+            <div style="width:50%;height:50%;align:center" class="video-frame">
+                <video oncontextmenu="return false;" style="width:100%; height:100%;" controls controlsList="nodownload">
+                    <source src="~/Content/Uploads/Videos/@Model.FileName.ToString().Trim()" type="video/mp4" />
+                </video>
+            </div>
+            <div>
+                @if (Model.chkVideoSeen == true)
+                {
+                    @Html.CheckBoxFor(model => model.chkVideoSeen, new { @onclick = "return false" })
+                }
+                else
+                {
+                    @Html.CheckBoxFor(model => model.chkVideoSeen)
+                }
+
+                <label>I have seen the video and understood.</label>
+            </div>
+
+            @if (Model.chkVideoSeen == false)
+            {
+
+                <div id="divPOSave">
+                    <button type="submit" id="btniid" class="btn btn-default insert-form-btn">Mark Attendance</button>
+                </div>
+            }
+        </div>
+
+            <script>
+
+                $("#btniid").click(function myfunction() {
+                    if (validateform() == false) {
+                        return false;
+                    }
+                    else {
+                        $("#formiid").submit();
+                    }
+                });
+
+                function validateform()
+                {
+
+                    
+                    var checkBox = document.getElementById('chkVideoSeen');
+                    // Check if the element is selected/checked
+                 
+
+                 
+                    if (checkBox.checked == false)
+                    {
+                        alert("Kindly tick the checkbox before you mark the attendance");
+                        return false;
+                    }
+
+                    return true;
+                }
+            </script>
+        
+    }
+    
+
+
+
+
+

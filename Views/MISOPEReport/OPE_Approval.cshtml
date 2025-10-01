@@ -1,0 +1,1127 @@
+﻿@using NonFactors.Mvc.Grid;
+
+@{
+    ViewBag.Title = "OPE_Approval";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+@*<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+    <script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+    <link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />*@
+
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+@*<style>
+        .height-table {
+            height: auto;
+        }
+
+        body {
+            font-family: 'TNG Pro';
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        text-align: center;
+
+        }
+
+        th {
+            background-color: #001ED2;
+            color: #ffffff;
+        }
+
+        @@media (max-width: 600px) {
+            table {
+                border: 0;
+            }
+
+                table thead {
+                    display: none;
+                }
+
+                table tr {
+                    margin-bottom: 10px;
+                    display: block;
+                    border-bottom: 2px solid #ddd;
+                }
+
+                table td {
+                    display: block;
+                    text-align: right;
+                }
+
+                    table td:last-child {
+                        border-bottom: 0;
+                    }
+        }
+
+        .label1 {
+            font-weight: normal !important;
+        }
+
+        #preloader {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+            z-index: 9999;
+            /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+        }
+
+       .highlight-row {
+            background-color: #FFEB00;
+        }
+
+         label {
+            font-weight: normal;
+            font-family:'TNG Pro';
+        }
+          .highlight-row_ {
+            background-color: #EFEFEF;
+        }
+    </style>*@
+
+<style>
+    .height-table {
+        height: auto;
+    }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-family: 'TNG Pro';
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+        font-family: 'TNG Pro';
+        font-weight: normal;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    .label1 {
+        font-weight: normal !important;
+    }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
+
+     #example tbody tr.highlight-row {
+        background-color: #FFEB00;
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+
+    #example tbody tr.highlight-row_ {
+        background-color: #FED7DA;
+    }
+
+    .btn.btn-info.dynamic-function-btn.highlighted {
+        background-color: #001ED2; /* Change the color as desired */
+    }
+</style>
+
+
+<script>
+    FilePond.parse(document.body);
+</script>
+
+@*New added Code*@
+@*<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />*@
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+            <form method="post">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="margin-left: -56px;">Out of Pocket Expenses Voucher(s) List</h3>
+                    <button type="button" value="ExportToExcel" id="btnexport" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="Get_Data()"
+                            style="border:none;">
+                        Export To Excel
+                    </button>
+                    <button type="button" value="Approved" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("GetOPListApproval", "MISOPEReport")'"
+                            style="border:none;margin-top: 0px;">
+                        Approved OPE Voucher(s) List
+                    </button>
+                </div><!-- /.col -->
+            </form>
+
+
+
+        </div><!-- /.row -->
+
+        <div class="col-xs-12">
+
+        </div><!-- /.data table col -->
+
+        <div class="col-xs-12">
+            <div class="col-xs-12" id="buttonbody">
+            </div>
+            @*<table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>*@
+            <table class="display" id="example">
+                <thead>
+                    <tr>
+                        <th class="remove-search" style="width:2%;">
+                            <input type="checkbox" name="ID" class="custom-checkbox chkCheckBoxId" id="chkChkAll" />
+                        </th>
+                        <th class="remove-search"><label>Number</label></th>
+                        <th class="remove-search"><label>Month</label></th>
+                        @*<th><label>Periods</label></th> @*//added by nikita on 25122023*@
+                        <th class="remove-search"><label>Inspector Name</label></th>
+                        <th class="remove-search"><label>Branch</label></th>
+                        <th class="remove-search"><label>Employee Code</label></th>
+                        <th class="remove-search"><label>Days</label></th>
+                        <th class="remove-search"><label id="txtcompaint">Complaint Number(s)</label></th>
+                        <th class="remove-search"><label id="txtdeductdays">Deduct OPE For Mandays</label></th>
+                        <th class="remove-search"><label>Total Amount (INR)</label></th>
+                        <th class="remove-search"><label>Approved Amount (INR)</label></th>
+                        <th class="remove-search"><label>Remarks</label></th>
+                        <th class="remove-search">
+                            <label>Previous Remarks</label>
+                            @*<i class="fas fa-info-circle" id="remarksInfoIcon" style="cursor: pointer; margin-left: 5px;"></i>*@
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            @*</td>
+                    </tr>
+                </table>*@
+        </div>
+        <div class="col-xs-12">
+            <input type="button" id="btnApprove" value="Approve" class="btn btn-default insert-form-btn" style="margin-bottom: 40px;" />
+        </div>
+    </div><!-- /.container-fluid -->
+    <!--End of header-->
+
+</div>
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="remarksModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Table to display remarks -->
+                <div class="table">
+                    <table class="table table-condensed table-responsive " id="tblusers" style="border:1px;font-size:12px;">
+                        <thead style="background-color:#001ED2;color:white;border:1px solid;">
+                            <tr class="" style="background-color:#001ED2;font-family:'TNG Pro';color:white;">
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Date</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Approval Stage</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Approver Name</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Remarks</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Deducted OPE For Mandays</th>
+                                @*<th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount approved</th>*@
+                            </tr>
+                        </thead>
+                        <tbody id="userbody" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: black;"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*New Added Code End*@
+
+
+
+
+    @{
+        var UrlLink = System.Configuration.ConfigurationManager.AppSettings["UrlLink"];
+    }
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            $("body").prepend('<div id="preloader"></div>');
+            GetOPApprovalList();
+            if ('@Session["UserName"]' == "TUV0003107" || '@Session["UserName"]' == 'shirish') {
+                $("#btnexport").show();
+
+
+            }
+            else if ('@Session["UserName"]' == "TUV000609" || '@Session["UserName"]' == 'sandeep') {
+                $("#btnexport").show();
+
+            }
+            else if ('@Session["UserName"]' == "TUV000874" || '@Session["UserName"]' == 'kpravin') {
+                $("#btnexport").show();
+
+            }
+            else {
+                $("#btnexport").hide();
+            }
+
+            $('#chkChkAll').click(function () {
+                if ($(this).is(":checked")) {
+                    $(".chkCheckBoxId").prop("checked", true)
+                }
+                else {
+                    $(".chkCheckBoxId").prop("checked", false)
+                }
+            });
+
+            $('#chkChkAll').click(function (e) {
+                var table = $(e.target).closest('table');
+                $('td input:checkbox', table).prop('checked', this.checked);
+            });
+
+            //var rows = $('#example tbody tr').length;
+
+            //for (var i = 1; i <= rows; i++) {
+            //    var days = $("#txtcompaint" + i).val();
+            //    //let approvedAmount = $("#amount_" + i).val();
+            //    // Assuming TotalAmount is in the sixth column
+            //    //var approvedAmount = $(this).find('#amount').val(); // Assuming ApprovedAmount is in the seventh column and inside an input field
+
+
+            //    // Check if the values are not equal
+            //    if (days >0) {
+            //        // Highlight the row in yellow
+            //        $("#txtcompaint" + i).addClass('highlight-row');
+            //    }
+            //}
+        });
+
+        $('#remarksInfoIcon').on('click', function () {
+            $('#remarksModal').modal('show'); // Use your modal ID here
+        });
+        function GetOPApprovalList() {
+            debugger;
+            $("body").prepend('<div id="preloader"></div>');
+            var UrlLink = '@UrlLink';
+            $.ajax({
+                type: "GET",
+                url: UrlLink + "/MISOPEReport/GetOPApprovalList",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    if (!!response) {
+                        var a = JSON.parse(response);
+                        var aa = JSON.stringify(response);
+
+                        if (a == "Error") {
+                            $("#example tbody").empty();
+                            tr = $('<tr/>');
+                            tr.append('<td colspan=13 style="text-align: center;">No Records Found</td>');
+                            $('#example').append(tr);
+                        }
+                        else {
+
+
+                            $("#example tbody").empty();
+                            for (var i = 0; i < a.length; i++) {
+
+                                if ('@Session["RoleName"]' == "Admin QHSE") {
+                                    test(a[i].OP_Number);
+                                }
+                                else if ('@Session["RoleName"]' == "Clusterhead Industrial Inspection") {
+                                    test(a[i].OP_Number);
+                                }
+                                else if ('@Session["RoleName"]' == "Expenses approver") {
+                                    test(a[i].OP_Number);
+                                }
+                                else {
+                                    //added by nikita on 25122023
+                                    var tr = $('<tr/>').toggleClass('highlight-row', a[i].Complaint != 0)
+                                   .toggleClass('highlight-row_', a[i].AmountClaim != a[i].ApprovedAmount);                            //tr = $('<tr/>');
+                                    tr.append("<td><input type='checkbox' id='" + a[i].OP_Number + "' /> </td>");
+                                    tr.append("<td><a href='" + UrlLink + "/MISOPEReport/OPE_Approval_History?OP_Number=" + a[i].OP_Number + "'>" + a[i].OP_Number + "</a></td>");
+                                    //tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].MonthName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].MonthsName + "</label> </td>");
+
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].InspectorName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Branch_Name + "</label> </td>");
+
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].EmployeeCode + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].WorkingDay + "</label> </td>");
+
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Complaint + "</label> </td>");
+
+                                    tr.append("<td><input type='text' id='txtDeductdays_" + i + "' value='" + a[i].Current_DeductMandays + "' onBlur='OnChangeDays(" + i + ", this.value);'></td>");
+
+                                    tr.append("<td><label id='VAmount_" + i + "'class='label1'>" + a[i].AmountClaim + "</label> </td>");
+
+                                    tr.append("<td><input type='text' readonly id='txtAprAmt_" + i + "' value ='" + a[i].ApprovedAmount + "'> </td>");
+                                    tr.append("<td><input type='text' id='txtRemarks_" + i + "' value ='" + a[i].Remarks_Empty + "'> </td>");
+                                    tr.append("<td><i class='fas fa-info-circle' id='icon_" + i + "' style='cursor: pointer;' onclick='BindDescription(\"" + a[i].OP_Number + "\", \"" + a[i].Branch_Remarks + "\")'></i></td>");
+                                    $('#example').append(tr);
+                                    //hideLoader(); // Hide loader when the content is loaded
+                                }
+                                $("#preloader").remove();
+                                $("#btnApprove").prop('disabled', false);
+
+                            }
+                        }//check response is null or empty
+
+                    }
+                    else {
+                        // Handle the case when response is null or empty
+                        $("#example tbody").empty();
+                        tr = $('<tr/>');
+                        tr.append('<td colspan=13 style="text-align: center;">No Records Found</td>');
+                        $('#example').append(tr);
+                    }
+                    $("#preloader").remove();
+                },
+
+                error: function (xhr, status, error) {
+                    $("#preloader").remove();
+                    // Code to handle errors goes here
+                    //hideLoader(); // Hide loader when the content is loaded
+                }
+            });
+            $("#preloader").remove();
+        };
+
+
+
+
+
+
+
+
+
+        //added by nikita on 19022024
+        @*var buttonMap = {};
+        function test(OP_Number) {
+            var buttonName = OP_Number.substring(0, 3);
+            if (!buttonMap[buttonName]) {
+                var button = $('<input/>').attr({
+                    type: "button",
+                    value: buttonName,
+                    class: "btn btn-info dynamic-function-btn",
+                    style: "border:none;margin-right: 17px;margin-left: -14px;",
+                    name: buttonName
+                });
+
+                button.on('click', function () {
+                    var associatedOP_Numbers = buttonMap[buttonName];
+                    newButtonClickListener(buttonName);
+                    $(".btn-info").removeClass("highlighted");
+
+                    $(this).addClass("highlighted");
+                    console.log("Button clicked:", buttonName);
+                });
+
+                $("#buttonbody").append(button);
+
+                buttonMap[buttonName] = [OP_Number];
+            } else {
+                buttonMap[buttonName].push(OP_Number);
+            }
+        }
+
+        function newButtonClickListener(button_name) {
+            $("body").prepend('<div id="preloader"></div>');
+            var UrlLink = '@UrlLink';
+            $.ajax({
+                type: "GET",
+                //url: UrlLink + "/MISOPEReport/GetOPApprovalList",
+                url: UrlLink + "/MISOPEReport/GetOPApprovalListButtonwise",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { Branch: button_name },
+
+                success: function (response) {
+                    debugger;
+                    if (!!response) {
+                        var a = JSON.parse(response);
+                        var aa = JSON.stringify(response);
+
+                        if (a == "Error") {
+                            $("#example tbody").empty();
+                            tr = $('<tr/>');
+                            tr.append('<td colspan=12 style="text-align: center;">No Record Found</td>');
+                            $('#example').append(tr);
+                        }
+                        else {
+                            $("#example tbody").empty();
+                            for (var i = 0; i < a.length; i++) {
+                                if (a[i].OP_Number.substring(0, 3) == button_name) {
+                                    var tr = $('<tr/>').toggleClass('highlight-row', a[i].Complaint != 0)
+                                    .toggleClass('highlight-row_', a[i].AmountClaim != a[i].ApprovedAmount);                            //tr = $('<tr/>');
+                                    tr.append("<td><input type='checkbox' id='" + a[i].OP_Number + "' /> </td>");
+                                    tr.append("<td><a href='" + UrlLink + "/MISOPEReport/OPE_Approval_History?OP_Number=" + a[i].OP_Number + "'>" + a[i].OP_Number + "</a></td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].MonthsName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].InspectorName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Branch_Name + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].EmployeeCode + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].WorkingDay + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Complaint + "</label> </td>");
+                                    tr.append("<td><input type='text' id='txtDeductdays_" + i + "' value='" + a[i].Current_DeductMandays + "' onBlur='OnChangeDays(" + i + ", this.value);'></td>");
+                                    tr.append("<td><label id='VAmount_" + i + "'class='label1'>" + a[i].AmountClaim + "</label> </td>");
+                                    tr.append("<td><input type='text' readonly id='txtAprAmt_" + i + "' value ='" + a[i].ApprovedAmount + "'> </td>");
+                                    tr.append("<td><input type='text' id='txtRemarks_" + i + "' value ='" + a[i].Remarks_Empty + "'> </td>");
+                                    tr.append("<td><i class='fas fa-info-circle' id='icon_" + i + "' style='cursor: pointer;' onclick='BindDescription(\"" + a[i].OP_Number + "\", \"" + a[i].Branch_Remarks + "\")'></i></td>");
+                                    $('#example').append(tr);
+                                }
+                                else {
+                                }
+                            }
+
+                            $('#example').DataTable();
+
+                            $('#example_wrapper .remove-search').removeClass('remove-search');
+                            $('#example_wrapper .sorting').removeClass('sorting');
+                            $('#example_wrapper .sorting_asc').removeClass('sorting_asc');
+                        }
+                    } else {
+                        $("#example tbody").empty();
+                        tr = $('<tr/>');
+                        tr.append('<td colspan=12 style="text-align: center;">No Record Found</td>');
+                        $('#example').append(tr);
+                    }
+                    $("#preloader").remove();
+                },
+                error: function (xhr, status, error) {
+                    $("#preloader").remove();
+                }
+            });
+        }*@
+
+        var buttonMap = {};
+        var allBranchesButtonCreated = false;
+
+        function test(OP_Number) {
+            var buttonName = OP_Number.substring(0, 3);
+            if (!buttonMap[buttonName]) {
+                var button = $('<input/>').attr({
+                    type: "button",
+                    value: buttonName,
+                    class: "btn btn-info dynamic-function-btn",
+                    style: "border:none;margin-right: 17px;margin-left: -14px;",
+                    name: buttonName
+                });
+                console.log("OP_Number:", OP_Number, "→ ButtonName:", buttonName);
+                button.on('click', function () {
+                    newButtonClickListener(buttonName);
+                });
+                $("#buttonbody").append(button);
+                buttonMap[buttonName] = [OP_Number]; 
+            } else {                
+                buttonMap[buttonName].push(OP_Number);
+            }
+            if (!allBranchesButtonCreated) {
+                var allBranchesButton = $('<input/>').attr({
+                    type: "button",
+                    value: "All",
+                    class: "btn btn-info dynamic-function-btn",
+                    style: "border:none;margin-right: 17px;margin-left: -14px;",
+                    name: "all"
+                });
+
+                allBranchesButton.on('click', function () {
+                    newButtonClickListener("all");
+                });
+
+                $("#buttonbody").append(allBranchesButton);
+
+                allBranchesButtonCreated = true; 
+            }
+        }
+        function newButtonClickListener(button_name) {
+            $("body").prepend('<div id="preloader"></div>');
+            var UrlLink = '@UrlLink';
+            $.ajax({
+                type: "GET",
+                //url: UrlLink + "/MISOPEReport/GetOPApprovalList",
+                url: UrlLink + "/MISOPEReport/GetOPApprovalListButtonwise",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { Branch: button_name },
+
+                success: function (response) {
+                    debugger;
+                    if (!!response) {
+                        var a = JSON.parse(response);
+                        var aa = JSON.stringify(response);
+
+                        if (a == "Error") {
+                            $("#example tbody").empty();
+                            tr = $('<tr/>');
+                            tr.append('<td colspan=12 style="text-align: center;">No Record Found</td>');
+                            $('#example').append(tr);
+                        }
+                        else {
+                            $("#example tbody").empty();
+                            for (var i = 0; i < a.length; i++) {
+                                //if (a[i].OP_Number.substring(0, 3) == button_name) {
+                                if (button_name === 'all') {
+                                    var tr = $('<tr/>').toggleClass('highlight-row', a[i].Complaint != 0)
+                                    .toggleClass('highlight-row_', a[i].AmountClaim != a[i].ApprovedAmount);                            //tr = $('<tr/>');
+                                    tr.append("<td><input type='checkbox' id='" + a[i].OP_Number + "' /> </td>");
+                                    tr.append("<td><a href='" + UrlLink + "/MISOPEReport/OPE_Approval_History?OP_Number=" + a[i].OP_Number + "'>" + a[i].OP_Number + "</a></td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].MonthsName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].InspectorName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Branch_Name + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].EmployeeCode + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].WorkingDay + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Complaint + "</label> </td>");
+                                    tr.append("<td><input type='text' id='txtDeductdays_" + i + "' value='" + a[i].Current_DeductMandays + "' onBlur='OnChangeDays(" + i + ", this.value);'></td>");
+                                    tr.append("<td><label id='VAmount_" + i + "'class='label1'>" + a[i].AmountClaim + "</label> </td>");
+                                    tr.append("<td><input type='text' readonly id='txtAprAmt_" + i + "' value ='" + a[i].ApprovedAmount + "'> </td>");
+                                    tr.append("<td><input type='text' id='txtRemarks_" + i + "' value ='" + a[i].Remarks_Empty + "'> </td>");
+                                    tr.append("<td><i class='fas fa-info-circle' id='icon_" + i + "' style='cursor: pointer;' onclick='BindDescription(\"" + a[i].OP_Number + "\", \"" + a[i].Branch_Remarks + "\")'></i></td>");
+                                    $('#example').append(tr);
+                                }
+
+                                else {
+                                    var tr = $('<tr/>').toggleClass('highlight-row', a[i].Complaint != 0)
+                                    .toggleClass('highlight-row_', a[i].AmountClaim != a[i].ApprovedAmount);                            //tr = $('<tr/>');
+                                    tr.append("<td><input type='checkbox' id='" + a[i].OP_Number + "' /> </td>");
+                                    tr.append("<td><a href='" + UrlLink + "/MISOPEReport/OPE_Approval_History?OP_Number=" + a[i].OP_Number + "'>" + a[i].OP_Number + "</a></td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].MonthsName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].InspectorName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Branch_Name + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].EmployeeCode + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].WorkingDay + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Complaint + "</label> </td>");
+                                    tr.append("<td><input type='text' id='txtDeductdays_" + i + "' value='" + a[i].Current_DeductMandays + "' onBlur='OnChangeDays(" + i + ", this.value);'></td>");
+                                    tr.append("<td><label id='VAmount_" + i + "'class='label1'>" + a[i].AmountClaim + "</label> </td>");
+                                    tr.append("<td><input type='text' readonly id='txtAprAmt_" + i + "' value ='" + a[i].ApprovedAmount + "'> </td>");
+                                    tr.append("<td><input type='text' id='txtRemarks_" + i + "' value ='" + a[i].Remarks_Empty + "'> </td>");
+                                    tr.append("<td><i class='fas fa-info-circle' id='icon_" + i + "' style='cursor: pointer;' onclick='BindDescription(\"" + a[i].OP_Number + "\", \"" + a[i].Branch_Remarks + "\")'></i></td>");
+                                    $('#example').append(tr);
+                                }
+                            }
+
+                            $('#example').DataTable();
+
+                            $('#example_wrapper .remove-search').removeClass('remove-search');
+                            $('#example_wrapper .sorting').removeClass('sorting');
+                            $('#example_wrapper .sorting_asc').removeClass('sorting_asc');
+                        }
+                    } else {
+                        $("#example tbody").empty();
+                        tr = $('<tr/>');
+                        tr.append('<td colspan=12 style="text-align: center;">No Record Found</td>');
+                        $('#example').append(tr);
+                    }
+                    //$("#preloader").remove();
+                },
+                error: function (xhr, status, error) {
+                    $("#preloader").remove();
+                },
+                complete: function () {
+                    $("#preloader").remove();
+                }
+            });
+        }
+        //end of code
+
+
+        @*function newButtonClickListener(button_name) {
+            $("body").prepend('<div id="preloader"></div>');
+            var UrlLink = '@UrlLink';
+            $.ajax({
+                type: "GET",
+                url: UrlLink + "/MISOPEReport/GetOPApprovalList",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    if (!!response) {
+                        var a = JSON.parse(response);
+                        var aa = JSON.stringify(response);
+
+                        if (a == "Error") {
+                            $("#example tbody").empty();
+                            tr = $('<tr/>');
+                            tr.append('<td colspan=12 style="text-align: center;">No Record Found</td>');
+                            $('#example').append(tr);
+                        }
+                        else {
+                            $("#example tbody").empty();
+                            for (var i = 0; i < a.length; i++) {
+                                if (a[i].OP_Number.substring(0, 3) == button_name) {
+                                    var tr = $('<tr/>').toggleClass('highlight-row', a[i].Complaint != 0)
+                                    .toggleClass('highlight-row_', a[i].AmountClaim != a[i].ApprovedAmount);                            //tr = $('<tr/>');
+                                    tr.append("<td><input type='checkbox' id='" + a[i].OP_Number + "' /> </td>");
+                                    tr.append("<td><a href='" + UrlLink + "/MISOPEReport/OPE_Approval_History?OP_Number=" + a[i].OP_Number + "'>" + a[i].OP_Number + "</a></td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].MonthsName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].InspectorName + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Branch_Name + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].EmployeeCode + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].WorkingDay + "</label> </td>");
+                                    tr.append("<td><label id='V_" + i + "'class='label1'>" + a[i].Complaint + "</label> </td>");
+                                    tr.append("<td><input type='text' id='txtDeductdays_" + i + "' value='" + a[i].Current_DeductMandays + "' onBlur='OnChangeDays(" + i + ", this.value);'></td>");
+                                    tr.append("<td><label id='VAmount_" + i + "'class='label1'>" + a[i].AmountClaim + "</label> </td>");
+                                    tr.append("<td><input type='text' readonly id='txtAprAmt_" + i + "' value ='" + a[i].ApprovedAmount + "'> </td>");
+                                    tr.append("<td><input type='text' id='txtRemarks_" + i + "' value ='" + a[i].Remarks_Empty + "'> </td>");
+                                    tr.append("<td><i class='fas fa-info-circle' id='icon_" + i + "' style='cursor: pointer;' onclick='BindDescription(\"" + a[i].OP_Number + "\", \"" + a[i].Branch_Remarks + "\")'></i></td>");
+                                    $('#example').append(tr);
+                                }
+                                else {
+                                }
+                            }
+                            $("#example").DataTable();
+                            $('#example_wrapper .remove-search').removeClass('remove-search');
+                            $('#example_wrapper .sorting').removeClass('sorting');
+                            $('#example_wrapper .sorting_asc').removeClass('sorting_asc');
+                            $("#preloader").remove();
+                        }
+
+                    }
+                    else {
+                        $("#example tbody").empty();
+                        tr = $('<tr/>');
+                        tr.append('<td colspan=12 style="text-align: center;">No Record Found</td>');
+                        $('#example').append(tr);
+                    }
+                    $("#preloader").remove();
+                },
+
+                error: function (xhr, status, error) {
+                    $("#preloader").remove();
+                }
+            });
+            $("#preloader").remove();
+        };*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $('#chkChkAll').click(function (e) {
+            var table = $(e.target).closest('table');
+            $('td input:checkbox', table).prop('checked', this.checked);
+        });
+
+        //addded by nikita on 25122023
+
+        function BindDescription(opnumber) {
+            debugger;
+            var VoucherNo = opnumber;
+            //var VoucherNo = $("#txtOP_Number").val();
+            var UrlLink = '@UrlLink';
+
+            $.ajax({
+                ////url: UrlLink + "/GenerateVoucher/Voucher_History_Description",
+                url: "@Url.Action("Op_Voucher_History_Description", "MISOPEReport")",
+                type: "get",
+                DataType: "json",
+                async: false,
+                contenttype: "application/json; charset=utf-8",
+                data: { VoucherNo: VoucherNo },
+                success: function (result) {
+                    debugger;
+                    var a = JSON.parse(result);
+                    $("#tblusers tbody").empty();
+
+                    let date = [a[0].Date, a[0].ApprovalOne_two_Date, a[0].PCH_Approval_Date, a[0].AdminQA_Approval_Date, a[0].CH_Approval_Date, a[0].Accountant_date];
+                    //added by nikita on 27122023
+                    let DeductMandays = [a[0].DeductMandays_BranchQA, a[0].DeductMandays_ApprovalOne_Two, a[0].DeductMandays_Pch, a[0].DeductMandays_Admin, a[0].DeductMandays_Ch, a[0].DeductMandays_Accounatantt];
+                    let Name_ = [a[0].BranchQAApproval, a[0].Name, a[0].PCH_Name, a[0].AdminQA_Approval, a[0].CH_Approval, a[0].Account_Approval];
+
+                    var Data = ["BranchQA", "ApprovalOne/ApprovalTwo", "PCH", "AdminQA", "ClusterHead", "Accountant"];
+                    let k = 0;
+                    var myArray = [];
+                    for (var i = 0; i < a.length; i++) {
+                        if (!!a[i].Branch_QA_Description) {
+                            myArray.push(a[i].Branch_QA_Description);
+                            k++;
+                        }
+                        if (!!a[i].ApprovalOne_Description) {
+                            myArray.push(a[i].ApprovalOne_Description);
+                            k++;
+                        }
+                        if (!!a[i].PCH_Approval_Description) {
+                            myArray.push(a[i].PCH_Approval_Description);
+                            k++;
+
+                        }
+                        if (!!a[i].AdminQA_Description) {
+                            myArray.push(a[i].AdminQA_Description);
+                            k++;
+                        }
+                        if (!!a[i].CH_Approval_Description) {
+                            myArray.push(a[i].CH_Approval_Description);
+                            k++;
+
+                        }
+                        if (!!a[i].Accountant_Description) {
+                            myArray.push(a[i].Accountant_Description);
+                            k++;
+                        }
+
+
+                        for (var j = 0; j < myArray.length; j++) {
+                            // changes added by nikita on 22112023
+                            $("#tblusers").append('<tr><td>' + date[j] + '</td><td>' + Data[j] + '</td><td>' + Name_[j] + '</td><td>' + myArray[j] + '</td><td>' + DeductMandays[j] + '</td></tr>')
+                        }
+
+                    }
+                    $('#remarksModal').modal('show');
+                },
+                error: function (result) {
+                    debugger;
+                    (result + "something went wrong");
+                }
+            });
+        }
+
+
+
+
+
+        @*$('#btnApprove').click(function (e) {
+            debugger;
+
+            if (confirm('Do you want to proceed with voucher(s) approval?')) {
+                $("body").prepend('<div id="preloader"></div>');
+                var UrlLink = '@UrlLink';
+                var i = 0;
+                var message = "";
+                var List_VoucherID = "";
+                var Data = [];
+                var _OP_Number = "";
+                $("#example input[type=checkbox]:checked").each(function () {
+                    if ($(this).attr('id') === 'chkChkAll') {
+                        return true; // Skip to the next iteration
+                    }
+
+                    i++;
+                    var row = $(this).closest("tr")[0];
+                    var _rowIndex = row.rowIndex - 1;
+
+                    var item = {};
+
+                    var checkboxId = $(this).attr('id');
+                    console.log('Checkbox ID: ' + checkboxId);
+
+                    //List_VoucherID = checkboxId + ',' + List_VoucherID;
+
+                    var OP_NumberSelector_ = '#example tbody tr:eq(' + _rowIndex + ') td:eq(1) label';
+                    var OP_Number = $(OP_NumberSelector_).text();
+                    _OP_Number = OP_Number;
+
+                    var TotalAmountSelector_ = '#example tbody tr:eq(' + _rowIndex + ') td:eq(8) label';
+                    var TotalAmount = $(TotalAmountSelector_).text();
+
+                    //added by nikita on 18122023
+
+                    var DeductAmount = '#example tbody tr:eq(' + _rowIndex + ') td:eq(7) input[type="text"]';
+                    var DeductAmount_ = $(DeductAmount).val();
+
+                    var ApprovedAmountSelector = '#example tbody tr:eq(' + _rowIndex + ') td:eq(9) input[type="text"]';
+                    var ApprovedAmount = $(ApprovedAmountSelector).val();
+
+                    var ApprovedRemarksSelector = '#example tbody tr:eq(' + _rowIndex + ') td:eq(10) input[type="text"]';
+                    var ApprovedRemarks = $(ApprovedRemarksSelector).val();
+
+                    item["row_num"] = i;
+                    item["Op_Num"] = checkboxId;
+                    item["OP_Number"] = checkboxId;
+                    item["Remarks"] = ApprovedRemarks;//$("#txtRemarks").val();
+                    item["ApprovedAmount"] = ApprovedAmount;
+                    item["TotalAmount"] = TotalAmount;
+                    item["Deduct_Mandays"] = DeductAmount_;
+                    Data.push(item);
+                });
+                var Data1 = JSON.stringify(Data);
+                $.ajax({
+                    url: '@Url.Action("GetOPBulk_ApprovalList","MISOPEReport")',
+                    type: "post",
+                    //url: UrlLink + "/MISOPEReport/GetOPBulk_ApprovalList",
+                    //contentType:"application/json; charset=utf-8",
+                    dataType: "json",
+                    data: { Data1: Data1, _OP_Number: _OP_Number },
+                    success: function (response) {
+                        var a = JSON.parse(response);
+                        var aa = JSON.stringify(response);
+                        GetOPApprovalList();
+                        $('#chkChkAll').prop('checked', false);
+                    },
+                    error: function (xhr, status, error) {
+                        // Code to handle errors goes here
+                    },
+                    complete: function () {
+                        // Remove the preloader after the request is complete (success or error)
+                        $("#preloader").remove();
+                    }
+                });
+                //$("#preloader").remove();
+            }
+        });*@
+        $('#btnApprove').click(function (e) {
+            debugger;
+
+            if (confirm('Do you want to proceed with voucher(s) approval?')) {
+                $("body").prepend('<div id="preloader"></div>');
+                //$("#btnApprove").prop('disabled', true);
+
+                var UrlLink = '@UrlLink';
+                var i = 0;
+                var message = "";
+                var List_VoucherID = "";
+                var Data = [];
+                var _OP_Number = "";
+                $("#example input[type=checkbox]:checked").each(function () {
+                    if ($(this).attr('id') === 'chkChkAll') {
+                        return true; // Skip to the next iteration
+                    }
+
+                    i++;
+                    var row = $(this).closest("tr")[0];
+                    var _rowIndex = row.rowIndex - 1;
+
+                    var item = {};
+
+                    var checkboxId = $(this).attr('id');
+                    console.log('Checkbox ID: ' + checkboxId);
+
+                    //List_VoucherID = checkboxId + ',' + List_VoucherID;
+
+                    var OP_NumberSelector_ = '#example tbody tr:eq(' + _rowIndex + ') td:eq(2) label';
+                    var OP_Number = $(OP_NumberSelector_).text();
+                    _OP_Number = OP_Number;
+
+                    var TotalAmountSelector_ = '#example tbody tr:eq(' + _rowIndex + ') td:eq(9) label';
+                    var TotalAmount = $(TotalAmountSelector_).text();
+
+                    //added by nikita on 18122023
+
+                    var DeductAmount = '#example tbody tr:eq(' + _rowIndex + ') td:eq(8) input[type="text"]';
+                    var DeductAmount_ = $(DeductAmount).val();
+
+                    var WorkingDays = '#example tbody tr:eq(' + _rowIndex + ') td:eq(6) label';
+                    var WorkingDays_ = $(WorkingDays).text();
+
+                    var complaints = '#example tbody tr:eq(' + _rowIndex + ') td:eq(7) label';
+                    var complaints_ = $(complaints).text();
+
+                    var ApprovedAmountSelector = '#example tbody tr:eq(' + _rowIndex + ') td:eq(10) input[type="text"]';
+                    var ApprovedAmount = $(ApprovedAmountSelector).val();
+
+                    var ApprovedRemarksSelector = '#example tbody tr:eq(' + _rowIndex + ') td:eq(11) input[type="text"]';
+                    var ApprovedRemarks = $(ApprovedRemarksSelector).val();
+
+                    item["row_num"] = i;
+                    item["Op_Num"] = checkboxId;
+                    item["OP_Number"] = checkboxId;
+                    item["Remarks"] = ApprovedRemarks;//$("#txtRemarks").val();
+                    item["ApprovedAmount"] = ApprovedAmount;
+                    item["TotalAmount"] = TotalAmount;
+                    item["Deduct_Mandays"] = DeductAmount_;
+                    item["WorkingMandays"] = WorkingDays_;
+                    item["Complaints"] = complaints_;
+                    Data.push(item);
+                });
+                var Data1 = JSON.stringify(Data);
+                event.preventDefault();
+                $("#btnApprove").prop('disabled', true);
+                $.ajax({
+                    url: '@Url.Action("GetOPBulk_ApprovalList","MISOPEReport")',
+                    type: "post",
+                    //url: UrlLink + "/MISOPEReport/GetOPBulk_ApprovalList",
+                    //contentType:"application/json; charset=utf-8",
+                    dataType: "json",
+                    data: { Data1: Data1, _OP_Number: _OP_Number },
+                    success: function (response) {
+                        var a = JSON.parse(response);
+                        var aa = JSON.stringify(response);
+                        GetOPApprovalList();
+                        $('#chkChkAll').prop('checked', false);
+                    },
+                    error: function (xhr, status, error) {
+                        // Code to handle errors goes here
+                    }
+                    //complete: function () {
+                    //    // Remove the preloader after the request is complete (success or error)
+                    //    $("#preloader").remove();
+                    //}
+                });
+                //$("#preloader").remove();
+            }
+        });
+        //function OnChangeDays(i, inputValue) {
+        //    debugger;
+        //    var Days_ = parseFloat(inputValue); // Parse the value as a float
+        //    var Days_deduct = isNaN(Days_) ? 0 : Days_; // Set to 0 if NaN
+        //    var Actual_amount = $('#txtAprAmt_' + i).val();
+        //    var amount = Days_deduct * 275;
+        //    var deduct_Amount = Actual_amount - amount;
+        //    $('#txtAprAmt_' + i).val(deduct_Amount);
+        //    // Do something with deduct_Amount if needed
+        //}
+        function OnChangeDays(i, inputValue) {
+            debugger;
+            var value= inputValue;
+            if (value === '') {
+                return false;
+            }
+            var Days_ = parseFloat(inputValue); // Parse the value as a float
+            var Days_deduct = isNaN(Days_) ? 0 : Days_; // Set to 0 if NaN
+            //var Actual_amount = $('#txtAprAmt_' + i).empty;
+            var Actual_amount = $('#VAmount_' + i).text();
+            //var Actual_amount = $('#txttotalamt_').text();
+            var amount = Days_deduct * 275;
+            var deduct_Amount = Actual_amount - amount;
+            $('#txtAprAmt_' + i).val(deduct_Amount);
+            // Do something with deduct_Amount if needed
+        }
+
+
+        @*function Get_Data() {
+        debugger;
+        var i = 1;
+        var message = "";
+        var List_VoucherID = "";
+        var Data = [];
+
+        $("#example input[type=checkbox]:checked").each(function () {
+            i++;
+            var row = $(this).closest("tr")[0];
+            var _rowIndex = row.rowIndex - 1;
+            var item = {};
+            var checkboxId = $(this).attr('id');
+            var VoucherNo = '#exampleExp tbody tr:eq(' + _rowIndex + ') td:eq(1) input[type="text"]';
+            var VoucherNo_ = $(VoucherNo).val();
+            item["VoucherNo"] = checkboxId;
+            item["VoucherNo_"] = VoucherNo_;//$("#txtRemarks").val();
+            Data.push(item);
+        });
+        var Data1 = JSON.stringify(Data);
+        window.location.href = '@Url.Action("Export_IndexOpeReport_", "MISOPEReport")' + '?data=' + encodeURIComponent(Data1);
+
+    }*@
+        function Get_Data() {
+            debugger;
+            var i = 1;
+            var Data = [];
+
+            $("#example input[type=checkbox]:checked").each(function () {
+                i++;
+                var row = $(this).closest("tr")[0];
+                var _rowIndex = row.rowIndex - 1;
+                var item = {};
+                var checkboxId = $(this).attr('id');
+
+                var VoucherNo = '#exampleExp tbody tr:eq(' + _rowIndex + ') td:eq() label';
+                var VoucherNo_ = $(VoucherNo).text();
+                //item["VoucherNo"] = checkboxId;
+                //item["VoucherNo_"] = VoucherNo_;
+
+                Data.push(checkboxId);
+            });
+            var dataString = Data.join(',');
+            window.location.href = '@Url.Action("Export_IndexOpeReport_", "MISOPEReport")' + '?data=' + encodeURIComponent(dataString);
+
+            @*// Send data to the controller using AJAX
+        $.ajax({
+            url: '@Url.Action("Export_IndexOpeReport_", "MISOPEReport")',
+            type: 'get',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: { Data1: dataString },  // Updated here
+            success: function (result) {
+                // Handle the success response from the controller if needed
+                console.log(result);
+            },
+            error: function (error) {
+                // Handle the error response if needed
+                console.log(error);
+            }
+        });*@
+        }
+        //function showLoader() {
+        //    $("#preloader").show();
+        //}
+
+        //function hideLoader() {
+        //    $("#preloader").hide();
+        //}
+    </script>

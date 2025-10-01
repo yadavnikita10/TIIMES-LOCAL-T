@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TestKioskApiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="ItemMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="inventoryCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="inventoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="inventoryPrice" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="inventoryAvailability" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="inventoryTamilName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="inventoryImageURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityContainer Name="TestKioskApiEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="ItemMasters" EntityType="Self.ItemMaster" />
+    <EntitySet Name="AspNetUserClaims" EntityType="TestKioskApiModel.AspNetUserClaim" />
+    <EntitySet Name="AspNetUserLogins" EntityType="TestKioskApiModel.AspNetUserLogin" />
+    <EntitySet Name="AspNetUsers" EntityType="TestKioskApiModel.AspNetUser" />
+    <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="TestKioskApiModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="TestKioskApiModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
+    </AssociationSet>
+    <EntitySet Name="RoleM_LeftSubCategory" EntityType="TestKioskApiModel.RoleM_LeftSubCategory" />
+    <EntitySet Name="RoleM_MenuCategory" EntityType="TestKioskApiModel.RoleM_MenuCategory" />
+    <EntitySet Name="AspNetRoles" EntityType="TestKioskApiModel.AspNetRole" />
+    <AssociationSet Name="AspNetUserRoles" Association="TestKioskApiModel.AspNetUserRoles">
+      <End Role="AspNetRole" EntitySet="AspNetRoles" />
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+    </AssociationSet>
+    <EntitySet Name="RoleM_SubSubCategory" EntityType="TestKioskApiModel.RoleM_SubSubCategory" />
+    <EntitySet Name="BranchMasters" EntityType="TestKioskApiModel.BranchMaster" />
+    <EntitySet Name="LibraryDocuments" EntityType="TestKioskApiModel.LibraryDocument" />
+    <EntitySet Name="LibraryMasters" EntityType="TestKioskApiModel.LibraryMaster" />
+    <EntitySet Name="InvoicingInstructions" EntityType="TestKioskApiModel.InvoicingInstruction" />
+  </EntityContainer>
+  <EntityType Name="AspNetUserClaim">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUser" Relationship="TestKioskApiModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
+  </EntityType>
+  <EntityType Name="AspNetUserLogin">
+    <Key>
+      <PropertyRef Name="LoginProvider" />
+      <PropertyRef Name="ProviderKey" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUser" Relationship="TestKioskApiModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
+  </EntityType>
+  <EntityType Name="AspNetUser">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+    <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUserClaims" Relationship="TestKioskApiModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
+    <NavigationProperty Name="AspNetUserLogins" Relationship="TestKioskApiModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
+    <NavigationProperty Name="AspNetRoles" Relationship="TestKioskApiModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+    <Property Name="U_Role_ID" Type="Int32" />
+    <Property Name="Created_By" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" />
+    <Property Name="Modified_By" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Created_Date" Type="DateTime" Precision="3" />
+    <Property Name="Modified_Date" Type="DateTime" Precision="3" />
+    <Property Name="FirstName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="DOB" Type="DateTime" Precision="3" />
+    <Property Name="Qualification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TransferDate" Type="DateTime" Precision="3" />
+    <Property Name="DateOf_Joining" Type="DateTime" Precision="3" />
+    <Property Name="RelievingDate" Type="DateTime" Precision="3" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Branch" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Address1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Address2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ZipCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Signature" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="EmployeeCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Designation" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="EmployeeGrade" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="OfficeNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ResiNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="MobileNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SAP_Vandor_code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Active" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Language_Spoken" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Employment_Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Reporting_To" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="DeleteStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Service_Type" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Cost_center" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CV" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Reporting2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Vendor_Code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Fax_No" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Marital_Status" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="BloodGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ShoesSize" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ShirtSize" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PanNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="AadharNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TotalyearofExprience" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Allergies" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Medical_History" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Additional_Qualification" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="EmergencyMobile_No" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Salutation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+    <End Type="TestKioskApiModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="TestKioskApiModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserClaim">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+    <End Type="TestKioskApiModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="TestKioskApiModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserLogin">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="RoleM_LeftSubCategory">
+    <Key>
+      <PropertyRef Name="LeftSubCat_Id" />
+    </Key>
+    <Property Name="LeftSubCat_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LeftMenucat_Id" Type="Int32" />
+    <Property Name="SubCat_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="R_Controller" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="R_Action" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Optional_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="OrderNo" Type="Int32" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="RoleM_MenuCategory">
+    <Key>
+      <PropertyRef Name="LeftMenucat_Id" />
+    </Key>
+    <Property Name="LeftMenucat_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Menu_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="OrderNo" Type="Int32" />
+  </EntityType>
+  <EntityType Name="AspNetRole">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="LeftSubCat_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUsers" Relationship="TestKioskApiModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
+  </EntityType>
+  <Association Name="AspNetUserRoles">
+    <End Type="TestKioskApiModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
+    <End Type="TestKioskApiModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+  </Association>
+  <EntityType Name="RoleM_SubSubCategory">
+    <Key>
+      <PropertyRef Name="SSC_Id" />
+    </Key>
+    <Property Name="SSC_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LeftSubCat_Id" Type="Int32" />
+    <Property Name="LeftMenucat_Id" Type="Int32" />
+    <Property Name="SSC_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="R_Controller" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="R_Action" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Optional_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="OrderNo" Type="Int32" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BranchMaster">
+    <Key>
+      <PropertyRef Name="Br_Id" />
+    </Key>
+    <Property Name="Br_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Branch_Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Branch_Code" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Manager" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Service_Code" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Sequence_Number" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Address1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Address2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Address3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Country" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="State" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Postal_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Email_Id" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DeleteStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CityName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="BranchAdmin" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Attachment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Coordinator_Email_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="LibraryDocument">
+    <Key>
+      <PropertyRef Name="LP_Id" />
+    </Key>
+    <Property Name="LP_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PDF" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Lib_Id" Type="Int32" />
+    <Property Name="Status" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="LibraryMaster">
+    <Key>
+      <PropertyRef Name="Lib_Id" />
+    </Key>
+    <Property Name="Lib_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FolderName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PK_SubSubID" Type="Int32" />
+    <Property Name="Status" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="InvoicingInstruction">
+    <Key>
+      <PropertyRef Name="INV_ID" />
+    </Key>
+    <Property Name="INV_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PK_JOB_ID" Type="Int32" />
+    <Property Name="InvoiceAmount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Balance" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="InvoiceDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="InvoiceNumber" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="CreatedBy" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyBy" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PK_SubJob_Id" Type="Int32" />
+  </EntityType>
+</Schema>

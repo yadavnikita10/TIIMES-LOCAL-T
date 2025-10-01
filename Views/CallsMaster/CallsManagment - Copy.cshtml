@@ -1,0 +1,540 @@
+﻿@model TuvVision.Models.CallsModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@helper CustomRenderingOfColumn(TuvVision.Models.CallsModel callmodel)
+{
+if (callmodel.Status == "Open")
+{
+        <span style='color: #3cb371; font-weight:bold;'>@callmodel.Status</span>
+}
+else if (callmodel.Status == "Closed")
+{
+        <span style='color: #ff0000; font-weight:bold;'>@callmodel.Status</span>
+}
+else if (callmodel.Status == "NoDone")
+{
+        <span style='color: #ffa500; font-weight:bold;'>@callmodel.Status</span>
+}
+else
+{
+        <span style='color: #000000; font-weight:bold;'>@callmodel.Status</span>
+}
+}
+
+@helper CustomRenderingOfColumn1(TuvVision.Models.CallsModel callmodel)
+{
+if (callmodel.ExtendCall_Status != null && callmodel.ExtendCall_Status != "")
+{
+        <span style='color: #ff0000; font-weight:bold;'>@callmodel.ExtendCall_Status</span>
+}
+else
+{
+        <span style='color: #000000'>@callmodel.ExtendCall_Status</span>
+}
+}
+
+@helper CustomRenderingOfColumnDropdown(TuvVision.Models.CallsModel callmodel)
+{
+int a = 0;
+if (ViewBag.SubCatlist != null)
+{
+    @Html.DropDownListFor(m => m.CallListData[a].FirstName, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Inspector--", new { @class = "form-control", @id = "Br_Id", })
+    
+}
+}@*c.CallListData[j].VisitDate*@
+
+@helper CustomRenderingOfColumnPKID(TuvVision.Models.CallsModel callmodel)
+{
+int a = 0;
+
+//@Html.DropDownListFor(m => m.CallListData[a].FirstName, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Inspector--", new { @class = "form-control", @id = "Br_Id", })
+
+foreach (var item in ViewData["BranchList"] as IEnumerable<TuvVision.Models.abc>)
+{
+@Html.TextBoxFor(c => c.CallListData[a].PK_Call_ID, item.PK_Call_ID)
+}a++;
+
+
+}
+
+
+@{
+    ViewBag.Title = "CallsManagment";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+}
+
+
+@*Ashwini Scripts here for datatable starts here*@
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>*@
+@*<script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+<style>
+    .ui-widget-header {
+        background: #3677e6 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+</style>
+<!--export to excel-->
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>*@
+
+@*Ashwini Scripts here for datatable ends here*@
+
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+<script>
+    $(function () {
+        $(".CallRecivedate").datepicker({
+           // dateFormat: 'dd/mm/y',//check change
+            dateFormat: 'dd/MM/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+@*<script>
+    $(function () {
+        $(".Fromdate").datepicker({
+            dateFormat: 'dd/mm/y',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".TODate").datepicker({
+            dateFormat: 'dd/mm/y',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>*@
+<script>
+    $(function () {
+        $(".Fromdate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm("CallsManagment", "CallsMaster", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    @*@Html.ValidationSummary(true)*@
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <div class="col-xs-12 col-sm-6">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Call Management</h3>
+                    </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="background-color:#3677e6;" onclick="location.href='@Url.Action("CallsDashBoard", "Virtual_Call")'">Add-On Calls</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="background-color:#3677e6;" onclick="location.href='@Url.Action("CallAssignment", "CallsMaster")'">Show Calls</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="background-color:#3677e6;" onclick="location.href='@Url.Action("ListCompentencyMetrixView", "CompentencyMetrixView")'">Competency Matrix</button>
+                            <button type="button"  value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex", "CallsMaster")'">
+                                Export To Excel
+                            </button>
+                        </div>
+                  
+                        @*<button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" id="delete">Send Emails</button>*@
+                    </div><!-- /.col -->
+            @*@using (Html.BeginForm("CallsManagment", "CallsMaster", new { enctype = "multipart/form-data", @id = "form1" }))
+            {*@
+                <div class="col-xs-12">
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <label>From Date:</label>
+                            @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "From Date", @class = "form-control Fromdate", autocomplete = "off" })
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <label>To Date:</label>
+                            @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "To Date", @class = "form-control ToDate", autocomplete = "off" })
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <label> Call No:</label>
+
+                            @Html.TextBoxFor(model => model.Call_No, new { @placeholder = "Call No", @class = "form-control" })
+
+                        </div>
+                    </div>
+                    @*<hr class="custom-hr">*@
+                </div>
+                <div class="col-xs-12">
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <label> Branch:</label>
+                            @if (ViewBag.SubCatlistss != null)
+                            {
+                                @Html.DropDownListFor(model => model.Excuting_Branch, ViewBag.SubCatlistss as IEnumerable<SelectListItem>, "--Select Branch--", new { @class = "form-control", @id = "Br_Id", })
+
+                            }
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <label>Originating Branch:</label>
+                            @if (ViewBag.SubCatlistss != null)
+                            {
+                                @Html.DropDownListFor(model => model.Originating_Branch, ViewBag.SubCatlistss as IEnumerable<SelectListItem>, "--Select Branch--", new { @class = "form-control", @id = "Br_Id", })
+
+                            }
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            @*<button type="submit" class="btn btn-default insert-form-btn"><i class="fa "></i> Search</button>*@                         
+                            @*<button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="background-color:#3677e6;" 
+                                    onclick="location.href='@Url.Action("CallsManagmentSearch", "CallsMaster")'">Search</button>*@
+                            <button type="submit" id="btnSubmit" name="Command" value="Search" class="btn btn-info dynamic-function-btn dynamic-function-btn-2">Search</button> 
+
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="form-group">
+
+
+                            @Html.ActionLink("Reset", "CallsManagment", "CallsMaster", new { @class = "btn btn-primary form-control" })
+                        </div>
+                        
+                    </div>
+
+                    @if (Convert.ToString(TempData["Error"]) != string.Empty)
+                    {
+                        <div class="col-xs-12">
+                            @if (Convert.ToString(TempData["Error"]) != null && Convert.ToString(TempData["Error"]) != "")
+                            {
+                                <h5 style="color:red;font-weight:bold;">Below Inspectors are on Leave :</h5>
+                                    <h5 style="color:red;font-weight:bold;">@Convert.ToString(TempData["Error"]).Replace("<br>", "\n")</h5>
+                            }
+                        </div>
+                        TempData["Error"] = "";
+                    }
+
+
+
+
+                    @*<hr class="custom-hr">*@
+                </div>
+            @*}*@
+               
+
+            <!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+      
+            
+           <div class="col-xs-12">
+                
+</div>
+
+            <div class="col-lg-12">
+                
+                    <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                        <tr>
+                           
+                            <td>
+                              
+                              
+                                        @(Html
+                                            .Grid(Model.ListDashboard)
+                                            .Build(columns =>
+                                            {
+                                                columns.Add().RenderedAs((model, row) => row + 1).Titled("Sr. No");
+                                                columns.Add(c => c.Call_No).Titled("Call No").Encoded(false).RenderedAs(c => Html.ActionLink(c.Call_No, "InsertCalls", new { PK_Call_ID = c.PK_Call_ID })).Filterable(true).FilteredAs("custom").Sortable(true);
+                                                columns.Add(c => c.Sub_Job).Titled("Sub-Job Number");
+                                                columns.Add(c => c.JobType).Titled("OBS type");
+                                                columns.Add(c => c.ServiceType).Titled("Service Type");
+                                                columns.Add(c => c.Call_Type).Titled("Call Type");
+                                                columns.Add(c => c.SAP_Number).Titled("SAP Number");
+                                                columns.Add(c => c.Company_Name).Titled("Customer Name");
+                                                columns.Add(c => c.VendorName).Titled("Vendor Name");
+                                                columns.Add(c => c.SubVendorName).Titled("Sub Vendor Name");
+                                                columns.Add(c => c.Actual_Visit_Date).Titled("Call Planned Date");
+                                                columns.Add(c => c.LastInspectorName_DateOfInspection).Titled("Last Inspector's Name and Date of Inspection");
+                                                columns.Add(c => c.CallListData[j].FirstName).Titled("Inspector to be Assigned").RenderedAs(c => CustomRenderingOfColumnDropdown(c)).Sortable(true);
+                                                columns.Add(model => Html.TextBoxFor(c => c.CallListData[j].VisitDate,new { placeholder = "Call Recived Date", @class = "form-control ", Type = "date" })).Filterable(true).FilteredAs("custom").Sortable(true).Titled("Visit Date");
+                                                columns.Add(c => c.InspectionLocation).Titled("Inspection Location");
+                                                columns.Add(c => c.VendorPONo).Titled("Customer PO No on Vendor");
+                                                columns.Add(c => c.SubVendorPONo).Titled("Vendor PO No on Sub Vendor");
+                                                columns.Add(c => c.Project_Name).Titled("Project Name");
+                                                columns.Add(c => c.OriginatingBranch).Titled("Originating Branch");
+                                                columns.Add(c => c.ExecutingBranch).Titled("Executing Branch");
+                                                columns.Add(c => c.Inspection_CallIntimationReceivedOn).Titled("Call Received date");
+                                                columns.Add(c => c.Call_Request_Date).Titled("Call Requested Date");
+                                                columns.Add(c => c.Status).Titled("Call Status").RenderedAs(c => CustomRenderingOfColumn(c)).Sortable(true);
+                                                columns.Add(c => c.PONumberOnVender).Titled("PO Number on Vendor");
+                                                columns.Add(c => c.StageOfInspection).Titled("Stages of Inspection");
+                                                columns.Add(c => c.ItemsToBeInpsected).Titled("Item to be Inspected");
+
+
+                                                columns.Add(model => Html.TextBoxFor(c => c.CallListData[j].PK_Call_ID, new { Value = model.PK_Call_ID })).Filterable(true).FilteredAs("custom").Sortable(true).Titled("Visit Date").Hidden();
+
+                                                columns.Add(model => Html.CheckBoxFor(c => c.CallListData[j].Vendorcheckbox, new { @type = "checkbox", @class = "checkBox" })).Titled("#");
+                                                columns.Add(c => c.OrgID).Titled("OrgID").Hidden();
+                                                columns.Add(c => c.OBSId).Titled("OBSId").Hidden();
+                                                columns.Add(c => c.EXEBRId).Titled("EXEBRId").Hidden();
+
+
+                                            }
+
+                                            )
+                                            .Pageable(pager =>
+                                            {
+                                                //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                                pager.ShowPageSizes = true;
+                                                pager.PagesToDisplay = 3;
+                                                pager.CurrentPage = 1;
+                                                pager.RowsPerPage = 2;
+
+                                            })
+                                            .UsingFilterMode(GridFilterMode.Row)
+                                            .Empty("No Data Found")
+                                            .Filterable()
+                                            .Sortable()
+
+                                )
+                                        
+                            </td>
+
+                        </tr>
+                        
+                    </table>
+                    <button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Save</button>
+
+                @*<script>
+                    $(function () {
+
+                        $("#btnSave").click(function () {
+
+                            $("#gridMapping tr").each(function () {
+
+                                var product = {};
+
+                                var CallID = $('td:first-child').text;
+
+                                product.Price = $(this).find("td:nth-child(2)").html();
+
+                                $.ajax({
+
+                                    type: "POST",
+
+                                    url: "Default.aspx/SaveProduct",
+
+                                    data: '{product: ' + JSON.stringify(product) + '}',
+
+                                    contentType: "application/json; charset=utf-8",
+
+                                    dataType: "json",
+
+
+
+                                    success: function (response) {
+
+                                        alert("Product has been added successfully.");
+
+
+
+                                    }
+
+                                });
+
+                            });
+
+                            return false;
+
+                        });
+
+                    });
+
+                       
+                </script>*@
+                    @*</form>*@
+                </div>
+
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+}
+
+@*<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>*@
+<script>
+    $(document).ready(
+    function () {
+        $('#example th input:checkbox').click(
+            function () {
+                $('#example td input:checkbox').attr('checked', $(this).attr('checked'));
+            }
+        );
+
+        //The following code keeps the 'selectAll' checkbox in sync with
+        //the manual selection of the checkboxes by user. This is an additional usability feature.
+        $('#example tr input:checkbox').click(
+            function () {
+                var checkedCount = $('#example td input:checkbox:checked').length;
+                var totalCount = $('#example td input:checkbox').length;
+                $('#example th input:checkbox').attr('checked', checkedCount === totalCount);
+            }
+        );
+    }
+ );
+</script>
+<script>
+    $(document).ready(function () {
+
+        $("#gridMapping tbody tbody tr").each(function (i, row) {
+            var $actualRow = $(row);
+
+            if ($actualRow != null) {
+
+                var OrgBranch = $actualRow.find("td").eq(28).html(); ////Orgid
+                var EmpType = $actualRow.find("td").eq(29).html(); ////OBS ID
+                var EXEBranch = $actualRow.find("td").eq(30).html(); ////EXE BRId
+                
+              
+                
+
+                if (OrgBranch != 'undefined')
+                {
+                    if (OrgBranch != '@Session["UserBranchId"]')
+                    {
+                        
+                            $actualRow.css('background-color', '#a4ffff');
+                        
+                    }
+                }
+
+
+              
+
+
+
+
+            }
+
+        });
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        $("#checkAll").click(function () {
+            $(".checkBox").prop('checked',
+                $(this).prop('checked'));
+        });
+
+        $("#delete").click(function () {
+            var selectedIDs = new Array();
+            $('input:checkbox.checkBox').each(function () {
+                debugger;
+                if ($(this).prop('checked')) {
+                    selectedIDs.push($(this).val());
+                }
+            });
+            alert(selectedIDs);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SendMailToInspector", "CallsearsMaster")',
+                dataType: 'json',
+                data: { arr: selectedIDs },
+                success: function (result) {
+
+                }
+            });
+            window.location.href = '@Url.Action("ListRegistrationDealers", "Admin")';
+            //var options = {};
+            //options.url = "/Admin/DealersRegisterApproved";
+            //options.type = "POST";
+            //options.data = JSON.stringify(selectedIDs);
+            //options.contentType = "application/json";
+            //options.dataType = "json";
+            //options.success = function (msg) {
+            //    alert(msg);
+            //};
+            //options.error = function () {
+            //    alert("Error while deleting the records!");
+            //};
+            //$.ajax(options);
+
+        });
+    });
+
+</script>
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+</script>
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>

@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "CreateUserBulk";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!-- Start of header -->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+                <div class="col-xs-12 form-col">
+                    <div class="row align-items-center">
+                        <div class="col-xs-8 col-sm-10">
+                            <label for="myFile" class="form-label">Choose File</label>
+                            <input type="file" id="FileUpload1" class="form-control d-inline-block" name="filename" required>
+                        </div>
+                        <div class="col-xs-4 col-sm-2 text-right">
+                            <label for="myFile" class="form-label"></label><br />
+                            <button type="submit" class="btn btn-primary mt-2 mt-sm-0" id="btncheck">Check</button>
+                        </div>
+                    </div>
+                    <table id="excelTable" class="table table-striped">
+                        <thead>
+                            <tr id="tableHeader">
+                                <!-- Headers will be dynamically added here -->
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#btncheck').click(function () {
+        debugger;
+        // Get the file input element
+        var fileUpload = $("#FileUpload1")[0];
+        // Ensure that a file is selected
+        if (fileUpload.files.length === 0) {
+            alert("Please select a file.");
+            return;
+        }
+        // Create a new FormData object
+        var formData = new FormData();
+        // Append the selected file to the FormData object
+        formData.append("fileData", fileUpload.files[0]);
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+        // Set up the request
+        xhr.open("POST", "@Url.Action("InsertDataIntoDataBase", "CreateInternationalUser")", true);
+        // Set up a callback function for when the request completes
+        xhr.onload = function () {
+            bindDataToTable(data);
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    alert("File uploaded and processed successfully.");
+                    // You can now update the table or do something else with the response
+                } else {
+                    alert("Error: " + response.message);
+                }
+            } else {
+                alert("Error: " + xhr.statusText);
+            }
+        };
+
+        // Send the form data to the server
+        xhr.send(formData);
+    });
+    function bindDataToTable(data) {
+        // Clear existing table content
+        $('#tableHeader').empty();
+        $('#tableBody').empty();
+        // Ensure there's data to display
+        if (data.length === 0) {
+            alert("No data found in the file.");
+            return;
+        }
+        // Add table headers (column names)
+        var headers = Object.keys(data[0]); // Get column names from the first row
+        headers.forEach(function (header) {
+            $('#tableHeader').append(`<th>${header}</th>`);
+        });
+        // Add table rows
+        data.forEach(function (row) {
+            var rowHtml = '<tr>';
+            headers.forEach(function (header) {
+                rowHtml += `<td>${row[header]}</td>`;
+            });
+            rowHtml += '</tr>';
+            $('#tableBody').append(rowHtml);
+        });
+    }
+</script>

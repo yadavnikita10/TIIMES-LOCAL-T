@@ -1,0 +1,536 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+<!-- Bootstrap -->
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+
+<!-- Start Other stylesheets -->
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+<style>
+    .divCenter {
+        text-align: center;
+        border: 0px solid red;
+        width: 100%;
+        /*height: 200px;
+            padding-top: 100px;*/
+    }
+
+    #btn {
+        font-size: 25px;
+    }
+
+    .td {
+        text-align: center;
+        border: 1px solid;
+        background: #EEEEEE;
+        font-family:'TNG Pro';
+        font-size:13px;
+         padding: 8px 8px;
+         font-weight:normal;
+
+    }
+
+    /*.th {
+        border: 1px solid;
+        background-color: red;
+    }*/
+
+    .label {
+        display: block;
+        text-align: center;
+        line-height: 150%;
+        font-size: .85em;
+    }
+
+    .table-dark thead {
+        background-color: #343a40;
+        color: #fff;
+    }
+
+    .th {
+       background: #104193;
+            word-wrap: break-word;
+            border: #00003C 1px solid;
+            font-size:13px;
+            font-family:'TNG Pro regular';
+            color: #FFFFFF;
+            vertical-align:center;
+            text-align: center;
+            height: 200px; /* Adjust the height as needed */
+            line-height: 1; /* Adjust line-height for better spacing */
+            writing-mode: vertical-rl;
+            position: center;
+            transform: rotate(180deg);
+            text-align: start;
+            
+    }
+    .slanted-heading {
+            transform: skewY();
+            white-space: nowrap;
+            text-wrap:inherit;
+        }
+
+    .rotate-heading {
+        -ms-transform: rotate(-60deg);
+    transform: rotate(-60deg);
+    }
+    .enq{
+    background-color:#EFEFEF;
+    color:#00003C;
+    border-color:#00003C;
+}
+.hand{
+    background-color:#CCD2f6;
+     color:#00003C;
+}
+.Inspection{
+    background-color:#EFEFEF;
+     color:#00003C;
+     
+}
+.Ethics{
+    background-color:#CCD2f6;
+     color:#00003C;
+}
+.Reports{
+    background-color:#EFEFEF;
+     color:#00003C;
+    
+}
+.lastcolor{
+    background-color:#FFFFFF;
+     color:#00003C;
+}
+   
+</style>
+
+
+
+
+
+
+
+
+<div class="main-content3 xs-max-height">
+    <div class="container-fluid">
+
+
+        <!--Start of header-->
+
+       
+
+        <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-10">
+                <a href="@Url.Action("Welcome","Login")" class="logo">
+                    <img src="~/AllJsAndCss/images/logoN.png" alt="" style="max-width: 210%;margin-top: -59px;">
+                </a>
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left:147px;padding-top:10px;font-family:'TNG Pro'; ">TUV India Private Limited <br />Customer Satisfaction Evaluation</h3>
+            </div>
+
+            <div class="col-lg-2" style="padding-right:20px;">
+                <button type="button" class="btn btn-info" style="margin-top: 16px;margin-left: 37px;width: 150px;background-color: #104193;color:white;border-radius: 0;" onclick="Redirect()">Go Back</button>
+
+            </div>
+        </div>
+    </div>
+          
+
+
+
+        <br /><br />
+    <div class="col-xs-12">
+        <div class="row">
+
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label for="txtfromdate" style="font-family:'TNG Pro';font-size:14px;">From Date:</label>
+                    <input type="date" id="txtfromdate" class="form-control">
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label for="txtTodate" style="font-family:'TNG Pro';font-size:14px;">To Date:</label>
+                    <input type="date" id="txtTodate" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label></label><br /><br />
+                    <button class="btn" style="width: 150px;background-color: #001ED2;color:white;border-radius: 0;" onclick="SearchDataFromdateTodate()">Search</button>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label for="txtfromdate" style="font-family:'TNG Pro';font-size:13px; text-align:center">Average Percentage</label>
+                    <input type="text" id="txtScoreAchived" class="form-control" style="background-color:#EFEFEF; text-align:center">
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <button class="btn" style="width: 150px;background-color: #001ED2;color:white;border-radius: 0; margin-top: 25px" onclick="ExportToExcel()">Export to Excel</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-12">
+        <div class="row">
+            <table id="tblDashboard" class="table table-striped dataTable" style="width:100%;border:1px solid">
+                <thead class="table-dark thead">
+                    <tr class="style">
+                        <th colspan="4" style="border:1px solid"></th>
+                        <th colspan="5" style="border:1px solid" class="enq">Handling enquiries</th>
+                        <th colspan="5" style="border:1px solid" class="hand">Scheduling inspections</th>
+                        <th colspan="4" style="border:1px solid" class="Inspection">Inspection process</th>
+                        <th colspan="1" style="border:1px solid" class="Ethics">Ethics</th>
+                        <th colspan="3" style="border:1px solid" class="Reports">Reports receipt process</th>
+                        <th colspan="3" style="border:1px solid" class="lastcolor"></th>
+                    </tr>
+                    <tr>
+                        <th class="th slanted-heading lastcolor">Client Name</th>
+                        <th class="th slanted-heading lastcolor">Job No</th>
+                        <th class="th slanted-heading lastcolor">Branch Name</th>
+                        <th class="th slanted-heading lastcolor">No of Responses received</th>
+                        <th class="th slanted-heading enq">How well did we respond to your enquiry?</th>
+                        <th class="th slanted-heading enq">Did You receive the Quotation within Expected Time</th>
+                        <th class="th slanted-heading enq">How well did we understand your requirements?</th>
+                        <th class="th slanted-heading enq">Did the quotation contain all the required informa</th>
+                        <th class="th slanted-heading enq">How quickly were your queries resolved & revised q</th>
+
+                        <th class="th slanted-heading hand">Was your email / call responded on time?</th>
+                        <th class="th slanted-heading hand">Was the call scheduled as per your request?</th>
+                        <th class="th slanted-heading hand">Did you receive information regarding conformation</th>
+                        <th class="th slanted-heading hand">In case of change in schedule were you informed wi</th>
+                        <th class="th slanted-heading hand">How satisfied are you with the communication proce</th>
+
+                        <th class="th slanted-heading Inspection">How would you rate the behaviour of TUV inspector </th>
+                        <th class="th slanted-heading Inspection">How would you rate the inspector’s safety awarenes</th>
+                        <th class="th slanted-heading Inspection">How would you rate the quality of inspection w.r.t</th>
+                        <th class="th slanted-heading Inspection">How would you rate the efficiency of our inspector</th>
+
+                        <th class="th slanted-heading Ethics">How would you rate our inspectors for maintaining </th>
+
+                        <th class="th slanted-heading Reports">Did you receive the inspection report/Release note</th>
+                        <th class="th slanted-heading Reports">Did the report meet your expectations w.r.t. compl</th>
+                        <th class="th slanted-heading Reports">How would you rate the report for number of errors</th>
+                        <th class="th slanted-heading lastcolor">Score Achived</th>
+                        <th class="th slanted-heading lastcolor">Max Score</th>
+                        <th class="th slanted-heading lastcolor">Percentage</th>
+                    </tr>
+                </thead>
+                <tbody id="databody"></tbody>
+            </table>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+  
+
+<script>
+    function GetDashboard() {
+        debugger;
+        var fromDate = $("#txtfromdate").val();
+        var toDate = $("#txtTodate").val();
+
+        if (!fromDate || !toDate) {
+            var currentDate = new Date();
+            var thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(currentDate.getDate() - 30);
+            fromDate = thirtyDaysAgo.toISOString().split('T')[0];
+            toDate = currentDate.toISOString().split('T')[0];
+
+            $('#txtfromdate').val(fromDate);
+            $('#txtTodate').val(toDate);
+        }
+
+        // Clear the table before appending new rows
+        //$('#tblDashboard tr:not(:first)').remove();
+        //$('#tblDashboard tr:not(:nth-child(1))').remove();
+       // $('#tblDashboard tbody tr').remove();
+        
+
+        $.ajax({
+            type: "GET",
+            url: "/FeedbackDashboard/GetDashboard",
+            data: { fromDate: fromDate, toDate: toDate },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                debugger;
+              
+               
+                var a = JSON.parse(response);
+                var aa = JSON.stringify(response);
+
+                //var $tbody = $('#tblDashboard tbody');
+
+                //// Remove data rows
+                //$tbody.find('tr:gt(1)').remove();
+
+                var tbody = $("#tblDashboard tbody");
+                $('#databody').empty();
+
+                //tbody.empty();
+
+               
+              
+                for (var i = 0; i < a.length; i++) {
+
+                    //var c = i + 1;
+                    //tr = $('<tr/>');
+                    //if (a[i].JobNo != "Total") {
+                    //    // tr.append("<td class='td'><a href='/Customer/FeedbackDashboard/ClientFeedbackHistory?tkn_key=" + a[i].JobID + "'>" + a[i].NameOfOrg + "</a></td>");
+                    //    tr.append("<td class='td'><a href='/FeedbackDashboard/ClientFeedbackHistory?tkn_key=" + a[i].JobID + "'>" + a[i].NameOfOrg + "</a></td>");
+                    //}
+                    //else {
+                    //    tr.append("<td class='td' colspan='2'>-</td>");
+                    //}
+                    //if (a[i].JobNo != "Total") {
+                    //    tr.append("<td class='td'>" + a[i].JobNo + "</td>");
+                    //}
+                    //tr.append("<td class='td'>" + a[i].Branch_Name + "</td>");
+
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_well_did_we_respond_to_your_enquiry + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].Did_You_receive_the_Quotation_within_Expected_Time + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_well_did_we_understand_your_requirements + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].Did_the_quotation_contain_all_the_required_informa + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_quickly_were_your_queries_resolved_and_revised_q + "</label> </td>");
+
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].Was_your_email_call_responded_on_time + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].Was_the_call_scheduled_as_per_your_request + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].Did_you_receive_information_regarding_conformation + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].In_case_of_change_in_schedule_were_you_informed_wi + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_satisfied_are_you_with_the_communication_proce + "</label> </td>");
+
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_would_you_rate_the_behaviour_of_TUV_inspector_ + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_would_you_rate_the_inspectors_safety_awarenes + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_would_you_rate_the_quality_of_inspection_w_r_t + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_would_you_rate_the_efficiency_of_our_inspector + "</label> </td>");
+
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_would_you_rate_our_inspectors_for_maintaining + "</label> </td>");
+
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].Did_you_receive_the_inspection_report_Release_note + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].Did_the_report_meet_your_expectations_w_r_t_compl + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].How_would_you_rate_the_report_for_number_of_errors + "</label> </td>");
+
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].Score_Achived + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].Total_Score + "</label> </td>");
+                    //tr.append("<td class='td'><label id='Question_" + c + "'>" + a[i].percentage + "</label> </td>");
+
+                    //$('#tblDashboard').append(tr);
+
+                    var c = i + 1;
+                    tr = $('<tr/>');
+
+                    if (a[i].JobNo != "Total" && a[i].Branch_Name != "Total" && a[i].jobCount != "Total" && a[i].JobNo != "MaxScore" && a[i].JobNo != "percentage") {
+                        // tr.append("<td class='td'><a href='/Customer/FeedbackDashboard/ClientFeedbackHistory?tkn_key=" + a[i].JobID + "'>" + a[i].NameOfOrg + "</a></td>");
+                        tr.append("<td class='td'><a href='/FeedbackDashboard/ClientFeedbackHistory?tkn_key=" + a[i].JobID + "'>" + a[i].NameOfOrg + "</a></td>");
+
+                    }
+
+                    else {
+                        let commanColumnName = "";
+                        let colorClass = "";
+
+                        if (a[i].JobNo == "Total") {
+                            commanColumnName = "Score Achived";
+                            
+                           
+                        } else if (a[i].JobNo == "MaxScore") {
+                            commanColumnName = "Max Score";
+                            
+                           
+                        } else if (a[i].JobNo == "percentage") {
+                            commanColumnName = "Percentage";
+                          
+                        
+                        }
+
+                        
+                        tr.append("<td class='td' colspan='4'>" + commanColumnName + "</td>");
+
+                    
+                    
+
+                    }
+
+
+
+                    if (a[i].JobNo != "Total" && a[i].JobNo != "MaxScore" && a[i].JobNo != "percentage") {
+                        tr.append("<td class='td'>" + a[i].JobNo + "</td>");
+                        tr.append("<td class='td'>" + a[i].Branch_Name + "</td>");
+                        tr.append("<td class='td'>" + a[i].jobCount + "</td>");
+                    }
+
+
+
+
+
+
+
+
+                    //}
+                    //added by shrutika salve 19122023
+
+                    //tr.append("<td class='td'>" + a[i].Branch_Name + "</td>");
+                    //tr.append("<td class='td'>" + a[i].jobCount + "</td>");
+                    tr.append("<td class='td enq'><id='Question_" + c + "'>" + a[i].How_well_did_we_respond_to_your_enquiry + " </td>");
+                    tr.append("<td class='td enq'><id='Question_" + c + "'>" + a[i].Did_You_receive_the_Quotation_within_Expected_Time + " </td>");
+                    tr.append("<td class='td enq'><id='Question_" + c + "'>" + a[i].How_well_did_we_understand_your_requirements + " </td>");
+                    tr.append("<td class='td enq'><id='Question_" + c + "'>" + a[i].Did_the_quotation_contain_all_the_required_informa + "</td>");
+                    tr.append("<td class='td enq'><id='Question_" + c + "'>" + a[i].How_quickly_were_your_queries_resolved_and_revised_q + " </td>");
+
+                    tr.append("<td class='td hand'><id='Question_" + c + "'>" + a[i].Was_your_email_call_responded_on_time + " </td>");
+                    tr.append("<td class='td hand'><id='Question_" + c + "'>" + a[i].Was_the_call_scheduled_as_per_your_request + " </td>");
+                    tr.append("<td class='td hand'><id='Question_" + c + "'>" + a[i].Did_you_receive_information_regarding_conformation + "</td>");
+                    tr.append("<td class='td hand'><id='Question_" + c + "'>" + a[i].In_case_of_change_in_schedule_were_you_informed_wi + "</td>");
+                    tr.append("<td class='td hand'><id='Question_" + c + "'>" + a[i].How_satisfied_are_you_with_the_communication_proce + "</td>");
+
+                    tr.append("<td class='td Inspection'><id='Question_" + c + "'>" + a[i].How_would_you_rate_the_behaviour_of_TUV_inspector_ + " </td>");
+                    tr.append("<td class='td Inspection'><id='Question_" + c + "'>" + a[i].How_would_you_rate_the_inspectors_safety_awarenes + "</td>");
+                    tr.append("<td class='td Inspection'><id='Question_" + c + "'>" + a[i].How_would_you_rate_the_quality_of_inspection_w_r_t + "</td>");
+                    tr.append("<td class='td Inspection'><id='Question_" + c + "'>" + a[i].How_would_you_rate_the_efficiency_of_our_inspector + "</td>");
+
+                    tr.append("<td class='td Ethics'><id='Question_" + c + "'>" + a[i].How_would_you_rate_our_inspectors_for_maintaining + "</td>");
+
+                    tr.append("<td class='td Reports'><id='Question_" + c + "'>" + a[i].Did_you_receive_the_inspection_report_Release_note + " </td>");
+                    tr.append("<td class='td Reports'><id='Question_" + c + "'>" + a[i].Did_the_report_meet_your_expectations_w_r_t_compl + "</td>");
+                    tr.append("<td class='td Reports'><id='Question_" + c + "'>" + a[i].How_would_you_rate_the_report_for_number_of_errors + "</td>");
+
+                    tr.append("<td class='td'><id='Question_" + c + "'>" + a[i].Score_Achived + "</td>");
+                    tr.append("<td class='td'><id='Question_" + c + "'>" + a[i].Total_Score + "</td>");
+                    tr.append("<td class='td'><id='Question_" + c + "'>" + a[i].percentage + " </td>");
+
+                    $('#tblDashboard').append(tr);
+                    //$tbody.append(tr);
+                    
+
+                }
+                
+            },
+            error: function (xhr, status, error) {
+                // Code to handle errors goes here
+            }
+        });
+    }
+
+    // Define the function in the global scope
+    function SearchDataFromdateTodate() {
+        GetDashboard();
+        GetBasicDetailsQuestionAns();
+    }
+
+    $(document).ready(function () {
+        debugger;
+        GetDashboard();
+        GetBasicDetailsQuestionAns();
+    });
+</script>
+
+<script>
+function Redirect() {
+        window.location.href = "@Url.Action("Welcome", "Login")"
+        }
+</script>
+
+<script>
+function ExportToExcel() {
+    var fromDate = $("#txtfromdate").val();
+    var toDate = $("#txtTodate").val();
+
+    window.location.href = "/FeedbackDashboard/GetDashboardExportExcel?fromDate=" + fromDate + "&toDate=" + toDate;
+}
+</script>
+
+
+<script>
+
+        function GetBasicDetailsQuestionAns() {
+            debugger;
+            var fromDate = $("#txtfromdate").val();
+            var toDate = $("#txtTodate").val();
+
+            if (!fromDate || !toDate) {
+                var currentDate = new Date();
+                var thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(currentDate.getDate() - 30);
+                fromDate = thirtyDaysAgo.toISOString().split('T')[0];
+                toDate = currentDate.toISOString().split('T')[0];
+
+                $('#txtfromdate').val(fromDate);
+                $('#txtTodate').val(toDate);
+            }
+
+            var feedbackID = $('#txtid').val();
+
+
+            $.ajax({
+                type: "GET",
+                url: "/FeedbackDashboard/Getscore",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { fromDate: fromDate, toDate: toDate },
+                async: false,
+                success: function (response) {
+                    debugger;
+                    var result = JSON.parse(response);
+                    //alert(response);
+
+                    if (result === "Error") {
+                        // Swal.fire('Something Went Wrong....');
+                    } else {
+                        // Assuming your response contains the answers in a specific format.
+                        // For example, if the answers are in an array, you can iterate through them.
+                        debugger;
+                        var RespondentName = result[0].Score_Achived;
+
+
+
+
+                        $("#txtScoreAchived").val(RespondentName);
+
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Code to handle errors goes here
+                }
+            });
+        }
+
+</script>
+
+
+

@@ -1,0 +1,286 @@
+﻿
+@model TuvVision.Models.Leave
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@using System.Configuration;
+
+@{
+    ViewBag.Title = "Holiday List";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<script src="~/AllJsAndCss/js/jquery-ui.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+<style>
+    .ifa {
+        pointer-events: none;
+    }
+</style>
+
+
+@if (TempData["S"] == "S")
+{
+    TempData["S"] = null;
+    <script>
+        alert("Data Inserted SuccessFully")
+    </script>
+}
+
+@if (TempData["E"] == "E")
+{
+    TempData["E"] = null;
+    <script>
+        alert("Something Went Wrong")
+    </script>
+}
+
+  
+
+
+    @using (Html.BeginForm("LeaveApprovalList", "Leave", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <div class="main-content3 xs-max-height">
+
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-15">
+
+
+                    <!-- /.col -->
+                    <!--Table was here-->
+                    <div class="col-xs-12 dynamic-page-title dynamic-page-title-2 ">
+                        <b>Leave Approval List </b>
+                        &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        @*<button type="button" class="btn btn-info dynamic-function-btn dynamic-function-btn" id="a" value="ExportToExcel" onclick="location.href='@Url.Action("LeaveManagementApprover","Leave")'">
+                            LeaveManagementApprover
+                        </button>
+                        <button type="button" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" id="a" value="ExportToExcel" onclick="location.href='@Url.Action("LeaveApplicationUser","Leave")'">
+                            LeaveApplicationUser
+                        </button>*@
+                    </div>
+                    <div class="col-xs-12">
+                        <hr class="custom-hr">
+                    </div><!-- /.col -->
+                </div>
+
+
+
+
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-12">
+
+
+
+
+
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+
+                                    <div>
+                                        <label> Branch Name:</label>
+                                        @Html.DropDownListFor(model => model.BranchID, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Branch--", new { @class = "form-control", @style = "margin-top:0px; border-color:deepskyblue;", @id = "ddlBranch" })
+                                        @Html.ValidationMessageFor(Model => Model.BranchID)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    <label>OBS type:<span style="color:#ff0000;">*</span></label>
+                                    @{
+                                        if (Model != null)
+                                        {
+                                            if (ViewBag.OBSType != null)
+                                            {
+                                                @Html.DropDownListFor(model => model.ProjectType, new SelectList(@ViewBag.OBSType, "Code", "Name"), "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control" })
+                                            }
+
+                                            else if (ViewData["ProjectTypeItems"] != null)
+                                            {
+                                                @Html.DropDownListFor(model => model.ProjectType, (IEnumerable<SelectListItem>)ViewData["ProjectTypeItems"], "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control" })
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(model => model.ProjectType, new SelectList(@ViewBag.OBSType, "Code", "Name"), "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control" })
+                                        }
+                                        @Html.ValidationMessageFor(m => m.ProjectType, "", new { @class = "text-danger validation-msg" })
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    <label>CH:<span style="color:#1CE325;">*</span></label>
+                                    @Html.TextBoxFor(model => model.CH, new { placeholder = "Enter  CH name", @class = "form-control form-control-custom CompanyName" })
+                                    @Html.ValidationMessageFor(model => model.CH, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    <label>PCH Name:</label>
+                                    @Html.TextBoxFor(model => model.PCHName, new { @placeholder = "Enter PCH Name", @class = "form-control form-control-custom CompanyName" })
+                                    @Html.ValidationMessageFor(model => model.PCHName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    <label>Approver 1:</label>
+                                    @Html.TextBoxFor(model => model.Approver1, new { @placeholder = "Enter Approver1 Name", @class = "form-control form-control-custom CompanyName" })
+                                    @Html.ValidationMessageFor(model => model.Approver2, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    <label>Approver 2:</label>
+                                    @Html.TextBoxFor(model => model.Approver2, new { @placeholder = "Enter Approver2 Name", @class = "form-control form-control-custom CompanyName" })
+                                    @Html.ValidationMessageFor(model => model.Approver2, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            @*Added By Satish Pawar on 07 June 2023*@
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    <label>Branch QA:</label>
+                                    @Html.TextBoxFor(model => model.BranchQA, new { @placeholder = "Enter Branch QA Name", @class = "form-control form-control-custom CompanyName" })
+                                    @Html.ValidationMessageFor(model => model.BranchQA, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <div class="form-group">
+                                    <label>Admin QA 2:</label>
+                                    @Html.TextBoxFor(model => model.AdminQA, new { @placeholder = "Enter Admin QA Name", @class = "form-control form-control-custom CompanyName" })
+                                    @Html.ValidationMessageFor(model => model.AdminQA, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+
+                                <button type="button" class="btn btn-default insert-form-btn" name="Save" value="Save">Save</button>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12" id="HolidayList">
+                    <table id="example" class="display" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>SR No</th>
+                                <th>Branch Name </th>
+                                <th>OBS Type</th>
+                                <th>CH Name</th>
+                                <th>PCH Name </th>
+                                <th>ApproverName 1 </th>
+                                <th>ApproverName 2 </th>
+                                @*Added By Satish Pawar on 07 June 2023*@
+                                <th>Branch QA </th>
+                                <th>Admin QA </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.dtLeave.Rows.Count > 0)
+                            {
+                                if (Model.dtLeave != null && Model.dtLeave.Rows.Count != 0)
+                                {
+                                    for (int cnt = 0; cnt < Model.dtLeave.Rows.Count; cnt++)
+                                    {
+                                        System.Data.DataRow row = Model.dtLeave.Rows[cnt];
+                                        <tr>
+                                            <td align="left">@row["Approval_ID"]</td>
+                                            <td align="left">@row["Branch_Name"]</td>
+                                            <td align="left">@row["OBSName"]</td>
+                                            <td align="left">@row["CH"]</td>
+                                            <td align="left">@row["PCH"]</td>
+                                            <td align="left">@row["Approve_1"]</td>
+                                            <td align="left">@row["Approve_2"]</td>
+                                            @*Added By Satish Pawar ob 07 June 2023*@
+                                            <td align="left">@row["BranchQA"]</td>
+                                            <td align="left">@row["AdminQA"]</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+                                        }
+    <link href="~/AllJsAndCss/css/jquery-ui.css"  rel="Stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        $(function () {
+            $(".CompanyName").autocomplete({
+
+                source: function (request, response) {
+
+                    $.ajax({
+                        url: '@Url.Action("GetClusterHead", "Leave")',
+                        data: "{ 'prefix': '" + request.term + "'}",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+
+                            response($.map(data, function (item) {
+                                return { label: item.CompanyName, value: item.CompanyNames + " (" + item.PkUserID + ") " };
+
+                            }));
+                        },
+                        error: function (response) {
+                            //alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            //  alert(response.responseText);
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    //if (u.item.val == -1) {
+                    //    return false;
+                    //}
+                    //$("#hfCompanyName").val(i.item.val);
+                },
+                minLength: 2
+            });
+
+        });
+
+
+
+    </script>
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+

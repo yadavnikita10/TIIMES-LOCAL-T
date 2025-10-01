@@ -1,0 +1,88 @@
+﻿@model IEnumerable<TuvVision.Models.CompentencyMatrixMaster>
+@{
+    ViewBag.Title = "ListCompentencyMatrixMaster";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">List Of Competency Matrix Scope</h3>
+                <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("CompentencyMatrixMaster", "CompentencyMatrix")'">Add Scope</button>
+            </div><!-- /.col -->
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+            <!--Table was here-->
+
+        </div>
+        <div class="col-xs-12">
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+
+                    <tr>
+                        <th class="hidden">Id</th>
+                        <th>Name</th>
+
+
+                        <th class="remove-search">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="hidden">
+                        <td class="hidden">Id</td>
+                        <td>Name</td>
+                        <td></td>
+                    </tr>
+                    <tr class="hidden">
+                        <td class="hidden"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    @foreach (var b in Model)
+                    {
+                        
+
+
+                                <tr>
+                                    <td class="hidden">@b.Id</td>
+
+                                    <td>@b.Name</td>
+
+                                    <td cRemarkslass="action-btn" style="text-align:center;">
+                                        <a href="@Url.Action("CompentencyMatrixMaster", "CompentencyMatrix", new { Id = @b.Id })" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>
+
+                                        <a href="@Url.Action("Delete", "CompentencyMatrix", new { Id = @b.Id })" class="delete" onclick="return confirm('Are you sure you want to Delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+                                    </td>
+
+                                </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+
+
+

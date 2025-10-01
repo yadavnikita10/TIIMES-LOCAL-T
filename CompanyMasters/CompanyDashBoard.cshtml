@@ -1,0 +1,206 @@
+﻿@model TuvVision.Models.CompanyMaster
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "CompanyDashBoard";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@*Ashwini Scripts here for datatable starts here*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+@*Ashwini Scripts here for datatable ends here*@
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm())
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Company Management</h3>
+                    <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("CreateCompany", "CompanyMasters")'">Add New Company</button>
+                    <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex1","CompanyMasters")'"
+                           >
+                        Export To Excel
+                    </button>
+                </div><!-- /.col -->
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+            <div class="col-xs-12">
+                @*<table id="example" class="display custom-table" cellspacing="0" width="100%">
+
+                    <thead>
+                        <tr>
+                            <th class="remove-search less-width">Action</th>
+                            <th>Company Name</th>
+                            <th>Address</th>
+                            <th>Email</th>
+                            <th>Pan No.</th>
+
+
+                            <th>Contact</th>
+                            <th>Mobile</th>
+
+                            <th>Group</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @{
+                            int i = 0;
+                        }
+                        @foreach (var item in ViewData["CompanyList"] as IEnumerable<TuvVision.Models.CompanyMaster>)
+                        {
+                        <tr>
+                            <td class="less-width">
+                                <a href="@Url.Action("CreateCompany", "CompanyMasters", new {@CompanyID = item.CMP_ID })" title="Edit"><span class="fa fa-pencil"></span>&nbsp;</a>
+                                <a href="@Url.Action("DeleteCompany", "CompanyMasters", new {@CompanyID = item.CMP_ID })" onclick="return confirm('Are you sure you want to delete this record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
+                                @{
+                                        if ((Convert.ToString(TempData["InsertCompany"])) != "" && Convert.ToString(TempData["InsertCompany"]) != null)
+                                        {
+                                            TempData["InsertCompany"] = null;
+                                    <script type="text/javascript" language="javascript">
+                                                alert("Company Added Successfully!!!!");
+                                    </script>
+                                        }
+                                        if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
+                                        {
+                                            TempData["UpdateCompany"] = null;
+                                    <script type="text/javascript" language="javascript">
+                                                alert("Company Updated Successfully");
+                                    </script>
+                                        }
+                                        if ((Convert.ToString(TempData["DeleteCompany"])) != "" && Convert.ToString(TempData["DeleteCompany"]) != null)
+                                        {
+                                            TempData["DeleteCompany"] = null;
+                                    <script type="text/javascript" language="javascript">
+                                                alert("Company Deleted Successfully");
+                                    </script>
+                                        }
+                                        if ((Convert.ToString(TempData["InsertContact"])) != "" && Convert.ToString(TempData["InsertContact"]) != null)
+                                        {
+                                            TempData["InsertContact"] = null;
+                                    <script type="text/javascript" language="javascript">
+                                                alert("Contact Added Successfully!!!!");
+                                    </script>
+                                        }
+                                        if ((Convert.ToString(TempData["UpdateContact"])) != "" && Convert.ToString(TempData["UpdateContact"]) != null)
+                                        {
+                                            TempData["UpdateContact"] = null;
+                                    <script type="text/javascript" language="javascript">
+                                                alert("Contact Updated Successfully");
+                                    </script>
+                                        }
+                                        if ((Convert.ToString(TempData["DeleteContact"])) != "" && Convert.ToString(TempData["DeleteContact"]) != null)
+                                        {
+                                            TempData["DeleteContact"] = null;
+                                    <script type="text/javascript" language="javascript">
+                                                alert("Contact Deleted Successfully");
+                                    </script>
+                                        }
+                                }
+                            </td>
+                            <td>@item.Company_Name</td>
+                            <td>@item.Address</td>
+                            <td>@item.Email</td>
+                            <td>@item.Pan_No</td>
+                            <td>@item.Contact</td>
+                            <td>@item.Mobile</td>
+                            <td>@item.CorporateName</td>
+                        </tr>
+                                        }
+
+                    </tbody>
+
+                </table>*@
+            </div><!-- /.data table col -->
+
+            <div class="col-xs-12">
+
+                <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                    <tr>
+                        <td>
+                            @(Html
+                            .Grid(Model.lstCompanyMaster1)
+                            .Build(columns =>
+                            {
+
+                                //< a href = "@Url.Action("CreateCompany", "CompanyMasters", new {@CompanyID = item.CMP_ID })" title = "Edit" >< span class="fa fa-pencil"></span>&nbsp;</a>
+                                //   <a href = "@Url.Action("DeleteCompany", "CompanyMasters", new {@CompanyID = item.CMP_ID })" onclick="return confirm('Are you sure you want to delete this record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
+
+
+                                columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "CreateCompany", new { CompanyID = o.CMP_ID
+                                }, new { @class = "fa fa-pencil", title = "Edit" }));
+                                columns.Add().Titled("Delete").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "DeleteCompany", new { CompanyID = o.CMP_ID }, new { @class = "fa fa-trash-o", title = "Delete", onclick = "return confirm('Are you sure you wish to delete ?');" }));
+
+                                columns.Add(c => c.Company_Name).Titled("Company Name");
+                                columns.Add(c => c.companyId).Titled("Company Name (ID)");
+                                columns.Add(c => c.Address).Titled("Office Address");
+                                columns.Add(c => c.BranchName).Titled("Branch Name");
+                                columns.Add(c => c.Email).Titled("Email ID");
+                                columns.Add(c => c.Pan_No).Titled("PAN No.");
+                                //columns.Add(c => c.Contact).Titled("Contact");
+                                //columns.Add(c => c.Mobile).Titled("Mobile");
+                                columns.Add(c => c.CorporateName).Titled("Corporate Group");
+
+
+
+
+                            })
+                            .Pageable(pager =>
+                            {
+                                //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                            )
+
+
+                        </td>
+                    </tr>
+                </table>
+
+
+
+            </div>
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+
+
+                                        }
+
+<script>
+    [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+        new MvcGrid(element);
+    });
+</script>

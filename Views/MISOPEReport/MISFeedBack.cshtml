@@ -1,0 +1,325 @@
+﻿@model TuvVision.Models.CustomerFeedback
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "FeedBackDashBoard";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+@*calender control*@
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+@*<h2>AppealDashBoard</h2>*@
+@using (Html.BeginForm("MISFeedBack", "MISOPEReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                @*<a class="btn btn-default insert-form-btn" href="~/Content/feedbackExcel/new format.xlsx" role="button" download="new format.xlsx">
+                    <i class="fa fa-download"></i> Download Format
+                </a>*@
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Customer FeedBack MIS</h3>
+                    @*<a href="@Url.Action("CreateFeedback","CustomerFeedback")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-plus-circle"></i> Add New Customer FeedBack</a>*@
+
+                    <button type="button"  value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex","MISOPEReport")'"
+                            style="border:none;">
+                        Export To Excel
+                    </button>
+                </div>
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div>
+                
+
+            </div>
+
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>From Date:</label>
+                        @*@Html.TextBoxFor(model => model.FromDate, new { placeholder = "Select From Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off" })*@
+                        @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromDate", autocomplete = "off" })
+                    </div>
+                </div>
+
+
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>To Date:</label>
+                        @*@Html.TextBoxFor(model => model.FromDate, new { placeholder = "Select From Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off" })*@
+                        @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToDate", autocomplete = "off" })
+                    </div>
+
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Search:</label>
+                        @*@Html.TextBoxFor(model => model.FromDate, new { placeholder = "Select From Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off" })*@
+                        <input type="submit" value="Search" class="btn btn-primary form-control" />
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="col-xs-12">
+                @*<table id="example" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+
+                            
+                            <th>Inspection Parameters</th>
+                          
+                            <th>Feedback against which Order / Project / Item / Vendor / Equipment / P.O./ TUVI Control No.?</th>
+                            <th>Client Location</th>
+                            <th>How well did we respond to your Enquiry? *</th>
+                            <th>Did You receive the Quotation within Expected Time Frame? *ENQUIRY HANDLING</th>
+                            <th>How well did we understand your requirements? *</th>
+                            <th>Did the quotation contain all the required information?</th>
+                            <th>How quickly were your queries resolved & revised quotation submitted? </th>
+                            <th>Was your email / call responded on time?</th>
+                            <th>Was the call scheduled as per your request? *</th>
+                            <th>Did you receive information regarding conformation of calls, inspector details in advance? *</th>
+                            <th>In case of change in schedule were you informed within expected time frame? *</th>
+                            <th>How satisfied are you with the communication process with the inspection coordination team? *</th>
+                            <th>How would you rate the behavior of TUV inspector with your staff (w.r.t. language, attitude)? *</th>
+                            <th>How would you rate the inspector’s safety awareness & leadership in implementation of safety requirements? *</th>
+                            <th>How would you rate the quality of inspection w.r.t. observations raised? *</th>
+                            <th>How would you rate the efficiency of our inspector w.r.t time taken for inspection? *</th>
+                            <th>How would you rate our inspectors for maintaining confidentiality & Integrity? *</th>
+                            <th>Did you receive the inspection report/Release note in time? *</th>
+                            <th>Did the report meet your expectations w.r.t. completeness, contents and conclusion *</th>
+                            <th>How would you rate the report for number of errors, revisions? *</th>
+                            <th>How likely would you continue your association with TUV India? *</th>
+                            <th>Would you like to give us any suggestion to improve our service </th>
+                            <th>Score Achieved </th>
+                            <th>Score Percentage </th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="hidden">
+                            
+                            <td>Inspection Parameters</td>
+                           
+                            <td>Feed back against which Order / Project / Item / Vendor / Equipment / P.O./ TUVI Control No.?</td>
+                            <td>Client Location</td>
+                            <td>How well did we respond to your Enquiry? *</td>
+                            <td>Did You receive the Quotation within Expected Time Frame? *ENQUIRY HANDLING</td>
+                            <td>How well did we understand your requirements? *</td>
+                            <td>Did the quotation contain all the required information?</td>
+                            <td>How quickly were your queries resolved & revised quotation submitted? </td>
+                            <td>Was your email / call responded on time?</td>
+                            <td>Was the call scheduled as per your request? *</td>
+                            <td>Did you receive information regarding conformation of calls, inspector details in advance? *</td>
+                            <td>In case of change in schedule were you informed within expected time frame? *</td>
+                            <td>How satisfied are you with the communication process with the inspection coordination team? *</td>
+                            <td>How would you rate the behavior of TUV inspector with your staff (w.r.t. language, attitude)? *</td>
+                            <td>How would you rate the inspector’s safety awareness & leadership in implementation of safety requirements? *</td>
+                            <td>How would you rate the quality of inspection w.r.t. observations raised? *</td>
+                            <td>How would you rate the efficiency of our inspector w.r.t time taken for inspection? *</td>
+                            <td>How would you rate our inspectors for maintaining confidentiality & Integrity? *</td>
+                            <td>Did you receive the inspection report/Release note in time? *</td>
+                            <td>Did the report meet your expectations w.r.t. completeness, contents and conclusion *</td>
+                            <td>How would you rate the report for number of errors, revisions? *</td>
+                            <td>How likely would you continue your association with TUV India? *</td>
+                            <td>Would you like to give us any suggestion to improve our service </td>
+                            <td>Score Achieved </td>
+                            <td>Score Percentage </td>
+
+
+                        </tr>
+
+                        <tr class="hidden">
+                           
+                            <td></td>
+                          
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+
+                        </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+                        @{
+
+                        }
+                        @foreach (var item in ViewData["FeedBackList"] as IEnumerable<TuvVision.Models.CustomerFeedback>)
+                        {
+                            <tr>
+                               
+                                <td>@item.Name_Of_organisation</td>
+                                <td>@item.Order_No</td>
+                                <td>@item.Client_Location</td>
+                                <td>@item.Enquiry_response</td>
+                                <td>@item.Quotation_Time_Frame_feedback</td>
+                                <td>@item.Requirement_Understanding</td>
+                                <td>@item.Quotation_information</td>
+                                <td>@item.Quotation_Submit_Response</td>
+                                <td>@item.Email_call_ResponseTime</td>
+                                <td>@item.Requested_Call_schedule</td>
+                                <td>@item.Confirmation_Reception</td>
+                                <td>@item.Change_in_schedule_Response</td>
+                                <td>@item.Communication_satisfaction</td>
+                                <td>@item.Behaiviour_of_Inspector</td>
+                                <td>@item.implementation_of_safety_requirements_Of_Inspector</td>
+                                <td>@item.quality_of_inspection</td>
+                                <td>@item.efficiency_with_time</td>
+                                <td>@item.Maintanance_Of_confidentiality_and_Integrity</td>
+                                <td>@item.inspection_report_or_Releasenote_Time</td>
+                                <td>@item.Expectation_Meet</td>
+                                <td>@item.report_for_number_of_errors</td>
+                                <td>@item.association_with_TUV_India</td>
+                                <td>@item.Suggestions</td>
+                                <td>@item.ScoreAchieved </td>
+                                <td>@item.ScoreAchieved.00%</td>
+                               
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>*@
+
+            </div><!-- /.data table col -->
+
+
+        <div class="col-xs-12">
+            <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>
+                        @(Html
+                            .Grid(Model.lstFeedback1)
+                            .Build(columns =>
+                            {
+
+                                
+                                columns.Add(c => c.Name_Of_organisation).Titled("Inspection Parameters");
+                                columns.Add(c => c.Order_No).Titled("Feedback against which Order / Project / Item / Vendor / Equipment / P.O./ TUVI Control No.?");
+                                columns.Add(c => c.Client_Location).Titled("Client Location");
+                                columns.Add(c => c.Enquiry_response).Titled("How well did we respond to your Enquiry? *");
+                                columns.Add(c => c.Quotation_Time_Frame_feedback).Titled("Did You receive the Quotation within Expected Time Frame? *ENQUIRY HANDLING");
+                                columns.Add(c => c.Requirement_Understanding).Titled("How well did we understand your requirements? *");
+                                columns.Add(c => c.Quotation_information).Titled("Did the quotation contain all the required information?");
+                                columns.Add(c => c.Quotation_Submit_Response).Titled("How quickly were your queries resolved & revised quotation submitted? ");
+                                columns.Add(c => c.Email_call_ResponseTime).Titled("Was your email / call responded on time?");
+                                columns.Add(c => c.Requested_Call_schedule).Titled("Was the call scheduled as per your request? *");
+                                columns.Add(c => c.Confirmation_Reception).Titled("Did you receive information regarding conformation of calls, inspector details in advance? *");
+                                columns.Add(c => c.Change_in_schedule_Response).Titled("In case of change in schedule were you informed within expected time frame? *");
+                                columns.Add(c => c.Communication_satisfaction).Titled("How satisfied are you with the communication process with the inspection coordination team? *");
+                                columns.Add(c => c.Behaiviour_of_Inspector).Titled("How would you rate the behaviour of TUV inspector with your staff (w.r.t. language, attitude)? *");
+                                columns.Add(c => c.implementation_of_safety_requirements_Of_Inspector).Titled("How would you rate the inspector’s safety awareness & leadership in implementation of safety requirements? *");
+                                columns.Add(c => c.quality_of_inspection).Titled("How would you rate the quality of inspection w.r.t. observations raised? *");
+                                columns.Add(c => c.efficiency_with_time).Titled("How would you rate the efficiency of our inspector w.r.t time taken for inspection? *");
+                                columns.Add(c => c.Maintanance_Of_confidentiality_and_Integrity).Titled("How would you rate our inspectors for maintaining confidentiality & Integrity? *");
+                                columns.Add(c => c.inspection_report_or_Releasenote_Time).Titled("Did you receive the inspection report/Release note in time? *");
+                                columns.Add(c => c.Expectation_Meet).Titled("Did the report meet your expectations w.r.t. completeness, contents and conclusion *");
+                                columns.Add(c => c.report_for_number_of_errors).Titled("How would you rate the report for number of errors, revisions? *");
+                                columns.Add(c => c.association_with_TUV_India).Titled("How likely would you continue your association with TUV India? *");
+                                columns.Add(c => c.Suggestions).Titled("Would you like to give us any suggestion to improve our service ");
+                                columns.Add(c => c.ScoreAchieved).Titled("Score Achieved");
+                               columns.Add(c => c.ScoreAchieved +".00%").Titled("Score Percentage");
+
+                            })
+                            .Pageable(pager =>
+                            {
+                                //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                        )
+
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+                            }
+
+<script>
+    $(function () {
+        $(".FromDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+</script>

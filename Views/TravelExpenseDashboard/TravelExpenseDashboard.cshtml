@@ -1,0 +1,1645 @@
+﻿@model TuvVision.Models.TravelExpense
+@using NonFactors.Mvc.Grid;
+@using TuvVision.Models;
+@using System.Web.Mvc;
+
+
+
+@{
+    ViewBag.Title = "TravelExpenseDashboard";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = null;
+    List<string> EditAuditorName = ViewBag.SubCatlist as List<string>;
+    List<string> Userrole = ViewBag.SubCatlist as List<string>;
+
+
+}
+
+
+
+@*<link href="~/AllJsAndCss/css/BootstrapcssOBS.css" rel="stylesheet" />*@
+
+
+@*<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+     Start Other stylesheets
+    <link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+    <link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+    <link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="~/AllJsAndCss/css/aos.css" rel="stylesheet">
+
+
+    <script src="~/AllJsAndCss/js/bootstrap.min.js"></script>*@
+
+
+
+@*<script src="~/AllJsAndCss/js/bootstrap.min.js"></script>*@
+
+<style>
+    .table-container {
+        display: flex;
+    }
+
+    .table {
+        flex: 1;
+        margin: 10px;
+        /*border: 1px solid #ccc;*/
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+</style>
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>*@
+@*<script type="text/javascript" src="https://www.google.com/jsapi"></script>*@
+@*<link href="~/Content/c3.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="~/Scripts/c3.min.js"></script>
+    <script src="~/Scripts/d3.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+@*<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+    <link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />*@
+
+<link href="~/Content/c3.css" rel="stylesheet" />
+<link href="~/Content/Site.css" rel="stylesheet" />
+<script src="~/Scripts/c3.min.js"></script>
+<script src="~/Scripts/d3.min.js"></script>
+
+
+
+
+
+
+
+@*<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+        <link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+        <link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+
+
+        <link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+        <link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+
+        <script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+        <link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />*@
+<link href="~/AllJsAndCss/css/BootstrapcssTravel.css" rel="stylesheet" />
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+@*<script type="text/javascript" >
+        $(function () {
+            $('#Auditee').multiselect({
+                includeSelectAllOption: true
+            });
+
+        });
+    </script>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Auditee').multiselect({
+            includeSelectAllOption: true,
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Auditee1').multiselect({
+            includeSelectAllOption: true,
+        });
+    });
+</script>
+
+
+<script>
+    $(function () {
+        $(".datepicker").datepicker({
+            dateFormat: 'dd M yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+    });
+</script>
+
+<body>
+    <div class="main-content3 xs-max-height">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-10">
+                    <a href="@Url.Action("Welcome", "Login")" class="logo">
+                        <img src="~/AllJsAndCss/images/logoN.png" alt="" style="max-width: 210%;margin-top: 8px;">
+                    </a>
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color: #001ED2;font-size:23px;font-weight:bold;padding-left: 368px;padding-top: -3px;font-family:'TNG Pro';padding-bottom: 27px;margin-top: -80px;">TUV India Private Limited Travel Expense Summary </h3>
+                </div>
+
+                <div class="col-lg-2" style="padding-right:20px;">
+                    <button type="button" class="btn" style="margin-top: 16px;margin-left: 37px;width: 150px;background-color: #001ED2;color:white;border-radius: 0;" onclick="Redirect()">Go Back</button>
+
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+
+
+
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label style= "margin-left: 14px;">From Date:</label>
+                    @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD datepicker", style = "margin-left: 14px;", autocomplete = "off", type = "date", @id = "Fromdate" })
+                    @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                </div>
+            </div>
+
+
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label>To Date:</label>
+
+                    @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD datepicker", autocomplete = "off", type = "date", @id = "Todate" })
+                    @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                </div>
+            </div>
+
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label>Employeement Category</label><br />
+                    @if (ViewBag.checkAuditee == "Auditee")
+                    {
+
+                        <select id="Auditee" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName" placeholder="Select Option" required="required">
+                            @foreach (var item in ViewBag.SubCatlist)
+                            {
+                                if (EditAuditorName.Contains(item.code))
+                                {
+                                    <option value="@item.code" selected>@item.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.code">@item.Name</option>
+                                }
+
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="Auditee" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName" placeholder="Select Option" required="required">
+
+                            @foreach (var item in ViewBag.SubCatlist)
+                            {
+                                <option value="@item.code">@item.Name</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label>User Role</label><br />
+                    @if (ViewBag.checkAuditee == "Auditee")
+                    {
+                        <select id="Auditee1" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName1" placeholder="Select Option" required="required">
+
+                            @foreach (var item in ViewBag.SubCatlist)
+                            {
+                                if (EditAuditorName.Contains(item.code))
+                                {
+                                    <option value="@item.code" selected>@item.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.code">@item.Name</option>
+                                }
+
+                            }
+                        </select>
+                    }
+
+
+                    else
+                    {
+                        <select id="Auditee1" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName1" placeholder="Select Option" required="required">
+                            @foreach (var item in ViewBag.UserRole)
+                            {
+                                <option value="@item.code">@item.Name</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label></label><br /><br />
+                    <input type="button" value="Search" class="btn" style="width: 170px;border-radius: 0;background-color: #001ED2;color:white;" onclick="FilterDatewisecostcenter(); FilterDatewiseBranch(); FilterDatewiseEmployee(); FilterDatewiseExpense(); FilterDatewiseEmployeement(); FilterDatewiseTotal(); FilterDatewiseType();" />
+                </div>
+            </div>
+
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label></label><br /><br />
+                    <input type="submit" value="Reset" class="btn" style="width: 170px;border-radius: 0;background-color: #001ED2;color:white;" onclick="reset()" />
+                </div>
+            </div>        
+
+            
+        </div>
+
+        @*<div class="col-xs-12 col-sm-6">
+
+
+
+
+                <select id="Auditee" class="form-control form-multiselect-city" multiple="multiple" name="AuditeeName" placeholder="Select Option" required="required">
+                    @foreach (var item in ViewBag.SubCatlist)
+                    {
+                            <option value="@item.code" selected>@item.Name</option>
+                    }
+                </select>
+
+
+
+
+            </div>*@
+    </div>
+
+    @*<div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <table class="table table-condensed table-responsive " id="tblusers" style="border:1px;font-size:12px;">
+                            <thead class="thead-dark" style="background-color:#EFEFEF;">
+                                <tr class="" style="background-color:grey; ">
+                                    <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Sr.No</th>
+
+                                    <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">CostCentre</th>
+                                    <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount</th>
+                                    <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount approved</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userbody" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: #001ED2;"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <table class="table table-condensed table-responsive " id="tblusers1" style="border:1px;font-size:12px;">
+                                <thead class="thead-dark" style="background-color:#EFEFEF;">
+                                    <tr class="" style="background-color:grey; ">
+                                        <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Sr.No</th>
+
+                                        <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">BranchName</th>
+                                        <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount</th>
+                                        <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount approved</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="userbody1" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: #001ED2;"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div>*@
+    <br />
+    <div class="row" style="text-align: left !important;">
+        <h3 style="display: inline; padding-left: 117px; font-family: 'TNG Pro'">Total Amount</h3>
+        <h3 style="display: inline;padding-left: 85px; font-family: 'TNG Pro'">Total Amount Approved</h3>
+    </div>
+    <div class="row" style="text-align: left !important;">
+        <input type="text" style="display: inline; border: 0; border-color: white; padding-left: 78px; font-family: 'TNG Pro'; font-size: 24px; text-align: center;" id="txttotalamount" readonly />
+        <input type="text" style="display: inline; border: 0; padding-left: 28px; font-family: 'TNG Pro'; font-size: 24px; text-align: center;" id="txttotalamountapproved" readonly />
+    </div>
+    <br />
+
+    @*<table style="width:100%">
+            <tr>
+                <td>Emil</td>
+                <td></td>
+                <td>Linus</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>14</td>
+                <td>10</td>
+            </tr>
+        </table>*@
+    <div class="table-container">
+        <div style="display:flex;">
+            <div class="table">
+                <table class="table table-condensed table-responsive " id="tblusers" style="border:1px;font-size:12px;">
+                    <thead class="thead-dark" style="background-color:#EFEFEF;">
+                        <tr class="" style="background-color:grey; ">
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Sr.No</th>
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">CostCentre</th>
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount</th>
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount approved</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userbody" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: #001ED2;"></tbody>
+                </table>
+            </div>
+
+            <div class="table">
+                <table class="table table-condensed table-responsive " id="tblusers1" style="border:1px;font-size:12px;">
+                    <thead class="thead-dark" style="background-color:#EFEFEF;">
+                        <tr class="" style="background-color:grey; ">
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Sr.No</th>
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">BranchName</th>
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount</th>
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount approved</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userbody1" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: #001ED2;"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <div class="col-lg-3" id="pieChart" style="width: 500px; height: 300px;">
+
+                </div>
+            </div>
+            <div>
+                <div class="col-lg-3" id="pieChart1" style="width:350px; height:300px;margin-left:17%">
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div style="display:flex">
+        <div class="table" style="max-width:62%;">
+            <table class="table table-condensed table-responsive " id="tblusers2" style="border:1px;font-size:12px;">
+                <thead class="thead-dark" style="background-color:#EFEFEF;">
+                    <tr class="" style="background-color:grey; ">
+                        <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Sr.No</th>
+                        <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Employee Name</th>
+                        <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount</th>
+                        <th scope="col" style="font-size: 14px;font-family:'TNG Pro';">Total Amount approved</th>
+                    </tr>
+                </thead>
+                <tbody id="userbody2" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: #001ED2;"></tbody>
+            </table>
+        </div>
+        <div>
+            <div class="col-lg-3" id="pieChart2" style="width:350px; height: 280px;margin-left:25%">
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    @*<div class="row">
+
+            <div class="col-lg-3" id="pieChart1" style="width: 300px; height: 300px;">
+
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-lg-3" id="pieChart2" style="width: 500px; height: 300px;">
+
+            </div>
+        </div>*@
+    @*</div>*@
+
+</body>
+
+@*<script>
+        var jQuery3_6 = jQuery.noConflict(true);
+    </script>*@
+
+<script>
+
+
+    $(document).ready(function () {
+        debugger;
+        Bind_CostCenterdata();
+        pie();
+        Bind_Branchdata();
+        Employeedata();
+        Employeementpie();
+        Typepiechart();
+        BindTotaldata();
+    });
+
+
+
+    //Bind cost center total amount and approve amount
+    function Bind_CostCenterdata() {
+        @*url: "@Url.Action("TravelExpense","TravelExpenseDashboard")",*@
+        debugger;
+        $.ajax({
+            url: "/TravelExpenseDashboard/TravelExpense",
+            type: "get",
+            DataType: "json",
+            async: false,
+            contenttype: "application/json; charset=utf-8",
+            success: function (result) {
+                debugger;
+                //("success");
+                BindCostCenter(result);
+            },
+
+            error: function (result) {
+                debugger;
+                //(result+"something went wrong");
+            }
+        });
+    }
+
+    function BindCostCenter(result) {
+        debugger;
+        var parsed = $.parseJSON(result);
+        //$("#userbody").empty();
+        var table = $("#tblusers").DataTable(); // Initialize DataTable
+        table.clear().draw(); // Clear existing data
+        $.each(parsed, function (i, item) {
+            //var BranchId = item.BranchId;
+
+            var formattedNumber = item.ApprovedAmount.toLocaleString('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+            });
+
+            var formattedNumber1 = item.TotalAmount.toLocaleString('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+            });
+            tr = $('<tr/>');
+            tr.append("<td>" + (parseInt(i) + 1) + "</td>");
+
+            tr.append("<td><a href=# class='branch-link'  style='color: #001ED2;' onclick=OnclickCostcenterpie('" + item.Cost_Center + "');OnclickfilteringBranchtable('" + item.Cost_Center + "');OnclickfilteringEmployeetable('" + item.Cost_Center + "');OnclickfilteringEmployeement('" + item.Cost_Center + "');OnclickfilteringType('" + item.Cost_Center + "');>" + item.Cost_Center + " </td>");
+            tr.append("<td>" + formattedNumber1 + "</td>");
+            tr.append("<td>" + formattedNumber + "</td>");
+
+            //    $("#tblusers").append(tr);
+            //})
+            //$("#tblusers").DataTable();
+            table.row.add(tr); // Add a new row to the DataTable
+        });
+        //$("#tblusers2").DataTable();
+        table.draw(); // Redraw the DataTable
+    }
+
+
+    //pie chart for costcenter ,approve amount,total amount
+    function pie() {
+
+
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("TravelExpensePieChart", "TravelExpenseDashboard")",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfunc(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+
+
+    //onclick costcenter binding pie
+    //pie chart for costcenter ,approve amount,total amount
+    function OnclickCostcenterpie(Cost_Center) {
+        debugger
+
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        var costcenter = Cost_Center;
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("TravelExpenseFilterPieChart", "TravelExpenseDashboard")",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            asyn: false,
+            data: { costcenter: costcenter ,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfunc(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function successfunc(jsondata) {
+        var data = {};
+        var activity = [];
+        jsondata.forEach(function (e) {
+            debugger;
+            activity.push(e.ExpenseType);
+            data[e.ExpenseType] = e.ExpenseTypeCount;
+        });
+        var chart = c3.generate({
+
+            bindto: '#pieChart',
+            data: {
+                json: [data],
+                keys: {
+                    value: activity,
+                },
+                type: 'pie'
+            },
+            color: {
+                pattern: ['#00EBC8', '#8CF000', '#ffEB00', '#FF5733', '#C70039', '#900C3F', '#581845',
+                '#6A0572', '#AB83A1', '#2A9D8F', '#E76F51', '#F4A261', '#E9C46A', '#B4CCB9',
+                '#264653', '#457B9D', '#A8DADC', '#FDCB6E', '#E5989B', '#6D6875', '#355070',
+                '#6D6875', '#7067CF', '#7952B3', '#A0522D', '#F28D35', '#F67280', '#C06C84',
+                '#355C7D', '#D5A021', '#81B622', '#F35427', '#01A4A4', '#61C0BF', '#BADC58',
+                '#F9EBEA', '#F8D7DA', ]
+                //pattern: ['#00EBC8', '#8CF000', '#ffEB00',]
+            },
+            pie: {
+                label: {
+                    format: function (value, ratio, id) {
+                        return value;
+                    }
+                }
+            }
+        });
+    }
+
+
+    //branch data binding
+
+    function Bind_Branchdata() {
+        @*url: "@Url.Action("TravelExpense","TravelExpenseDashboard")",*@
+        debugger;
+        $.ajax({
+            url: "/TravelExpenseDashboard/TravelExpenseBranchwise",
+            type: "get",
+            DataType: "json",
+            contenttype: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                debugger;
+                //("success !");
+                BindBranch(result);
+            },
+
+            error: function (result) {
+                debugger;
+                //(result+"something went wrong");
+            }
+        });
+    }
+
+
+    function BindBranch(result) {
+        debugger;
+        var parsed = $.parseJSON(result);
+        //$("#userbody1").empty();
+        var table = $("#tblusers1").DataTable(); // Initialize DataTable
+        table.clear().draw(); // Clear existing data
+        $.each(parsed, function (i, item) {
+            //var BranchId = item.BranchId;
+            var formattedNumber = item.ApprovedAmount.toLocaleString('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+            });
+
+            var formattedNumber1 = item.TotalAmount.toLocaleString('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+            });
+            tr = $('<tr/>');
+            tr.append("<td>" + (parseInt(i) + 1) + "</td>");
+
+            tr.append("<td><a href=# class='branch-link'onclick=OnclickBranchfilteringCostcenter('" + item.BranchCode + "');OnclickBranchfilteringEmployee('" + item.BranchCode + "');OnclickBranchfilteringTotalamount('" + item.BranchCode + "');OnclickBranchfilteringEmpenseTypePie('" + item.BranchCode + "');OnclickBranchfilteringTypePie('" + item.BranchCode + "');OnclickBranchfilteringEmployeement_Categoray('" + item.BranchCode + "');>" + item.Branch_Name + "</td>");
+            tr.append("<td>" + formattedNumber1 + "</td>");
+            tr.append("<td>" + formattedNumber + "</td>");
+            //    $("#tblusers1").append(tr);
+            //})
+            //$("#tblusers1").DataTable();
+            table.row.add(tr); // Add a new row to the DataTable
+        });
+        //$("#tblusers2").DataTable();
+        table.draw(); // Redraw the DataTable
+    }
+
+
+    //binding employee and its amount
+
+    function Employeedata() {
+        @*url: "@Url.Action("TravelExpense","TravelExpenseDashboard")",*@
+        debugger;
+        $.ajax({
+            url: "/TravelExpenseDashboard/TravelExpenseEmployeeWise",
+            type: "get",
+            DataType: "json",
+            contenttype: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                debugger;
+                //("success...");
+                BindEmployee(result);
+            },
+            error: function (result) {
+                debugger;
+                //(result+"something went wrong");
+            }
+        });
+    }
+
+
+    function BindEmployee(result) {
+        debugger;
+        var parsed = $.parseJSON(result);
+        var table = $("#tblusers2").DataTable(); // Initialize DataTable
+        table.clear().draw(); // Clear existing data
+        //var parsed = $.parseJSON(result);
+        //$("#userbody2").empty();
+        $.each(parsed, function (i, item) {
+            //var BranchId = item.BranchId;
+            var formattedNumber = item.ApprovedAmount.toLocaleString('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+            });
+
+            var formattedNumber1 = item.TotalAmount.toLocaleString('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+            });
+            tr = $('<tr/>');
+            tr.append("<td>" + (parseInt(i) + 1) + "</td>");
+            tr.append("<td><a href=# class='branch-link' onclick=OnclickEmployeefilteringCostcentertable('" + item.PK_UserID + "');OnclickEmployeefilteringEmpenseType('" + item.PK_UserID + "');OnclickEmployeefilteringType('" + item.PK_UserID + "');OnclickEmployeefilteringEmployeementCategoray('" + item.PK_UserID + "');OnclickEmployeefilteringBranchTable('" + item.PK_UserID + "');>" + item.EmployeeName + "</td>");
+            tr.append("<td>" + formattedNumber1 + "</td>");
+            tr.append("<td>" + formattedNumber + "</td>");
+            //$("#tblusers2").append(tr);
+            table.row.add(tr); // Add a new row to the DataTable
+        });
+        //$("#tblusers2").DataTable();
+        table.draw(); // Redraw the DataTable
+    }
+
+
+
+
+
+    //pie chart binding for employeemnet categoray
+
+
+    function Employeementpie() {
+        debugger
+        //var costcenter=Cost_Center;
+        $.ajax({
+            url: "@Url.Action("TravelExpenseEmployeecategary", "TravelExpenseDashboard")",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfuncEmployeementcategoray(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function successfuncEmployeementcategoray(jsondata) {
+
+        var data = {};
+        var activity = [];
+        jsondata.forEach(function (e) {
+            debugger;
+            var formattedNumber = e.DescriptionCount.toLocaleString('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+            });
+
+            activity.push(e.Description);
+            data[e.Description] = e.DescriptionCount;
+        });
+        var chart = c3.generate({
+
+            bindto: '#pieChart1',
+            data: {
+                json: [data],
+                keys: {
+                    value: activity,
+                },
+                type: 'pie'
+            },
+            color: {
+                pattern: ['#00EBC8', '#8CF000', '#ffEB00', '#FF5733', '#C70039', '#900C3F', '#581845',
+                '#6A0572', '#AB83A1', '#2A9D8F', '#E76F51', '#F4A261', '#E9C46A', '#B4CCB9',
+                '#264653', '#457B9D', '#A8DADC', '#FDCB6E', '#E5989B', '#6D6875', '#355070',
+                '#6D6875', '#7067CF', '#7952B3', '#A0522D', '#F28D35', '#F67280', '#C06C84',
+                '#355C7D', '#D5A021', '#81B622', '#F35427', '#01A4A4', '#61C0BF', '#BADC58',
+                '#F9EBEA', '#F8D7DA', ]
+                //pattern: ['#00EBC8', '#8CF000', '#ffEB00',]
+            },
+            pie: {
+                label: {
+                    format: function (value, ratio, id) {
+                        return value;
+                    }
+                }
+            }
+        });
+
+    }
+
+
+    //piechart for type
+
+
+    function Typepiechart() {
+        debugger
+        //var costcenter=Cost_Center;
+        $.ajax({
+            url: "@Url.Action("ExpenseItemTypePieChart", "TravelExpenseDashboard")",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfuncpie(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function successfuncpie(jsondata) {
+        var data = {};
+        var activity = [];
+        jsondata.forEach(function (e) {
+            debugger;
+
+            activity.push(e.Type);
+            data[e.Type] = e.Typecount;
+        });
+        var chart = c3.generate({
+
+            bindto: '#pieChart2',
+            data: {
+                json: [data],
+                keys: {
+                    value: activity,
+                },
+                type: 'pie'
+            },
+
+            color: {
+
+                pattern: ['#00EBC8', '#8CF000', '#ffEB00', '#FF5733', '#C70039', '#900C3F', '#581845',
+                '#6A0572', '#AB83A1', '#2A9D8F', '#E76F51', '#F4A261', '#E9C46A', '#B4CCB9',
+                '#264653', '#457B9D', '#A8DADC', '#FDCB6E', '#E5989B', '#6D6875', '#355070',
+                '#6D6875', '#7067CF', '#7952B3', '#A0522D', '#F28D35', '#F67280', '#C06C84',
+                '#355C7D', '#D5A021', '#81B622', '#F35427', '#01A4A4', '#61C0BF', '#BADC58',
+                '#F9EBEA', '#F8D7DA', ]
+                //pattern: ['#00EBC8', '#8CF000', '#ffEB00',]
+            },
+            pie: {
+                label: {
+                    format: function (value, ratio, id) {
+                        return value;
+                    }
+                }
+            }
+        });
+
+    }
+
+
+
+    function BindTotaldata() {
+
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("BindingTotaldata", "TravelExpenseDashboard")",
+            data: {},
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                debugger;
+                var parsed = $.parseJSON(result);
+
+                var formattedNumber = parsed[0].ApprovedAmount.toLocaleString('en-IN', {
+                    style: 'currency',
+                    currency: 'INR',
+                    minimumFractionDigits: 0,
+                });
+
+                var formattedNumber1 = parsed[0].TotalAmount.toLocaleString('en-IN', {
+                    style: 'currency',
+                    currency: 'INR',
+                    minimumFractionDigits: 0,
+                });
+
+                $('#txttotalamountapproved').val(formattedNumber);
+                $('#txttotalamount').val(formattedNumber1);
+
+                //$('#txttotalamountapproved').val(parsed[0].ApprovedAmount);
+                //$('#txttotalamount').val(parsed[0].TotalAmount);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    // costcenter onclick  filtering branch table
+
+
+    function OnclickfilteringBranchtable(costcenter) {
+        debugger
+        var costcenter = costcenter;
+
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+
+        //if (Fromdate != '' && Todate != '' || EmployeementCategoray != '' || UserRole != '') {
+        //    // All four variables are not null, call a function or perform an action
+        //    FilterDatewiseBranch();
+        //    FilterDatewiseEmployee();
+        //}
+        $.ajax({
+            url: "/TravelExpenseDashboard/BindingFirstTable",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { costcenter: costcenter, Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            async: false,
+            success: function (result) {
+                debugger;
+                //var numberdata = JSON.parse(result);
+                BindBranch(result);
+                filterBindTotaldata(result);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    //onclick cost center filtering employee table
+    function OnclickfilteringEmployeetable(costcenter) {
+        debugger
+        var costcenter = costcenter;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/BindingSecondTable",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            async: false,
+            data: { costcenter: costcenter,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                //var numberdata = JSON.parse(result);
+                BindEmployee(result);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function filterBindTotaldata(result) {
+
+
+        var parsed = $.parseJSON(result);
+        var formattedNumber = parsed[0].ApprovedAmount.toLocaleString('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            minimumFractionDigits: 0,
+        });
+        var formattedNumber1 = parsed[0].TotalAmount.toLocaleString('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            minimumFractionDigits: 0,
+        });
+        $('#txttotalamountapproved').val('');
+        $('#txttotalamount').val('');
+        $('#txttotalamountapproved').val(formattedNumber);
+        $('#txttotalamount').val(formattedNumber1);
+
+
+
+        //$('#txttotalamountapproved').val(parsed[0].ApprovedAmount);
+        //$('#txttotalamount').val(parsed[0].TotalAmount);
+
+    }
+
+    ////onclick costcenter binding branchtable
+    //function OnclickCostFilteringTable() {
+    //    debugger;
+
+    //}
+
+
+    function OnclickfilteringEmployeement(costcenter) {
+        debugger
+        var costcenter = costcenter;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/FilterEmployemnetPie",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            async: false,
+            data: { costcenter: costcenter,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfuncEmployeementcategoray(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+    //onclick on costcenter filtering type
+    function OnclickfilteringType(costcenter) {
+        debugger
+        var costcenter = costcenter;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/FilterTypePie",
+            type: "get",
+            async: false,
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+
+            data: { costcenter: costcenter,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfuncpie(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+
+    //onclick on employeeTable filtering costcenter table
+    function OnclickEmployeefilteringCostcentertable(PK_UserID) {
+        debugger
+        var PK_UserID = PK_UserID;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filteringcostcentertableonEmployeeclick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { costcenter: PK_UserID,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                // var numberdata = JSON.parse(result);
+                BindCostCenter(result);
+                filterBindTotaldata(result);
+                BindBranch(result);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    //onclick employee filtering Expense type
+    function OnclickEmployeefilteringEmpenseType(PK_UserID) {
+        debugger
+        var PK_UserID = PK_UserID;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filteringExpenseTypeonEmployeeclick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { Pk_UserrId: PK_UserID, Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfunc(numberdata);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    //onclick employee binding Type pie
+    function OnclickEmployeefilteringType(PK_UserID) {
+        debugger
+        var PK_UserID = PK_UserID;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filteringTypeonEmployeeclick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { Pk_UserrId: PK_UserID,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfuncpie(numberdata);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+    //onclick employee Employement categoray binding
+    function OnclickEmployeefilteringEmployeementCategoray(PK_UserID) {
+        debugger
+        var PK_UserID = PK_UserID;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filteringEmployeementTypeonEmployeeclick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { Pk_UserrId: PK_UserID,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfuncEmployeementcategoray(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+
+    //on click branch binding costcenter
+
+    function OnclickBranchfilteringCostcenter(BranchCode) {
+        debugger
+        var BranchCode = BranchCode;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filterCostcenteronBranchClick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { BranchCode: BranchCode,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                // var numberdata = JSON.parse(result);
+                BindCostCenter(result);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function OnclickBranchfilteringEmployee(BranchCode) {
+        debugger
+        var BranchCode = BranchCode;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filterEmployeeonBranchClick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { BranchCode: BranchCode,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                // var numberdata = JSON.parse(result);
+                BindEmployee(result);
+                $("#tblusers2").DataTable();
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function OnclickBranchfilteringTotalamount(BranchCode) {
+        debugger
+        var BranchCode = BranchCode;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filterTotalAmountonBranchClick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { BranchCode: BranchCode,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                // var numberdata = JSON.parse(result);
+                filterBindTotaldata(result);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+
+    //branch on click binding expense pie
+
+    //onclick employee filtering Expense type
+    function OnclickBranchfilteringEmpenseTypePie(BranchCode) {
+        debugger
+        var BranchCode = BranchCode;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filterExpenseBranchClick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { BranchCode: BranchCode,Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfunc(numberdata);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    //on click employee filtering branch table
+
+
+    function OnclickEmployeefilteringBranchTable(Pk_userid) {
+        debugger
+        var Pk_userid = Pk_userid;
+        $.ajax({
+            url: "/TravelExpenseDashboard/filterBranchTableOnClick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { Pk_userid: Pk_userid },
+            success: function (result) {
+                debugger;
+                BindBranch(result);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    //onclick employee binding Type pie
+    function OnclickBranchfilteringTypePie(BranchCode) {
+        debugger
+        var BranchCode = BranchCode;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filterTypeBranchClick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { BranchCode: BranchCode, Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfuncpie(numberdata);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+    //onclick branch Employement categoray pie binding
+    function OnclickBranchfilteringEmployeement_Categoray(BranchCode) {
+        debugger
+        var BranchCode = BranchCode;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "/TravelExpenseDashboard/filterEmployementBranchClick",
+            type: "get",
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { BranchCode: BranchCode, Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString },
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfuncEmployeementcategoray(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+
+
+
+    //function AddComma(e) {
+    //    debugger;
+    //    var id = e;
+    //    var value = id;
+    //    var valuebeforedot = value.split('.')[0];
+    //    var valueafterdot = value.split('.')[1];
+    //    var res;
+    //    if (valuebeforedot.length > 3) {
+    //        var lastThree = valuebeforedot.substring(valuebeforedot.length - 3);
+    //        var otherNumbers = valuebeforedot.substring(0, valuebeforedot.length - 3);
+    //        if (otherNumbers != '') {
+    //            lastThree = ',' + lastThree;
+    //            if (valueafterdot != undefined && valuebeforedot != '') {
+    //                res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + '.' + valueafterdot;
+    //            }
+    //            else {
+    //                res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+    //            }
+    //            $('#' + e.id).val(res);
+    //        }
+    //    }
+    //}
+
+    //});
+
+    //filter costcenter table from datewise and rolewise
+
+    function FilterDatewisecostcenter() {
+        debugger;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+        var EmployeementCategoray = $("#Auditee").val(); // Assuming it's an array of strings with double quotes
+        var EmployeementCategorayString = EmployeementCategoray.toString();
+        var UserRole = $("#Auditee1").val(); // Assuming it's an array of strings with double quotes
+        var UserRoleString = UserRole.toString();
+
+        $.ajax({
+            url: "@Url.Action("DatewiseCosecenterfilter", "TravelExpenseDashboard")",
+            type: "post",
+            datatype: "json",
+            contenttype: "application/json; charset=utf-8",
+            data: {
+                Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString
+            },
+            success: function (result) {
+                debugger;
+                BindCostCenter(result);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        })
+    }
+
+
+
+    //filter branch table from datewise and rolewise
+    function FilterDatewiseBranch() {
+        debugger;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "@Url.Action("DatewiseBranchfilter", "TravelExpenseDashboard")",
+            type: "post",
+            datatype: "json",
+            async: false,
+            contenttype: "application/json; charset=utf-8",
+            data: {
+                Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString
+            },
+            success: function (result) {
+                debugger;
+                BindBranch(result);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        })
+    }
+
+    //filter Employee table from datewise and rolewise
+    function FilterDatewiseEmployee() {
+        debugger;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "@Url.Action("DatewiseEmployeefilter", "TravelExpenseDashboard")",
+            type: "post",
+            datatype: "json",
+            async:false,
+        contenttype: "application/json; charset=utf-8",
+        data: {
+            Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString
+        },
+        success: function (result) {
+            debugger;
+            BindEmployee(result);
+        },
+        error: function (error) {
+            console.log("error occurred during ajax call:", error);
+        }
+    })
+    }
+
+
+    //filter Expense table from datewise and rolewise
+    function FilterDatewiseExpense() {
+        debugger;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+        url: "@Url.Action("DatewiseExpensefilter", "TravelExpenseDashboard")",
+        type: "post",
+        datatype: "json",
+        async:false,
+        contenttype: "application/json; charset=utf-8",
+        data: {
+            Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString
+        },
+        success: function (result) {
+            debugger;
+            var numberdata = JSON.parse(result);
+
+            successfunc(numberdata);
+        },
+        error: function (error) {
+            console.log("error occurred during ajax call:", error);
+        }
+    })
+    }
+
+
+    //filter Type table from datewise and rolewise
+    function FilterDatewiseType() {
+        debugger;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "@Url.Action("DatewiseTypefilter", "TravelExpenseDashboard")",
+            type: "post",
+        datatype: "json",
+        async:false,
+        contenttype: "application/json; charset=utf-8",
+        data: {
+            Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString
+        },
+        success: function (result) {
+            debugger;
+            var numberdata = JSON.parse(result);
+
+            successfuncpie(numberdata);
+        },
+        error: function (error) {
+            console.log("error occurred during ajax call:", error);
+        }
+    })
+    }
+
+    //filter Employement table from datewise and rolewise
+    function FilterDatewiseEmployeement() {
+        debugger;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "@Url.Action("DatewiseEmployeementfilter", "TravelExpenseDashboard")",
+            type: "post",
+        datatype: "json",
+        async:false,
+        contenttype: "application/json; charset=utf-8",
+        data: {
+            Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString
+        },
+        success: function (result) {
+            debugger;
+            var numberdata = JSON.parse(result);
+            successfuncEmployeementcategoray(numberdata);
+        },
+        error: function (error) {
+            console.log("error occurred during ajax call:", error);
+        }
+    })
+    }
+
+
+    //filter Employement table from datewise and rolewise
+    function FilterDatewiseTotal() {
+        debugger;
+        var Fromdate = $("#Fromdate").val();
+        var Todate = $("#Todate").val();
+
+        var EmployeementCategoray = $("#Auditee").val();
+        var EmployeementCategorayString = EmployeementCategoray.join(',');
+        var UserRole = $("#Auditee1").val();
+        var UserRoleString = UserRole.join(',');
+        $.ajax({
+            url: "@Url.Action("DatewiseTotal", "TravelExpenseDashboard")",
+            type: "post",
+        datatype: "json",
+        async:false,
+        contenttype: "application/json; charset=utf-8",
+        data: {
+            Fromdate: Fromdate, Todate: Todate, EmployeementCategoray: EmployeementCategorayString, UserRole: UserRoleString
+        },
+        success: function (result) {
+            debugger;
+            filterBindTotaldata(result);
+        },
+        error: function (error) {
+            console.log("error occurred during ajax call:", error);
+        }
+    })
+    }
+
+
+
+    function reset() {
+        var toDateInput = document.getElementById("Fromdate");
+
+        toDateInput.value = "";
+        var toDateInput1 = document.getElementById("Todate");
+
+        toDateInput1.value = "";
+        var toDateInput2 = document.getElementById("Auditee");
+
+        toDateInput2.value = "";
+        var toDateInput3 = document.getElementById("Auditee1");
+
+        toDateInput3.value = "";
+
+        Bind_CostCenterdata();
+        pie();
+        Bind_Branchdata();
+        Employeedata();
+        Employeementpie();
+        Typepiechart();
+        BindTotaldata();
+    }
+</script>

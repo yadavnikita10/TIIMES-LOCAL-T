@@ -1,0 +1,159 @@
+﻿@model TuvVision.Models.ExpeditingModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "ExpeditingReportList";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+@helper Edit(TuvVision.Models.ExpeditingModel Report)
+{
+    if (Report.Edit == "1")
+    {
+    <a href="@Url.Action("ExpeditingReport", "Expediting", new {@PK_CALL_ID = Report.PK_call_id })" title="Edit"><i class="fa fa-pencil"></i></a>
+    }
+    else
+    {
+
+    }
+}
+@helper CustomRenderingOfReport1(TuvVision.Models.ExpeditingModel ex)
+        {
+    <a href="~/ExpeditingDocument/@ex.ReportNo" download="~/ExpeditingDocument/@ex.ReportNo" style="color:#001ED2;">
+        @*@Report.Report*@
+        @ex.ReportNo
+    </a>
+}
+
+
+
+
+
+
+@using (Html.BeginForm())
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+                <form method="post">
+                    @Html.HiddenFor(m => m.PK_call_id)
+
+                    <div class="col-xs-12">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Expediting Reports</h3>
+                        <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex","Expediting")'"
+                                style="border:none;">
+                            Export To Excel
+                        </button>
+
+                    </div><!-- /.col -->
+                </form>
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+            <div class="col-xs-12">
+
+            </div><!-- /.data table col -->
+
+            <div class="col-xs-12">
+
+                <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                    <tr>
+                        <td>
+                            @(Html
+                            .Grid(Model.lst1)
+                            .Build(columns =>
+                            {
+
+                                columns.Add().Titled("Edit").RenderedAs(c => Edit(c)).Sortable(true);
+                                columns.Add(c => c.ReportName).Titled("Report No");
+                                columns.Add(c => c.ReportNo).Titled("Download File").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true);
+                                columns.Add(c => c.Call_no).Titled("Call No");
+                                columns.Add(c => c.Sub_Job_No).Titled("Sub-Job No");
+                                columns.Add(c => c.Sap_no).Titled("Job No");
+                                columns.Add(c => c.Project_Name).Titled("Project Name");
+                                columns.Add(c => c.Customer_Name).Titled("Customer Name");
+                                columns.Add(c => c.VendorName).Titled("Vendor Name");
+                                columns.Add(c => c.Po_No).Titled("PO No");
+                                columns.Add(c => c.Inspector).Titled("Inspector Name");
+                                columns.Add(c => c.InspectionDate).Titled("Inspection Date");
+                                columns.Add(c => c.ReportDate).Titled("Report Date");
+                                columns.Add(c => c.Product_item).Titled("Item to be inspected");
+                                columns.Add(c => c.Originating_Branch).Titled("Originating Branch");
+                                columns.Add(c => c.Executing_branch).Titled("Executing Branch");
+                                columns.Add(c => c.Pk_RM_id).Titled("PK_RM_ID");
+
+
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                            )
+
+
+                        </td>
+                    </tr>
+                </table>
+
+
+
+            </div>
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+}
+
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+</script>
+
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+
+
+</script>

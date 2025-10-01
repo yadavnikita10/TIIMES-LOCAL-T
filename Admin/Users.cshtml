@@ -1,0 +1,276 @@
+﻿@using System.Configuration;
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+@using Microsoft.Owin.Security;
+@{
+    ViewBag.Title = "Users";
+    //Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<h2>Users</h2>
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+
+
+        </div>
+    </div>
+    <div class="clearfix">
+    </div>
+    <div class="col-lg-2">
+        @*<input type="button" id="btnExport" value="Export To Excel" onclick="tableToExcel('dvContainer', 'User List');" />*@
+        <button value="Print Div Contents" id="btnPrint" onclick="printDiv('dvContainer')" style="right:0; top:15px; z-index:1000; cursor:pointer;"><i class="fa icon-print" style="color:#C50A39; font-size:18px;"></i></button>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <form id="demo-form2" method="post" enctype="multipart/form-data">
+                    <div class="col-sm-6 col-xs-12 col-md-offset-3">
+
+
+                        <div class="form-group">
+                            <label class="control-label" for="first-name">
+                                User Type
+                            </label>
+
+                            @Html.DropDownList("RoleList", ViewBag.RoleList as IEnumerable<SelectListItem>, "---SELECT---", new { @class = "form-control", @id = "Role_ID" })
+                        </div>
+
+
+                    </div>
+                    @*<div class="form-group">
+                            Services Category<br />
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3 text-center">
+                                @Html.DropDownList("MassEventList", ViewBag.MassEventList as IEnumerable<SelectListItem>, "----SELECT----", new { @class = "form-control", @id = "Event_Cal_ID" })
+
+
+                            </div>
+                        </div>*@
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3 text-center">
+                            <br />
+                            <button type="submit" class="btn btn-success">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="x_title">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a href=""><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                        </li>
+                        <li>
+                            <h2>
+                                <a href="@Url.Action("AddUpdateUsers", "Admin")" class="btn btn-sm btn-primary">
+                                    Add User
+                                </a>
+                            </h2>
+                        </li>
+                    </ul>
+                    <div class="clearfix">
+                    </div>
+                </div>
+                <div class="x_content">
+                    @if (TempData["Message"] == "S")
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <a class="close" onclick="$('.alert').hide()">×</a> User Saved Successfully
+                        </div>
+                    }
+                    else if (TempData["Message"] == "E")
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <a class="close" onclick="$('.alert').hide()">×</a> User Updated Successfully.
+                        </div>
+                    }
+                    else if (TempData["Message"] == "D")
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <a class="close" onclick="$('.alert').hide()">×</a> User Deleted Successfully.
+                        </div>
+                    }
+                    else if (TempData["Message"] == "EX")
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <a class="close" onclick="$('.alert').hide()">×</a> User Already Exist.
+                        </div>
+                    }
+                    <div id="dvContainer">
+                        <div class="hide" id="headingT">
+                            <br />
+                            <center>
+                                <h3>
+                                    @*@ConfigurationManager.AppSettings["Temple_Name"].ToString()*@
+                                </h3>
+                                <h3>
+                                    All Users
+
+                                </h3>
+                                <h4></h4>
+                            </center>
+                        </div>
+                        <table id="example" class="table table-striped responsive-utilities jambo_table">
+                            <thead>
+                                <tr class="headings">
+                                    <th>
+                                        Sr No.
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Role
+                                    </th>
+                                    <th>
+                                        User Name
+                                    </th>
+                                    @*<th>
+                                            Designation
+                                        </th>*@
+                                    <th>
+                                        Mobile No
+                                    </th>
+                                    @*<th>
+                                            Email ID
+                                        </th>*@
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Created Date
+                                    </th>
+                                    <th>
+                                        Created By
+                                    </th>
+                                    <th>
+                                        Modified Date
+                                    </th>
+                                    <th>
+                                        Modified By
+                                    </th>
+                                    <th class="NoLast" id="Editsection">
+                                        <span class="nobr">Action</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{int rowNo = 0;
+                                    foreach (var item in ViewData["UsersList"] as IEnumerable<Vision.ViewModel.AspNetUsersViewModel>)
+                                    {
+
+
+                                        <tr class="even pointer">
+                                            <td class="a-center ">
+                                                @(rowNo += 1)
+                                            </td>
+                                            <td class="">
+                                                @item.FirstName
+                                            </td>
+                                            <td class="">
+                                                @item.RoleName
+                                            </td>
+                                            <td class="">
+                                                @item.UCName
+                                            </td>
+                                            @*<td class="">
+                                                    @item.Designation
+                                                </td>*@
+                                            <td class="">
+                                                @item.MobileNo
+                                            </td>
+                                            @*<td class="">
+                                                    @item.Email_ID
+                                                </td>*@
+                                            <td class="">
+                                                @item.StatusName
+                                            </td>
+                                            <td class="">
+                                                @Convert.ToDateTime(item.Created_Date).ToString("dd-MMM-yyyy")
+                                            </td>
+                                            <td class="">
+                                                @item.UCName
+                                            </td>
+                                            <td class="">
+                                                @((item.Modified_Date == null) ? "" : Convert.ToDateTime(item.Modified_Date).ToString("dd-MMM-yyyy"))
+                                            </td>
+                                            <td class="a-right a-right ">
+                                                @item.UMName
+                                            </td>
+                                            <td class="last" id="Editing">
+                                                <a href="@Url.Action("AddUpdateUsers", "Admin", new { id = @item.Id })" class="btn btn-info btn-xs">
+                                                    <i class="fa fa-pencil"></i>&nbsp;Edit
+                                                </a>  &nbsp; <a href="@Url.Action("AllResetPassword", "Admin", new { id = @item.Id })" class="btn btn-info btn-xs">
+                                                    <i class="fa fa-pencil"></i>&nbsp;Reset Password
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+    </div>
+</div>
+
+
+
+@*@section Bottom{
+
+    @Html.Partial("_PagingTable")
+}*@
+
+<script>
+    var tableToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+          , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+          , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+          , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+        return function (table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()
+</script>
+<script>
+    var k = jQuery.noConflict();
+    function printDiv(divName) {
+        k("#example_filter").addClass('hide');
+        k("#example_length").addClass('hide');
+        k("#example_paginate").addClass('hide');
+        k("#example_info").addClass('hide');
+        k("#headingT").removeClass('hide');
+        k("#headingTW").removeClass('hide');
+        k(".NoLast").addClass('hide');
+        k(".last").addClass('hide');
+        k(".view").addClass('hide');
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+        k("#example_filter").removeClass('hide');
+        k("#example_length").removeClass('hide');
+        k("#example_paginate").removeClass('hide');
+        k("#example_info").removeClass('hide');
+        k("#headingT").addClass('hide');
+        k("#headingTW").addClass('hide');
+        k(".NoLast").removeClass('hide');
+        k(".last").removeClass('hide');
+        k(".view").removeClass('hide');
+    }
+</script>
+
+

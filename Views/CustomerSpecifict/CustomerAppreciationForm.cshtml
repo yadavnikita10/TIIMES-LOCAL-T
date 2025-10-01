@@ -1,0 +1,718 @@
+﻿@model TuvVision.Models.ModelCustomerAppreciation
+@{
+    ViewBag.Title = "CustomerAppreciationForm";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    List<string> EditProdName = ViewBag.EditproductName as List<string>;
+}
+
+
+<style>
+    .ui-widget-header {
+        background: #001ED2 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+    /*-- Delete color-profile --*/
+    ul.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+    /*EndCode*/
+    /*-- Delete color-profile --*/
+    ul.AttachmentFormat {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.AttachmentFormat > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.AttachmentFormat > li a.title1 {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.AttachmentFormat > li a.deleteItemFormat {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+    /*EndCode*/
+</style>
+
+
+@*DATEPICKER*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+<script>
+    $(function () {
+        $(".CallRecivedate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+
+                        <div class="col-xs-12 text-right">
+                            <a href="@Url.Action("ListCustomerAppreciation", "CustomerSpecifict")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Customer Appreciation Form</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Number (TIIMES UIN): </label>
+                                                            @Html.TextBoxFor(model => model.UIIN, htmlAttributes: new { placeholder = "UIIN", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.UIIN, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group addCSS">
+                                                            <label>Branch :</label>
+
+                                                            @Html.DropDownListFor(model => model.Branch, (IEnumerable<SelectListItem>)ViewData["BranchName"], "---Select Branch---", new { @id = "ddlBranch", @class = "form-control" })
+
+                                                            @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    @*<div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Mode </label>
+                                                                @Html.TextBoxFor(model => model.Mode, new { @placeholder = "Mode", @class = "form-control", autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.Mode, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>*@
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Mode:</label>
+                                                            @Html.DropDownListFor(m => m.Mode, new List<SelectListItem>
+                                                                     {
+                                                                    new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                    new SelectListItem{ Text="E-Mail", Value = "E-Mail" },
+                                                                     new SelectListItem{ Text="Letter", Value = "Letter" },
+                                                                     new SelectListItem{ Text="Verbal", Value = "Verbal" },
+                                                                     new SelectListItem{ Text="Award", Value = "Award" },
+                                                                     new SelectListItem{ Text="Certificate", Value = "Certificate" },
+
+
+                                                           },
+
+                                                                     new { @class = "form-control", @id = "PT" })
+                                                            @Html.ValidationMessageFor(m => m.Mode, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Date Of Receipt </label>
+                                                            @Html.TextBoxFor(model => model.Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Date", @class = "form-control CallRecivedate ", autocomplete = "off" })
+                                                            @*@Html.TextBoxFor(model => model.Date_Of_Inspection, new { @placeholder = "Date Of Inspection", @class = "form-control" })*@
+                                                            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger validation-msg" })
+
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Job Number </label>
+                                                            @Html.TextBoxFor(model => model.JobNumberWithSubJob, new { @placeholder = "Job Number", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.JobNumberWithSubJob, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Project </label>
+                                                            @Html.TextBoxFor(model => model.ProjectName, new { @placeholder = "Project", @class = "form-control", autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Customer Name </label>
+                                                            @Html.TextBoxFor(model => model.CustomerName, htmlAttributes: new { placeholder = "Customer Name", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Vendor Name: </label>
+                                                            @Html.TextBoxFor(model => model.VendorName, htmlAttributes: new { placeholder = "Vendor Name", @class = "form-control", autocomplete = "off" })
+
+                                                            @Html.ValidationMessageFor(model => model.VendorName, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Sub Vendor Name: </label>
+                                                            @Html.TextBoxFor(model => model.SubVendorName, htmlAttributes: new { placeholder = "Sub Vendor Name", @class = "form-control", autocomplete = "off" })
+
+                                                            @Html.ValidationMessageFor(model => model.SubVendorName, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                @*<div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label> Employee Name:</label>
+
+                                                                @if (ViewBag.Userlist != null)
+                                                                {
+                                                                    @Html.DropDownListFor(m => m.EmployeeName, ViewBag.Userlist as IEnumerable<SelectListItem>, "--Select Employee Name--", new { @class = "form-control FirstName", id = 'a' })
+                                                                }
+                                                                    @Html.ValidationMessageFor(model => model.EmployeeName, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                    </div>*@
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Employee Name:</label><span style="color:#ff0000;">*</span>
+
+                                                            @if (ViewBag.check == "productcheck")
+                                                            {
+
+                                                                <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductListName" placeholder="Select Option" required="required">
+                                                                    @foreach (var item in ViewBag.ProjectTypeItems)
+                                                                    {
+
+
+                                                                        if (EditProdName.Contains(item.DAuditorCode))
+                                                                        {
+                                                                            <option value="@item.DAuditorCode" selected>@item.DAuditorName</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@item.DAuditorCode">@item.DAuditorName</option>
+                                                                        }
+
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            else
+                                                            {
+                                                                <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductListName" placeholder="Select Option" required="required">
+
+                                                                    @{
+                                                                        foreach (var item in ViewData["ProjectTypeItems"] as IEnumerable<TuvVision.Models.Audit>)
+                                                                        {
+
+                                                                            <option value="@item.DAuditorCode">@item.DAuditorName&nbsp; &nbsp;</option>
+
+
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                        }
+
+                                                            @Html.ValidationMessageFor(model => model.EmployeeName, "", new { @class = "text-danger" })
+
+                                                            @if (Model != null)
+                                                            {
+
+
+                                                            }
+                                                            <input type="text" class="hidden" id="ProductLists" />
+                                                        </div>
+
+
+
+
+
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Cover Image: </label>
+                                                            @Html.TextBoxFor(model => model.CoverImage, new { placeholder = "Enter Cover Image Name", @class = "form-control form-control-custom CoverImage" })
+                                                            @Html.ValidationMessageFor(model => model.CoverImage, "", new { @class = "text-danger" })
+                                                            <input type="hidden" id="HfCoverImage" name="CoverImage" />
+                                                            @Html.HiddenFor(model => model.CoverImage)
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Praising Quote</label>
+                                                            @Html.TextAreaFor(model => model.PraisingQuote, htmlAttributes: new { placeholder = "Praising Quote", @class = "form-control", autocomplete = "off", Rows = "3" })
+                                                            @Html.ValidationMessageFor(model => model.PraisingQuote, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Praised By</label>
+                                                            @Html.TextAreaFor(model => model.PraisedBy, htmlAttributes: new { placeholder = "Praised By", @class = "form-control", autocomplete = "off", Rows = "3" })
+                                                            @Html.ValidationMessageFor(model => model.PraisedBy, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Remarks</label>
+                                                            @Html.TextAreaFor(model => model.Remarks, htmlAttributes: new { placeholder = "Remarks", @class = "form-control", autocomplete = "off", Rows = "3" })
+                                                            @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            @Html.CheckBoxFor(model => model.ShareasNews)
+                                                            <label>Share as News with Employee : </label>
+                                                            @Html.ValidationMessageFor(model => model.ShareasNews, "", new { @class = "text-danger validation-msg ShareasNews" })
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label><i class="fa fa-paperclip" style="color:black;"></i>Evidences: </label><br />
+
+                                                            <input type="file" class="filepond" name="FileUpload" id="FileUpload" multiple>
+                                                            <input hidden="hidden" id="FileUpload" name="FileUpload" class="hidden" />
+                                                        </div>
+                                                    </div>
+
+                                                    @if (Model != null)
+                                                    {
+                                                        if (Model.Attachment != null && Model.Attachment.Count > 0)
+                                                        {
+
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <ul class="Attachment">
+                                                                        @foreach (var item in Model.Attachment)
+                                                                        {
+                                                                            <li>
+                                                                                <a class="title1" href="~/CustomerAppreciationForm/Download/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                                <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem">X</a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">There is no attachments !!!</p>
+                                                    }
+                                                </div>
+
+
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label><i class="fa fa-paperclip" style="color:black;"></i>Additional Images: </label><br />
+
+                                                            <input type="file" class="filepond" name="FileUpload1" id="FileUpload1" multiple>
+                                                            <input hidden="hidden" id="FileUpload1" name="FileUpload1" class="hidden" />
+                                                        </div>
+                                                    </div>
+
+                                                    @if (Model != null)
+                                                    {
+                                                        if (Model.Attachment1 != null && Model.Attachment1.Count > 0)
+                                                        {
+
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <ul class="Attachment">
+                                                                        @foreach (var item in Model.Attachment1)
+                                                                        {
+                                                                            <li>
+                                                                                <a class="title1" href="~/CustomerAppreciationForm/Download/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                                <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem">X</a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">There is no attachments !!!</p>
+                                                    }
+                                                </div>
+
+
+
+
+
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-3" style="pointer-events:none;">
+                                                        <div class="form-group">
+                                                            <label>Form Filled By</label>
+                                                            @Html.TextBoxFor(model => model.CreatedBy, htmlAttributes: new { placeholder = "Form Filled By", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.CreatedBy, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3" style="pointer-events:none;">
+                                                        <div class="form-group">
+                                                            <label>Creation Date</label>
+                                                            @Html.TextBoxFor(model => model.CreatedDate, htmlAttributes: new { placeholder = "Created Date", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.CreatedDate, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3" style="pointer-events:none;">
+                                                        <div class="form-group">
+                                                            <label>Modified By</label>
+                                                            @Html.TextBoxFor(model => model.ModifiedBy, htmlAttributes: new { placeholder = "ModifiedBy", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.ModifiedBy, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3" style="pointer-events:none;">
+                                                        <div class="form-group">
+                                                            <label>Modification Date</label>
+                                                            @Html.TextBoxFor(model => model.ModifiedDate, htmlAttributes: new { placeholder = "Modified Date", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.ModifiedDate, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                @if (Model.Id > 0)
+                                                {
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <button type="submit" id="btnSave" class="btn btn-default insert-form-btn">Update</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <button type="submit" id="btnSave" class="btn btn-default insert-form-btn"> Save </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+
+
+<script type="text/javascript">
+
+    $("#JobNumberWithSubJob").change(function () {
+            debugger;
+            if ($("#JobNumberWithSubJob").val() != "") {
+                var Address = {};
+
+                Address.url = '@Url.Action("GetDataByControllNo", "ValueAddition")';
+
+                Address.type = "Get";
+                Address.data = { Control_No: $("#JobNumberWithSubJob").val() };
+                Address.datatype = "json";
+                Address.ContentType = "application/json";
+                Address.success = function (address) {
+
+                    $("#ProjectName").val(address.ProjectName).val();
+                    $("#CustomerName").val(address.CustomerName).val();
+                    $("#VendorName").val(address.VendorName).val();
+                    $("#SubVendorName").val(address.SubVendorName).val()
+
+                };
+                Address.error = function () { alert("Error in Getting Address !"); };
+                $.ajax(Address);
+            }
+            else {
+                $("#ProjectName").empty();
+                $("#CustomerName").empty();
+                $("#VendorName").empty();
+                $("#SubVendorName").empty();
+                //$("#Address").prop("disabled", true);
+            }
+        });
+
+</script>
+
+
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+
+<script>
+FilePond.registerPlugin(
+// encodes the file as base64 data
+FilePondPluginFileEncode,
+// validates the size of the file
+FilePondPluginFileValidateSize,
+// corrects mobile image orientation
+FilePondPluginImageExifOrientation,
+// previews dropped images
+FilePondPluginImagePreview
+);
+// Select the file input and use create() to turn it into a pond
+FilePond.create( document.querySelector('.filepond'));
+</script>
+<script>
+FilePond.setOptions({
+server: '@Url.Action("TemporaryFilePathDocumentAttachment", "CustomerAppreciationForm")'
+});
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('.deleteItem').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            var EnquiryID = $("#PK_ID").val();
+            if (confirm('Do you really want to Delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteUploadedFile")',
+                    type: 'POST',
+                    data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("Something went Wrong, Please try again!");
+                })
+            }
+        });
+    });
+
+</script>
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#ProductLists').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+
+
+
+
+</script>
+
+<script>
+    $(function () {
+        $(".CoverImage").autocomplete({
+            source: function (request, response) {
+                debugger
+                $.ajax({
+                    url: '@Url.Action("GetCoverImageName", "CustomerAppreciationForm")',
+                    data: "{ 'prefix': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data)
+                    {
+                        response($.map(data, function (item)
+                        {
+                            return { label: item.CompanyName, value: item.CompanyNames + " (" + item.PkUserID + ") " };
+
+                        }));
+                    },
+                    error: function (response)
+                    {
+
+                    },
+                    failure: function (response)
+                    {
+
+                    }
+                });
+            },
+            select: function (e, i) {
+
+            },
+            minLength: 2
+        });
+
+    });
+
+</script>
+
+<script>
+
+        $("#btnSave").on('click', function (event)
+        {
+            var ShareasNews = $('#ShareasNews').prop('checked')
+            var CoverImage = $("#CoverImage").val();
+
+
+            if (ShareasNews == true)
+            {
+                if(CoverImage == null || CoverImage == "")
+                {
+                    alert("Kindly select the Cover Image for News");
+                    $("#CoverImage").focus();
+                    return false;
+                }
+            }
+
+
+            return true;
+
+        });
+
+
+</script>

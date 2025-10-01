@@ -1,0 +1,1662 @@
+﻿
+@model TuvVision.Models.QuotationMaster
+@{ string key = System.Configuration.ConfigurationManager.AppSettings["Web"].ToString(); }
+
+@{
+    ViewBag.Title = "SendQuotation";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@*<!-- Existing Stylesheets -->
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- Add Bootstrap JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<!-- Existing Stylesheets -->
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />*@
+
+
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<style>
+    .height-table {
+        height: auto;
+    }
+
+    .ui-autocomplete {
+        z-index: 1051 !important; /* Ensure it's above the modal's z-index */
+    }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-family: 'TNG Pro';
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+        font-family: 'TNG Pro';
+        font-weight: normal;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    .label1 {
+        font-weight: normal !important;
+    }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
+
+    #example tbody tr.highlight-row {
+        background-color: #FFEB00;
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+
+    #example tbody tr.highlight-row_ {
+        background-color: #FED7DA;
+    }
+
+    .btn.btn-info.dynamic-function-btn.highlighted {
+        background-color: #001ED2; /* Change the color as desired */
+    }
+
+
+    
+#MailBody {
+    font-family: Arial !important;
+
+     color :#000C54;
+     font-size:15px;
+}
+
+
+</style>
+
+
+<form method="post" enctype="multipart/form-data" id="formic">
+    @Html.HiddenFor(m => m.PK_QTID);
+    @Html.HiddenFor(m => m.QuotationCompanyName)
+    @Html.HiddenFor(m => m.CMP_ID_)
+    @*@Html.HiddenFor(m => m.PK_SubJob_Id)
+    @Html.HiddenFor(m => m.chkARC)*@
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <div class="container-fluid">
+                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                    <div class="col-xs-12 form-col">
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Send Quotation</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        @*@Html.HiddenFor(m => m.abcid)
+                                        @Html.HiddenFor(m => m.PK_IVR_ID)
+                                        @Html.HiddenFor(m => m.Vendor_Name_Location)*@
+
+                                        
+                                        <div class="row">
+                                            <br /><br />
+                                            <div class="col-xs-12 col-sm-12">
+                                                <label style="margin-left: 16px;font-family:'TNG Pro';font-weight:bold;">Distribution list : Tick for sending Quotation Email notification</label>
+                                            </div>
+                                        </div>
+                                        <br />
+
+                                        
+                                            <div class="col-xs-12">
+                                                <table class="display" id="example">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                <input type="checkbox" style="font-family:'TNG Pro';font-size:12px;" class="column-checkbox" id="TuvCheckbox" data-column="Tuv">
+                                                                Tuv Emails&nbsp;&nbsp;<i class="fa-solid fa-user-plus" data-toggle="modal" data-contacttype="Tuv" data-target="#AddNewContactDetails_TUV"></i>
+                                                            </th>
+                                                            <th>
+                                                                <i class="fa-solid fa-circle-plus" data-toggle="modal" data-contacttype="Tuv" data-target="#AddExistingClient"></i>&nbsp;&nbsp;
+                                                                <input type="checkbox" style="font-family:'TNG Pro';font-size:12px;" class="column-checkbox" id="ClientCheckbox" data-column="Client">
+                                                                Client Emails&nbsp;&nbsp;<i class="fa-solid fa-user-plus" id="lnkNewCOntact" data-toggle="modal" data-contacttype="Client" data-target="#AddNewContactDetails"></i>@Html.HiddenFor(m => m.QuotationCompanyName)
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="font-size:12px;font-family:'TNG Pro'"></tbody>
+                                                </table>
+                                            </div>
+                                            <br />
+                                            <br />
+
+                                            <div class="col-xs-12 col-sm-12">
+                                                <table class="table table-condensed" style="border:1px solid;font-family:'TNG Pro'">
+                                                    <thead style="background-color:#001ED2;color:#FFFFFF;font-family:'TNG Pro'">
+                                                        <tr>
+                                                            <th class="hidden"></th>
+                                                            <th style="border:1px solid;font-family:'TNG Pro';text-align:center;width:50px;">
+                                                                <input type="checkbox" id="selectAll" />
+                                                            </th>
+                                                            <th style="border:1px solid;font-family:'TNG Pro';text-align:left;">Attachment</th>
+                                                        </tr>
+                                                    <thead>
+                                                    <tbody id="tblbody" style="text-align:left;"></tbody>
+                                                </table>
+                                            </div>
+                                       
+                                        <div class="row">
+                                            <div class="col-xs-12" style="margin-left:15px;">
+                                                <label style="margin-left:2px;font-family:'TNG Pro';font-weight:bold;">Mail Subject</label>
+                                                @Html.TextAreaFor(model => model.MailSubject, new { @placeholder = "Enter Subject", @class = "form-control", @id = "Subject" })
+                                            </div>
+                                        </div>
+                                         <br />
+                                        <div class="row">
+                                            <div class="col-xs-12" style="margin-left:15px;">
+                                                <label style="margin-left:2px;font-family:'TNG Pro';font-weight:bold;">Mail Body</label>
+                                                @Html.TextAreaFor(model => model.MailBody, new { @placeholder = "Enter Mail Body", @class = "form-control", @id = "MailBody", @style = "font-family: Arial;",cols = 35, rows = 15 })
+                                            </div>
+                                        </div>
+
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-xs-12" style="margin-left:15px;" >
+                                                <label style="margin-left:2px;font-family:'TNG Pro';font-weight:bold;">Signture</label>
+                                                <div id="MailFooter"style="border:1px;padding-left:4px;border:1px solid;border-color:lightgrey;">
+                                                    @*<p>Best Regards,</p><p><strong id="textname"></strong><br><p id="txtdesugnation"></p><br><br><strong>TUV India Private Limited</strong><br>Industrial Services</p><p id="txtAddress"></p><p><strong>T</strong><p id="txtofficeno"></p></p><br><strong>M</strong><p id="txtMobileno"></p><br><strong>E</strong><a href="" id="txtemail"><p id="txtemail"></p></a></p>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+
+                                       
+                                        <div class="col-xs-12 text-center">
+                                            <button type="button" class="btn btn-default insert-form-btn" id="btndistribute_" onclick="btndistribute()">Send Quotation</button>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddExistingClient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Existing Client</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                        <div class="col-xs-12 col-sm-6" id="IDVendorContact">
+                            <div class="form-group">
+                                <label><b>Client Email:</b></label>
+                                @{
+                                    var selectedContacts_client = Model.CMP_ID_?.Split(',') ?? new string[] { };
+                                    var contacts_client = ViewBag.Contacts_client as List<SelectListItem>;
+                                }
+                                @if (Model.CMP_ID_ != null && Model.CMP_ID_.Any())
+                                {
+                                    @Html.DropDownListFor(model => model.CMP_ID_, new MultiSelectList(contacts_client, "Value", "Text", selectedContacts_client), new { @id = "ClientContactContact", @class = "form-control form-multiselect-city", @multiple = "multiple", })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.CMP_ID_, new SelectList(Enumerable.Empty<SelectListItem>()), new { @id = "ClientContactContact", @class = "form-control form-multiselect-city", @multiple = "multiple" })
+                                }
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <button type="button" class="btn btn-default insert-form-btn " id="btnAddClient" title="Add New Contact" onclick="btnAddClient_();"><i class="fa fa-plus-circle"></i> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 15px;">
+                    <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalCloseButton5"><span aria-hidden="true">&times;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddNewContactDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add new contact</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span style="color:#E12F24;">
+                                <strong>Notes </strong> :
+                            </span> 1) <span style="color:#ff0000;">*</span> - Mandatory.<br /><br />
+                        </div>
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Contact Person name:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.ContactNames, new { @placeholder = "Contact Name Here", @class = "form-control" })
+                            </div>
+                        </div>
+                        @Html.HiddenFor(m => m.Attachment)
+                        <div class="col-xs-12 col-sm-4 hidden">
+
+                            <div class="form-group">
+                                <label>Company name:</label>
+                                @if (Model != null)
+                                {
+                                    if (ViewBag.ContactCompanyName != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.ContactCompanyName, new SelectList(@ViewBag.ContactCompanyName, "Code", "Name"), "---Select Company---", new { @id = "ddlContactCompanyname", @class = "form-control" })
+                                    }
+                                }
+                                else
+                                {
+                                    if (ViewBag.ContactCompanyName != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.ContactCompanyName, new SelectList(@ViewBag.ContactCompanyName, "Code", "Name"), new { @id = "ddlContactCompanyname", @class = "form-control" })
+                                    }
+                                }
+                            </div>
+                            @Html.Hidden("hidCompany")
+                            @Html.Hidden("hiddenButtonId")
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Designation:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.TitleName, new { @placeholder = "Designation", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TitleName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Email Id:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email Here", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Landline number:</label>
+                                @Html.TextBoxFor(model => model.HomePhone, new { @placeholder = "Landline Number Here", @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Mobile number:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.Mobile, new { @placeholder = "Mobile Number Here", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Fax number:</label>
+                                @Html.TextBoxFor(model => model.Fax_No, new { @placeholder = "Enter Fax Number", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Fax_No, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                @if (Model != null)
+                                {
+                                    if (Model.IsMainContact == true)
+                                    {
+                                        <div>
+                                            <label>
+                                                <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" checked="checked" />Primary Contact
+                                            </label>
+                                        </div>
+                                    }
+                                    else if (Model.IsMainContact == false)
+                                    {
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" />Primary Contact
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="IsMainContact" id="IsMainContact" value="true" /> Primary Contact
+                                            <input name="IsMainContact" type="hidden" value="false" />
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Status:<span style="color:#ff0000;">*</span></label>
+                                @Html.DropDownListFor(m => m.ContactStatus, new List<SelectListItem>
+                                {
+                                 new SelectListItem{ Text="---SELECT---", Value = "" },
+                                 new SelectListItem{ Text="Active", Value = "Active" },
+                                 new SelectListItem{ Text="In-Active", Value = "In-Active" },
+                                }, new { @class = "form-control", @id = "PT" })
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4">
+                        </div>
+                    </div>
+                    @*<div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label>Address:<span style="color:#ff0000;">*</span></label>
+                                @Html.DropDownListFor(model => model.Address, new SelectList(Enumerable.Empty<SelectListItem>(), "--Select Vendor Address--", "--Select Vendor Address--"), "--Select Vendor Address--", new { @id = "ddlCaddr", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger validation-msg" })
+                            </div>
+                        </div>
+                    </div>*@
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <button type="button" class="btn btn-default insert-form-btn " id="btnAddNewContact" title="Add New Contact"><i class="fa fa-plus-circle"></i> Add Contact</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 10px 15px;">
+                <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalCloseButton"><span aria-hidden="true">&times;</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg modal fade" id="AddNewContactDetails_TUV" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center" style="background-color: #001ED2;color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add New Email</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-box" style="padding-bottom:0!important;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <span style="color:#E12F24;">
+                                <strong>Notes </strong> :
+                            </span> 1) <span style="color:#ff0000;">*</span> - Mandatory.<br /><br />
+                        </div>
+                        <div class="col-xs-12">
+                            <hr class="custom-hr1">
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="form-group">
+                                <label>TUV Email ID:<span style="color:#ff0000;">*</span></label>
+                                @Html.TextBoxFor(model => model.Tuv_Email, new { @placeholder = "TUV Email", @class = "form-control TuvEmailData", @id = "ddlTuvEmail" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <button type="button" class="btn btn-default insert-form-btn " id="btntuvemail" title="Add New Contact"><i class="fa fa-plus-circle"></i> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 10px 15px;">
+                    <button type="button" class="btn btn-default news-btn" data-dismiss="modal" id="btncosenew">Close</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalCloseButton_TUV"><span aria-hidden="true">&times;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    
+    // Ensures that pasted text uses the correct font (Arial)
+    $(document).ready(function() {
+        $('#MailBody').on('paste', function(e) {
+            var textarea = $(this)[0];
+            setTimeout(function() {
+                // This forces the content to be in Arial font after pasting
+                textarea.style.fontFamily = 'Arial';
+                textarea.style.color = '#000C54';
+                textarea.style.fontSize = '15px';
+            }, 0);
+        });
+    });
+
+
+
+</script>
+
+
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+
+
+<script>
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+
+<script>
+
+    function initializeMultiselectClient_() {
+        debugger;
+        $('#ClientContactContact').multiselect({
+            includeSelectAllOption: true,
+            selectAllText: 'Select All',
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 300
+        });
+    }
+
+    $('#ClientContactContact').on('click', function () {
+        loadClientDetails();
+    });
+
+
+        var Type_;
+        var GetClientidedtity;
+
+        $("#btnAddNewContact").on('click', function () {
+            debugger;
+            //$('#hiddenButtonId').val(buttonId); // Store the clicked button id
+            //var clickedButtonId = $('#hiddenButtonId').val();
+
+            var GetType=Type_;
+            var testcompanynameparam = $('#hidCompany').val();
+            var ContactNames = $("#ContactNames").val();
+            var ddlContactCompanyName = ContactNames;
+            var ddlCompanyName = testcompanynameparam;
+            var HomePhoneNo = $("#HomePhone").val();
+            var MobileNo = $("#Mobile").val();
+            var MainContact = $('#IsMainContact').is(':checked');
+            var CompanyName = $('#hidCompany').val();
+            var Address = $("#ddlCaddr option:selected").val();
+            var Email = $("#Email").val();
+            var Fax_No = $("#Fax_No").val();
+            var TitleName = $("#TitleName").val();
+            var ContactStatus = $("#PT").val();
+            //**************************************************************************
+            if ($("#ContactNames").val() == "" || $("#ContactNames").val() == null) {
+                alert("Please Enter Contact Name!!!");
+                $("#ContactNames").focus()
+                return false;
+            }
+            else if (ddlCompanyName == 0 || ddlCompanyName == null) {
+                alert("Please Select Company Name !!!");
+                $("#ContactCompanyName").focus()
+                return false;
+            }
+            else if (TitleName == "" || TitleName == null) {
+                alert("Enter Designation !!!");
+                $("#TitleName").focus()
+                return false;
+            }
+            else if (Email == "" || Email == null) {
+                alert("Enter Email !!!");
+                $("#Email").focus()
+                return false;
+            }
+            //else if (MobileNo == "" || MobileNo == null) {
+            //    alert("Enter Mobile !!!");
+            //    $("#Mobile").focus()
+            //    return false;
+            //}
+            //else if(Address === "-1" || Address === "") {
+            //    alert("select Address !!!");
+            //    // Handle the case where no valid option is selected
+            //    console.log("No valid address selected.");
+            //}
+            else if (ContactStatus == "" || ContactStatus == null) {
+                alert("Enter Status !!!");
+                $("#PT").focus()
+                return false;
+            }
+            else {
+                var ContactDetails =
+                    {
+                        ContactNames: ContactNames,
+                        ContactCompanyName: ddlContactCompanyName,
+                        CompanyName: testcompanynameparam,
+                        HomePhone: HomePhoneNo,
+                        Mobile: MobileNo,
+                        IsMainContact: MainContact,
+                        Address: Address,
+                        Email: Email,
+                        Fax_No: Fax_No,
+                        TitleName: TitleName,
+                        ContactStatus: ContactStatus
+                    }
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify({ ECM: ContactDetails }),
+                    url: '@Url.Action("ContactDetails", "EnquiryMaster")',
+                    dataType: 'json',
+                    Async: false,
+                    enctype: "multipart/form-data",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.success == 1) {
+                            // window.location.reload();
+                            //$('#AddNewContactDetails').modal('hide');
+                            var test = $('#Vendor_Name_Location').val();
+                            var Email_1 = $("#Email").val();
+                            UpdateClienttable(Email_1);
+                            //saveloadVendorDetail(test);
+                            $('#ContactNames').val("");
+                            $('#TitleName').val("");
+                            $('#Email').val("");
+                            $('#HomePhone').val("");
+                            $('#Mobile').val("");
+                            $('#Fax_No').val("");
+                            $("#PT").val("");
+                            //Bind_EmailID();
+                            //showMessage();
+
+                            
+
+                            //if($("#hiddenButtonId").val()=="client"){
+                            //    UpdateClienttable(Email,CompanyName);
+                            //}
+                            //else{
+
+                            //    UpdateTable(Email,GetType);
+                            //}
+                            $('#AddNewContactDetails').modal('hide');
+                            $("#modalCloseButton").click();
+                            $('.modal-backdrop').removeClass('in');
+                            //window.location.reload();  // Refresh the page after save
+                            //$("#divDocuments").load(location.href + " #divDocuments");
+                            BindData();
+
+
+                        }
+                        else if (response.success == 2) {
+                            alert("Duplicate Contact detail Or !!Failed!!! Something Went Wrong!!! Please Try Again....")
+                            //Bind_EmailID();
+                            $('#AddNewContactDetails').modal('hide');
+                            //showMessage();
+                        }
+                        //Bind_EmailID();
+                    }
+                });
+            }
+        });
+
+    $("#AddNewContactDetails").on('shown.bs.modal',function(){
+        $('.modal-backdrop').addClass('in');
+    });
+
+
+        $("#btntuvemail").on('click', function () {
+            debugger;
+            var PK_QTID = @Html.Raw(Json.Encode(Model.PK_QTID));
+            var Email=$("#ddlTuvEmail").val();
+             if (Email == "" || Email == null) {
+                alert("Enter Email !!!");
+                $("#ddlTuvEmail").focus()
+                return false;
+            }
+                $.ajax({
+                    url: '@Url.Action("UpdateTUVMail", "QuotationMaster")',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {Email:Email,PK_QTID:PK_QTID},
+                    Async: false,
+                    success: function (response) {
+                        debugger;
+                            $('#TUV_Email').val("");                          
+                            $('#AddNewContactDetails_TUV').modal('hide');
+                            $("#modalCloseButton_TUV").click();
+                            $('.modal-backdrop').removeClass('in');    
+                            BindData();
+                    }
+                });
+            });
+    $("#AddNewContactDetails_TUV").on('shown.bs.modal',function(){
+        $('.modal-backdrop').addClass('in');
+    });
+</script>
+
+<script>
+    $(function () {
+        debugger
+        $(".TuvEmailData").autocomplete({
+            source: function (request, response) {
+                debugger
+                $.ajax({
+                    url: '@Url.Action("GetLeadByName", "QuotationMaster")',
+                    data: "{ 'prefix': '" + GetCurrentSearchTerm(request.term) + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            var value = item.CompanyName;
+                            return { label: item.CompanyName, value: value };
+
+                        }));
+                    },
+                    error: function (response) {
+                    },
+                    failure: function (response) {
+
+                    }
+                });
+            },
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function () {
+                return false;
+            }
+        });
+
+        function splitCurrentText(LastTerm) {
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+            return splitCurrentText(LastTerm).pop();
+        }
+    });
+
+
+
+
+    function loadClientDetails() {
+        debugger;
+        var vendorName=$("#CMP_ID_").val();
+        $.ajax({
+            url: '@Url.Action("GetClientdetails", "subJobMaster")',
+            data: JSON.stringify({ 'Pre': vendorName }),
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                // Clear existing options
+                $('#ClientContactContact').empty();
+                var selectedContacts = $('#ClientContactContact').data('selected-contacts') || [];
+                var options = '';
+                for (var i = 0; i < response.length; i++) {
+                    var selected = selectedContacts.includes(response[i].Vendor_Contact.toString()) ? ' selected' : '';
+                    options += '<option value="' + response[i].Vendor_Contact + '"' + selected + '>' + response[i].vendor_name + '</option>';
+                }
+                $("#ClientContactContact").html(options);
+                $('#ClientContactContact').multiselect('destroy');
+                // Re-initialize the multi-select plugin
+                initializeMultiselectClient_();
+            },
+            error: function (response) {
+                console.error(response.responseText);
+            },
+            failure: function (response) {
+                console.error(response.responseText);
+            }
+        });
+    }
+
+
+
+    </script>
+<script>
+    $(document).ready(function () {
+        $('#lnkNewCOntact').click(function () {
+            debugger
+            if ($("#QuotationCompanyName").val() != "") {
+                var Address = {};
+                var Company_Name = $("#QuotationCompanyName").val();
+                $("#hidCompany").val(Company_Name);
+                Address.url = '@Url.Action("GetAddressOfCompany", "CompanyMasters")';
+                Address.type = "Get";
+                Address.data = { Company_Name: Company_Name };
+                Address.datatype = "json";
+                Address.ContentType = "application/json";
+                Address.success = function (response) {
+                    $('#ddlCaddr').empty();
+
+
+                    debugger;
+
+                    //var ddlresponse = JSON.parse(response);
+                    //var ddl_ = ddlresponse.Name;
+
+                    var s = '<option value="-1">--Select Address--</option>';
+                    for (var i = 0; i < response.length; i++) {
+                        s += '<option value="' + response[i].Name + '">' + response[i].Name + '</option>';
+                    }
+                    $("#ddlCaddr").html(s);
+                };
+                Address.error = function () {
+                    alert("Error in Getting Address !");
+                };
+                $.ajax(Address);
+            }
+            else {
+                $("#ddlCaddr").empty();
+                $("#ddlCaddr").prop("disabled", true);
+            }
+        });
+    });
+
+
+
+    function showMessage() {
+        //debugger;
+        console.log($('#QuotationCompanyName').val())
+        $('#ddlContactType').html('');
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("GetSubSubSectionType", "EnquiryMaster")',
+            data: { CompanyName: $('#QuotationCompanyName').val() },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                var options = '<option value="">--Select--</option>';
+                for (var i = 0; i < data.length; i++) {
+                    options += '<option value="' + data[i].Code + '">' + data[i].Name + '</option>';
+                }
+
+                $('#ddlContactType').html(options);
+
+
+                var selectedValue = '@Model.ContactName';
+                $('#ddlContactType').val(selectedValue);
+            }
+        });
+    };
+</script>
+
+
+
+
+
+
+@*<script>
+    $(function () {
+        debugger
+        $(".TuvEmailData").autocomplete({
+            source: function (request, response) {
+                debugger
+                $.ajax({
+                    url: '@Url.Action("GetLeadByName", "JobMaster")',
+                    data: "{ 'prefix': '" + GetCurrentSearchTerm(request.term) + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            var value = item.CompanyName;
+                            return { label: item.CompanyName, value: value };
+
+                        }));
+                    },
+                    error: function (response) {
+                    },
+                    failure: function (response) {
+
+                    }
+                });
+            },
+            select: function (event, ui) {
+                var LastValue = splitCurrentText(this.value);
+                LastValue.pop();
+                LastValue.push(ui.item.value);
+                LastValue.push("");
+                this.value = LastValue.join(",");
+                return false;
+            },
+            focus: function () {
+                return false;
+            }
+        });
+
+        function splitCurrentText(LastTerm) {
+            return LastTerm.split(/,\s*/);
+        }
+
+        function GetCurrentSearchTerm(LastTerm) {
+            return splitCurrentText(LastTerm).pop();
+        }
+        });
+</script>*@
+
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        var tuvemails;
+        BindData(tuvemails);
+        GetAttachmentData();
+         
+        loadClientDetails();
+        $('#selectAll').on('click', function () {
+            var isChecked = $(this).is(':checked'); // Check if the Select All checkbox is checked
+            $('.chk_isChecked').prop('checked', isChecked); // Check/uncheck all checkboxes
+        });
+        
+    })
+
+       function GetAttachmentData_() {
+    // Retrieve PK_QTID from the server-side model
+    var PK_QTID = @Html.Raw(Json.Encode(Model.PK_QTID));
+
+    $.ajax({
+        url: "@Url.Action("GetAttachmentData", "QuotationMaster")",
+        type: 'POST',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ PK_QTID: PK_QTID }),
+        success: function (result) {
+            var data = [];
+
+            // Handle result as JSON
+            if (typeof result === "string") {
+                try {
+                    data = JSON.parse(result);
+                } catch (e) {
+                    console.error("Failed to parse JSON:", e);
+                    return;
+                }
+            } else {
+                data = result;
+            }
+
+            console.log("Full Response Data:", data);
+
+            if (data === "Error") {
+                var tr = $('<tr/>').append('<td colspan=4>No Record Found</td>');
+                $("#tblbody").html(tr);
+            } else {
+                $("#tblbody").empty();
+
+                $.each(data, function (i, item) {
+                    var path = "QuotationHtml";  // Ensure this path is correct
+                    var fileName = item.QuotationPdf;
+
+                    if (fileName) {
+                        var trimmedFileName = String(fileName).trim();
+                        var encodedFileName = encodeURIComponent(trimmedFileName);
+
+                        var link = path
+                            ? `<a href='/${path}/${encodedFileName}' target='_blank'>${trimmedFileName}</a>`
+                            : `<a href='/${encodedFileName}' target='_blank'>${trimmedFileName}</a>`;
+
+                        var row = `<tr>
+                                    <td class='hidden'>${item.Type || ''}</td>
+                                    <td><input type='checkbox' name='Selectone' class='chk_isChecked' id='${trimmedFileName}'/></td>
+                                    <td style='text-align:left;'>${link}</td>
+                                    </tr>`;
+                        $("#tblbody").append(row);
+                    }
+                });
+                $("#selectAll").on('change', function () {
+                    var checked = $(this).is(':checked');
+                    $('.chk_isChecked').prop('checked', checked); // Select or deselect all checkboxes
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error: " + error);
+        }
+    });
+}
+    @*function GetAttachmentData_() {
+        // Retrieve PK_QTID from the server-side model
+        var PK_QTID = @Html.Raw(Json.Encode(Model.PK_QTID));
+
+        $.ajax({
+            url: "@Url.Action("GetAttachmentData", "QuotationMaster")",
+            type: 'POST',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ PK_QTID: PK_QTID }),
+        success: function (result) {
+            var data = [];
+
+            // Ensure result is a valid JSON object
+            if (typeof result === "string") {
+                try {
+                    data = JSON.parse(result);
+                } catch (e) {
+                    console.error("Failed to parse JSON:", e);
+                    return;
+                }
+            } else {
+                data = result;
+            }
+
+            console.log("Full Response Data:", data);
+
+            if (Array.isArray(data) && data.length === 0) {
+                // Handle the case with no records
+                var noRecordRow = $('<tr/>').append('<td colspan="4">No Record Found</td>');
+                $("#tblbody").html(noRecordRow);
+            } else {
+                $("#tblbody").empty();
+
+                $.each(data, function (i, item) {
+                    //var path = "QuotationHtml";  // Ensure this path is correct
+                    //var fileName = item.QuotationPdf;
+                    //if (fileName) {
+                    //    var trimmedFileName = String(fileName).trim();
+                    //    var encodedFileName = encodeURIComponent(trimmedFileName);
+                    //    // Ensure the link is properly constructed
+                    //    var link = path
+                    //        ? `<a href='/${path}/${encodedFileName}' target='_blank'>${trimmedFileName}</a>`
+                    //        : `<a href='/${encodedFileName}' target='_blank'>${trimmedFileName}</a>`;
+                    //    // Append a new row to the table
+                    //    var row = `<tr>
+                    //                <td class='hidden'>${item.Type || ''}</td>
+                    //                <td><input type='checkbox' name='Selectone' class='chk_isChecked' id='${encodedFileName}'/></td>
+                    //                <td style='text-align:left;'>${link}</td>
+                    //                </tr>`;
+                    //    $("#tblbody").append(row);
+                    var path = "QuotationHtml";  // Ensure this path is correct
+                    var fileName = item.QuotationPdf;
+                    var path2="Content/item.year/item.month";
+                    var filename2=item.RelatedDocument;
+                    if (fileName) {
+                        var trimmedFileName = String(fileName).trim();
+                        var encodedFileName = encodeURIComponent(trimmedFileName);
+                        var link = path
+                            ? `<a href='/${path}/${encodedFileName}' target='_blank'>${trimmedFileName}</a>`
+                            : `<a href='/${encodedFileName}' target='_blank'>${trimmedFileName}</a>`;
+                        var row = `<tr>
+                                    <td class='hidden'>${item.Type || ''}</td>
+                                    <td><input type='checkbox' name='Selectone' class='chk_isChecked' id='${encodedFileName}'/></td>
+                                    <td style='text-align:left;'>${link}</td>
+                                    </tr>`;
+                        $("#tblbody").append(row);
+                    }
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error: ", {
+                status: status,
+                error: error,
+                responseText: xhr.responseText
+            });
+        }
+    });
+    }*@
+
+    @*function GetAttachmentData() {
+        // Retrieve PK_QTID from the server-side model
+        var PK_QTID = @Html.Raw(Json.Encode(Model.PK_QTID));
+
+        $.ajax({
+            url: "@Url.Action("GetAttachmentData_", "QuotationMaster")",
+            type: 'POST',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ pk_ivr_id: PK_QTID }),
+        success: function (result) {
+            var data = [];
+
+            // Ensure result is a valid JSON object
+            if (typeof result === "string") {
+                try {
+                    data = JSON.parse(result);
+                } catch (e) {
+                    console.error("Failed to parse JSON:", e);
+                    return;
+                }
+            } else {
+                data = result;
+            }
+
+            console.log("Full Response Data:", data);
+
+            if (Array.isArray(data) && data.length === 0) {
+                // Handle the case with no records
+                var noRecordRow = $('<tr/>').append('<td colspan="4">No Record Found</td>');
+                $("#tblbody").html(noRecordRow);
+            } else {
+                $("#tblbody").empty();
+
+                $.each(data, function (i, item) {
+                    //// Paths for the files
+                    //var path1 = "QuotationHtml";  // Path for QuotationPdf
+                    //var path2 = `Content/${item.Year_}/${item.Month_}`; // Path for RelatedDocument
+
+                    //// Process QuotationPdf
+
+                    var Type=item.Type;
+                    var trimmedFileName=item.FormattedPath+item.FileName;
+                    if (Type=="Quotation") {
+                        //var trimmedFileName = String(item.Quotation).trim();
+                        var encodedFileName = encodeURIComponent(trimmedFileName);
+                        var link1 = `<a href='/${encodedFileName}' target='_blank'>${trimmedFileName}</a>`;
+                        var row1 = `<tr>
+                                        <td class='hidden'>${item.Type || ''}</td>
+                                        <td><input type='checkbox' name='Selectone' class='chk_isChecked' id='${encodedFileName}'/></td>
+                                        <td style='text-align:left;'>${link1}</td>
+                                    </tr>`;
+                        $("#tblbody").append(row1);
+                    }
+
+                    // Process RelatedDocument
+                    if (Type=="Supporting") {
+                        //var relatedFileName = String(item.RelatedDocument).trim();
+                        //var encodedRelatedFileName = encodeURIComponent(relatedFileName);
+                        var encodedFileName = encodeURIComponent(trimmedFileName);
+                        var link2 = `<a href='/${encodedFileName}' target='_blank'>${encodedFileName}</a>`;
+                        var row2 = `<tr>
+                                        <td class='hidden'>${item.Type || ''}</td>
+                                        <td><input type='checkbox' name='Selectone' class='chk_isChecked' id='${encodedFileName}'/></td>
+                                        <td style='text-align:left;'>${link2}</td>
+                                    </tr>`;
+                        $("#tblbody").append(row2);
+                    }
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error: ", {
+                status: status,
+                error: error,
+                responseText: xhr.responseText
+            });
+        }
+    });
+    }*@
+    function GetAttachmentData() {
+    // Retrieve PK_QTID from the server-side model
+    var PK_QTID = @Html.Raw(Json.Encode(Model.PK_QTID));
+
+    $.ajax({
+        url: "@Url.Action("GetAttachmentData_", "QuotationMaster")",
+        type: 'POST',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ pk_ivr_id: PK_QTID }),
+        success: function (result) {
+            var data = [];
+
+            // Ensure result is a valid JSON object
+            if (typeof result === "string") {
+                try {
+                    data = JSON.parse(result);
+                } catch (e) {
+                    console.error("Failed to parse JSON:", e);
+                    return;
+                }
+            } else {
+                data = result;
+            }
+
+            console.log("Full Response Data:", data);
+
+            if (Array.isArray(data) && data.length === 0) {
+                // Handle the case with no records
+                var noRecordRow = $('<tr/>').append('<td colspan="4">No Record Found</td>');
+                $("#tblbody").html(noRecordRow);
+            } else {
+                $("#tblbody").empty();
+
+                $.each(data, function (i, item) {
+                    var Type = item.Type;
+                    var trimmedFileName = item.FormattedPath + item.FileName;
+
+                    // Process Quotation
+                    if (Type == "Quotation") {
+                        var encodedFileName = encodeURIComponent(trimmedFileName);
+                        var link1 = `<a href='/${encodedFileName}' download>${trimmedFileName}</a>`;
+                        var row1 = `<tr>
+                                        <td class='hidden'>${item.Type || ''}</td>
+                                        <td><input type='checkbox' name='Selectone' class='chk_isChecked' id='${encodedFileName}'/></td>
+                                        <td style='text-align:left;'>${link1}</td>
+                                    </tr>`;
+                        $("#tblbody").append(row1);
+                    }
+
+                    // Process Supporting Document
+                    if (Type == "Supporting") {
+                        var encodedFileName = encodeURIComponent(trimmedFileName);
+                        var link2 = `<a href='/${encodedFileName}' download>${encodedFileName}</a>`;
+                        var row2 = `<tr>
+                                        <td class='hidden'>${item.Type || ''}</td>
+                                        <td><input type='checkbox' name='Selectone' class='chk_isChecked' id='${encodedFileName}'/></td>
+                                        <td style='text-align:left;'>${link2}</td>
+                                    </tr>`;
+                        $("#tblbody").append(row2);
+                    }
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error: ", {
+                status: status,
+                error: error,
+                responseText: xhr.responseText
+            });
+        }
+    });
+}
+
+
+
+        //*************************************************************************************************************************************************************************************//
+     var tuvEmails = [];
+     var clientEmails = [];
+ function BindData(tuvemails_) {
+    debugger;
+    tuvemails = tuvemails_;
+    var pk_ivr_id = @Html.Raw(Json.Encode(Model.PK_QTID));
+    $.ajax({
+        url: "@Url.Action("GetDataQuotation", "QuotationMaster")",
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({ pk_ivr_id: pk_ivr_id }),
+        success: function (Response) {
+            debugger;
+            var data = Array.isArray(Response) ? Response : $.parseJSON(Response);
+
+            //var subject = `Inspection Visit Report for PO Number ${Po_No} and ${vendor_name} - ${SubJob_No}`;
+            //$("#Subject").val(subject);
+
+
+            //if (Semd_Mails_To_Email == "1") {
+            //    document.getElementById("txtmail").innerText = `Mail has been sent to the client on ${IsmailSendToClient_Date}.`;
+            //}
+
+            if (Array.isArray(data) && data.length > 0) {
+                var Tuv_Email = data[0].Tuv_Email || '';
+                var Client_Email = data[0].Client_Email || '';
+                function splitEmails(emailList) {
+                    return emailList
+                        ? emailList
+                            .replace(/[,;]/g, ';') // Replace both commas and semicolons with a common delimiter
+                            .split(';') // Split by semicolon
+                            .filter(email => email.trim() !== '') // Filter out empty values
+                            .map(email => email.trim()) // Trim whitespace from each email
+                        : [];
+                }
+                tuvEmails = splitEmails(Tuv_Email);
+                clientEmails = splitEmails(Client_Email);
+                var maxRows = Math.max(tuvEmails.length, clientEmails.length);
+                var tableBody = $('#example tbody');
+                tableBody.empty(); // Clear existing rows
+                for (var i = 0; i < maxRows; i++) {
+                    var rowHtml = `<tr>
+                        ${generateEmailCell(tuvEmails[i], i, 'Tuv')}
+                        ${generateEmailCell(clientEmails[i], i, 'Client')}
+                    </tr>`;
+                    tableBody.append(rowHtml);
+                }
+
+
+                //var Address= data[0].Address;
+                //      var Footer = '<p>Best Regards,</p>' +
+                //     '<p><strong>' + data[0].Name + '</strong><br>' +
+                //      data[0].Designation+'<br><br>' +
+                //     '<strong>TUV India Private Limited</strong><br>' +
+                //     'Industrial Services</p>' +
+                //     '<p>' +Address.replace(/, /g, '<br>') + '</p>' +
+                //     '<p><strong>T</strong>' + data[0].OfficeNo+'<br>' +
+                //     '<strong>M</strong> ' + data[0].MobileNo + ' '+
+                //     '<strong>E</strong> <a href="'+ data[0].Tuv_Email_Id +'">'+ data[0].Tuv_Email_Id +'</a></p>';
+
+                //      $("#MailFooter").val(Address);
+                // Ensure the address is a valid string or fallback to an empty string
+                //var Address = (data[0].Address1 && typeof data[0].Address1 === 'string') ? data[0].Address1 : '';                
+                //if (Address) {
+                //    Address = Address.replace(/, /g, '<br>');  
+                //}
+                //$("#textname").val(data[0].Name);
+                //$("#txtdesugnation").val(data[0].Designation);
+                //$("#txtAddress").val(data[0].Address);
+                //$("#txtofficeno").val(data[0].OfficeNo);
+                //$("#txtMobileno").val(data[0].MobileNo);
+                //$("#txtemail").val(data[0].Tuv_Email_Id);
+                // Assuming data[0].Address1 is the field with the address
+                var Address = (data[0].Address1 && typeof data[0].Address1 === 'string') ? data[0].Address1 : '';                
+                if (Address) {
+                    Address = Address.replace(/, /g, '<br>');  // Replace commas with <br> for line breaks
+                }
+                var designation = data[0].Designation || '';
+                // Set form values
+                //$("#textname").val(data[0].Name);
+                //$("#txtdesugnation").val(data[0].Designation);
+                //$("#txtAddress").val(Address);  // Use formatted address here
+                //$("#txtofficeno").val(data[0].OfficeNo);
+                //$("#txtMobileno").val(data[0].MobileNo);
+                //$("#txtemail").val(data[0].Tuv_Email_Id);
+
+                // Update Mail Footer
+//                $("#MailFooter").html(`
+//    <p style='font-family:Arial;font-size:15px;color:#000C54'>Best Regards,</p>    
+//    <p><strong style='font-family:Arial; font-weight:bold;font-size:15px;color:#000C54'>${data[0].Name}</strong><br>
+//    <strong style='font-family:Arial;color:#000C54;font-size:13px;'>${designation}</strong><br><br>
+//    <strong style='font-family:Arial; color:#001ED2; font-weight:bold;font-size:15px;'>TUV India Private Limited</strong><br>
+//     <strong style='font-family:Arial;font-size:15px;'>
+//    ${data[0].OBSName}</strong>
+//    <p style='font-family:Arial;color:#001ED2;font-size:15px;'">${Address}</p>
+//    <p><strong style='font-family:Arial;'>T&nbsp;&nbsp; </strong>${data[0].OfficeNo || ''}<br>
+//    <strong style='font-family:Arial;'>M &nbsp;&nbsp;</strong>${data[0].MobileNo || ''}<br>
+//    <strong style='font-family:Arial;'>E &nbsp;&nbsp;</strong><a href="mailto:${data[0].Tuv_Email_Id}" style='font-family:Arial;'>${data[0].Tuv_Email_Id || ''}</a></p><br><br>
+
+//    <p style='font-family:Arial;font-size:15px;'>TÜV®</p><br><br>
+//    <p style='font-family:Arial;font-size:15px;'>Disclaimer:</p>
+
+//    Information in this e-mail and any attachment  transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed.
+//    If you have received this email  by mistake, please notify the sender immediately by return reply to this email and delete the original message (including any attachments) from your system.
+//    Any unauthorized review, use, disclosure, or distribution of this message in whole or in part is strictly prohibited. 
+//    The recipient should check this email and its attachment for viruses as we do not take any responsibility nor accept any damage caused by any virus transmitted by this email. 
+//`);
+
+                $("#MailFooter").html(`
+    <p style='font-family:Arial;font-size:15px;color:#000C54'>Best Regards,</p>    
+    <p><strong style='font-family:Arial; font-weight:bold;font-size:15px;color:#000C54'>${data[0].Name}</strong><br>
+    <strong style='font-family:Arial;color:#000C54;font-size:13px;font-weight: normal;'>${designation}</strong><br><br>
+    <strong style='font-family:Arial; color:#001ED2; font-weight:bold;font-size:15px;'>TUV India Private Limited</strong><br>
+    <strong style='font-family:Arial;font-size:12px;font-weight: normal;'>${data[0].OBSName}</strong></p>
+    <p style='font-family:Arial;color:#000C54;font-size:15px;'>${Address}</p>
+    <p><strong style='font-family:Arial;font-size:15px;'>T&nbsp;&nbsp;</strong>${data[0].OfficeNo || ''}<br>
+    <strong style='font-family:Arial;font-size:15px;'>M&nbsp;&nbsp;</strong>${data[0].MobileNo || ''}<br>
+    <strong style='font-family:Arial;font-size:15px;'>E&nbsp;&nbsp;</strong><a href="mailto:${data[0].Tuv_Email_Id}" style='font-family:Arial;font-size:15px;'>${data[0].Tuv_Email_Id || ''}</a></p><br>
+
+    <p style='font-family:Arial;font-size:13px;color:#000C54;'>TÜV®</p> 
+    
+    <p style='font-family:Arial;font-size:10px;'>        
+        <span style='width: 100%; display: block; margin: 10px 0;font-size:10px;'>===============================================================================================================================================</span> 
+        <strong style='font-family:Arial;font-size:12px;'>Disclaimer:</strong><br>
+        Information in this e-mail and any attachment transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. <br>
+        If you have received this email by mistake, please notify the sender immediately by return reply to this email and delete the original message (including any attachments) from your system. <br>
+        Any unauthorized review, use, disclosure, or distribution of this message in whole or in part is strictly prohibited. <br>
+        The recipient should check this email and its attachment for viruses as we do not take any responsibility nor accept any damage caused by any virus transmitted by this email.
+         <span style='width: 100%; display: block; margin: 10px 0;font-size:10px;'>==============================================================================================================================================</span> 
+    </p>
+`);
+
+
+
+                //var Footer = '<p>Best Regards,</p>' +
+                //    '<p><strong>' + data[0].Name + '</strong><br>' +
+                //    data[0].Designation + '<br><br>' +
+                //    '<strong>TUV India Private Limited</strong><br>' +
+                //    'Industrial Services</p>';               
+                //Footer += '<p>' + (Address || '-') + '</p>' +
+
+                //    '<p><strong>T</strong>' + data[0].OfficeNo + '<br>' +
+                //    '<strong>M</strong> ' + data[0].MobileNo + ' ' +
+                //    '<strong>E</strong> <a href="mailto:' + data[0].Tuv_Email_Id + '">' + data[0].Tuv_Email_Id + '</a></p>';              
+                ////$("#MailFooter").html(Footer);
+                //$("#MailFooter").val(Footer);
+                // For rendering HTML (like <br>) in a div or any other HTML element
+                //var Footer = '<p>Best Regards,</p>' +
+                //    '<p><strong>' + data[0].Name + '</strong><br>' +
+                //    data[0].Designation + '<br><br>' +
+                //    '<strong>TUV India Private Limited</strong><br>' +
+                //    'Industrial Services</p>';
+                //Footer += '<p>' + (Address || '-') + '</p>' +
+                //    '<p><strong>T</strong>' + data[0].OfficeNo + '<br>' +
+                //    '<strong>M</strong> ' + data[0].MobileNo + '<br>' +
+                //    '<strong>E</strong> <a href="mailto:' + data[0].Tuv_Email_Id + '">' + data[0].Tuv_Email_Id + '</a></p>';
+                ////$("#MailFooter").html(Footer);  // Use .html() for HTML rendering in div or other elements
+                //$("#MailFooter").val(Footer);  // Use .html() for HTML rendering in div or other elements
+
+                $('.column-checkbox').change(function () {
+                    var isChecked = $(this).is(':checked');
+                    var column = $(this).data('column');
+                    var emails = [];
+                    switch (column) {
+                        case 'Tuv':
+                            emails = tuvEmails;
+                            break;
+                        case 'Client':
+                            emails = clientEmails;
+                            break;
+                    }
+                    if (isChecked) {
+                        console.log('Checked emails in column:', column, emails);
+                        alert('Emails in ' + column + ': ' + emails.join(', ')); // Show all emails in the column
+                    }
+                });
+            } else {
+                $('#example tbody').empty(); // Clear table body if no data
+                console.log('No data available or response format is not as expected.');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error: ' + error);
+        }
+    });
+ }
+
+
+    
+
+// Helper function to generate the email cell with optional cancel button
+    function generateEmailCell(email, emailIndex, column) {
+    if (email) {
+        return `<td data-column="${column}" data-index="${emailIndex}">${email} <button onclick="removeEmail(this)" style="color:red;font-weight: bold;background-color:white;">X</button></td>`;
+    } else {
+        return `<td></td>`;
+    }
+}
+
+// Function to clean up email array
+function cleanEmailArray(emails) {
+    return emails
+        .map(email => email.trim()) // Trim leading and trailing spaces
+        .filter(email => email.length > 0); // Remove empty strings
+}
+
+// Function to handle email removal
+function removeEmail(button) {
+    var $cell = $(button).closest('td');
+    var column = $cell.data('column');
+    var index = $cell.data('index');
+
+    // Remove the email from the corresponding array
+    switch (column) {
+        case 'Tuv':
+            tuvEmails[index] = ''; // Clear the email from the array
+            break;
+        case 'Client':
+            clientEmails[index] = ''; // Clear the email from the array
+            break;
+    }
+
+    // Clean arrays after removal
+    tuvEmails = cleanEmailArray(tuvEmails);
+    clientEmails = cleanEmailArray(clientEmails);
+
+    // Update the specific cell in the table
+    $cell.html(''); // Clear the cell content
+
+    // Re-bind data to update the table
+}
+
+// Function to handle distribution of emails and attachments
+function btndistribute() {
+    debugger;
+
+    var pk_call_id = @Html.Raw(Json.Encode(Model.PK_QTID));
+    var mailsubject = $("#Subject").val();
+    var MailBody=$("#MailBody").val();
+    var Signature = encodeURIComponent($("#MailFooter").html());
+
+    
+    console.log("Signature value:", Signature);  // Log the value
+    var selectedColumns = [];
+    $('.column-checkbox:checked').each(function () {
+        var column = $(this).data('column');
+        selectedColumns.push(column);
+    });
+
+
+    if(document.getElementById('ClientCheckbox').checked == false)
+        {
+            alert("Please select Client Email column.");
+            return false;
+        }
+    
+    //if (selectedColumns.length === 0) {
+    //    alert("Please select at least one Email column.");
+    //    return false;
+    //}
+
+    // Collect email values for selected columns
+    var checkedEmailValues = [];
+    selectedColumns.forEach(function (column) {
+        var emailArray = [];
+        switch (column) {
+            case 'Tuv':
+                emailArray = tuvEmails;
+                break;
+            case 'Client':
+                emailArray = clientEmails;
+                break;
+        }
+        if (emailArray.length > 0) {
+            checkedEmailValues = checkedEmailValues.concat(emailArray);
+        }
+    });
+
+    // Clean the checkedEmailValues array
+    checkedEmailValues = cleanEmailArray(checkedEmailValues);
+
+    // Collect selected attachments
+    var selectedAttachments = [];
+    $('.chk_isChecked:checked').each(function () {
+        var attachmentValue = $(this).attr('id');
+        selectedAttachments.push(attachmentValue);
+    });
+
+    // Validate if at least one email and one attachment are selected
+    //if (checkedEmailValues.length === 0) {
+    //    alert("Please select at least one Email.");
+    //    return false;
+    //}
+
+    if (selectedAttachments.length === 0) {
+        alert("Please select at least one file.");
+        return false;
+    }
+
+    if(MailBody=="" || MailBody==null){
+        alert("Please Enter Mail Body.");
+        return false;
+    }
+
+    if(mailsubject=="" || mailsubject==null){
+        alert("Please Enter Mail Subject");
+        return false;
+    }
+    // Log selected emails and attachments
+    console.log('Selected Emails:', checkedEmailValues);
+    console.log('Selected Attachments:', selectedAttachments);
+
+    // Send data via AJAX
+    $.ajax({
+        type: "POST",
+        url: "/QuotationMaster/SendQuotation",
+        data: {
+            emails: checkedEmailValues.join(';'),
+            attachments: selectedAttachments.join(';'),
+            pk_call_id: pk_call_id,
+            mailsubject: mailsubject,
+            MailBody:MailBody,
+            Signature:Signature
+        },
+        success: function (response) {
+            if (response) {
+                alert("Email Sent Successfully!");
+            }
+            console.log('Email sent successfully');
+            $(".column-checkbox").prop('checked', false);
+            $("#Subject").val('');
+            $("#MailBody").val('');
+            $("#selectAll").prop('checked', false);
+            GetAttachmentData_();
+            BindData();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error in sending email: ', error);
+            alert("Something Went Wrong!!");
+        }
+    });
+}
+
+    function UpdateClienttable(ClientName){
+        debugger;
+        var PK_QTID = @Html.Raw(Json.Encode(Model.PK_QTID));
+        $.ajax({
+            url:"@Url.Action("UpdateClientTable", "QuotationMaster")",
+            type: 'POST',
+            dataType: 'json',
+            data:{PK_QTID:PK_QTID,ClientName:ClientName},
+            success:function(result){
+        },
+        error:function(error){
+            alert("Something Went wrong: " + error);
+        }
+    });
+    }
+
+
+
+
+    function btnAddClient_(ClientName){
+        debugger;
+        var ClientEmail=$("#ClientContactContact").val();
+        var PK_QTID = @Html.Raw(Json.Encode(Model.PK_QTID));
+        var vendorName=$("#CMP_ID_").val();
+        var emailArray = Array.isArray(ClientEmail) ? ClientEmail : [ClientEmail];
+        emailArray = emailArray.map(function(email) {
+         return email.trim();
+        });
+        $.ajax({
+            url:"@Url.Action("UpdateClientTableExisting", "QuotationMaster")",
+            type: 'POST',
+            dataType: 'json',
+            data:{PK_QTID:PK_QTID,ClientName:emailArray,getCompanyName:vendorName},
+            success:function(result){
+                debugger;
+                $("#AddExistingClient").modal('hide');
+                $("#modalCloseButton5").click();
+                $('.modal-backdrop').removeClass('in');
+                BindData();
+                addclass();
+        },
+        error:function(error){
+            alert("Something Went wrong: " + error);
+            $("#AddExistingClient").modal('hide');
+            $("#modalCloseButton5").click();
+            $('.modal-backdrop').removeClass('in');
+            BindData();
+            addclass();
+        }
+    });
+    }
+
+
+    function addclass(){
+
+        $('#AddExistingClient').on('shown.bs.modal', function() {
+            $('.modal-backdrop').addClass('in');
+        });
+       
+    }
+
+
+</script>
+

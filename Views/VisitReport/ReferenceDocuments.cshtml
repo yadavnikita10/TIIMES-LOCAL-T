@@ -1,0 +1,336 @@
+﻿@model TuvVision.Models.ReferenceDocumentsModel
+
+@{
+    ViewBag.Title = "ReferenceDocuments";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+}
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+                        <br />
+                        <h5 class="dynamic-page-title dynamic-page-title-2 " style="padding-left: 11px;">Inspection Visit Report Number : @Session["VisitReportNo"]</h5>
+                        @*<a href="@Url.Action("IvrReports","VisitReport")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
+
+                        <div class="col-xs-12">
+
+
+                            @if (Model.PK_CALL_ID != 0)
+            {
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">General</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'"> Item Description</button>
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Reference Documents</button>
+
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Stages Witnessed</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Document Reviewed</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Details Of Measuring Instrument</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Conclusion</button>
+
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Image</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Report</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID = Model.abcid} )'">List Of Issues</button>
+
+                                @*<button class="btn btn-info dynamic-function-btn ReportImage" type="button" onclick="location.href='@Url.Action("VisitReportAttchment", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID} )'">Attachment</button>*@
+                                @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID} )'">Report</button>*@
+                            }
+
+
+
+                            </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Reference Documents</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+                                                @Html.HiddenFor(m => m.PK_CALL_ID)
+                                                @Html.HiddenFor(m => m.abcid)
+                                              
+
+                                                    @*<div class="col-xs-12 col-sm-3">
+                                            <div class="form-group">
+                                                <label>Document Name:</label>
+
+                                                @Html.TextBoxFor(model => model.Document_Name, new { @placeholder = "Po Item No", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Document_Name, "", new { @class = "text-danger validation-msg" })
+                                            </div>
+                                        </div>*@
+                                                    @*<div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label> Document Name:</label>
+
+                                                            @Html.DropDownListFor(m => m.Document_Name, new List<SelectListItem>
+                                                          {
+                                                            new SelectListItem{ Text="Select", Value = "" },
+                                                            new SelectListItem{ Text="PR/MR/ARM", Value = "PR/MR/ARM" },
+                                                            new SelectListItem{ Text="QAP/ITP/QCP", Value = "QAP/ITP/QCP" },
+                                                            new SelectListItem{ Text="Drawing(s)", Value = "Drawing(s)" },
+                                                            new SelectListItem{ Text="Procedure(s)", Value = "Procedure(s)" },
+                                                            new SelectListItem{ Text="Datasheet(s)", Value = "Datasheet(s)" },
+                                                            new SelectListItem{ Text="Others(Specify)", Value = "Others(Specify)" },
+
+                                                         }, new { @class = "form-control", @id = "Type" })
+                                                            @Html.ValidationMessageFor(m => m.Document_Name, "", new { @class = "text-danger" })
+
+                                                        </div>
+          
+                                                                                                  </div>*@
+
+                                                @if (Model.Visible == "True")
+                                                {
+
+
+foreach (var item in ViewBag.DocName as IEnumerable<TuvVision.Models.ReferenceDocumentsModel>)
+{
+    <div class="row">
+        <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+                <label> Document Name:</label>
+
+                @Html.TextBoxFor(m => m.RD[j].Document_Name, new { @placeholder = "Document name", @class = "form-control", @readonly = true, @Value = item.Document_Name })
+                @Html.HiddenFor(m => m.RD[j].Document_Name)
+                @Html.ValidationMessageFor(m => m.Document_Name, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+                <label>Client Document No:</label>
+
+                @*@Html.TextBoxFor(model => model.RD[j].Document_No, new { @placeholder = "Enter Document No", @class = "form-control", autocomplete = "off", @Value = item.Document_No })*@
+                @Html.TextAreaFor(m => m.RD[j].Document_No, new {  placeholder = "Enter Client Document No", @class = "form-control", autocomplete = "off", item.Document_No })
+                @Html.ValidationMessageFor(model => model.Document_No, "", new { @class = "text-danger validation-msg" })
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+                <label>Vendor Document No:</label>
+
+                @Html.TextBoxFor(model => model.RD[j].VendorDocumentNumber, new { @placeholder = "Enter Document No", @class = "form-control", autocomplete = "off", @Value = item.VendorDocumentNumber })
+                @Html.ValidationMessageFor(model => model.VendorDocumentNumber, "", new { @class = "text-danger validation-msg" })
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+                <label>Approval Status:</label>
+
+                @Html.TextBoxFor(model => model.RD[j].Approval_Status, new { @placeholder = "Enter Approval Status", @class = "form-control", autocomplete = "off", @Value = item.Approval_Status })
+                @Html.ValidationMessageFor(model => model.Approval_Status, "", new { @class = "text-danger validation-msg" })
+            </div>
+        </div>
+    </div>
+    j++;
+}
+
+
+
+
+                                                <div class="col-xs-12 text-center" id="IVRPointerEvents">
+
+                                                    <button type = "submit" class="btn btn-default insert-form-btn" id="btnReset" value="Reset">Save</button>
+
+                                                </div>
+                                                }
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+@using (Html.BeginForm("UpdateReferenceD", "VisitReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formiid" }))
+{
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-12">
+                                            <table id = "library-dt" class="display custom-table" cellspacing="0" width="100%">
+
+                                                <thead>
+                                                    <tr>
+
+                                                        <th>Document Name</th>
+                                                        <th>Client Document Number</th>
+                                                        <th>Vendor Document Number</th>
+                                                        <th>Approval Status</th>
+                                                        @*<th class="remove-search">Action</th>*@
+                                                    </tr>
+                                                </thead>
+
+                                                @*<tbody>
+                                                    @{
+                                                    var TestingData = ViewData["CostSheet"] as IEnumerable<TuvVision.Models.ReferenceDocumentsModel>;
+                                                    }
+
+                                                    @foreach(var item in TestingData.OrderByDescending(a => a.PK_RD_ID))
+                                                {
+                                                <tr>
+                                                    <td>@item.Document_Name</td>
+                                                    <td>@item.Document_No</td>
+                                                    <td>@item.VendorDocumentNumber</td>
+
+                                                    <td>@item.Approval_Status</td>
+
+                                                    <td class="less-width">
+                                                        <a href = "@Url.Action("ReferenceDocuments", "VisitReport", new {@PK_RD_ID = item.PK_RD_ID })" title="Edit"><span class="fa fa-pencil"></span>&nbsp;</a>
+                                                        <a href = "@Url.Action("DeleteIReferenceDocumentsData", "VisitReport", new {@PK_RD_ID = item.PK_RD_ID, @PK_CALL_ID = item.PK_CALL_ID })" onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
+                                                        @{
+                                                                if ((Convert.ToString(TempData["InsertCompany"])) != "" && Convert.ToString(TempData["InsertCompany"]) != null)
+                                                                {
+                                                                    TempData["InsertCompany"] = null;
+                                                         
+                                                                }
+                                                                if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
+                                                                {
+                                                                    TempData["UpdateCompany"] = null;
+                                                           
+                                                                }
+                                                        }
+                                                    </td>
+
+                                                </tr>
+
+                                                                }
+
+                                                </tbody>*@
+
+                                                <tbody>
+
+                                                    @{
+                                                        int i = 0;
+                                                    }
+
+                                                    @foreach (var item in ViewBag.CostSheet as IEnumerable<TuvVision.Models.ReferenceDocumentsModel>)
+                                                    {
+                                                        i = i + 1;
+                                                        <tr>
+                                                            @Html.HiddenFor(model => model.RD[j].PK_CALL_ID, new { @placeholder = "ID", @Value = item.PK_CALL_ID, @class = "form-control" })
+
+
+                                                            @Html.HiddenFor(model => model.RD[j].PK_RD_ID, new { @placeholder = "ID", @Value = item.PK_RD_ID, @class = "form-control" })
+                                                            <td>
+                                                            @Html.TextBoxFor(model => model.RD[j].Document_Name, new { @placeholder = "Document Name", @Value = item.Document_Name, @class = "form-control", @readonly = "readonly", @style = "Height:600px" })
+                                                            @Html.HiddenFor(model => model.RD[j].Document_Name, new { @placeholder = "Document Name", @Value = item.Document_Name, @class = "form-control" })
+                                                            </td>
+                                                            
+                                                            <td>
+                                                                @*@Html.TextBoxFor(model => model.RD[j].Document_No, new { @placeholder = "Document No", @Value = item.Document_No, @class = "form-control" })*@
+                                                                @Html.TextBoxFor(m => m.RD[j].Document_No, new { placeholder = "Document No", @class = "form-control", autocomplete = "off", @Value=item.Document_No,rows="20", @style = "Height:600px" })
+
+
+                                                            </td>
+                                                            <td>
+                                                                @Html.TextBoxFor(model => model.RD[j].VendorDocumentNumber, new { @placeholder = "Vendor Document Number", @Value = item.VendorDocumentNumber, @class = "form-control", @style = "Height:600px" })
+                                                            </td>
+                                                            <td>
+                                                                @Html.TextBoxFor(model => model.RD[j].Approval_Status, new { @placeholder = "Approval Status", @Value = item.Approval_Status, @class = "form-control", @style = "Height:600px" })
+                                                            </td>
+
+                                                        </tr>
+                                                        j++;
+                                                    }
+                                                </tbody>
+
+
+
+                                            </table>
+                                            </div>
+                                        </div>
+                                </div>
+
+
+                                <div class="col-xs-12 text-center">
+                                    <button type="submit" class="btn btn-default insert-form-btn">Update</button>
+
+                                </div>
+
+}
+
+                            </div>
+                        </div>
+
+                       
+                        <!--Contact Details By Manoj -->
+
+
+                    </div><!-- /.box-shadow -->
+                        </div>
+                    </div>
+    </div>
+</div>
+    </div>
+
+                <div class="main-content3 xs-max-height">
+
+                  
+                    <div class="container-fluid">
+                       
+
+                        <div class="col-xs-12">
+                         
+                        </div>
+
+
+                    </div>
+                    
+
+                </div>
+              
+                }
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        //var chkARC = $('#chkARC').val();
+        //var IVRCount = $('#IVRCount').val();
+        //var ARCFirstPrint = $('#ARCFirstPrint').val();
+
+
+        $("input[type='text']").each(function () {
+
+            var textbox = $(document.createElement('textarea')).val(this.value);
+            console.log(this.attributes);
+            $.each(this.attributes, function () {
+                if (this.specified) {
+                    textbox.prop(this.name, this.value)
+                }
+            });
+            $(this).replaceWith(textbox);
+
+
+         })
+
+
+
+
+
+
+    });
+</script>
+
+
+<script>
+    var isConfirmationIVR = @Session["IsConfirmationIVR"] ?? 0;
+    // JavaScript to disable pointer events if isConfirmationIVR is 1
+
+    if (isConfirmationIVR == 1) {
+        document.getElementById("IVRPointerEvents").style.pointerEvents = "none";
+    }
+</script>

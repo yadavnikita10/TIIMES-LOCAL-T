@@ -1,0 +1,380 @@
+﻿@model TuvVision.Models.InspectionvisitReportModel
+@{
+    ViewBag.Title = "VisitReportForm";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<head>
+    <link href="~/AllJsAndCss/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <div class="container">
+        <table id="tblproductsummery" border="1" style="margin-top:86px; width:70%" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="alicls">Item</th>
+                    <th class="alicls">No.Of Statements</th>
+                    <th class="alicls">Action</th>
+                </tr>
+            </thead>
+            <tbody id="bdyproductsummery"></tbody>
+        </table>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <button type="button" id="showFormButton" class="alicls" style="position:absolute;top:204px;right:444px;">Add Suggestion&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
+            </div>
+        </div>
+        <div id="formSection" class="row mt-3 hidden" style="margin-left:10px;margin-top: 60px;">
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Item:</label><span class="text-danger">*</span>
+                    <select id="ProductLists" class="form-control" name="ProductList" placeholder="Select Option" required="required">
+                        <option value="" disabled selected>Please select</option>
+                        @if (ViewData["Drpproduct"] != null)
+                        {
+                            foreach (var item in ViewData["Drpproduct"] as IEnumerable<TuvVision.Models.Calls>)
+                            {
+                                <option value="@item.Product_ID">@item.Product_Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4" style="margin-top:26px;">
+                <div class="form-group">
+                    <input type="file" id="fileInput" name="file" class="form-control" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 d-flex align-items-end mt-2" style="margin-top:26px;">
+                <button type="button" id="previewButton" class="alicls">Upload</button>
+            </div>
+        </div>
+
+        <table class="table table-hover" id="previewdatatble" border="1">
+            <thead>
+                <tr>
+                    <th class="alicls">Statement</th>
+                    <th class="alicls">Action</th>
+                </tr>
+            </thead>
+            <tbody id="previewtbl"></tbody>
+        </table>
+
+        <table id="actualprductstatement" border="1">
+            <thead>
+                <tr>
+                    <th class="alicls">Product</th>
+                    <th class="alicls">Statement</th>
+                    <th class="alicls">Action</th>
+                </tr>
+            </thead>
+            <tbody id="Actualtbl"></tbody>
+        </table>
+    </div>
+
+</form>
+<script>
+    $(document).ready(function () {
+        $("#previewdatatble").addClass('hide');
+        $("#actualprductstatement").addClass('hide');
+        ProductSummery();
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#previewButton').click(function () {
+            //$('#fileInput').on('change', function (event) {
+            const drpitem = $('#ProductLists :selected').text();
+            if (drpitem == "" || drpitem == 'Please select') {
+                alert("please select item Inspected");
+                return false;
+            }
+            var formData = new FormData();
+            var file = $('#fileInput')[0].files[0];
+            formData.append('file', file);
+            $.ajax({
+                url: '@Url.Action("Preview", "StandardStatement")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.message == 'Only Excel files (.xls, .xlsx) are allowed.') {
+                        alert('Only Excel files (.xls, .xlsx) are allowed.');
+                        return false;
+                    }
+                    $("#actualprductstatement").empty();
+                    $("#actualprductstatement").addClass('hide');
+                    $("#previewdatatble").removeClass('hide');
+                    $("#previewtbl").empty();
+                    $.each(data, function (index, item) {
+                        debugger;
+                        if (item.Statementwithconclu != "") {
+                            $("#previewtbl").append("<tr><td><textarea style='width:100%;height:70px;'>" + item.Statementwithconclu + "</textarea></td><td class='text-center'><i class='fa fa-trash removeRow' aria-hidden='true'></i></td></tr>")
+                        }
+                    });
+                    $("#previewtbl").append("<div class='text-center mt-3' style='margin-left: 230px;height: 45px;margin-top: 8px;'><button id='uploadButton' class='alicls'>Save</button></div>");
+
+                },
+                error: function () {
+                    alert("Failed to preview the data.");
+                }
+            });
+        });
+
+
+        $(document).on('click', '.removeRow', function () {
+            $(this).closest('tr').remove();
+        });
+
+        $(document).on('click', '#uploadButton', function () {
+            debugger;
+            var tableData = [];
+            //alert(1);
+            const drpitem = $('#ProductLists :selected').val();
+            //alert(2);
+            //alert(drpitem);
+            $('#previewtbl tr').each(function ()
+            {
+                debugger;
+                var row = $(this);
+                var rowData =
+                    {
+                    Id: drpitem,
+                    statementwithconclu: row.find('td:eq(0)').text()
+                };
+                tableData.push(rowData);
+                
+            });
+            $.ajax({
+                url: '@Url.Action("UploadData", "StandardStatement")',
+                type: 'POST',
+                data: JSON.stringify(tableData),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (result) {
+                    if (result == "Save") {
+                        alert("Data uploaded successfully.");
+                        ProductSummery();
+                    }
+                },
+                error: function () {
+                    alert("Failed to upload the data.");
+                }
+            });
+        });
+    });
+
+    function DeleteItem(Id)//for delete
+    {
+        $.ajax({
+            url: '@Url.Action("ProductItemDelete", "StandardStatement")',
+            type: 'GET',
+            dataType: 'json',
+            data: { id: Id },
+            success: function (data) {
+                if (data == 'True') {
+                    alert("Item Deleted Successfully");
+                    ProductSummery();
+                }
+            }, error: function (data) {
+                alert("Something Went Wrong!!");
+            }
+        });
+    }
+   
+</script>
+
+<script>
+    function ProductSummery() {
+        $.ajax({
+            url: '@Url.Action("GetProductSummery", "StandardStatement")',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $("#bdyproductsummery").empty();
+                if (!!data && data != '') {
+                    var Dtable = JSON.parse(data);
+                    $.each(Dtable, function (index, item) {
+                        $("#bdyproductsummery").append("<tr><td style='cursor: pointer;' style='text-align: center;'><a onclick=GetProductitem(" + item.Product_ID + ")>" + item.Product + "</a></td><td style='text-align: center;'>" + item.NumberStatement + "</td><td class='text-center'><i class='fa fa-trash' aria-hidden='true' style='cursor: pointer;' onclick=DeleteProductItem(" + item.Product_ID + ")></i></td></tr>")
+                    });
+                }
+            }, error: function (xhr, status, error) {
+                console.log("Error:", error);
+            }
+
+        });
+    }
+</script>
+
+<script>
+    var Dtable = [];
+    var originalData = {};
+    function GetProductitem(productId) {
+        $.ajax({
+            url: '@Url.Action("GetAllProductStatement", "StandardStatement")',
+            type: 'GET',
+            dataType: 'json',
+            data: { productId: productId },
+            success: function (data) {
+                debugger;
+                document.getElementById('formSection').classList.remove('hidden');
+                $('#ProductLists').val(productId).attr("style", "pointer-events: none;");;
+                document.getElementById('tblproductsummery').classList.add('hidden');
+                $("#actualprductstatement").removeClass('hide');
+                $("#previewtbl").empty();
+                $("#previewdatatble").addClass('hide');
+                if (!!data && data != '') {
+                    $("#Actualtbl").empty();
+                    Dtable = JSON.parse(data);
+                    $.each(Dtable, function (index, item) {
+                        originalData[item.Pk_StatementId] = item.Statementwithconclusion;
+                        $("#Actualtbl").append(
+                       "<tr id='row_" + item.Pk_StatementId + "'>" +
+                       "<td>" + item.Product + "</td>" +
+                       "<td id='statement_" + item.Pk_StatementId + "'>" +
+                       "<textarea id='edit_" + item.Pk_StatementId + "' rows='4' cols='85'>" + item.Statementwithconclusion + "</textarea>" +
+                       "</td>" +
+                       "<td class='text-center'>" +
+                       "<i class='fa fa-trash' aria-hidden='true' onclick='DeleteItem(" + item.Pk_StatementId + ")'></i>" +
+                       "</td>" +
+                       "</tr>"
+                        );
+                    });
+                    $("#Actualtbl").append(
+                     "<tr>" +
+                     "<td colspan='3' class='text-center'>" +
+                     "<button class='alicls' onclick='saveAllEdits()'>Save</button>" +
+                     "</td>" +
+                     "</tr>"
+                     );
+                }
+            }, error: function (xhr, status, error) {
+                alert("Something Went Wrong");
+            }
+
+        });
+    }
+
+    // Function to handle saving all edits
+    function saveAllEdits() {
+        var editedData = [];
+        $.each(Dtable, function (index, item) {
+            var textarea = $('#edit_' + item.Pk_StatementId);
+            var originalText = originalData[item.Pk_StatementId];
+            var currentText = textarea.val();
+
+            if (originalText !== currentText) {
+                editedData.push({
+                    Id: item.Pk_StatementId,
+                    Statementwithconclu: currentText
+                });
+            }
+        });
+        $.ajax({
+            url: '@Url.Action("ProductItemEdit", "StandardStatement")',
+            type: 'POST',
+            data: JSON.stringify(editedData),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (response) {
+                if (response == "True") {
+                    alert("Content updated successfully");
+                    ProductSummery();
+                }
+                else {
+                    alert("Failed to update content");
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Something Went Wrong");
+            }
+        });
+    }
+</script>
+
+<script>
+    document.getElementById('showFormButton').addEventListener('click', function () {
+        document.getElementById('formSection').classList.toggle('hidden');
+        $("#actualprductstatement").addClass('hide');
+        document.getElementById('tblproductsummery').classList.toggle('hidden');
+    });
+</script>
+
+<script>
+    function DeleteProductItem(productName)//summerydelete
+    {
+        Swal.fire({
+            title: "Are you sure?",
+            //text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("DeleteSummaryProductItem", "StandardStatement")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { productId: productName },
+                    success: function (data) {
+                        if (!!data && data == "True") {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your product has been deleted.",
+                                icon: "success"
+                            });
+                            ProductSummery();
+                        }
+                    }, error: function (data) {
+                        alert("Something Went Wrong!!");
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .custom-table {
+        width: 100%;
+        max-width: 1298px;
+    }
+
+    .alicls {
+        text-align: center;
+        color: #ffffff;
+        background-color: #001ADD;
+        padding:5px;
+    }
+
+    .text-center {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .hide {
+        display: none;
+    }
+</style>
+

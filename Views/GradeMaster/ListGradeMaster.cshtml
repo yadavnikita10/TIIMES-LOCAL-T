@@ -1,0 +1,153 @@
+﻿@model TuvVision.Models.GradeMaster
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "ListGradeMaster";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Grade Master</h3>
+                
+                    <button type="button" value="CreateGrade" style="margin-left: 10px"  class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("GradeMaster", "GradeMaster")'">Add Grade </button>
+                
+                
+                    <button type="button" value="ExportToExcel"  class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex","GradeMaster")'">
+                        Export To Excel
+                    </button>
+               
+                </div><!-- /.col -->
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+            <!--Table was here-->
+
+        </div>
+        <div class="col-xs-12">
+        
+            @*<table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="hidden">Id</th>             
+                        <th>Employee Grade</th>                 
+                        <th>Car Rate</th>                      
+                        <th>Motor Bike Rate</th>                    
+                        <th>OPE Rate</th>
+                       
+
+                        <th class="remove-search">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var asset in Model)
+                    {
+                        <tr>
+                            <td class="hidden">@asset.Id</td>
+                            <td>@asset.EmployeeGrade</td>
+                            <td>@asset.CarRate</td>
+
+                            <td>@asset.MotorBikeRate</td>
+
+                            <td>@asset.OPERate</td>
+
+
+
+                            <td class="action-btn" style="text-align:center;">
+                                <a href="@Url.Action("UpdateGradeMaster", "GradeMaster", new { id = @asset.Id })" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>
+
+                                <a href="@Url.Action("Delete", "GradeMaster", new { id = @asset.Id })" class="delete" onclick="return confirm('Are you sure you wish to Delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>*@
+              
+
+        </div>
+        <div class="col-xs-12">
+            <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>
+                        @(Html
+                            .Grid(Model.lmd1)
+                            .Build(columns =>
+                            {
+                                //    <td class="action-btn" style="text-align:center;">
+                                //    <a href="@Url.Action("UpdateGradeMaster", "GradeMaster", new { id = @asset.Id })" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>
+
+                                //    <a href="@Url.Action("Delete", "GradeMaster", new { id = @asset.Id })" class="delete" onclick="return confirm('Are you sure you wish to Delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+                                //</td>
+
+                                columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "UpdateGradeMaster", new { id = o.Id }, new { @class = "fa fa-pencil", title = "Edit" }));
+                                columns.Add().Titled("Delete").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "Delete", new { id = o.Id }, new { @class = "fa fa-trash-o", title = "Delete", onclick = "return confirm('Are you sure you wish to delete ?');" }));
+
+                                columns.Add(c => c.Id).Titled("Id");
+                                columns.Add(c => c.EmployeeGrade).Titled("Employee Grade");
+                                columns.Add(c => c.CarRate).Titled("Car Rate");
+                                columns.Add(c => c.MotorBikeRate).Titled("Motor Bike Rate");
+                                columns.Add(c => c.OPERate).Titled("OPE Rate");
+
+
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                        )
+
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+
+        </div>
+
+</div>
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+</script>
+
+<style>
+    table.evaluation > tbody {
+        width: 100% !important;
+        display: table;
+    }
+
+        table.evaluation > tbody > tr td table {
+            width: 100% !important;
+            display: table;
+        }
+</style>

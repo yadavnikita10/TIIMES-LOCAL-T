@@ -1,0 +1,561 @@
+﻿@model TuvVision.Models.QuizModel
+@{
+    ViewBag.Title = "GetQuiz";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int i = 0;
+    int k = 0;
+}
+
+
+
+
+
+
+@*@import url(https://fonts.googleapis.com/css?family=Work+Sans:300,600);*@
+<script type="text/javascript" src="https://fonts.googleapis.com/css?family=Work+Sans:300,600"></script>
+<style>
+
+  
+
+body1{
+	font-size: 20px;
+	/*font-family: 'Work Sans', sans-serif;*/
+    font-family:'TNG Pro';
+	color: #333;
+  font-weight: 300;
+  text-align: center;
+  background-color: #f8f6f0;
+}
+h1{
+  font-weight: 300;
+  margin: 0px;
+  padding: 10px;
+  font-size: 20px;
+  background-color: #444;
+  color: #fff;
+}
+.question{
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.answers {
+  margin-bottom: 20px;
+  text-align: left;
+  display: inline-block;
+}
+.answers label{
+  display: block;
+  margin-bottom: 10px;
+}
+button{
+  /*font-family: 'Work Sans', sans-serif;*/
+  font-family:'TNG Pro';
+	font-size: 22px;
+	background-color: #279;
+	color: #fff;
+	border: 0px;
+	border-radius: 3px;
+	padding: 20px;
+	cursor: pointer;
+	margin-bottom: 20px;
+}
+button:hover{
+	background-color: #38a;
+}
+
+
+
+
+
+.slide{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.active-slide{
+  opacity: 1;
+  z-index: 2;
+}
+.quiz-container{
+  position: relative;
+  height: 200px;
+  margin-top: 40px;
+}
+</style>
+
+@using (Html.BeginForm("GetQuiz", "Quiz", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formqz" }))
+{
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-5">
+
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                                <br />
+                                <a href="@Url.Action("TrainingDetails", "TrainingSchedule")" class="btn btn-default insert-form-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Quiz on @ViewBag.TP</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+    <div class="row">
+        <div class="col-xs-12 col-sm-4">
+            @Html.HiddenFor(model => model.TrainingID)
+            @Html.HiddenFor(model => model.QuizID)
+        </div>
+    </div>
+
+    @*<h3 class="form-page-title">@ViewBag.TrngNm</h3>*@
+    <br />
+    @{
+        int QuestionCount = (ViewBag.QuizQuestions as List<TuvVision.Models.QuizQuestion>).Count();
+    }
+
+
+
+    @if (ViewBag.QuizVerify == "NotSubmitted")
+    {
+        <script>
+    function openQuizPage() {
+        // Get the Psid from ViewBag
+        var sid = '@ViewBag.Psid';
+        // Create the URL with Psid as query string
+        var qTime = '@ViewBag.QTimeInMinutes';
+
+    // Create the URL with Psid and QTimeInMinutes as query string
+        var url = '@Url.Action("Q2", "Quiz")' + '?sid=' + sid + '&qTime=' + qTime;
+
+        // Open the new page with Psid in the URL
+        window.location.href = url;
+    }
+
+
+            $(document).ready(function() {
+                var quizVerify = '@ViewBag.QuizVerify'; // Get the value from ViewBag
+                if (quizVerify === "NotSubmitted") {
+                    openQuizPage(); // Call the function if the condition is met
+                }
+            });
+
+        </script>
+
+
+
+
+
+
+
+            <div id="customAlert" class="modal" >
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+
+                    <div id="quizDiv">
+                        Time remaining: <span id="timer"></span>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="form-group">
+
+                                    <input type="button" id='next' value="Next" onlick="sum_values()" class="btn btn-primary btn-lg" style="width:100px;">
+                                    <input type="button" id='Previous' value="Previous" onlick="sum_values()" class="btn btn-primary btn-lg" style="width:109px;">
+                                    @*<button type="submit" class="btn btn-primary  btn-lg" id="submit" style="width:100px;" onclick='return confirm("Are you sure  you want to Submit Quiz ?")'> Submit </button>*@
+                                    <button type="submit" class="btn btn-primary  btn-lg" id="submit" style="width:100px;"> Submit </button>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-2">
+                                <div class="form-group">
+
+
+                                    @*<input type="button" id='Previous' value="Previous" onlick="sum_values()" class="btn btn-primary btn-lg" style="width:109px;">*@
+
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-2">
+                                <div class="form-group">
+
+
+                                    @*<button type="submit" class="btn btn-primary  btn-lg" id="submit" style="width:100px;" onclick='return confirm("Are you sure  you want to Submit Quiz ?")'> Submit </button>*@
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="col-xs-12">
+                            <table>
+                                @foreach (var item in ViewBag.QuizQuestions as List<TuvVision.Models.QuizQuestion>)
+                            {
+
+                                i = i + 1;
+
+                            <tr><td><br /></td></tr>
+
+
+                            @*<div class="quiz-container">*@
+                            <div class="questions">
+                                <p style="text-align:left;"> @i &nbsp;@item.TQuestion </p>
+                                @Html.HiddenFor(m => m.QuizQuestion[k].TQuizID, new { Value = item.TQuizID })
+                                @Html.HiddenFor(m => m.QuizQuestion[k].TrainingID, new { Value = item.TrainingID })
+                                @*<form>*@
+                                <p style="text-align:left;">
+                                    @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption1)))
+                                                                                {
+                                                                                @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "a", new { name = "abc", @class = "R" })
+                                                                                <span> @item.TOption1 &nbsp;&nbsp;</span>
+                                                                                }
+                                </p>
+                                <p style="text-align:left;">
+                                    @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption2)))
+                                                                                {
+                                                                                @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "b", new { name = "abc2", @class = "R2" })
+                                                                                <span> @item.TOption2 &nbsp;&nbsp;</span>
+                                                                                }
+                                </p>
+                                <p style="text-align:left;">
+                                    @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption3)))
+                                                                                {
+                                                                                @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "c", new { name = "abc3", @class = "R3" })
+                                                                                <span> @item.TOption3 &nbsp;&nbsp;</span>
+                                                                                }
+                                </p>
+                                <p style="text-align:left;">
+                                    @if (!string.IsNullOrEmpty(Convert.ToString(item.TOption4)))
+                                                                                {
+                                                                                @Html.RadioButtonFor(m => m.QuizQuestion[k].TOption1, "d", new { name = "abc4", @class = "R4" })
+                                                                                <span> @item.TOption4 &nbsp;&nbsp;</span>
+                                                                                }
+                                </p>
+                                @*</form>*@
+                            </div>
+                            @*</div>*@
+                                k++;
+                            }
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        All The Best..
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="pageOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999;"></div>
+
+    }
+    else
+    {
+        if (ViewBag.ResultShow != "Yes")
+        {
+            <div class="row">
+                <h3>Congratulations ... You have successfully attempted this Test !<br /> Result will be displayed here after Quiz End Date.</h3>
+                <br />
+            </div>
+            }
+
+            else if (ViewBag.ResultShow == "Yes" && ViewBag.PassFail == "Failed")
+            //else if (ViewBag.ResultShow == "Yes")
+            {
+
+            <div class="row">
+                <h3>
+                    Result: @ViewBag.PassFail  @ViewBag.Percent % in @ViewBag.NoOfAttempt attempt<br /> For Reattempt Quiz Kindly here <br />
+                   
+                    @if (ViewBag.NoOfAttempt == "1")
+                    {
+                     <a href="@Url.Action("GetQuiz", "Quiz", new { Reattempt = "Yes", sid = Convert.ToInt32(ViewBag.sid) })" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-left:10px;">Re-Attempt Quiz</a>
+                    }
+                </h3>
+            </div>
+            }
+            else
+            {
+            <div class="row">
+                <h3>Result: @ViewBag.PassFail @ViewBag.Percent % in @ViewBag.NoOfAttempt attempt </h3>
+
+            </div>
+            }
+
+
+
+
+            }
+
+
+
+
+
+
+</form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@*Working*@
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        answers = new Object();
+        $('.option').change(function () {
+            var answer = ($(this).attr('value'))
+            var question = ($(this).attr('name'))
+            answers[question] = answer
+        })
+        var item1 = document.getElementById('questions');
+
+        var totalQuestions = $('.questions').size();
+        var currentQuestion = 0;
+        
+        $questions = $('.questions');
+        $questions.hide();
+        $($questions.get(currentQuestion)).fadeIn();
+
+        chkFirstQ(currentQuestion)
+        $('#next').click(function () {
+            debugger;
+           
+            $($questions.get(currentQuestion)).fadeOut(function () {
+                currentQuestion = currentQuestion + 1;
+                if (currentQuestion == totalQuestions) {
+                    var result = sum_values()
+                    $("#next").hide();
+                    $("#submit").show();
+                    //do stuff with the result
+                    chkFirstQ(currentQuestion)
+                } else {
+                    $("#next").show();
+                    $("#submit").hide();
+                    chkFirstQ(currentQuestion)
+                    
+                    $($questions.get(currentQuestion)).fadeIn();
+                }
+            });
+
+        });
+
+        $('#submit').click(function () {
+            debugger;
+            var getSelectedValue = document.querySelector('input[name="abc"]:checked');
+
+        })
+        
+
+        $('#Previous').click(function () {
+            debugger;
+            $($questions.get(currentQuestion)).fadeOut(function () {
+                currentQuestion = currentQuestion - 1;
+                if (currentQuestion == totalQuestions) {
+                    var result = sum_values()
+                    $("#next").hide();
+                    $("#submit").show();
+                    
+                    //do stuff with the result
+                    chkFirstQ(currentQuestion)
+                } else {
+                    $("#submit").hide();
+                    $("#next").show();
+                    chkFirstQ(currentQuestion)
+                    
+                    $($questions.get(currentQuestion)).fadeIn();
+                }
+            });
+
+        });
+
+
+
+    });
+
+
+    function chkFirstQ(currentQuestion) {
+        debugger;
+        
+            if (currentQuestion == "0") {
+                $("#Previous").hide();
+            }
+            else {
+                $("#Previous").show();
+            }
+
+
+            var totalQuestions1 = $('.questions').size();
+            if (currentQuestion + 1 == totalQuestions1) {
+                $("#submit").show();
+                $("#next").hide();
+            }
+            else {
+                $("#submit").hide();
+                $("#next").show();
+            }
+        
+    }
+
+
+  
+
+    function sum_values() {
+        var the_sum = 0;
+        for (questions in answers) {
+            the_sum = the_sum + parseInt(answers[question])
+        }
+        return the_sum
+    }
+
+
+    function GetQCount(q) {
+        debugger;
+
+        if (q == 1) {
+            $("#Previous").hide();
+        }
+        else
+        {
+            $("#Previous").show();
+        }
+    }
+    function GetQCountOnPre(q) {
+        debugger;
+        if (q == 1) {
+            $("#Previous").hide();
+            $("#submit").hide();
+            $("#next").show();
+        }
+        else {
+            $("#Previous").show();
+        }
+    }
+
+
+</script>
+
+
+<script type="text/javascript">
+    var totalMinutes = @ViewBag.QTimeInMinutes; @*@Model.TimeLimit;*@ // Get the quiz time limit from the model
+    var seconds = totalMinutes * 60;
+
+    function startTimer() {
+        var timerInterval = setInterval(function () {
+            seconds--;
+            var minutes = Math.floor(seconds / 60);
+            var remainingSeconds = seconds % 60;
+
+            document.getElementById("timer").innerHTML = minutes + "m " + remainingSeconds + "s";
+
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                alert("Time is up! Submitting your quiz...");
+                //document.getElementById("quizForm").submit(); // Automatically submit the form when time is up
+                document.getElementById("submit").click();
+            }
+        }, 1000);
+    }
+
+    window.onload = startTimer; // Start timer when the page loads
+</script>
+
+
+
+@*Start 12/09/2024*@
+
+<style>
+
+    /* Disable pointer events for the entire page except the modal */
+.page-overlay {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Black transparent background */
+    pointer-events: none; /* Disable pointer events on entire page */
+}
+
+/* Allow pointer events only inside the modal */
+#customAlert {
+    position: fixed;
+    z-index: 2; /* Make sure it appears on top of the overlay */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Adjust width */
+    height: auto; /* Adjust height */
+    pointer-events: auto; /* Allow pointer events inside the modal */
+}
+
+/* Close Button */
+.close {
+    color: #c0090f;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+</style>
+
+
+
+
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            showModal();
+        });
+
+        function showModal() {
+            var modal = document.getElementById("customAlert");
+            var overlay = document.getElementById("pageOverlay");
+
+            modal.style.display = "block";
+            overlay.style.display = "block"; // Show overlay to block content
+        }
+</script>
+
+<script type="text/javascript">
+    var modal = document.getElementById("customAlert");
+    var span = document.getElementsByClassName("close")[0];
+    var overlay = document.getElementById("pageOverlay");
+
+    // Close the modal when the user clicks on <span> (x)
+    span.onclick = function() {
+        modal.style.display = "none";
+        overlay.style.display = "none"; // Hide overlay when modal is closed
+    }
+
+    // Close the modal when the user clicks anywhere outside of the modal
+    window.onclick = function(event) {
+        if (event.target == modal || event.target == overlay) {
+            modal.style.display = "none";
+            overlay.style.display = "none"; // Hide overlay when modal is closed
+        }
+    }
+</script>

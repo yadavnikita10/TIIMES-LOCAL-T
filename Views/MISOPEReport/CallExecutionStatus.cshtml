@@ -1,0 +1,1056 @@
+﻿@model TuvVision.Models.CallsModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "CallExecutionStatus";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@helper CustomRenderingOfReport1(TuvVision.Models.CallsModel IVR)
+        {
+    <a href="~/IVRReport/@IVR.IVRReportNo" download="~/IVRReport/@IVR.IVRReportNo">
+        @*@Report.Report*@
+        @IVR.IVRReportNo
+    </a>
+}
+
+
+
+
+
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+@*DATEPICKER*@
+@*<script src="https://code.jquery.com/jquery-1.10.2.js"></script>*@
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+    <script src="~/AllJsAndCss/js/datatable-custom2.js"></script>*@
+
+
+
+
+
+
+<script>
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<style>
+    .no-border {
+        border: none;
+    }
+
+    .insert {
+        width: 80px;
+    }
+
+    .dropdown {
+        width: 100px;
+    }
+
+    .small-text {
+        font-size: 12px;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #001ED2;
+        font-weight: bold;
+        color: #ffffff;
+        font-size: 14px;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .small-table {
+        font-size: 12px;
+    }
+
+        .small-table th, .small-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .small-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .small-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+    .td {
+        font-size: 13px;
+    }
+</style>
+
+
+
+
+
+@using (Html.BeginForm("CallExecutionStatus", "MISOPEReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+    <div class="main-content3 xs-max-height">
+        <div class="container-fluid">
+
+
+            <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Call Execution Status</h3>
+
+            <br />
+            <br />
+            <div class="row">
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="small">From Date:</label>
+                        @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom form-control-sm  FromD", autocomplete = "off" })
+                        @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="small">To Date:</label>
+                        @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select End Date", @class = "form-control form-control-custom form-control-sm  FromD", autocomplete = "off" })
+                        @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="small">Excuting Branch:</label>
+                        @*if (ViewData["BranchName"] != null)
+                            {*@
+                        @Html.DropDownListFor(model => model.Excuting_Branch, (IEnumerable<SelectListItem>)ViewData["BranchName"], "---Select Branch---", new { @id = "ddlBranch", @class = "form-control  form-control-sm" })
+                        @Html.ValidationMessageFor(model => model.Excuting_Branch, "", new { @class = "text-danger validation-msg" })
+                        @*}
+                            else
+                            {
+                            @Html.DropDownListFor(model => model.ContactName, new SelectList(@ViewBag.ContactType, "Code", "Name"), "---Select Contact---", new { @id = "ddlContactType", @class = "form-control" })
+                            }*@
+
+                    </div>
+                </div>
+
+
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="small">Originating Branch:</label>
+
+                        @Html.DropDownListFor(model => model.OriginatingBranch, (IEnumerable<SelectListItem>)ViewData["BranchName"], "---Select Branch---", new { @id = "ddlBranch1", @class = "form-control form-control-sm " })
+                        @Html.ValidationMessageFor(model => model.OriginatingBranch, "", new { @class = "text-danger validation-msg" })
+
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="small">Coordinator Name:</label>
+
+                        @Html.DropDownListFor(model => model.CoordinatorName, (IEnumerable<SelectListItem>)ViewData["Employees"], "---Select Name---", new { @id = "ddlemp", @class = "form-control form-control-sm " })
+                        @Html.ValidationMessageFor(model => model.CoordinatorName, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="small">Inspector Name:</label>
+
+                        @Html.DropDownListFor(model => model.Inspector, (IEnumerable<SelectListItem>)ViewData["Emp"], "---Select Name---", new { @id = "ddlemp1", @class = "form-control form-control-sm" })
+                        @Html.ValidationMessageFor(model => model.Inspector, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+
+                <div class="col-xs-12 col-sm-2">
+                    <div class="form-group">
+                        <label>Call Status:</label>
+
+                        @*@Html.TextBoxFor(model => model.Status, new { @placeholder = "Status", @class = "form-control", @readonly = "readonly" })*@
+
+                        @Html.DropDownListFor(m => m.Status, new List<SelectListItem>
+                                                                {
+                                                                new SelectListItem{ Text="Select Status", Value = "" },
+                                                                new SelectListItem{ Text="Open", Value = "Open" },
+                                                                new SelectListItem{ Text="Assigned", Value = "Assigned" },
+                                                                new SelectListItem{ Text="Not Done", Value = "NotDone" },
+                                                                new SelectListItem{ Text="Closed", Value = "Closed" },
+                                                                new SelectListItem{ Text="Abortive", Value = "Abortive" },
+                                                                new SelectListItem{ Text="Cancelled", Value = "Cancelled" },
+
+                                                                }, new { @class = "form-control", @id = "ddlstatus" })
+                        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @*<button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle" id="btnsave"></i>Search</button>*@
+                        <input type="submit" value="Search" class="btn btn-default insert-form-btn insert form-control-sm" id="btnsave" style="margin-top:25px; " />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div>
+
+            <div class="row">
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label class="small">No.Of calls:-</label>
+                        @Html.TextBoxFor(model => model.TotalCalls, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "No of calls", @class = "form-control form-control-custom form-control-sm no-border ", autocomplete = "off", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.TotalCalls, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Open Calls:-</label>
+                        @Html.TextBoxFor(model => model.OpenCalls, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Open Calls", @class = "form-control form-control-custom no-border ", autocomplete = "off", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.OpenCalls, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Cancelled Calls:-</label>
+                        @Html.TextBoxFor(model => model.CancelledCalls, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Cancelled Calls", @class = "form-control form-control-custom no-border", autocomplete = "off", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.CancelledCalls, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Not Done Calls:-</label>
+                        @Html.TextBoxFor(model => model.NotDoneCalls, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Not Done Calls", @class = "form-control form-control-custom no-border ", autocomplete = "off", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.NotDoneCalls, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Assigned Calls:-</label>
+                        @Html.TextBoxFor(model => model.AssignedCalls, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Assigned Calls", @class = "form-control form-control-custom no-border", autocomplete = "off", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.AssignedCalls, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Closed Calls:-</label>
+                        @Html.TextBoxFor(model => model.ClosedCalls, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Closed Calls", @class = "form-control form-control-custom no-border ", autocomplete = "off", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.ClosedCalls, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <hr class="custom-hr">
+                    <div>
+                        @*<button type="button" id="btnExport" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex3", "MISOPEReport")';">
+                                Export To Excel
+                            </button>*@
+                        @*<button type="button" id="btnExport" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2">
+                                Export To Excel
+                            </button>*@
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group" style="padding-left:25px;">
+                <hr class="custom-hr1">
+            </div>
+
+
+            <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>
+
+
+
+                        @(Html.Grid(Model.lstDashBoard1)
+                    .Build(columns =>
+                    {
+                        columns.Add(c => c.Call_No)
+.Titled("Call Number")
+.Encoded(false)
+.RenderedAs(c => $"<a href='{Url.Action("CallsDetails", "CallsMaster", new { PK_Call_ID = c.PK_Call_ID })}' title='Call No' target='_blank'>{c.Call_No}</a>");
+
+
+                        columns.Add(c => c.Actual_Visit_Date).Titled("Actual Visit Date");
+                        columns.Add(c => c.Status).Titled("Status");
+                        columns.Add(c => c.Company_Name).Titled("Company name");
+                        columns.Add(c => c.VendorName).Titled("Vendor Name");
+                        columns.Add(c => c.Executing_Branch).Titled("Executing Branch");
+                        columns.Add(c => c.Originating_Branch).Titled("Originating Branch");
+                        columns.Add(c => c.CoordinatorName).Titled("Coordinator Name");
+                        columns.Add(c => c.Inspector).Titled("Inspector");
+                        columns.Add(c => c.InspectorMobile).Titled("Inspector Mobile");
+                        columns.Add(c => c.IVR).Titled("IVR Number").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true);
+
+                    })
+
+                    .Pageable(pager =>
+                            {
+                                //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No Data Found")
+                            .Filterable()
+                            .Sortable()
+                        )
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    
+}
+
+
+<script>
+    [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+        new MvcGrid(element);
+    });
+</script>
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>
+
+
+
+@*<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>*@
+
+
+
+
+
+@*<script>
+        $('#btnsave').click(function () {
+            debugger;
+
+            $('#partialtabledata').html('');
+            var FromDate = $('#FromDate').val();
+            var Todate = $('#ToDate').val();
+            var Excuting_Branch = $('#ddlBranch').val();
+            var OriginatingBranch = $('#ddlBranch1').val();
+            var CoordinatorName = $('#ddlemp').val();
+            var inspectorname = $('#ddlemp1').val();
+            debugger;
+            $.ajax({
+                url: '@Url.Action("GetdataCopy", "MISOPEReport")',
+                type: "post",
+                datatype: 'json',
+                data: { FromDate: FromDate, Todate: Todate, Excuting_Branch: Excuting_Branch, OriginatingBranch: OriginatingBranch, CoordinatorName: CoordinatorName, inspectorname: inspectorname },
+                cache: false,
+                success: function (address) {
+                    // Extract the required data for the pie chart
+                    var data = [
+                      address.OpenCalls,
+                      address.CancelledCalls,
+                      address.NotDoneCalls,
+                      address.AssignedCalls,
+                      address.ClosedCalls
+                    ];
+
+                    // Calculate the total sum of data points
+                    var total = data.reduce(function (acc, value) {
+                        return acc + value;
+                    }, 0);
+
+                    // Calculate the percentages for each data point
+                    var percentages = data.map(function (value) {
+                        return Math.round((value / total) * 100);
+                    });
+
+                    // Create the pie chart using Chart.js
+                    var ctx = document.getElementById('pieChart').getContext('2d');
+                    var chart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            datasets: [{
+                                data: data,
+                                backgroundColor: [
+                                  'rgba(255, 99, 132, 0.6)',
+                                  'rgba(54, 162, 235, 0.6)',
+                                  'rgba(255, 206, 86, 0.6)',
+                                  'rgba(75, 192, 192, 0.6)',
+                                  'rgba(153, 102, 255, 0.6)'
+                                ],
+                                borderColor: [
+                                  'rgba(255, 99, 132, 1)',
+                                  'rgba(54, 162, 235, 1)',
+                                  'rgba(255, 206, 86, 1)',
+                                  'rgba(75, 192, 192, 1)',
+                                  'rgba(153, 102, 255, 1)'
+                                ],
+                                borderWidth: 1
+                            }],
+                            labels: ['Open', 'Cancelled', 'Not Done', 'Assigned', 'Closed'],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            tooltips: {
+                                callbacks: {
+                                    label: function (tooltipItem, data) {
+                                        var dataset = data.datasets[tooltipItem.datasetIndex];
+                                        var value = dataset.data[tooltipItem.index];
+                                        var percentage = percentages[tooltipItem.index];
+                                        return dataset.label + ': ' + percentage + '% (' + value + ')';
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Update the other form fields with the received data
+                    $("#TotalCalls").val(address.TotalCalls);
+                    $("#OpenCalls").val(address.OpenCalls);
+                    $("#CancelledCalls").val(address.CancelledCalls);
+                    $("#NotDoneCalls").val(address.NotDoneCalls);
+                    $("#AssignedCalls").val(address.AssignedCalls);
+                    $("#ClosedCalls").val(address.ClosedCalls);
+
+                    alert("Data Added Successfully!");
+                },
+                error: function () {
+                    console.log('Error in retrieving data');
+                }
+
+
+            });
+
+
+
+        });
+    </script>*@
+
+<script>
+    $(document).ready(function () {
+        loadData();
+    });
+</script>
+
+
+@*<script>
+    function loadData() {
+        debugger;
+        var FromDate = $('#FromDate').val();
+        var Todate = $('#ToDate').val();
+        var Excuting_Branch = $('#ddlBranch').val();
+        var OriginatingBranch = $('#ddlBranch1').val();
+        var CoordinatorName = $('#ddlemp').val();
+        var inspectorname = $('#ddlemp1').val();
+        var status = $('#ddlstatus').val();
+        debugger;
+        $.ajax({
+            type: 'post',
+            url: '@Url.Action("Getdatacallsearch1", "MISOPEReport")',
+            data: { FromDate: FromDate, Todate: Todate, Excuting_Branch: Excuting_Branch, OriginatingBranch: OriginatingBranch, CoordinatorName: CoordinatorName, inspectorname: inspectorname, status: status },
+            dataType: 'json',
+            async: false,
+            success: function (response) {
+                debugger;
+                let Da = JSON.parse(response);
+                alert(response);
+                if (response != null) {
+                    debugger;
+                    // Assuming Da is an array of objects like: [{ PK_Call_ID: 1, Call_No: 'ABC', ... }, { PK_Call_ID: 2, Call_No: 'XYZ', ... }, ... ]
+                    var tableBody = $('#example tbody');
+                    $.each(Da, function (index, obj) {
+                        var row = $('<tr>');
+
+                        var callNoLink = $('<a>')
+                            .addClass('small-text')
+                            .attr('href', '/CallsMaster/CallsDetails?PK_Call_ID=' + obj.PK_Call_ID)
+                            .attr('target', '_blank') // Open link in a new window or tab
+                            .text(obj.Call_No);
+
+                        var callNoCell = $('<td>').append(callNoLink);
+                        var actualVisitDateCell = $('<td>').addClass('small').text(obj.Actual_Visit_Date);
+                        var statusCell = $('<td>').addClass('small').text(obj.Status);
+                        var companyCell = $('<td>').addClass('small').text(obj.Company_Name);
+                        var vendorCell = $('<td>').addClass('small').text(obj.VendorName);
+                        var executingBranchCell = $('<td>').addClass('small').text(obj.Executing_Branch);
+                        var originatingBranchCell = $('<td>').addClass('small').text(obj.Originating_Branch);
+                        var coordinatorCell = $('<td>').addClass('small').text(obj.CoordinatorName);
+                        var inspectorCell = $('<td>').addClass('small').text(obj.Inspector);
+                        var inspectorMobileCell = $('<td>').addClass('small').text(obj.InspectorMobile);
+
+                        var IVRNoLink = $('<a>')
+                            .addClass('small')
+                            .attr('href', '/IVRReport/' + obj.IVRReportNo)
+                            .attr('target', '_blank')
+                            .attr('download', '')
+                            .text(obj.IVRReportNo);
+
+                        var IVRNoCell = $('<td>').append(IVRNoLink);
+
+                        row.append(callNoCell, actualVisitDateCell, statusCell, companyCell, vendorCell, executingBranchCell, originatingBranchCell, coordinatorCell, inspectorCell, inspectorMobileCell, IVRNoCell);
+
+                        tableBody.append(row);
+                    });
+
+                }
+
+                //if (response != null) {
+
+                //    var _CallExecution = JSON.stringify(response);
+                //    window.sessionStorage.setItem('CallExecution', _CallExecution);
+                //    alert(response);
+                //    // Render the grid with the returned data
+                //    renderGrid(response);
+                //}
+            },
+            error: function () {
+                console.log('Error in retrieving data');
+            }
+        });
+
+    }
+    function renderGrid(data) {
+        var tableBody = $('#example tbody');
+        tableBody.empty();
+
+        $.each(data, function (index, obj) {
+            var row = $('<tr>');
+            var callNoLink = $('<a>')
+                .addClass('small-text')
+                .attr('href', '/CallsMaster/CallsDetails?PK_Call_ID=' + obj.PK_Call_ID)
+                .attr('target', '_blank') // Open link in a new window or tab
+                .text(obj.Call_No);
+            var callNoCell = $('<td>').append(callNoLink);
+
+            row.append(callNoCell);
+            row.append($('<td>').addClass('small').text(obj.Actual_Visit_Date));
+            row.append($('<td>').addClass('small').text(obj.Status));
+            row.append($('<td>').addClass('small').text(obj.Company_Name));
+            row.append($('<td>').addClass('small').text(obj.VendorName));
+            row.append($('<td>').addClass('small').text(obj.Executing_Branch));
+            row.append($('<td>').addClass('small').text(obj.Originating_Branch));
+            row.append($('<td>').addClass('small').text(obj.CoordinatorName));
+            row.append($('<td>').addClass('small').text(obj.Inspector));
+            row.append($('<td>').addClass('small').text(obj.InspectorMobile));
+            var IVRNoLink = $('<a>')
+              .addClass('small')
+              .attr('href', '/IVRReport/' + obj.IVRReportNo)
+              .attr('target', '_blank')
+              .attr('download', '') // Open link in a new window or tab
+              .text(obj.IVRReportNo);
+            var IVRNoCell = $('<td>').append(IVRNoLink);
+            row.append(IVRNoCell);
+
+            tableBody.append(row);
+
+        });
+    }
+
+</script>
+
+<script>
+    function fetchData() {
+        var FromDate = $('#FromDate').val();
+        var Todate = $('#ToDate').val();
+        var Excuting_Branch = $('#ddlBranch').val();
+        var OriginatingBranch = $('#ddlBranch1').val();
+        var CoordinatorName = $('#ddlemp').val();
+        var inspectorname = $('#ddlemp1').val();
+        var status = $('#ddlstatus').val();
+
+        $.ajax({
+            url: '@Url.Action("GetdataCopy", "MISOPEReport")',
+            type: "post",
+            datatype: 'json',
+            data: {
+                FromDate: FromDate,
+                Todate: Todate,
+                Excuting_Branch: Excuting_Branch,
+                OriginatingBranch: OriginatingBranch,
+                CoordinatorName: CoordinatorName,
+                inspectorname: inspectorname,
+                status: status
+            },
+            async: false,
+            success: function (address) {
+                // Update the form fields with the received data
+                $("#TotalCalls").val(address.TotalCalls);
+                $("#OpenCalls").val(address.OpenCalls);
+                $("#CancelledCalls").val(address.CancelledCalls);
+                $("#NotDoneCalls").val(address.NotDoneCalls);
+                $("#AssignedCalls").val(address.AssignedCalls);
+                $("#ClosedCalls").val(address.ClosedCalls);
+
+
+
+
+                // Update the chart data and options
+                var data = [
+                address.OpenCalls,
+                address.CancelledCalls,
+                address.NotDoneCalls,
+                address.AssignedCalls,
+                address.ClosedCalls
+                ];
+
+                var total = data.reduce(function (acc, value) {
+                    return acc + value;
+                }, 0);
+
+                var percentages = data.map(function (value) {
+                    return Math.round((value / total) * 100);
+                });
+
+                var chart = new Chart(document.getElementById('pieChart'), {
+                    type: 'pie',
+                    data: {
+                        datasets: [{
+                            data: data,
+                            backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                            ],
+                            borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }],
+                        labels: ['Open', 'Cancelled', 'Not Done', 'Assigned', 'Closed'],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        tooltips: {
+                            callbacks: {
+                                label: function (tooltipItem, data) {
+                                    var dataset = data.datasets[tooltipItem.datasetIndex];
+                                    var value = dataset.data[tooltipItem.index];
+                                    var percentage = percentages[tooltipItem.index];
+                                    return dataset.label + ': ' + percentage + '% (' + value + ')';
+                                }
+                            }
+                        }
+                    }
+                });
+
+                alert("Data Added Successfully!");
+            },
+            error: function () {
+                console.log('Error in retrieving data');
+            }
+        });
+    }
+</script>
+
+<script>
+    $('#btnsave').click(function () {
+        debugger;
+        fetchData();
+        debugger;
+        loadData();
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Trigger the change event of ddlBranch initially to bind the second dropdown
+        $("#ddlBranch1").trigger("change");
+    });
+    $("#ddlBranch1").change(function () {
+        var BranchId1 = $(this).val();
+
+        $.ajax({
+            type: "GET",
+            url: "/MISOPEReport/OnchageMethod", // Replace with the correct URL
+            data: { BranchId1: BranchId1 },
+            dataType: "json",
+            cache: false,
+            success: function (response) {
+                debugger;
+                var employees = JSON.parse(response)
+
+                //JSON.parse(b)
+                var $ddlemp = $("#ddlemp");
+
+
+
+                if (employees && employees.length > 0) {
+                    employees.forEach(function (employee) {
+                        var PK_UserID = employee.PK_UserID;
+                        var fullName = employee.FullName;
+                        if (fullName) {
+                            $ddlemp.append($("<option>", {
+                                value: PK_UserID,
+                                text: fullName
+                            }));
+                        }
+                    });
+                }
+
+
+            },
+            error: function (response) {
+                alert("Something went wrong");
+            }
+        });
+    });
+
+
+
+</script>*@
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        // Trigger the change event of ddlBranch initially to bind the second dropdown
+        $("#ddlBranch").trigger("change");
+    });
+
+    $("#ddlBranch").change(function () {
+        var BranchId = $(this).val();
+
+        $.ajax({
+            type: "GET",
+            url: "/MISOPEReport/Onchageinspector", // Replace with the correct URL
+            data: { BranchId: BranchId },
+            dataType: "json",
+            cache: false,
+            success: function (response) {
+                debugger;
+                var employees = JSON.parse(response)
+
+                //JSON.parse(b)
+                var $ddlemp = $("#ddlemp1");
+
+
+
+                if (employees && employees.length > 0) {
+                    employees.forEach(function (employee) {
+                        var PK_UserID = employee.PK_UserID;
+                        var fullName = employee.FullName;
+                        if (fullName) {
+                            $ddlemp.append($("<option>", {
+                                value: PK_UserID,
+                                text: fullName
+                            }));
+                        }
+                    });
+                }
+
+            },
+            error: function (response) {
+                alert("Something went wrong");
+            }
+        });
+    });
+
+
+
+</script>
+
+
+
+
+@*<script>
+    $(document).ready(function () {
+        debugger;
+        $("#ddlBranch").change(function () {
+            var BranchId = $(this).val();
+
+            $.ajax({
+                type: "GET",
+                url: "/MISOPEReport/OnchageMethod", // Replace with the correct URL
+                data: { BranchId: BranchId },
+                dataType: "json",
+                cache: false,
+                success: function (response) {
+                    debugger;
+                    var employees = JSON.parse(response)
+
+                    //JSON.parse(b)
+                    var $ddlemp1 = $("#ddlemp");
+
+                    // Clear previous options
+                    //$ddlemp1.empty();
+                    //$ddlemp1.append('<option>---Select inspector Name---</option>');
+
+                    //var employees = response.Table;
+                    if (employees && employees.length > 0) {
+                        employees.forEach(function (employee) {
+                            var fullName = employee.FullName;
+                            if (fullName) {
+                                $ddlemp1.append("<option>" + fullName + "</option>");
+                            }
+                        });
+                    }
+                },
+                error: function (response) {
+                    alert("Something went wrong");
+                }
+            });
+        });
+
+    });
+    </script>*@
+
+@*<script>
+        function coordinatorBranchName() {
+            $("#ddlBranch1").change(function () {
+                var BranchId = $(this).val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/MISOPEReport/Onchageinspector", // Replace with the correct URL
+                    data: { BranchId: BranchId },
+                    dataType: "json",
+                    cache: false,
+                    success: function (response) {
+                        debugger;
+                        var employees = JSON.parse(response)
+
+                        //JSON.parse(b)
+                        var $ddlemp1 = $("#ddlemp1");
+
+                        // Clear previous options
+                        $ddlemp1.empty();
+                        $ddlemp1.append('<option>---Select inspector Name---</option>');
+
+                        //var employees = response.Table;
+                        if (employees && employees.length > 0) {
+                            employees.forEach(function (employee) {
+                                var fullName = employee.FullName;
+                                if (fullName) {
+                                    $ddlemp1.append("<option>" + fullName + "</option>");
+                                }
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            });
+
+        }
+    </script>*@
+
+@*<script>
+        $(document).ready(function () {
+            debugger;
+            function loadData(branchId) {
+                $.ajax({
+                    type: "GET",
+                    url: "/MISOPEReport/OnchageMethod",
+                    data: { BranchId: branchId },
+                    dataType: "json",
+                    cache: false,
+                    success: function (response) {
+                        debugger;
+                        var employees = JSON.parse(response)
+
+                        var $ddlemp = $("#ddlemp");
+                        //$ddlemp.empty();
+
+
+                        if (employees && employees.length > 0) {
+                            employees.forEach(function (employee) {
+                                var fullName = employee.FullName;
+                                if (fullName) {
+                                    $ddlemp.append("<option>" + fullName + "</option>");
+                                }
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+            debugger
+            $("#ddlBranch").change(function () {
+                var branchId = $(this).val();
+                loadData(branchId);
+            });
+        });
+
+
+    </script>*@
+
+
+
+
+@*<script type="text/javascript">
+        $(function () {
+            $('#btnExport').on('click', function () {
+                debugger
+                var _CallExecution = window.sessionStorage.getItem('CallExecution');
+                var CallExecution = JSON.stringify(_CallExecution);
+                var Data = [];
+                Data.push(_CallExecution);
+                var Data1 = JSON.stringify(Data);
+
+                var FromDate = $('#FromDate').val();
+                var Todate = $('#ToDate').val();
+                var Excuting_Branch = $('#ddlBranch').val();
+                var OriginatingBranch = $('#ddlBranch1').val();
+                var CoordinatorName = $('#ddlemp').val();
+                var inspectorname = $('#ddlemp1').val();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ExportIndex3", "MISOPEReport")',
+                    dataType: "json",
+                    //data: { FromDate: FromDate, Todate: Todate, Excuting_Branch: Excuting_Branch, OriginatingBranch: OriginatingBranch, CoordinatorName: CoordinatorName, inspectorname: inspectorname },
+                    data: { CallExecution: Data1 },
+                    success: function (r) {
+                        alert("Hi");
+                        //debugger
+                        ////Convert Base64 string to Byte Array.
+                        //var bytes = Base64ToBytes(r);
+
+                        ////Convert Byte Array to BLOB.
+                        //var blob = new Blob([bytes], { type: "application/octetstream" });
+
+                        ////Check the Browser type and download the File.
+                        //var isIE = false || !!document.documentMode;
+                        //if (isIE) {
+                        //    window.navigator.msSaveBlob(blob, "Grid.xlsx");
+                        //} else {
+                        //    var url = window.URL || window.webkitURL;
+                        //    link = url.createObjectURL(blob);
+                        //    var a = $("<a />");
+                        //    a.attr("download", "Grid.xlsx");
+                        //    a.attr("href", link);
+                        //    $("body").append(a);
+                        //    a[0].click();
+                        //    $("body").remove(a);
+                        //}
+                    }
+                });
+            });
+        });
+
+        function Base64ToBytes(base64) {
+            var binary_string = window.atob(base64);
+            var len = binary_string.length;
+            var bytes = new Uint8Array(len);
+            for (var i = 0; i < len; i++) {
+                bytes[i] = binary_string.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+    </script>*@

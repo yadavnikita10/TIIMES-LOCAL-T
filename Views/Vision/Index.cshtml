@@ -1,0 +1,72 @@
+﻿@model IEnumerable<TuvVision.Models.ItemMasterModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+   @Html.ActionLink("Create New", "IteamInsert", "Vision")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            SR No
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.inventoryCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.inventoryName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.inventoryPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.inventoryAvailability)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.inventoryTamilName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.inventoryImageURL)
+        </th>
+        <th></th>
+    </tr>
+    @{
+        int i = 0;
+    }
+@foreach (var item in Model) {
+    i = i + 1;
+    <tr>
+        <td>
+            @i
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.inventoryCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.inventoryName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.inventoryPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.inventoryAvailability)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.inventoryTamilName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.inventoryImageURL)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @*@Html.ActionLink("Details", "Details", new { id=item.Id }) |*@
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+        </td>
+    </tr>
+}
+
+</table>

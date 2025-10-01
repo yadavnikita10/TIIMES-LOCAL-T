@@ -1,0 +1,520 @@
+﻿@model TuvVision.Models.CompentencyMatrixMaster
+@{
+    ViewBag.Title = "CompentencyMatrixMaster";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    List<string>
+    EditProdName = ViewBag.EditproductName as List<string>
+        ;
+
+
+        }
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+        <!-- Bootstrap -->
+        <link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+        <!-- Start Other stylesheets -->
+        <link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+        <link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+        <link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+        <style>
+            .table-container {
+                width: 1300px; /* Adjust the width as needed */
+                overflow-x: hidden; /* Hide horizontal scrollbar */
+                overflow-y: hidden;
+            }
+
+            /* Set the size of the table */
+            .fixed-size-table {
+                width: 100%;
+                table-layout: fixed; /* Fixed table layout */
+            }
+
+                /* Style the table cells (optional) */
+                .fixed-size-table td {
+                    border: 1px solid #00003C;
+                    padding: 4px 0px;
+                    font-size: 12px;
+                }
+        </style>
+
+
+       
+
+
+        <div class="main-content3 xs-max-height grey-bg-f3">
+            <div class="grey-bg-f3">
+                <!--Start of header-->
+                <div class="container-fluid">
+                    <div class="row assignfixedwidth rp-5">
+
+                        <div class="col-xs-12 form-col">
+                            <div class="row">
+
+                                <div class="col-xs-12 text-right">
+                                    <a href="@Url.Action(" ListCompentencyMatrixMaster", "CompentencyMatrix" )" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                                </div>
+
+                                <div class="col-xs-12">
+                                    <div class="white-bg section-box-shadow">
+                                        <h3 class="form-page-title">Add Customer (CAIL)</h3>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                                <div class="form-box">
+                                                    <form method="post" enctype="multipart/form-data">
+
+                                                        <div class="row">
+
+
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    @if (Model != null && Model.BranchName != null)
+                                                                    {
+                                                                    <label>Main Branch:</label>
+
+                                                                    @Html.HiddenFor(model => model.Branchid, htmlAttributes: new { placeholder = "Branch Id", @class = "form-control", autocomplete = "off" })
+                                                                    @Html.TextBoxFor(model => model.BranchName, htmlAttributes: new { placeholder = "Branch Name", @class = "form-control", autocomplete = "off" })
+
+
+                                                                    @Html.ValidationMessageFor(model => model.BranchName, "", new { @class = "text-danger validation-msg" })
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                    <label>Main Branch:</label>
+                                                                    @Html.HiddenFor(model => model.Branchid, htmlAttributes: new { placeholder = "Branch Id", @class = "form-control", autocomplete = "off", @Value = Session["Branchid"] })
+                                                                    @Html.TextBoxFor(model => model.BranchName, htmlAttributes: new { placeholder = "Branch Name", @class = "form-control", autocomplete = "off", @Value = Session["MainBranch"] })
+
+
+                                                                    @Html.ValidationMessageFor(model => model.BranchName, "", new { @class = "text-danger validation-msg" })
+                                                                    }
+
+
+                                                                </div>
+
+                                                            </div>
+
+
+
+
+
+
+
+
+
+
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Item to be Inspected:</label><span style="color:#ff0000;">*</span>
+
+                                                                    <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required">
+
+                                                                        @{
+                                                                        if (ViewBag.check == "productcheck")
+                                                                        {
+                                                                        foreach (var item in ViewBag.SubCatlist as SelectList)
+                                                                        {
+                                                                        if (EditProdName != null)
+                                                                        {
+                                                                        if (EditProdName.Contains(item.Text))
+                                                                        {
+                                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                        <option value="@item.Value">@item.Text</option>
+                                                                        }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                        <option value="@item.Value">@item.Text</option>
+                                                                        }
+                                                                        }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                        foreach (var item in ViewBag.SubCatlist as SelectList)
+                                                                        {
+
+                                                                        <option value="@item.Value">@item.Text </option>
+
+
+                                                                        }
+                                                                        }
+                                                                        @*foreach (var item in ViewBag.SubCatlist as SelectList)
+                                                                        {
+
+                                                                        <option value="@item.Value">@item.Text </option>
+
+
+                                                                        }*@
+                                                                        }
+
+                                                                    </select>
+
+                                                                </div>
+
+
+                                                            </div>
+
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Project Name / Other detail: </label>
+                                                                    @Html.TextBoxFor(model => model.ProjectName, htmlAttributes: new { placeholder = "Project Name / Other detail:", @class = "form-control", autocomplete = "off" })
+
+
+                                                                    @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger validation-msg" })
+
+                                                                </div>
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label>Customer Name:</label>
+                                                                    @*@Html.TextBoxFor(model => model.Name, htmlAttributes: new { placeholder = "Customer Name", @class = "form-control", autocomplete = "off", @id = "CustomerName" })*@
+                                                                    @Html.TextAreaFor(model => model.Name, new { placeholder = "Customer Name", @class = "form-control", @rows = "3", style = "height: 109px;", @id = "CustomerName" })
+
+
+                                                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger validation-msg" })
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+
+
+
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12">
+                                                                <div class="form-group">
+                                                                    @*<button type="reset" class="btn btn-default insert-form-btn"> Reset </button>*@
+                                                                   
+                                                                    <button type="submit" class="btn btn-default insert-form-btn"> Save </button>
+                                                                   
+                                                                    
+
+                                                                    @*@if (Model != null && Model.Id > 0)
+                                                                    {
+                                                                    <input type="button" class="btn btn-default insert-form-btn" id="addinspectorlist" value="Add inspector List">
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                    }*@
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        @if (Model != null && Model.Id > 0)
+                                                        {
+                                                        <div class="row" id="showdata">
+                                                            <div class="col-xs-12 col-sm-8">
+                                                                <div class="form-group">
+                                                                    <label> Inspector Name:</label>
+
+                                                                    @if (ViewBag.Userlist != null)
+                                                                    {
+
+                                                                    @Html.DropDownListFor(m => m.inspectorName, ViewBag.Userlist as IEnumerable<SelectListItem>
+                                                                        , new { @class = "form-control form-multiselect-city", id = "inspectorData", multiple = "multiple" })
+
+                                                                        }
+                                                                        @*@Html.TextBoxFor(model => model.FirstName, new { @placeholder = "Inspector", @class = "form-control"  })*@
+                                                                        @Html.ValidationMessageFor(model => model.inspectorName, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+
+                                                            @*@if (isBranchPresentORnot)
+                                                            {*@
+                                                            <div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+
+                                                                    <button type="submit" class="btn btn-default insert-form-btn" style="margin-bottom: -47px">Add</button>
+                                                                </div>
+
+                                                            </div>
+                                                            @*}
+
+                                                            else
+                                                            {
+                                                            <div class="col-xs-12 col-sm-4" style="display:none">
+                                                                <div class="form-group">
+
+                                                                    <button type="submit" class="btn btn-default insert-form-btn" style="margin-bottom: -47px">Add</button>
+                                                                </div>
+
+                                                            </div>
+
+                                                            }*@
+
+                                                            @*<div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+
+                                                                    <button type="submit" class="btn btn-default insert-form-btn" style="margin-bottom: -47px">Add</button>
+                                                                </div>
+
+                                                            </div>*@
+
+                                                        </div>
+
+
+                                                        <div class="row">
+
+                                                            <div class="col-xs-12">
+                                                                <table class="display dataTable no-footer fixed-size-table" id="example">
+                                                                    <thead>
+                                                                        <tr style="background-color: #104193; font-size:14px; color: #ffffff; text-align:center;">
+                                                                            <th class="remove-search hidden" width="5%" style="padding-left:0px;">ID</th>
+                                                                            <th class="remove-search hidden" width="5%" style="padding-left:0px;">inspectorid</th>
+                                                                            <th width="5%" style="padding-left:0px; text-align:center;">InspectorName</th>
+                                                                            <th width="5%" style="padding-left:0px; text-align:center;">Branch Name</th>
+                                                                            <th width="5%" style="text-align:center;">Action</th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    @{
+
+
+                                                                    var Value = ViewData["Details"] as IEnumerable
+                                                                    <TuvVision.Models.CompentencyMatrixMaster>
+                                                                        ;
+
+                                                                        if (Value != null)
+                                                                        {
+                                                                        <tbody>
+
+                                                                            @foreach (var item in ViewData["Details"] as IEnumerable
+                                                                            <TuvVision.Models.CompentencyMatrixMaster>
+                                                                                )
+                                                                                {
+
+                                                                                <tr>
+                                                                                    <td class="hidden" width="5%">@item.Id</td>
+                                                                                    <td class="hidden" width="5%">@item.inspectorid</td>
+                                                                                    <td width="5%" style="text-align:center;">@item.inspectorName</td>
+                                                                                    <td width="5%" style="text-align:center;">@item.BranchName</td>
+                                                                                    @*<td class="less-width" width="5%" style="text-align:center;">
+                                                                                        <a href="@Url.Action(" DeleteinspectorName", "CompentencyMatrix" , new {@Id=item.Id , @inspectorid=item.inspectorid })" onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
+
+                                                                                    </td>*@
+                                                                                    @{
+                                                                                        string userBranchIds = Convert.ToString(System.Web.HttpContext.Current.Session["UserBranchId"]);
+                                                                                        string[] userBranchIdArray = userBranchIds.Split(',');
+
+                                                                                        bool isBranchPresent = userBranchIdArray.Contains(@item.Branchid.ToString());
+                                                                                    }
+                                                                                    @if (isBranchPresent)
+                                                                                    {
+                                                                                        <td class="less-width" width="5%" style="text-align:center;">
+                                                                                            <a href="@Url.Action("DeleteinspectorName", "CompentencyMatrix", new { @Id = item.Id, @inspectorid = item.inspectorid })" onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
+
+                                                                                        </td>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <td class="less-width" width="5%" style="text-align:center;display:none;">
+                                                                                            <a href="@Url.Action("DeleteinspectorName", "CompentencyMatrix", new { @Id = item.Id, @inspectorid = item.inspectorid })" onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
+
+                                                                                        </td>
+                                                                                    }
+
+                                                                                </tr>
+                                                                                }
+
+                                                                        </tbody>
+                                                                        }
+                                                                        }
+
+
+
+
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+
+                                                        }
+                                                        else
+                                                        {
+
+                                                        }
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        @*
+        <script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+        <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+        <script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+        @*Auto Fill Name*@
+
+
+        @*
+        <script type="text/javascript">
+*@
+@*<script>
+    $(document).ready(function () {
+        debugger
+        $("#Name").autocomplete({
+          source: function (request, response) {
+                   $.ajax({
+                       url: '@Url.Action("GetSurveyorName", "CompentencyMatrix")',
+                       type: "POST",
+                       dataType: "json",
+                       data: { Prefix: request.term },
+                       success: function (data) {
+
+                           response($.map(data, function (item) {
+
+                               return {
+                                   label: item.SurveyorName, value: item.SurveyorName
+
+                               };
+
+                           }))
+
+                       },
+                       select: function(event, ui) {
+                           event.preventDefault();
+                           $('#Location').val(ui.item.SurveyorId);
+                       },
+                       focus: function(event, ui) {
+                           event.preventDefault();
+                           $('#Location').val(ui.item.SurveyorId);
+                       },
+
+                       //select: function (event, ui) {
+                       //    $('#Location').val(ui.item.SurveyorId);
+                       //    return false;
+                   //},
+                       minLength: 1
+
+
+                   }
+                   )
+
+               },
+
+
+               messages: {
+                   noResults: "", results: ""
+               }
+           });
+    }
+
+
+
+
+
+
+    )
+
+        </script>*@
+
+        <script>
+            $(document).ready(function () {
+                $("#CustomerName").autocomplete({
+                    source: function (req, response) {
+                        $.ajax({
+                            url: '@Url.Action("GetSurveyorName", "CompentencyMatrix")',
+                            type: "POST",
+                            dataType: "json",
+                            data: { Prefix: GetCurrentSearchTerm(req.term) },
+                            success: function (data) {
+                                response($.map(data, function (item) {
+                                    return { label: item.SurveyorName, value: item.SurveyorName };
+                                }));
+                            }
+                        });
+                    },
+                    select: function (event, ui) {
+                        var LastValue = splitCurrentText(this.value);
+                        LastValue.pop();
+                        LastValue.push(ui.item.value);
+                        LastValue.push("");
+                        this.value = LastValue.join(",");
+                        return false;
+                    },
+                    focus: function () {
+                        return false;
+                    }
+                });
+
+                function splitCurrentText(LastTerm) {
+                    return LastTerm.split(/,\s*/);
+                }
+
+                function GetCurrentSearchTerm(LastTerm) {
+                    return splitCurrentText(LastTerm).pop();
+                }
+            });
+
+        </script>
+
+
+
+        <script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+        <link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+
+
+        <script>
+            $(function () {
+                $('#ProductLists').multiselect({
+                    includeSelectAllOption: true
+                });
+
+            });
+        </script>
+
+        <script>
+            $('.form-multiselect-city').multiselect({
+                enableFiltering: true,
+                includeSelectAllOption: true,
+                enableCaseInsensitiveFiltering: true
+            });
+        </script>
+
+
+
+        @*
+        <script>
+    $(document).ready(function() {
+        $("#addinspectorlist").click(function() {
+            $("#showdata").toggle();
+            $("#showdatatable").toggle();
+        });
+
+        $("#addInspectorButton").click(function() {
+
+        });
+    });
+        </script>*@

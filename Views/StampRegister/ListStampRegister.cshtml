@@ -1,0 +1,230 @@
+﻿@model IEnumerable<TuvVision.Models.StampRegister>
+@{
+    ViewBag.Title = "ListStampRegister";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int a;
+
+    string To;
+    char[] delimiters = new[] { ',', ';', ' ' };
+    string[] EmailIDs;
+    int x = 1;
+    int y = 0;
+
+    int p = 0;
+
+    var aa = Convert.ToDateTime("1/1/1900 12:00:00 AM");
+
+}
+
+
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Stamp Register</h3>
+                <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("CreateStampRegister", "StampRegister")'">Insert Data</button>
+                
+            </div><!-- /.col -->
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+            <!--Table was here-->
+
+        </div>
+        <div class="col-xs-12" id="divTableDataHolder">
+            @*<table id="example" class="display" cellspacing="0" width="100%">*@
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Sr.Number</th>
+                        <th>Inspector Name</th>
+                        <th>Modified By</th>
+                        <th>Branch</th>
+                        @foreach (var item in ViewData["Image"] as IEnumerable<TuvVision.Models.StampImageList>)
+                        {
+
+                            <th class="remove-search" style="width: 100px;">
+                                @item.ImageName
+                                <br />
+                                @*<img src="http://localhost:54895/StampMasterDocument/@item.attachment" style="width:25px; height:25px;" />*@
+                                <img src="~/StampMasterDocument/@item.attachment" style="width:25px; height:25px;" />
+                                @*<img src="@Url.Content(String.Format("~/StampMasterDocument/{0}", item.attachment))" style="width:100px; height:50px;" />*@
+                            </th>
+
+                        }
+                        <th>Stamp Number</th>
+                        <th>Joining Date</th>
+
+                        <th>Total Hard Stamps</th>
+                        <th>Total Rubber Stamps</th>
+                        <th>Date Of Issue</th>
+                        <th>Date Of Re Issue</th>
+                        <th>Reason for Modification(if required)</th>
+                        <th class="remove-search">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr class="hidden">
+                        <td>Sr.Number</td>
+                        <td>Surveyor Name</td>
+                        <td>Modified By</td>
+                        <td>Location</td>
+                        @foreach (var item in ViewData["Image"] as IEnumerable<TuvVision.Models.StampImageList>)
+                        {
+
+                            <td class="remove-search style=" width 100px;"">
+                                @item.ImageName
+                                <br />
+                                <img src="http://localhost:54895/StampMasterDocument/@item.attachment" style="width:25px; height:25px;" />
+                            </td>
+
+                        }
+                        <td>Stamp Number</td>
+                        <td>Joining Date</td>
+
+                        <td>Total HardS tamps</td>
+                        <td>Total Rubber Stamps</td>
+                        <td>Date Of Issue</td>
+                        <td>Date Of Re-Issue</td>
+                        <td>Reason for Modification (if required)</td>
+                        <td></td>
+                    </tr>
+
+                    <tr class="hidden">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        @foreach (var item in ViewData["Image"] as IEnumerable<TuvVision.Models.StampImageList>)//1 to 14
+                        {
+                            <td style="width: 100px;"></td>
+                        }
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+
+                    </tr>
+
+
+
+
+                    @foreach (var b in Model)
+                    {
+
+
+                        <tr>
+                            <td>@b.Id</td>
+                            <td>@b.SurveyorName</td>
+                            <td>@b.ModifiedBy</td>
+                            <td>@b.Location</td>
+
+
+
+
+
+
+
+                            @{
+                                string[] ps;
+
+                                ps = b.AdditionalStamp.Split(',');//2,3
+
+
+
+                                foreach (var item in ViewData["Image"] as IEnumerable<TuvVision.Models.StampImageList>)//1 to 14
+                                {
+
+                                    <td style="width: 100px;">
+
+                                        @if (ps.FirstOrDefault() == null) // ps !=null
+                                        {
+                                            <span> 0 </span>
+                                        }
+                                        else if (ps.Contains(Convert.ToString(item.ImageId)))
+                                        {
+                                            <span> 1 </span>
+                                        }
+                                        else
+                                        {
+                                            <span> 0 </span>
+                                        }
+
+
+                                    </td>
+                                }
+
+                            }
+
+
+
+
+
+
+
+
+
+                            <td>@b.StampNumber</td>
+                            <td>@b.JoiningDate.ToString("yyyy-MM-dd")</td>
+                            <td>@b.TotalHardStamps</td>
+                            <td>@b.TotalRubberStamps</td>
+                            <td>@b.CreatedDate.ToString("yyyy-MM-dd")</td>
+
+                            @if (b.ModifiedDate == aa)
+                            {
+                                <td>NA</td>
+                            }
+                            else
+                            {
+                                <td>@b.ModifiedDate.ToString("yyyy-MM-dd")</td>
+                            }
+                            <td>@b.Remarks</td>
+
+                            <td cRemarkslass="action-btn" style="text-align:center;">
+                                <a href="@Url.Action("CreateStampRegister", "StampRegister", new { id = @b.Id })" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>
+
+                                <a href="@Url.Action("Delete", "StampRegister", new { id = @b.Id })" class="delete" onclick="return confirm('Are you sure you wish to Delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+
+                            </td>
+
+                        </tr>
+                                }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+@*<script>
+$("[id$=myButtonControlID]").click(function(e) {
+    window.open('data:application/vnd.ms-excel,' + encodeURIComponent( $('div[id$=divTableDataHolder]').html()));
+    e.preventDefault();
+});
+</script>*@

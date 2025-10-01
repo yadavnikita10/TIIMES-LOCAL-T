@@ -1,0 +1,2600 @@
+﻿@model TuvVision.Models.QuotationMaster
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "Quotation";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+
+    List<string> EditLocation = ViewBag.EditproductName as List<string>;
+
+    List<string> EditCurrency = ViewBag.EditproductName as List<string>;
+
+}
+
+@{
+    List<string> EditCityName = ViewBag.EditCityName as List<string>;
+    List<string> EditCountryName = ViewBag.EditCountryName as List<string>;
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//cdn.ckeditor.com/4.6.0/full/ckeditor.js"></script>
+@*DATEPICKER*@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<script>
+
+    $(function () {
+        $(".ExpiryDatedate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<style>
+    .ui-widget-header {
+        background: #3677e6 !important;
+    }
+
+    .ui-datepicker-month, .ui-datepicker-year {
+        color: #333 !important;
+    }
+    /*-- Delete color-profile --*/
+    ul.Attachment {
+        padding-left: 0px;
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+        ul.Attachment > li {
+            border: 1px solid #999;
+            margin: 7px 5px 0 0;
+            display: inline-block;
+            padding: 0px 10px;
+            background-color: #dfdfdf;
+            color: #000;
+        }
+
+            ul.Attachment > li a.title {
+                color: #000;
+                vertical-align: text-bottom;
+                text-transform: capitalize;
+            }
+
+            ul.Attachment > li a.deleteItem {
+                color: white;
+                font-size: 10px;
+                background: #e91e1e;
+                padding: 2px 4px;
+                border-radius: 50%;
+                vertical-align: text-top;
+            }
+    /*EndCode*/
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.EQ_ID)
+    @Html.HiddenFor(m => m.Revise)
+    @Html.Hidden("EQ_ID")
+    @Html.Hidden("FK_CMP_ID")
+    // @Html.Hidden("PK_QTID");
+
+    @Html.Hidden("EnquiryNumber");
+    @Html.HiddenFor(m => m.EnquiryNumber);
+    @Html.HiddenFor(m => m.QuotationNumber);
+    @Html.HiddenFor(m => m.PK_QTID);
+    <!--Start of main content 3-->
+    <div class="grey-bg-f3">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            <a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+
+                        </div>
+
+
+
+                        <div class="col-xs-12 text-right">
+                            @if (Model.PK_QTID == 0)
+                            {
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-2">
+                                        <div class="form-group">
+                                            <span>Search Quotation </span>
+                                        </div>
+                                    </div>
+
+                                    @*<div class="col-xs-12 col-sm-offset-2 col-sm-2">
+                                            <div class="form-group">
+                                                <select class="form-control" style="margin-top:15px; border-color:deepskyblue;" id="Category" name="Category">
+                                                    <option value="">Select Category</option>
+                                                    <option value="Quotation Number">Quotation Number</option>
+                                                    <option value="Description">Description</option>
+                                                    <option value="Enquiry Description">Enquiry Description</option>
+                                                    <option value="Client Name">Client Name</option>
+                                                    <option value="Project Name">Project Name</option>
+                                                </select>
+
+                                            </div>
+                                        </div>*@
+
+                                    @*<div class="col-xs-12 col-sm-2">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" style="margin-top:15px; border-color:deepskyblue; " name="Searchdata" id="Searchdata" placeholder="Type..." />
+                                            </div>
+                                        </div>*@
+
+
+                                </div>
+
+                                @*<div class="col-xs-12 col-sm-2">
+                                        <div class="form-group">
+                                            <button type="button" id="filter1" class="btn btn-default insert-form-btn"><i class="fa "></i> Search</button>
+
+                                        </div>
+                                    </div>*@
+                            <!--  vaibhav Copy quo start-->
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-xs-12 col-sm-4">
+                                            <input type="text" class="form-control" style="margin-top:15px; border-color:deepskyblue; " name="ClientName" id="ClientName" placeholder="ClientName" />
+
+                                        </div>
+                                        <div class="col-xs-12 col-sm-4">
+                                            <input type="text" class="form-control" style="margin-top:15px; border-color:deepskyblue; " name="QuotationDescription" id="QuotationDescription" placeholder="Project Name" />
+
+                                        </div>
+                                        @*<div class="col-xs-12 col-sm-4">
+                                                <input type="text" class="form-control" style="margin-top:15px; border-color:deepskyblue; " name="ProjectName" id="ProjectName" placeholder="Project Name" />
+
+                                            </div>*@
+                                        <div class="col-xs-12 col-sm-4">
+                                            <input type="text" class="form-control" style="margin-top:15px; border-color:deepskyblue; " name="QuotationNumberSearch" id="QuotationNumberSearch" placeholder="Quotation Number" />
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+
+                                        @*<div class="col-xs-12 col-sm-4">
+                                                <input type="text" class="form-control" style="margin-top:15px; border-color:deepskyblue; " name="Enquiry Description" id="EnquiryDescription" placeholder="Enquiry Description" />
+
+                                            </div>*@
+                                        <div class="col-xs-12 col-sm-4">
+                                            <button type="button" id="NewSearch" class="btn btn-default insert-form-btn"><i class="fa "></i> Search</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="col-xs-12 text-right">*@
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-xs-12 col-sm-4 text-left">
+                                            <div class="form-group text-left">
+                                                <span>Copy Quotation </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-4">
+                                            @*<div class="col-xs-12 col-md-offset-5 col-md-2 text-center" id='Others' style='display:none;'>*@
+                                            <div class="form-group">
+                                                <select id="ddlCustomers" class="form-control"></select>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="form-group">
+                                                <button type="button" id="NewCopyQuotation" class="btn btn-default insert-form-btn"><i class="fa "></i> Copy Quotation</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    @*</div>*@
+                                        <!--  vaibhav Copy quo start-->
+                            }
+
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                @{
+                                    if (Model != null)
+                                    {
+                                        <h3 class="form-page-title">Quotation Number : @Html.DisplayFor(model => model.QuotationNumber)</h3>
+                                    }
+                                    else
+                                    {
+                                        <h3 class="form-page-title">Insert Quotation</h3>
+                                    }
+                                }
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post">
+                                                @Html.HiddenFor(m => m.PK_QTID)
+                                                <div class="col-xs-12 text-right">
+                                                    <p style="padding:0;margin:0;margin-bottom:10px;color:red;font-weight:bold;font-size: 12px;">Fields marked * are mandatory</p>
+                                                </div>
+
+
+                                                @*<div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Quotation Number:</label>
+                                                            @Html.TextBoxFor(model => model.QuotationNumber, new { placeholder = "Quotation Number....", @class = "form-control form-control-custom" })
+                                                        </div>
+                                                    </div>*@
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Enquiry:</label>
+                                                            @Html.TextBoxFor(model => model.Enquiry, new { placeholder = "Enter Enquiry", @class = "form-control form-control-custom", @readonly = "readonly" })
+                                                            <input type="hidden" id="hfEnquiry" name="EnquiryId" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Project Name:</label>
+                                                            @Html.TextBoxFor(model => model.Quotation_Description, new { placeholder = "Enter Quotation Description", @class = "form-control form-control-custom", @row = "3", @readonly = "readonly" })
+                                                            <input type="hidden" id="hfQuotation_Description" name="Quotation_DescriptionId" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Enquiry Reference No:</label>
+                                                            @Html.TextBoxFor(model => model.Reference, new { placeholder = "Enter Enquiry Reference Number", @class = "form-control form-control-custom", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            @Html.HiddenFor(model => model.FK_CMP_ID)
+
+
+
+
+                                                            <label>Company Name:</label>
+                                                            @Html.TextBoxFor(model => model.QuotationCompanyName, new { placeholder = "Enter Company Name", @class = "form-control form-control-custom CompanyName", @readonly = "readonly" })
+                                                            <input type="hidden" id="hfQuotationCompanyName" name="QuotationCompanyNameId" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>End Customer:</label>
+                                                            @Html.TextBoxFor(model => model.EndCustomer, new { placeholder = "Enter End Customer", @class = "form-control form-control-custom", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label style="display:block;">Branch:</label>
+                                                            @{
+                                                                if (Model != null)
+                                                                {
+                                                                    if (ViewBag.Branch != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.QuotationBranch, new SelectList(@ViewBag.Branch, "Code", "Name"), "---Select Branch---", new { @id = "ddlBrachType", @class = "form-control" })
+                                                                    }
+                                                                }
+                                                                if (ViewData["BranchNameTypeItems"] != null)
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.QuotationBranch, (IEnumerable<SelectListItem>)ViewData["BranchNameTypeItems"], "---Select Branch---", new { @id = "ddlBrachType", @class = "form-control" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.QuotationBranch, new SelectList(@ViewBag.Branch, "Code", "Name"), "---Select Branch---", new { @id = "ddlBrachType", @class = "form-control" })
+                                                                }
+
+                                                            }
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>OBS Type:<span style="color:#ff0000;">*</span></label>
+                                                            @Html.HiddenFor(model => model.ProjectType)
+                                                            @{
+                                                                if (Model != null)
+                                                                {
+                                                                    if (ViewBag.OBSType != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.ProjectType, new SelectList(@ViewBag.OBSType, "Code", "Name"), "---Select OBS Type---", new { @id = "ddlProjectType", @class = "form-control", disabled = "disabled" })
+                                                                    }
+                                                                    else if (ViewData["ProjectTypeItems"] != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.ProjectType, (IEnumerable<SelectListItem>)ViewData["ProjectTypeItems"], "---Select OBS Type---", new { @id = "ddlProjectType", @class = "form-control", disabled = "disabled" })
+                                                                    }
+
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.ProjectType, new SelectList(@ViewBag.OBSType, "Code", "Name"), "---Select OBS Type---", new { @id = "ddlProjectType", @class = "form-control", disabled = "disabled" })
+                                                                }
+                                                                @Html.ValidationMessageFor(m => m.ProjectType, "", new { @class = "text-danger validation-msg" })
+                                                            }
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Service Portfolio Type:<span style="color:#ff0000;">*</span></label>
+                                                            @Html.HiddenFor(model => model.PortfolioType)
+                                                            @{
+                                                                if (Model != null)
+                                                                {
+                                                                    if (ViewBag.PortfolioType != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.PortfolioType, new SelectList(@ViewBag.PortfolioType, "Code", "Name"), "---Select Portfolio Type---", new { @id = "ddlPortfolioType", @class = "form-control", disabled = "disabled" })
+                                                                    }
+                                                                    else if (ViewData["PortfolioTypeItems"] != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.PortfolioType, (IEnumerable<SelectListItem>)ViewData["PortfolioTypeItems"], "---Select Portfolio Type---", new { @id = "ddlPortfolioType", @class = "form-control", disabled = "disabled" })
+                                                                    }
+
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.PortfolioType, new SelectList(@ViewBag.PortfolioType, "Code", "Name"), "---Select Portfolio Type---", new { @id = "ddlPortfolioType", @class = "form-control", disabled = "disabled" })
+                                                                }
+
+                                                                @Html.ValidationMessageFor(m => m.PortfolioType, "", new { @class = "text-danger validation-msg" })
+                                                            }
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Service Type:<span style="color:#ff0000;">*</span></label>
+                                                            @Html.HiddenFor(model => model.SubServiceType)
+                                                            @{
+                                                                if (Model != null)
+                                                                {
+                                                                    if (ViewBag.ServiceType != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.SubServiceType, new SelectList(@ViewBag.ServiceType, "Code", "Name"), "---Select Service Type---", new { @id = "ddlServiceType", @class = "form-control", disabled = "disabled" })
+                                                                    }
+
+                                                                    else if (ViewData["ServiceTypeItems"] != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.SubServiceType, (IEnumerable<SelectListItem>)ViewData["ServiceTypeItems"], "---Select Service Type---", new { @id = "ddlServiceType", @class = "form-control", disabled = "disabled" })
+                                                                    }
+
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.SubServiceType, new SelectList(@ViewBag.ServiceType, "Code", "Name"), "---Select Service Type---", new { @id = "ddlServiceType", @class = "form-control", disabled = "disabled" })
+                                                                }
+                                                                @Html.ValidationMessageFor(m => m.SubServiceType, "", new { @class = "text-danger validation-msg" })
+                                                            }
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Quotation Status:</label>
+                                                            @{
+                                                                if (Model != null)
+                                                                {
+                                                                    if (ViewBag.Status != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(model => model.Status, new SelectList(@ViewBag.StatusType, "Code", "Name"), "---Select Status Type---", new { @id = "ddlStatusType", @class = "form-control", @onChange = "onchangeddlStatus();" })
+                                                                    }
+                                                                }
+                                                                if (ViewData["StatusTypeItems"] != null)
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.Status, (IEnumerable<SelectListItem>)ViewData["StatusTypeItems"], "---Select Status Type---", new { @id = "ddlStatusType", @class = "form-control", @onChange = "onchangeddlStatus();" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.Status, new SelectList(@ViewBag.StatusType, "Code", "Name"), "---Select Status Type---", new { @id = "ddlStatusType", @class = "form-control", @onChange = "onchangeddlStatus();" })
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Taxation :</label>
+                                                            @Html.TextBoxFor(model => model.GST, new { placeholder = "Enter GST", @class = "form-control form-control-custom" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Expiry Date :</label>
+                                                            @Html.TextBoxFor(model => model.ExpiryDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Est Close Date", @class = "form-control ExpiryDatedate ", autocomplete = "off" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Inspection Location :</label><span style="color:#ff0000;">*</span>
+
+                                                            @if (ViewBag.check == "productcheck")
+                                                            {
+
+                                                                <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required" disabled="true">
+                                                                    @foreach (var item in @ViewBag.InspectionLocationItems)
+                                                                    {
+                                                                        if (EditLocation.Contains(item.Value))
+                                                                        {
+                                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="@item.Value">@item.Text</option>
+                                                                        }
+
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            else
+                                                            {
+                                                                <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required" disabled="true">
+
+                                                                    @{
+
+                                                                        foreach (var item in @ViewBag.InspectionLocation)
+
+                                                                        {
+
+                                                                            <option value="@item.Code">@item.Name&nbsp; &nbsp;</option>
+
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                        }
+
+                                                            @Html.ValidationMessageFor(model => model.InspectionLocation, "", new { @class = "text-danger" })
+
+                                                        </div>
+
+
+
+                                                        <input type="text" class="hidden" id="ProductLists" />
+
+                                                    </div>
+
+
+
+
+
+
+
+                                                    @*<div class="row">*@
+
+
+                                                    @{
+
+                                                        if (ViewBag.EditCityName != null)
+                                                        {
+                                                            if (EditCityName.Count > 0)
+                                                            {
+                                                                <div class="col-xs-12 col-sm-4 form-multiselect-city-box" id='DOMESTIC'>
+                                                                    <div class="form-group">
+                                                                        <label>CITY- (INSPECTION LOCATION)</label>
+                                                                        <select id="CityNameList" class="form-control form-multiselect-city" multiple="multiple" name="rolename" placeholder="Select Option">
+                                                                            @{
+                                                                                foreach (var item in ViewBag.CityNameItems)
+                                                                                {
+                                                                                    if (EditCityName.Contains(item.Value))
+                                                                                    {
+                                                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <option value="@item.Value">@item.Text</option>
+                                                                                    }
+                                                                                }
+
+                                                                                @*if (ViewBag.CityNameItems == null)
+                                                                                    {
+                                                                                        foreach (var item in ViewBag.EditCityName)
+                                                                                        {
+                                                                                                <option value="@item.Code">@item.Name</option>
+                                                                                        }
+                                                                                    }*@
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                                    }
+                                                                                }
+                                                                                @*else
+                                                                                    {
+                                                                                            <div class="col-xs-12 col-sm-4 form-multiselect-city-box-edit">
+                                                                                                <div class="form-group">
+                                                                                                    <label>City:</label>
+                                                                                                    <select id="CityNameList" class="form-control form-multiselect-city " multiple="multiple" name="rolename" placeholder="Select Option">
+                                                                                                        @{
+                                                                                                            foreach (var item in ViewBag.CityNameItems)
+                                                                                                            {
+                                                                                                                if (EditCityName.Contains(item.Value))
+                                                                                                                {
+                                                                                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                        <option value="@item.Value">@item.Text</option>
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                                <input type="text" class="hidden" id="CityNameList" />
+                                                                                            </div>
+                                                                                        }*@
+                                                    }
+
+                                                    <!--For Edit-->
+                                                    @{
+                                                        @*<div class="col-xs-12 col-sm-4 form-multiselect-country-box" style='display:none;' id='INTERNATIONAL'>*@
+                                                    if (ViewBag.EditCountryName != null)
+                                                    {
+                                                        if (EditCountryName.Count > 0)
+                                                        {
+                                                            <div class="col-xs-12 col-sm-4 form-multiselect-country-box" id='INTERNATIONAL'>
+                                                                <div class="form-group">
+                                                                    <label>Country:</label>
+
+
+                                                                    <select id="CountryNameList" class="form-control form-multiselect-country" multiple="multiple" name="rolename" placeholder="Select Option">
+                                                                        @{
+                                                                            foreach (var item in ViewBag.CountryNameItems)
+                                                                            {
+                                                                                if (EditCountryName.Contains(item.Value))
+                                                                                {
+                                                                                    <option value="@item.Value" selected>@item.Text</option>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Value">@item.Text</option>
+                                                                                }
+                                                                            }
+
+                                                                            @*if (ViewBag.CountryNameItems == null)
+                                                                                {
+                                                                                    foreach (var item in ViewBag.CountryName)
+                                                                                    {
+                                                                                        <option value="@item.Code">@item.Name</option>
+                                                                                }*@
+                                                                        }
+                                                                        }
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                                                }
+
+                                                                            }
+                                                                            @*else
+                                                                                {
+
+                                                                                        <div class="col-xs-12 col-sm-4 form-multiselect-country-box-edit">
+                                                                                            <div class="form-group">
+                                                                                                <label>Country:</label>
+
+                                                                                                <select id="CountryNameList" class="form-control form-multiselect-country" multiple="multiple" name="rolename" placeholder="Select Option">
+                                                                                                    @{
+                                                                                                    foreach (var item in ViewBag.CountryNameItems)
+                                                                                                    {
+                                                                                                        if (EditCountryName.Contains(item.Value))
+                                                                                                        {
+                                                                                                                <option value="@item.Value" selected>@item.Text</option>
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                                <option value="@item.Value">@item.Text</option>
+                                                                                                        }
+
+                                                                                                    }
+                                                                                                    }
+                                                                                                </select>
+                                                                                            </div><input type="text" class="hidden" id="CountryNameList">
+                                                                                        </div>
+
+                                                                                                    }*@
+
+
+                                                                            @*</div>*@
+
+
+                                                    }
+                                                    @*</div>*@
+
+
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label> Order Type:</label>
+                                                            @Html.DropDownListFor(m => m.OrderType, new List<SelectListItem>
+                                                              {
+                                                               new SelectListItem{ Text="Select Order Type", Value = "" },
+                                                                new SelectListItem{ Text="Man Days", Value = "ManDays" },
+                                                                new SelectListItem{ Text="Man Month", Value = "ManMonth" },
+                                                                new SelectListItem{ Text="Lump Sum/Percentage", Value = "LumSum" },
+                                                             }, new { @class = "form-control", @id = "ddlOrderType" })
+                                                            @Html.ValidationMessageFor(model => model.OrderType, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Order Rate(%):</label>
+
+                                                            @Html.TextBoxFor(model => model.OrderRate, new { @placeholder = "Order Rate", @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.OrderRate, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+
+                                                            <label>Estimated Man Days:</label>
+
+                                                            @Html.TextBoxFor(model => model.Estimate_ManDays_ManMonth, new { @placeholder = "Estimated Man Days", @class = "form-control", autocomplete = "off", @id = "Estimate_ManDays_ManMonth" })
+                                                            @Html.ValidationMessageFor(model => model.Estimate_ManDays_ManMonth, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Estimated Man Month:</label>
+                                                            @*<input type="text" class="form-control" placeholder="TAN Here">*@
+                                                            @Html.TextBoxFor(model => model.Estimate_ManMonth, new { @placeholder = "Estimated Man Month", @class = "form-control", autocomplete = "off", @id = "Estimate_ManMonth" })
+                                                            @Html.ValidationMessageFor(model => model.Estimate_ManMonth, "", new { @class = "text-danger validation-msg" })
+
+
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Quotation Amount :</label>
+                                                            @if (Model.CostSheetApproveStatus != null)
+                                                            {
+                                                                if (Model.CostSheetApproveStatus == "0" || Model.CostSheetApproveStatus == "1")
+                                                                {
+                                                                    @Html.TextBoxFor(model => model.EstimatedAmount, new { placeholder = "Quotation Amount", @class = "form-control form-control-custom" })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.TextBoxFor(model => model.EstimatedAmount, new { placeholder = "Quotation Amount", @class = "form-control form-control-custom", @readonly = true })
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.EstimatedAmount, new { placeholder = "Quotation Amount", @class = "form-control form-control-custom" })
+                                                            }
+
+                                                            @Html.ValidationMessageFor(m => m.EstimatedAmount, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label>Distance in KM (For Domestic):</label>
+
+                                                            @Html.TextBoxFor(model => model.Distance, new { @placeholder = "Distance in Kilometeres", @class = "form-control", autocomplete = "off", @id = "distance" })
+                                                            @Html.ValidationMessageFor(model => model.Distance, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group"></div>
+                                                        <div class="form-group">
+                                                            <label for="InActive" style="color:black;">ARC Job</label>
+                                                            @Html.CheckBoxFor(model => model.chkArc)
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="DomesticCurrency" style='display:none;'>
+                                                    <div class="form-page-title"><label>Domestic</label></div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <div class="col-xs-12 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Estimated Amount:<span style="color:#ff0000;">*</span></label>
+                                                                        @Html.TextBoxFor(model => model.DEstimatedAmount, new { placeholder = "Estimated Amount", @class = "form-control form-control-custom" })
+
+                                                                        @Html.ValidationMessageFor(m => m.DEstimatedAmount, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="col-xs-12 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Currency :</label>
+                                                                        @Html.DropDownListFor(m => m.Dcurrency, ViewBag.CurrencyItems as IEnumerable<SelectListItem>, "--Select Currency--", new { @id = "Dcurrency", @class = "form-control" })
+                                                                        @Html.HiddenFor(m => m.Dcurrency)
+
+                                                                        @Html.ValidationMessageFor(model => model.Dcurrency, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+                                                                @*</div>*@
+
+
+
+
+                                                                <div class="col-xs-12 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Exchange Rate:<span style="color:#ff0000;">*</span></label>
+                                                                        @Html.TextBoxFor(model => model.DExchangeRate, new { placeholder = "Exchange Rate", @class = "form-control form-control-custom DExchangeRate", @onblur = "onchangeevent();" })
+                                                                        @Html.ValidationMessageFor(m => m.DExchangeRate, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Amount:<span style="color:#ff0000;">*</span></label>
+                                                                        @Html.TextBoxFor(model => model.DTotalAmount, new { placeholder = "Amount", @class = "form-control form-control-custom" })
+                                                                        @Html.ValidationMessageFor(m => m.DTotalAmount, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div id="InternationalCurrency" style='display:none;'>
+
+                                                    <div class="form-page-title"><label>International</label></div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <div class="col-xs-12 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Estimated Amount:<span style="color:#ff0000;">*</span></label>
+                                                                        @Html.TextBoxFor(model => model.IEstimatedAmount, new { placeholder = "Estimated Amount", @class = "form-control form-control-custom" })
+                                                                        @Html.ValidationMessageFor(m => m.IEstimatedAmount, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+
+                                                                @*5 feb*@
+                                                                <div class="col-xs-12 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Currency :</label>
+                                                                        @Html.DropDownListFor(m => m.Icurrency, ViewBag.CurrencyItems as IEnumerable<SelectListItem>, "--Select Currency--", new { @id = "Icurrency", @class = "form-control" })
+                                                                        @Html.HiddenFor(m => m.Icurrency)
+
+                                                                        @Html.ValidationMessageFor(model => model.Icurrency, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Exchange Rate:<span style="color:#ff0000;">*</span></label>
+                                                                        @Html.TextBoxFor(model => model.IExchangeRate, new { placeholder = "Exchange Rate", @class = "form-control form-control-custom", @onblur = "onchangeevent();" })
+                                                                        @Html.ValidationMessageFor(m => m.IExchangeRate, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Amount:<span style="color:#ff0000;">*</span></label>
+                                                                        @Html.TextBoxFor(model => model.ITotalAmount, new { placeholder = "Amount", @class = "form-control form-control-custom" })
+                                                                        @Html.ValidationMessageFor(m => m.ITotalAmount, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Proposal for inspection services Type :</label>
+
+                                                            @Html.TextAreaFor(model => model.ThirdPartyInspectionService, new { placeholder = "Third Party Inspection Service", @class = "form-control", @rows = "3", @value = "Third Party Inspection Service" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Subject:</label>
+                                                        @Html.TextAreaFor(model => model.Subject, new { placeholder = "Enter Subject...", @class = "form-control", @rows = "2" })
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Thank you  :</label>
+
+                                                            @Html.TextAreaFor(model => model.ThankYouLetter, new { placeholder = "", @class = "form-control", @rows = "3" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12" style="width: 100%;">
+                                                    <div class="form-group">
+                                                        <label>Scope Of Work:</label>
+                                                        @Html.TextAreaFor(model => model.ScopeOfWork)
+                                                        <script type="text/javascript">
+                                                            CKEDITOR.replace('ScopeOfWork');
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Exclusion :</label>@Html.CheckBoxFor(model => model.ExclusionCheckBox)
+
+                                                            @Html.TextAreaFor(model => model.Exclusion, new { placeholder = "", @class = "form-control", @rows = "3" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-12" style="width: 100%;">
+                                                    <div class="form-group">
+                                                        <label>Deliverable:</label>
+                                                        @Html.TextAreaFor(model => model.Deliverable)
+                                                        <script type="text/javascript">
+                                                            CKEDITOR.replace('Deliverable');
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                @*<div class="col-xs-12 col-sm-12" style="width: 100%;">
+                                                        <div class="form-group">
+                                                            <label>Header Details:</label>
+                                                            @Html.TextAreaFor(model => model.HeaderDetails)
+                                                            <script type="text/javascript">
+                                                                CKEDITOR.replace('HeaderDetails');
+                                                            </script>
+                                                        </div>
+                                                    </div>*@
+
+
+                                                <div class="col-xs-12 col-sm-12" style="width: 100%;">
+                                                    <div class="form-group">
+                                                        <label>Communication Protocol:</label>
+                                                        @Html.TextAreaFor(model => model.CommunicationProtocol)
+                                                        <script type="text/javascript">
+                                                            CKEDITOR.replace('CommunicationProtocol');
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12" style="width: 100%;">
+                                                    <div class="form-group">
+                                                        <label>Professional Fees:</label>
+                                                        @Html.TextAreaFor(model => model.FeesStructure)
+                                                        <script type="text/javascript">
+                                                            CKEDITOR.replace('FeesStructure');
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Payment Terms:</label>
+                                                        @*@Html.TextAreaFor(model => model.PaymentTerms, new { placeholder = "Enter Remarks...", @class = "form-control", @rows = "4" })*@
+                                                        @Html.TextAreaFor(model => model.PaymentTerms)
+                                                        <script type="text/javascript">
+                                                            CKEDITOR.replace('PaymentTerms');
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>Validity :@Html.DisplayFor(model => model.QuotationNumber)</label>
+                                                            @*<label>Validity :</label>*@
+
+                                                            @Html.TextAreaFor(model => model.Validity, new { placeholder = "Validity", @class = "form-control", @rows = "3" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                                <div class="col-xs-12 col-sm-12" style="width: 100%;">
+                                                    <div class="form-group">
+                                                        <label>Add Enclosures:</label>
+                                                        @*@Html.TextAreaFor(model => model.KeyNotes, new { placeholder = "Enter Remarks...", @class = "form-control", @rows = "4" })*@
+                                                        @Html.TextAreaFor(model => model.AddEnclosures)
+                                                        <script type="text/javascript">
+                                                            CKEDITOR.replace('AddEnclosures');
+                                                            //CKEDITOR.instances['AddEnclosures'].setData("Terms & Conditions")
+                                                        </script>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>To:</label>
+                                                        @Html.TextAreaFor(model => model.To, new { placeholder = "Enter To...", @class = "form-control", @rows = "2" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>CC:</label>
+                                                        @Html.TextAreaFor(model => model.CC, new { placeholder = "Enter CC...", @class = "form-control", @rows = "2" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Remarks:</label>
+                                                        @Html.TextAreaFor(model => model.Remark, new { placeholder = "Enter Remarks...", @class = "form-control", @rows = "5" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12" id="LostReason1" style='display:none;'>
+                                                    <div class="form-group">
+                                                        <label>Lost Reason:</label>
+                                                        @Html.TextAreaFor(model => model.LostReason, new { placeholder = "Enter Lost Reason...", @class = "form-control", @rows = "5" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group">
+                                                        <label><i class="fa fa-paperclip" style="color:black;"></i> Related Documents (Please attach files here) :</label>
+                                                        <input type="file" class="filepond" name="filepond" id="FileUpload" multiple>
+                                                        <input hidden="hidden" id="hdfFileUpload" name="FileUpload" class="hidden" />
+                                                    </div>
+                                                </div>
+
+                                                @if (Model != null)
+                                                {
+                                                    if (Model.FileDetails != null && Model.FileDetails.Count > 0)
+                                                    {
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <ul class="Attachment">
+                                                                    @foreach (var item in Model.FileDetails)
+                                                                    {
+                                                                        <li>
+                                                                            <a class="title" href="/QuotationMaster/Download/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                            <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem">X</a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="color:red;text-align:center;font-weight:bold;">File Not Uploaded</p>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p style="color:red;text-align:center;font-weight:bold;">There is no attachments !!!</p>
+                                                }
+                                                @Html.HiddenFor(m => m.Attachment)
+
+                                                <!--Button Controls-->
+                                                <div class="col-xs-12 text-center">
+                                                    @{
+                                                        if (Model.QuotationNumber == null) //============Code Added By rahul
+                                                        {
+                                                            @*<button type="button" class="btn btn-default news-btn" id="btnReset" value="Reset" title="Reset">Reset</button>*@
+                                                            <button type="button" class="btn btn-default insert-form-btn" id="btnQuotaionMasterSave" title="Submit"><i class="fa fa-plus-circle"></i> Save </button>
+
+                                                        }
+                                                        else
+                                                        {
+
+                                                            //if (TempData["QuotNumber"].ToString() != "" && TempData["QuotNumber"].ToString() != null)
+                                                            if (Model.QuotationNumber != null) //=========Code By Rahul
+                                                            {
+                                                                if (Model.Revise == "Revise")
+                                                                {
+                                                                    if (ViewBag.WonCount == "pass")
+                                                                    {
+                                                                        <span style="color:red;"><b>This Quotation has already Won</b></span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <button type="button" class="btn btn-default insert-form-btn" id="btnQuotaionMasterUpdate" title="Submit"><i class="fa fa-plus-circle"></i> Revise Quotation</button>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (Model.Status == 4 || Model.Status == 5)
+                                                                    {
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <button type="button" class="btn btn-default insert-form-btn" id="btnQuotaionMasterUpdate" title="Submit"> Update Quotation</button>
+                                                                    }
+
+                                                                }
+
+                                                                @*<button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("QuotationDetails", "QuotationMaster",new {@PK_QTID=Model.PK_QTID })'"> Print Quotation</button>*@
+                                                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("CostSheet", "CostSheetMaster",new {@PK_EQID=Model.EQ_ID, @Quatation=Model.QuotationNumber,@PK_QTID=Model.PK_QTID})'"><i class="fa fa-plus-circle"></i> Cost Sheet</button>
+                                                                    <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("QuotationDetailsGeneratePDF", "QuotationMaster",new {@PK_QTID=Model.PK_QTID })'">Quotation PDF</button>
+                                                                /////if (Model.CostSheetApproveStatus == "2" && Model.Status == 3) //=========Code By Rahul
+                                                                if (Model.CostSheetApproveStatus != "3") //=========Auto Approval
+                                                                {
+                                                                    if (Model.CostSheetApproveStatus == "2") //=========Code By Rahul
+                                                                    {
+                                                                        if (Convert.ToInt32(Model.EstimatedAmount) >= 1000000)
+                                                                        {
+                                                                            if (Model.CostSheetCLStatus == "2")
+                                                                            {
+                                                                                if (Model.Status == 3)
+                                                                                {
+                                                                                    <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i> Job Creation</button>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span style="color:red;"><b>Quotation is not Won</b></span>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span style="color:red;"><b>Clusterhead Cost Sheet Approval Pending</b></span>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (Model.Status == 3)
+                                                                            {
+                                                                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i> Job Creation</button>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span style="color:red;"><b>Quotation is not Won</b></span>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else if (Model.CostSheetApproveStatus == "0") //=========Code By Rahul
+                                                                    {
+                                                                        
+                                                                        <span style="color:red;"><b> Cost Sheet Missing </b></span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span style="color:red;"><b> Cost Sheet Approval Pending </b></span>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (Model.Status == 3)
+                                                                    {
+                                                                        <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i> Job Creation</button>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span style="color:red;"><b> Cost Sheet Auto Approved </b></span>
+                                                                    }
+                                                                }
+
+                                                                <div class="col-xs-12 col-sm-12" id="divPDFFile">
+                                                                    <div class="form-group">
+
+
+                                                                        @if (!string.IsNullOrEmpty(Model.QuotationPDF))
+                                                                        {
+                                                                            <label>Download PDF</label>
+                                                                            //string[] pdf = (Model.Pdf).Split(',');
+                                                                            <a id="btnPdf" class="btn btn-default insert-form-btn" href="@Url.Content("~/QuotationHtml/"+@Model.QuotationPDF)" role="button" download="@Url.Content("~/QuotationHtml/" +@Model.QuotationPDF)">
+                                                                                <i class="fa fa-download">@Model.QuotationPDF</i>
+                                                                                @Html.HiddenFor(model => Model.QuotationPDF)
+                                                                            </a>
+
+                                                                        }
+
+                                                                    </div>
+                                                                </div>
+
+
+
+
+
+                                                            }
+                                                        }
+
+                                                    }
+
+                                                </div>
+                                                <div></div>
+                                                @if (Model.JobDashBoard != null)
+                                                {
+                                                    <div class="col-lg-12">
+                                                        <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                                                            <tr>
+                                                                <td>
+                                                                    @(Html
+                            .Grid(Model.JobDashBoard)
+                            .Build(columns =>
+                            {
+
+
+                                columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "JobCreation", "JobMaster", new { @PK_JOB_ID = o.PKJobId, @PK_QT_ID = o.PK_QTID }, new { @class = "fa fa-pencil", @title = "Action" }));
+
+
+                                columns.Add(c => c.JobNo).Titled("Job No");
+                                columns.Add(c => c.ClientName).Titled("Client Name");
+                                columns.Add(c => c.Job_type).Titled("Job Type");
+                                columns.Add(c => c.Description).Titled("Description");
+
+                            })
+                            .Pageable(pager =>
+                            {
+                                //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No Data Found")
+                            .Filterable()
+                            .Sortable()
+
+                                                                    )
+
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+                                                    </div>
+                                                }
+                                                <!--Button Controls-->
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.col -->
+
+                    </div><!-- /.row -->
+                </div><!-- /.data table col -->
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+		<!--End of main content 3-->
+                                                        }
+
+
+
+
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+<script>
+    // $('.form-multiselect-city').multiselect();
+    $('.form-multiselect-city').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true,
+        enableCaseInsensitiveFiltering: true
+    });
+    $('.form-multiselect-country').multiselect({
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true
+    });
+</script>
+
+
+
+@****************************************************************************************Script Started Here******************************************************************@
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+<script>
+    FilePond.registerPlugin(
+    // encodes the file as base64 data
+    FilePondPluginFileEncode,
+    // validates the size of the file
+    FilePondPluginFileValidateSize,
+    // corrects mobile image orientation
+    FilePondPluginImageExifOrientation,
+    // previews dropped images
+    FilePondPluginImagePreview
+    );
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(document.querySelector('.filepond'));
+</script>
+<script>
+    FilePond.setOptions({
+        server: '@Url.Action("TemporaryFilePathQuotationAttachment", "QuotationMaster")'
+    });
+</script>
+
+<script>
+    var SummaryExtension = false;
+    var fileExtension = ["pdf", "PDF", "xls", "xlsx", "doc", "DOC", "docx", "DOCX", "png", "PNG", "jpg", "JPG", "jpeg", "JPEG", "gif", "GIF"];
+    $("#FileUpload").change(function (e) {
+        debugger
+        var files = $("#FileUpload input[type='file']").get(0).files;
+        for (var index = 0; index < files.length; index++) {
+            var singleExtension = e.target.files[index].name.split('.').pop();
+            var Condition = fileExtension.includes(singleExtension);
+            if (Condition == true) {
+                SummaryExtension = true;
+            }
+            else {
+                SummaryExtension = false;
+                return;
+            }
+        }
+        if (SummaryExtension == true) {
+            var fileData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                fileData.append("FileUpload input[type='file']", files[i]);
+            }
+            //Creating an XMLHttpRequest and sending
+            var xhr = new XMLHttpRequest();
+            var link = '@Url.Action("TemporaryFilePathQuotationAttachment", "QuotationMaster")';
+            xhr.open('POST', link, 'true');
+            xhr.send(fileData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var data = xhr.responseText;
+                    data = data.replace(/"/g, "");
+                    $("#DocumentAttached").val(data);
+                }
+            }
+            //})
+        }
+        else {
+            alert("Only formats are allowed : " + fileExtension.join(','));
+        }
+
+
+
+
+        //if ($.inArray($("#FileUpload").val().split('.').pop().toLowerCase(), fileExtension) == -1)
+        //{
+        //    alert("Only formats are allowed : " + fileExtension.join(', '));
+        //}
+
+        //var SingleExtension = "JPG";
+
+
+    })
+</script>
+@*New Quotation Generation And Revised Quotation Generation*@
+<script>
+    $(document).ready(function () {
+        $('#EstimatedAmount').keypress(function (event) {
+            return isNumber(event, this)
+        });
+    });
+    // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A NUMERIC OR DECIMAL VALUE.
+    function isNumber(evt, element) {
+
+        var charCode = (evt.which) ? evt.which : event.keyCode
+
+        if (
+            (charCode != 45 || $(element).val().indexOf('-') != -1) &&      // “-” CHECK MINUS, AND ONLY ONE.
+            (charCode != 46 || $(element).val().indexOf('.') != -1) &&      // “.” CHECK DOT, AND ONLY ONE.
+            (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    $(document).ready(function () {
+        $("#btnQuotaionMasterSave").on('click', function () {
+            debugger;
+            var EnquiryID = $("#EQ_ID").val();
+            var PK_QTID = $("#PK_QTID").val();
+            var FK_CMP_ID = $("#FK_CMP_ID").val();
+
+
+            var CompanyAddress = $("#CompanyAddress").val();
+            var Validity = $("#Validity").val();
+            var QuotationNumber = $("#QuotationNumber").val();
+
+
+            var ThirdPartyInspectionService = $("#ThirdPartyInspectionService").val();
+            var ThankYouLetter = $("#ThankYouLetter").val();
+
+
+
+
+            var EnquiryDescription = $("#Enquiry").val();
+            var CompanyName = $("#CompanyName").val();
+
+            var ddlProjectType = $("#ddlProjectType option:selected").val();
+
+            var ddlPortfolioType = $("#ddlPortfolioType option:selected").val();
+
+            var ddlType = $("#ddlServiceType option:selected").val();
+
+            var ddlBranch = $("#ddlBrachType option:selected").val();
+            var Subject = $("#Subject").val();
+
+            var selected = $("#CityNameList option:selected");
+            var ddlCityValue = "";
+            selected.each(function () {
+                ddlCityValue += $(this).text() + ",";
+            });
+
+            var selected = $("#CountryNameList option:selected");
+            var ddlCountryValue = "";
+            selected.each(function () {
+                ddlCountryValue += $(this).text() + ",";
+            });
+
+            var selected = $("#Attachment").val();
+
+            // var HeaderDetails = CKEDITOR.instances['HeaderDetails'].getData();
+            var ScopeOfWork = CKEDITOR.instances['ScopeOfWork'].getData();
+            var Deliverable = CKEDITOR.instances['Deliverable'].getData();
+            //   var Commercials = CKEDITOR.instances['Commercials'].getData();
+            var FeesStructure = CKEDITOR.instances['FeesStructure'].getData();
+            var PaymentTerms = CKEDITOR.instances['PaymentTerms'].getData();
+            // var KeyNotes = CKEDITOR.instances['KeyNotes'].getData();
+            var AddEnclosures = CKEDITOR.instances['AddEnclosures'].getData();
+            var CommunicationProtocol = CKEDITOR.instances['CommunicationProtocol'].getData();
+            // var Coordinators = CKEDITOR.instances['Coordinators'].getData();
+            // var EscalationMatrix = CKEDITOR.instances['EscalationMatrix'].getData();
+
+            var arrInspectionLocation = $("#ProductLists").val() || [];
+            var p = arrInspectionLocation.join(",");
+            var arrCountry = $("#CountryNameList").val() || [];
+            var Country = arrCountry.join(",");
+            var arrCity = $("#CityNameList").val() || [];
+            var City = arrCity.join(",");
+
+
+
+            var DEstimatedAmount = $("#DEstimatedAmount").val();
+            var Dcurrency = $("#Dcurrency option:selected").val();
+            var DExchangeRate = $("#DExchangeRate").val();
+            var DTotalAmount = $("#DTotalAmount").val();
+
+            var IEstimatedAmount = $("#IEstimatedAmount").val();
+            var Icurrency = $("#Icurrency option:selected").val();
+            var IExchangeRate = $("#IExchangeRate").val();
+            var ITotalAmount = $("#ITotalAmount").val();
+
+            var OrderRate = $("#OrderRate").val();
+            var OrderType = $("#ddlOrderType option:selected").val();
+            var Estimate_ManMonth = $("#Estimate_ManMonth").val();
+            var Estimate_ManDays_ManMonth = $("#Estimate_ManDays_ManMonth").val();
+            var LostReason = $("#LostReason").val();
+
+            var checkbox = "";
+            if ($('#chkArc').prop('checked')) {
+                checkbox = "1"
+            }
+            else {
+                checkbox = "0"
+            }
+            distance: $("#distance").val();
+
+
+            var multipleValues = $("#ddlStatusType").val();
+            var l = $("#LostReason").val();
+
+            //*********************************************************
+            if (multipleValues == '4') {
+                if ($("#LostReason").val() == "" || $("#LostReason").val() == null) {
+                    alert("Please Enter Lost Reason !!!");
+                    $("#LostReason").focus()
+                    return false;
+                }
+            }
+
+
+            var varExclusionCheckBox = "";
+            if ($('#ExclusionCheckBox').prop('checked')) {
+                varExclusionCheckBox = "1"
+            }
+            else {
+                varExclusionCheckBox = "0"
+            }
+            //*********************************************************
+
+            if ($("#Enquiry").val() == "" || $("#Enquiry").val() == null) {
+                alert("Please Enter Enquiry Description !!!");
+                $("#Enquiry").focus()
+                return false;
+            }
+            if ($("#QuotationCompanyName").val() == "" || $("#QuotationCompanyName").val() == null) {
+                alert("Please Enter Company Name First !!!");
+                $("#QuotationCompanyName").focus()
+                return false;
+            }
+            if (ddlProjectType == "" || ddlProjectType == null) {
+                alert("Please Select At lease (1) Project Type !!!");
+                $("#ProjectType").focus()
+                return false;
+            }
+
+            if (ddlPortfolioType == "" || ddlPortfolioType == null) {
+                alert("Please Select At lease (1) Portfolio Type !!!");
+                $("#ddlportfolioType").focus()
+                return false;
+            }
+            if (ddlType == "" || ddlType == null) {
+                alert("Please Select at lease (1) Type !!!");
+                $("#ServiceType").focus()
+                return false;
+            }
+            if (ddlBranch == "---Select Branch---" || ddlBranch == "" || ddlBranch == null) {
+                alert("Please Select Branch !!!");
+                $("#ddlBrachType").focus()
+                return false;
+            }
+
+            if (OrderType == "---Select Order Type---" || OrderType == "" || OrderType == null) {
+                alert("Please Select Order Type !!!");
+                $("#ddlOrderType").focus()
+                return false;
+            }
+
+            if (OrderRate == "" || OrderRate == null) {
+                alert("Please enter Order Rate !!!");
+                $("#OrderRate").focus()
+                return false;
+            }
+
+            if (OrderType == "ManDays" && (Estimate_ManDays_ManMonth == null || Estimate_ManDays_ManMonth == "")) {
+                alert("Please Enter Estimated Man days !!!");
+                $("#Estimate_ManDays_ManMonth").focus()
+                return false;
+            }
+            if (OrderType == "ManMonth" && (Estimate_ManMonth == null || Estimate_ManMonth == "")) {
+                alert("Please Enter Estimated Man Month !!!");
+                $("#Estimate_ManMonth").focus()
+                return false;
+            }
+
+
+            if ($("#EstimatedAmount").val() == "" || $("#EstimatedAmount").val() == null) {
+                alert("Please Enter Estimated Amount !!!");
+                $("#EstimatedAmount").focus();
+                return false;
+            }
+
+            if (OrderType == "ManDays" && OrderRate >= 5000 && $("#EstimatedAmount").val() >= 250000 && p == "2") {
+                if ($("#distance").val() == "" || $("#distance").val() == null || $("#distance").val() == "0") {
+                    alert("Please Enter Inspection Location Distance !!!");
+                    $("#distance").focus();
+                    return false;
+                }
+            }
+
+
+
+
+            var QuotationDetails =
+				{
+				    EQ_ID: EnquiryID,
+				    PK_QTID: PK_QTID,
+				    QuotationNumber: QuotationNumber,
+				    Enquiry: $("#Enquiry").val(),
+				    Quotation_Description: $("#Quotation_Description").val(),
+				    EndCustomer: $("#EndCustomer").val(),
+				    QuotationCompanyName: $("#QuotationCompanyName").val(),
+				    Reference: $("#Reference").val(),
+				    GST: $("#GST").val(),
+				    ExpiryDate: $("#ExpiryDate").val(),
+
+				    SubServiceType: $("#ddlServiceType option:selected").val(),
+				    PortfolioType: $("#ddlPortfolioType option:selected").val(),
+				    ProjectType: $("#ddlProjectType option:selected").val(),
+
+				    QuotationBranch: $("#ddlBrachType option:selected").val(),
+
+
+				    Status: $("#ddlStatusType option:selected").val(),
+				    Remark: $("#Remark").val(),
+				    //ContactName: $("#ddlContactType option:selected").val(),
+				    //HeaderDetails: HeaderDetails,
+				    Subject: $("#Subject").val(),
+				    // HeaderDetails: HeaderDetails,
+				    ScopeOfWork: ScopeOfWork,
+				    Deliverable: Deliverable,
+				    // Commercials: Commercials,
+				    FeesStructure: FeesStructure,
+				    PaymentTerms: PaymentTerms,
+				    //KeyNotes: KeyNotes,
+				    AddEnclosures: AddEnclosures,
+				    CommunicationProtocol: CommunicationProtocol,
+				    // Coordinators: Coordinators,
+				    // EscalationMatrix: EscalationMatrix,
+				    To: $("#To").val(),
+				    CC: $("#CC").val(),
+				    ApprovalStatus: $("#ApprovalStatus").val(),
+				    EnquiryNumber: $("#EnquiryNumber").val(),
+				    Attachment: $("#Attachment").val(),
+				    FK_CMP_ID: FK_CMP_ID,
+				    CompanyAddress: CompanyAddress,
+				    Validity: Validity,
+				    ThirdPartyInspectionService: ThirdPartyInspectionService,
+				    ThankYouLetter: ThankYouLetter,
+				    EstimatedAmount: $("#EstimatedAmount").val(),
+
+				    InspectionLocation: p,
+
+				    //City: $("#ddlCityType option:selected").val(),
+				    //Country: $("#ddlCountryType option:selected").val(),
+				    City: City,
+				    Country: Country,
+
+
+				    DEstimatedAmount: $("#DEstimatedAmount").val(),
+				    Dcurrency: Dcurrency,//$("#Dcurrency").val(),
+				    DExchangeRate: $("#DExchangeRate").val(),
+				    DTotalAmount: $("#DTotalAmount").val(),
+				    IEstimatedAmount: $("#IEstimatedAmount").val(),
+				    Icurrency: Icurrency,//$("#Icurrency").val(),
+				    IExchangeRate: $("#IExchangeRate").val(),
+				    ITotalAmount: $("#ITotalAmount").val(),
+				    OrderRate: $("#OrderRate").val(),
+				    Estimate_ManMonth: $("#Estimate_ManMonth").val(),
+				    Estimate_ManDays_ManMonth: $("#Estimate_ManDays_ManMonth").val(),
+				    chkArc: $("#chkArc").val(),
+				    //check : checkbox,
+				    Exclusion: $("#Exclusion").val(),
+				    ExclusionCheckBox: $('#ExclusionCheckBox').val(),
+				    OrderType: OrderType,
+				     distance : $("#distance").val(),
+				    LostReason: $("#LostReason").val()
+            
+				}
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Quotation", "QuotationMaster")',
+                dataType: 'json',
+                Async: false,
+                data: JSON.stringify({ QM: QuotationDetails, "C": checkbox }),
+                enctype: "multipart/form-data",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+
+                    if (response.success == 1) {
+                        alert("Quotation Details has been saved successfully!!!")
+                        window.location.href = '@Url.Action("QuotationDetails", "QuotationMaster")';
+                    }
+                    else if (response.result == 'Redirect') {
+                        alert("Quotation Details has been saved successfully!!!")
+                        window.location = response.url;
+                    }
+                    else if (response.success == 2) {
+                        alert("Quotation Details has been Revised successfully!!!")
+                        window.location.href = '@Url.Action("QuotationDetails", "QuotationMaster")';
+                    }
+
+                    else if (response.success == 4) {
+                        alert("Failed !!! Something Went Wrong!!!")
+                        window.location.href = '@Url.Action("Enquiry", "EnquiryMaster")';
+                    }
+                    else if (response.success == 5) {
+                        alert("Quotation Details has been saved successfully!!!") //============Code Added By Rahul
+                        window.location.href = '@Url.Action("QuotationDetails", "QuotationMaster")';
+                    }
+                }
+            });
+
+        });
+
+    });
+</script>
+@*Editing Quotation Details Script*@
+<script>
+    $(document).ready(function () {
+        $("#btnQuotaionMasterUpdate").on('click', function () {
+            debugger;
+            $('#divPDFFile').hide();
+            var FK_CMP_ID = $("#FK_CMP_ID").val();
+            var EnquiryID = $("#EQ_ID").val();
+            var PK_QTID = $("#PK_QTID").val();
+            var QuotationNumber = $("#QuotationNumber").val();
+            var Revise = $("#Revise").val();
+            var EnquiryDescription = $("#Enquiry").val();
+            var CompanyName = $("#CompanyName").val();
+            var ddlProjectType = $("#ddlProjectType option:selected").val();
+
+            var SubServiceType = $("#ddlProjectType option:selected").val();
+            var PortfolioType = $("#ddlPortfolioType option:selected").val();
+
+
+            var ddlType = $("#ddlServiceType option:selected").val();
+            //var ddlBranch = $("#ddlBranch option:selected").val();
+            var ddlBranch = $("#ddlBrachType option:selected").val();
+            var Subject = $("#Subject").val();
+            var Validity = $("#Validity").val();
+            var ThirdPartyInspectionService = $("#ThirdPartyInspectionService").val();
+            var ThankYouLetter = $("#ThankYouLetter").val();
+
+            var CompanyAddress = $("#CompanyAddress").val();
+            var selected = $("#CityNameList option:selected");
+            var ddlCityValue = "";
+            selected.each(function () {
+                ddlCityValue += $(this).text() + ",";
+            });
+
+            var selected = $("#CountryNameList option:selected");
+            var ddlCountryValue = "";
+            selected.each(function () {
+                ddlCountryValue += $(this).text() + ",";
+            });
+
+            var checkbox = "";
+            if ($('#chkArc').prop('checked')) {
+                checkbox = "1"
+            }
+            else {
+                checkbox = "0"
+            }
+
+            var varExclusionCheckBox = "";
+            if ($('#ExclusionCheckBox').prop('checked')) {
+                varExclusionCheckBox = "1"
+            }
+            else {
+                varExclusionCheckBox = "0"
+            }
+
+
+
+            var selected = $("#Attachment").val();
+
+            // var HeaderDetails = CKEDITOR.instances['HeaderDetails'].getData();
+            var ScopeOfWork = CKEDITOR.instances['ScopeOfWork'].getData();
+            var Deliverable = CKEDITOR.instances['Deliverable'].getData();
+            //var Commercials = CKEDITOR.instances['Commercials'].getData();
+            var FeesStructure = CKEDITOR.instances['FeesStructure'].getData();
+            var PaymentTerms = CKEDITOR.instances['PaymentTerms'].getData();
+            // var KeyNotes = CKEDITOR.instances['KeyNotes'].getData();
+            var AddEnclosures = CKEDITOR.instances['AddEnclosures'].getData();
+            var CommunicationProtocol = CKEDITOR.instances['CommunicationProtocol'].getData();
+            // var Coordinators = CKEDITOR.instances['Coordinators'].getData();
+            // var EscalationMatrix = CKEDITOR.instances['EscalationMatrix'].getData();
+
+            var arrInspectionLocation = $("#ProductLists").val() || [];
+            var p = arrInspectionLocation.join(",");
+            var arrCountry = $("#CountryNameList").val() || [];
+            var Country = arrCountry.join(",");
+            var arrCity = $("#CityNameList").val() || [];
+            var City = arrCity.join(",");
+
+            var DEstimatedAmount = $("#DEstimatedAmount").val();
+            var Dcurrency = $("#Dcurrency option:selected").val();
+            var DExchangeRate = $("#DExchangeRate").val();
+            var DTotalAmount = $("#DTotalAmount").val();
+            var IEstimatedAmount = $("#IEstimatedAmount").val();
+            var Icurrency = $("#Icurrency option:selected").val();
+
+            var IExchangeRate = $("#IExchangeRate").val();
+            var ITotalAmount = $("#ITotalAmount").val();
+
+            var OrderRate = $("#OrderRate").val();
+            var Estimate_ManMonth = $("#Estimate_ManMonth").val();
+            var Estimate_ManDays_ManMonth = $("#Estimate_ManDays_ManMonth").val();
+            //var OrderType = $("#ddlOrderType").val();
+            var OrderType = $("#ddlOrderType option:selected").val();
+            var distance = $("#distance").val();
+            var multipleValues = $("#ddlStatusType").val();
+            var l = $("#LostReason").val();
+
+            //*********************************************************
+            if (multipleValues == '4') {
+                if ($("#LostReason").val() == "" || $("#LostReason").val() == null) {
+                    alert("Please Enter Lost Reason !!!");
+                    $("#LostReason").focus()
+                    return false;
+                }
+            }
+
+            if ($("#Enquiry").val() == "" || $("#Enquiry").val() == null) {
+                alert("Please Enter Enquiry Description !!!");
+                $("#Enquiry").focus()
+                return false;
+            }
+            if ($("#QuotationCompanyName").val() == "" || $("#QuotationCompanyName").val() == null) {
+                alert("Please Enter Company Name First !!!");
+                $("#QuotationCompanyName").focus()
+                return false;
+            }
+            if (ddlProjectType == "" || ddlProjectType == null) {
+                alert("Please Select At lease (1) Project Type !!!");
+                $("#ProjectType").focus()
+                return false;
+            }
+            if (ddlType == "" || ddlType == null) {
+                alert("Please Select at lease (1) Type !!!");
+                $("#ServiceType").focus()
+                return false;
+            }
+            if (ddlBranch == "---Select Branch---" || ddlBranch == "" || ddlBranch == null) {
+                alert("Please Select Branch !!!");
+                $("#ddlBrachType").focus()
+                return false;
+            }
+            if (OrderType == "---Select Order Type---" || OrderType == "" || OrderType == null) {
+                alert("Please Select Order Type !!!");
+                $("#ddlOrderType").focus()
+                return false;
+            }
+
+            if (OrderRate == "" || OrderRate == null) {
+                alert("Please enter Order Rate !!!");
+                $("#OrderRate").focus()
+                return false;
+            }
+            if (OrderType == "ManDays" && (Estimate_ManDays_ManMonth == null || Estimate_ManDays_ManMonth == "")) {
+                alert("Please Enter Estimated Man days !!!");
+                $("#Estimate_ManDays_ManMonth").focus()
+                return false;
+            }
+
+            if (OrderType == "ManMonth" && (Estimate_ManMonth == null || Estimate_ManMonth == "")) {
+                alert("Please Enter Estimated Man Month !!!");
+                $("#Estimate_ManMonth").focus()
+                return false;
+            }
+
+
+            if (OrderType == "ManDays" && OrderRate >= 5000 && $("#EstimatedAmount").val() >= 250000 && p == "2") {
+                if ($("#distance").val() == "" || $("#distance").val() == null || $("#distance").val() == "0") {
+                    alert("Please Enter Inspection Location Distance !!!");
+                    $("#distance").focus();
+                    return false;
+                }
+            }
+
+            var QuotationDetails =
+				{
+				    EQ_ID: EnquiryID,
+				    PK_QTID: PK_QTID,
+				    QuotationNumber: QuotationNumber,
+				    Enquiry: $("#Enquiry").val(),
+				    Quotation_Description: $("#Quotation_Description").val(),
+				    EndCustomer: $("#EndCustomer").val(),
+				    QuotationCompanyName: $("#QuotationCompanyName").val(),
+				    Reference: $("#Reference").val(),
+				    GST: $("#GST").val(),
+				    ExpiryDate: $("#ExpiryDate").val(),
+				    ServiceType: $("#ddlServiceType option:selected").val(),
+				    QuotationBranch: $("#ddlBrachType option:selected").val(),
+				    ProjectType: $("#ddlProjectType option:selected").val(),
+				    Status: $("#ddlStatusType option:selected").val(),
+				    Remark: $("#Remark").val(),
+				    // HeaderDetails: HeaderDetails,
+				    Subject: $("#Subject").val(),
+				    //HeaderDetails: HeaderDetails,
+				    ScopeOfWork: ScopeOfWork,
+				    Deliverable: Deliverable,
+				    //  Commercials: Commercials,
+				    FeesStructure: FeesStructure,
+				    PaymentTerms: PaymentTerms,
+				    // KeyNotes: KeyNotes,
+				    AddEnclosures: AddEnclosures,
+				    CommunicationProtocol: CommunicationProtocol,
+				    // Coordinators: Coordinators,
+				    //EscalationMatrix: EscalationMatrix,
+				    To: $("#To").val(),
+				    CC: $("#CC").val(),
+				    ApprovalStatus: $("#ApprovalStatus").val(),
+				    EnquiryNumber: $("#EnquiryNumber").val(),
+				    Attachment: $("#Attachment").val(),
+				    FK_CMP_ID: FK_CMP_ID,
+
+				    Validity: Validity,
+				    ThirdPartyInspectionService: ThirdPartyInspectionService,
+				    ThankYouLetter: ThankYouLetter,
+
+				    CompanyAddress: CompanyAddress,
+				    Revise: Revise,
+				    PortfolioType: PortfolioType,
+				    SubServiceType: SubServiceType,
+
+				    InspectionLocation: p,
+
+
+				    City: City,
+				    Country: Country,
+
+
+				    EstimatedAmount: $("#EstimatedAmount").val(),
+
+				    DEstimatedAmount: $("#DEstimatedAmount").val(),
+				    Dcurrency: Dcurrency,//$("#Dcurrency").val(),
+				    DExchangeRate: $("#DExchangeRate").val(),
+				    DTotalAmount: $("#DTotalAmount").val(),
+				    IEstimatedAmount: $("#IEstimatedAmount").val(),
+				    Icurrency: Icurrency,//$("#Icurrency").val(),
+				    IExchangeRate: $("#IExchangeRate").val(),
+				    ITotalAmount: $("#ITotalAmount").val(),
+				    OrderRate: $("#OrderRate").val(),
+				    Estimate_ManMonth: $("#Estimate_ManMonth").val(),
+				    Estimate_ManDays_ManMonth: $("#Estimate_ManDays_ManMonth").val(),
+				    Exclusion: $("#Exclusion").val(),
+				    distance: $("#distance").val(),
+				    check: checkbox,
+				    ExclusionCheckBox: $('#ExclusionCheckBox').val(),
+				    OrderType: OrderType,
+				    LostReason: $("#LostReason").val()
+				}
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Quotation", "QuotationMaster")',
+                dataType: 'json',
+                Async: false,
+                data: JSON.stringify({ QM: QuotationDetails, "C": checkbox }),
+                enctype: "multipart/form-data",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    @*if (response.success == 3)
+                            {
+                        alert("Quotation Details has been Updated successfully!!!")
+                        window.location.href = '@Url.Action("Quotation", "QuotationMaster")';
+                    }*@
+                    if (response.result == 'Redirect') {
+                        alert("Quotation Details has been Updated successfully!!!")
+                        window.location = response.url;
+                    }
+                    else if (response.success == 1) {
+                        alert("Quotation Details has been saved successfully!!!")
+                        window.location = response.url;
+                    }
+                        //else if (response.success == 2) {
+                        //    alert("Quotation Details has been Revised!!!")
+                        //    //window.location = response.url;
+                        //}
+                    else if (response.result == 'RedirectRevised') {
+                        alert("Quotation Details has been Revised Successfully !!!")
+                        window.location = response.url;
+                    }
+                    else if (response.success == 4) {
+                        alert("Failed !!! Something Went Wrong!!!")
+                        window.location.href = '@Url.Action("Enquiry", "EnquiryMaster")';
+                    }
+                    else if (response.success == 5) {
+                        alert("Quotation Details has been saved successfully!!!")  //============Code Added By Rahul
+                        window.location.href = '@Url.Action("QuotationDetails", "QuotationMaster")';
+                    }
+                }
+            });
+        });
+
+    });
+</script>
+
+<script>
+    $('#filter1').click(function () {
+        debugger;
+        //$('#partialtabledata').html('');
+        var Category = $('#Category').val();
+        var data = $('#Searchdata').val();
+        if (Category != "" && data != "") {
+
+
+            $.ajax({
+                url: '@Url.Action("Searchdata", "QuotationMaster")',
+                type: 'GET',
+                datatype: 'json',
+                data: { Category: Category, data: data },
+                success: function (ObjModelQuotationMast) {
+                    debugger;
+                    //alert('Hi');
+
+                    // var cknotes = ObjModelQuotationMast.KeyNotes;
+                    // $('#KeyNotes').html(cknotes).text();
+                    var ScopeOfWork = ObjModelQuotationMast.ScopeOfWork;
+                    var Deliverable = ObjModelQuotationMast.Deliverable;
+
+
+                    alert("Quotation Copied Successfully");
+                    // var cknotes = ObjModelQuotationMast.KeyNotes;
+                    $('#Remark').val(ObjModelQuotationMast.Remark).val()
+                    $('#Subject').val(ObjModelQuotationMast.Subject).val()
+                    // $('#HeaderDetails').val(ObjModelQuotationMast.HeaderDetails).val()
+                    // $('#ScopeOfWork').val(ObjModelQuotationMast.ScopeOfWork).val()
+                    $('#ScopeOfWork').html(ScopeOfWork).text();
+                    $('#Deliverable').html(Deliverable).text();
+                    //$('#Deliverable').val(ObjModelQuotationMast.Deliverable).val()
+                    $('#CommunicationProtocol').val(ObjModelQuotationMast.CommunicationProtocol).val()
+                    $('#To').val(ObjModelQuotationMast.To).val()
+                    $('#CC').val(ObjModelQuotationMast.CC).val()
+                    // $('#Coordinators').val(ObjModelQuotationMast.Coordinators).val()
+                    // $('#EscalationMatrix').val(ObjModelQuotationMast.EscalationMatrix).val()
+                    // $('#Commercials').val(ObjModelQuotationMast.Commercials).val()
+                    $('#FeesStructure').val(ObjModelQuotationMast.FeesStructure).val()
+                    $('#PaymentTerms').val(ObjModelQuotationMast.PaymentTerms).val()
+
+                    //var editor = $('#KeyNotes').ckeditorGet();
+                    // CKEDITOR.instances.Keynotes.setData(document.getElementById(cknotes).innerHTML);
+                    // CKEDITOR.instances['Keynotes'].getData.editor(cknotes);
+                    //CKEDITOR.instances['Keynotes'].setData(cknotes)
+                    // CKEDITOR.instances[cknotes].updateElement()
+
+                    // $('#KeyNotes').html(cknotes).text();
+                    $('#AddEnclosures').val(ObjModelQuotationMast.AddEnclosures).val()
+                    $('#Attachment').val(ObjModelQuotationMast.Attachment).val()
+
+                }
+            });
+
+        }
+        else {
+            if (Category == "") {
+                alert("Please Select Category");
+            }
+            else if (data == "") {
+                alert("Please Enter Data");
+            }
+            else {
+                alert("Data is not available");
+            }
+
+        }
+    });
+</script>
+
+<script>
+    $('#NewCopyQuotation').click(function () {
+        debugger;
+        //$('#partialtabledata').html('');
+        var Category = $('#ddlCustomers').val();
+        //var data = $('#Searchdata').val();
+        if (Category != "") {
+
+
+            $.ajax({
+                url: '@Url.Action("Copydata", "QuotationMaster")',
+                type: 'GET',
+                datatype: 'json',
+                data: { Category: Category },
+                success: function (ObjModelQuotationMast) {
+                    debugger;
+                    //alert('Hi');
+
+                    var ScopeOfWork = ObjModelQuotationMast.ScopeOfWork;
+                    var Deliverable = ObjModelQuotationMast.Deliverable;
+                    var CommunicationProtocol = ObjModelQuotationMast.CommunicationProtocol;
+                    var FeesStructure = ObjModelQuotationMast.FeesStructure;
+                    var PaymentTerms = ObjModelQuotationMast.PaymentTerms;
+                    var AddEnclosures = ObjModelQuotationMast.AddEnclosures;
+                    CKEDITOR.instances['Deliverable'].setData(Deliverable)
+                    var a = CKEDITOR.instances['Deliverable'].getData();
+                    $('#Deliverable').html(a).text();
+
+                    CKEDITOR.instances['ScopeOfWork'].setData(ScopeOfWork)
+                    var b = CKEDITOR.instances['ScopeOfWork'].getData();
+                    $('#ScopeOfWork').html(b).text();
+
+                    CKEDITOR.instances['CommunicationProtocol'].setData(CommunicationProtocol)
+                    var C = CKEDITOR.instances['CommunicationProtocol'].getData();
+                    $('#CommunicationProtocol').html(C).text();
+
+                    CKEDITOR.instances['FeesStructure'].setData(FeesStructure)
+                    var D = CKEDITOR.instances['FeesStructure'].getData();
+                    $('#FeesStructure').html(D).text();
+
+                    CKEDITOR.instances['PaymentTerms'].setData(PaymentTerms)
+                    var E = CKEDITOR.instances['PaymentTerms'].getData();
+                    $('#PaymentTerms').html(E).text();
+
+                    CKEDITOR.instances['ScopeOfWork'].setData(ScopeOfWork)
+                    var a = CKEDITOR.instances['ScopeOfWork'].getData();
+                    $('#ScopeOfWork').html(a).text();
+
+
+
+                    CKEDITOR.instances['AddEnclosures'].setData(AddEnclosures)
+                    var addEnclo = CKEDITOR.instances['AddEnclosures'].getData();
+                    $('#AddEnclosures').html(addEnclo).text();
+
+
+
+                    alert("Quotation Copied Successfully");
+                    //var cknotes = ObjModelQuotationMast.KeyNotes;
+                    $('#Remark').val(ObjModelQuotationMast.Remark).val()
+                    $('#Subject').val(ObjModelQuotationMast.Subject).val()
+                    // $('#HeaderDetails').val(ObjModelQuotationMast.HeaderDetails).val()
+                    //$('#ScopeOfWork').html(ScopeOfWork).text();
+                    //$('#Deliverable').html(Deliverable).text();
+
+
+                    //$('#CommunicationProtocol').val(ObjModelQuotationMast.CommunicationProtocol).val()
+                    $('#To').val(ObjModelQuotationMast.To).val()
+                    $('#CC').val(ObjModelQuotationMast.CC).val()
+                    // $('#Coordinators').val(ObjModelQuotationMast.Coordinators).val()
+                    // $('#EscalationMatrix').val(ObjModelQuotationMast.EscalationMatrix).val()
+                    // $('#Commercials').val(ObjModelQuotationMast.Commercials).val()
+                    $('#FeesStructure').val(ObjModelQuotationMast.FeesStructure).val()
+                    $('#PaymentTerms').val(ObjModelQuotationMast.PaymentTerms).val()
+
+                    //var editor = $('#KeyNotes').ckeditorGet();
+                    // CKEDITOR.instances.Keynotes.setData(document.getElementById(cknotes).innerHTML);
+                    // CKEDITOR.instances['Keynotes'].getData.editor(cknotes);
+                    //CKEDITOR.instances['Keynotes'].setData(cknotes)
+                    //CKEDITOR.instances[cknotes].updateElement()
+
+                    // $('#KeyNotes').html(cknotes).text();
+
+
+                    //var editor = $('#Deliverable').ckeditorGet();
+
+
+
+                    // $('#AddEnclosures').val(ObjModelQuotationMast.AddEnclosures).val()
+                    $('#Attachment').val(ObjModelQuotationMast.Attachment).val()
+                    $('#ThankYouLetter').val(ObjModelQuotationMast.ThankYouLetter).val()
+                    $('#ThirdPartyInspectionService').val(ObjModelQuotationMast.ThirdPartyInspectionService).val()
+
+                }
+            });
+
+        }
+        else {
+            if (Category == "") {
+                alert("Please Select Quotation Number");
+            }
+
+
+        }
+    });
+</script>
+
+
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>
+
+@*Delete Uploaded File Code added by manoj Sharma 12 March 2020*@
+
+<script>
+    $(document).ready(function () {
+        $('.deleteItem').click(function (e) {
+            debugger;
+            e.preventDefault();
+            var $ctrl = $(this);
+            //var EnquiryID = $("#EQ_ID").val();
+            if (confirm('Do you really want to delete this file?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteFile")',
+                    type: 'POST',
+                    data: { id: $(this).data('id') }
+                }).done(function (data) {
+                    if (data.Result == "OK") {
+                        $ctrl.closest('li').remove();
+                    }
+                    else if (data.Result.Message) {
+                        alert(data.Result.Message);
+                    }
+                }).fail(function () {
+                    alert("There is something wrong. Please try again.");
+                })
+
+            }
+        });
+    });
+
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#ClientName").autocomplete({
+
+            source: function (request, response) {
+                debugger;
+                $.ajax({
+                    //url: "/TrainingSchedule/GetRecord",
+                    url: '@Url.Action("GetClientRecord", "QuotationMaster")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.ClientName, value: item.ClientName };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    })
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#QuotationDescription").autocomplete({
+
+            source: function (request, response) {
+                debugger;
+                $.ajax({
+                    //url: "/TrainingSchedule/GetRecord",
+                    url: '@Url.Action("GetQuotationDescription", "QuotationMaster")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Quotation_Description, value: item.Quotation_Description };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    })
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#ProjectName").autocomplete({
+
+            source: function (request, response) {
+                debugger;
+                $.ajax({
+
+                    url: '@Url.Action("GetClientRecord", "QuotationMaster")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.ClientName, value: item.ClientName };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    })
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#EnquiryDescription").autocomplete({
+
+            source: function (request, response) {
+                debugger;
+                $.ajax({
+
+                    url: '@Url.Action("GetEnquiryDescription", "QuotationMaster")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Enquiry_Description, value: item.Enquiry_Description };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    })
+</script>
+
+<script type="text/javascript">
+
+
+    $('#NewSearch').click(function () {
+        debugger;
+        //console.log($('#CompanyName').val())
+        $('#ddlCustomers').html('');
+        //var VisitReport = $('#VisitReport').val();
+        //var SubJobNo = $('#SubJobNo').val();
+        //var ProjectName = $('#ProjectName').val();
+        var ClientName = $('#ClientName').val();
+        var QuotationDescription = $('#QuotationDescription').val();
+        var QuotationNumberSearch = $('#QuotationNumberSearch').val();
+        //var EnquiryDescription = $('#EnquiryDescription').val();
+
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("NewSearchdata", "QuotationMaster")',
+            //data: { CompanyName: $('#CompanyName').val() },
+            data: { ClientName: ClientName, QuotationDescription: QuotationDescription, QuotationNumberSearch: QuotationNumberSearch },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                // alert(data)
+                $("#Others").show();
+                $("#Systemhide").hide();
+
+                var district = "<select id='ddlCustomers'>";
+                district = district + '<option value="">--Select Quotation Number--</option>';
+                for (var i = 0; i < data.length; i++) {
+                    district = district + '<option value=' + data[i].ddlQuotationNumber + '>' + data[i].ddlQuotationNumber + '</option>';
+                }
+                district = district + '</select>';
+                $('#ddlCustomers').html(district);
+
+                //$.each(response, function () {
+                //    ddlCustomers.append($("<option></option>").val(this['Value']).html(this['Text']));
+                //});
+            }
+        });
+        //});
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        $('#ProductLists').on('change', function () {
+            debugger;
+            var multipleValues = $("#ProductLists").val() || [];
+
+            var p = multipleValues.join(",");
+            if (p == '1,2') {
+                $("#DOMESTIC").show();
+                $("#INTERNATIONAL").show();
+
+                $("#DomesticCurrency").show();
+                $("#InternationalCurrency").show();
+            }
+            else if (p == '1') {
+                $("#INTERNATIONAL").show();
+                $("#DOMESTIC").hide();
+
+                $("#DomesticCurrency").hide();
+                $("#InternationalCurrency").show();
+
+
+                $("#DEstimatedAmount").val("");
+                $("#Dcurrency option:selected").val("");
+                $("#DExchangeRate").val("");
+                $("#DTotalAmount").val("");
+            }
+            else if (p == '2') {
+                $("#DOMESTIC").show();
+                $("#INTERNATIONAL").hide();
+
+                $("#DomesticCurrency").show();
+                $("#InternationalCurrency").hide();
+
+                $("#IEstimatedAmount").val("");
+                $("#Icurrency").val("");
+                $("#IExchangeRate").val("");
+                $("#ITotalAmount").val("");
+            }
+            else {
+                $("#DOMESTIC").hide();
+                $("#INTERNATIONAL").hide();
+
+
+                $("#DomesticCurrency").hide();
+                $("#InternationalCurrency").hide();
+
+                $("#DEstimatedAmount").val("");
+                $("#Dcurrency option:selected").val("");
+                $("#DExchangeRate").val("");
+                $("#DTotalAmount").val("");
+                $("#IEstimatedAmount").val("");
+                $("#Icurrency").val("");
+                $("#IExchangeRate").val("");
+                $("#ITotalAmount").val("");
+            }
+
+
+
+            //if  (this.value == '2' && this.value == '1') {
+            //    $("#DOMESTIC").show();
+            //    $("#INTERNATIONAL").hide();
+            //}
+            //else if (this.value == '2') {
+            //    $("#DOMESTIC").show();
+            //    $("#INTERNATIONAL").hide();
+            //}
+            //else if
+            //    (this.value == '1')
+            //    //.....................^.......
+            //{
+            //    $("#INTERNATIONAL").show();
+            //    $("#DOMESTIC").hide();
+            //}
+
+
+
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#ProductLists').multiselect({
+            includeSelectAllOption: true
+        });
+
+    });
+</script>
+
+<script type="text/javascript">
+    //$(document).ready(function () {
+    function onchangeevent() {
+
+        var multipleValues = $("#ProductLists").val() || [];
+        var DTotalAmount = 0;
+        var ITotalAmount = 0;
+
+        var p = multipleValues.join(",");
+
+        if (p == '1') {
+            var IEstimatedAmount = parseFloat($('#IEstimatedAmount').val());
+            var IExchangedRate = parseFloat($('#IExchangeRate').val());
+            ITotalAmount = IEstimatedAmount * IExchangedRate;
+            $('#EstimatedAmount').val(ITotalAmount);
+            $('#ITotalAmount').val(ITotalAmount);
+            $("#DomesticCurrency").hide();
+            $("#InternationalCurrency").show();
+
+
+        }
+        if (p == '2') {
+            var EstimatedAmount = parseFloat($('#DEstimatedAmount').val());
+            var ExchangedRate = parseFloat($('#DExchangeRate').val());
+
+
+            DTotalAmount = EstimatedAmount * ExchangedRate;
+            $('#EstimatedAmount').val(DTotalAmount);
+            $('#DTotalAmount').val(DTotalAmount);
+            $("#DomesticCurrency").show();
+            $("#InternationalCurrency").hide();
+        }
+        if (p == '1,2') {
+            var EstimatedAmount = parseFloat($('#DEstimatedAmount').val());
+            var ExchangedRate = parseFloat($('#DExchangeRate').val());
+
+            var IEstimatedAmount = parseFloat($('#IEstimatedAmount').val());
+            var IExchangedRate = parseFloat($('#IExchangeRate').val());
+
+            DTotalAmount = EstimatedAmount * ExchangedRate;
+
+            if (isNaN(DTotalAmount) == false) {
+                $('#DTotalAmount').val(DTotalAmount);
+            }
+
+            ITotalAmount = IEstimatedAmount * IExchangedRate;
+
+            if (isNaN(ITotalAmount) == false) {
+                $('#ITotalAmount').val(ITotalAmount);
+            }
+
+            var GrandTotal = DTotalAmount + ITotalAmount;
+            if (isNaN(GrandTotal) == false) {
+                $('#EstimatedAmount').val(ITotalAmount);
+            }
+            // $('#EstimatedAmount').val(GrandTotal);
+            $("#DomesticCurrency").show();
+            $("#InternationalCurrency").show();
+        }
+    };
+
+
+</script>
+
+@*<script type="text/javascript">
+        //$(document).ready(function () {
+            function onchangeevent() {
+
+            debugger;
+            //$('.DExchangeRate').blur(function () {
+            //$("#DExchangeRate").blur(function () {
+            //$("#DExchangeRate").blur(function () {
+            var multipleValues = $("#ProductLists").val() || [];
+            var DTotalAmount = 0;
+            var ITotalAmount = 0;
+            var EstimatedAmount = parseFloat($('#DEstimatedAmount').val());
+            var ExchangedRate = parseFloat($('#DExchangeRate').val());
+
+            var IEstimatedAmount = parseFloat($('#IEstimatedAmount').val());
+            var IExchangedRate = parseFloat($('#IExchangeRate').val());
+
+
+            var p = multipleValues.join(",");
+
+            if (p == '1')
+            {
+                ITotalAmount = IEstimatedAmount * IExchangedRate;
+                $('#EstimatedAmount').val(ITotalAmount);
+                $('#ITotalAmount').val(ITotalAmount);
+
+
+                $("#DomesticCurrency").hide();
+                $("#InternationalCurrency").show();
+            }
+            if (p == '2') {
+
+
+                DTotalAmount = EstimatedAmount * ExchangedRate;
+                $('#EstimatedAmount').val(DTotalAmount);
+                $('#DTotalAmount').val(DTotalAmount);
+
+                $("#DomesticCurrency").show();
+                $("#InternationalCurrency").hide();
+            }
+            if (p == '1,2') {
+
+                DTotalAmount = EstimatedAmount * ExchangedRate;
+                $('#DTotalAmount').val(DTotalAmount);
+
+                ITotalAmount = IEstimatedAmount * IExchangedRate;
+                $('#ITotalAmount').val(ITotalAmount);
+
+                var GrandTotal = DTotalAmount + ITotalAmount;
+                $('#EstimatedAmount').val(GrandTotal);
+
+                $("#DomesticCurrency").show();
+                $("#InternationalCurrency").show();
+            }
+
+
+
+
+
+        };
+
+
+    </script>*@
+
+<script type="text/javascript">
+    debugger;
+    $(document).ready(function () {
+        var multipleValues = $("#ProductLists").val() || [];
+        var DTotalAmount = 0;
+        var ITotalAmount = 0;
+        var EstimatedAmount = parseFloat($('#DEstimatedAmount').val());
+        var ExchangedRate = parseFloat($('#DExchangeRate').val());
+
+        var IEstimatedAmount = parseFloat($('#IEstimatedAmount').val());
+        var IExchangedRate = parseFloat($('#IExchangeRate').val());
+
+
+        var p = multipleValues.join(",");
+
+        if (p == '1') {
+            ITotalAmount = IEstimatedAmount * IExchangedRate;
+            $('#EstimatedAmount').val(ITotalAmount);
+            $('#ITotalAmount').val(ITotalAmount);
+
+            $("#DomesticCurrency").hide();
+            $("#InternationalCurrency").show();
+
+
+        }
+        if (p == '2') {
+
+
+            DTotalAmount = EstimatedAmount * ExchangedRate;
+            $('#EstimatedAmount').val(DTotalAmount);
+            $('#DTotalAmount').val(DTotalAmount);
+            $("#DomesticCurrency").show();
+            $("#InternationalCurrency").hide();
+        }
+        if (p == '1,2') {
+
+            DTotalAmount = EstimatedAmount * ExchangedRate;
+            $('#DTotalAmount').val(DTotalAmount);
+
+            ITotalAmount = IEstimatedAmount * IExchangedRate;
+            $('#ITotalAmount').val(ITotalAmount);
+
+            var GrandTotal = DTotalAmount + ITotalAmount;
+            $('#EstimatedAmount').val(GrandTotal);
+            $("#DomesticCurrency").show();
+            $("#InternationalCurrency").show();
+        }
+
+
+
+        var multipleValues = $("#ddlStatusType").val();
+        if (multipleValues == 4) {
+            $("#LostReason1").show();
+        }
+        else {
+            $("#LostReason1").hide();
+        }
+
+
+
+    });
+
+
+</script>
+
+<script type="text/javascript">
+    debugger;
+    //$(document).ready(function () {
+    function onchangeddlStatus() {
+        debugger;
+
+        var multipleValues = $("#ddlStatusType").val();
+
+        if (multipleValues == 4) {
+            $("#LostReason1").show();
+        }
+        else {
+            $("#LostReason1").hide();
+        }
+    };
+
+    //});
+</script>

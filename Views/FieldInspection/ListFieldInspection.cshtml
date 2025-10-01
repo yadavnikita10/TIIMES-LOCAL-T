@@ -1,0 +1,137 @@
+﻿@*@model IEnumerable<TuvVision.Models.FieldInspectionMaster>*@
+@model TuvVision.Models.FieldInspectionMaster
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "ListFieldInspection";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+<style>
+    table.evaluation > tbody {
+        width: 100% !important;
+        display: table;
+    }
+
+        table.evaluation > tbody > tr td table {
+            width: 100% !important;
+            display: table;
+        }
+</style>
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Add Field Inspection-TCE</h3>
+                <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("CreateFieldInspection", "FieldInspection")'">Add Field Inspection</button>
+            </div><!-- /.col -->
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+            <!--Table was here-->
+
+        </div>
+        <div class="col-xs-12">
+            @*<table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="hidden">PK_FieldInspection</th>
+                        <th>Inspection Name</th>
+                        <th>IAF Scope Number</th>
+
+                        <th class="remove-search">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var b in Model)
+                    {
+                        <tr>
+                            <td class="hidden">@b.PK_FieldInspection</td>
+
+                            <td>@b.InspectionName</td>
+                            <td>@b.IAFScopeName</td>
+                            <td cRemarkslass="action-btn" style="text-align:center;">
+                                <a href="@Url.Action("CreateFieldInspection", "FieldInspection", new { PK_FieldInspection = @b.PK_FieldInspection })" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>
+
+                                <a href="@Url.Action("Delete", "FieldInspection", new { PK_FieldInspection = @b.PK_FieldInspection })" class="delete" onclick="return confirm('Are you sure you wish to delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>*@
+
+        </div>
+
+        <div class="col-xs-12">
+            <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>
+                        @(Html
+                            .Grid(Model.lmd1)
+                            .Build(columns =>
+                            {
+                                // < a href = "@Url.Action("CreateFieldInspection", "FieldInspection", new { PK_FieldInspection = @b.PK_FieldInspection })" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil"></i></a>
+
+                                //<a href = "@Url.Action("Delete", "FieldInspection", new { PK_FieldInspection = @b.PK_FieldInspection })" class="delete" onclick="return confirm('Are you sure you wish to delete selected Record?');" title="Delete"><i class="fa fa-trash"></i></a>
+
+                                columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "CreateFieldInspection", new { PK_FieldInspection = o.PK_FieldInspection }, new { @class = "fa fa-pencil", title = "Edit" }));
+                                columns.Add().Titled("Delete").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "Delete", new { PK_FieldInspection = o.PK_FieldInspection }, new { @class = "fa fa-trash-o", title = "Delete", onclick = "return confirm('Are you sure you wish to delete ?');" }));
+
+                                columns.Add(c => c.PK_FieldInspection).Titled("PK_FieldInspection").Hidden();
+    columns.Add(c => c.InspectionName).Titled("Inspection Name");
+    columns.Add(c => c.IAFScopeName).Titled("IAF Scope Number");
+
+                            })
+                            .Pageable(pager =>
+                            {
+        //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+        pager.ShowPageSizes = true;
+        pager.PagesToDisplay = 3;
+        pager.CurrentPage = 1;
+        pager.RowsPerPage = 2;
+    })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                        )
+
+
+                    </td>
+                </tr>
+            </table>
+
+            </div>
+
+        </div>
+
+</div>
+
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+</script>	
+
+
+

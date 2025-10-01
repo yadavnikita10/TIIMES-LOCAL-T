@@ -1,0 +1,187 @@
+﻿
+@{
+    ViewBag.Title = "CompetancyMatrix";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+<style>
+    a.menu_links {
+        cursor: pointer;
+    }
+
+    #myInput {
+        background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 100%; /* Full-width */
+        font-size: 14px; /* Increase font-size */
+        /*padding: 12px 20px 12px 40px;*/ /* Add some padding */
+        padding: 6px 19px 5px 16px;
+        border: 1px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+    }
+
+    table {
+        /*font-family: arial, sans-serif;*/
+        font-family:'TNG Pro';
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    /*td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }*/
+    td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        /*background-color: #04AA6D;*/
+        background-color: #001ED2;
+        color: white;
+    }
+
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Competency Matrix</h3>
+                    
+                </div><!-- /.col -->
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+            <div class="col-xs-12 col-sm-offset-1 col-sm-6"  >
+                <table id="myTable" class="display" cellspacing="0" width="80%">
+                    
+                    <thead>
+                        <tr class="header">
+                          
+                            <th class="remove-search" style="padding: 10px 10px !important;">Name</th>
+                            <th class="remove-search" style="padding: 10px 10px !important;" width="5%">View</th>
+
+                        </tr>
+                    </thead>                 
+                    <tr>
+                           
+                        <td>
+                            <img src="~/library-types/excel.png" download width="15" />
+                            Competency Matrix
+                        </td>
+
+
+
+
+
+                        <td align="center">
+                            <a href="~/CompetencyMatrix.xlsx" id="btnView1" class="menu_links" align="center">
+                                    
+                                &nbsp;&nbsp;&nbsp;<img src="@Url.Content("~/View1.png")" />
+                            </a>
+                        </td>
+                    </tr>
+                    
+
+                    
+
+                </table>
+
+               
+            </div><!-- /.data table col -->
+
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+
+    <script type="text/javascript">
+        function DownloadFile(fileName) {
+            //Set the File URL.
+            var url = "Files/" + fileName;
+
+            //Create XMLHTTP Request.
+            var req = new XMLHttpRequest();
+            req.open("GET", url, true);
+            req.responseType = "blob";
+            req.onload = function ()
+            {
+                //Convert the Byte Data to BLOB object.
+                var blob = new Blob([req.response], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileName);
+                } else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = document.createElement("a");
+                    a.setAttribute("download", fileName);
+                    a.setAttribute("href", link);
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+            };
+            req.send();
+        };
+    </script>
+
+
+    <script>
+    function GetClientReport(File)
+    {
+
+        if(File.substring(File.length - 3).toUpperCase()=="PDF")
+        {
+            window.open('GetPDF?FileName=' + File + "&#toolbar=0", "_blank",'noopener,noreferrer,resizable');
+        }
+        else
+        {
+            window.location.href = "../LibraryFiles/" + File;
+            return false;
+        }
+    }
+
+    </script>
+}
+
+
+
+
+
+
+

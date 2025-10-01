@@ -1,0 +1,420 @@
+﻿@model TuvVision.Models.ProfileUser
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@using System.Configuration;
+
+@{
+    ViewBag.Title = "UserDashBoard";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+@*Ashwini Scripts here for datatable starts here*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>*@
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+
+@using (Html.BeginForm())
+{
+    <!--Start of header-->
+    <!--Start of main content 3-->
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">User Data</h3>
+
+                    <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportUserData","MISOPEReport")'">
+                        Export To Excel
+                    </button>
+                </div><!-- /.col -->
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+
+
+
+
+            <div class="col-xs-12" id="divHistory">
+                
+                <table class="display dataTable no-footer" id="example" >
+                    
+                    <thead>
+                        <tr>
+                            @*<th>TIIMES UIN</th>*@
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+
+                            <th>Last Name</th>
+                            <th>Date OfJoining</th>
+                            <th>Branch</th>
+                            <th>Cost Center</th>
+
+                            <th>Employement Category</th>
+                            <th>Employee Grade</th>
+
+                            <th>HR Employee Code</th>
+                            <th>Sap Employee Code</th>
+                            <th>Sap Vendor Code</th>
+
+                            <th>Designation</th>
+                            <th>Tuv Email Id</th>
+                            @*<th>Main Branch</th>*@
+                            <th>OBS Type</th>
+                            <th>Date Of Birth</th>
+                            <th>Personal Email ID</th>
+                            <th>Mobile No</th>
+                            <th>Emergency Mobile Number</th>
+                            <th>Residence Number</th>
+                            <th>TUVI Landline Number</th>
+                            <th>Exprience before Joining TUVI</th>
+                            <th>Total year of Exprience</th>
+
+                            <th>Residing Address</th>
+                            <th>Permanent Address</th>
+                            <th>Residing Address PIN code</th>
+                            <th>Permanent Address PIN code</th>
+                            <th>Blood Group</th>
+                            <th>Shoes Size</th>
+                            <th>Shirt Size</th>
+                            <th>TUVI Stamp No</th>
+                            <th>Current Assignment</th>
+                            @*<th>Course</th>*@
+                            @*<th>Educational Qualification</th>
+                             <th>Proffesional Qualification</th>
+                             <th>Degree</th>
+                             <th>Field Of Study</th>
+                             <th>Year Of Passing</th>*@
+                            <th>Qualification</th>
+
+                            <th>University</th>
+                            <th>Last Year %/CGPA</th>
+                            <th>Aggregate %/CGPA</th>
+                            <th>Certification</th>
+                            <th>Eye Test(YES/NO)</th>
+                            <th>ProfCertificates</th>
+                            <th>Photo</th>
+                            <th>Signature</th>
+
+
+                            <th>CV</th>
+                            <th>Pan Card</th>
+                            <th>Eye Test Report</th>
+                            <th>F-MR-12-Declaration</th>
+                            <th>Proffesional Certificates</th>
+                            <th>Educational Certificates</th>
+
+
+                            @*<th>Certification Number</th>
+                             <th>Issue Date</th>
+                             <th>Valid Till</th>*@
+                            @*<th>Eye Test Year</th>*@
+
+
+
+
+
+
+
+
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                        @if (Model.dtUserData != null && Model.dtUserData.Rows.Count != 0)
+                        {
+                            for (int cnt = 0; cnt < Model.dtUserData.Rows.Count; cnt++)
+                            {
+                                System.Data.DataRow row = Model.dtUserData.Rows[cnt];
+                                <tr>
+                                    @*<td align="left">@row["pk_UserID" ]</td>*@
+                                    <td align="left">@row["FirstName"]</td>
+                                    <td align="left">@row["MiddleName"]</td>
+
+
+                                    <td align="left">@row["LastName"]</td>
+                                    <td align="left">@row["DateOfJoining"]</td>
+                                    <td align="left">@row["Branch"]</td>
+                                    <td align="left">@row["CostCenter_Id"]</td>
+
+                                    <td align="left">@row["EmployementCategory"]</td>
+                                    <td align="left">@row["EmployeeGrade"]</td>
+
+                                    <td align="left">@row["EmployeeCode"]</td>
+                                    <td align="left">@row["SAP_Emp_code"]</td>
+
+                                    <td align="left">@row["SAP_VendorCode"]</td>
+                                    <td align="left">@row["Designation"]</td>
+
+                                    <td align="left">@row["Tuv_Email_Id"]</td>
+                                    <td align="left">@row["OBSName"]</td>
+                                    <td align="left">@row["DOB"]</td>
+
+                                    <td align="left">@row["EmailID"]</td>
+                                    <td align="left">@row["MobileNo"]</td>
+                                    <td align="left">@row["EmergencyMobile_No"]</td>
+                                    <td align="left">@row["ResidenceNo"]</td>
+                                    <td align="left">@row["OfficeNo"]</td>
+                                    <td align="left">@row["ExpBeforeTUV"]</td>
+                                    <td align="left">@row["TotalyearofExprience"]</td>
+
+
+
+                                    <td align="left">@row["Address1"]</td>
+                                    <td align="left">@row["Address2"]</td>
+                                    <td align="left">@row["SiteAddr"]</td>
+                                    <td align="left">@row["PermanantPin"]</td>
+                                    <td align="left">@row["BloodGroup"]</td>
+                                    <td align="left">@row["ShoesSize"]</td>
+                                    <td align="left">@row["ShirtSize"]</td>
+                                    <td align="left">@row["TUVIStampNo"]</td>
+
+                                    <td align="left">@row["CurrentAssignment"]</td>
+                                    <td align="left" width="5000px">
+                                        @Html.Raw(row["Qualification"].ToString().Replace(",", "<br>"))
+                                    </td>
+
+                                    @*<td align="left">@row["FileName"]</td>*@
+                                    <td align="left">@row["University"]</td>
+                                    <td align="left">@row["LastYearPerc"]</td>
+                                    <td align="left">@row["AggregatePerc"]</td>
+                                    <td align="left">@row["FileName"]</td>
+
+
+                                    <td align="left">@row["EyeTest"]</td>
+                                    @*<td align="left">@row["PanNo"]</td>
+                        <td align="left">@row["Gender"]</td>*@
+
+
+
+                                    <td align="left" width="5000px">
+                                        @Html.Raw(row["ProfCertificates"].ToString().Replace(",", "<br>"))
+                                    </td>
+
+                                    @if (row["Photo"] != null && row["Photo"].ToString() != "")
+                                    {
+
+                                        <td align="center">
+                                            @*<img src="data:image/jpg;base64,@Convert.ToBase64String((byte[])row["Photo"])" style="height:80px;width:80px;"  />*@
+                                            <img src="@String.Format("{0}/{1}/{2}", @ConfigurationManager.AppSettings["Web"].ToString(),"content/Uploads/Images", @row["Photo"].ToString())" style="height:80px;width:80px;" />
+
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="center">&nbsp;</td>
+                                    }
+
+                                    @if (row["Sign"] != null && row["Sign"].ToString() != "")
+                                    {
+
+                                        <td align="center">
+                                            @*<img src="data:image/jpg;base64,@Convert.ToBase64String((byte[])row["Sign"])" style="height:80px;width:80px;" />*@
+                                            <img src="@String.Format("{0}/{1}/{2}", @ConfigurationManager.AppSettings["Web"].ToString(),"content/Uploads/Images", @row["Sign"].ToString())" style="height:80px;width:80px;" />
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="center">&nbsp;</td>
+                                    }
+
+
+
+
+                                    @*@if (row["Photo"] != null && row["Photo"].ToString() != "")
+                        {
+
+                            <td align="center">
+                                <img src="data:image/jpg;base64,@Convert.ToBase64String((byte[])row["Photo"])" style="height:80px;width:80px;"  />
+                            </td>
+                        }
+                        else
+                        {
+                            <td align="center">&nbsp;</td>
+                        }
+
+                        @if (row["Sign"] != null && row["Sign"].ToString() != "")
+                        {
+
+                            <td align="center">
+                                <img src="data:image/jpg;base64,@Convert.ToBase64String((byte[])row["Sign"])" style="height:80px;width:80px;" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td align="center">&nbsp;</td>
+                        }*@
+
+
+                                    @if (row["CV"] != null && row["CV"].ToString() != "")
+                                    {
+                                        var attach2 = row["CV"].ToString().Split('|');
+                                        <td align="left">
+                                            <li>
+                                                <a class="title" href="@Url.Action("Download", "MISOPEReport", new { @d = attach2[1].ToString() })">@attach2[0].ToString()</a>
+                                            </li>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="left">&nbsp;</td>
+                                    }
+
+
+                                    @if (row["PAN"] != null && row["PAN"].ToString() != "")
+                                    {
+                                        var attach3 = row["PAN"].ToString().Split('|');
+                                        <td align="left">
+                                            <li>
+                                                <a class="title" href="@Url.Action("Download", "MISOPEReport", new { @d = attach3[1].ToString() })">@attach3[0].ToString()</a>
+                                            </li>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="left">&nbsp;</td>
+                                    }
+
+                                    @if (row["ETR"] != null && row["ETR"].ToString() != "")
+                                    {
+                                        var attach4 = row["ETR"].ToString().Split('|');
+                                        <td align="left">
+                                            <li>
+                                                <a class="title" href="@Url.Action("Download", "MISOPEReport", new { @d = attach4[1].ToString() })">@attach4[0].ToString()</a>
+                                            </li>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="left">&nbsp;</td>
+                                    }
+
+
+                                    @if (row["FMR"] != null && row["FMR"].ToString() != "")
+                                    {
+                                        var attach5 = row["FMR"].ToString().Split('|');
+                                        <td align="left">
+                                            <li>
+                                                <a class="title" href="@Url.Action("Download", "MISOPEReport", new { @d = attach5[1].ToString() })">@attach5[0].ToString()</a>
+                                            </li>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="left">&nbsp;</td>
+                                    }
+
+                                    @if (row["PCert"] != null && row["PCert"].ToString() != "")
+                                    {
+
+                                        var attach6 = row["PCert"].ToString().Split(',');
+
+                                        <td align="left">
+                                            @for (int ar1 = 0; ar1 < attach6.Length; ar1++)
+                                            {
+                                                var attach6PCert = attach6[ar1].ToString().Split('|');
+                                                <li>
+                                                    <a class="title" href="@Url.Action("Download", "MISOPEReport", new { @d = attach6PCert[1].ToString() })">@attach6PCert[0].ToString()</a>
+                                                </li><br />
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="left">&nbsp;</td>
+                                    }
+
+                                    @if (row["ECert"] != null && row["ECert"].ToString() != "")
+                                    {
+                                        var attach7 = row["ECert"].ToString().Split(',');
+
+                                        <td align="left">
+                                            @for (int ar2 = 0; ar2 < attach7.Length; ar2++)
+                                            {
+                                                var attach7ECert = attach7[ar2].ToString().Split('|');
+                                                <li>
+                                                    <a class="title" href="@Url.Action("Download", "MISOPEReport", new { @d = attach7ECert[1].ToString() })">@attach7ECert[0].ToString()</a>
+                                                </li><br />
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="left">&nbsp;</td>
+                                    }
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+
+
+                </table>
+            </div><br /><br />
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+    </div>
+  <!--End of main content 3-->
+}
+
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>
+
+<script src="~/Scripts/MvcGrid/jquery.quicksearch.js"></script>
+<script src="~/Scripts/MvcGrid/dataTables.fixedColumns.min.js"></script>
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+
+           $('.mvc-grid-value').each(function (i)
+           {
+               var j = i + 2 ;
+               $(this).quicksearch("#gridMapping tr:not(:has(th))",
+               {
+
+                   'testQuery': function (query, txt, row)
+                   {
+
+                       return $(row).children(":eq(" + j + ")").text().toLowerCase().indexOf(query[0].toLowerCase()) != -1;
+                   }
+               });
+           });
+</script>

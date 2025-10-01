@@ -1,0 +1,136 @@
+﻿@using NonFactors.Mvc.Grid;
+@{
+    ViewBag.Title = "ApprovedList";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+
+
+<!--filepond-->
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+<!--filepond-->
+<!-- Load FilePond library -->
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    FilePond.parse(document.body);
+</script>
+
+@*New added Code*@
+@*<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />*@
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+            <form method="post">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Approved Voucher</h3>
+                   
+                    <button type="button" value="Approved" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ApprovedList","GenerateVoucher")'"
+                            style="border:none;">
+                        Go Back
+                    </button>
+
+                </div><!-- /.col -->
+            </form>
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+            <!--Table was here-->
+
+        </div><!-- /.row -->
+
+        <div class="col-xs-12">
+
+        </div><!-- /.data table col -->
+
+        
+
+        <div class="col-xs-12">
+            <table class="" style="overflow-y:auto" id="example1">
+                <thead>
+                    <tr>
+                        <th style="width:15%;"><label>Voucher No</label></th>
+                        <th style="width:15%;"><label>Days Present</label></th>
+                        <th style="width:15%;"><label>Total Amount</label></th>
+                        <th style="width:15%;"><label>Approved Amount</label></th>
+                        <th style="width:20%;" class="remove-search"><label>Status</label></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+
+    </div><!-- /.container-fluid -->
+    <!--End of header-->
+
+</div>
+
+@*New Added Code End*@
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetVoucherApprovalList();
+    });
+
+
+    function GetVoucherApprovalList() {
+
+        $.ajax({
+            type: "GET",
+            url: "../GenerateVoucher/GetVoucherApprovalList",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var a = JSON.parse(response);
+                var aa = JSON.stringify(response);
+
+                if (a == "Error") {
+
+                }
+                else {
+
+                    $("#example1 tbody").empty();
+                    for (var i = 0; i < a.length; i++) {
+                        var c = i + 1;
+                        tr = $('<tr/>');
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].VoucherNo  + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].DaysPresent + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].TotalAmount + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].ApprovedAmount + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + a[i].Status + "</label> </td>");
+
+                        $('#example1').append(tr);
+                    }
+
+
+                }
+            },
+            error: function (xhr, status, error) {
+                // Code to handle errors goes here
+            }
+        });
+
+    };
+
+  
+</script>
+
+

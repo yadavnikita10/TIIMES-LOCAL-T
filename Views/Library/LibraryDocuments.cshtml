@@ -1,0 +1,366 @@
+﻿@model TuvVision.Models.LibraryDocumentModel
+
+@{
+    ViewBag.Title = "LibraryDocuments";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@*Ashwini Scripts here for datatable starts here*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>*@
+@*<script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+
+@*<style>
+    #myInput {
+  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+  background-position: 10px 12px; /* Position the search icon */
+  background-repeat: no-repeat; /* Do not repeat the icon image */
+  width: 100%; /* Full-width */
+  font-size: 16px; /* Increase font-size */
+  padding: 12px 20px 12px 40px; /* Add some padding */
+  border: 1px solid #ddd; /* Add a grey border */
+  margin-bottom: 12px; /* Add some space below the input */
+}
+
+#myTable {
+  border-collapse: collapse; /* Collapse borders */
+  width: 100%; /* Full-width */
+  border: 1px solid #ddd; /* Add a grey border */
+  font-size: 18px; /* Increase font-size */
+}
+
+#myTable th, #myTable td {
+  text-align: left; /* Left-align text */
+  padding: 12px; /* Add padding */
+}
+
+#myTable tr {
+  /* Add a bottom border to all table rows */
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  /* Add a grey background color to the table header and on hover */
+  background-color: #f1f1f1;
+}
+</style>*@
+<style>
+    a.menu_links { cursor: pointer; }
+     #myInput {
+  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+  background-position: 10px 12px; /* Position the search icon */
+  background-repeat: no-repeat; /* Do not repeat the icon image */
+  width: 100%; /* Full-width */
+  font-size: 14px; /* Increase font-size */
+  /*padding: 12px 20px 12px 40px;*/ /* Add some padding */
+  padding: 6px 19px 5px 16px;
+  border: 1px solid #ddd; /* Add a grey border */
+  margin-bottom: 12px; /* Add some space below the input */
+}
+     
+    table {
+        /*font-family: arial, sans-serif;*/
+        font-family:'TNG Pro';
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    /*td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }*/
+     td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+       th {
+       padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            /*background-color: #04AA6D;*/
+            background-color: #001ED2;
+            color: white;
+            font-size:14px;
+    }
+
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+   
+</style>
+
+<!--Start of main content 3-->
+<div class="main-content2 xs-max-height">
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+            <div class="col-xs-12 col-md-6">
+
+                @if (Session["Doc"].ToString() != null || Session["Doc"].ToString() == "")
+                {
+                    <h5 class="dynamic-page-title dynamic-page-title-2 text-left" style="margin-bottom:10px;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;"><i class="fa fa-folder-open"></i><span style="font-size:19px;"> @Session["Doc"] / @Model.FolderName </span></h5>
+                }
+                else
+                {
+                    <h5 class="dynamic-page-title dynamic-page-title-2 text-left" style="margin-bottom:10px;white-space: nowrap;width: 25%;overflow: hidden;text-overflow: ellipsis;"><i class="fa fa-folder-open"></i> Files </h5>
+                }
+               
+                @*<h3 class="dynamic-page-title dynamic-page-title-2 text-left" style="margin-bottom:10px;">Library</h3>*@
+            </div><!-- /.col -->
+        @*@if (Model.Rollid == 36 || Model.Rollid == 1)*@
+@if (Model.Rollid == 36 || Model.Rollid == 1 || Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]) == "TUV0001742" || Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]) == "TUV0002556" || Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]) == "TUV00280")
+{
+            <div class="col-xs-12 col-md-6">
+                <form class="form-inline" method="post" enctype="multipart/form-data" id="lform">
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.LP_Id)
+                        @Html.HiddenFor(model => model.Lib_Id)
+                      
+                        @*@Html.TextBoxFor(model => model.PDF, new { placeholder = "type...", @class = "form-control" })*@
+                        <input id="multiImage" name="multiImage" type="file" multiple="multiple" required />
+                        <br />
+                        @Html.HiddenFor(m => m.PDF)
+                        @if (Model != null)
+                        {
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        }
+                        <br />
+                        <br />
+
+                        @Html.DisplayFor(m => m.PDF)
+
+                    </div>
+                    <button type="submit" id="btnSave" class="btn btn-info dynamic-function-btn" style="margin-bottom: 0!important;"><i class="fa fa-save"></i> Save</button>
+                </form>
+            </div>
+        }
+            @*<div class="col-xs-12">
+                <hr class="custom-hr">
+                <h4 style="color:red;font-weight:bold;">Please upload only files with PDF, Word, Excel, PPT, JPG, JPEG, GIF format !</h4>
+            </div>*@
+            <div class="col-xs-12">
+                <hr class="custom-hr1">
+            </div>
+            <div class="col-xs-12">
+                <input type="text" id="myInput" onkeyup="myFunction1()" placeholder="Search by Name.">
+
+                <table id="myTable" class="display" cellspacing="0" width="60%"> @*library-dt*@
+                    <thead>
+                        <tr class="header">
+                            @if (Model.Rollid == 1 || Model.Rollid == 36)
+                            {
+                                <th width="5%" class="remove-search" style="padding: 10px 10px !important;">Action</th>
+                            }
+                            <th class="remove-search" style="padding: 10px 10px !important;" >Name</th>
+                         
+                            <th class="remove-search" style="padding: 10px 10px !important;" width="5%">View</th>
+                       
+                        </tr>
+                    </thead>
+
+                    @*<tbody>*@
+                        @foreach (var item in ViewData["LibraryList"] as IEnumerable<TuvVision.Models.LibraryDocumentModel>)
+                        {
+                            <tr>
+                                @if (Model.Rollid == 1 || Model.Rollid == 36)
+                                {
+                                    <td>                                        
+                                        <a href="@Url.Action("DeleteLibraryDocuments", "Library", new {@LP_Id = item.LP_Id , @Lib_Id = item.Lib_Id })" onclick="return confirm('Are you sure you want to Delete this Record?')"><i class="fa fa-trash-o" style="color:red;"></i>&nbsp;</a>
+                                    </td>
+                                }
+                                <td>
+
+
+                                    @if (item.PDF.ToString().ToUpper().EndsWith(".TXT") || item.PDF.ToString().ToUpper().EndsWith(".DOC") || item.PDF.ToString().ToUpper().EndsWith(".DOCX") || item.PDF.ToString().ToUpper().EndsWith(".RAR"))
+                                    {
+
+                                        <img src="~/library-types/pdf.png" download width="15" />
+                                        @item.PDF
+
+                                    }
+
+                                    @if (item.PDF.ToString().ToUpper().EndsWith(".XLSX") || item.PDF.ToString().ToUpper().EndsWith(".XLS") || item.PDF.ToString().ToUpper().EndsWith(".XLS"))
+                                    {
+                                        <img src="~/library-types/excel.png" download width="15" />
+                                        @item.PDF
+
+                                    }
+
+                                    @if (item.PDF.ToString().ToUpper().EndsWith(".PDF") || item.PDF.ToString().ToUpper().EndsWith(".JPEG") || item.PDF.EndsWith(".JPG") || item.PDF.ToString().ToUpper().EndsWith(".GIF") || item.PDF.ToString().ToUpper().EndsWith(".PNG"))
+                                    {
+                                        <img src="~/library-types/pdf.png" download width="15" />
+                                        @item.PDF
+
+                                    }
+                                    @if (item.PDF.ToString().ToUpper().EndsWith(".MP4") || item.PDF.ToString().ToUpper().EndsWith(".WMV"))
+                                    {
+                                        <img src="~/library-types/MP.png" download width="15" />
+                                        @item.PDF
+
+                                    }
+                                </td>
+
+
+
+
+
+
+
+                                
+                                
+                                <td align="center">
+                                    <a onclick="javascript:GetClientReport('@item.PDF','@item.LP_Id');" id="btnView1" class="menu_links" align="center">
+                                        &nbsp;&nbsp;&nbsp;<img src="@Url.Content("~/View1.png")" />
+                                    </a>
+                                </td>
+</tr>
+                        }
+
+                    @*</tbody>*@
+
+                </table>
+            </div><!-- /.data table col -->
+
+        </div><!-- /.row -->
+
+
+
+    </div><!-- /.container-fluid -->
+    <!--End of header-->
+
+</div>
+<!--End of main content 3-->
+
+<script>
+    $("#btnSave").click(function myfunction() {
+            if (validateform() == false) {
+                return false;
+            }
+            else {
+                $("#lform").submit();
+            }
+    });
+    function validateform() {
+        var fileInput = document.getElementById("multiImage");
+        var files = $('#multiImage')[0].files;
+        var len = $('#multiImage').get(0).files.length;
+        for (var i = 0; i < len; i++) {
+            f = files[i];
+            var ext = f.name.split('.').pop().toLowerCase();
+            if ($.inArray(ext, ['gif', 'GIF', 'png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'pdf', 'PDF', 'pptx', 'PPTX', 'xlsx', 'XLSX', 'docx', 'DOCX', 'doc', 'DOC', 'rar', 'RAR', 'mp4', 'MP4']) == -1) {
+                alert('Please select word, excel, PDF, PPT, image files only !');
+                $('#multiImage').val('');
+                return false;
+            }
+        }
+    }
+</script>
+
+
+
+
+<script>
+    function myFunction1() {
+        debugger;
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  ////alert(@Model.Rollid)
+       
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++)
+  {
+      if((@Model.Rollid =='36') || (@Model.Rollid=='1'))
+      {
+          td = tr[i].getElementsByTagName("td")[1];
+      }
+      else
+      {
+          td = tr[i].getElementsByTagName("td")[0];
+      }
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
+
+
+<script>
+    document.addEventListener("keyup", function(event)
+    {
+       // alert("keyup " + event.keyCode);
+
+        if ((event.ctrlKey && event.keyCode == 80))
+        {
+            return false;
+        }
+    });
+
+
+    document.addEventListener("keydown", function (event)
+    {
+     //   alert("keydown  " + event.keyCode);
+
+        if ((event.ctrlKey && event.keyCode == 80))
+        {
+            return false;
+        }
+
+
+    });
+
+    document.addEventListener("keypress", function (event) {
+       // alert("keypress  " + event.keyCode);
+
+        if ((event.ctrlKey && event.keyCode == 80)) {
+            return false;
+        }
+    });
+
+
+</script>
+
+<script>
+    function GetClientReport(File,id)
+    {
+
+        if(File.substring(File.length - 3).toUpperCase()=="PDF")
+        {
+            window.open('GetPDF?FileName=' + File + "&#toolbar=0", "_blank",'noopener,noreferrer,resizable');
+        }
+        else if(File.substring(File.length - 3).toUpperCase()=="MP4")
+        {
+            window.open("../MisReport/PlayLibVideo/" + id + "?VideoFile=" + File);
+            return false;
+        }
+        else
+        {
+            window.location.href = "../LibraryFiles/" + File;
+            return false;
+        }
+    }
+
+</script>
+
+

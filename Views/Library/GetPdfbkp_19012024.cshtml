@@ -1,0 +1,93 @@
+﻿@model TuvVision.Models.LibraryDocumentModel
+
+<!-- End Other stylesheets -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+@{
+
+    Layout = null;
+}
+
+
+<script src="~/AllJsAndCss/js/jquery.min.js"></script>
+
+@Html.HiddenFor(m => m.FileName)
+
+    <iframe name="FileFrame" height="98%" marginheight="0" marginwidth="10"   frameborder="0"   style="overflow: auto" width="100%" 
+             id="FileFrame"  ></iframe>
+
+<script>
+    $(document).ready(function()
+    {       
+        var FileName = $('#FileName').val() ;
+        var FileFrame = $('#FileFrame').val();
+        
+        $.ajax
+            ({
+            type: "post",
+            url: '@Url.Action("GetPDF", "Library")',
+
+            data: { FileName: FileName },
+            datatype: "json",
+            
+            success: function (response)
+            {
+                
+                
+                // $("#document").html('<iframe src="@Url.Action("PreviewSelectedFile", "PDFForm", new { fileUrl = "_FilePath" }) "'.replace("_FilePath", response)+ 'id="documentViewIframe" onload="LoadLoader();" frameborder="0" allowfullscreen style="overflow: auto;min-height: 550px;height: 700px;width: 100%;" ></iframe>');
+
+                $('#FileFrame').attr("src", response);
+                return false;
+
+            }
+        });
+
+    });
+</script>
+
+
+
+
+<script>
+    document.addEventListener("keyup", function(event)
+    {
+     //   alert("keyup " + event.keyCode);
+       // alert("keypress  " + event.keyCode);
+        if ((event.ctrlKey && event.keyCode == 80) || (event.ctrlKey && event.keyCode == 83)) {
+
+            return false;
+        }
+    });
+
+
+  
+    document.addEventListener("keydown", function (event)
+    {
+       // alert("keydown  " + event.keyCode);
+        //alert("keypress  " + event.keyCode);
+        if ((event.ctrlKey && event.keyCode == 80) || (event.ctrlKey && event.keyCode == 83)) {
+
+            return false;
+        }
+    });
+
+
+    document.addEventListener("keypress", function (event) {
+    // alert("keypress  " + event.keyCode);
+
+     if ((event.ctrlKey && event.keyCode == 80) || (event.ctrlKey && event.keyCode == 83)) {
+
+         return false;
+     }
+    });
+
+    
+   
+</script>
+
+
+<script type="text/javascript">
+    document.oncontextmenu = null
+    
+</script>
+
+

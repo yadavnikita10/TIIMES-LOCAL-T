@@ -1,0 +1,130 @@
+﻿@model TuvVision.Models.RangeInspectionMaster
+@{
+    ViewBag.Title = "CreateRangeInspectionMaster";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+
+                        <div class="col-xs-12 text-right">
+                            <a href="@Url.Action("ListRangeInspectionMaster", "RangeInspectionMaster")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                                <h3 class="form-page-title">Range Inspection</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
+                                            <form method="post" enctype="multipart/form-data">
+
+                                                <div class="row">
+
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label>Field Of Inspection</label>
+                                                            @Html.DropDownListFor(model => model.FK_FieldInspection, new SelectList(@ViewBag.TitleName, "Code", "Name"), "---Select Title---", new { @id = "ddlTitle", @class = "form-control" })
+
+                                                            @Html.ValidationMessageFor(model => model.FK_FieldInspection, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-12 col-sm-8">
+                                                        <div class="form-group">
+                                                            <label>Range Of Inspection </label>
+                                                            @Html.TextAreaFor(model => model.RangeInspection, htmlAttributes: new { placeholder = "Range Of Inspection", @class = "form-control", autocomplete = "off" })
+
+
+                                                            @Html.ValidationMessageFor(model => model.RangeInspection, "", new { @class = "text-danger validation-msg" })
+
+                                                        </div>
+
+                                                    </div>
+
+                                                   
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <label>Minimum Educational Qualification</label>
+                                                        @Html.DropDownListFor(m => m.MinimumEducationQua, new List<SelectListItem>
+                                                                     {
+                                                                    new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="1", Value = "1" },
+                                                                     new SelectListItem{ Text="2", Value = "2" },
+                                                                     new SelectListItem{ Text="3", Value = "3" },
+                                                                     new SelectListItem{ Text="4", Value = "4" },
+                                                                     new SelectListItem{ Text="5", Value = "5" },
+                                                                     new SelectListItem{ Text="6", Value = "6" },
+                                                                     new SelectListItem{ Text="7", Value = "7" },
+                                                                     new SelectListItem{ Text="8", Value = "8" },
+                                                                     new SelectListItem{ Text="9", Value = "9" },
+                                                                     new SelectListItem{ Text="10", Value = "10" },
+
+
+
+                                                           },
+
+                                                                     new { @class = "form-control", @id = "PT" })
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4">
+                                                        <label>Minimum Requirement for Level 3</label>
+                                                        @Html.DropDownListFor(m => m.MinimumRequirmentForLevel3, new List<SelectListItem>
+                                                                     {
+                                                                    new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     new SelectListItem{ Text="1", Value = "1" },
+                                                                     new SelectListItem{ Text="2", Value = "2" },
+                                                                     new SelectListItem{ Text="3", Value = "3" },
+                                                                     new SelectListItem{ Text="4", Value = "4" },
+                                                                     new SelectListItem{ Text="5", Value = "5" },
+                                                                     new SelectListItem{ Text="6", Value = "6" },
+                                                                     new SelectListItem{ Text="7", Value = "7" },
+                                                                     new SelectListItem{ Text="8", Value = "8" },
+                                                                     new SelectListItem{ Text="9", Value = "9" },
+                                                                     new SelectListItem{ Text="10", Value = "10" },
+
+
+                                                           },
+
+                                                                     new { @class = "form-control", @id = "PT" })
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12">
+                                                        <div class="form-group">
+                                                            @*<button type="reset" class="btn btn-default insert-form-btn"> Reset </button>*@
+                                                            <button type="submit" class="btn btn-default insert-form-btn"> Save </button>
+                                                            @*<a href="@Url.Action("ListFieldInspection", "FieldInspection")" class="btn btn-default insert-form-btn">Add Field Of Inspection</a>*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+

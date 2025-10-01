@@ -1,0 +1,238 @@
+﻿@model TuvVision.Models.ReportModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@helper CustomRenderingOfReport1(TuvVision.Models.ReportModel Report)
+        {
+    <a href="~/IVRReport/@Report.Report" download="download" style="color:#001ED2;">
+        @Report.Report
+
+    </a>
+}
+
+        @*//page made by nikita on 03102023*@
+
+@{
+    ViewBag.Title = "AllIvrReports";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm())
+{
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            @*<div class="row assignfixedwidth rp-15">*@
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Inspection Visit Report</h3>
+                <div>
+                    @*<button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex1", "CompentencyMetrixView")';">
+                        Export To Excel
+                    </button>*@
+                </div>
+            </div>
+
+
+            @*<div class="col-xs-12">
+                <hr class="custom-hr1">
+            </div>*@
+
+        </div><!-- /.row -->
+        <div class="row">
+
+
+
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label>From Date:</label>
+                    @Html.TextBoxFor(model => model.FromDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Start Date", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                    @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger validation-msg" })
+                </div>
+            </div>
+
+
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label>To Date:</label>
+                    @Html.TextBoxFor(model => model.ToDate, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select To Date", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                    @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger validation-msg" })
+                </div>
+            </div>
+
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label></label><br />
+                    <input type="submit" value="Search" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" />
+                </div>
+
+
+            </div>
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <label></label><br />
+                    <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportAllIndex","MISInspectionRecords")'"
+                            style="border:none;">
+                        Export To Excel
+                    </button>
+                </div>
+
+
+            </div>
+        </div>
+        @*</div>*@
+
+
+
+        <div class="col-xs-12">
+            <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>
+                        @(Html
+                            .Grid(Model.lst1)
+                            .Build(columns =>
+                            {
+                                //columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "VisitReportForm", new { PK_CALL_ID = o.PK_CALL_ID }, new { @class = "fa fa-pencil", title = "Report Name" }));
+
+                                columns.Add(c => c.ReportNo).Titled("Report No");
+                                columns.Add(c => c.Report).Titled("Download File").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true).Css("color: #001ED2;");
+                                columns.Add(c => c.Call_No).Titled("Call No");
+                                columns.Add(c => c.SubJob_No).Titled("Sub-Job No");
+                                columns.Add(c => c.Sap_And_Controle_No).Titled("Job No");
+                                columns.Add(c => c.Project_Name_Location).Titled("Project Name");
+                                columns.Add(c => c.Client_Name).Titled("Customer Name");
+                                columns.Add(c => c.Vendor_Name_Location).Titled("Vendor Name");
+                                columns.Add(c => c.Po_No).Titled("PO No");
+                                columns.Add(c => c.Inspector).Titled("Inspector");
+                                columns.Add(c => c.Date_Of_Inspection).Titled("Inspection Date");
+                                columns.Add(c => c.inspectionDate).Titled("Last Inspection Date");
+                                columns.Add(c => c.IVRDownloadDate).Titled("Last Download Date");
+                                columns.Add(c => c.checkIFCustomerSpecific).Titled("Customer Specific format");
+                                columns.Add(c => c.ReportprepareinTiimes).Titled("Report Prepared In Tiimes");
+                                columns.Add(c => c.ReportDate).Titled("Report Date");
+                                columns.Add(c => c.Product_item).Titled("Item to be inspected");
+                                columns.Add(c => c.Originating_Branch).Titled("Originating Branch");
+                                columns.Add(c => c.Excuting_Branch).Titled("Executing Branch");
+                                columns.Add(c => c.CanIRNbeissued).Titled("Can IRN be issued");
+                                columns.Add(c => c.IssuedPOItemNumbers).Titled("Issued PO Item Numbers");
+                                columns.Add(c => c.Conclusion).Titled("Conclusion");
+                                columns.Add(c => c.Areas_Of_Concerns).Titled("Areas Of Concerns");
+                                //columns.Add(c => c.mitigateddate).Titled("Mitigated Date");
+
+                                columns.Add(c => c.ReviseReason).Titled("Revise Reason");
+                                columns.Add(c => c.ddlReviseReason).Titled("Revise Reason Detail");
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                        )
+
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+}
+
+
+
+
+@*...Calender Control...*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="~/Scripts/MvcGrid/jquery.quicksearch.js"></script>
+<script src="~/Scripts/MvcGrid/dataTables.fixedColumns.min.js"></script>
+
+<script>
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSearch").click(function myfunction() {
+            debugger;
+            if (ValidateForm() == false) {
+                return false;
+            }
+            else {
+                $("#form1").submit()
+            }
+        });
+    });
+
+    function ValidateForm() {
+
+        if ($("#FromDate").val() == "") {
+            alert('Select From Date!');
+            return false;
+        }
+        if ($("#ToDate").val() == "") {
+            alert('Select To Date!');
+            return false;
+        }
+        debugger;
+        if ($("#FromDate").val() > $("#ToDate").val()) {
+            alert("To Date selected is Greater than From Date  !!!");
+            return false;
+        }
+
+        else {
+            return true;
+
+        }
+    }
+</script>
+
+
+<script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+</script>
+
+<style>
+    table.evaluation > tbody {
+        width: 100% !important;
+        display: table;
+    }
+
+        table.evaluation > tbody > tr td table {
+            width: 100% !important;
+            display: table;
+        }
+</style>
+
+

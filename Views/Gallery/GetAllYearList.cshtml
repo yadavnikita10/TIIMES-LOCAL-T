@@ -1,0 +1,211 @@
+﻿
+@{
+    ViewBag.Title = "GetAllYearList";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<style>
+    a.gallery-thumb img {
+   
+    height: 180px !important;
+  
+}
+</style>
+<link href="~/Gallery/css/font-awesome.min.css" rel="stylesheet">
+<link href="~/Gallery/css/gallery.css" rel="stylesheet">
+
+<!--animate-->
+<link rel="stylesheet" href="~/Gallery/css/animate.min.css">
+<!--animate-->
+<!--fancybox-->
+<link rel="stylesheet" href="~/Gallery/fancybox/jquery.fancybox.css" media="screen">
+<link rel="stylesheet" href="~/Gallery/fancybox/jquery.fancybox-thumbs.css" media="screen">
+<!--fancybox-->
+
+    @*<link href="~/Content/Css/gallery.css" rel="stylesheet" />
+    <link href="~/Content/Css/fancybox/jquery.fancybox-thumbs.css" rel="stylesheet" />
+    <script src="~/Content/Css/fancybox/jquery.fancybox-thumbs.js"></script>
+    <link href="~/Content/Css/fancybox/jquery.fancybox.css" rel="stylesheet" />
+    <script src="~/Content/Css/fancybox/jquery.fancybox.js"></script>
+    <script src="~/Content/Css/fancybox/jquery.fancybox.pack.js"></script>*@
+
+
+<!--Start of banner header-->
+<div class="container-fluid grey-bg-f3" style="background: url(images/gallery-banner.jpg);background-size: cover;background-repeat: no-repeat;position: relative;overflow: hidden;">
+    <div class="overlay-header"></div>
+    <div class="row assignfixedwidth rp-20">
+        <div class="col-xs-12 text-center">
+            <div class="banner-header">
+                <h3>View the collection</h3>
+                <p>Have a look at some of the Albums of TUV India</p>
+            </div>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+<!--End of banner header-->
+<!--Start of gallery-->
+<div class="container-fluid light-blue-bg">
+    <div class="row assignfixedwidth rp-20">
+        <div class="col-xs-12 white-bg section-box-shadow main-content2">
+            @if (ViewBag.GetYearList != null)
+            {
+
+                <div class="row">
+                    <div class="col-xs-12 text-center gallery-btn-col">
+
+                        <ul class="gallery-filter-tab">
+
+                            <li class="filtr-active" data-filter="all">All</li>
+                            @*<li class="filtr-active"  data-filter="all"><a class="fetchbyYear" value="All" href="#"> All</a></li>*@
+                            @foreach (var item in ViewBag.GetYearList as IEnumerable<TuvVision.BusinessEntities.Gallery_VM>)
+                            {
+                                <li data-filter='@item.Year'>@item.Year</li>
+                                // <li class="filtr-active" data-filter><a href="#" class="fetchbyYear" value="@item.Year">@item.Year </a> </li>//~/Gallery/GelAllTitleList?yr=@item.Year
+                            }
+                        </ul>
+
+                    </div><!-- end of col -->
+                </div><!-- end of row -->
+               
+
+
+                <div class="row display-flex filtr-container">
+
+                    @if (ViewBag.GallaryData != null)
+                    {
+                        foreach (var item in ViewBag.GallaryData as List<TuvVision.BusinessEntities.Gallery_VM>)
+                        {
+                            if (item.GallaryImages.Count() > 0)
+                            {
+                                <div class="col-xs-12 col-sm-4 col-md-4 filtr-item" data-category='@item.Year'>
+
+                                    <a class="fancybox-thumbs gallery-thumb" data-fancybox-group="@item.Title" href="@Url.Content(item.Gallery)">
+                                        <img src="@Url.Content(item.Gallery)" height="150" alt="" />
+                                        <p class="gallery-thumb-title">@item.Title</p>
+                                        <p class="gallery-thumb-date">@Convert.ToDateTime(item.EventDate).ToString("dd-MMMM-yyyy")</p>
+                                        <p class="gallery-thumb-calltoaction">View Gallery</p>
+                                        <span class="gallery-icon">
+                                            <i class="fa fa-folder-open-o"></i>
+                                        </span>
+                                    </a><!--end of thumb-->
+                                    <div class="pointer">
+                                        @if (item.GallaryImages != null)
+                                        {
+                                            foreach (var indiimages in item.GallaryImages)
+                                            {
+                                                <a class="fancybox-thumbs hidden" data-fancybox-group="@item.Title" href="@Url.Content(indiimages)"><img src="@Url.Content(indiimages)" alt="" /></a>
+                                            }
+                                        }
+                                    </div><!--end of gallery-->
+
+                                </div>
+                            }
+
+                        }
+                    }
+                </div>
+
+            }
+
+            <div class="AppendTitle">
+                
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<!--animate-->
+<script src="~/Gallery/js/animation.js"></script>
+<!--animate-->
+<!--filterizr-->
+<script src="~/Gallery/js/jquery.filterizr.js"></script>
+<script>
+        $(function () {
+            $('.filtr-container').filterizr();
+            $('.gallery-filter-tab li').click(function() {
+		        $(this).addClass('filtr-active');
+        		$(this).siblings().removeClass('filtr-active');
+		    });
+        });
+</script>
+
+<!--fancybox-->
+<script src="~/Gallery/fancybox/jquery.fancybox.js"></script>
+<script src="~/Gallery/fancybox/jquery.fancybox.pack.js"></script>
+<script src="~/Gallery/fancybox/jquery.fancybox-thumbs.js"></script>
+<script>
+    	$(function () {
+    	$('.fancybox-thumbs').fancybox({
+            prevEffect : 'none',
+            nextEffect : 'none',
+
+            closeBtn  : true,
+            arrows    : true,
+            nextClick : true,
+
+            helpers : {
+                thumbs : {
+                    width  : 88,
+                    height : 50
+                }
+            }
+        });
+        });
+</script>
+
+@*<script src="~/Gallery/js/animation.js"></script>
+<script src="~/Gallery/js/jquery.filterizr.js"></script>
+
+<script src="~/Gallery/fancybox/jquery.fancybox.js"></script>
+<script src="~/Gallery/fancybox/jquery.fancybox.pack.js"></script>
+<script src="~/Gallery/fancybox/jquery.fancybox-thumbs.js"></script>
+<script>
+    	$(function () {
+    	$('.fancybox-thumbs').fancybox({
+            prevEffect : 'none',
+            nextEffect : 'none',
+
+            closeBtn  : true,
+            arrows    : true,
+            nextClick : true,
+
+            helpers : {
+                thumbs : {
+                    width  : 88,
+                    height : 50
+                }
+            }
+        });
+        });
+</script>*@
+
+
+@*<script>
+
+    $(document).ready(function () {
+
+        $(".fetchbyYear").click(function () {
+
+            var _value = $(this).attr("value")
+
+            $.ajax({
+                url: '/Gallery/GelAllTitleList',
+                data: { yr: _value },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html'
+            })
+             .success(function (result) {
+                 $('.AppendTitle').html(result);
+            })
+            .error(function (xhr, status) {
+            alert(status);
+            })
+            alert(_value);
+
+        })
+    })
+
+</script>*@

@@ -1,0 +1,468 @@
+﻿@model TuvVision.Models.ComplaitRegister
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "ComplaintsDashBoardByCallNo";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+@helper CustomRenderingOfColumn(TuvVision.Models.ComplaitRegister callmodel)
+{
+    <p class="show-read-more">@callmodel.Root_Cause</p>
+}
+
+<script>
+$(document).ready(function(){
+    var maxLength = 50;
+    $(".show-read-more").each(function(){
+        var myStr = $(this).text();
+        if($.trim(myStr).length > maxLength){
+            var newStr = myStr.substring(0, maxLength);
+            var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
+            $(this).empty().html(newStr);
+            $(this).append(' <a href="javascript:void(0);" class="read-more">read more...</a>');
+            $(this).append('<span class="more-text">' + removedStr + '</span>');
+        }
+    });
+    $(".read-more").click(function(){
+        $(this).siblings(".more-text").contents().unwrap();
+        $(this).remove();
+    });
+});
+</script>
+<style>
+    .show-read-more .more-text {
+        display: none;
+    }
+</style>
+
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm("ComplaintsDashBoard", "Complaint", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+                
+                    
+                    <div class="col-xs-12">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Complaint - By Vendor Name</h3>
+                    </div><!-- /.col -->
+              
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+            <div class="col-xs-12">
+
+            </div><!-- /.data table col -->
+
+            <div class="col-xs-12">
+
+               
+
+                @*<table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+
+                    <thead>
+                        <tr>
+
+                            <th>Complaint number</th>
+                            <th>Date</th>
+
+                            <th>Job number</th>
+                            <th>Category</th>
+                            <th>Product</th>
+                            <th>Client name</th>
+                            <th>Vendor name</th>
+                            <th>Complaint</th>
+                            <th>RCA</th>
+                            <th>Correction</th>
+                            <th>CA</th>
+                            <th>Lessons Learnt</th>
+                            <th>Status</th>
+                            <th>Attributable</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="hidden">
+
+
+                            <td>Complaint number</td>
+                            <td>Date</td>
+
+                            <td>Job number</td>
+                            <td>Category</td>
+                            <td>Product</td>
+                            <td>Client name</td>
+                            <td>Vendor name</td>
+                            <td>Complaint</td>
+                            <td>RCA</td>
+                            <td>Correction</td>
+                            <td>CA</td>
+                            <td>Lessons Learnt</td>
+                            <td>Status</td>
+                            <td>Attributable</td>
+
+                        </tr>
+                        <tr class="hidden">
+
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+
+                        @foreach (var item in ViewData["ComplaintList"] as IEnumerable<TuvVision.Models.ComplaitRegister>)
+                        {
+                        <tr>
+
+
+                            <td>@item.Complaint_No</td>
+                            <td>@item.Complaint_Date</td>
+                            <td>@item.Control_No</td>
+                            <td>@item.Category</td>
+                            <td>@item.ProductList</td>
+                            <td>@item.TUV_Client</td>
+                            <td>@item.Vendor</td>
+                            <td>@item.Complaint_Details</td>
+                            <td>@item.Root_Cause</td>
+                            <td>@item.Correction</td>
+                            <td>@item.CA_To_Prevent_Recurrance</td>
+                            <td>@item.LessonLearned</td>
+                            <td>@item.States_Of_Complaints</td>
+                            <td>@item.AttributeToFaultiInspection</td>
+                        </tr>
+                        }
+
+                    </tbody>
+
+                </table>*@
+
+                <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                    <tr>
+                        <td>
+                            <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                                <tr>
+                                    <td>
+                                        @(Html
+                            .Grid(Model.lstByVendor)
+                            .Build(columns =>
+                            {
+
+                                columns.Add(c => c.Complaint_No).Titled("Complaint No");
+                                columns.Add(c => c.Complaint_Date).Titled("Complaint Date");
+                                columns.Add(c => c.Control_No).Titled("Job number");
+                                columns.Add(c => c.Category).Titled("Category");
+                                columns.Add(c => c.ProductList).Titled("Product");
+                                columns.Add(c => c.TUV_Client).Titled("Client name");
+                                columns.Add(c => c.Vendor).Titled("Vendor name");
+                                columns.Add(c => c.Complaint_Details).Titled("Complaint");
+                                //columns.Add(c => c.Root_Cause).Titled("RCA");
+                                columns.Add(c => c.Root_Cause).Titled("RCA").RenderedAs(c => CustomRenderingOfColumn(c)).Sortable(true);
+                                columns.Add(c => c.Correction).Titled("Correction");
+                                columns.Add(c => c.CA_To_Prevent_Recurrance).Titled("CA");
+                                columns.Add(c => c.LessonLearned).Titled("Lessons Learnt");
+                                columns.Add(c => c.States_Of_Complaints).Titled("Status");
+                                columns.Add(c => c.AttributeToFaultiInspection).Titled("Attributable");
+
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                                        )
+
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <div class="row assignfixedwidth rp-15">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Complaint - By Item</h3>
+                <hr class="custom-hr1">
+            </div><!-- /.col -->
+
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+
+
+            @*<div class="col-xs-12">
+                <hr class="custom-hr1">
+            </div>*@<!-- /.col -->
+            <!--Table was here-->
+            @*</div>
+        </div>*@
+
+
+            @if (ViewData["Item"] != null)
+            {
+
+
+                <div class="col-xs-12">
+                    @*<h3 class="dynamic-page-title dynamic-page-title-2  text-left">Complaint - By Item </h3>
+    <div style="overflow-x:auto;">
+
+
+
+        <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+            <thead>
+                <tr>
+
+                    <th>Complaint number</th>
+                    <th>Date</th>
+
+                    <th>Job number</th>
+                    <th>Category</th>
+                    <th>Product</th>
+                    <th>Client name</th>
+                    <th>Vendor name</th>
+                    <th>Complaint</th>
+                    <th>RCA</th>
+                    <th>Correction</th>
+                    <th>CA</th>
+                    <th>Lessons Learnt</th>
+                    <th>Status</th>
+                    <th>Attributable</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="hidden">
+
+
+                    <td>Complaint number</td>
+                    <td>Date</td>
+
+                    <td>Job number</td>
+                    <td>Category</td>
+                    <td>Product</td>
+                    <td>Client name</td>
+                    <td>Vendor name</td>
+                    <td>Complaint</td>
+                    <td>RCA</td>
+                    <td>Correction</td>
+                    <td>CA</td>
+                    <td>Lessons Learnt</td>
+                    <td>Status</td>
+                    <td>Attributable</td>
+
+                </tr>
+                <tr class="hidden">
+
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                </tr>
+
+                @foreach (var item in ViewData["Item"] as IEnumerable<TuvVision.Models.ComplaitRegister>)
+                {
+                    <tr>
+
+
+                        <td>@item.Complaint_No</td>
+                        <td>@item.Complaint_Date</td>
+                        <td>@item.Control_No</td>
+                        <td>@item.Category</td>
+                        <td>@item.ProductList</td>
+                        <td>@item.TUV_Client</td>
+                        <td>@item.Vendor</td>
+                        <td>@item.Complaint_Details</td>
+                        <td>@item.Root_Cause</td>
+                        <td>@item.Correction</td>
+                        <td>@item.CA_To_Prevent_Recurrance</td>
+                        <td>@item.LessonLearned</td>
+                        <td>@item.States_Of_Complaints</td>
+                        <td>@item.AttributeToFaultiInspection</td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>*@
+                    <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                        <tr>
+                            <td>
+                                <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                                    <tr>
+                                        <td>
+                                            @(Html
+                            .Grid(Model.lstByItem)
+                            .Build(columns =>
+                            {
+
+                                columns.Add(c => c.Complaint_No).Titled("Complaint No");
+                                columns.Add(c => c.Complaint_Date).Titled("Complaint Date");
+                                columns.Add(c => c.Control_No).Titled("Job number");
+                                columns.Add(c => c.Category).Titled("Category");
+                                columns.Add(c => c.ProductList).Titled("Product");
+                                columns.Add(c => c.TUV_Client).Titled("Client name");
+                                columns.Add(c => c.Vendor).Titled("Vendor name");
+                                columns.Add(c => c.Complaint_Details).Titled("Complaint");
+                                columns.Add(c => c.Root_Cause).Titled("RCA");
+                                columns.Add(c => c.Correction).Titled("Correction");
+                                columns.Add(c => c.CA_To_Prevent_Recurrance).Titled("CA");
+                                columns.Add(c => c.LessonLearned).Titled("Lessons Learnt");
+                                columns.Add(c => c.States_Of_Complaints).Titled("Status");
+                                columns.Add(c => c.AttributeToFaultiInspection).Titled("Attributable");
+
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                                            )
+
+
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </td>
+                        </tr>
+                    </table>
+    </div>
+
+                @*<div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div>*@
+                
+
+
+            }
+            else
+            {
+
+            }
+
+
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+}
+
+<script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+</script>
+<style>
+    table.evaluation > tbody {
+        width: 100% !important;
+        display: table;
+    }
+
+        table.evaluation > tbody > tr td table {
+            width: 100% !important;
+            display: table;
+        }
+</style>
+
+
+
+@{
+    if ((Convert.ToString(TempData["Result"])) != "" && Convert.ToString(TempData["Result"]) != null)
+    {
+        TempData["Result"] = null;
+        <script type="text/javascript" language="javascript">
+                                                alert("Complaint has been Deleted Successfully!!!!");
+        </script>
+    }
+}
+@{
+    if ((Convert.ToString(TempData["insertComplaints"])) != "" && Convert.ToString(TempData["insertComplaints"]) != null)
+    {
+        TempData["insertComplaints"] = null;
+        <script type="text/javascript" language="javascript">
+                                                alert("Complaint Added Successfully!!!!");
+        </script>
+    }
+    if ((Convert.ToString(TempData["UpdateComplaints"])) != "" && Convert.ToString(TempData["UpdateComplaints"]) != null)
+    {
+        TempData["UpdateComplaints"] = null;
+        <script type="text/javascript" language="javascript">
+                                                                    alert("Complaint Updated Successfully");
+        </script>
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

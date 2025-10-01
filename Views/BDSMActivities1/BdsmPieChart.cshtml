@@ -1,0 +1,997 @@
+﻿@model TuvVision.Models.BDSPiechart
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "BdsmPieChart";
+    //Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Layout = "";
+}
+@*<link href="~/alljsandcss/css/mvcgridn.css" rel="stylesheet" />
+<script src="~/alljsandcss/datatable/js/jquery.datatables.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="~/alljsandcss/js/datatable-custom2.js"></script>
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>*@
+
+
+
+
+
+
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+<!-- Start Other stylesheets -->
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<link href="~/AllJsAndCss/css/aos.css" rel="stylesheet">
+
+
+<script src="~/AllJsAndCss/js/bootstrap.min.js"></script>
+
+<style>
+    body {
+        overflow-x: hidden;
+    }
+   .active  {
+    background-color: red;
+}
+</style>
+<script>
+
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@*<script type="text/javascript" src="https://www.google.com/jsapi"></script>*@
+<link href="~/Content/c3.css" rel="stylesheet" />
+<link href="~/Content/Site.css" rel="stylesheet" />
+<script src="~/Scripts/c3.min.js"></script>
+<script src="~/Scripts/d3.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<body>
+    @*<div class="main-content3 xs-max-height">*@
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-10">
+                <a href="@Url.Action("Welcome","Login")" class="logo">
+                    <img src="~/AllJsAndCss/images/logo.png" alt="" style="max-width: 70%;margin-top: -59px;">
+                </a>
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left" style="color:darkblue;font-size:25px;font-weight:bold;padding-left:0px;padding-top:10px">TUV India Private Limited <br />Marketing Visit Summary </h3>
+            </div>
+
+            <div class="col-lg-2" style="padding-right:20px;">
+                <button type="button" class="btn btn-primary" style="margin-top: 16px;margin-left: 65px;" onclick="Redirect()">Go Back</button>
+
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-2">
+            <div class="form-group">
+                <label>From Date:</label>
+                <input type="date" id="txtfromdate" />
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="form-group">
+                <label>To Date:</label>
+                <input type="date" id="txtTodate" />
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" style="margin-top: 16px;margin-left:-75px;" onclick="SearchDataFromdateTodate()" />
+            </div>   
+        </div>
+        <div class="col-xs-2">
+            <div class="form-group">
+                <input type="button" value="Reset" class="btn btn-primary" style="margin-top: 16px;margin-left:-205px" onclick="reset()" />
+            </div>
+        </div>
+    </div>
+    <div class="row container-fluid">
+        <div class="col-xs-2">
+            <div class="form-group">
+                <h4 style="margin-left:15px;font-size:15px;">Number of Visits</h4>
+                <input type="text" style="border:0;margin-left:55px;font-weight:bold;  font-size: 20px;" id="txtnoofvisits" />
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="form-group">
+                <h4 style="font-size:15px;font-size:15px;">On-site Visit</h4>
+                <input type="text" style="border:0;margin-left:25px;font-weight:bold;font-size: 20px;" id="txtonsite" />
+
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="form-group">
+                <h4 style="font-size:15px;font-size:15px;">Off-site/from office</h4>
+                <input type="text" style="border:0;margin-left:55px;font-weight:bold;font-size: 20px;" id="txtoffsite" />
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="form-group">
+                <h4 style="font-size:15px;font-size:15px;">Existing Customer Visit</h4>
+                <input type="text" style="border:0;margin-left:55px;font-weight:bold;font-size: 20px;" id="txtexisting" />
+
+            </div>
+        </div>
+    </div>
+
+        @*<div class="row container-fluid">
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <h4 style="margin-left:15px;font-size:15px;">Cost estimation</h4>
+                    <input type="text" style="border:0;margin-left:55px;font-weight:bold; font-size: 20px;" id="txtCostestimation" />
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <h4 style="margin-left:15px;font-size:15px;">Online meeting</h4>
+                    <input type="text" style="border:0;margin-left:55px;font-weight:bold; font-size: 20px;" id="txtOnlinemeeting" />
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <h4 style="margin-left:15px;font-size:15px;">Online meeting with customer</h4>
+                    <input type="text" style="border:0;margin-left:55px;font-weight:bold; font-size: 20px;" id="txtOnline_meeting_with_customer" />
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <h4 style="margin-left:15px;font-size:15px;">Quotation preparation</h4>
+                    <input type="text" style="border:0;margin-left:55px;font-weight:bold; font-size: 20px;" id="txtQuotation_preparation" />
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="form-group">
+                    <h4 style="margin-left:15px;font-size:15px;">Tender Management</h4>
+                    <input type="text" style="border:0;margin-left:55px;font-weight:bold; font-size: 20px;" id="txtTenderManagement" />
+                </div>
+            </div>
+        </div>*@
+    <div class="row">
+        @*Table Data Div*@
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <table class="table table-condensed table-responsive " id="tblusers" style="border:1px;">
+                            <thead class="thead-dark" style="background-color:grey;">
+                                <tr class="" style="background-color:grey; ">
+                                    <th scope="col" style="font-size: 13px;"></th>
+                                    <th scope="col" style="font-size: 13px;">BranchName</th>
+                                    <th scope="col" style="font-size: 13px;">No.of Visits</th>
+                                    @*<th scope="col"style="font-weight:bold;">SR.No</th>*@
+                                </tr>
+                            </thead>
+                            <tbody id="userbody" style="border:1px;font-size:10px;"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <table class="table table-condensed table-responsive " id="tblusers1" style="border:1px;font-size:10px;">
+                            <thead class="thead-dark" style="background-color:grey;">
+                                <tr class="" style="background-color:grey; ">
+                                    <th scope="col" style="font-size: 13px;"></th>
+                                    <th scope="col" style="font-size: 13px;">EmployeeName</th>
+                                    <th scope="col" style="font-size: 13px;">No.of Visits</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userbody1"></tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*Pie Chart Div*@
+        <div class="col-lg-2">
+            @*First Pie Chart*@
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="col-lg-3" id="pieChart" style="width: 300px; height: 300px;margin-left:50px;">
+
+                    </div>
+                </div>
+            </div>
+            @*Second Pie Chart*@
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="col-lg-3" id="pieChart1" style="width:250px; height: 250px;margin-left:65px;">
+                    </div>
+
+                </div>
+                </div>
+                @*Third Pie Chart*@
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="col-lg-3" id="pieChart2" style="width:250px; height: 250px;margin-left:65px;">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+<script>
+    $(document).ready(function () {
+        //debugger;
+        BDMS_SiteWise_data();
+        Bind_BranchData();
+        Bind_EmployeeData();
+        pie();
+        NewExistingpie();
+        DomesticInetrnationalpie();
+    });
+
+
+    //search data from date
+    function SearchDataFromdateTodate() {
+        var Fromdate = $("#txtfromdate").val();
+        var ToDate = $("#txtTodate").val();
+        $.ajax({
+            url: "@Url.Action("SearchDataFromdateTodate","BDSMActivities")",
+            type: "get",
+            DataType: "json",
+            contenttype: "application/json; charset=utf-8",
+            data: { Fromdate: Fromdate, ToDate: ToDate },
+            success: function (result) {
+                debugger;
+                BindEmployee(result);
+                BindDataFromdateTodate();
+                PieSearchDataFromdateTodate();
+                PieNew_ExistingSearchDataFromdateTodate();
+                PieDom_Inter_SearchDataFromdateTodate();
+                BindBranch_DataFromdateTodate();
+            },
+            error: function (result) {
+                debugger;
+                alert("Something Went wrong");
+
+            }
+        })
+    }
+
+
+    function BindDataFromdateTodate() {
+        var Fromdate = $("#txtfromdate").val();
+        var ToDate =   $("#txtTodate").val();
+        $.ajax({
+            url: "@Url.Action("BindSearchDataFromdateTodate", "BDSMActivities")",
+            type: "get",
+            DataType: "json",
+            contenttype: "application/json; charset=utf-8",
+            data: { Fromdate: Fromdate, ToDate: ToDate },
+            success: function (result) {
+            debugger;
+            var parsed = $.parseJSON(result);
+            $('#txtnoofvisits').val('');
+            $('#txtexisting').val('');
+            $('#txtoffsite').val('');
+            $('#txtonsite').val('');
+            //$('#txtCostestimation').val('');
+            //$('#txtOnlinemeeting').val('');
+            //$('#txtOnline_meeting_with_customer').val('');
+            //$('#txtQuotation_preparation').val('');
+            //$('#txtTenderManagement').val('');
+            $('#txtnoofvisits').val(parsed[0].MarketingVisit);
+            $('#txtexisting').val(parsed[0].Existing_Customer_Visit);
+            $('#txtoffsite').val(parsed[0].Marketing_Offsite);
+            $('#txtonsite').val(parsed[0].Marketing_Onsite);
+            //$('#txtCostestimation').val(parsed[0].Cost_estimation);
+            //$('#txtOnlinemeeting').val(parsed[0].Online_meeting);
+            //$('#txtOnline_meeting_with_customer').val(parsed[0].Online_meeting_with_customer);
+            //$('#txtQuotation_preparation').val(parsed[0].Quotation_preparation);
+            //$('#txtTenderManagement').val(parsed[0].Tender_Management);
+        },
+        error: function (result) {
+            debugger;
+            alert("Something Went wrong");
+
+        }
+    })
+    }
+
+    function BindBranch_DataFromdateTodate() {
+        var Fromdate = $("#txtfromdate").val();
+        var ToDate =   $("#txtTodate").val();
+        $.ajax({
+        url: "@Url.Action("Branch_FilteringData_FromdateTodate", "BDSMActivities")",
+        type: "get",
+        DataType: "json",
+        contenttype: "application/json; charset=utf-8",
+        data: { Fromdate: Fromdate, ToDate: ToDate },
+        success: function (result) {
+            debugger;
+            BindBranch(result);
+           
+        },
+        error: function (result) {
+            debugger;
+            alert("Something Went wrong");
+
+        }
+    })
+    }
+
+
+
+
+
+
+
+
+    //bindpiewithgromdataandTodate
+    function PieSearchDataFromdateTodate() {
+        var Fromdate = $("#txtfromdate").val();
+        var ToDate = $("#txtTodate").val();
+        $.ajax({
+        url: "@Url.Action("PieBindSearchDataFromdateTodate", "BDSMActivities")",
+        type: "get",
+        DataType: "json",
+        contenttype: "application/json; charset=utf-8",
+        data: { Fromdate: Fromdate, ToDate: ToDate },
+        success: function (result) {
+            debugger;
+            var numberdata = JSON.parse(result);
+            successfunc(numberdata);
+        },
+        error: function (result) {
+            debugger;
+            alert("Something Went wrong");
+
+        }
+    })
+    }
+
+
+    //pienewExistingfromdatetodate
+
+    function PieNew_ExistingSearchDataFromdateTodate() {
+        var Fromdate = $("#txtfromdate").val();
+        var ToDate = $("#txtTodate").val();
+        $.ajax({
+        url: "@Url.Action("PieNew_ExistingFromdateTodate", "BDSMActivities")",
+        type: "get",
+        DataType: "json",
+        contenttype: "application/json; charset=utf-8",
+        data: { Fromdate: Fromdate, ToDate: ToDate },
+        success: function (result) {
+            debugger;
+            var numberdata = JSON.parse(result);
+            successfuncNewExisting(numberdata);
+        },
+        error: function (result) {
+            debugger;
+            alert("Something Went wrong");
+
+        }
+    })
+    }
+
+    function PieDom_Inter_SearchDataFromdateTodate() {
+        var Fromdate = $("#txtfromdate").val();
+        var ToDate = $("#txtTodate").val();
+        $.ajax({
+        url: "@Url.Action("PieDom_Inter_FromdateTodate", "BDSMActivities")",
+        type: "get",
+        DataType: "json",
+        contenttype: "application/json; charset=utf-8",
+        data: { Fromdate: Fromdate, ToDate: ToDate },
+        success: function (result) {
+            debugger;
+            var numberdata = JSON.parse(result);
+            successfuncDomInter(numberdata);
+        },
+        error: function (numberdata) {
+            debugger;
+            alert("Something Went wrong");
+
+        }
+    })
+    }
+
+
+    //Bind Branch and Employee Count
+    function Bind_BranchData() {
+        debugger;
+        $.ajax({
+            url: "@Url.Action("GetAllBranch", "BDSMActivities")",
+            type: "get",
+            dataType: "json",
+            data: "{}",
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                debugger;
+                BindBranch(result);
+                //Bind_BranchFilterCountData();
+            },
+
+            error: function (result) {
+                //debugger;
+                alert("something went wrong");
+            }
+        });
+    }
+
+    function BindBranch(result) {
+        var parsed = $.parseJSON(result);
+        $("#userbody").empty();
+        $.each(parsed, function (i, item) {
+            var BranchId = item.BranchId;
+            tr = $('<tr/>');
+            tr.append("<td>" + (parseInt(i) + 1) + "</td>");
+            tr.append("<td> <a href=# class='branch-link' onclick=GetEmployee_BranchWise('" + BranchId + "')>" + item.Branch_Name + "</td>");
+            tr.append("<td>" + item.EmployeeCount + "</td>");
+            $("#tblusers").append(tr);
+            //$("#userbody").on("click", ".branch-link", function () {
+                // Your logic here to handle the click event and get employee data
+
+                // Change the link color after the click
+                //$(this).css("color", "red"); // Change the color to your desired color
+            //Bind_BranchFilterCountData(BranchId);
+
+            //});
+           
+        })
+        $("#tblusers").DataTable();
+    }
+
+
+    //branch filter record binding for no of vistis record
+    function Bind_BranchFilterCountData(BranchId) {
+        debugger;
+        $.ajax({
+            url: "@Url.Action("BranchdataFilter", "BDSMActivities")",
+            type: "get",
+            dataType: "json",
+            data: { BranchId: BranchId },
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+            debugger;
+            var parsed = $.parseJSON(result);
+            $('#txtnoofvisits').val('');
+            $('#txtexisting').val('');
+            $('#txtoffsite').val('');
+            $('#txtonsite').val('');
+            //$('#txtCostestimation').val('');
+            //$('#txtOnlinemeeting').val('');
+            //$('#txtOnline_meeting_with_customer').val('');
+            //$('#txtQuotation_preparation').val('');
+            //$('#txtTenderManagement').val('');
+            $('#txtnoofvisits').val(parsed[0].MarketingVisit);
+            $('#txtexisting').val(parsed[0].Existing_Customer_Visit);
+            $('#txtoffsite').val(parsed[0].Marketing_Offsite);
+            $('#txtonsite').val(parsed[0].Marketing_Onsite);
+                //$('#txtCostestimation').val(parsed[0].Cost_estimation);
+                //$('#txtOnlinemeeting').val(parsed[0].Online_meeting);
+                //$('#txtOnline_meeting_with_customer').val(parsed[0].Online_meeting_with_customer);
+                //$('#txtQuotation_preparation').val(parsed[0].Quotation_preparation);
+                //$('#txtTenderManagement').val(parsed[0].Tender_Management);
+
+        },
+
+        error: function (result) {
+            //debugger;
+            alert("something went wrong");
+        }
+    });
+    }
+
+
+
+
+
+
+    //Bind Branch Wise Filter
+    function GetEmployee_BranchWise(BranchId) {
+        debugger;
+        $.ajax({
+            url: "@Url.Action("GetEmployee_BranchWise", "BDSMActivities")",
+            type: "get",
+            dataType: "json",
+            data: { BranchId: BranchId },
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                debugger;
+                BindEmployee(result);
+                Bind_BranchFilterCountData(BranchId);
+
+            },
+
+            error: function (result) {
+                debugger;
+                alert("something went wrong");
+            }
+        });
+    }
+
+
+    //Bind Employee Name and Activity COunt
+    function Bind_EmployeeData() {
+        //debugger;
+        $.ajax({
+            url: "@Url.Action("GetAllEmployee", "BDSMActivities")",
+            type: "get",
+            dataType: "json",
+            data: "{}",
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+               debugger;
+                BindEmployee(result);
+
+            },
+            error: function (result) {
+                //debugger;
+                alert("something went wrong");
+            }
+        });
+    }
+
+    function BindEmployee(result) {
+        debugger;
+        var parsed = $.parseJSON(result);
+        $("#userbody1").empty();
+        $.each(parsed, function (i, item) {
+            var PK_UserID = item.PK_UserID;
+            tr = $('<tr/>');
+            tr.append("<td>" + (parseInt(i) + 1) + "</td>");
+            tr.append("<td> <a href=# class='C' onclick=Get_EmployeeBranch('" + PK_UserID + "')>" + item.EmployeeName + "</td>");
+            tr.append("<td>" + item.ActivityTypeCount + "</td>");
+            $("#userbody1").append(tr);
+
+           
+
+            $(".color").click(function () {
+                $(".color").removeClass('active');
+                $(this).toggleClass('active');
+            });
+            //$("#userbody1").append('<tr><td>' + (parseInt(i) + 1) + '<td> <a href="#"onclick="filterEmployeedata(' + PK_UserID + ')">' + item.EmployeeName + '</td><td>' + item.ActivityTypeCount + '</td></tr>')
+        })
+        $("#tblusers1").DataTable();
+    }
+
+
+    //Filter Employee With Branch
+    function Get_EmployeeBranch(PK_UserID) {
+        debugger;
+        $.ajax({
+            url: "@Url.Action("GetBranch_EmployeeWise", "BDSMActivities")",
+            type: "get",
+            dataType: "json",
+            data: { PK_UserId: PK_UserID },
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                debugger;
+                BindBranch(result);
+                Bind_Employee_Pie(PK_UserID);
+                BDMS_Emp_FilterWisedata(PK_UserID);
+                FilterednewExistingpie(PK_UserID);
+                Filtere_domestic_internationalpie(PK_UserID);
+            },
+
+            error: function (result) {
+                debugger;
+                alert("something went wrong");
+            }
+        });
+    }
+
+    function Bind_Employee_Pie(PK_UserId) {
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("Bind_Employee_Pie", "BDSMActivities")",
+            data: { pk_UserId: PK_UserId },
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                debugger;
+                var numberdata = JSON.parse(result);
+                successfunc(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+    function BDMS_SiteWise_data() {
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("BindTotext", "BDSMActivities")",
+            data: {},
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                debugger;
+                var parsed = $.parseJSON(result);
+                $('#txtnoofvisits').val(parsed[0].MarketingVisit);
+                $('#txtexisting').val(parsed[0].Existing_Customer_Visit);
+                $('#txtoffsite').val(parsed[0].Marketing_Offsite);
+                $('#txtonsite').val(parsed[0].Marketing_Onsite);
+
+
+
+                //$('#txtCostestimation').val(parsed[0].Cost_estimation);
+                //$('#txtOnlinemeeting').val(parsed[0].Online_meeting);
+                //$('#txtOnline_meeting_with_customer').val(parsed[0].Online_meeting_with_customer);
+                //$('#txtQuotation_preparation').val(parsed[0].Quotation_preparation);
+                //$('#txtTenderManagement').val(parsed[0].Tender_Management);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function BDMS_Emp_FilterWisedata(PK_UserID) {
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("BindEmpWiseFilterData", "BDSMActivities")",
+            data: {},
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { PK_UserID: PK_UserID },
+            success: function (result) {
+                debugger;
+                var parsed = $.parseJSON(result);
+                $('#txtnoofvisits').val(parsed[0].MarketingVisit);
+                $('#txtexisting').val(parsed[0].Existing_Customer_Visit);
+                $('#txtoffsite').val(parsed[0].Marketing_Offsite);
+                $('#txtonsite').val(parsed[0].Marketing_Onsite);
+
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function pie() {
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("BindDataToChart2", "BDSMActivities")",
+            data: {},
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                //debugger;
+                var numberdata = JSON.parse(result);
+                successfunc(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function successfunc(jsondata) {
+        var data = {};
+        var activity = [];
+        jsondata.forEach(function (e) {
+            debugger;
+
+            activity.push(e.ActivityType);
+            data[e.ActivityType] = e.ActivityCount;
+        });
+        var chart = c3.generate({
+
+            bindto: '#pieChart',
+            data: {
+                json: [data],
+                keys: {
+                    value: activity,
+                },
+                type: 'pie'
+            },
+
+            color: {
+                pattern: ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5']
+            },
+            pie: {
+                label: {
+                    format: function (value, ratio, id) {
+                        return value;
+                    }
+                }
+            }
+        });
+
+    }
+    function Redirect() {
+        window.location.href = "@Url.Action("Welcome", "Login")"
+    }
+
+
+    //piechart new_exiting_Customer
+
+    function NewExistingpie() {
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("BindDataToChartNewExisting","BDSMActivities")",
+            data: {},
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                //debugger;
+                var numberdata = JSON.parse(result);
+                successfuncNewExisting(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function successfuncNewExisting(jsondata) {
+        var data = {};
+        var activity = [];
+        jsondata.forEach(function (e) {
+            //debugger;
+            activity.push(e.New_ExistingCustomer);
+            data[e.New_ExistingCustomer] = e.NewExistingCount;
+        });
+        var chart = c3.generate({
+
+            bindto: '#pieChart1',
+            data: {
+                json: [data],
+                keys: {
+                    value: activity,
+                },
+                type: 'pie'
+            },
+            color: {
+                pattern: ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5']
+            },
+            pie: {
+                label: {
+                    format: function (value, ratio, id) {
+                        return value;
+                    }
+                }
+            }
+        });
+
+    }
+
+    //Domestic_international_piechart
+
+    function DomesticInetrnationalpie() {
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("BindDataToChartDomInter", "BDSMActivities")",
+            data: {},
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                //debugger;
+                var numberdata = JSON.parse(result);
+                successfuncDomInter(numberdata);
+            },
+
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function successfuncDomInter(jsondata) {
+        var data = {};
+        var activity = [];
+        jsondata.forEach(function (e) {
+            activity.push(e.Dom_Inter_Visit);
+            data[e.Dom_Inter_Visit] = e.Dom_Inter_Count;
+        });
+        var chart = c3.generate({
+            bindto: '#pieChart2',
+            data: {
+                json: [data],
+                keys: {
+                    value: activity,
+                },
+                type: 'pie'
+            },
+
+            color: {
+                pattern: ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5']
+            },
+            pie: {
+                label: {
+                    format: function (value, ratio, id) {
+                        return value;
+                    }
+                }
+            }
+        });
+
+    }
+
+
+
+
+
+    function reset() {
+        //debugger;
+        $("#txtfromdate").val('');
+        $("#txtTodate").val('');
+        BDMS_SiteWise_data();
+        Bind_BranchData();
+        Bind_EmployeeData();
+        pie();
+        NewExistingpie();
+        DomesticInetrnationalpie();
+    }
+    //piechart for filtered employee
+
+    function EmpFilterpie(PK_UserId) {
+
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("EmpFilterData", "BDSMActivities")",
+            data: { PK_UserId: PK_UserId },
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                //debugger;
+                var numberdata = JSON.parse(result);
+                successfuncFilterEmpData(numberdata);
+            },
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+    function successfuncFilterEmpData(jsondata) {
+        var data = {};
+        var activity = [];
+        jsondata.forEach(function (e) {
+            //debugger;
+            activity.push(e.ActivityType);
+            data[e.ActivityType] = e.ActivityTypeCount;
+        });
+        var chart = c3.generate({
+
+            bindto: '#pieChart',
+            data: {
+                json: [data],
+                keys: {
+                    value: activity,
+                },
+                type: 'pie'
+            },
+
+            color: {
+                pattern: ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5']
+            },
+            pie: {
+                label: {
+                    format: function (value, ratio, id) {
+                        return value;
+                    }
+                }
+            }
+        });
+
+    }
+
+    //piechart for filtered newExisting customer type
+
+    function FilterednewExistingpie(PK_UserId) {
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("Bind_NewExistingFilter_Pie", "BDSMActivities")",
+            data: { PK_UserId: PK_UserId },
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                //debugger;
+                var numberdata = JSON.parse(result);
+                successfuncNewExisting(numberdata);
+            },
+
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+    //domestic_international_Filtereddata
+    function Filtere_domestic_internationalpie(PK_UserId) {
+        $.ajax({
+            type: "get",
+            url: "@Url.Action("Bind_DomInterFilter_Pie", "BDSMActivities")",
+            data: { PK_UserId: PK_UserId },
+            contenttype: "application/json; charset=utf-8",
+            datatype: "json",
+            success: function (result) {
+                //debugger;
+                var numberdata = JSON.parse(result);
+                successfuncDomInter(numberdata);
+            },
+
+            error: function (error) {
+                console.log("error occurred during ajax call:", error);
+            }
+        });
+    }
+
+
+</script>
+
+<script>
+    [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+        new MvcGrid(element);
+    });
+</script>
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>

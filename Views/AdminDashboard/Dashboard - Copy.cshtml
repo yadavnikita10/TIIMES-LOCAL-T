@@ -1,0 +1,374 @@
+﻿@model TuvVision.Models.Dashboard
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<style>
+    td.dashboard-head {
+        background: #e6e8ec;
+        color: #000;
+        font-weight: 600;
+    }
+
+    table.table-bordered.dashboard tr td {
+        padding: 15px;
+    }
+
+    table.table-bordered.dashboard tbody tr td {
+        border: 1px solid #000 !important;
+    }
+
+    td.dashboard-head {
+        width: 380px;
+        font-size: 14px;
+    }
+
+    td.dasboard-value {
+        /*width: 80px;*/
+        width: -20px;
+    }
+</style>
+
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css"></script>
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+
+
+            <div class="col-xs-12">
+                @*<hr class="custom-hr">*@
+            </div><!-- /.col -->
+            <!--Table was here-->
+
+        </div><!-- /.row -->
+
+        <div id="tabs">
+
+            <ul>
+                <li><a href="#tabs-2">Notification</a></li>
+                <li><a href="#tabs-1">Dashboard</a></li>
+
+            </ul>
+
+            <div id="tabs-2">
+                @foreach (var item in ViewBag.Quotation as IEnumerable<TuvVision.Models.ListQuotationDashboard>)
+                {
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 boxBdr">
+
+
+                            <table class="table-bordered dashboard">
+                                <tbody>
+
+
+                                    <tr>
+                                        @if (item.Role == "1")
+                                        {
+                                            if (item.SendForApprovel != "Auto" && item.SendForApprovel != "")
+                                            {
+                                                if (item.RegretStatus == "Regret")
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    <p>(@item.CreatedDate) @item.Name has Sent you a quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for approval. </p>
+                                                }
+                                            }
+
+                                            if (item.RegretStatus == "Regret")
+                                            {
+                                                if (item.RegretReason == "")
+                                                {
+                                                    <p>(@item.CreatedDate)  @item.Name has regretted the enquiry number @item.EnquiryNumber </p>
+                                                }
+                                                else
+                                                {
+                                                    <p>(@item.CreatedDate)  @item.Name has regretted the enquiry number @item.EnquiryNumber with reason @item.RegretReason </p>
+                                                }
+                                            }
+                                            if (item.QuotationStatus == "3")//Won
+                                            {
+                                                <p>(@item.CreatedDate)  @item.Name bagged order against quotation number @item.QuotationNumber </p>
+
+                                            }
+                                            if (item.QuotationStatus == "4")//Lost
+                                            {
+                                                <p>(@item.CreatedDate)  We have not received order against Quotation Number @item.QuotationNumber crated by  @item.Name due to reason @item.LostReason.  </p>
+
+                                            }
+                                            if (item.CHComment != "" && item.CHComment != null)
+                                            {
+                                                <p>(@item.CHCommentDate) @item.ClusterHeadName has commented on cost sheet of quotation number @item.QuotationNumber .</p>
+                                            }
+
+                                            if (item.CostSheetCHStatus == "2")
+                                            {
+                                                <p>(@item.ApprovedOrNotApprovedDateCH) @item.ClusterHeadName has approved the cost sheet of Quotation number @item.QuotationNumber. @*created by @item.Name .*@</p>
+                                            }
+                                            if (item.SendForApprovel == "Auto")
+                                            {
+                                                <p>(@item.SendForApprovelDate) Tiimes has auto - approved the quotation number @item.QuotationNumber created by @item.Name.</p>
+                                            }
+
+
+                                        }
+                                        else if (item.Role == "46" || item.Role == "47" || item.Role == "48" || item.Role == "49" || item.Role == "51")
+                                        {
+                                            if (item.RegretStatus == "Regret")
+                                            {
+
+                                            }
+                                            else
+                                            {
+                                                if (item.SendForApprovel != "Auto" && item.SendForApprovel != "")
+                                                {
+                                                    if (item.EstimatedAmount > 1000000)
+                                                    {
+                                                        <p>(@item.SendForApprovelDate) @item.Name has Sent you a quotation <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> for approval. </p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>(@item.SendForApprovelDate) @item.Name has sent request to approve cost sheet of quotation number <a href="@Url.Action("Quotation", "QuotationMaster", new { PK_QM_ID = @item.PK_QM_ID })" title="Edit"><span style="color:blue"> @item.QuotationNumber</span></a> to Mr. @item.BranchHeadName </p>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                            if (item.RegretStatus == "Regret")
+                                            {
+                                                if (item.RegretReason == "")
+                                                {
+                                                    <p>(@item.CreatedDate)  @item.Name has regretted the enquiry number @item.EnquiryNumber </p>
+                                                }
+                                                else
+                                                {
+                                                    <p>(@item.CreatedDate) @item.Name has regretted the enquiry number @item.EnquiryNumber with reason @item.RegretReason </p>
+                                                }
+
+                                            }
+                                            if (item.QuotationStatus == "3")
+                                            {
+                                                <p>(@item.CreatedDate)  @item.Name bagged order against quotation number @item.QuotationNumber </p>
+
+                                            }
+                                            if (item.QuotationStatus == "4")//Lost
+                                            {
+                                                <p>(@item.CreatedDate)  We have not received order against Quotation Number @item.QuotationNumber crated by  @item.Name due to reason @item.LostReason.  </p>
+
+                                            }
+                                            if (item.PCHComment != "" && item.PCHComment != null)
+                                            {
+                                                <p>(@item.PCHCommentDate)  @item.BranchHeadName has commented on cost sheet of quotation number @item.QuotationNumber created by @item.Name .</p>
+                                            }
+
+                                            if (item.CostSheetPCHStatus == "2")
+                                            {
+                                                if (item.PCHComment != "" && item.PCHComment != null)
+                                                {
+                                                    <p>(@item.ApprovedOrNotApprovedDatePCH) @item.BranchHeadName has approved the cost sheet of Quotation number @item.QuotationNumber created by @item.Name with @item.PCHComment.</p>
+                                                }
+                                                else
+                                                {
+                                                    <p>(@item.ApprovedOrNotApprovedDatePCH) @item.BranchHeadName has approved the cost sheet of Quotation number @item.QuotationNumber created by @item.Name .</p>
+                                                }
+
+                                            }
+                                            if (item.CostSheetPCHStatus == "1")
+                                            {
+                                                if (item.PCHComment != "")
+                                                {
+                                                    <p> @item.BranchHeadName has not approved the cost sheet of quotation number @item.QuotationNumber created by @item.Name with @item.PCHComment.</p>
+                                                }
+                                                else
+                                                {
+                                                    <p> @item.BranchHeadName has not approved the cost sheet of quotation number @item.QuotationNumber created by @item.Name .</p>
+                                                }
+
+                                            }
+                                            if (item.SendForApprovel == "Auto")
+                                            {
+                                                <p>(@item.SendForApprovelDate) Tiimes has auto - approved the quotation number @item.QuotationNumber created by @item.Name.</p>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            if ((item.PCHComment != null) && (item.PCHComment != ""))
+                                            {
+                                                <p>(@item.PCHCommentDate)  @item.BranchHeadName has commented on cost sheet of quotation number @item.QuotationNumber .</p>
+
+
+                                            }
+                                            if (item.CHComment != "" && item.CHComment != null)
+                                            {
+                                                <p> @item.ClusterHeadName has commented on cost sheet of quotation number @item.QuotationNumber .</p>
+                                            }
+                                            if (item.CostSheetPCHStatus == "2")
+                                            {
+                                                <p>(@item.ApprovedOrNotApprovedDatePCH) @item.BranchHeadName has approved the cost sheet of Quotation number @item.QuotationNumber. @*created by @item.Name .*@</p>
+                                            }
+                                            if (item.CostSheetCHStatus == "2")
+                                            {
+                                                <p>(@item.ApprovedOrNotApprovedDateCH) @item.ClusterHeadName has approved the cost sheet of Quotation number @item.QuotationNumber. @*created by @item.Name .*@</p>
+                                            }
+                                            if (item.SendForApprovel == "Auto")
+                                            {
+                                                <p>(@item.SendForApprovelDate) Tiimes has auto - approved the quotation number @item.QuotationNumber created by @item.Name.</p>
+                                            }
+
+
+                                        }
+
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                }
+
+
+
+            </div>
+
+
+            <div id="tabs-1">
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-8 col-md-offset-2 boxBdr">
+
+
+                        <table class="table-bordered dashboard">
+                            <tbody>
+
+
+                                <tr>
+
+                                    <td class="dashboard-head">Heading:</td>
+
+                                    <td class="dasboard-value">
+                                        Till day
+                                    </td>
+                                    <td class="dasboard-value">
+                                        Last 15 Days
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="dashboard-head">Enquiries received :</td>
+                                    <td class="dasboard-value"><a href="@Url.Action("EnquiryMasterDashBoard", "EnquiryMaster", new {@Type = "NoOfEnquiry" })">@Html.DisplayFor(model => model.NoOfEnquiry, new { @placeholder = "", @class = "form-control" })</a></td>
+                                    <td class="dasboard-value"><a href="@Url.Action("EnquiryMasterDashBoard", "EnquiryMaster", new {@Type = "NoOfEnquiryInLast15Days" })">@Html.DisplayFor(model => model.NoOfEnquiryInLast15Days, new { @placeholder = "", @class = "form-control" })</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="dashboard-head">Enquiries regretted :</td>
+                                    <td class="dasboard-value"><a href="@Url.Action("EnquiryMasterDashBoard", "EnquiryMaster", new {@Type = "NoOfEnquiryRegret" })">@Html.DisplayFor(model => model.NoOfEnquiryRegret, new { @placeholder = "", @class = "form-control" })</a></td>
+                                    <td class="dasboard-value"><a href="@Url.Action("EnquiryMasterDashBoard", "EnquiryMaster", new {@Type = "NoOfEnquiryRegretInLast15Days" })">@Html.DisplayFor(model => model.NoOfEnquiryRegretInLast15Days, new { @placeholder = "", @class = "form-control" })</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="dashboard-head">Quotations generated :</td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "NoOfQuotation" })">@Html.DisplayFor(model => model.NoOfQuotation, new { @placeholder = "", @class = "form-control" })</a></td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "NoOfQuotationInLast15Days" })">@Html.DisplayFor(model => model.NoOfQuotationInLast15Days, new { @placeholder = "", @class = "form-control" })</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="dashboard-head">Quotation Approved by PCH :</td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationApprovedByPCH" })">@Html.DisplayFor(model => model.QuotationApprovedByPCH, new { @placeholder = "", @class = "form-control" })</a></td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationApprovedByPCHInLast15Days" })">@Html.DisplayFor(model => model.QuotationApprovedByPCHInLast15Days, new { @placeholder = "", @class = "form-control" })</a></td>
+                                </tr>
+                                @*<tr>
+                                        <td class="dashboard-head">Quotation Not Approved by PCH :</td>
+                                        <td class="dasboard-value"><a>@Html.DisplayFor(model => model.QuotationPendingApprovel, new { @placeholder = "", @class = "form-control" })</a></td>
+                                        <td class="dasboard-value"></td>
+                                    </tr>*@
+                                <tr>
+                                    <td class="dashboard-head">Quotation Approved by cluster head  :</td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationApprovedByClusterHead" })">@Html.DisplayFor(model => model.QuotationApprovedByClusterHead, new { @placeholder = "", @class = "form-control" })</a></td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationApprovedByClusterHeadInLast15Days" })">@Html.DisplayFor(model => model.QuotationApprovedByClusterHeadInLast15Days, new { @placeholder = "", @class = "form-control" })</a></td>
+
+                                </tr>
+                                @*<tr>
+                                        <td class="dashboard-head">Quotation not Approved by clustered head:</td>
+                                        <td class="dasboard-value"><a>@Html.DisplayFor(model => model.NoOfQuotation, new { @placeholder = "", @class = "form-control" })</a></td>
+                                        <td class="dasboard-value"></td>
+                                    </tr>*@
+                                <tr>
+                                    <td class="dashboard-head">Quotation Won  :</td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationWon" })">@Html.DisplayFor(model => model.QuotationWon, new { @placeholder = "", @class = "form-control" })</a></td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationWonInLast15Days" })">@Html.DisplayFor(model => model.QuotationWonInLast15Days, new { @placeholder = "", @class = "form-control" })</a></td>
+
+                                </tr>
+                                <tr>
+                                    <td class="dashboard-head">Quotation Lost  :</td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationLost" })">@Html.DisplayFor(model => model.QuotationLost, new { @placeholder = "", @class = "form-control" })</a></td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationLostInLast15Days" })">@Html.DisplayFor(model => model.QuotationLostInLast15Days, new { @placeholder = "", @class = "form-control" })</a></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="dashboard-head">Quotation Pending For Approvel  :</td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationPendingForApprovel" })">@Html.DisplayFor(model => model.QuotationPendingForApprovel, new { @placeholder = "", @class = "form-control" })</a></td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationPendingForApprovelInLast15Days" })">@Html.DisplayFor(model => model.QuotationPendingForApprovelInLast15Days, new { @placeholder = "", @class = "form-control" })</a></td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="dashboard-head">Quotation Open  :</td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationOpen" })">@Html.DisplayFor(model => model.QuotationOpen, new { @placeholder = "", @class = "form-control" })</a></td>
+                                    <td class="dasboard-value"><a href="@Url.Action("QuotationMasterDashBoard", "QuotationMaster", new {@Type = "QuotationOpenInLast15Days" })">@Html.DisplayFor(model => model.QuotationOpenFromLast15Days, new { @placeholder = "", @class = "form-control" })</a></td>
+
+                                </tr>
+                                <tr>
+                                    <td class="dashboard-head">Hit Rate (%)  :</td>
+                                    <td class="dasboard-value">@Html.DisplayFor(model => model.HitRate, new { @placeholder = "", @class = "form-control" })</td>
+                                    <td class="dasboard-value">@Html.DisplayFor(model => model.HitRateInLast15Days, new { @placeholder = "", @class = "form-control" })</td>
+
+                                </tr>
+                                <tr>
+                                    <td class="dashboard-head">In Process (%)  :</td>
+                                    <td class="dasboard-value">@Html.DisplayFor(model => model.InProcess, new { @placeholder = "", @class = "form-control" })</td>
+                                    <td class="dasboard-value">@Html.DisplayFor(model => model.InProcessLast15Days, new { @placeholder = "", @class = "form-control" })</td>
+
+                                </tr>
+                                <tr>
+                                    <td class="dashboard-head">Loss Rate (%)  :</td>
+                                    <td class="dasboard-value">@Html.DisplayFor(model => model.LossRate, new { @placeholder = "", @class = "form-control" })</td>
+                                    <td class="dasboard-value">@Html.DisplayFor(model => model.LossRateIn15Days, new { @placeholder = "", @class = "form-control" })</td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+
+        <script>
+            $(function () {
+                $("#tabs").tabs();
+            });
+        </script>
+
+
+    </div>
+</div>

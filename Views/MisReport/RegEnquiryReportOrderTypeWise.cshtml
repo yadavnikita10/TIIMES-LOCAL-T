@@ -1,0 +1,232 @@
+﻿@model TuvVision.Models.EnquiryMaster
+
+@{
+    ViewBag.Title = "RegEnquiryReportOrderTypeWise";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+@using (Html.BeginForm("RegEnquiryReportOrderTypeWise", "MisReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <br /><br />
+
+            <div class="form-group" style="padding-left:25px;">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Regret Enquiry Report OrderTypeWise</h3>
+            </div>
+
+            @if (Convert.ToString(TempData["Result"]) != null && Convert.ToString(TempData["Result"]) != "")
+            {
+                <div class="col-xs-4">
+                    <h4 style="color:red;font-weight:bold;">@Convert.ToString(TempData["Result"])</h4>
+                </div>
+            }
+
+            <div class="form-group" style="padding-left:25px;">
+                <hr class="custom-hr1">
+            </div>
+
+
+            <br /><br />
+            <div class="row">
+
+                <div class="col-xs-2">
+                    <div class="form-group" style="width:280px;padding-left:25px;">
+                        <label>From Date:</label>
+                        @Html.TextBoxFor(model => model.FromDate, "{0:dd/MM/yyyy}", htmlAttributes: new { placeholder = "dd/mm/yyyy", @class = "form-control form-control-custom FromD", autocomplete = "off" })
+                    </div>
+                </div>
+
+
+                <div class="col-xs-2">
+                    <div class="form-group" style="width:280px;padding-right:25px;">
+                        <label>To Date:</label>
+                        @Html.TextBoxFor(model => model.ToDate, "{0:dd/MM/yyyy", htmlAttributes: new { placeholder = "dd/mm/yyyy", @class = "form-control form-control-custom ToD", autocomplete = "off" })
+                    </div>
+
+                </div>
+
+                <div class="col-xs-2">
+                    <label></label>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary form-control" id="btnSearch">Search</button>
+                    </div>
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="button" id="a" value="ExportToExcel" class="btn btn-primary form-control" onclick="location.href='@Url.Action("ExportIndexRegEnquiryReportOrderType_Wise", "MisReport")'">
+                            Export To Excel
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+            <div class="col-xs-12">
+                <table class="display dataTable no-footer" style="overflow-y:auto" id="gridMapping">
+                    <tr>
+                        <td>
+                            @(Html
+                            .Grid(Model.lst1)
+                            .Build(columns =>
+                            {
+
+                                columns.Add(c => c.EnquiryNumber).Titled("Enquiry Number");/*.Encoded(false).RenderedAs(o => Html.ActionLink(o.EnquiryNumber, "Enquiry", "EnquiryMaster", new { EQ_ID = o.EQ_ID }, new { title = "Enquiry Number" }));*/
+                                columns.Add(c => c.Branch).Titled("Branch");
+                                columns.Add(c => c.Source).Titled("Source");
+                                columns.Add(c => c.RefDate).Titled("Enquiry receipt date");
+                                columns.Add(c => c.EstCloseS).Titled("Estimated closure date");
+                                columns.Add(c => c.EnquiryReferenceNo).Titled("Enquiry reference details");
+                                columns.Add(c => c.Company_Name).Titled("Customer Name");
+                                columns.Add(c => c.EndCustomer).Titled("End customer name");
+                                columns.Add(c => c.ProjectType).Titled("OBS Type");
+                                columns.Add(c => c.PortfolioType).Titled("Portfolio Type");
+                                columns.Add(c => c.Type).Titled("Service Type");
+                                columns.Add(c => c.ProjectName).Titled("Project Name");
+                                columns.Add(c => c.EnquiryDescription).Titled("Description");
+                                columns.Add(c => c.ModifiedBy).Titled("Modified By");
+                                columns.Add(c => c.ARC).Titled("ARC Job");
+                                columns.Add(c => c.Domesticlocation).Titled("Domestic");
+                                columns.Add(c => c.Intlocation).Titled("International");
+                                columns.Add(c => c.DEstimatedAmount).Titled("Domestic Amount");
+                                columns.Add(c => c.IEstimatedAmount).Titled("International Amount");
+                                columns.Add(c => c.TEstimatedAmount).Titled("Total Estimated Amount");
+                                columns.Add(c => c.Status).Titled("Enquiry Status");
+                                columns.Add(c => c.RegretReason).Titled("Regret Reason");
+                                columns.Add(c => c.RegretActionTaken).Titled("Regret Action Taken");
+                                columns.Add(c => c.OrderType).Titled("Order Type");
+                                columns.Add(c => c.ContactName).Titled("Customer Contact Person Name");
+                                columns.Add(c => c.ContactNo).Titled("Customer Contact Person Number");
+                                columns.Add(c => c.Owner).Titled("Enquiry Created By");
+                                columns.Add(c => c.LeadGivenBy).Titled("Lead Given By");
+                                columns.Add(c => c.NotesbyLeads).Titled("Notes by Leads");
+                                columns.Add(c => c.OpendateS).Titled("Creation Date");
+                                columns.Add(c => c.ModifiedDateS).Titled("Modification Date");
+
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                // pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                            )
+
+
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+
+
+}
+
+
+@*...Calender Control...*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="~/Scripts/MvcGrid/jquery.quicksearch.js"></script>
+
+
+<script>
+    $(function () {
+        $(".FromD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".ToD").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSearch").click(function myfunction() {
+            debugger;
+            if (ValidateForm() == false) {
+                return false;
+            }
+            else {
+                $("#form1").submit()
+            }
+        });
+    });
+
+    function ValidateForm() {
+
+        if ($("#FromDate").val() == "") {
+            alert('Select From Date!');
+            return false;
+        }
+        if ($("#ToDate").val() == "") {
+            alert('Select To Date!');
+            return false;
+        }
+        debugger;
+        if ($("#FromDate").val() > $("#ToDate").val()) {
+            alert("To Date selected is Greater than From Date  !!!");
+            return false;
+        }
+
+        else {
+            return true;
+
+        }
+    }
+</script>
+
+<script>
+           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+               new MvcGrid(element);
+           });
+
+
+            $('.mvc-grid-value').each(function (i)
+            {
+                    $(this).quicksearch("#gridMapping tr:not(:has(th))",
+                    {
+                        'testQuery': function (query, txt, row)
+                        {
+                            return $(row).children(":eq(" + i + ")").text().toLowerCase().indexOf(query[0].toLowerCase()) != -1;
+                        }
+                    });
+            });
+
+</script>

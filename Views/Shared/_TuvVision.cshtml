@@ -1,0 +1,518 @@
+﻿@*@using System.Threading.Tasks;
+    @using Microsoft.AspNet.Identity;
+    @using Microsoft.AspNet.Identity.Owin;
+    @using Microsoft.Owin.Security;
+    @using Vision.DatahandlingLayer.Implementation
+    @using Vision.DatahandlingLayer.Interface
+    @using System.Configuration
+    @{
+        IAdminRepository admin = new AdminRepository();
+
+    }*@
+@using TuvVision.Models;
+@using System.Data.SqlClient;
+@using System.Data;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>TIIMES - Welcome to TUV India</title>
+
+    @*<link rel="shortcut icon" href="~/AllJsAndCss/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">*@
+    <link rel="shortcut icon" href="~/AllJsAndCss/Favicon.svg" type="image/x-icon" style="height:12px;width:12px;">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Bootstrap -->
+    <link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Start Other stylesheets -->
+    <link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+    <link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+    <link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+    @*Start of Added by sushant*@
+    <script src="~/Scripts/MvcGrid/mvc-grid.js"></script>
+    <link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
+    @*End of Added by sushant*@
+
+    <!--AOS animate-->
+    <link href="~/AllJsAndCss/css/aos.css" rel="stylesheet">
+
+    <link href="~/AllJsAndCss/datatable/css/jquery.dataTables.css" rel="stylesheet" />
+
+    <!-- End Other stylesheets -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/AllJsAndCss/js/jquery.min.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="~/AllJsAndCss/js/bootstrap.min.js"></script>
+    @*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+        <script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+    <!-- Start Other script files -->
+    <!--AOS animate-->
+    <script src="~/AllJsAndCss/js/aos.js"></script>
+    <script src="~/AllJsAndCss/js/aos-call.js"></script>
+
+    <!--Owl JS-->
+    @*<script src="~/AllJsAndCss/owlCarousel/owl.carousel.js"></script>*@
+
+    <script src="~/AllJsAndCss/js/custom.js"></script>
+    <script src="~/AllJsAndCss/js/scroll-to-top.js"></script>
+    <script src="~/AllJsAndCss/js/navigation-top-fixed.js"></script>
+    <!-- End Other script files -->
+    @*<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>*@
+    @*<script src="~/Scripts/jquery-1.10.2.js"></script>*@
+    <script src="~/Scripts/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+    <script>
+        debugger;
+        var activityPingUrl = '@Url.Action("returnLastActivity", "Login")';
+        var updatePingUrl = '@Url.Action("UpdateActivityTime", "Login")';
+
+
+
+        function checkActivityTimer() {
+            $.ajax({
+                url: activityPingUrl,
+                method: 'get',
+                success: function (data, textStatus, xhr) {
+                    //console.log('Success:', data);
+                    ///300 = 5 minutes
+                    if (data > 1200) {
+                        showPopupAndRedirectLogin();
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    //console.error('Error:', errorThrown);
+                    //console.log('Status:', textStatus);
+                    //console.log('Response:', xhr.responseText);
+                }
+            });
+        }
+
+        setInterval(checkActivityTimer, 300000);
+
+        function mouseClickFunction() {
+            console.log("Mouse clicked!");
+            //call controller to update.
+
+            $.ajax({
+                url: updatePingUrl,
+                method: 'get',
+                success: function (data, textStatus, xhr) {
+                    //console.log('Success:', data);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    //console.error('Error:', errorThrown);
+                    //console.log('Status:', textStatus);
+                    //console.log('Response:', xhr.responseText);
+                }
+            });
+
+
+        }
+
+        function showPopupAndRedirectLogin() {
+            // Add your logic to show a popup
+            alert('Session Expired.');
+
+            // Redirect to the LogOn page
+            window.location.href = '@Url.Content("~/Login/UserLogin")';
+        }
+
+        window.addEventListener('click', mouseClickFunction)
+
+    </script>
+
+    @{
+
+        var SubmenuList = Session["GroupByDataSubMenu"] as List<IGrouping<int?, MenuRights>>;
+        var NewMenuList = Session["NewMenuList"] as List<MenuListDTO>;
+    }
+
+</head>
+
+@{
+
+
+
+    var userIDsss = Convert.ToString(Session["SessionLoggedUserID"]);
+    var SessionID = Convert.ToString(Session["SessionID"]);
+
+    SqlConnection con = new SqlConnection(Convert.ToString(System.Configuration.ConfigurationManager.ConnectionStrings["TuvConnection"]));
+    SqlCommand cmd = new SqlCommand("SELECT top 1 * FROM ActiveUsers where UserId = '" + userIDsss + "' order by id desc", con);
+    con.Open();
+    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+    DataTable dataTable = new DataTable();
+    adapter.Fill(dataTable);
+    con.Close();
+
+    var Sesid = Convert.ToString(dataTable.Rows[0]["SessionID"]);
+
+    if (SessionID != Sesid)
+    {
+        <script type="text/javascript">
+        // Your JavaScript function to show a popup and redirect
+        function showPopupAndRedirect() {
+                // Add your logic to show a popup
+                alert('Session Terminated. New Login Detected.');
+
+                // Redirect to the LogOn page
+                window.location.href = '@Url.Content("~/Login/UserLogin")';
+            }
+
+        // Call the function to show the popup and redirect
+            showPopupAndRedirect();
+        </script>
+        //Response.Redirect("~/Account/LogOn");
+    }
+
+}
+<body>
+
+    <!--Start of logo header-->
+    <div class="container-fluid white-bg logo-header-main" style="margin-top:-47px;">
+        <div class="row assignfixedwidth rp-10" style="margin-top:22px;">
+            <div class="col-xs-3 col-sm-3 extreme-xs-pr">
+                <a href="@Url.Action("Welcome","Login")" class="logo">
+                    @*<a href="@Url.Action("Welcome","Login")" class="login-logo" style="max-width:200px;">
+                        <img src="~/AllJsAndCss/images/TUEV-INDIA_Quality-Label_Electric-Blue_sRGB.jpg" alt="" style="backface-visibility:hidden;">
+                    </a>*@
+                    <a href="@Url.Action("Welcome","Login")" class="login-logo1" style="max-width:200px;">
+                        <img src="~/AllJsAndCss/images/TUEV-INDIA_Quality-Label_Electric-Blue_sRGB.SVG" alt="" style="backface-visibility:hidden;height:113px;margin-left:-21px;width:218px;">
+                    </a>
+                    
+            </div><!--End of col-->
+            <div class="col-xs-7 col-sm-7" style="margin-top:47px;text-align:center;padding-right:66px;">
+                <lable style="font-size:22px;color:#00003C;font-family:TNG Pro;">@*<img src="~/AllJsAndCss/images/Slide6.jpg" alt="" style="backface-visibility:hidden;">*@TIIMES</lable>
+                <br /><label style="font-size:18px;color:#00003C;font-family:TNG Pro;font-weight:normal;">TUV INDIA INSPECTION MANAGEMENT AND EXECUTION SYSTEM</label>
+            </div>
+
+            @*<div class="col-xs-6 col-sm-5 text-right extreme-xs-pr">
+                <span>TUV INDIA INSPECTION MANAGEMENT & EXECUTION SYSTEM (TIIMES)</span>
+            </div>*@
+                @*<div class="col-xs-3 col-sm-5 text-right extreme-xs-pr">*@
+                    <div class="col-xs-2 col-sm-2 text-right extreme-xs-pr">
+                    <div class="btn-group animated user-account-btn-group" role="group" style="margin-top:13px;">
+
+                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @*<span class="user-acc-text" >
+                        <table style="width:150%" >
+
+                            <tr>
+                                <td>
+                                    @if (Session["IData"] != null)
+                                    {
+                                        <img src="data:image/jpg;base64,@Convert.ToBase64String((byte[])Session["IData"])" height="50px" width="50px" style="border-radius: 50%;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/AllJsAndCss/images/user.png" width="20" alt="">
+                                    }
+                                </td>
+                                <td style="text-align:left">
+                                    Hello,
+                                    <strong><br />@Session["LoginName"].ToString()</strong>
+                                </td>
+
+                            </tr>
+
+
+                        </table>
+
+                            </span>*@
+
+                            <table style="width:150%" border="0">
+                                <tr>
+                                    <td>
+                                        @if (Session["IData"] != "")
+                                        {
+                                            // <img src="data:image/jpg;base64,@Convert.ToBase64String((byte[])Session["IData"])" height="50px" width="50px" style="border-radius: 50%;" />
+                                            <img src="~/content/Sign/@Session["IData"].ToString()" height="65px" width="65px" style="border-radius: 50%;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/AllJsAndCss/images/Icon_male-user.png" height="61px" width="61px" alt="">
+                                        }
+                                    </td>
+
+                                    <td align="left">
+
+                                        @*<lable style="color:#001ED2;">Hello,</lable>
+                                        <strong style="color:#001ED2;"><p>@Session["LoginName"].ToString()</p></strong>*@
+                                        <span class="user-acc-text">
+                                            @*<lable style="color:#104193;">Hello,</lable><br />*@
+                                            <label style="color:#104193;font-weight:normal;font-family:'TNG Pro';font-size:13px;margin-bottom:-4px;">@Session["F"].ToString() <br /> @Session["L"].ToString() <span style="color:#00003C;font-family:'TNG Pro Medium'">↓</span></label>
+                                            @*<br />*@
+                                            @*<a class="dropdown dropdown-toggle"></a><label style="color:#104193;font-weight:normal;font-family:'TNG Pro';font-size:13px;">@Session["L"].ToString() ↓</label>*@
+                                            @*<lable style="color:#104193;"><br /></lable>*@
+                                            
+                                        </span>
+
+                                    </td>
+
+
+                                    @*<td>
+                                                                            <span class="user-acc-text">
+                                                                            </span>
+                                </td>*@
+
+                                </tr>
+                            </table>
+                        </button>
+
+                        <ul class="dropdown-menu user-account-btn-group-dd">
+                            @*<li><a href="@Url.Action("Myprofile","Users")"><i class="fa fa-user"></i> My Profile</a></li>*@
+                            <li><a href="@Url.Action("CreateUser","Users")"><i class="fa fa-user"></i> My Profile</a></li>
+                            <li><a href="@Url.Action("ChangedPassword","Logout")"><i class="fa fa-cog"></i> Change Password</a></li>
+
+                            <li><a href="@Url.Action("Logout", "Logout")" onclick="return confirm('Are you sure you want to Logout from Application ?')" title="Delete"><i class="fa fa-power-off"></i> Logout</a></li>
+
+                        </ul>
+                    </div>
+                </div><!--End of col-->
+            </div><!--End of row-->
+    </div><!--End of container-fluid-->
+    <!--End of logo header-->
+    <!--Start of navbar-->
+    <nav class="navbar navbar-custom tuv-navbar" style="background-color:#001ED2;">
+       
+                <div class="container-fluid">
+                    <div class="row assignfixedwidth">
+                        @*10Feb2025*@
+
+                        @*<div class="container-fluid">
+            <div class="row assignfixedwidth">
+                <div class="navbar-header">
+        <button type="button" class="navbar-toggle navbar-toggle-custom collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+    </div>*@
+
+                                @*End 10Feb2025*@
+
+
+
+                                <!-- Collect the nav links, forms, and other content for toggling -->
+                                @*<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#001ED2;">
+                    <ul class="nav navbar-nav navbar-right navbar-nav-custom">*@
+                                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#001ED2; white-space: nowrap;">
+                                    @*<ul class="nav navbar-nav navbar-nav-custom" style="display: flex; flex-wrap: nowrap;">*@
+                                    <ul class="nav navbar-nav navbar-nav-custom" style="display: flex; flex-wrap: nowrap;">
+                                        @{
+                                            if (Session["UserName"] != null)
+                                            {
+                                                foreach (var item in NewMenuList)
+                                                {
+
+
+
+
+
+                                                    if (item.SubMenuList.Count > 0)
+                                                    {
+                                                        <li>
+                                                            <a class="dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                                                @item.MainMenuName
+                                                                @if (Session["GalleryRead"].ToString() == "0" && item.MainMenuName.ToString().ToUpper() == "GALLERY")
+                                                                {
+                                                                    <img src="~/NewImg.jpg" height="20px" width="25px" alt="">
+                                                                }
+                                                            </a>
+                                                            @if (item.SubMenuList.Count > 0)
+                                                            {
+                                                                <ul class="dropdown-menu">
+                                                                    @foreach (var subitem in item.SubMenuList)
+                                                                    {
+                                                                        <li class="dropdown-submenu">
+                                                                            @if (subitem.SubSubmenuList.Count() > 0)//Change ing ==
+                                                                            {
+                                                                                <a href="#" class="rightarrow">@subitem.Name</a>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <a href="@Url.Action(subitem.Action,subitem.Controller)">@subitem.Name</a>
+                                                                            }
+                                                                            @if (subitem.SubSubmenuList.Count > 0)
+                                                                            {
+                                                                                <ul class="dropdown-menu">
+                                                                                    @foreach (var subsubitem in subitem.SubSubmenuList)
+                                                                                    {
+                                                                                        <li>
+                                                                                            @if (subsubitem.SubSubMenuName == subsubitem.SubSubMenuName)
+                                                                                            {
+                                                                                                if (@subsubitem.SubSubMenuName.Contains("Induction"))
+                                                                                                {
+                                                                                                    <a href="http://10.10.30.35:8080/Induction?u=@Session["ID"]" target="_blank">@subsubitem.SubSubMenuName</a>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <a href="@Url.Action(subsubitem.Action, subsubitem.Controller)">@subsubitem.SubSubMenuName</a>
+                                                                                                }
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <a href="@Url.Action(subsubitem.Action,subsubitem.Controller)">@subsubitem.SubSubMenuName</a>
+                                                                                            }
+                                                                                        </li>
+                                                                                    }
+                                                                                </ul>
+                                                                            }
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            @if (item.MainMenuName.Contains("Induction"))
+                                                            {
+                                                                <a href="https://TIIMES.TUV-india.com/TUVInduction/?u=@Session["ID"]" target="_blank">@item.MainMenuName</a>
+                                                            }
+                                                            else if (item.MainMenuName.Contains("Ticketing"))
+                                                            {
+                                                                <a href="https://helpdesk.tuv-india.com:10443/login" target="_blank">@item.MainMenuName</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="@Url.Action(item.Action, item.Controller)">
+                                                                    @item.MainMenuName
+
+                                                                    @if (Session["NewsRead"].ToString() == "0" && item.MainMenuName.ToString().ToUpper() == "NEWS")
+                                                                    {
+                                                                        <img src="~/NewImg.jpg" height="20px" width="20px" alt="">
+                                                                    }
+
+                                                                    @if (Session["GalleryRead"].ToString() == "0" && item.MainMenuName.ToString().ToUpper() == "GALLERY")
+                                                                    {
+                                                                        <img src="~/NewImg.jpg" height="20px" width="20px" alt="">
+                                                                    }
+
+                                                                    @if (Session["LessionLeantRead"].ToString() == "0" && item.MainMenuName.ToString().ToUpper() == "LESSON LEARNT")
+                                                                    {
+                                                                        <img src="~/NewImg.jpg" height="20px" width="20px" alt="">
+                                                                    }
+                                                                </a>
+
+
+                                                            }
+                                                        </li>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @Html.Action("UserLogin", "Login");
+
+                                            }
+                                        }
+
+                                        <!-- /.navbar-collapse -->
+                                    </ul>
+
+
+
+                                </div>
+                            </div><!-- /.row -->
+                        </div><!-- /.container-fluid -->
+</nav>
+    <!--End of navbar-->
+    <!--================================================================================================-->
+    <!--Start of main-content-->
+    @RenderBody()
+    @*<!--End of main-content-->
+            <!--================================================================================================-->
+            <!--Start of footer-->
+            <div class="container-fluid footer-bg rp-20">
+                <div class="row assignfixedwidth">
+                    <div class="col-xs-12 xs-text-center col-sm-6">
+                        <p class="footer-text-2">© TÜV NORD GROUP. All Rights Reserved</p>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+            <!--End of footer-->
+            <!--Start of scroll to top button-->
+            <div class='scrolltop'>
+                <div class='scroll icon'><i class="fa fa-4x fa-angle-up"></i></div>
+            </div>
+            <!--End of scroll to top button-->
+
+
+        </body>
+        </html>*@
+    <!--Start of footer-->@*#CCFBF4*@
+    <div class="container-fluid footer-bg rp-15" style="background-color:rgb(0, 235, 200);height:49px;">
+        <div class="row assignfixedwidth">
+            <div class="col-xs-12 xs-text-center col-sm-8">
+
+                @*<p class="footer-text-2">© TÜV NORD GROUP. All Rights Reserved. <a href="http://www.tuv-nord.com/in" target="_blank"><i class="fa fa-globe"></i> TUV India</a></p>*@
+                
+                <a href="http://www.facebook.com/tuvindia" target="_blank"><i><img src="~/AllJsAndCss/images/Icon_facebook.jpg" /></i></a>
+                <a href="http://www.linkedin.com/company/tuv-india" target="_blank"><i><img src="~/AllJsAndCss/images/linkedin.jpg" /></i></a>
+                <a href="http://twitter.com/tuvnordindia" target="_blank"><i><img src="~/AllJsAndCss/images/Icon_twitter_white.png" style="margin-top:5px;"/></i></a>
+                <a href="http://www.youtube.com/channel/UCf_o6xZ-Wh_0ilUfmz37i_w" target="_blank"><i><img src="~/AllJsAndCss/images/Icon_youtube.png" /></i></a>
+            </div><!-- /.col -->
+            <div class="col-xs-12 xs-text-center col-sm-4 text-right">
+                @*<a href="http://www.facebook.com/tuvindia" target="_blank" class="foo-social"><i class="fa fa-facebook"></i></a>
+                <a href="http://www.linkedin.com/company/tuv-india" target="_blank" class="foo-social"><i class="fa fa-linkedin"></i></a>
+                <a href="http://twitter.com/tuvnordindia" target="_blank" class="foo-social"><i class="fa fa-twitter"></i></a>
+                <a href="http://www.youtube.com/channel/UCf_o6xZ-Wh_0ilUfmz37i_w" target="_blank" class="foo-social"><i class="fa fa-youtube"></i></a>*@
+                @*<a href="http://www.tuv-nord.com/in" target="_blank"><i><img src="~/AllJsAndCss/images/TUEV-NORD-GROUP_Logo_Electric-Blue_sRGB.jpg" /></i></a>*@
+                <a href="http://www.tuv-nord.com/in" target="_blank">@*<i class="right">*@<label style="color:#001ED2;font-weight:normal;font-family:'TNG Pro';margin-top:4px;">  © TÜV NORD GROUP </label>  @*<img src="~/AllJsAndCss/images/TUVNordLogo.png" style="padding-left:1000px;"/>*@@*</i>*@</a>
+
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+    <!--End of footer-->
+    <!--Start of scroll to top button-->
+    <div class='scrolltop'>
+        <div class='scroll icon'><i class="fa fa-4x fa-angle-up"></i></div>
+    </div>
+    <!--End of scroll to top button-->
+
+
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+       $('.dropdown-submenu').hover(function () {
+        //    debugger;
+            var submenu = $(this).children('.dropdown-menu');
+
+            // Temporarily show the submenu to get correct dimensions
+            submenu.css('display', 'block');
+
+            var windowWidth = $(window).width();
+            var offsetRight = submenu.offset().left + submenu.outerWidth();
+            var offsetLeft = submenu.offset().left;
+
+            // If the submenu exceeds the right boundary, move it to the left
+            if (offsetRight > windowWidth) {
+                submenu.css({ left: 'auto', right: '100%' });
+            }
+                // If the submenu exceeds the left boundary, move it to the right
+            else if (offsetLeft < 0) {
+                submenu.css({ right: 'auto', left: '100%' });
+            }
+
+            // Ensure submenu hides properly when not hovered
+        }, function () {
+            $(this).children('.dropdown-menu').css('display', 'none');
+        });
+    });
+</script>

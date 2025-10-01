@@ -1,0 +1,142 @@
+﻿@model TuvVision.Models.EnquiryMaster
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "GetConflictEnquiry";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+    int k = 0;
+    int i = 0;
+}
+
+@*Ashwini Scripts here for datatable starts here*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+
+@using (Html.BeginForm())
+{
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+
+                <div class="col-xs-12">
+                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Conflict Enquiry</h3>
+                    @*<a href="@Url.Action("Enquiry","EnquiryMaster")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2 mr-1"><i class="fa fa-plus-circle"></i> Add New Enquiry</a>
+                        <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2 " style='margin-right:16px' onclick="location.href='@Url.Action("ExportIndex","EnquiryMaster")'">
+                            Export To Excel
+                        </button>*@
+                </div><!-- /.col -->
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+
+            <form method="post" enctype="multipart/form-data">
+                @Html.HiddenFor(model=>model.EQ_ID)
+                <div class="white-bg section-box-shadow">
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                            <div class="form-box">
+
+                                @if (ViewBag.lstConflictEnquiry != null)
+                                {
+                                    if (ViewBag.lstConflictEnquiry.Count != 0)
+                                    {
+                                        <div id="DomesticCurrency" style='width:100% ;align:center;pointer-events:none;'>
+                                            <div class="form-page-title"><label>Conflict Enquiry</label></div>
+
+                                            <table id="DTestTable" cellspacing="0" cellpadding="3" border="1" style="width: 100%">
+                                                <tr>
+
+                                                    <td width="200px">
+                                                        Enquiry Number
+                                                    </td>
+                                                    <td width="200px">
+                                                        Company Name
+                                                    </td>
+                                                    <td width="200px">
+                                                        Branch
+                                                    </td>
+                                                    <td width="200px">
+                                                        Created By
+                                                    </td>
+
+                                                </tr>
+
+
+                                                @foreach (var item in ViewBag.lstConflictEnquiry as IEnumerable<TuvVision.Models.EnquiryMaster>)
+                                            {
+                                                i = i + 1;
+
+                                            <tr class="trDomestic">
+
+
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.lstConflictJobs[j].EnquiryNumber, new { @placeholder = "Enquiry Number", @class = "form-control  COrderRate", @onkeypress = "return isNumberKey(event);", @Value = item.EnquiryNumber, @id = "IddOrderType" + i, @readonly = "readonly" })
+                                                    @Html.ValidationMessageFor(model => model.EnquiryNumber, "", new { @class = "text-danger validation-msg" })
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.lstConflictJobs[j].CompanyName, new { @placeholder = "Company Name", @class = "form-control  COrderRate", @onkeypress = "return isNumberKey(event);", @Value = item.CompanyName, @id = "IddOrderType" + i, @readonly = "readonly" })
+                                                    @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger validation-msg" })
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.lstConflictJobs[j].Branch, new { @placeholder = "Branch", @class = "form-control  COrderRate", @onkeypress = "return isNumberKey(event);", @Value = item.Branch, @id = "IddOrderType" + i, @readonly = "readonly" })
+                                                    @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger validation-msg" })
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.lstConflictJobs[j].CreatedBy, new { @placeholder = "Created By", @class = "form-control  COrderRate", @onkeypress = "return isNumberKey(event);", @Value = item.CreatedBy, @id = "IddOrderType" + i, @readonly = "readonly" })
+                                                    @Html.ValidationMessageFor(model => model.CreatedBy, "", new { @class = "text-danger validation-msg" })
+                                                </td>
+
+                                            </tr>
+                                                j++;
+                                            }
+
+
+                                            </table>
+                                        </div>
+                                    }
+                                }
+
+
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="form-group">
+
+                                        @Html.CheckBoxFor(model => model.ConflictConfirmation, new { @id = "chkAwaited" })
+                                        <label for="InActive" style="color:black;padding-top:24px;">Conflict Confirmation</label>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xs-12 text-center">
+                                    <button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i>Save </button>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </form>
+
+
+</div>
+    </div>
+}
+
+
+
+

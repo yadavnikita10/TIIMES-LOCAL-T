@@ -1,0 +1,236 @@
+﻿@model IEnumerable<TuvVision.Models.TrainingScheduleModel>
+@{
+    //ViewBag.Title = "ListScheduleTraining";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@if(TempData["Err"] != null)
+{
+    TempData["Err"] = null;
+    <script>
+        alert("Your Attendence is not marked please contact Organiser.");
+    </script>
+  
+}
+@if (TempData["Err1"] != null)
+{
+    TempData["Err1"] = null;
+    <script>
+        alert("Link expired please contact Organiser.");
+    </script>
+
+}
+@if (TempData["QuizNotStart"] != null)
+{
+    TempData["QuizNotStart"] = null;
+    <script>
+        alert("Quiz Not Start.");
+    </script>
+
+}
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Conventional Training List</h3>
+                <a href="@Url.Action("TrainingDetails", "TrainingSchedule")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-left:10px;">Conventional</a>
+                <a href="@Url.Action("ELearningTrainingDetail", "TrainingSchedule")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2">E-Learning</a>
+
+                @*<button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("TrainingSchedule", "TrainingSchedule")'">Schedule Training</button>*@
+            </div><!-- /.col -->
+
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+
+
+            <div class="col-xs-12">
+                
+                @*<button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("TrainingSchedule", "TrainingSchedule")'">Schedule Training</button>*@
+            </div>
+
+            <!--Table was here-->
+
+        </div>
+        <div class="col-xs-12">
+            <table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="remove-search">Action</th>
+                        <th class="hidden">Id</th>
+                        <th class="hidden">TrainingRecordId</th>
+                        <th class="hidden">TrainingRecordId</th>
+                        <th class="remove-search">Training Topic</th>
+                        <th class="remove-search">Trainer Name</th>
+                        @*<th>Trainee Name</th>*@
+                        @*<th class="remove-search">Branch Name</th>*@
+                        <th class="remove-search">External Trainer Name</th>
+                        <th class="remove-search">Scope</th>
+                        <th class="remove-search">Training Date(s)(Time)</th>
+                        <th class="remove-search">Total Hours</th>
+                        @*<th class="remove-search">Training End Date</th>
+                        <th class="remove-search">Training Start Time</th>
+                        <th class="remove-search">Training End Time</th>*@
+                        <th class="remove-search">Training Type</th>
+                        <th class="remove-search">Venue</th>
+                        <th class="remove-search">Link</th>
+                        @*<th class="remove-search">Video File</th>*@
+                        <th class="remove-search">Organiser Name</th>
+                        <th class="remove-search">Mobile No.</th>
+                        <th class="remove-search">Evaluation Method</th>
+                        <th class="remove-search">Quiz Start Date</th>
+                        <th class="remove-search">Quiz End Date</th>
+                        
+                        
+                    </tr>
+                    
+                </thead>
+                
+                <tbody>
+                    @foreach (var b in ViewBag.TrainingList as IEnumerable<TuvVision.Models.TrainingScheduleModel>)
+                    {
+                        <tr>
+                            <td cRemarkslass="action-btn" style="text-align:center;">
+                                @if (b.QuizButtonVisibleOnList == "Yes")
+                                {
+                                    <a href="@Url.Action("GetQuiz", "Quiz", new { @sid = @b.PK_TrainingScheduleId ,@chkAtt = "AttChk"})" class="btn  btn-xs" title="Quiz" style="background-color:#001ED2;color:#FFFFFF;border-radius:0"><i class="fa fa-question"></i></a>
+
+                                }
+                                @*<button type="button" class="btn btn-info btn-xs" id="btnAddSiteAdd" title="Quiz"><i class="fa fa-question"></i>  </button>*@
+                                <a href="@Url.Action("TrainingFeedBack", "TrainingSchedule", new { @fid = @b.PK_TrainingScheduleId ,@chkAtt = "AttChk"})" class="btn  btn-xs"style="background-color:#001ED2;color:#FFFFFF;border-radius:0" title="Feedback"><i class="fa fa-check"></i></a>
+                            @*//added by nikita on 23102023*@
+                                @if (b.TrainType == "On Job" || b.TrainType == "Supervised Working")
+                                {
+                                    <a href="@Url.Action("GetExpense", "Quiz", new {@sid = @b.PK_TrainingScheduleId  ,@chkAtt = "AttChk", @TrainingStartDate=@b.TrainingStartDate,@Type1="Training",})" class="btn  btn-xs" style="background-color:#001ED2;color:#FFFFFF;border-radius:0" title="Expense"><i class="fa fa-inr" aria-hidden="true"></i></a>
+                                }
+                            </td>
+                            <td class="hidden">@b.PK_TrainingScheduleId</td>
+                            <td class="hidden">@b.TrainingRecordId</td>
+                            <td class="hidden">@b.TrainingId</td>
+                            <td>@b.TrainingName</td>
+                            <td>@b.TrainerName</td>                         
+                            <td>@b.ExternalTrainer</td>
+                            <td>@b.Scope</td>
+                            <td>@b.TrainingStartDate</td>
+                            <td>@b.TotalHours</td>
+                            @*<td>@b.TrainingEndDate</td>
+                            <td>@b.TrainingStartTime</td>
+                            <td>@b.TrainingEndTime</td>*@
+                            <td>@b.TrainType</td>
+                            <td>@b.Venue</td>
+                            <td>
+                                @if (b.Link != "")
+                                {
+                                    <a href="@b.Link" class="new-tab" target="_blank"><img src="~/View1.png" /></a>
+                                }
+                            
+                            
+                            </td>
+                            
+                            @*@if (b.TrainType.ToUpper() == "E-LEARNING")
+                            {
+
+                                <td align="center">
+                                @if (b.Link != "")
+                                {
+                                    <a onclick="window.open('@Url.Action("PlayVideo", "MisReport", new {@VideoFile=b.FileName })')"
+                                       id="btnView1" class="menu_links" align="center">
+                                        &nbsp;&nbsp;&nbsp;<img src="@Url.Content("~/View1.png")" />
+                                    </a>
+                                }
+                                    
+                                </td>
+                            }
+                            else
+                            {
+                                <td>NA</td>
+                            }*@
+                            
+                            <td>@b.CreatedBy</td>
+                            <td>@b.MobileNo</td>
+                            <td>@b.EvaluationMethod</td>
+                            <td>@b.QuizeStartDate</td>
+                            <td>@b.QuizeEndDate</td>
+                            
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#btnAddSiteAdd").on('click', function () {
+            debugger;
+           
+
+            
+                $.ajax({
+                    url: '@Url.Action("ChangedPassword", "TrainingSchedule")',
+                    type: 'POST',
+                    data: JSON.stringify({ "OldPassword": $('#OldPassword').val(), "NewPassword": $('#NewPassword').val(), "ConfirmPassword": $('#ConfirmPassword').val() }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response == "Success") {
+                            alert("Password has been Changed Successfully, Please Login Again...!!!");
+                            $('#OldPassword').val('');
+                            $('#NewPassword').val('');
+                            $('#ConfirmPassword').val('')
+                            window.location.href = '@Url.Action("UserLogin", "Login")';
+                        }
+                        else if (response.result == 'Redirect') {
+                            $('#OldPassword').val('');
+                            alert("Invalid Old Password,Old Password Should be Matched, Please try again...!!!");
+                            window.location = response.url;
+                        }
+                        else if (response.result == 'RedirectPage') {
+                            $('#NewPassword').val('');
+                            $('#ConfirmPassword').val('')
+                            alert("New Password and Confirm Password does not matched, Please try again...!!!");
+                            window.location = response.url;
+                        }
+                        else {
+                            $('#OldPassword').val('');
+                            $('#NewPassword').val('');
+                            $('#ConfirmPassword').val('')
+                            alert("Failed!!  Something Went Wrong !!!");
+                            window.location.href = '@Url.Action("Welcom", "Login")';
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            
+        });
+
+    });
+</script>
+
+
+
+
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+

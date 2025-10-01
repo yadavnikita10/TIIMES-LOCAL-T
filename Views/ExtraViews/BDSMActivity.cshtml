@@ -1,0 +1,127 @@
+﻿@model TuvVision.Models.BDSMActivity
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = "BDSMActivity";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+@using (Html.BeginForm())
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+                <form method="post">
+
+
+                    <div class="col-xs-12">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">BD/SM Activity</h3>
+                        <button type="button" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportAllIndex","BDSMActivities")'"
+                                style="border:none;">
+                            Export To Excel
+                        </button>
+
+                    </div><!-- /.col -->
+                </form>
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+
+            <div class="col-xs-12">
+
+            </div><!-- /.data table col -->
+
+            <div class="col-xs-12">
+
+                <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                    <tr>
+                        <td>
+                            @(Html
+                            .Grid(Model.listingBDSMActivityrecord)
+                            .Build(columns =>
+                            {
+                                columns.Add(c => c.Id).Titled("UIN");
+                                columns.Add(c => c.EmployeeName).Titled("Employee Name");
+                                columns.Add(c => c.HREmployeeCode).Titled("HR Employee Code");
+                                columns.Add(c => c.Tuv_Email_Id).Titled("Email Id");
+                                columns.Add(c => c.MobileNo).Titled("Mobile No");
+                                columns.Add(c => c.Designation).Titled("Designation");
+                                columns.Add(c => c.TravelTime).Titled("Travel Time");           
+                                columns.Add(c => c.StartDate).Titled("Start Date");             
+                                columns.Add(c => c.EndDate).Titled("End Date");                                        
+                                columns.Add(c => c.ActivityType).Titled("Activities");
+                                columns.Add(c => c.Location).Titled("Cities");
+                                columns.Add(c => c.New_ExistingCustomer).Titled("New/Existing");
+                                columns.Add(c => c.Dom_Inter_Visit).Titled("Domestic/International");
+                                columns.Add(c => c.Description).Titled("Description");
+
+
+                            })
+                            .Pageable(pager =>
+                            {
+
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No data found")
+                            .Filterable()
+                            .Sortable()
+
+                            )
+
+
+                        </td>
+                    </tr>
+                </table>
+
+
+
+            </div>
+
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+}
+
+<script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+</script>
+
+<style>
+    table.evaluation > tbody {
+        width: 100% !important;
+        display: table;
+    }
+
+        table.evaluation > tbody > tr td table {
+            width: 100% !important;
+            display: table;
+        }
+</style>
+
+
+
+

@@ -1,0 +1,109 @@
+﻿@model TuvVision.Models.ExpenseItem
+@{
+    ViewBag.Title = "Voucher";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+<div class="main-content3 xs-max-height">
+
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
+
+            <div class="col-xs-12">
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Voucher </h3>
+                <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("VoucherStatus", "ExpenseVoucher")'">Voucher List</button>
+                <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex","ExpenseVoucher")'">
+                    Export To Excel
+                </button>
+            </div><!-- /.col -->
+            
+            <div class="col-xs-12">
+                <hr class="custom-hr">
+            </div><!-- /.col -->
+            <!--Table was here-->
+
+        </div>
+       
+        <div class="col-xs-12">
+            <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                <tr>
+                    <td>             
+                        @(Html
+                            .Grid(Model.LstDashboard)
+                            .Build(columns =>
+                            {
+                                columns.Add(c => c.Date).Titled("Date");
+
+                                columns.Add(c => c.ExpenseType).Titled("Expense Name");
+                                columns.Add(c => c.Country).Titled("Country");
+                                columns.Add(c => c.EndCity).Titled("EndCity");
+                                columns.Add(c => c.Currency).Titled("Currency");
+                                columns.Add(c => c.Amount).Titled("Amount");
+                                columns.Add(c => c.ExchRate).Titled("Ex Rate");
+                                columns.Add(c => c.Description).Titled("Description");
+                                
+                                
+
+
+
+                            }).Pageable(pager =>
+                            {
+                                //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No Data Found")
+                            .Filterable()
+                            .Sortable()
+                )
+                </td>
+                </tr>
+            </table>
+
+            @*<table id="example" class="display" cellspacing="0" width="100%">
+                <thead>
+                    
+                </thead>
+
+                <tbody>
+                    @foreach (var b in Model)
+                    {
+                        <tr>
+                           
+                            <td>@b.Date</td>
+                            <td>@b.ExpenseType</td>
+                            <td>@b.Country</td>
+                            <td>@b.Currency</td>
+                            <td>@b.TotalAmount</td>
+                            <td>@b.ExchRate</td>
+                            <td>@b.Description</td>
+                            <td>@b.TotalAmount</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>*@
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+@*<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>*@
+

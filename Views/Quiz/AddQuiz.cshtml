@@ -1,0 +1,211 @@
+﻿@model TuvVision.Models.QuizModel
+@{
+    ViewBag.Title = "AddQuiz";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@using (Html.BeginForm("AddQuiz", "Quiz", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formaq" }))
+{
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-5">
+
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                            <a href="@Url.Action("QuestionList", "Quiz", new {@sid=Model.TopicName })" class="btn btn-default insert-form-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                            </div>
+                            <br />
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+
+
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="col-xs-12">
+                                                <h5 style="margin-top:10px;margin-bottom:8px; color:blue;">Upload Template:</h5>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-2">
+                                                <a class="btn btn-default insert-form-btn" href="~/Excel/QuizQA.xlsx" role="button" download="QuizQA.xlsx" style="margin-top:0px;">
+                                                    <i class="fa fa-download"></i>Download Format
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <div class="form-group">
+                                                    <input type="file" name="FileUpload1" class="form-control" id="FileUpload1">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <button type="button" id="btnAddExcel" class="btn btn-default insert-form-btn" style="margin-top:0px;"> Upload </button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <h3 class="form-page-title">Add Question</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            @Html.HiddenFor(model => model.QuizID)
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-xs-12">
+                                                        <div class="col-xs-12">
+                                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                                                Topic <sup><i class="fa fa-asterisk starRequired"></i></sup>
+                                                            </label>
+                                                            <div class="col-md-6 col-sm-6 col-xs-12" style="pointer-events:none;">                                                                
+                                                                @Html.DropDownListFor(m => m.TopicName, new SelectList(ViewBag.RollList, "value", "text"), "- Select Topic Name -", new { @class = "form-control col-md-7 col-xs-12", @required = "required" })                                                               
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                                            Question <sup><i class="fa fa-asterisk starRequired"></i></sup>
+                                                        </label>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            @Html.TextAreaFor(m => m.Question, new { @class = "form-control col-md-7 col-xs-12", @required = "", @rows = "4" })                                                           
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                                            Option 1 <sup><i class="fa fa-asterisk starRequired"></i></sup>
+                                                        </label>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            @Html.TextBoxFor(m => m.Option1, new { @class = "form-control col-md-7 col-xs-12" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                                            Option 2 <sup><i class="fa fa-asterisk starRequired"></i></sup>
+                                                        </label>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            @Html.TextBoxFor(m => m.Option2, new { @class = "form-control col-md-7 col-xs-12" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                                            Option 3 <span class="required"></span>
+                                                        </label>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            @Html.TextBoxFor(m => m.Option3, new { @class = "form-control col-md-7 col-xs-12" })                                                           
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                                            Option 4 <span class="required"></span>
+                                                        </label>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            @Html.TextBoxFor(m => m.Option4, new { @class = "form-control col-md-7 col-xs-12" })                                                            
+                                                        </div>
+                                                    </div>                                                    
+                                                    <div class="col-xs-12">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                                                            Correct Answer<sup><i class="fa fa-asterisk starRequired"></i></sup>
+                                                        </label>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            @{
+                                                                List<SelectListItem> listItems = new List<SelectListItem>();
+                                                                listItems.Add(new SelectListItem { Text = "Option 1", Value = "a" });
+                                                                listItems.Add(new SelectListItem { Text = "Option 2", Value = "b" });
+                                                                listItems.Add(new SelectListItem { Text = "Option 3", Value = "c" });
+                                                                listItems.Add(new SelectListItem { Text = "Option 4", Value = "d" });
+                                                            } 
+                                                            @Html.DropDownListFor(m => m.Answer, listItems, "- Select Correct Answer -", new { @class = "form-control col-md-7 col-xs-12", @required = "required" })                                        
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                @*<button type="reset" class="btn btn-default insert-form-btn"> Reset </button>*@
+                                                                <button type="submit" class="btn btn-default insert-form-btn" id="btnAddQns"> Add </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+
+
+    $('#btnAddExcel').on('click', function (event) {
+        debugger;
+        event.preventDefault(); // Prevent default form submission behavior
+        $('#formaq').off('submit'); // Remove any submit handlers if previously attached
+        $('#formaq').submit(); // Directly submit the form
+    });
+
+
+
+    $("#btnAddQns").click(function myfunction() {
+
+            if (validateform() == false) {
+                return false;
+            }
+            else {
+                $("#formaq").submit();
+            }
+        });
+    function validateform() {
+        if ($("#Question").val() == "" || $("#Question").val() == null) {
+            alert("Please enter Question !");
+            $("#Question").focus()
+            return false;
+        }
+        if ($("#Option1").val() == "" || $("#Option1").val() == null) {
+            alert("Please enter Option 1 !");
+            $("#Option1").focus()
+            return false;
+        }
+        if ($("#Option2").val() == "" || $("#Option2").val() == null) {
+            alert("Please enter Option 2 !");
+            $("#Option2").focus()
+            return false;
+        }
+        if ($("#Answer Option:selected").val() == "" || $("#Answer Option:selected").val() == null) {
+            alert("Please select Answer !");
+            $("#Answer").focus()
+            return false;
+        }
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#Answer").change(function () {
+            debugger;
+            if ($("#Answer").val() == "a" && $("#Option1").val() == "" || $("#Option1").val() == null) {
+                alert("Can't Select Option 1 since Option 1 Text is empty")
+            }
+            if ($("#Answer").val() == "b" && $("#Option2").val() == "" || $("#Option2").val() == null) {
+                alert("Can't Select Option 2 since Option 2 Text is empty")
+            }
+            if ($("#Answer").val() == "c" && $("#Option3").val() == "" || $("#Option3").val() == null) {
+                alert("Can't Select Option 3 since Option 3 Text is empty")
+            }
+            if ($("#Answer").val() == "d" && $("#Option4").val() == "" || $("#Option4").val() == null) {
+                alert("Can't Select Option 4 since Option 4 Text is empty")
+            }
+        });
+    });
+</script>
+
+

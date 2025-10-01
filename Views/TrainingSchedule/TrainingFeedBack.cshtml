@@ -1,0 +1,268 @@
+﻿@model TuvVision.Models.TrainingScheduleModel
+@{
+    ViewBag.Title = "TrainingFeedBack";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@using (Html.BeginForm("TrainingFeedBack", "TrainingSchedule", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formtf" }))
+{
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                <div class="row assignfixedwidth rp-5">
+
+                    <div class="col-xs-12 form-col">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                                <br />
+                                <a href="@Url.Action("TrainingDetails", "TrainingSchedule")" class="btn btn-default insert-form-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="col-xs-12">
+                                <div class="white-bg section-box-shadow">
+                                    <h3 class="form-page-title">Training Feedback</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                            <div class="form-box">
+                                                <form>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            @Html.HiddenFor(model => model.PK_TrainingScheduleId)
+                                                            @Html.HiddenFor(model=>model.tfid)
+                                                            @Html.HiddenFor(model=>model.FFID)
+                                                            @Html.HiddenFor(model=>model.FeedbackFile)
+                                                        </div>
+                                                    </div>
+
+                                                    <h3 class="form-page-title">@ViewBag.TrngNm</h3>
+                                                    <br />
+                                                    
+                                                        <div class="col-xs-12">
+                                                            <table>
+                                                                <tr>
+                                                                    <td><span style="font-size: 14px; font-weight:bold; margin-left:10px; color:red;">C. Evaluation of the Programme.</span></td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td width="100%" style="border-bottom:none; border-right-width: 0; border-left-width: 0;" colspan="2">
+                                                                        <span>1) Were you aware of the aims and objectives of the programme.</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-top-width:0;border-right-width: 0; border-left-width: 0; border-bottom-width: 0; padding-bottom: 15px;">
+
+                                                                        @Html.RadioButtonFor(m => m.C1, "Yes")
+                                                                        <label>Yes</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C1, "No")
+                                                                        <label>No</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-bottom:none; border-right-width: 0; border-left-width: 0;" colspan="2">
+                                                                        <span>2) The duration of the session was</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-top-width:0;border-right-width: 0; border-left-width: 0; border-bottom-width: 0; padding-bottom: 15px;">
+                                                                        @Html.RadioButtonFor(m => m.C2, "Too Short")
+                                                                        <label>Too Short</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C2, "Appropriate")
+                                                                        <label>Appropriate</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C2, "Too Long")
+                                                                        <label>Too Long</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-bottom:none; border-right-width: 0; border-left-width: 0;" colspan="2">
+                                                                        <span>3) The training programme met your expectations</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-top-width:0;border-right-width: 0; border-left-width: 0; border-bottom-width: 0; padding-bottom: 15px;">
+                                                                        @Html.RadioButtonFor(m => m.C3, "Fully")
+                                                                        <label>Fully</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C3, "Partially")
+                                                                        <label>Partially</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C3, "Not at All")
+                                                                        <label>Not at All</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-bottom:none; border-right-width: 0; border-left-width: 0;" colspan="2">
+                                                                        <span>4) The content of the training was relevant to the objectives of the training</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-top-width:0;border-right-width: 0; border-left-width: 0; border-bottom-width: 0; padding-bottom: 15px;">
+                                                                        @Html.RadioButtonFor(m => m.C4, "Relevant")
+                                                                        <label>Relevant</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C4, "Somewhat Relevant")
+                                                                        <label>Somewhat Relevant</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C4, "Not Relevant")
+                                                                        <label>Not Relevant</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-bottom:none; border-right-width: 0; border-left-width: 0;" colspan="2">
+                                                                        <span>5) As a result of the training, I will be able to do my job more effectively</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-top-width:0;border-right-width: 0; border-left-width: 0; padding-bottom: 15px;">
+                                                                        @Html.RadioButtonFor(m => m.C5, "Significantly")
+                                                                        <label>Significantly</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C5, "Noticeably")
+                                                                        <label>Noticeably</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C5, "Somewhat")
+                                                                        <label>Somewhat</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.C5, "Not at All")
+                                                                        <label>Not at All</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><span style="font-size: 14px; font-weight:bold; margin-left:10px;color:red;">D. Evaluation of the trainer</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-bottom:none; border-right-width: 0; border-left-width: 0;" colspan="2">
+                                                                        <span>1) Knowledge and command of the subject</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-top-width:0;border-right-width: 0; border-left-width: 0; border-bottom-width: 0; padding-bottom: 15px;">
+                                                                        @Html.RadioButtonFor(m => m.D1, "Excellent")
+                                                                        <label>Excellent</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D1, "Good")
+                                                                        <label>Good</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D1, "Satisfactory")
+                                                                        <label>Satisfactory</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D1, "Poor")
+                                                                        <label>Poor</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-bottom:none; border-right-width: 0; border-left-width: 0;" colspan="2">
+                                                                        <span>2) Presentation/Communication skills</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-top-width:0;border-right-width: 0; border-left-width: 0; border-bottom-width: 0; padding-bottom: 15px;">
+                                                                        @Html.RadioButtonFor(m => m.D2, "Excellent")
+                                                                        <label>Excellent</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D2, "Good")
+                                                                        <label>Good</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D2, "Satisfactory")
+                                                                        <label>Satisfactory</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D2, "Poor")
+                                                                        <label>Poor</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-bottom:none; border-right-width: 0; border-left-width: 0;" colspan="2">
+                                                                        <span>3) Question handling skills</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-top-width:0;border-right-width: 0; border-left-width: 0; border-bottom-width: 0; padding-bottom: 15px;">
+                                                                        @Html.RadioButtonFor(m => m.D3, "Excellent")
+                                                                        <label>Excellent</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D3, "Good")
+                                                                        <label>Good</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D3, "Satisfactory")
+                                                                        <label>Satisfactory</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D3, "Poor")
+                                                                        <label>Poor</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-bottom:none; border-right-width: 0; border-left-width: 0;" colspan="2">
+                                                                        <span>4) Gestures, body language and eye contact of the trainer</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-top-width:0;border-right-width: 0; border-left-width: 0; padding-bottom: 15px;">
+                                                                        @Html.RadioButtonFor(m => m.D4, "Excellent")
+                                                                        <label>Excellent</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D4, "Good")
+                                                                        <label>Good</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D4, "Satisfactory")
+                                                                        <label>Satisfactory</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.D4, "Poor")
+                                                                        <label>Poor</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><span style="font-size: 14px; font-weight:bold; margin-left:10px;color:red;">E. How was the Administrative arrangements for the programme</span></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-right-width: 0; border-left-width: 0; padding-top:15px; padding-bottom: 15px;">
+                                                                        @Html.RadioButtonFor(m => m.E1, "Excellent")
+                                                                        <label>Excellent</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.E1, "Good")
+                                                                        <label>Good</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.E1, "Satisfactory")
+                                                                        <label>Satisfactory</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.E1, "Poor")
+                                                                        <label>Poor</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="margin-left: 10px;color:red;">
+                                                                        <span><strong>F. Note down key learning points from this course.</strong></span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" style="border-right-width: 0; border-left-width: 0; padding-top:15px; padding-bottom: 15px;">
+                                                                        @Html.TextAreaFor(m => m.F1, new { @rows = "6", @cols = "110", })
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="margin-left: 10px;color:red;">
+                                                                        <span><strong>G. Overall Rating of the programme on 4 point scale</strong></span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        @Html.RadioButtonFor(m => m.G1, "Excellent")
+                                                                        <label>Excellent</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.G1, "Good")
+                                                                        <label>Good</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.G1, "Satisfactory")
+                                                                        <label>Satisfactory</label>&nbsp;&nbsp;
+                                                                        @Html.RadioButtonFor(m => m.G1, "Poor")
+                                                                        <label>Poor</label>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    @if (Model.SubmitCount == "2")
+                                                    {
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <button type="submit" class="btn btn-default insert-form-btn"> Submit </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                        
+                                                    
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

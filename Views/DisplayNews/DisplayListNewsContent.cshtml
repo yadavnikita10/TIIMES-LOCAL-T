@@ -1,0 +1,56 @@
+﻿@model IEnumerable<TuvVision.BusinessEntities.News_VM>
+
+@{
+    ViewBag.Title = "DisplayListNewsContent";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+<!--Start of main content 2-->
+<div class="main-content2">
+
+    <!--Start of banner header-->
+    <div class="grey-bg-f3 news-bg">
+        <img src="~/News/images/news-banner.jpg" alt="" />
+        <div class="row assignfixedwidth rp-20">
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+    <!--End of banner header-->
+
+
+    <div class="container-fluid white-bg">
+        <div class="row assignfixedwidth">
+            <div class="col-xs-12">
+                <div>
+                    <div>
+                        @if (ViewBag.Data != null)
+                        {
+                                foreach (var item in ViewBag.Data as IEnumerable<TuvVision.BusinessEntities.News_VM>)
+                                    {
+                                    <div class="listing">
+                                        @if (ViewBag.Data != null)
+                                        {
+                                        <div class="news-img">
+                                            <img src="@Url.Content(@item.NewsImage)" style="object-position: center;" alt="">
+                                        </div>
+                                        }
+                                        <div class="news-basic-details">
+                                            <h3>@item.Title</h3>
+                                            <h4><strong>Date</strong> : @item.strCreatedDate</h4>
+                                            <p>@item.StortDescription</p>
+                                            <a href="~/DisplayNews/ReadNewsContent?Id=@item.PK_NewsId" class="transition-all btn news-btn btn-primary">Read More</a>
+                                        </div>
+                                    </div>
+                                    }
+                                          
+                        }
+
+
+
+                    </div><!--end of listing-->
+                </div><!--end of news-->
+            </div>
+        </div>
+    </div>
+    </div>
+
+

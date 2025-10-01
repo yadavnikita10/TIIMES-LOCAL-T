@@ -1,0 +1,218 @@
+﻿@model TuvVision.Models.ReportModel
+@using NonFactors.Mvc.Grid;
+@using System.Web.Mvc;
+
+@{
+    ViewBag.Title = "IRNReports";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@helper CustomRenderingOfReport1(TuvVision.Models.ReportModel Report)
+        {
+    <a href="~/IRNReports/@Report.Report" download="download">
+        @Report.Report
+    </a>
+}
+@helper Edit(TuvVision.Models.ReportModel Report)
+{
+            if (Report.Edit == "1")
+            {
+                //columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "IRNForm", "InspectionReleaseNote", new { @PK_IVR_ID = o.PK_CALL_ID, @PK_RM_ID = o.PK_RM_ID }, new { @class = "fa fa-pencil", title = "ReportName" })).Filterable(true).FilteredAs("custom").Sortable(true).Css("aa");
+                <a href="@Url.Action("IRNForm", "InspectionReleaseNote", new {@PK_IVR_ID = Report.PK_CALL_ID,@PK_RM_ID = Report.PK_RM_ID })" title="Edit"><i class="fa fa-pencil"></i></a>
+            }
+            else
+            {
+
+            }
+}
+
+<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+
+@*Ashwini Scripts here for datatable starts here*@
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<!--export to excel-->
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/buttons.html5.min.js"></script>
+<script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+@*Ashwini Scripts here for datatable ends here*@
+
+@using (Html.BeginForm())
+{
+
+    <div class="main-content3 xs-max-height">
+
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-15">
+                <form method="post">
+                    @Html.HiddenFor(m => m.PK_CALL_ID)
+
+                    <div class="col-xs-12">
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left"> Inspection Release Note / Certificate</h3>
+                        <button type="button" value="CreateRole" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" style="margin-left: 16px" onclick="location.href='@Url.Action("IRNForm", "InspectionReleaseNote")'">Add New IRN</button>
+                        <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex","InspectionReleaseNote")'">
+                            Export To Excel
+                        </button>
+                        @*<button type="submit" class="btn btn-info dynamic-function-btn dynamic-function-btn-2">New Report Ganrate</button>*@
+                        @*<button class="btn btn-info dynamic-function-btn dynamic-function-btn-2" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID} )'">Image</button>*@
+                    </div><!-- /.col -->
+                </form>
+
+                <div class="col-xs-12">
+                    <hr class="custom-hr">
+                </div><!-- /.col -->
+                <!--Table was here-->
+
+            </div><!-- /.row -->
+            @*<div class="col-xs-12">
+                    <table id="example" class="display custom-table" cellspacing="0" width="100%">
+
+                        <thead>
+                            <tr>
+                                @*<th class="remove-search less-width">Action</th>
+                                <th class="remove-search less-width">Sr No</th>
+                                <th>Report Name</th>
+                                <th>Inspection Date</th>
+                                <th>Report Date</th>
+                                <th>Project Name</th>
+                                <th>Report </th>
+                                <th>Created Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @{
+                                int i = 0;
+                            }
+                            @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.ReportModel>)
+                            {
+                                i = i + 1;
+                                <tr>
+                                    <td>@i</td>
+                                    <td>
+                                        <a href="@Url.Action("IRNForm", "InspectionReleaseNote", new {@PK_IVR_ID = item.PK_CALL_ID })" title="Edit">@item.ReportName</a>
+                                    @item.ReportName
+                                    </td>
+                                    <td>@item.inspectionDate</td>
+                                    <td>@item.CraetedDate</td>
+                                    <td>@item.ProjectName</td>
+                                    <td>
+                                        <a href="~/IRNReports/@item.Report" download="download">
+
+                                            <img src="~/PDF-Icon.png" height="50px" width="50px" />
+                                        </a>
+                                    </td>
+
+                                    <td>@item.CraetedDate</td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>*@<!-- /.data table col -->
+            <div class="col-lg-12">
+                <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                    <tr>
+                        <td>
+                            @(Html
+                            .Grid(Model.LstDashboard)
+                            .Build(columns =>
+                            {
+                                //< a href = "@Url.Action("ContactDetails","CompanyMasters",new { @CNT_ID = item.PK_ContID })" style = "margin-right:15px;" title = "Edit" >< i class="fa fa-pencil"></i></a>
+                                //                   <a href = "@Url.Action("DeleteContact","CompanyMasters",new {@CNT_ID=item.PK_ContID })" onclick="return confirm('Are you sure you want to delete Contact record?')" title="Delete"><i class="fa fa-trash"></i></a>
+
+
+                                //columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink("IRNForm", "InspectionReleaseNote", new { PK_IVR_ID = o.PK_IVR_ID }, new { @class = "fa fa-pencil", title = "Edit" }));
+                                //columns.Add().Titled("Edit").Encoded(false).RenderedAs(o => Html.ActionLink(" ", "IRNForm", "InspectionReleaseNote", new { @PK_IVR_ID = o.PK_CALL_ID, @PK_RM_ID = o.PK_RM_ID }, new { @class = "fa fa-pencil", title = "ReportName" })).Filterable(true).FilteredAs("custom").Sortable(true).Css("aa");
+                                columns.Add().Titled("Edit").RenderedAs(c => Edit(c)).Sortable(true);
+                                columns.Add(c => c.ReportName).Titled("Report Name");
+                                columns.Add(c => c.inspectionDate).Titled("Inspection Date");
+                                columns.Add(c => c.CraetedDate).Titled("Report Date");
+                                columns.Add(c => c.ProjectName).Titled("Project Name");
+                                //columns.Add(c => c.Report).Titled("Report");
+                                //columns.Add().Titled("Report").Encoded(false).RenderedAs(o => Html.ActionLink(o.Report, "Report", new { Report = o.Report })).Filterable(true).FilteredAs("custom").Sortable(true).Css("aa");
+                                columns.Add(c => c.Report).Titled("Report File").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true);
+                                //columns.Add().Encoded(false).Titled("Report").Filterable(false).RenderedAs(c => @<div style="width:50px;"><img alt="Image" src='<img src="~/pdf/pdf.png"/>')"/>o.Report</div>);
+                                columns.Add(c => c.SubJob_No).Titled("Sub/Sub-Sub Job No");
+                                columns.Add(c => c.VendorName).Titled("Vendor Name");
+                                columns.Add(c => c.Vendor_Name_Location).Titled("Sub Vendor Name");
+                                columns.Add(c => c.ClientName).Titled("Sub Job PO No");
+                                columns.Add(c => c.Po_No).Titled("Sub-Sub Job PO No");
+                                columns.Add(c => c.Inspector).Titled("Inspector");
+                                columns.Add(c => c.Excuting_Branch).Titled("Excuting_Branch");
+                                columns.Add(c => c.Originating_Branch).Titled("Originating_Branch");
+                            })
+                            .Pageable(pager =>
+                            {
+                                //pager.PageSizes = new DictionaryInt32, String > { { 0, "All" }, { 2, "2" }, { 4, "4" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 2;
+
+                            })
+                            .UsingFilterMode(GridFilterMode.Row)
+                            .Empty("No Data Found")
+                            .Filterable()
+                            .Sortable()
+                            )
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div><!-- /.container-fluid -->
+        <!--End of header-->
+
+    </div>
+    <!--End of Ashwini Code-->
+}
+
+@*<script>
+               [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                   new MvcGrid(element);
+               });
+    </script>*@
+
+<style>
+    table.evaluation > tbody {
+        width: 100% !important;
+        display: table;
+    }
+
+        table.evaluation > tbody > tr td table {
+            width: 100% !important;
+            display: table;
+        }
+</style>
+
+<script>
+    var CustomTextFilter = (function (base) {
+        MvcGridExtends(CustomTextFilter, base);
+
+        function CustomTextFilter(column) {
+            base.call(this, column);
+
+            this.methods = ['contains'];
+            column.grid.lang.custom = { contains: 'Contains' };
+        }
+
+        // Other extension points can be found at MvcGridFilter declaration
+
+        return CustomTextFilter;
+    })(MvcGridFilter);
+
+    new MvcGrid(document.querySelector('.mvc-grid'), {
+        filters: {
+            'custom': CustomTextFilter
+        }
+    });
+</script>
+
+
+
+

@@ -1,0 +1,182 @@
+﻿@model TuvVision.Models.Calls
+
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="grey-bg-f3">
+        <div class="container-fluid">
+            <div class="row assignfixedwidth rp-5">
+
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            <a href="@Url.Action("CallsDashBoard", "Virtual_Call")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
+                               
+                                    <h3 class="form-page-title">Add Call</h3>
+                            
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+    <div class="form-box">
+        <form>
+            <div class="col-xs-12 text-right">
+                <p style="padding:0;margin:0;margin-bottom:10px;color:red;font-weight:bold;font-size: 12px;">Fields marked * are mandatory</p>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Customer Name:</label>
+                    @Html.TextBoxFor(model => model.Company_Name, new { placeholder = "Enter Company Name", @class = "form-control form-control-custom CompanyName" })
+                    <input type="hidden" id="hfCompanyName" name="CompanyName" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Status:</label>
+                    @Html.TextBoxFor(model => model.Status, new { placeholder = "Enter Status", @class = "form-control form-control-custom CompanyName" })
+                    <input type="hidden" id="hfStatus" name="Status" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Source:</label>
+                    @Html.DropDownListFor(model => model.Source, new List<SelectListItem>
+       {
+            new SelectListItem {Text="---Select---",Value="---Select---" },
+           new SelectListItem {Text="Email",Value="Email" },
+           new SelectListItem {Text="Fax",Value="Fax" },
+           new SelectListItem {Text="Phone",Value="Phone" },
+           new SelectListItem {Text="Walk-In",Value="Walk-In" },
+           new SelectListItem {Text="Web",Value="Web" }
+       }, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Urgency:</label>
+                    @Html.DropDownListFor(model => model.Urgency, new List<SelectListItem>
+       {
+           new SelectListItem {Text="---Select---",Value="---Select---" },
+           new SelectListItem {Text="High",Value="High" },
+           new SelectListItem {Text="Low",Value="Low" },
+           new SelectListItem {Text="Med-High",Value="Med-High" },
+           new SelectListItem {Text="Med-Low",Value="Med-Low" },
+           new SelectListItem {Text="Medium",Value="Medium" }
+       }, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Sub-Category:</label>
+                    @Html.DropDownListFor(model => model.Sub_Category, new List<SelectListItem>
+       {
+            new SelectListItem {Text="---Select---",Value="---Select---" },
+           new SelectListItem {Text="Kick off meeting",Value="Kick off meeting" },
+           new SelectListItem {Text="Pre inspection meeting",Value="Pre inspection meeting" },
+           new SelectListItem {Text="Stage Inspection",Value="Stage Inspection" },
+           new SelectListItem {Text="Final Inspection",Value="Final Inspection" },
+
+       }, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Contact Name:</label>
+                    @Html.TextBoxFor(model => model.ContactName, new { placeholder = "Enter Contact Name", @class = "form-control form-control-custom CompanyName" })
+                    <input type="hidden" id="hfContactName" name="ContactName" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Call Received Date:</label>
+                    @Html.TextBoxFor(model => model.Call_received_date, new { placeholder = "Select Call Received Date", @class = "form-control form-control-custom CompanyName datepickerC" })
+                    <input type="hidden" id="hfCallreceiveddate" name="Callreceiveddate" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Call Requested Date:</label>
+                    @Html.TextBoxFor(model => model.Call_Request_Date, new { placeholder = "Select Call Requested Date", @class = "form-control form-control-custom CompanyName datepickerC" })
+                    <input type="hidden" id="hfCallRequestDate" name="CallRequestDate" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Type:</label>
+                    @Html.TextBoxFor(model => model.Type, new { placeholder = "Enter Type", @class = "form-control form-control-custom CompanyName" })
+                    <input type="hidden" id="hfType" name="Type" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Category:</label>
+                    @Html.TextBoxFor(model => model.Category, new { placeholder = "Enter Category", @class = "form-control form-control-custom CompanyName" })
+                    <input type="hidden" id="hfCategory" name="Type" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Vendor Name:</label>
+                    @Html.TextBoxFor(model => model.Vendor_Name, new { placeholder = "Enter Vendor Name", @class = "form-control form-control-custom CompanyName" })
+                    <input type="hidden" id="hfVendorName" name="Type" />
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label>Project Name:</label>
+                    @Html.TextAreaFor(model => model.Project_Name, new { placeholder = "Enter Project Name", @class = "form-control form-control-custom", @rows = "3" })
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label>Job Location:</label>
+                    @Html.TextAreaFor(model => model.Job_Location, new { placeholder = "Enter Job Location", @class = "form-control form-control-custom", @rows = "3" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Client's Email:</label>
+                    @Html.TextBoxFor(model => model.Client_Email, new { placeholder = "Enter Client Email", @class = "form-control form-control-custom CompanyName" })
+                    <input type="hidden" id="hfClientEmail" name="Type" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Vendor's Email:</label>
+                    @Html.TextBoxFor(model => model.Vendor_Email, new { placeholder = "Enter Vendors Email", @class = "form-control form-control-custom CompanyName" })
+                    <input type="hidden" id="hfVendorEmail" name="Type" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Home Branch:</label>
+                    @Html.TextBoxFor(model => model.Tuv_Branch, new { placeholder = "Enter Home Branch", @class = "form-control form-control-custom CompanyName" })
+                    <input type="hidden" id="hfHomeBranch" name="Type" />
+                </div>
+            </div>
+            <div class="col-xs-12 text-center">
+                <button type="reset" class="btn btn-default news-btn">Reset</button>
+                <button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i>ADD</button>
+            </div>
+
+    </form>
+                                </div>
+                                        </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            </div>
+        </div>
+    </div>
+
+}
