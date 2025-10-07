@@ -27,7 +27,9 @@ namespace TuvVision.Controllers
             ViewBag.SubCatlist = new SelectList(Data, "Br_Id", "Branch_Name");
             var UserData = objISM.GetInspectorList1();
             ViewBag.Userlist = new SelectList(UserData, "PK_UserID", "FirstName");
+            DataSet DSGetAllddllst = new DataSet();
 
+           
             if (PKId > 0)
             {
 

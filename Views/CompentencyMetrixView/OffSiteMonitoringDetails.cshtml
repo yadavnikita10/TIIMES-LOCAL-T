@@ -104,6 +104,26 @@
             }
     </style>
 
+<script>
+
+    $(function () {
+        $(".Abc").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            minDate: "-7d",
+            maxDate: "+0M",
+        });
+        $(".Abc").each(function () {
+            if (!$(this).val().trim()) {
+                var today = $.datepicker.formatDate('dd/mm/yy', new Date());
+                $(this).val(today);
+            }
+        });
+    });
+</script>
+
     @using (Html.BeginForm("OffMonitoringDetails", "CompentencyMetrixView", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
     {
         <input type="hidden" id="hdnDateValidation" />
@@ -276,9 +296,15 @@
                                                                 <strong>&nbsp;&nbsp;&nbsp;Notes </strong> :
                                                             </span>
                                                             <span>
-                                                                1) <span style="color:#ff0000;">*</span> -<b>Mandatory</b>
+                                                               1) <span style="color:#ff0000;">*</span> -<b>Mandatory</b>
 
-                                                            </span>
+                                                            </span><br />
+                                                <span>
+                                                    &nbsp;&nbsp;&nbsp;2) Offsite monitoring report shall be prepared within seven days of the activity.
+
+
+
+                                                </span>
                                                             <br>
                                                             <br>
                                                             
@@ -311,17 +337,28 @@
 
 
                                                 <div class="form-box" id="textid">
-
+                                                    
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-4">
 
+                                                            
+
                                                             <div class="form-group">
                                                                 <label>Date :</label>
-                                                                @Html.TextBoxFor(model => model.Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Date", @class = "form-control CallRecivedate ", autocomplete = "off", @readonly = "readonly" })
-                                                                @*@Html.TextBoxFor(model => model.Date, new { @placeholder = "Date Of Inspection", @class = "form-control" })*@
+                                                                @Html.TextBoxFor(model => model.Date, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Date", @class = "form-control CallRecivedate Abc", autocomplete = "off"})
+                                                               
                                                                 @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger validation-msg" })
                                                             </div>
-                                                        </div>
+                                                            @*<div class="form-group">
+                                                                @Html.TextBoxFor(model => model.Date, new
+                                                       {
+                                                           placeholder = "Date",
+                                                           @class = "form-control CallRecivedate Abc",
+                                                           autocomplete = "off"
+                                                       })
+                                                                </div>*@
+
+                                                            </div>
 
 
                                                         @Html.HiddenFor(m => m.inspectorId)

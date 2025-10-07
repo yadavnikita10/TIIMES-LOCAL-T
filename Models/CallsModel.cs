@@ -502,7 +502,9 @@ namespace TuvVision.Models
         public string InspectionLocation_ { get; set; }
         public string TUVEmpCode { get; set; }
         public bool chkIfTravelExpenseOnPDF { get; set; }
-
+        public bool Manufact_Contra_Prod_Fabri { get; set; }
+        public bool stock_Trade_Raw { get; set; }
+        public bool TUVICustomer_End_Plant { get; set; }
 
         public string ActionHidden { get; set; }
         public string JobBlock { get; set; }

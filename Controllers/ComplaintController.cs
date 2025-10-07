@@ -23,6 +23,10 @@ namespace TuvVision.Controllers
         DALComplaintRegisterMaster objDAM = new DALComplaintRegisterMaster();
         ComplaitRegister CMREegister = new ComplaitRegister();
         DALCallMaster objDAM1 = new DALCallMaster();
+        List<NameCode> lstProjectType = new List<NameCode>();
+        SafetyInsidentReport objM = new Models.SafetyInsidentReport();
+        DALSafetyInsidentReport objISM = new DALSafetyInsidentReport();
+
         // GET: Complaint
         public ActionResult Index()
         {
@@ -74,7 +78,7 @@ namespace TuvVision.Controllers
                                 ModifiedDate = Convert.ToString(dr["ModifiedDate"]),
                                 AttributeToFaultiInspection = Convert.ToString(dr["AttributeToFaultiInspection"]),
                                 showData1 = Convert.ToString(dr["showData1"]),
-                                
+                              
                             }
                             );
                     }
@@ -149,7 +153,8 @@ namespace TuvVision.Controllers
                                 ModifiedBy = Convert.ToString(dr["ModifiedBy"]),
                                 ModifiedDate = Convert.ToString(dr["ModifiedDate"]),
                                 AttributeToFaultiInspection = Convert.ToString(dr["AttributeToFaultiInspection"]),
-                                showData1 = Convert.ToString(dr["showData1"])
+                                showData1 = Convert.ToString(dr["showData1"]),
+                               
                             }
                             );
 
@@ -176,6 +181,8 @@ namespace TuvVision.Controllers
             List<Audit> lstAuditorNamee = new List<Audit>();
             dsAuditorName = objDALAudit.BindAuditorName();
 
+
+
             if (dsAuditorName.Tables[0].Rows.Count > 0)
             {
                 lstAuditorNamee = (from n in dsAuditorName.Tables[0].AsEnumerable()
@@ -187,12 +194,32 @@ namespace TuvVision.Controllers
                                    }).ToList();
             }
 
+
+
             IEnumerable<SelectListItem> AuditorName;
             AuditorName = new SelectList(lstAuditorNamee, "DAuditorCode", "DAuditorName");
             ViewBag.AuditorName = AuditorName;
             ViewData["AuditorName"] = AuditorName;
             ViewData["AuditorName"] = lstAuditorNamee;
             #endregion
+
+            var Data1 = objDalCalls.GetBranchList();
+            ViewBag.SubCatlist_ = new SelectList(Data1, "Br_Id", "Branch_Name");
+            DataSet DSGetAllddllst = new DataSet();
+            DSGetAllddllst = objISM.GetDropDownList();
+
+            if (DSGetAllddllst.Tables[0].Rows.Count > 0)
+            {
+                lstProjectType = (from n in DSGetAllddllst.Tables[0].AsEnumerable()
+                                  select new NameCode()
+                                  {
+                                      Name = n.Field<string>(DSGetAllddllst.Tables[0].Columns["ProjectName"].ToString()),
+                                      Code = n.Field<Int32>(DSGetAllddllst.Tables[0].Columns["PK_ID"].ToString())
+
+                                  }).ToList();
+            }
+            ViewBag.OBSType = lstProjectType;
+
 
             #region Bind Product category
             ViewData["Drpproduct"] = objDAM1.GetDrpList();
@@ -262,9 +289,12 @@ namespace TuvVision.Controllers
                         CMREegister.ActionTaken = Convert.ToString(DTComplaint.Rows[0]["ActionTaken"]);
                         CMREegister.ProjectName = Convert.ToString(DTComplaint.Rows[0]["ProjectName"]);
                         CMREegister.ShareLessonsLearnt = Convert.ToBoolean(DTComplaint.Rows[0]["ShareLessonsLearnt"]);
-
+                        CMREegister.OtherReason = Convert.ToString(DTComplaint.Rows[0]["OtherReason"]);
+                        CMREegister.DelayReason = Convert.ToString(DTComplaint.Rows[0]["DelayReason"]);
                         CMREegister.Call_no = Convert.ToString(DTComplaint.Rows[0]["CallNo"]);
                         CMREegister.ReferenceDocument = Convert.ToString(DTComplaint.Rows[0]["ReferenceDocument"]);
+                        CMREegister.OBSID = Convert.ToString(DTComplaint.Rows[0]["OBSID"]);
+                        
                        // CMREegister.Hide = Convert.ToBoolean(DTComplaint.Rows[0]["Hide2"]);
 
                         //Added by Ankush for Delete file and update file

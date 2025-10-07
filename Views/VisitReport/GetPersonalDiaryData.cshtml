@@ -6,14 +6,16 @@
     Layout = "~/Views/Shared/_TuvVision.cshtml";
 }
 
-<link href="~/AllJsAndCss/css/MVCGridN.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+@*<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css" />*@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src="~/Scripts/MvcGrid/jquery.quicksearch.js"></script>
-<script src="~/Scripts/MvcGrid/dataTables.fixedColumns.min.js"></script>
-<script>
+<!-- jQuery and DataTables Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+@*<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>*@
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+@*<script>
     $(function () {
         $(".FromD").datepicker({
             dateFormat: 'dd/mm/yy',//check change
@@ -32,7 +34,7 @@
             yearRange: "-100:+50"
         });
     });
-</script>
+</script>*@
 
 
 
@@ -99,7 +101,7 @@
         </div>
             </div>
             <div class="col-xs-12">
-                <table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
+                @*<table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
                     <tr>
                         <td>
                             @(Html
@@ -108,8 +110,6 @@
                             {
                                 columns.Add().Titled("Edit").RenderedAs(c => Edit(c)).Sortable(true);
                                 columns.Add(c => c.Person).Titled("Inspector Name");
-                                //columns.Add(c => c.Downloadfile).Titled("Download File").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true);
-                                //columns.Add(c => c.Downloadfile).Titled("Download");
                                 columns.Add(c => c.DateofInspection).Titled("Date of Inspection");
                                 columns.Add(c => c.IVRRefNo).Titled("IVR No");
                                 columns.Add(c => c.VendorName).Titled("Vendor Name");
@@ -123,8 +123,7 @@
                                 columns.Add(c => c.No_For_lot_invoicing).Titled("No For lot invoicing");
                                 columns.Add(c => c.BolierOwner).Titled("Bolier Owner");
                                 columns.Add(c => c.BoilerManufacturer).Titled("Boiler Manufacturer");
-                                columns.Add(c => c.BoilerComponentManufacturer).Titled("Boiler Component Manufacturer");
-                                //columns.Add(c => c.Date).Titled("Date");
+                                columns.Add(c => c.BoilerComponentManufacturer).Titled("Boiler Component Manufacturer");                                
                             })
                             .Pageable(pager =>
                             {
@@ -140,6 +139,62 @@
                             )
                         </td>
                     </tr>
+                </table>*@
+                <table id="visitDiaryTable" class="display responsive nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Edit</th>
+                            <th>Inspector Name</th>
+                            <th>Date of Inspection</th>
+                            <th>IVR No</th>
+                            <th>Vendor Name</th>
+                            <th>Job Number</th>
+                            <th>SAP Number</th>
+                            <th>Inspection Authority Reference No</th>
+                            <th>Boliers Maker No</th>
+                            <th>Form No Certificate No</th>
+                            <th>Quality Offered Final Inspection</th>
+                            <th>Size</th>
+                            <th>No For Lot Invoicing</th>
+                            <th>Boiler Owner</th>
+                            <th>Boiler Manufacturer</th>
+                            <th>Boiler Component Manufacturer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.lstData)
+                        {
+                            <tr>
+                               <td>
+                    @if (!string.IsNullOrEmpty(item.Downloadfile) && item.Pk_id != 0)
+                    {
+                        <a href="@Url.Action("VisitReportForm", "VisitReport", new {
+                            PK_CALL_ID = Convert.ToInt32(item.Downloadfile),
+                            PK_RM_ID = item.Pk_id,
+                            PK_IVR_ID = item.PK_IVR_ID
+                        })" title="Edit">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    }
+                </td>
+                                <td>@item.Person</td>
+                                <td>@item.DateofInspection</td>
+                                <td>@item.IVRRefNo</td>
+                                <td>@item.VendorName</td>
+                                <td>@item.JobNumber</td>
+                                <td>@item.Sapnumber</td>
+                                <td>@item.Inspection_Authority_ReferenceNo</td>
+                                <td>@item.Boliers_Maker_No</td>
+                                <td>@item.Form_no_Certificate_No</td>
+                                <td>@item.Quality_offered_Final_Inspection</td>
+                                <td>@item.Size</td>
+                                <td>@item.No_For_lot_invoicing</td>
+                                <td>@item.BolierOwner</td>
+                                <td>@item.BoilerManufacturer</td>
+                                <td>@item.BoilerComponentManufacturer</td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -182,8 +237,31 @@
     }
 </script>
 
-
 <script>
+    $(function () {
+        $(".FromD, .ToD").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+
+        $('#visitDiaryTable').DataTable({
+            //responsive: true,
+            pageLength: 10,
+            "scrollX": true,
+            "scrollY": "400px",
+            lengthMenu: [5, 10, 25, 50, 100],
+            order: [],
+            language: {
+                emptyTable: "No data found"
+            }
+        });
+    });
+
+</script>
+
+@*<script>
            [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
                new MvcGrid(element);
            });
@@ -201,7 +279,7 @@
             });
 
 
-</script>
+</script>*@
 
 
 

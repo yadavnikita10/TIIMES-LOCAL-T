@@ -53,7 +53,8 @@
                 border-radius: 50%;
                 vertical-align: text-top;
             }
-             ul.Attachment > li a.deleteItem1 {
+
+            ul.Attachment > li a.deleteItem1 {
                 color: white;
                 font-size: 10px;
                 background: #e91e1e;
@@ -66,6 +67,15 @@
 @*<--Code Added By Rahul -->*@
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+@*<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />*@
+
+@*<link href="~/Content/css/bootstrap-multiselect.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-multiselect.js"></script>*@
+
+
+@*<link href="~/Content/css/bootstrap-multiselect.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-multiselect.js"></script>*@
+
 <script>
 
     $(function () {
@@ -127,7 +137,7 @@
                                             </div>
                                             @Html.HiddenFor(m => m.Complaint_No)
                                             @Html.HiddenFor(m => m.CloseMailSent)
-                                            
+
                                             @*<div class="col-xs-12 col-sm-4">
                                                     <div class="form-group">
                                                         <label>Complaint Number:</label>
@@ -150,7 +160,7 @@
                                                     <div class="form-group">
                                                         <label>Complaint Date:</label>
                                                         @*@Html.TextBoxFor(model => model.Complaint_Date, new { placeholder = "Enter Complaint Date", @class = "form-control form-control-custom  Abc", @autocomplete="off"})*@
-                                                        @Html.TextBoxFor(model => model.Complaint_Date, "{0:dd MMM yyyy}", new { placeholder = "Enter Complaint Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off", @id = "complaint_date" })
+                                                        @Html.TextBoxFor(model => model.Complaint_Date, "{0:dd MMM yyyy}", new { placeholder = "Enter Complaint Date", @class = "form-control form-control-custom CompanyName Abc", @Autocomplete = "off", @id = "Complaint_Date" })
                                                         @Html.ValidationMessageFor(model => model.Complaint_Date, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -224,22 +234,55 @@
                                                         @Html.ValidationMessageFor(model => model.SubVendorVendorPO, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
-                                                <div class="col-xs-12 col-sm-4">
+                                                <div class="col-xs-12 col-sm-3" style="pointer-events:none;">
                                                     <div class="form-group">
                                                         <label>Originating Branch:</label>
-                                                        @Html.TextBoxFor(model => model.Originating_Branch, new { placeholder = "Enter Originating Branch", @class = "form-control form-control-custom CompanyName " })
-                                                        @Html.ValidationMessageFor(model => model.Originating_Branch, "", new { @class = "text-danger" })
+                                                        @*@Html.TextBoxFor(model => model.Originating_Branch, new { placeholder = "Enter Originating Branch", @class = "form-control form-control-custom CompanyName " })
+                                                        @Html.ValidationMessageFor(model => model.Originating_Branch, "", new { @class = "text-danger" })*@
+                                                        @if (ViewBag.SubCatlist_ != null)
+                                                        {
+                                                            @Html.DropDownListFor(m => m.Originating_Branch, ViewBag.SubCatlist_ as IEnumerable<SelectListItem>, "Enter Originating Branch", new { @class = "form-control form-control-custom CompanyName ",@id= "Originating_Branch" })
+                                                            @Html.HiddenFor(m => m.Originating_Branch)
+                                                        }
+                                                        @*@Html.ValidationMessageFor(model => model.or, "", new { @class = "text-danger validation-msg" })*@
                                                     </div>
                                                 </div>
-
-                                                <div class="col-xs-12 col-sm-4">
+                                                 
+                                                <div class="col-xs-12 col-sm-3">
                                                     <div class="form-group">
                                                         <label>Executing Branch:</label>
                                                         @Html.TextBoxFor(model => model.Executing_Branch, new { placeholder = "Enter Executing Branch", @class = "form-control form-control-custom CompanyName" })
                                                         @Html.ValidationMessageFor(model => model.Executing_Branch, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
-                                                <div class="col-xs-12 col-sm-4">
+
+                                                <div class="col-xs-12 col-sm-3" style="pointer-events:none;">
+                                                    <div class="form-group">
+                                                        <label>OBS type:<span style="color:#ff0000;">*</span></label>
+                                                        @{
+                                                            if (Model != null)
+                                                            {
+                                                                if (ViewBag.OBSType != null)
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.OBSID, new SelectList(@ViewBag.OBSType, "Code", "Name"), "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control" })
+                                                                }
+
+                                                                else if (ViewData["ProjectTypeItems"] != null)
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.OBSID, (IEnumerable<SelectListItem>)ViewData["ProjectTypeItems"], "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control" })
+                                                                }
+
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.DropDownListFor(model => model.OBSID, new SelectList(@ViewBag.OBSType, "Code", "Name"), "Select OBS Type", new { @id = "ddlProjectType", @class = "form-control" })
+                                                            }
+                                                            @Html.ValidationMessageFor(m => m.OBSID, "", new { @class = "text-danger validation-msg" })
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 col-sm-3">
                                                     <div class="form-group">
                                                         <label>Inspector Name:</label>
                                                         @*@if (ViewBag.check == "inspector")
@@ -317,7 +360,6 @@
 
                                                         @*@Html.DropDownListFor(m => m.Inspector_Name, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Inspectors--", new { @class= "form-control" ,@id = "ddlContactType" })*@
                                                         @*@Html.DropDownListFor(model => model.Inspector_Name, new SelectList(@ViewBag.SubCatlist, "Code", "Name"), "---Select Contact---", new { @id = "ddlContactType", @class = "form-control" })*@
-
                                                     </div>
                                                 </div>
                                                 @*<div class="col-xs-12 col-sm-4">
@@ -350,7 +392,6 @@
                                                             @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>*@
-
                                                 @*<div class="row">*@
                                                 <div class="col-xs-12 col-sm-4">
                                                     <div class="form-group">
@@ -359,7 +400,6 @@
                                                         </div>
                                                         @if (ViewBag.check1 == "productcheck1")
                                                         {
-
                                                             <select id="Category" class="form-control form-multiselect-city" multiple="multiple" name="Category" placeholder="Select Option" required="required">
                                                                 @foreach (var item in ViewBag.Category)
                                                                 {
@@ -372,33 +412,23 @@
                                                                     {
                                                                         <option value="@item.Value">@item.Text</option>
                                                                     }
-
                                                                 }
                                                             </select>
                                                         }
                                                         else
                                                         {
                                                             <select id="Category" class="form-control form-multiselect-city" multiple="multiple" name="Category" placeholder="Select Option" required="required">
-
                                                                 @{
                                                                     foreach (var item in ViewData["Category1"] as IEnumerable<TuvVision.Models.ComplaitRegister>)
                                                                     {
-
                                                                         @*<option value="@item.ComplaintCategoryName">@item.ComplaintCategoryName&nbsp; &nbsp;</option>*@
                                                                         <option value="@item.ComplaintCategoryId">@item.ComplaintCategoryName&nbsp; &nbsp;</option>
-
                                                                     }
                                                                 }
                                                             </select>
                                                                     }
-
                                                         @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
-
                                                     </div>
-
-
-
-
                                                     <input type="text" class="hidden" id="Category" />
                                                 </div>
 
@@ -556,6 +586,28 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row" id="Showdelaydropdown">
+                                                <div class="col-xs-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="StaticDropdown">Reason For Delay:<span style="color:#ff0000;">*</span></label>
+                                                        @Html.DropDownListFor(model => model.DelayReason, new List<SelectListItem>
+                                                        {
+                                                            new SelectListItem { Text = "Ivestigation took time", Value = "Ivestigation took time" },
+                                                            new SelectListItem { Text = "Delay in Response from inspector", Value = "Delay in response from inspector"}, // Pre-selected
+                                                            new SelectListItem { Text = "Delay in Response from vendor", Value = "Delay in response from vendor"},
+                                                            new SelectListItem { Text = "Delay in Response from Customer", Value = "Delay in response from Customer"},
+                                                            new SelectListItem { Text = "other", Value = "other" }
+                                                        }, "Select an option", new { @class = "form-control", id = "StaticDropdown" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-6 other-reason-container">
+                                                    <div class="form-group">
+                                                        <label>Detail For Delay Reason:<span style="color:#ff0000;">*</span></label>
+                                                        @Html.TextAreaFor(model => model.OtherReason, new { placeholder = "Other Reason", @class = "form-control form-control-custom OtherReason", @rows = "3" })
+                                                        @Html.ValidationMessageFor(model => model.OtherReason, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-xs-12 col-sm-12">
                                                     <div class="form-group">
@@ -594,19 +646,22 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div>
+                                                <hr class="custom-hr1 line">
+                                            </div>
+                                            <div class="row" id="txtshowdiv">
                                                 <div class="col-xs-12 col-sm-4">
                                                     <div class="form-group">
                                                         <label>Status Of Complaint:</label>
                                                         @Html.DropDownListFor(m => m.States_Of_Complaints, new List<SelectListItem>
                                                                      {
-                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     //new SelectListItem{ Text="---SELECT---", Value = "" },
                                                                      new SelectListItem{ Text="Open", Value = "Open" },
                                                                      new SelectListItem{ Text="Closed", Value = "Closed" },
                                                                      //new SelectListItem{ Text="On Going", Value = "On Going" },
 
 
-                                                                     }, new { @class = "form-control", @id = "PT" })
+                                                                     }, new { @class = "form-control", @id = "PT1" })
                                                         @Html.ValidationMessageFor(m => m.States_Of_Complaints, "", new { @class = "text-danger validation-msg" })
                                                     </div>
                                                 </div>
@@ -615,13 +670,14 @@
                                                         <label>Attribute to faulty Inspection:</label>
                                                         @Html.DropDownListFor(m => m.AttributeToFaultiInspection, new List<SelectListItem>
                                                                      {
-                                                                     new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                     //new SelectListItem{ Text="---SELECT---", Value = "" },
+                                                                      new SelectListItem{ Text="No", Value = "No" },
                                                                      new SelectListItem{ Text="Yes", Value = "Yes" },
-                                                                     new SelectListItem{ Text="No", Value = "No" },
+
                                                                      //new SelectListItem{ Text="On Going", Value = "On Going" },
 
 
-                                                                     }, new { @class = "form-control", @id = "PT" })
+                                                                     }, new { @class = "form-control", @id = "PT2" })
                                                         @Html.ValidationMessageFor(m => m.AttributeToFaultiInspection, "", new { @class = "text-danger validation-msg" })
                                                     </div>
                                                 </div>
@@ -651,7 +707,7 @@
                                                                                 @foreach (var item in Model.FileDetails)
                                                                                 {
                                                                                     <li>
-                                                                                        <a class="title" href="/Complaint/Download/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                                        <a class="title" href="/Complaint/Download/?p=@(item.IDS + item.Extension)&d=@item.PK_ID&name=@item.FileName">@item.FileName</a>
                                                                                         <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem">X</a>
                                                                                     </li>
                                                                                 }
@@ -693,7 +749,7 @@
                                                                     @foreach (var item in Model.ATT1)
                                                                     {
                                                                         <li>
-                                                                            <a class="title1" href="~/Complaint/Download2/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                            <a class="title1" href="~/Complaint/Download2/?p=@(item.IDS + item.Extension)&d=@item.PK_ID&name=@item.FileName">@item.FileName</a>
                                                                             <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem1">X</a>
                                                                         </li>
                                                                     }
@@ -736,7 +792,7 @@
                                                                     @foreach (var item in Model.ATT2)
                                                                     {
                                                                         <li>
-                                                                            <a class="title1" href="~/Complaint/Download2/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                            <a class="title1" href="~/Complaint/Download2/?p=@(item.IDS + item.Extension)&d=@item.PK_ID&name=@item.FileName">@item.FileName</a>
                                                                             <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem1">X</a>
                                                                         </li>
                                                                     }
@@ -778,7 +834,6 @@
                                                                     {
                                                                         <li>
                                                                             <a class="title1" href="~/Complaint/Download2/?p=@(item.IDS + item.Extension)&d=@item.PK_ID&name=@item.FileName">@item.FileName</a>
-
                                                                             <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem1">X</a>
                                                                         </li>
                                                                     }
@@ -819,7 +874,7 @@
                                                                     @foreach (var item in Model.ATT4)
                                                                     {
                                                                         <li>
-                                                                            <a class="title1" href="~/Complaint/Download2/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                            <a class="title1" href="~/Complaint/Download2/?p=@(item.IDS + item.Extension)&d=@item.PK_ID&name=@item.FileName">@item.FileName</a>
                                                                             <a href="javascript:void(0);" data-id="@item.PK_ID" class="deleteItem1">X</a>
                                                                         </li>
                                                                     }
@@ -840,10 +895,10 @@
                                             </div>
 
                                             @*<div class="row">
-                                                <div class="col-xs-12">
-                                                    @Html.CheckBoxFor(model => model.Hide)
-                                                </div>
-                                            </div>*@
+                                                    <div class="col-xs-12">
+                                                        @Html.CheckBoxFor(model => model.Hide)
+                                                    </div>
+                                                </div>*@
 
 
 
@@ -856,13 +911,13 @@
                                                 @if (Model != null)
                                                 {
                                                     @*<button type="submit" class="btn btn-default insert-form-btn" onclick="return Validate(event);"><i class="fa fa-plus-circle"></i> Save</button>*@
-                                                    <button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Save</button>
+                                                    <button type="submit" id="btnsubmit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Save</button>
                                                 }
                                                 else
                                                 {
                                                     <button type="reset" class="btn btn-default news-btn"> Reset</button>
                                                     @*<button type="submit" class="btn btn-default insert-form-btn" onclick="return Validate(event);"><i class="fa fa-plus-circle"></i> Save</button>*@
-                                                    <button type="submit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Save</button>
+                                                    <button type="submit" id="btnsubmit" class="btn btn-default insert-form-btn"><i class="fa fa-plus-circle"></i> Save</button>
                                                 }
                                             </div>
 
@@ -889,6 +944,7 @@
                                                     <tr>
                                                         <td>Measurement</td>
                                                         <td>item dimension, fit-up issues</td>
+
                                                     </tr>
                                                     <tr>
                                                         <td>Identification</td>
@@ -911,7 +967,10 @@
                                                         <td>Independence, Integrity, Independence   </td>
                                                     </tr>
                                                 </table>
+
                                             </div>
+
+
                                         </form>
                                     </div>
                                 </div>
@@ -935,10 +994,12 @@
                     type: "POST",
                     contentType: "application/json;charset-utf-8",
                     success: function (data) {
+
                         response($.map(data, function (item) {
                             return { label: item.Originating_Branch, value: item.Originating_Branch };
                         }))
                     },
+
                 });
             }
         });
@@ -954,6 +1015,7 @@
                     type: "POST",
                     contentType: "application/json;charset-utf-8",
                     success: function (data) {
+
                         response($.map(data, function (item) {
                             return { label: item.Executing_Branch, value: item.Executing_Branch };
                         }))
@@ -997,9 +1059,11 @@
                     type: "POST",
                     contentType: "application/json;charset-utf-8",
                     success: function (data) {
+
                         response($.map(data, function (item) {
                             //alert(JSON.stringify(data))
                             return { label: item.Control_No, value: item.Control_No };
+
                         })
                     )
                     },
@@ -1015,6 +1079,7 @@
 
 
 <script>
+
     $(function () {
         $('#Inspector_Nameedit').multiselect({
             selectAllValue: 'multiselect-all',
@@ -1043,6 +1108,7 @@
                     $.each(result, function (i, item) {
                         //$("#Inspector_Name").append('<option value="' + item.PKUserId + '">' + item.Inspector_Name + '</option>');
                         $("#Auditor").append('<option value="' + item.PKUserId + '">' + item.Inspector_Name + '</option>');
+
                     });
                     $('#Auditor').multiselect({
                         selectAllValue: 'multiselect-all',
@@ -1054,18 +1120,26 @@
                         nonSelectedText: 'Select Inspector Name',
                     });
                 },
+
                 error: function (errormsg) {
                     alert(errormsg.responseText);
                 }
+
             });
+
         });
+
     }
     );
+
+
     //$(function () {
     //    if (("#Executing_Branch") == "") {
     //        $('#Inspector_Name').removeAttr("")
     //    }
     //})
+
+
     //$(function ()
     //{
 
@@ -1074,13 +1148,18 @@
 
 
 </script>
+
+
+
 <link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
 <script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+
 <script>
     $("#Inspector_Name").multiselect({
         includeSelectAllOption: true
     });
 </script>
+
 <script>
     $('.form-multiselect-city').multiselect({
         enableFiltering: true,
@@ -1088,6 +1167,7 @@
         enableCaseInsensitiveFiltering: true
     });
 </script>
+
 @*<script>
         $("#Executing_Branch").blur(
                 function getCityList() {
@@ -1158,6 +1238,25 @@
     </script>*@
 <script>
     $(document).ready(function () {
+        $("#Showdelaydropdown").hide();
+        debugger;
+        toggleOtherReason();
+        //$(function () {
+            function toggleOtherReason() {
+                if ($('#StaticDropdown').val() != "") {
+                    $("#Showdelaydropdown").show();
+                } else {
+                    $("#Showdelaydropdown").hide();
+                }
+            }
+
+            toggleOtherReason();
+            $('#Showdelaydropdown').change(toggleOtherReason);
+            ChangeAttributable();
+        //});
+    })
+
+    $(document).ready(function () {
         $('.deleteItem').click(function (e) {
             debugger;
             e.preventDefault();
@@ -1165,7 +1264,7 @@
             var EnquiryID = $("#EQ_ID").val();
             if (confirm('Do you really want to delete this file?')) {
                 $.ajax({
-                    url: '@Url.Action("DeleteFileFormat")',
+                   url: '@Url.Action("DeleteFile")',
                     type: 'POST',
                     data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
                 }).done(function (data) {
@@ -1194,7 +1293,7 @@
             var EnquiryID = $("#EQ_ID").val();
             if (confirm('Do you really want to delete this file?')) {
                 $.ajax({
-                    url: '@Url.Action("DeleteFile")',
+                    url: '@Url.Action("DeleteFileFormat","Complaint")',
                     type: 'POST',
                     data: { id: $(this).data('id'), EnquiryID: $("#EQ_ID").val() }
                 }).done(function (data) {
@@ -1273,7 +1372,11 @@
                     $("#EndUser").val(address.EndUser).val();
                     $("#ProjectName").val(address.ProjectName).val();
                     $("#VendorPO").val(address.VendorPO).val();
-                    $("#SubVendorVendorPO").val(address.SubVendorVendorPO).val()
+                    $("#SubVendorVendorPO").val(address.SubVendorVendorPO).val();
+                    console.log("JOBSID from server:", address.JOBSID);
+                    $("#ddlProjectType").val(address.JOBSID);
+                    $("#Originating_Branch").val(address.Originating_Branch);
+                    ChangeAttributable();
                 };
                 Address.error = function () { alert("Error in Getting Address !"); };
                 $.ajax(Address);
@@ -1290,6 +1393,7 @@
 
 <script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
 <link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/moment.min.js"></script>
 <script>
     $('.form-multiselect-city').multiselect({
         enableFiltering: true,
@@ -1312,10 +1416,11 @@
     });
 </script>
 
-@*<script>
+<script>
 
- 
-    function Validate(event) {
+
+    function Validate(event)
+    {
         debugger;
 
         var complaint_date = $("#complaint_date").val();
@@ -1329,7 +1434,7 @@
         var Date_Of_FinalReply1 = moment(Date_Of_FinalReply, "DD/MM/YYYY");
         var Date_Of_PreliminaryReply1 = moment(Date_Of_PreliminaryReply, "DD/MM/YYYY");
 
-        var Status = $('select[name="States_Of_Complaints"]').val(); 
+        var Status = $('select[name="States_Of_Complaints"]').val();
         console.log(Status);
 
         //var Status = $('#States_Of_Complaints option:selected').val();
@@ -1351,7 +1456,6 @@
             alert("Date Of Corrective Action cannot be earlier than Date Of Final Reply");
             return false;
         }
-
         if (Status == 'Closed') {
             if (Date_Of_Aknowledgement == "" || Date_Of_Aknowledgement == null) {
                 alert("Please select Date Of Acknowledgment");
@@ -1366,9 +1470,188 @@
                 return false;
             }
         }
-
-        
         return true;
     }
 
-</script>*@
+</script>
+<script>
+        $('#Date_Of_Aknowledgement').change(function () {
+            debugger;
+            var Complaint_Date = $('#Complaint_Date').val();
+            var Date_Of_Aknowledgement = $(this).val();
+            var a = checkDateConstraints(Complaint_Date, Date_Of_Aknowledgement, "Date Of Acknowledgment can not be Less than Complaint Date.");
+          if (a == 1) {
+
+            $(this).val("");
+
+        }
+         })
+
+
+        $('#Date_Of_PreliminaryReply').change(function () {
+            debugger;
+                var Date_Of_Aknowledgement = $('#Date_Of_Aknowledgement').val();
+                var Date_Of_PreliminaryReply = $(this).val();
+                var a = checkDateConstraints(Date_Of_Aknowledgement, Date_Of_PreliminaryReply, "Date of Preliminiary cannot be less than Date Of Acknowledgment.");
+             if (a == 1) {
+                 $(this).val("");
+             }
+
+         })
+
+
+        $('#Date_Of_FinalReply').change(function () {
+            debugger;
+             var Date_Of_PreliminaryReply = $('#Date_Of_PreliminaryReply').val();
+             var Date_Of_FinalReply = $(this).val();
+             var Complaint_Date = $('#Complaint_Date').val();
+             var a = checkDateConstraints(Date_Of_PreliminaryReply, Date_Of_FinalReply, "Date of FinalReply cannot be less than Date of Preliminiary.");
+             if (a == 1) {
+                 $(this).val("");
+             }
+             var aa = checkDateConstraints_(Complaint_Date, Date_Of_FinalReply);
+             if (aa == 1) {
+                 //$(this).val("");
+             }
+        })
+
+        $('#Date_Of_Action').change(function () {
+            debugger;
+            var Date_Of_FinalReply = $('#Date_Of_FinalReply').val();
+            var Date_Of_Action = $(this).val();
+            var a = checkDateConstraints(Date_Of_FinalReply, Date_Of_Action, "Date Of Corrective Action cannot be less than Date of Preliminiary.");
+            if (a == 1) {
+                $(this).val("");
+
+            }
+
+        })
+
+
+
+
+
+            function checkDateConstraints(fromDate, toDate, errorMessage) {
+                debugger;
+                var fromDateMoment = moment(fromDate, 'DD/MM/YYYY');
+                var toDateMoment = moment(toDate, 'DD/MM/YYYY');
+
+
+                let fromdate = fromDateMoment.format('YYYY-MM-DD');
+                let todate = toDateMoment.format('YYYY-MM-DD');
+                if (Date.parse(fromdate) > Date.parse(todate)) {
+                    alert(errorMessage);
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+            $("#btnsubmit").click(function(e) {
+                debugger;
+                if ($("#PT1").val() == "Closed") {
+                    if (
+                        $('#Date_Of_Aknowledgement').val() == "" ||
+                        $('#Date_Of_FinalReply').val() == "" ||
+                        $('#Date_Of_PreliminaryReply').val() == ""
+                    ) {
+                        alert("Please fill all required date fields (Date Of Preliminary Reply,Date of Acknowledgement,Date Of Final Reply) before submitting.");
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+                else if ($('#Complaint_Date').val() == "") {
+                    alert("Please fill Compalint Date");
+                    return false;
+                }
+                else if ($('#LastDateOfInspection').val() == "") {
+                    alert("Please fill Last Date Of Inspection Date");
+                    return false;
+                }
+                else if ($("#Control_No").val() == "") {
+                    alert("Please Enter Job Number");
+                    return false;
+                }
+                return true;
+            });
+
+
+
+
+</script>
+<script>
+    //$('#Date_Of_FinalReply').change(function () {
+    //    debugger;
+    //    var Complaint_Date = $('#Complaint_Date').val();
+    //    var Date_Of_FinalReply = $(this).val();
+    //    var a = checkDateConstraints_(Complaint_Date, Date_Of_FinalReply, "Date of FinalReply cannot be less than Date of Preliminiary.");
+    //    if (a == 1) {
+    //        $(this).val("");
+
+    //    }
+
+    //})
+
+    function checkDateConstraints_(fromDate, toDate, errorMessage) {
+        debugger;
+        var fromDateMoment = moment(fromDate, 'DD/MM/YYYY');
+        var toDateMoment = moment(toDate, 'DD/MM/YYYY');
+
+
+        let fromdate = fromDateMoment.format('YYYY-MM-DD');
+        let todate = toDateMoment.format('YYYY-MM-DD');
+        let timeDiff = Date.parse(todate) - Date.parse(fromdate);
+        let dayDiff = timeDiff / (1000 * 3600 * 24); // convert ms to days
+        if (dayDiff > 7) {
+            $("#Showdelaydropdown").show();
+            $('.other-reason-container').hide();
+            return 1;
+        } else {
+            return 0;
+            //$('#delayReasonDropdown').hide();
+        }
+
+    }
+
+
+
+</script>
+<script>
+
+    //$('#Showdelaydropdown').change(function () {
+    //    debugger;
+    //    if ($('#Showdelaydropdown').val() == "other") {
+    //        $('.other-reason-container').show();
+    //    } else {
+    //        $('.other-reason-container').hide();
+    //    }
+
+    //})
+
+    $(function () {
+        function toggleOtherReason() {
+            if ($('#StaticDropdown').val() == "other") {
+                $('.other-reason-container').show();
+            } else {
+                $('.other-reason-container').hide();
+            }
+        }
+
+        toggleOtherReason();
+        $('#Showdelaydropdown').change(toggleOtherReason);
+    });
+</script>
+
+<script>
+    //Originating_Branch
+
+    function ChangeAttributable() {
+        debugger;
+        var Branch = "@Session["UserBranchId"]".toString();
+        var OriginatingBranch = $("#Originating_Branch").val();
+        if (Branch.includes(OriginatingBranch)) {
+            $("#txtshowdiv").css("pointer-events", "auto");
+        } else {
+            $("#txtshowdiv").css("pointer-events", "none");
+        }
+    }
+</script>

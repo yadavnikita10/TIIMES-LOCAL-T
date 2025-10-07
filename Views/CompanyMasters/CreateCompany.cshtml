@@ -177,6 +177,29 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(m => m.Manufact_Contra_Prod_Fabri, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                                                <b>1. Manufacturer / Contractor / Producer / Fabricator of item</b>
+                                                                @Html.ValidationMessageFor(m => m.Manufact_Contra_Prod_Fabri, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(m => m.stock_Trade_Raw, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                                                <b>2. Stockiest / Trader / Raw material Supplier</b>
+                                                                @Html.ValidationMessageFor(m => m.stock_Trade_Raw, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                @Html.CheckBoxFor(m => m.TUVICustomer_End_Plant, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                                                <b>3. TUVI Customer / End customer / Plant (Site assignment)</b>
+                                                                @Html.ValidationMessageFor(m => m.TUVICustomer_End_Plant, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-3">
@@ -519,8 +542,33 @@
                                                                         @Html.ValidationMessageFor(model => model.OffAddrPin, "", new { @class = "text-danger" })
                                                                     </div>
                                                                 </div>
+                                                               
 
                                                             </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <div class="form-group">
+                                                                    @Html.CheckBoxFor(m => m.Manufact_Contra_Prod_Fabri, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                                                    <b>1. Manufacturer / Contractor / Producer / Fabricator of item</b>
+                                                                    @Html.ValidationMessageFor(m => m.Manufact_Contra_Prod_Fabri, "", new { @class = "text-danger" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-4">
+                                                                <div class="form-group">
+                                                                    @Html.CheckBoxFor(m => m.stock_Trade_Raw, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                                                    <b>2. Stockiest / Trader / Raw material Supplier</b>
+                                                                    @Html.ValidationMessageFor(m => m.stock_Trade_Raw, "", new { @class = "text-danger" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-4">
+                                                                <div class="form-group">
+                                                                    @Html.CheckBoxFor(m => m.TUVICustomer_End_Plant, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                                                    <b>3. TUVI Customer / End customer / Plant (Site assignment)</b>
+                                                                    @Html.ValidationMessageFor(m => m.TUVICustomer_End_Plant, "", new { @class = "text-danger" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
 
                                                         <div class="row">
                                                             <div class="col-xs-12 col-sm-3">
@@ -870,6 +918,30 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
+                                                                                            <div class="row">
+                                                                                                <div class="col-xs-4">
+                                                                                                    <div class="form-group">
+                                                                                                        @Html.CheckBoxFor(m => m.Manufact_Contra_Prod_Fabri, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                                                                                        <b>1. Manufacturer / Contractor / Producer / Fabricator of item</b>
+                                                                                                        @Html.ValidationMessageFor(m => m.Manufact_Contra_Prod_Fabri, "", new { @class = "text-danger" })
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-xs-4">
+                                                                                                    <div class="form-group">
+                                                                                                        @Html.CheckBoxFor(m => m.stock_Trade_Raw, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                                                                                        <b>2. Stockiest / Trader / Raw material Supplier</b>
+                                                                                                        @Html.ValidationMessageFor(m => m.stock_Trade_Raw, "", new { @class = "text-danger" })
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-xs-4">
+                                                                                                    <div class="form-group">
+                                                                                                        @Html.CheckBoxFor(m => m.TUVICustomer_End_Plant, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                                                                                        <b>3. TUVI Customer / End customer / Plant (Site assignment)</b>
+                                                                                                        @Html.ValidationMessageFor(m => m.TUVICustomer_End_Plant, "", new { @class = "text-danger" })
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+
                                                                                             <div class="row" style="display:none;">
                                                                                                 <div class="col-xs-12 col-sm-12">
                                                                                                     <div class="form-group">
@@ -1130,7 +1202,16 @@
         Reset()
         $("#btnSaveCompany").click(function myfunction() {
             debugger;
-            if (ValidateForm() == false) {
+
+            var isAnyChecked = $("[data-group='partyType']:checked").length > 0;
+
+            if (!isAnyChecked) {
+                alert("Please select one of the following options:\1. Manufacturer\2. Stockiest\3. TUVI Customer");
+                return false;
+            }
+
+
+            else if (ValidateForm() == false) {
                 return false;
             }
             else {
@@ -1334,6 +1415,20 @@
 
         return true;
     }
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        // Mutually exclusive checkboxes
+        $('.custom-radio-group').on('change', function () {
+            if ($(this).is(':checked')) {
+                const group = $(this).data('group');
+                $('.custom-radio-group[data-group="' + group + '"]').not(this).prop('checked', false);
+            }
+        });
+    });
 </script>
 
 <script>

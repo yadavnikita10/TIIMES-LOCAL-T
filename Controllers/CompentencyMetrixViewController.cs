@@ -2186,7 +2186,10 @@ namespace TuvVision.Controllers
             DtData = id.Tables[0];
             obj.monitoringid = id.Tables[0].Rows[0][0].ToString();
             string monitoringid = obj.monitoringid;
-
+            if (UID == null)
+            {
+                obj.Date = DateTime.Today.ToString("dd/MM/yyyy"); // Matches jQuery 'dd/mm/yy'
+            }
             string[] splitedProduct_Name;
             string[] splitedScope;
             int _mins = 1000;

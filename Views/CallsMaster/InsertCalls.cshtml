@@ -7,8 +7,6 @@
     List<string> EditJobProdName = ViewBag.EditJobproductName as List<string>;
 }
 
-
-
 <script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jquery.min.js"></script>
 
@@ -30,6 +28,11 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+
+
 
 
 <script>
@@ -2398,6 +2401,8 @@
                                                     }
 
                                                 </div>
+
+                                                
                                                 @*</form>*@
                                             </div>
                                         </div>
@@ -2419,8 +2424,56 @@
 
         </div>
     </div>
-                                                                }
 
+}
+<div class="modal fade" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content mvc-grid-modal">
+            <div class="modal-header mvc-grid-modal-header">
+                <h5 class="modal-title" id="remarksModalLabel">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mvc-grid-modal-body">
+                <!-- Table to display remarks -->
+                <div class="table mvc-grid-table">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                @Html.CheckBoxFor(m => m.Manufact_Contra_Prod_Fabri, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                <b>1. Manufacturer / Contractor / Producer / Fabricator of item</b>
+                                @Html.ValidationMessageFor(m => m.Manufact_Contra_Prod_Fabri, "", new { @class = "text-danger" })
+                                @*</div>*@
+                                @*</div>
+                                    <div class="col-xs-4">*@
+                                @*<div class="form-group">*@
+                                @Html.CheckBoxFor(m => m.stock_Trade_Raw, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                <b>2. Stockiest / Trader / Raw material Supplier</b>
+                                @Html.ValidationMessageFor(m => m.stock_Trade_Raw, "", new { @class = "text-danger" })
+                                @*</div>*@
+                                @**@@*</div>
+                                    <div class="col-xs-4">
+                                        <div class="form-group">*@
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    @Html.CheckBoxFor(m => m.TUVICustomer_End_Plant, new { @class = "custom-radio-group", @data_group = "partyType" })
+                                    <b>3. TUVI Customer / End customer / Plant (Site assignment)</b>
+                                    @Html.ValidationMessageFor(m => m.TUVICustomer_End_Plant, "", new { @class = "text-danger" })
+                                    @*</div>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer mvc-grid-modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade bs-example-modal-lg modal fade" id="AddNewContactDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -2621,6 +2674,8 @@
 
     </div>
 </div>
+
+
 
 
 <script>
@@ -3185,14 +3240,34 @@
 
 
 <script>
-    $("#btnic").click(function myfunction() {
-        if (validateform() == false) {
+    //$("#btnic").click(function myfunction() {
+    //    debugger;
+    //    $('#remarksModal').modal('show');
+    //    //$("#remarksModal").show();
+    //    //if (validateform() == false) {
+    //    //    return false;
+    //    //}
+    //    //else {
+    //    //    $("#formic").submit();
+    //    //}
+    //});
 
-            return false;
-        }
-        else {
-            $("#formic").submit();
-        }
+    $("#btnic").click(function () {
+        $("#remarksModal").dialog({
+            modal: true,
+            buttons: {
+                Submit: function () {
+                    if (validateform() === false) {
+                        return;
+                    }
+                    $("#formic").submit();
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
     });
 
 

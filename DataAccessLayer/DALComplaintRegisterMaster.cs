@@ -232,6 +232,8 @@ namespace TuvVision.DataAccessLayer
                     CMDComplaint.Parameters.AddWithValue("@Root_Cause", CRCom.Root_Cause);
                     CMDComplaint.Parameters.AddWithValue("@CA_To_Prevent_Recurrance", CRCom.CA_To_Prevent_Recurrance);
                     CMDComplaint.Parameters.AddWithValue("@Effectiveness_Of_Implementation_Of_CA", CRCom.Effectiveness_Of_Implementation_Of_CA);
+                    CMDComplaint.Parameters.AddWithValue("@DelayReason", CRCom.DelayReason);
+                    CMDComplaint.Parameters.AddWithValue("@OtheReason", CRCom.OtherReason);
                     //CMDComplaint.Parameters.AddWithValue("@Date_Of_Aknowledgement", DateTime.ParseExact(CRCom.Date_Of_Aknowledgement, "dd/MM/yyyy", theCultureInfo));
                     DateTime dt;
                     if (DateTime.TryParseExact(CRCom.Date_Of_Aknowledgement, "dd/MM/yyyy", null, DateTimeStyles.None, out dt))
@@ -308,6 +310,7 @@ namespace TuvVision.DataAccessLayer
                     CMDComplaint.Parameters.AddWithValue("@Hide", CRCom.Hide);
                     CMDComplaint.Parameters.AddWithValue("@VendorPO", CRCom.VendorPO);
                     CMDComplaint.Parameters.AddWithValue("@SubVendorVendorPO", CRCom.SubVendorVendorPO);
+                    CMDComplaint.Parameters.AddWithValue("@OBSID", CRCom.OBSID);
                     CMDComplaint.Parameters.AddWithValue("@ModifiedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                     result = CMDComplaint.ExecuteNonQuery().ToString();
                 }
@@ -345,6 +348,8 @@ namespace TuvVision.DataAccessLayer
                     CMDComplaint.Parameters.AddWithValue("@Correction", CRCom.Correction);
                     CMDComplaint.Parameters.AddWithValue("@Root_Cause", CRCom.Root_Cause);
                     CMDComplaint.Parameters.AddWithValue("@CA_To_Prevent_Recurrance", CRCom.CA_To_Prevent_Recurrance);
+                    CMDComplaint.Parameters.AddWithValue("@DelayReason", CRCom.DelayReason);
+                    CMDComplaint.Parameters.AddWithValue("@OtheReason", CRCom.OtherReason);
                     // CMDComplaint.Parameters.AddWithValue("@Date_Of_Aknowledgement", DateTime.ParseExact(CRCom.Date_Of_Aknowledgement, "dd/MM/yyyy", theCultureInfo));
                     DateTime dt;
                     if (DateTime.TryParseExact(CRCom.Date_Of_Aknowledgement,
@@ -422,6 +427,10 @@ namespace TuvVision.DataAccessLayer
                     CMDComplaint.Parameters.AddWithValue("@Hide", CRCom.Hide);
                     CMDComplaint.Parameters.AddWithValue("@VendorPO", CRCom.VendorPO);
                     CMDComplaint.Parameters.AddWithValue("@SubVendorVendorPO", CRCom.SubVendorVendorPO);
+                    CMDComplaint.Parameters.AddWithValue("@OBSID", CRCom.OBSID);
+
+
+                    
 
                     CMDComplaint.Parameters.Add("@GetCmpID", SqlDbType.Int).Direction = ParameterDirection.Output;
                     result = CMDComplaint.ExecuteNonQuery().ToString();
@@ -644,6 +653,8 @@ namespace TuvVision.DataAccessLayer
                     _vmcompany.CompanyName = dr["Company_Name"].ToString();
                     _vmcompany.VendorPO = dr["vendor_Po_No"].ToString();
                     _vmcompany.SubVendorVendorPO = dr["Subvendor_Po_No"].ToString();
+                    _vmcompany.Originating_Branch = dr["JobBranch"].ToString();
+                    _vmcompany.JOBSID = dr["JOBSID"].ToString();
                 }
 
             }

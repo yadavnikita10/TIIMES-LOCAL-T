@@ -48,10 +48,11 @@ namespace TuvVision.Models
         [DataType(DataType.Text)]
         //[Required(ErrorMessage = "Please Enter Complaint_Date")]
         public string BranchForInspector { get; set; }
+        public string JOBSID { get; set; }
         public string Inspector_Name { get; set; }
         public string PKUserId { get; set; }
         public string allInspector_Name { get; set; }
-    
+        public string OBSID { get; set; }
         public string Complaint_Details { get; set; }
         [DataType(DataType.Text)]
        // [Required(ErrorMessage = "Please Enter Complaint Details")]
@@ -108,6 +109,8 @@ namespace TuvVision.Models
         public string LessonLearned { get; set; }
 
         public string ActionTaken { get; set; }
+        public string DelayReason { get; set; }
+        public string OtherReason { get; set; }
 
         public string ProductList { get; set; }
 

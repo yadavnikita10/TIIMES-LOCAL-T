@@ -102,6 +102,9 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdateCompany.Parameters.AddWithValue("@SiteAddrPin", CM.SiteAddrPin);
                     CMDInsertUpdateCompany.Parameters.AddWithValue("@InspectionLocation", CM.InspectionLocation);
                     CMDInsertUpdateCompany.Parameters.AddWithValue("@isvendor", CM.vendorid);
+                    CMDInsertUpdateCompany.Parameters.AddWithValue("@Manufact_Contra_Prod_Fabri", CM.Manufact_Contra_Prod_Fabri);
+                    CMDInsertUpdateCompany.Parameters.AddWithValue("@stock_Trade_Raw", CM.stock_Trade_Raw);
+                    CMDInsertUpdateCompany.Parameters.AddWithValue("@TUVICustomer_End_Plant", CM.TUVICustomer_End_Plant);
                     CMDInsertUpdateCompany.Parameters.AddWithValue("@ModifiedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                     CMDInsertUpdateCompany.Parameters.Add("@ReturnCompanyId", SqlDbType.Int).Direction = ParameterDirection.Output;
                     Result = CMDInsertUpdateCompany.ExecuteNonQuery().ToString();
@@ -132,7 +135,10 @@ namespace TuvVision.DataAccessLayer
                     InsertUpdateCompany.Parameters.AddWithValue("@Contact", CM.Contact);
                     InsertUpdateCompany.Parameters.AddWithValue("@OffAddrPin", CM.OffAddrPin);
                     InsertUpdateCompany.Parameters.AddWithValue("@SiteAddrPin", CM.SiteAddrPin);
-                    InsertUpdateCompany.Parameters.AddWithValue("@InspectionLocation", CM.InspectionLocation);                  
+                    InsertUpdateCompany.Parameters.AddWithValue("@InspectionLocation", CM.InspectionLocation);
+                    //InsertUpdateCompany.Parameters.AddWithValue("@Manufact_Contra_Prod_Fabri", CM.Manufact_Contra_Prod_Fabri);
+                    //InsertUpdateCompany.Parameters.AddWithValue("@stock_Trade_Raw", CM.stock_Trade_Raw);
+                    //InsertUpdateCompany.Parameters.AddWithValue("@TUVICustomer_End_Plant", CM.TUVICustomer_End_Plant);
                     InsertUpdateCompany.Parameters.AddWithValue("@ModifiedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                     InsertUpdateCompany.Parameters.Add("@ReturnCompanyId", SqlDbType.Int).Direction = ParameterDirection.Output;
                     Result = InsertUpdateCompany.ExecuteNonQuery().ToString();
@@ -168,6 +174,9 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdateCompany.Parameters.AddWithValue("@InspectionLocation", CM.InspectionLocation);
                     CMDInsertUpdateCompany.Parameters.AddWithValue("@New_Cmp", CM.New_Cmp);
                     CMDInsertUpdateCompany.Parameters.AddWithValue("@isvendor", CM.vendorid);
+                    CMDInsertUpdateCompany.Parameters.AddWithValue("@Manufact_Contra_Prod_Fabri", CM.Manufact_Contra_Prod_Fabri);
+                    CMDInsertUpdateCompany.Parameters.AddWithValue("@stock_Trade_Raw", CM.stock_Trade_Raw);
+                    CMDInsertUpdateCompany.Parameters.AddWithValue("@TUVICustomer_End_Plant", CM.TUVICustomer_End_Plant);
                     CMDInsertUpdateCompany.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                     CMDInsertUpdateCompany.Parameters.Add("@ReturnCompanyId", SqlDbType.Int).Direction = ParameterDirection.Output;
                     Result = CMDInsertUpdateCompany.ExecuteNonQuery().ToString();
@@ -198,6 +207,9 @@ namespace TuvVision.DataAccessLayer
                     InsertUpdateCompany.Parameters.AddWithValue("@OffAddrPin", CM.OffAddrPin);
                     InsertUpdateCompany.Parameters.AddWithValue("@SiteAddrPin", CM.SiteAddrPin);
                     InsertUpdateCompany.Parameters.AddWithValue("@InspectionLocation", CM.InspectionLocation);
+                    //InsertUpdateCompany.Parameters.AddWithValue("@Manufact_Contra_Prod_Fabri", CM.Manufact_Contra_Prod_Fabri);
+                    //InsertUpdateCompany.Parameters.AddWithValue("@stock_Trade_Raw", CM.stock_Trade_Raw);
+                    //InsertUpdateCompany.Parameters.AddWithValue("@TUVICustomer_End_Plant", CM.TUVICustomer_End_Plant);
                     InsertUpdateCompany.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                     InsertUpdateCompany.Parameters.Add("@ReturnCompanyId", SqlDbType.Int).Direction = ParameterDirection.Output;
                     Result = InsertUpdateCompany.ExecuteNonQuery().ToString();

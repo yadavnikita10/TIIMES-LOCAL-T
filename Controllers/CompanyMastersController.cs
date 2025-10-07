@@ -123,6 +123,9 @@ namespace TuvVision.Controllers
                     ObjModelCompany.OffAddrPin = Convert.ToString(DSEditCompany.Tables[0].Rows[0]["OffAddrPin"]);
                     //ObjModelCompany.SiteAddrPin = Convert.ToString(DSEditCompany.Tables[0].Rows[0]["SiteAddrPin"]);
                     ObjModelCompany.InspectionLocation = Convert.ToString(DSEditCompany.Tables[0].Rows[0]["InspectionLocation"]);
+                    ObjModelCompany.Manufact_Contra_Prod_Fabri = Convert.ToBoolean(DSEditCompany.Tables[0].Rows[0]["Manufact_Contra_Prod_Fabri"]);
+                    ObjModelCompany.stock_Trade_Raw = Convert.ToBoolean(DSEditCompany.Tables[0].Rows[0]["stock_Trade_Raw"]);
+                    ObjModelCompany.TUVICustomer_End_Plant = Convert.ToBoolean(DSEditCompany.Tables[0].Rows[0]["TUVICustomer_End_Plant"]);
                 }
 
                 #region Bind Addr

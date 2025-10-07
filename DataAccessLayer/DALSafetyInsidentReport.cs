@@ -145,6 +145,33 @@ namespace TuvVision.DataAccessLayer
             return Result;
         }
 
+
+
+        public DataSet GetDropDownList()//Binding All Dropdownlist
+        {
+            DataSet DSGetDdlList = new DataSet();
+            try
+            {
+                SqlCommand CMDGetDdlLst = new SqlCommand("SP_SafetyInsidentReport", con);
+                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+                CMDGetDdlLst.CommandTimeout = 900000000;
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 7);
+                //CMDGetDdlLst.Parameters.AddWithValue("@UserID", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                SqlDataAdapter SDAGetAllDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                SDAGetAllDdlLst.Fill(DSGetDdlList);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DSGetDdlList.Dispose();
+            }
+            return DSGetDdlList;
+        }
+
+
         public DataSet GetOnPageLoad()
         {
             DataSet DTEditContact = new DataSet();
