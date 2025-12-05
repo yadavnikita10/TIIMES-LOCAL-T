@@ -16,8 +16,8 @@ namespace TuvVision.DataAccessLayer
         CultureInfo provider = CultureInfo.InvariantCulture;
         IFormatProvider theCultureInfo = new System.Globalization.CultureInfo("en-GB", true);
 
-        //public DataSet GetData(MISOPEReport objMOR)
-        public DataSet GetData(string Month, string Year)
+        //public DataSet GetData(MISOPEReport objMOR)i
+        public DataSet GetData(string Month, string Year)   
         {
             DataSet ds = new DataSet();
 

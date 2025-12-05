@@ -19,7 +19,7 @@ namespace TuvVision.Models
 
         public string DSubJob_No { get; set; }
         public int DPK_SubJob_Id { get; set; }
-        
+
         public virtual ICollection<FileDetails> FileDetails { get; set; }
         public string FDate { get; set; }
         public string TDate { get; set; }
@@ -32,7 +32,7 @@ namespace TuvVision.Models
         public string ToDate { get; set; }*/
         public int OrgID { get; set; }
         public int EXEBRId { get; set; }
-        
+
         public string Call_Recived_date { get; set; }
         public string Call_Request_Date { get; set; }
         public string Planned_Date { get; set; }
@@ -61,7 +61,6 @@ namespace TuvVision.Models
         public string CoordinatorEmail_ { get; set; }
         public string Type { get; set; }
         public string Contact_Name { get; set; }
-        public string MainBranch { get; set; }
 
         public string JobType { get; set; }
         public string ServiceType { get; set; }
@@ -71,7 +70,7 @@ namespace TuvVision.Models
         public string Excuting_Branch { get; set; }
         public string Sub_Type { get; set; }
         public string Job { get; set; }
-        
+
 
         public string Source { get; set; }
         public string Vendor_Name { get; set; }
@@ -80,7 +79,7 @@ namespace TuvVision.Models
 
         public string Urgency { get; set; }
         public string Special_Notes { get; set; }
-        
+
         public string Competency_Check { get; set; }
         public string End_Customer { get; set; }
         public string Category { get; set; }
@@ -107,7 +106,9 @@ namespace TuvVision.Models
         public string ModifyBy { get; set; }
         public string DeleteStatus { get; set; }
         public string Call_No { get; set; }
-        
+        public string Mentor { get; set; }
+        public string MentorId { get; set; }
+
         public string From_Time { get; set; }
         public string To_Time { get; set; }
         public string Call_Type { get; set; }
@@ -118,7 +119,7 @@ namespace TuvVision.Models
         public string P2 { get; set; }
         public string AI { get; set; }
         public bool chkDoNotshareVendor { get; set; }
-
+        public string OPEStatus { get; set; }
         public string Branch_Name { get; set; }
         public int Br_Id { get; set; }
         public int ExBr_Id { get; set; }
@@ -145,12 +146,12 @@ namespace TuvVision.Models
         public string Inspection_CallIntimationReceivedOn { get; set; }
         public string RequstedInspectedDate { get; set; }
 
-        public string  Inspector_To_Be_Assign { get; set; }
-        public string  PONumberOnVender { get; set; }
-        public string  OriginatingBranch { get; set; }
-        public string  StageOfInspection { get; set; }
-        public string  InspectionLocation{ get; set; }
-        public string  ItemsToBeInpsected { get; set; }
+        public string Inspector_To_Be_Assign { get; set; }
+        public string PONumberOnVender { get; set; }
+        public string OriginatingBranch { get; set; }
+        public string StageOfInspection { get; set; }
+        public string InspectionLocation { get; set; }
+        public string ItemsToBeInpsected { get; set; }
         public string Unassign_Inspector { get; set; }
 
         public string PONumberOnSubVender { get; set; }
@@ -169,17 +170,17 @@ namespace TuvVision.Models
         //public DateTime? FromDateNew { get; set; }
         //public DateTime? ToDateNew { get; set; }
 
-        
 
 
-        
+
+
         public string ExtendCall_Status { get; set; }
         public string Description { get; set; }
         public string Quantity { get; set; }
-        public string MailSend_ConsumedMandays { get; set; }
+
         public int DelayInINRSubmission { get; set; }
 
-        
+
         public string Product_Name { get; set; }
 
         public bool ChkMultipleSubJobNo { get; set; }
@@ -197,7 +198,7 @@ namespace TuvVision.Models
         public string SubVendorName { get; set; }
         public string VendorPONo { get; set; }
         public string SubVendorPONo { get; set; }
-       
+
         public string ExecutingBranch { get; set; }
 
         public string POAmountGreaterThan { get; set; }
@@ -210,8 +211,8 @@ namespace TuvVision.Models
 
         public bool FinalInspection { get; set; }
 
-       // [Range(1, 14, ErrorMessage = "Value must be between 1 to 14")]
-     ///   public int EstimatedHours { get; set; }
+        // [Range(1, 14, ErrorMessage = "Value must be between 1 to 14")]
+        ///   public int EstimatedHours { get; set; }
         public string EstimatedHours { get; set; }
         public string ClientAddress { get; set; }
         public string VendorAddress { get; set; }
@@ -262,11 +263,12 @@ namespace TuvVision.Models
         public string IVRDistributionDelay { get; set; }
         public string IRNDistributionDelay { get; set; }
         public string CallCancelledBy { get; set; }
+        public string CallCancelledDate { get; set; }
         public List<CallsModel> lstDashBoard { get; set; }
         public List<CallsModel> lstDashBoard1 { get; set; }
 
         public string CallReceiveTime { get; set; }
-       // public string CallReceiveTime { get; set; }
+        // public string CallReceiveTime { get; set; }
         public string IVRCreateDate { get; set; }
 
         public string IRNCreateDate { get; set; }
@@ -502,18 +504,57 @@ namespace TuvVision.Models
         public string InspectionLocation_ { get; set; }
         public string TUVEmpCode { get; set; }
         public bool chkIfTravelExpenseOnPDF { get; set; }
-        public bool Manufact_Contra_Prod_Fabri { get; set; }
-        public bool stock_Trade_Raw { get; set; }
-        public bool TUVICustomer_End_Plant { get; set; }
+
 
         public string ActionHidden { get; set; }
         public string JobBlock { get; set; }
-        
+        public string InspectorDelayReason { get; set; }
+        public int Id { get; set; }
+        public string DelayReason { get; set; }
+        public string operationalApprovalRequired { get; set; }
+        public string IsAssignedUnderOprMngr { get; set; }
+        public string status_ { get; set; }
+        public string callAssignDate { get; set; }
+        public int AllowCallsAfterOPEProcess { get; set; }
+        public string OPE { get; set; }
+        public string iscompetent { get; set; }
+        public string callassignby { get; set; }
+
+        public string ApprovedBy { get; set; }
+        public string icTCE { get; set; }
+        public string IsApproveReject { get; set; }
+
+        public string CallCloseAllow { get; set; }
+        public string ifyes { get; set; }
+        public string UID { get; set; }
+        public string inspCode { get; set; }
+        public string mentoringon { get; set; }
+        public string isTceUpdated { get; set; }
+        public string IsMentoringDone { get; set; }
+
+        public string modifieddate { get; set; }
+        public string tceDate { get; set; }
+
+        public string CallNotDoneBy { get; set; }
+        public string CallNotDoneDate { get; set; }
+
+        public string OBSName { get; set; }
+
+        public string EmployeeCode { get; set; }
+
+        public string MainBranch { get; set; }
+
+        public string TimeSheetFilledBY { get; set; }
+
+
+
+
+
     }
 
     public class abc
     {
-       
+
         public int PK_Call_ID { get; set; }
         public string Company_Name { get; set; }
         public string Status { get; set; }
@@ -575,20 +616,20 @@ namespace TuvVision.Models
 
 
 
-        public string SAP_Number{ get; set; }
+        public string SAP_Number { get; set; }
         public string Sub_Job_Number { get; set; }
         public string Inspection_CallIntimationReceivedOn { get; set; }
         public virtual ICollection<FileDetails> FileDetails { get; set; }
-        public string RequstedInspectedDate{ get; set; }
-      //  public string Actual_Visit_Date                       { get; set; }
-        public string LastInspectorName_DateOfInspection  { get; set; }
-        public string Inspector_To_Be_Assign{ get; set; }
+        public string RequstedInspectedDate { get; set; }
+        //  public string Actual_Visit_Date                       { get; set; }
+        public string LastInspectorName_DateOfInspection { get; set; }
+        public string Inspector_To_Be_Assign { get; set; }
         public string CallStatus { get; set; }
-        public string PONumberOnVender  { get; set; }
+        public string PONumberOnVender { get; set; }
         public string PONumberOnSubVender { get; set; }
         public string OriginatingBranch { get; set; }
         public string StageOfInspection { get; set; }
-        public string InspectionLocation{ get; set; }
+        public string InspectionLocation { get; set; }
         public string ItemsToBeInpsected { get; set; }
         public string Reasion { get; set; }
         public string ExtendCall_Status { get; set; }
@@ -600,6 +641,9 @@ namespace TuvVision.Models
 
         public string TCEFilled { get; set; }
         public string inspectorapproved { get; set; }
+        public string DelayReason { get; set; }
+        public string isapprovereq { get; set; }
+        public int Id { get; set; }
     }
     public class EmployeeAttendance
     {
@@ -623,7 +667,7 @@ namespace TuvVision.Models
         public string Date { get; set; }
         public string InspectorName { get; set; }
         public string Branch_Name { get; set; }
-        
+
         public string Job { get; set; }
         public string Sub_Job { get; set; }
         public string SAP_No { get; set; }
@@ -649,11 +693,11 @@ namespace TuvVision.Models
     }
 
     public class Item
-{
+    {
 
-        public string [] Name  { get; set; }
-        public string [] Date { get; set; }
-        public String [] PK_Call_ID { get; set; }
+        public string[] Name { get; set; }
+        public string[] Date { get; set; }
+        public String[] PK_Call_ID { get; set; }
     }
 
     public class ItemTest
@@ -664,6 +708,8 @@ namespace TuvVision.Models
         public String PK_Call_ID { get; set; }
         public string iscompedent { get; set; }
         public string isinspectorApproved { get; set; }
+        public string InspReason { get; set; }
+        public string isappreq { get; set; }
     }
 
     public class Test
@@ -724,7 +770,7 @@ namespace TuvVision.Models
         public string Call_No { get; set; }
         public string Excuting_Branch { get; set; }
         public string Originating_Branch { get; set; }
-       
+
     }
 
     public class ProcessMeasures
@@ -779,8 +825,22 @@ namespace TuvVision.Models
         public string offsitemonitoringOne { get; set; }
         public string TotalNCR { get; set; }
         public string SafetyReport { get; set; }
+
+        public string ObsType { get; set; }
+
+
     }
 
 
+    public class SelectedItem
+    {
+        public string id { get; set; }
+        public string reason { get; set; }
+        public string Remark { get; set; }
+        public string mentor { get; set; }
+        public string IsTCE { get; set; }
+        public string IsAppr { get; set; }
+
+    }
 
 }

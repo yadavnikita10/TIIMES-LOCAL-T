@@ -1,0 +1,104 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Grammar Checker</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        #editor {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 2px solid #ccc;
+            font-size: 15px;
+        }
+
+        #output {
+            margin-top: 10px;
+        }
+
+        .errorBox {
+            background: #ffe4e4;
+            border-left: 4px solid red;
+            padding: 5px;
+            margin-top: 8px;
+        }
+
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Real-Time Grammar Checker</h2>
+
+    <textarea id="editor" placeholder="Start typing..."></textarea>
+
+    <div id="output"></div>
+
+    <script>
+let timer;
+
+// Run grammar check on every key press with delay
+document.getElementById("editor").addEventListener("input", function () {
+    clearTimeout(timer);
+    timer = setTimeout(runCheck, 600); // check after user stops typing
+});
+
+function runCheck() {
+    let text = document.getElementById("editor").value;
+
+    if (!text.trim()) {
+        document.getElementById("output").innerHTML = "";
+        return;
+    }
+
+    document.getElementById("output").innerHTML = "<i>Checking...</i>";
+
+    fetch("https://api.languagetool.org/v2/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+            text: text,
+            language: "en-US"
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        let html = "";
+
+        if (data.matches.length === 0) {
+            html = `<p class="correct">✔ Looks good! No grammar errors.</p>`;
+        } else {
+            data.matches.forEach(m => {
+                html += `
+                    <div class="errorBox">
+                        <b>Issue:</b> ${m.message}<br>
+                        <b>Error:</b> "${m.context.text}"<br>
+                        <b>Suggestions:</b> ${m.replacements.slice(0, 3).map(r => r.value).join(", ")}
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById("output").innerHTML = html;
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("output").innerHTML = "Error checking grammar.";
+    });
+}
+    </script>
+
+</body>
+</html>

@@ -138,4 +138,25 @@ namespace TuvVision.Models
         public string FkSubSubMenuIds { get; set; }
         
     }
+
+    public class Declaration
+    {
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public string Organization { get; set; }
+        public string NatureOfWork { get; set; }
+        public string FullOrPartTime { get; set; }
+        public string Name { get; set; }
+        public string Datediff { get; set; }
+        public string Branch  { get; set; }
+        public string TillDate { get; set; }
+        public string Address { get; set; }
+        public string image { get; set; }
+        public string place { get; set; }
+        public string Location { get; set; }
+        public string TimeField { get; set; }
+        public string CurrentDate { get; set; }
+        public string Grade { get; set; }
+        public string Pk_userid { get; set; }
+    }
 }

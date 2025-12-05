@@ -90,7 +90,8 @@ if (callmodel.issendforapprovalExpense == "True"/* || callmodel.issendforapprova
 else
 {
 
-    if (callmodel.ActivityType == "48" || callmodel.ActivityType == "31" || callmodel.ActivityType == "14" || callmodel.ActivityType == "32" || callmodel.ActivityType == "30" || callmodel.ActivityType == "04" || callmodel.ActivityType == "05" || callmodel.ActivityType == "19" || callmodel.ActivityType == "20" || callmodel.ActivityType == "07"||callmodel.ActivityType=="02")
+    if (
+        callmodel.ActivityType == "48" || callmodel.ActivityType == "31" || callmodel.ActivityType == "14" || callmodel.ActivityType == "32" || callmodel.ActivityType == "30" || callmodel.ActivityType == "04" || callmodel.ActivityType == "05" || callmodel.ActivityType == "19" || callmodel.ActivityType == "20" || callmodel.ActivityType == "07"||callmodel.ActivityType=="02")
     {
     }
     else
@@ -770,6 +771,35 @@ else
 
 
 
+
+        var ISA='@Session["ISA"]';
+        if(ISA.toUpperCase()=="YES"){
+            $("#PT option[value='51']").show();
+            $("#PT option[value='52']").show();
+            $("#PT option[value='53']").show();
+            $("#PT option[value='54']").show();
+            $("#PT option[value='55']").show();
+            $("#PT option[value='56']").show();
+            $("#PT option[value='57']").show();
+            $("#PT option[value='58']").show();
+            $("#PT option[value='59']").show();
+            $("#PT option[value='60']").show();
+            $("#PT option[value='61']").show();
+        }
+
+        else{
+            $("#PT option[value='51']").hide();
+            $("#PT option[value='52']").hide();
+            $("#PT option[value='53']").hide();
+            $("#PT option[value='54']").hide();
+            $("#PT option[value='55']").hide();
+            $("#PT option[value='56']").hide();
+            $("#PT option[value='57']").hide();
+            $("#PT option[value='58']").hide();
+            $("#PT option[value='59']").hide();
+            $("#PT option[value='60']").hide();
+            $("#PT option[value='61']").hide();
+        }
     });
 </script>
 @*end*@
@@ -1053,6 +1083,17 @@ else
             $("#JobNumber").focus()
             return false;
         }
+
+        var ISA='@Session["ISA"]';
+        if(ISA.toUpperCase()=="YES"){
+            if (($("#PT Option:selected").val() == "51"||$("#PT Option:selected").val() == "52"||$("#PT Option:selected").val() == "53"||$("#PT Option:selected").val() == "54"||$("#PT Option:selected").val() == "55"||$("#PT Option:selected").val() == "56"||$("#PT Option:selected").val() == "57"||$("#PT Option:selected").val() == "58"||$("#PT Option:selected").val() == "59"||$("#PT Option:selected").val() == "60"||$("#PT Option:selected").val() == "61") && (JN == "" || JN == null)) {
+                alert("Please Enter  Job Number !");
+                $("#JobNumber").focus()
+                return false;
+            }
+
+        }
+
         //F
         /*********************Control Number Compulsory**********************/
 
@@ -1701,6 +1742,9 @@ else
     function VisiblityOfControlNo(val2)
     {
 
+
+
+
         //if (val2 == "29" || val2 == "11" || val2 == "22" || val2 == "32" || val2 == "31" || val2 == "41")
         if (val2 == "25" || val2 == "07" || val2 == "18" || val2 == "28" || val2 == "40")
         {
@@ -1728,6 +1772,13 @@ else
             $('#JobNumber').show();
             $('#ControlSpan').hide();
             $('#SalesOrderNo').show();
+        }
+        else if(val2 == "51"||val2 == "52"||val2 == "53"||val2 == "54"||val2 == "55"||val2 == "56"||val2 == "57"||val2 == "58"||val2 == "59"||val2 == "60"||val2 == "61"){
+            $('#ControlNo').show();
+            $('#ControlNoWithSubJob').hide();
+            $('#JobNumber').show();
+            $('#ControlSpan').show();
+            $('#SalesOrderNo').hide();
         }
         else
         {

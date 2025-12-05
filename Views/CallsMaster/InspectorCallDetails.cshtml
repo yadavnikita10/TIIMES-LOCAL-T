@@ -20,8 +20,8 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 
 
 
@@ -32,150 +32,156 @@
 
 
 
-    <style>
-        .resizable-container {
-            overflow-x: auto;
+<style>
+    .resizable-container {
+        overflow-x: auto;
+    }
+
+    .resizable-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid;
+    }
+
+        .resizable-table th {
+            cursor: ew-resize;
+            white-space: nowrap; /* Prevent text wrapping */
         }
 
-        .resizable-table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid;
+        .resizable-table td {
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflowing content */
         }
 
-            .resizable-table th {
-                cursor: ew-resize;
-                white-space: nowrap; /* Prevent text wrapping */
-            }
+    .fixed-width-column {
+        width: 100px; /* Width for fixed-width columns */
+    }
 
-            .resizable-table td {
-                white-space: nowrap; /* Prevent text wrapping */
-                overflow: hidden; /* Hide overflowing content */
-            }
+    .table-container {
+        max-height: 1500px; /* Set a fixed height for the container */
+        overflow-y: hidden; /* Add vertical scrollbar when content exceeds container height */
+    }
 
-        .fixed-width-column {
-            width: 100px; /* Width for fixed-width columns */
+    tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter {
+        text-align: left;
+    }
+
+    table.dataTable tbody td {
+        padding: 0px 10px;
+    }
+
+    thead th, table.dataTable thead td {
+        padding: 4px 6px;
+        border-bottom: #FFFFFF;
+    }
+
+    .dataTables_filter {
+        text-align: center; /* Center align the search boxes */
+    }
+
+    table.dataTable thead th {
+        padding: 2px 5px;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        float: left;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+        float: left;
+        margin-left: 10px;
+    }
+
+    table.dataTable {
+        width: auto !important;
+    }
+
+    .contact-info {
+        display: none;
+    }
+
+    .eye-icon {
+        cursor: pointer;
+        color: #000;
+    }
+
+        .eye-icon:hover {
+            color: #E12F24;
         }
 
-        .table-container {
-            max-height: 1500px; /* Set a fixed height for the container */
-            overflow-y: hidden; /* Add vertical scrollbar when content exceeds container height */
-        }
+    .current {
+        font-weight: bold;
+        color: Black;
+        background-color: gray;
+    }
+</style>
 
-        tfoot input {
-            width: 100%;
-            padding: 3px;
-            box-sizing: border-box;
-        }
+<div class="main-content3 xs-max-height">
 
-        div.dataTables_wrapper div.dataTables_filter {
-            text-align: left;
-        }
-
-        table.dataTable tbody td {
-            padding: 0px 10px;
-        }
-
-        thead th, table.dataTable thead td {
-            padding: 4px 6px;
-            border-bottom: #FFFFFF;
-        }
-
-        .dataTables_filter {
-            text-align: center; /* Center align the search boxes */
-        }
-
-        table.dataTable thead th {
-            padding: 2px 5px;
-        }
-
-        .dataTables_wrapper .dataTables_length {
-            float: left;
-        }
-
-        .dataTables_wrapper .dataTables_filter {
-            float: left;
-            margin-left: 10px;
-        }
-
-        table.dataTable {
-            width: auto !important;
-        }
-
-        .contact-info {
-            display: none;
-        }
-
-        .eye-icon {
-            cursor: pointer;
-            color: #000;
-        }
-
-            .eye-icon:hover {
-                color: #E12F24;
-            }
-
-        .current {
-            font-weight: bold;
-            color: Black;
-            background-color: gray;
-        }
-    </style>
-
-    <div class="main-content3 xs-max-height">
-
-        <!--Start of header-->
-        <div class="container-fluid">
-            <div class="row assignfixedwidth rp-15">
+    <!--Start of header-->
+    <div class="container-fluid">
+        <div class="row assignfixedwidth rp-15">
 
 
 
-            </div>
+        </div>
 
 
-            <input type="text" class="hidden" id="statusid" />
+        <input type="text" class="hidden" id="statusid" />
 
 
 
 
 
-            <div class="col-xs-12 resizable-container">
-                <div class="table-container" style="margin-top:-6px;">
+        <div class="col-xs-12 resizable-container">
+            <div class="table-container" style="margin-top:-6px;">
 
-                    <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Call Details</h3>
-                    <br>
-                    <div class="col-xs-12 col-sm-12">
-                        <span style="color:#FA3746;">
-                            <strong style="margin-left: -12px">Notes: </strong>
-                        </span>
-                        <span>
-                            1) <span>An IVR can be created for a maximum of 6 days for each individual sub-job.</span>
-                            2) <span>Rows highlighted in red indicate an open issue or NCR or complaint with a particular vendor.</span>
-                        </span>
-                    </div>
+                <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Call Details</h3>
+                <br>
+                <div class="col-xs-12 col-sm-12">
+                    <span style="color:#FA3746;">
+                        <strong style="margin-left: -12px">Notes: </strong>
+                    </span>
+                    <span>
+                        1) <span>An IVR can be created for a maximum of 6 days for each individual sub-job.</span>
+                        2) <span>Rows highlighted in red indicate an open issue or NCR or complaint with a particular vendor.</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span style="color:#ff0000;">*</span><span style="color:red">3) If the action on the selection checkbox is disabled for inspection call(s), approval from the Operations Manager is required.</span>
+                        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4)<span style="display:inline-block; width:13px; height:13px; background-color:#8CF000; border:1px solid #999; vertical-align:middle; margin:0 6px;"></span>
+                        <span>OPE has been submitted for approval Further action is not permitted.</span>
 
-                    <button class="btn btn-default news-btn" style="margin-bottom: 3px;" value="Closed" id="IDClosed">Close & Generate VR</button>
 
-                    <button class="btn btn-default news-btn" style="margin-bottom:3px;" id="IDAbortive">Abort & Generate VR</button>
+                    </span>
 
-                    <button class="btn btn-default news-btn" style="margin-bottom:3px;" value="NotDone" id="notDone">Not Done</button>
+                </div>
 
-                    <button class="btn btn-default news-btn" style="margin-bottom:3px;" value="Cancelled" id="IDCancelled">Cancel</button>
+                <button class="btn btn-default news-btn" style="margin-bottom: 3px;" value="Closed" id="IDClosed">Close & Generate VR</button>
 
-                    @*@{
+                <button class="btn btn-default news-btn" style="margin-bottom:3px;" id="IDAbortive">Abort & Generate VR</button>
+
+                <button class="btn btn-default news-btn" style="margin-bottom:3px;" value="NotDone" id="notDone">Not Done</button>
+
+                <button class="btn btn-default news-btn" style="margin-bottom:3px;" value="Cancelled" id="IDCancelled">Cancel</button>
+
+                @*@{
                         var item1 = ViewData["CallCount"] as IList<TuvVision.Models.CallsModel>;
                         var obj1 = item1 != null && item1.Count > 0 ? item1[0] : null;
                     }*@
 
 
 
-                <label class="small" style="margin-left: 10px;font-size: 14px">Call Summary-</label>
+                @*<label class="small" style="margin-left: 10px;font-size: 14px">Call Summary-</label>
                 <label class="small" style="font-size: 14px">Total: </label>
                 <label style="font-size: 14px">@(Model != null ? Model.TotalCalls.ToString() : "N/A")</label>
                 <label class="small" style="font-size: 14px">Assigned Calls: </label>
                 <label style="font-size: 14px">@(Model != null ? Model.AssignedCalls.ToString() : "N/A")</label>
                 <label style="font-size: 14px">Closed Calls: </label>
-                <label style="font-size: 14px">@(Model != null ? Model.ClosedCalls.ToString() : "N/A")</label>
+                <label style="font-size: 14px">@(Model != null ? Model.ClosedCalls.ToString() : "N/A")</label>*@
                 <div class="row">
 
                     <div class="col-xs-12 col-sm-9" id='INTERNATIONAL' style='display:none;'>
@@ -209,7 +215,7 @@
                             <th style="border:1px solid;">
 
                             </th>
-
+                            @*<th style="border: 1px solid;" class="fixed-width-column">Edit</th>*@
                             <th style="border: 1px solid;" class="fixed-width-column hidden">Pk_call_id</th>
                             <th style="border: 1px solid;" class="fixed-width-column hidden">PK_UserID</th>
                             <th style="border: 1px solid;" class="fixed-width-column hidden">Report Type</th>
@@ -253,6 +259,7 @@
 
                         </tr>
                         <tr class="fixed-width-column" style="border:1px solid;  background:#001ED2;" id="searchRow">
+                            @*<th><input type="text" style="width:28px;" /></th>*@
                             <th><input type="text" style="width:28px;" /></th>
                             <th class="hidden" style="width:7px;"><input type="text" placeholder="Search Name" style="color:black;" /></th>
                             <th class="hidden" style="width:7px;"><input type="text" placeholder="Search Name" style="color:black;" /></th>
@@ -303,111 +310,183 @@
                                 {
                                     var rowStyle = obj.AssignStatus == "1" ? "background-color: #FDAFB5;" : "";
 
-                                <tr style="@rowStyle">
-                                    
-                                    @if (obj.Status == "Assigned")
-                                    {
-                                        if (obj.JobBlock != "YES")
+                                    <tr style="@rowStyle">
+
+                                        @if (obj.Status == "Assigned")
                                         {
-                                            <td style='text-align: center; border: 1px solid;'>
-                                                <input type='checkbox' class="chk" />
-                                            </td>
+                                            if (obj.OPE == "Yes")
+                                            {
+                                                if (obj.OPE == "Yes" && obj.AllowCallsAfterOPEProcess == 1 && obj.status_ == "Yes")
+                                                {
+                                                    <td style='text-align: center; border: 1px solid;'>
+                                                        <input type='checkbox' class="chk" />
+                                                    </td>
+                                                }
+                                                else if (obj.OPE.ToUpper() == "YES" && obj.status_ == "Yes")
+                                                {
+                                                    <td style='text-align:center; border: 1px solid;background-color:#8CF000;'></td>
+                                                }
+                                                else
+                                                {
+                                                    if (obj.IsAssignedUnderOprMngr == "YES")
+                                                    {
+                                                        if (obj.CallCloseAllow == "NO")
+                                                        {
+                                                            <td style='text-align: center; border: 1px solid;'>
+                                                                <input type='checkbox' class="chk" />
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td style='text-align: center; border: 1px solid;'>
+                                                                <input type='checkbox' class="chk" disabled />
+                                                            </td>
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style='text-align: center; border: 1px solid;'>
+                                                            <input type='checkbox' class="chk" />
+                                                        </td>
+                                                    }
+                                                }
+                                            }
+
+
+
+
+
+
+                                            else if (obj.IsAssignedUnderOprMngr == "YES")
+                                            {
+                                                if (obj.CallCloseAllow == "NO")
+                                                {
+                                                    <td style='text-align: center; border: 1px solid;'>
+                                                        <input type='checkbox' class="chk" />
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td style='text-align: center; border: 1px solid;'>
+                                                        <input type='checkbox' class="chk" disabled />
+                                                    </td>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                <td style='text-align: center; border: 1px solid;'>
+                                                    <input type='checkbox' class="chk" />
+                                                </td>
+                                            }
+
                                         }
                                         else
                                         {
-                                            <td style='text-align: center; border: 1px solid;'>Block</td>
+                                            <td style='text-align: center; border: 1px solid;'></td>
                                         }
+                                        @*<td style="text-align: center; border: 1px solid;">
+                                                <a href="@Url.Action("InsertCalls", "Callsmaster", new { pk_call_id = obj.PK_Call_ID })"
+                                                   class="fa fa-pencil"
+                                                   title="Edit"
+                                                   style="color: #001ED2; font-size: 16px; text-decoration: none;">
+                                                </a>
+                                            </td>*@
+                                        <td style='text-align: center; border: 1px solid;' class="hidden">@obj.PK_Call_ID</td>
+                                        <td style='text-align: center; border: 1px solid;' class="hidden">@obj.PK_UserID</td>
+                                        <td style='text-align: center; border: 1px solid;' class="hidden">@obj.ReportType</td>
 
-                                    }
-                                    else
-                                    {
-                                        <td style='text-align: center; border: 1px solid;'></td>
-                                    }
-                                    <td style='text-align: center; border: 1px solid;' class="hidden">@obj.PK_Call_ID</td>
-                                    <td style='text-align: center; border: 1px solid;' class="hidden">@obj.PK_UserID</td>
-                                    <td style='text-align: center; border: 1px solid;' class="hidden">@obj.ReportType</td>
-
-                                    <td style="text-align: center; border: 1px solid;">
-                                        <a href="@Url.Action("CallsDetails", "Callsmaster", new { pk_call_id = obj.PK_Call_ID })">@obj.Call_No</a>
-                                    </td>
-
-                                    <td style='text-align: center; border: 1px solid;'>@obj.Actual_Visit_Date</td>
-
-
-                                    <td style="text-align: center; border: 1px solid; @(obj.ActualDay == "Sunday" ? "background-color:#FB5F6B;" : "")">
-                                        @obj.ActualDay
-                                    </td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.Status</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.SubSubJobNo</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.VendorName</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.Company_Name</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.PO_Number</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.EstimatedHours</td>
-                                    <td style="text-align: center; border: 1px solid;">
+                                        @*<td style="text-align: center; border: 1px solid;">
+                                                <a href="@Url.Action("CallsDetails", "Callsmaster", new { pk_call_id = obj.PK_Call_ID })">@obj.Call_No</a>
+                                            </td>*@
+                                        @*<td>
+                                                <a href="@Url.Action("CallsDetails", "Callsmaster", new { pk_call_id = obj.PK_Call_ID })"
+                                                   class="fa fa-pencil"
+                                                   title="Edit"
+                                                   style="color: #001ED2; font-size: 16px; text-decoration: none;">
+                                                </a>
+                                            </td>*@
+                                        <td style='text-align: center; border: 1px solid;'>@obj.Call_No</td>
 
 
-                                        @if (!string.IsNullOrEmpty(obj.CustomerRepresentative))
-                                        {
-                                            <span class="tooltip-container" data-toggle="tooltip" data-placement="top" title="@obj.CustomerRepresentative">
-                                                <img src="~/View1.png" />
-                                            </span>
-                                        }
-                                    </td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.InspectionLocation</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.Actual_Visit_Date</td>
 
 
-                                    <td style="text-align: center; border: 1px solid;">
-                                        @if (!string.IsNullOrEmpty(obj.Client_Contact))
-                                        {
-                                            <span class="tooltip-container" data-toggle="tooltip" data-placement="top" title="@obj.Client_Contact">
-                                                <img src="~/View1.png" />
-                                            </span>
-                                        }
-                                        @if (!string.IsNullOrEmpty(obj.Vendor_Contact))
-                                        {
-                                            <span class="tooltip-container" data-toggle="tooltip" data-placement="top" title="@obj.Vendor_Contact">
-                                                <img src="~/View1.png" />
-                                            </span>
-                                        }
-                                        @if (!string.IsNullOrEmpty(obj.Sub_Vendor_Contact))
-                                        {
-                                            <span class="tooltip-container" data-toggle="tooltip" data-placement="top" title="@obj.Sub_Vendor_Contact">
-                                                <img src="~/View1.png" />
-                                            </span>
-                                        }
-                                    </td>
+                                        <td style="text-align: center; border: 1px solid; @(obj.ActualDay == "Sunday" ? "background-color:#FB5F6B;" : "")">
+                                            @obj.ActualDay
+                                        </td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.Status</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.SubSubJobNo</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.VendorName</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.Company_Name</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.PO_Number</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.EstimatedHours</td>
+                                        <td style="text-align: center; border: 1px solid;">
 
 
+                                            @if (!string.IsNullOrEmpty(obj.CustomerRepresentative))
+                                            {
+                                                <span class="tooltip-container" data-toggle="tooltip" data-placement="top" title="@obj.CustomerRepresentative">
+                                                    <img src="~/View1.png" />
+                                                </span>
+                                            }
+                                        </td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.InspectionLocation</td>
 
 
-                                    <td style="text-align: center; border: 1px solid;">
-                                        <a href="@Url.Action("IVRReportsBySubjob", "SubJobMaster", new { SubJob_No = obj.SubSubJobNo })" target="_blank">IVR List</a>
-                                    </td>
-                                    <td style="text-align: center; border: 1px solid;">
-                                        <a href="@Url.Action("IRNReportsBySubjob", "SubJobMaster", new { PK_Call_ID = obj.PK_Call_ID })" target="_blank">IRN List</a>
-                                    </td>
-                                    <td style="text-align: center; border: 1px solid;">
-                                        <a href="@Url.Action("NCRReportsBySubjob", "SubJobMaster", new { SubJob_No = obj.SubSubJobNo })" target="_blank">NCR List</a>
-                                    </td>
-                                    <td style="text-align: center; border: 1px solid;">
-                                        <a href="@Url.Action("ComplaintsDashBoardByCallNo", "Complaint", new { SubVendorName = obj.SubVendorName, PK_Call_ID = obj.PK_Call_ID })" target="_blank">Complaint List</a>
-                                    </td>
-                                    <td style="text-align: center; border: 1px solid;">
-                                        <a href="@Url.Action("AllConcern", "VisitReport", new { PK_CALL_ID = obj.PK_Call_ID, Type = "InspectorCall" })" target="_blank">List of Issues</a>
-                                    </td>
-
-                                    <td style='text-align: center; border: 1px solid;'>@obj.chkARC1</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.StageOfInspection</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.ItemsToBeInpsected</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.Project_Name</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.Inspector</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.Call_Type</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.Urgency</td>
-                                    <td style='text-align: center; border: 1px solid;'>@obj.Call_Recived_date</td>
+                                        <td style="text-align: center; border: 1px solid;">
+                                            @if (!string.IsNullOrEmpty(obj.Client_Contact))
+                                            {
+                                                <span class="tooltip-container" data-toggle="tooltip" data-placement="top" title="@obj.Client_Contact">
+                                                    <img src="~/View1.png" />
+                                                </span>
+                                            }
+                                            @if (!string.IsNullOrEmpty(obj.Vendor_Contact))
+                                            {
+                                                <span class="tooltip-container" data-toggle="tooltip" data-placement="top" title="@obj.Vendor_Contact">
+                                                    <img src="~/View1.png" />
+                                                </span>
+                                            }
+                                            @if (!string.IsNullOrEmpty(obj.Sub_Vendor_Contact))
+                                            {
+                                                <span class="tooltip-container" data-toggle="tooltip" data-placement="top" title="@obj.Sub_Vendor_Contact">
+                                                    <img src="~/View1.png" />
+                                                </span>
+                                            }
+                                        </td>
 
 
 
-                                </tr>
+
+                                        <td style="text-align: center; border: 1px solid;">
+                                            <a href="@Url.Action("IVRReportsBySubjob", "SubJobMaster", new { SubJob_No = obj.SubSubJobNo })" target="_blank">IVR List</a>
+                                        </td>
+                                        <td style="text-align: center; border: 1px solid;">
+                                            <a href="@Url.Action("IRNReportsBySubjob", "SubJobMaster", new { PK_Call_ID = obj.PK_Call_ID })" target="_blank">IRN List</a>
+                                        </td>
+                                        <td style="text-align: center; border: 1px solid;">
+                                            <a href="@Url.Action("NCRReportsBySubjob", "SubJobMaster", new { SubJob_No = obj.SubSubJobNo })" target="_blank">NCR List</a>
+                                        </td>
+                                        <td style="text-align: center; border: 1px solid;">
+                                            <a href="@Url.Action("ComplaintsDashBoardByCallNo", "Complaint", new { SubVendorName = obj.SubVendorName, PK_Call_ID = obj.PK_Call_ID })" target="_blank">Complaint List</a>
+                                        </td>
+                                        <td style="text-align: center; border: 1px solid;">
+                                            <a href="@Url.Action("AllConcern", "VisitReport", new { PK_CALL_ID = obj.PK_Call_ID, Type = "InspectorCall" })" target="_blank">List of Issues</a>
+                                        </td>
+
+                                        <td style='text-align: center; border: 1px solid;'>@obj.chkARC1</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.StageOfInspection</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.ItemsToBeInpsected</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.Project_Name</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.Inspector</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.Call_Type</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.Urgency</td>
+                                        <td style='text-align: center; border: 1px solid;'>@obj.Call_Recived_date</td>
+
+
+
+                                    </tr>
                                 }
                             }
                         </tbody>

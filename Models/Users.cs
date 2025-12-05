@@ -88,6 +88,8 @@ namespace TuvVision.Models
         [Required(ErrorMessage = "Please Select Branch "), MaxLength(30)]
         [Display(Name = "Branch")]
         public string Branch { get; set; }
+        public string FRM { get; set; }
+        public bool chkDeclaration { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public static List<Users> lstUser { get; set; }
         public List<NameCode> lstGroupRoleName { get; set; }
@@ -213,7 +215,7 @@ namespace TuvVision.Models
 
         public string StrIData { get; set; }
         public string StrSignatureData { get; set; }
-
+        public int ISA { get; set; }
 
         public List<Users> lstCallDashBoard1 { get; set; }
         public String MentorName { get; set; }
@@ -437,6 +439,7 @@ namespace TuvVision.Models
         public string ExperienceInMonth { get; set; }
 
         public string ProfCertificates { get; set; }
+        
         public string Attachments { get; set; }
         public List<ProfileUser> LstUserData { get; set; }
 

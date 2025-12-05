@@ -341,6 +341,7 @@ namespace TuvVision.Controllers
                 if (DTEditUser.Rows.Count > 0)
                 {
                     ObjModelUsers.PK_UserID = Convert.ToString(DTEditUser.Rows[0]["PK_UserID"]);
+                    ObjModelUsers.ISA = Convert.ToInt32(DTEditUser.Rows[0]["ISA"]);
                     ObjModelUsers.FirstName = Convert.ToString(DTEditUser.Rows[0]["FirstName"]);
                     ObjModelUsers.LastName = Convert.ToString(DTEditUser.Rows[0]["LastName"]);
                     ObjModelUsers.EmailID = Convert.ToString(DTEditUser.Rows[0]["EmailID"]);
@@ -356,6 +357,7 @@ namespace TuvVision.Controllers
                     ObjModelUsers.Address2 = Convert.ToString(DTEditUser.Rows[0]["Address2"]);
                     ObjModelUsers.IsActive = Convert.ToBoolean(DTEditUser.Rows[0]["IsActive"]);
                     ObjModelUsers.Branch = Convert.ToString(DTEditUser.Rows[0]["FK_BranchID"]);
+                    ObjModelUsers.FRM = Convert.ToString(DTEditUser.Rows[0]["FRM"]);
                     ObjModelUsers.UserRole = Convert.ToString(DTEditUser.Rows[0]["FK_RoleID"]);
                     ObjModelUsers.PKId = Convert.ToString(DTEditUser.Rows[0]["FK_RoleID"]);
 

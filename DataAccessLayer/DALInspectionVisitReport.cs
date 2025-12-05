@@ -208,6 +208,11 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@Outtime", CPM.Outtime);
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@ReviseReason", CPM.ReviseReason);
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@IsComfirmation", CPM.IsComfirmation);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@Manufact_Contra_Prod_Fabri", CPM.Manufact_Contra_Prod_Fabri);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@TestingLaboratory", CPM.TestingLaboratory);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@stock_Trade_Raw", CPM.stock_Trade_Raw);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@TUVICustomer_End_Plant", CPM.TUVICustomer_End_Plant);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@CMP_ID", CPM.CMP_ID);
 
                     if (CPM.Date_of_PO == null)
                     {
@@ -5358,6 +5363,9 @@ namespace TuvVision.DataAccessLayer
             }
             return getdata;
         }
+
+
+
 
 
         public List<VisitMonitoringRecord> GetPersonalDiaryDataDatewise(string FromDate,string ToDate)//Get All DropDownlist 

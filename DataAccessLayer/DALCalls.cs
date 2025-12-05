@@ -62,7 +62,7 @@ namespace TuvVision.DataAccessLayer
                 CMDInsertUpdateCalls.Parameters.AddWithValue("@Originating_Branch", CPM.Originating_Branch);
                 CMDInsertUpdateCalls.Parameters.AddWithValue("@Type", CPM.Type);
                 CMDInsertUpdateCalls.Parameters.AddWithValue("@Contact_Name", CPM.Contact_Name);
-          //      CMDInsertUpdateCalls.Parameters.AddWithValue("@Call_Recived_date", DateTime.ParseExact(CPM.CallReceiveTime, "dd/MM/yyyy", null));
+                //      CMDInsertUpdateCalls.Parameters.AddWithValue("@Call_Recived_date", DateTime.ParseExact(CPM.CallReceiveTime, "dd/MM/yyyy", null));
                 CMDInsertUpdateCalls.Parameters.AddWithValue("@Call_Recived_date", DateTime.ParseExact(CPM.CallReceiveTime.Substring(0, 10), "dd/MM/yyyy", CultureInfo.InvariantCulture));
                 if (CPM.Call_Request_Date != null)
                 {
@@ -148,7 +148,17 @@ namespace TuvVision.DataAccessLayer
                 //added by shrutika salve 14062024
                 CMDInsertUpdateCalls.Parameters.AddWithValue("@CustomerRepresentativeName", CPM.CustomerRepresentative);
                 CMDInsertUpdateCalls.Parameters.AddWithValue("@CallsRemarks", CPM.CallRemarks);
-
+                CMDInsertUpdateCalls.Parameters.AddWithValue("@DelayInspAssign", CPM.InspectorDelayReason);
+                CMDInsertUpdateCalls.Parameters.AddWithValue("@callgenerationDelayRsn", CPM.DelayReason);
+                CMDInsertUpdateCalls.Parameters.AddWithValue("@IsOprMgrApprovalReq", CPM.operationalApprovalRequired);
+                if (CPM.DelayReason != null)
+                {
+                    CMDInsertUpdateCalls.Parameters.AddWithValue("@callgenerationDelay", "YES");
+                }
+                else
+                {
+                    CMDInsertUpdateCalls.Parameters.AddWithValue("@callgenerationDelay", "NO");
+                }
                 CMDInsertUpdateCalls.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                 CMDInsertUpdateCalls.Parameters.Add("@ReturnId", SqlDbType.Int).Direction = ParameterDirection.Output;
                 Result = CMDInsertUpdateCalls.ExecuteNonQuery().ToString();
@@ -179,7 +189,7 @@ namespace TuvVision.DataAccessLayer
                 CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
                 CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 55);
                 CMDGetDdlLst.Parameters.AddWithValue("@PK_Call_ID", callId);
-                
+
                 CMDGetDdlLst.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
                 SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
                 SDAGetDdlLst.Fill(DSGetddlList);
@@ -368,9 +378,19 @@ namespace TuvVision.DataAccessLayer
 
                     //added by shrutika salve 14062024
                     CMDInsertUpdateCalls.Parameters.AddWithValue("@CustomerRepresentativeName", CPM.CustomerRepresentative);
+                    CMDInsertUpdateCalls.Parameters.AddWithValue("@IsOprMgrApprovalReq", CPM.operationalApprovalRequired);
                     CMDInsertUpdateCalls.Parameters.AddWithValue("@CallsRemarks", CPM.CallRemarks);
-
-
+                    CMDInsertUpdateCalls.Parameters.AddWithValue("@DelayPlnDateRsn", CPM.DelayReason);
+                    CMDInsertUpdateCalls.Parameters.AddWithValue("@DelayInspAssign", CPM.InspectorDelayReason);
+                    CMDInsertUpdateCalls.Parameters.AddWithValue("@callgenerationDelayRsn", CPM.DelayReason);
+                    if (CPM.DelayReason != null)
+                    {
+                        CMDInsertUpdateCalls.Parameters.AddWithValue("@callgenerationDelay", "YES");
+                    }
+                    else
+                    {
+                        CMDInsertUpdateCalls.Parameters.AddWithValue("@callgenerationDelay", "NO");
+                    }
                     CMDInsertUpdateCalls.Parameters.Add("@ReturnId", SqlDbType.Int).Direction = ParameterDirection.Output;
                     Result = CMDInsertUpdateCalls.ExecuteNonQuery().ToString();
                     ReturnId = Convert.ToInt32(CMDInsertUpdateCalls.Parameters["@ReturnId"].Value.ToString());
@@ -492,9 +512,11 @@ namespace TuvVision.DataAccessLayer
                     //added by shrutika salve 14062024
                     CMDInsertUpdateCall.Parameters.AddWithValue("@CustomerRepresentativeName", CPM.CustomerRepresentative);
                     CMDInsertUpdateCall.Parameters.AddWithValue("@CallsRemarks", CPM.CallRemarks);
-
+                    CMDInsertUpdateCall.Parameters.AddWithValue("@DelayInspAssign", CPM.InspectorDelayReason);
+                    CMDInsertUpdateCall.Parameters.AddWithValue("@DelayPlnDateRsn", CPM.DelayReason);
                     //added by shrutika salve 08022024
                     CMDInsertUpdateCall.Parameters.AddWithValue("@ExpeditingType", CPM.ExpeditingType);
+                    CMDInsertUpdateCall.Parameters.AddWithValue("@IsOprMgrApprovalReq", CPM.operationalApprovalRequired);
                     Result = CMDInsertUpdateCall.ExecuteNonQuery().ToString();
                 }
 
@@ -570,7 +592,7 @@ namespace TuvVision.DataAccessLayer
             return DTEditContact;
         }
 
-        
+
 
 
         public DataSet EditCallByInspector(int? PK_Call_ID)
@@ -689,7 +711,7 @@ namespace TuvVision.DataAccessLayer
         }
         #endregion
 
-        public List<BranchMasters> GetBranchList_(int? PK_SubJob_Id,int? PK_Call_ID)// Binding Sales Masters DashBoard of Master Page 
+        public List<BranchMasters> GetBranchList_(int? PK_SubJob_Id, int? PK_Call_ID)// Binding Sales Masters DashBoard of Master Page 
         {
             DataTable DTEMDashBoard = new DataTable();
             List<BranchMasters> lstEnquiryDashB = new List<BranchMasters>();
@@ -1065,6 +1087,8 @@ namespace TuvVision.DataAccessLayer
                 CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
                 CMDGetEnquriy.CommandTimeout = 1000000;
                 CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", 9);
+                //CMDGetEnquriy.Parameters.AddWithValue("@PK_SubJob_Id", PK_SubJob_Id);
+                //CMDGetEnquriy.Parameters.AddWithValue("@PK_Call_ID", PK_Call_ID);
                 CMDGetEnquriy.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
                 SqlDataAdapter SDAGetEnquiry = new SqlDataAdapter(CMDGetEnquriy);
                 SDAGetEnquiry.Fill(DTEMDashBoard);
@@ -1277,11 +1301,11 @@ namespace TuvVision.DataAccessLayer
                     CMDGetDdlLst.Parameters.AddWithValue("@Fromdate", DateTime.ParseExact(DateTime.ParseExact(CM.FromDate, "dd/mm/yyyy", provider).ToString("mm/dd/yyyy"), "MM/dd/yyyy", theCultureInfo));
                     CMDGetDdlLst.Parameters.AddWithValue("@ToDate", DateTime.ParseExact(DateTime.ParseExact(CM.ToDate, "dd/mm/yyyy", provider).ToString("mm/dd/yyyy"), "MM/dd/yyyy", theCultureInfo));
                 }
-                
 
-                
+
+
                 CMDGetDdlLst.Parameters.AddWithValue("@Call_No", CM.Call_No);
-                CMDGetDdlLst.Parameters.AddWithValue("@Branch", CM.Excuting_Branch );
+                CMDGetDdlLst.Parameters.AddWithValue("@Branch", CM.Executing_Branch);
                 CMDGetDdlLst.Parameters.AddWithValue("@originating_Branch", CM.Originating_Branch);
 
                 CMDGetDdlLst.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
@@ -1334,13 +1358,13 @@ namespace TuvVision.DataAccessLayer
         {
             DateTime dtf = new DateTime();
             DateTime dtt = new DateTime();
-          /*  if (a.FromDate != null && a.ToDate != null)
-            {
+            /*  if (a.FromDate != null && a.ToDate != null)
+              {
 
-                dtf = Convert.ToDateTime(a.FromDate);
-                dtt = Convert.ToDateTime(a.ToDate);
-            }
-            */
+                  dtf = Convert.ToDateTime(a.FromDate);
+                  dtt = Convert.ToDateTime(a.ToDate);
+              }
+              */
 
 
             DataTable DTCallsList = new DataTable();
@@ -1469,13 +1493,13 @@ namespace TuvVision.DataAccessLayer
         }
         public DataTable GetAssignmentDashBoardWithDate(CallsModel a)
         {
-          //  DateTime dtf = Convert.ToDateTime(a.From_Date);
+            //  DateTime dtf = Convert.ToDateTime(a.From_Date);
             //DateTime dtt = Convert.ToDateTime(a.To_Date);
-            string DateF =  a.FromDate;
+            string DateF = a.FromDate;
             string DateT = a.ToDate;
             string CallNo = a.Call_No;
             int BrId = a.Br_Id;
-            int ExBr_Id = Convert.ToInt32( a.Originating_Branch);
+            int ExBr_Id = Convert.ToInt32(a.Originating_Branch);
 
             DataTable DTAssignment = new DataTable();
             try
@@ -1516,7 +1540,7 @@ namespace TuvVision.DataAccessLayer
             con.Open();
             try
             {
-         //     LogFile(strDate.ToString(), "strDate");
+                //     LogFile(strDate.ToString(), "strDate");
                 if (URS.PK_Call_ID != 0)
                 {
                     SqlCommand CMDInsertUpdateUsers = new SqlCommand("SP_CallsMaster", con);
@@ -1537,6 +1561,8 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@Status", URS.Status);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@Inspector", URS.Inspector);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@ModifyBy", System.Web.HttpContext.Current.Session["UserIDs"]);
+                    CMDInsertUpdateUsers.Parameters.AddWithValue("@DelayInspAssign", URS.InspectorDelayReason);
+                    CMDInsertUpdateUsers.Parameters.AddWithValue("@IsOprMgrApprovalReq", URS.IsAssignedUnderOprMngr);
                     Result = CMDInsertUpdateUsers.ExecuteNonQuery().ToString();
                 }
                 else
@@ -1551,13 +1577,13 @@ namespace TuvVision.DataAccessLayer
                     //CMDInsertUpdateUsers.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserLoginID"]));
                     //Result = CMDInsertUpdateUsers.ExecuteNonQuery().ToString();
                 }
-                
+
 
             }
             catch (Exception ex)
             {
                 string Error = ex.Message.ToString();
-              //  LogFile(ex.Message , "UpdateCallAssignment");
+                //  LogFile(ex.Message , "UpdateCallAssignment");
             }
             finally
             {
@@ -1567,6 +1593,45 @@ namespace TuvVision.DataAccessLayer
                 }
             }
             return Result;
+        }
+
+        public List<CallsModel> GetDelayedReason()// Binding Sales Masters DashBoard of Master Page 
+        {
+            DataTable DTEMDashBoard = new DataTable();
+            List<CallsModel> lstEnquiryDashB = new List<CallsModel>();
+            try
+            {
+                SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", "99");
+                //CMDGetEnquriy.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
+                SqlDataAdapter SDAGetEnquiry = new SqlDataAdapter(CMDGetEnquriy);
+                SDAGetEnquiry.Fill(DTEMDashBoard);
+                if (DTEMDashBoard.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in DTEMDashBoard.Rows)
+                    {
+                        lstEnquiryDashB.Add(
+                           new CallsModel
+                           {
+                               Id = Convert.ToInt32(dr["ID"]),
+                               DelayReason = Convert.ToString(dr["Reason"]),
+
+                           }
+                         );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTEMDashBoard.Dispose();
+            }
+            return lstEnquiryDashB;
         }
 
         public DataSet GetEmailDetails(int CallId)
@@ -1580,14 +1645,14 @@ namespace TuvVision.DataAccessLayer
                     SqlCommand CMDInsertUpdateUsers = new SqlCommand("SP_CallsMaster", con);
                     CMDInsertUpdateUsers.CommandType = CommandType.StoredProcedure;
                     CMDInsertUpdateUsers.CommandTimeout = 0;
-                    CMDInsertUpdateUsers.Parameters.AddWithValue("@SP_Type", 54);                    
-                    CMDInsertUpdateUsers.Parameters.AddWithValue("@PK_Call_ID", CallId);                    
+                    CMDInsertUpdateUsers.Parameters.AddWithValue("@SP_Type", 54);
+                    CMDInsertUpdateUsers.Parameters.AddWithValue("@PK_Call_ID", CallId);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@ModifyBy", System.Web.HttpContext.Current.Session["UserIDs"]);
-                    
+
                     SqlDataAdapter SDAEditContact = new SqlDataAdapter(CMDInsertUpdateUsers);
                     SDAEditContact.Fill(Result);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -1651,7 +1716,7 @@ namespace TuvVision.DataAccessLayer
             return DSGetddlList;
         }
 
-        public int DeleteCalls(int? PK_Call_ID)
+        public int DeleteCalls(int? PK_Call_ID, string reason)
         {
             int Result = 0;
             con.Open();
@@ -1662,6 +1727,7 @@ namespace TuvVision.DataAccessLayer
                 CMDContactDelete.CommandTimeout = 100000;
                 CMDContactDelete.Parameters.AddWithValue("@SP_Type", 19);
                 CMDContactDelete.Parameters.AddWithValue("@PK_Call_ID", PK_Call_ID);
+                CMDContactDelete.Parameters.AddWithValue("@DeleteReason", reason);
                 CMDContactDelete.Parameters.AddWithValue("@ModifyBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                 Result = CMDContactDelete.ExecuteNonQuery();
                 if (Result != 0)
@@ -1699,7 +1765,7 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@Status", URS.Status);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@AssignStatus", URS.AssignStatus);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@IsVisitReportGenerated", URS.IsVisitReportGenerated);
-                    
+
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@Inspector", URS.Inspector);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@PK_Call_ID", URS.PK_Call_ID);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@Reasion", URS.Reasion);
@@ -1817,7 +1883,7 @@ namespace TuvVision.DataAccessLayer
             return DSCheckValid;
         }
 
-        
+
 
         //**********************Manoj Added code for Uploading File in database on 12 March 2020
         public string InsertFileAttachment(List<FileDetails> lstFileUploaded, int CALL_ID)
@@ -1840,7 +1906,7 @@ namespace TuvVision.DataAccessLayer
 
                 foreach (var item in lstFileUploaded)
                 {
-                    DTUploadFile.Rows.Add(CALL_ID, item.FileName, item.Extension, item.Id, UserName, DateTime.Now, UserName, DateTime.Now,item.FileContent);
+                    DTUploadFile.Rows.Add(CALL_ID, item.FileName, item.Extension, item.Id, UserName, DateTime.Now, UserName, DateTime.Now, item.FileContent);
                 }
                 if (lstFileUploaded.Count > 0)
                 {
@@ -2056,8 +2122,8 @@ namespace TuvVision.DataAccessLayer
             }
             return DTGetTUVEmail;
         }
-		
-		public DataTable GetCallDetailsNew(int callId, string ArrPK_Call_ID)
+
+        public DataTable GetCallDetailsNew(int callId, string ArrPK_Call_ID)
         {
             DataTable DSGetddlList = new DataTable();
             try
@@ -2083,7 +2149,7 @@ namespace TuvVision.DataAccessLayer
 
 
         }
-		
+
         public void LogFile(string strMessage, string strMethodName)
         {
             try
@@ -2117,7 +2183,7 @@ namespace TuvVision.DataAccessLayer
                 CMDCallDash.CommandTimeout = 100000;
                 CMDCallDash.Parameters.AddWithValue("@SP_Type", 68);
                 CMDCallDash.Parameters.AddWithValue("@PK_Call_ID", pkCallID);
-                
+
                 SqlDataAdapter SDADashBoardData = new SqlDataAdapter(CMDCallDash);
                 SDADashBoardData.Fill(DTDashBoard);
 
@@ -2136,7 +2202,7 @@ namespace TuvVision.DataAccessLayer
             return strPlannedDate;
         }
 
-        public DataTable GetInspectorTS(string InspectorName,string plannedDate) //User Role DashBoard
+        public DataTable GetInspectorTS(string InspectorName, string plannedDate) //User Role DashBoard
         {
 
             DataTable DTDashBoard = new DataTable();
@@ -2147,7 +2213,7 @@ namespace TuvVision.DataAccessLayer
                 CMDCallDash.CommandTimeout = 100000;
                 CMDCallDash.Parameters.AddWithValue("@SP_Type", 69);
                 CMDCallDash.Parameters.AddWithValue("@Inspector", InspectorName);
-                CMDCallDash.Parameters.AddWithValue("@TSDate", plannedDate);                
+                CMDCallDash.Parameters.AddWithValue("@TSDate", plannedDate);
                 SqlDataAdapter SDADashBoardData = new SqlDataAdapter(CMDCallDash);
                 SDADashBoardData.Fill(DTDashBoard);
             }
@@ -2172,7 +2238,7 @@ namespace TuvVision.DataAccessLayer
                 SqlCommand CMDEditContact = new SqlCommand("SP_CallsMaster", con);
                 CMDEditContact.CommandType = CommandType.StoredProcedure;
                 CMDEditContact.Parameters.AddWithValue("@SP_Type", 70);
-                CMDEditContact.Parameters.AddWithValue("@PK_Call_ID", PK_Call_ID);                
+                CMDEditContact.Parameters.AddWithValue("@PK_Call_ID", PK_Call_ID);
                 SqlDataAdapter SDAEditContact = new SqlDataAdapter(CMDEditContact);
                 SDAEditContact.Fill(DTEditContact);
             }
@@ -2234,7 +2300,7 @@ namespace TuvVision.DataAccessLayer
         //added by nikita on 23052024
         public string InsertUpdateAddMandays(CallsModel CPM)
         {
-           
+
             string Result = string.Empty;
             DataTable dtResult = new DataTable();
 
@@ -2325,7 +2391,7 @@ namespace TuvVision.DataAccessLayer
                 SqlDataAdapter SDADashBoardData = new SqlDataAdapter(CMDCallDash);
                 SDADashBoardData.Fill(DTDashBoard);
 
-             
+
 
             }
             catch (Exception ex)
@@ -2340,7 +2406,7 @@ namespace TuvVision.DataAccessLayer
             return DTDashBoard;
         }
 
-        
+
         public List<CallReasonMaster> GetReasonList(string Type)// Binding Sales Masters DashBoard of Master Page 
         {
             DataTable DTEMDashBoard = new DataTable();
@@ -2391,7 +2457,7 @@ namespace TuvVision.DataAccessLayer
                 SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
                 CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
                 CMDGetEnquriy.CommandTimeout = 1000000;
-                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", 73);                
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", 73);
                 CMDGetEnquriy.Parameters.AddWithValue("@PK_Call_ID", pkCallID);
                 Result = CMDGetEnquriy.ExecuteNonQuery();
 
@@ -2408,7 +2474,7 @@ namespace TuvVision.DataAccessLayer
         }
 
 
-        public DataTable GetScopeDetails(string ProdList,string stageof)// Binding Sales Masters DashBoard of Master Page 
+        public DataTable GetScopeDetails(string ProdList, string stageof, string ExecutingService)// Binding Sales Masters DashBoard of Master Page 
         {
             string Result = string.Empty;
             DataTable DTDashBoard = new DataTable();
@@ -2422,6 +2488,8 @@ namespace TuvVision.DataAccessLayer
                 CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", 75);
                 CMDGetEnquriy.Parameters.AddWithValue("@Product_item", ProdList);
                 CMDGetEnquriy.Parameters.AddWithValue("@ProductStage", stageof);
+                CMDGetEnquriy.Parameters.AddWithValue("@ProductService", ExecutingService);
+                //CMDGetEnquriy.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
                 if (con.State == ConnectionState.Closed)
                 {
                     con.Open();
@@ -2445,7 +2513,7 @@ namespace TuvVision.DataAccessLayer
         }
 
 
-        public string GetCompetancy(string Name,string Scope)// Binding Sales Masters DashBoard of Master Page 
+        public string GetCompetancy(string Name, string Scope)// Binding Sales Masters DashBoard of Master Page 
         {
             string Result = string.Empty;
 
@@ -2475,7 +2543,7 @@ namespace TuvVision.DataAccessLayer
             {
                 string Error = ex.Message.ToString();
             }
-            
+
             return Result.ToString();
         }
 
@@ -2538,7 +2606,7 @@ namespace TuvVision.DataAccessLayer
             return Result.ToString();
         }
 
-        public string GetcustomerApproved(string inspectorName, string CustomerName)// Binding Sales Masters DashBoard of Master Page 
+        public string GetcustomerApproved(string inspectorName, string CustomerName, string ProductList)// Binding Sales Masters DashBoard of Master Page 
         {
             string Result = string.Empty;
 
@@ -2551,6 +2619,7 @@ namespace TuvVision.DataAccessLayer
                 CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", 81);
                 CMDGetEnquriy.Parameters.AddWithValue("@Customer", CustomerName);
                 CMDGetEnquriy.Parameters.AddWithValue("@Inspector", inspectorName);
+                CMDGetEnquriy.Parameters.AddWithValue("@product_list", ProductList);
 
                 if (con.State == ConnectionState.Closed)
                 {
@@ -2804,7 +2873,7 @@ namespace TuvVision.DataAccessLayer
 
 
 
-        public DataTable UpdateMailflag(int? PK_JOB_ID)
+        public DataTable UpdateMailflag(int? PK_SubJob_Id)
         {
             DataTable DTEditUploadedFile = new DataTable();
             try
@@ -2812,7 +2881,7 @@ namespace TuvVision.DataAccessLayer
                 SqlCommand CMDEditUploadedFile = new SqlCommand("SP_ConsumedMandays_mail", con);
                 CMDEditUploadedFile.CommandType = CommandType.StoredProcedure;
                 CMDEditUploadedFile.Parameters.AddWithValue("@SP_Type", 2);
-                CMDEditUploadedFile.Parameters.AddWithValue("@Pk_Job_id", PK_JOB_ID);
+                CMDEditUploadedFile.Parameters.AddWithValue("@Pk_Job_id", PK_SubJob_Id);
 
                 SqlDataAdapter SDAEditUploadedFile = new SqlDataAdapter(CMDEditUploadedFile);
                 SDAEditUploadedFile.Fill(DTEditUploadedFile);
@@ -2827,6 +2896,518 @@ namespace TuvVision.DataAccessLayer
             }
             return DTEditUploadedFile;
         }
+
+        public DataTable GetCallsReview()
+
+        {
+            DataTable DSGetddlList = new DataTable();
+            try
+            {
+                SqlCommand CMDGetDdlLst = new SqlCommand("SP_CallsMaster", con);
+                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+                CMDGetDdlLst.CommandTimeout = 1000000;
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 89);
+                CMDGetDdlLst.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
+                SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                SDAGetDdlLst.Fill(DSGetddlList);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DSGetddlList.Dispose();
+            }
+            return DSGetddlList;
+        }
+
+        public DataTable GetRejCallsReview(string id)
+
+        {
+
+            string result = id.Replace("{", "").Replace("}", "");
+
+            DataTable DSGetddlList = new DataTable();
+            try
+            {
+                SqlCommand CMDGetDdlLst = new SqlCommand("SP_CallsMaster", con);
+                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+                CMDGetDdlLst.CommandTimeout = 1000000;
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 93);
+                CMDGetDdlLst.Parameters.AddWithValue("@Call_No", result);
+                SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                SDAGetDdlLst.Fill(DSGetddlList);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DSGetddlList.Dispose();
+            }
+            return DSGetddlList;
+        }
+
+        public DataTable GetAppCallsReview(string id)
+
+        {
+            DataTable DSGetddlList = new DataTable();
+            try
+            {
+                SqlCommand CMDGetDdlLst = new SqlCommand("SP_CallsMaster", con);
+                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+                CMDGetDdlLst.CommandTimeout = 1000000;
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 96);
+                CMDGetDdlLst.Parameters.AddWithValue("@Call_No", id);
+                SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                SDAGetDdlLst.Fill(DSGetddlList);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DSGetddlList.Dispose();
+            }
+            return DSGetddlList;
+        }
+
+        public DataTable GetCallsHistory()
+
+        {
+            DataTable DSGetddlList = new DataTable();
+            try
+            {
+                SqlCommand CMDGetDdlLst = new SqlCommand("SP_CallsMaster", con);
+                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+                CMDGetDdlLst.CommandTimeout = 1000000;
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 94);
+                CMDGetDdlLst.Parameters.AddWithValue("@UserID", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                SDAGetDdlLst.Fill(DSGetddlList);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DSGetddlList.Dispose();
+            }
+            return DSGetddlList;
+        }
+
+        public string InsertOprMgrStatus(string id, string approve, string isassign, string reason)
+        {
+            string Result = string.Empty;
+            con.Open();
+
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SP_CallsMaster", con))
+                {
+                    id = id.Replace("{", "").Replace("}", "");
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@SP_Type", 90);
+                    cmd.Parameters.AddWithValue("@IsApproved", approve);
+                    cmd.Parameters.AddWithValue("@Call_No", id);
+                    cmd.Parameters.AddWithValue("@IsAssigned", isassign);
+                    cmd.Parameters.AddWithValue("@Reason", reason);
+                    cmd.Parameters.AddWithValue("@IsAssignedBy", System.Web.HttpContext.Current.Session["UserIDs"]);
+                    Result = cmd.ExecuteNonQuery().ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Result = "Error: " + ex.Message;
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+
+            return Result;
+        }
+
+        public List<CallsModel> GetinspectorDelayedReason()
+        {
+            DataTable DTEMDashBoard = new DataTable();
+            List<CallsModel> lstEnquiryDashB = new List<CallsModel>();
+            try
+            {
+                SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", "98A");
+                //CMDGetEnquriy.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
+                SqlDataAdapter SDAGetEnquiry = new SqlDataAdapter(CMDGetEnquriy);
+                SDAGetEnquiry.Fill(DTEMDashBoard);
+                if (DTEMDashBoard.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in DTEMDashBoard.Rows)
+                    {
+                        lstEnquiryDashB.Add(
+                           new CallsModel
+                           {
+                               Id = Convert.ToInt32(dr["ID"]),
+                               DelayReason = Convert.ToString(dr["Reason"]),
+
+                           }
+                         );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTEMDashBoard.Dispose();
+            }
+            return lstEnquiryDashB;
+        }
+
+
+        public string GetInspector(string Date, string pk_call_id)// Binding Sales Masters DashBoard of Master Page 
+        {
+            string Result = string.Empty;
+
+            DataTable DTDashBoard = new DataTable();
+            try
+            {
+                SqlCommand CMDGetEnquriy = new SqlCommand("Sp_CallInspectorDelayValidation", con);
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                //CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", 76);
+                CMDGetEnquriy.Parameters.AddWithValue("@pk_call_id", pk_call_id);
+                if (Date != null)
+                {
+                    CMDGetEnquriy.Parameters.AddWithValue("@plannedDate", DateTime.ParseExact(Date, "dd/MM/yyyy", theCultureInfo));
+                }
+                // CMDGetEnquriy.Parameters.AddWithValue("@plannedDate", Date);
+
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                SqlDataAdapter SDADashBoardData = new SqlDataAdapter(CMDGetEnquriy);
+                SDADashBoardData.Fill(DTDashBoard);
+                if (DTDashBoard.Rows.Count > 0)
+                {
+                    Result = DTDashBoard.Rows[0][0].ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+
+            return Result.ToString();
+        }
+
+        public string GetCompetancyProductWise(string Name, string Scope)
+        {
+            string Result = string.Empty;
+
+            DataTable DTDashBoard = new DataTable();
+            try
+            {
+                SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", 100);
+                CMDGetEnquriy.Parameters.AddWithValue("@Inspector", Name);
+                CMDGetEnquriy.Parameters.AddWithValue("@Product_item", Scope);
+
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                SqlDataAdapter SDADashBoardData = new SqlDataAdapter(CMDGetEnquriy);
+                SDADashBoardData.Fill(DTDashBoard);
+                if (DTDashBoard.Rows.Count > 0)
+                {
+                    Result = DTDashBoard.Rows[0][0].ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+
+            return Result.ToString();
+        }
+
+        public DataTable GetSearchProductList(string ProductName)
+        {
+            DataTable DTScripName = new DataTable();
+
+            try
+            {
+                SqlCommand CMDSearchNameCode = new SqlCommand("SP_TechnicalCompetencyEvaluation", con);
+                CMDSearchNameCode.CommandType = CommandType.StoredProcedure;
+                CMDSearchNameCode.CommandTimeout = 1000000000;
+                CMDSearchNameCode.Parameters.AddWithValue("@SP_Type", "17");
+                CMDSearchNameCode.Parameters.AddWithValue("@ProductList", ProductName);
+                //CMDSearchNameCode.Parameters.AddWithValue("@Createdby", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                SqlDataAdapter SDAScripName = new SqlDataAdapter(CMDSearchNameCode);
+                SDAScripName.Fill(DTScripName);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTScripName.Dispose();
+            }
+            return DTScripName;
+        }
+
+        public List<Users> GetMentorList()// Binding Sales Masters DashBoard of Master Page 
+        {
+            DataTable DTEMDashBoard = new DataTable();
+            List<Users> lstEnquiryDashB = new List<Users>();
+            try
+            {
+                SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", 9);
+                CMDGetEnquriy.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
+                //CMDGetEnquriy.Parameters.AddWithValue("@Call_No", call_no);
+                SqlDataAdapter SDAGetEnquiry = new SqlDataAdapter(CMDGetEnquriy);
+                SDAGetEnquiry.Fill(DTEMDashBoard);
+                if (DTEMDashBoard.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in DTEMDashBoard.Rows)
+                    {
+                        lstEnquiryDashB.Add(
+                           new Users
+                           {
+                               PK_UserID = Convert.ToString(dr["PK_UserID"]),
+                               FirstName = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]),
+
+                           }
+                         );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTEMDashBoard.Dispose();
+            }
+            return lstEnquiryDashB;
+        }
+
+        public string InsertOprMgrStatus(string id, string approve, string isassign, string reason, string remark, string MentorID, string IsTCE)
+        {
+            string Result = string.Empty;
+            con.Open();
+
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SP_CallsMaster", con))
+                {
+                    id = id.Replace("{", "").Replace("}", "");
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@SP_Type", 90);
+                    cmd.Parameters.AddWithValue("@IsApproved", approve);
+                    cmd.Parameters.AddWithValue("@Call_No", id);
+                    cmd.Parameters.AddWithValue("@IsAssigned", isassign);
+                    cmd.Parameters.AddWithValue("@Reason", reason);
+                    cmd.Parameters.AddWithValue("@Remark", remark);
+                    cmd.Parameters.AddWithValue("@MentorID", MentorID);
+                    cmd.Parameters.AddWithValue("@istce", IsTCE);
+                    cmd.Parameters.AddWithValue("@IsAssignedBy", System.Web.HttpContext.Current.Session["UserIDs"]);
+                    Result = cmd.ExecuteNonQuery().ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Result = "Error: " + ex.Message;
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+
+            return Result;
+        }
+
+        public string InspetorUpdateLogStatus(string id)
+        {
+            string Result = string.Empty;
+            con.Open();
+
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SP_CallsMaster", con))
+                {
+                    id = id.Replace("{", "").Replace("}", "");
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@SP_Type", 102);
+                    cmd.Parameters.AddWithValue("@Call_No", id);
+                    cmd.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
+                    Result = cmd.ExecuteNonQuery().ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Result = "Error: " + ex.Message;
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+
+            return Result;
+        }
+
+        public string InspetorStatus(string id)
+        {
+            string Result = string.Empty;
+            con.Open();
+
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SP_CallsMaster", con))
+                {
+                    id = id.Replace("{", "").Replace("}", "");
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@SP_Type", "100A");
+                    cmd.Parameters.AddWithValue("@Call_No", id);
+                    Result = cmd.ExecuteNonQuery().ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Result = "Error: " + ex.Message;
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+
+            return Result;
+        }
+
+        public List<Users> GetInspectorListService(int? PK_SubJob_Id, int? PK_Call_ID)// Binding Sales Masters DashBoard of Master Page 
+        {
+            DataTable DTEMDashBoard = new DataTable();
+            List<Users> lstEnquiryDashB = new List<Users>();
+            try
+            {
+                SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", "9NN");
+                CMDGetEnquriy.Parameters.AddWithValue("@PK_SubJob_Id", PK_SubJob_Id);
+                CMDGetEnquriy.Parameters.AddWithValue("@PK_Call_ID", PK_Call_ID);
+                CMDGetEnquriy.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
+                SqlDataAdapter SDAGetEnquiry = new SqlDataAdapter(CMDGetEnquriy);
+                SDAGetEnquiry.Fill(DTEMDashBoard);
+                if (DTEMDashBoard.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in DTEMDashBoard.Rows)
+                    {
+                        lstEnquiryDashB.Add(
+                           new Users
+                           {
+                               PK_UserID = Convert.ToString(dr["PK_UserID"]),
+                               FirstName = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]),
+
+                           }
+                         );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTEMDashBoard.Dispose();
+            }
+            return lstEnquiryDashB;
+        }
+
+
+        public DataTable GetProductList(string Service)
+        {
+            DataTable DTScripName = new DataTable();
+
+            try
+            {
+                SqlCommand CMDSearchNameCode = new SqlCommand("SP_ProductList", con);
+                CMDSearchNameCode.CommandType = CommandType.StoredProcedure;
+                CMDSearchNameCode.CommandTimeout = 1000000000;
+                CMDSearchNameCode.Parameters.AddWithValue("@SP_Type", 1);
+                CMDSearchNameCode.Parameters.AddWithValue("@Service", Service);
+                SqlDataAdapter SDAScripName = new SqlDataAdapter(CMDSearchNameCode);
+                SDAScripName.Fill(DTScripName);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTScripName.Dispose();
+            }
+            return DTScripName;
+        }
+
+
+        public DataTable GetItemList(string Service)
+        {
+            DataTable DTScripName = new DataTable();
+
+            try
+            {
+                SqlCommand CMDSearchNameCode = new SqlCommand("SP_ProductList", con);
+                CMDSearchNameCode.CommandType = CommandType.StoredProcedure;
+                CMDSearchNameCode.CommandTimeout = 1000000000;
+                CMDSearchNameCode.Parameters.AddWithValue("@SP_Type", 2);
+                CMDSearchNameCode.Parameters.AddWithValue("@Service", Service);
+                SqlDataAdapter SDAScripName = new SqlDataAdapter(CMDSearchNameCode);
+                SDAScripName.Fill(DTScripName);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTScripName.Dispose();
+            }
+            return DTScripName;
+        }
+
+
 
     }
 }

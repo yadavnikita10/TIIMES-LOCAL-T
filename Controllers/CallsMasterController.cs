@@ -47,6 +47,8 @@ namespace TuvVision.Controllers
         // GET: CallsMaster
         CommonControl objCommonControl = new CommonControl();
 
+        static SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["TuvConnection"].ConnectionString);
+
 
         [HttpGet]
         public ActionResult InsertCalls(int? PK_SubJob_Id, int? PK_Call_ID)
@@ -65,6 +67,13 @@ namespace TuvVision.Controllers
             date_ = DTGetProductLst.Rows[0][1].ToString();
             ViewBag.Issendforapproval = Result_;
             ViewBag.datestatus = date_;
+
+            var delreason = objDalCalls.GetDelayedReason();
+            ViewBag.DelayReasonList = new SelectList(delreason, "Id", "DelayReason");
+
+
+            var Inspectorreason = objDalCalls.GetinspectorDelayedReason();
+            ViewBag.DelayInspectorReasonList = new SelectList(Inspectorreason, "Id", "DelayReason");
             //end
             //added by nikita on 12122023
             #region Job Bind Format of report 
@@ -251,7 +260,7 @@ namespace TuvVision.Controllers
             ViewBag.Reasonlist = new SelectList(ReasonData, "CReason_Id", "Reason");
 
 
-            var UserData = objDalCalls.GetInspectorList();
+            var UserData = objDalCalls.GetInspectorListService(PK_SubJob_Id, PK_Call_ID);
             ViewBag.Userlist = new SelectList(UserData, "PK_UserID", "FirstName");
 
             DataSet DSGetEmployeeType = new DataSet();
@@ -388,20 +397,20 @@ namespace TuvVision.Controllers
                                 if (ObjModelsubJob.POAmountGreaterThan == "Yes")
                                 {
                                     ObjModelsubJob.POAmountGreaterThan = "80% of PO amount has been consumed, inform to all concern persons.";
-
-                                   
                                 }
                                 else
                                 {
                                     ObjModelsubJob.POAmountGreaterThan = "";
                                 }
                                 ObjModelsubJob.MandaysConsumedValidity = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CalculateMandays"]);
+
                                 ObjModelsubJob.Mailsend_consumedMandays = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["Mailsend_consumedMandays"]);
-                                
-                                if (ObjModelsubJob.MandaysConsumedValidity=="Yes" && ObjModelsubJob.Mailsend_consumedMandays==0)
+
+                                if (ObjModelsubJob.MandaysConsumedValidity == "Yes" && ObjModelsubJob.Mailsend_consumedMandays == 0)
                                 {
                                     SendMAil_ConsumedMandays(Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["PK_SubJob_Id"]), Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["PK_JOB_ID"]));
                                 }
+
                                 ObjModelsubJob.PK_SubJob_Id = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["PK_SubJob_Id"]);
                                 ObjModelsubJob.Company_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Company_Name"]);
                                 ObjModelsubJob.Status = "Open";
@@ -414,7 +423,7 @@ namespace TuvVision.Controllers
                                 if (v >= 0)
                                 {
                                     var UserDataByExecuting_Branch = objDalCalls.GetInsByExBr(v);
-                                    ViewBag.Userlist = new SelectList(UserDataByExecuting_Branch, "PK_UserID", "FirstName");
+                                    //  ViewBag.Userlist = new SelectList(UserDataByExecuting_Branch, "PK_UserID", "FirstName");
                                 }
 
                                 #endregion
@@ -603,6 +612,8 @@ namespace TuvVision.Controllers
                     ObjModelsubJob.Status = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Status"]);
                     // ObjModelsubJob.PK_JOB_ID = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["PK_JOB_ID"]);
                     ObjModelsubJob.Type = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Type"]);
+                    ObjModelsubJob.OPEStatus = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["OPEStatus"]);
+                    ObjModelsubJob.OPE = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Ope"]);//added on 11112025
                     ObjModelsubJob.Br_Id = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["Executing_Branch"]);
                     ObjModelsubJob.TCEFilled = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["TECFormfilled"]);
                     ObjModelsubJob.Originating_Branch = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Originating_Branch"]);
@@ -616,8 +627,8 @@ namespace TuvVision.Controllers
                     ObjModelsubJob.Coordinatorname_ = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Name"]); //added by nikita on 12122023
                     ObjModelsubJob.CoordinatorMobileNo_ = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["MobileNo"]); //added by nikita on 12122023
                     ObjModelsubJob.CoordinatorEmail_ = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Tuv_Email_Id"]); //added by nikita on 12122024
-                    ObjModelsubJob.MainBranch = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["MainBranch"]); //added by nikita on 12122024
-                    
+
+
 
                     ObjModelsubJob.Call_Recived_date = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Call_Recived_date"]);
                     ObjModelsubJob.Call_Request_Date = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Call_Request_Date"]);
@@ -666,10 +677,7 @@ namespace TuvVision.Controllers
 
                     ObjModelsubJob.Description = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Description"]);
                     ObjModelsubJob.Quantity = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Quantity"]);
-                    //ObjModelsubJob.MailSend_ConsumedMandays = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["MailSend_ConsumedMandays"]);
-
-
-                    
+                    ObjModelsubJob.MainBranch = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["MainBranch"]); //added by nikita on 12122024
 
                     /////// SubSub Vendor For /1/1 Sub SubJob
                     //ObjModelsubJob.Vendor_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubVendorName"]);
@@ -739,6 +747,7 @@ namespace TuvVision.Controllers
                     ObjModelsubJob.inspectorCompetant = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["iscompetant"]);
                     //added by shrutika salve 08022024
                     ObjModelsubJob.checkIFExpeditingReport = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["reporttype"]);
+                    ObjModelsubJob.status_ = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["OPEStatus"]);
                     //added by shrutika salve 19032023
                     ObjModelJob.checkIFConcernDisplay = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["IfConcernsDisplayOfPDF"]);
                     if (Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["checkIFCustomerSpecificReportNo"]) == "1")
@@ -772,7 +781,10 @@ namespace TuvVision.Controllers
                     ObjModelsubJob.ManMonths = Convert.ToBoolean(chkManMonths);
                     ObjModelsubJob.ExpeditingType = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["ExpeditingType"]);
                     ObjModelsubJob.ActionHidden = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["ActionHidden"]);
-
+                    //added by shrutika salve 21052025
+                    ObjModelsubJob.DelayReason = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["callgenerationDelayRsn"]);
+                    ObjModelsubJob.InspectorDelayReason = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["InspectorDelayRsn"]);
+                    ObjModelsubJob.operationalApprovalRequired = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["IsOprMgrApprovalReq"]);
                     ViewData["PrimaryMaterialchecked"] = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["PrimaryMaterial"]);
 
 
@@ -1205,25 +1217,27 @@ namespace TuvVision.Controllers
                                     {
 
                                         dsEmailDetails = objDalCalls.GetEmailDetails(Convert.ToInt32(splitcalls[0]));
+                                        if (dsEmailDetails.Tables[0].Rows[0]["SendMail"].ToString() == "YES")
+                                        {
 
 
+                                            if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                            {
+                                                ContinuousCallMail(ListofCall, CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                            }
+                                            if (CM.Vendorcheckbox && CM.Vendor_Email != null)
+                                            {
+                                                ContinuousCallMail(ListofCall, CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                            }
+                                            if (CM.ClientEmailcheckbox && CM.Client_Email != null)
+                                            {
+                                                ContinuousCallMail(ListofCall, CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                            }
 
-                                        if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
-                                        {
-                                            ContinuousCallMail(ListofCall, CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                                        }
-                                        if (CM.Vendorcheckbox && CM.Vendor_Email != null)
-                                        {
-                                            ContinuousCallMail(ListofCall, CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                                        }
-                                        if (CM.ClientEmailcheckbox && CM.Client_Email != null)
-                                        {
-                                            ContinuousCallMail(ListofCall, CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                                        }
-
-                                        if (CM.FirstName != null)
-                                        {
-                                            ContinuousCallMail(ListofCall, dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                            if (CM.FirstName != null)
+                                            {
+                                                ContinuousCallMail(ListofCall, dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                            }
                                         }
                                     }
                                 }
@@ -1297,25 +1311,28 @@ namespace TuvVision.Controllers
                                         if (CM.FirstName != null)
                                         {
                                             dsEmailDetails = objDalCalls.GetEmailDetails(Convert.ToInt32(Result));
-                                            if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                            if (dsEmailDetails.Tables[0].Rows[0]["SendMail"].ToString() == "YES")
                                             {
-                                                //ServicebookingMail(CM,CM.Tuv_Branch, CM.FirstName);  //------------------Emails
-                                                CallManagementMail(Convert.ToInt32(Result), CM.Tuv_Branch.ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
-                                            }
-                                            if (CM.Vendorcheckbox && CM.Vendor_Email != null)
-                                            {
-                                                CallManagementMail(Convert.ToInt32(Result), CM.Vendor_Email.ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo); //------------------Emails
-                                            }
-                                            if (CM.ClientEmailcheckbox && CM.Client_Email != null)
-                                            {
-                                                CallManagementMail(Convert.ToInt32(Result), CM.Client_Email.ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
-                                            }
+                                                if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                                {
+                                                    //ServicebookingMail(CM,CM.Tuv_Branch, CM.FirstName);  //------------------Emails
+                                                    CallManagementMail(Convert.ToInt32(Result), CM.Tuv_Branch.ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                                }
+                                                if (CM.Vendorcheckbox && CM.Vendor_Email != null)
+                                                {
+                                                    CallManagementMail(Convert.ToInt32(Result), CM.Vendor_Email.ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo); //------------------Emails
+                                                }
+                                                if (CM.ClientEmailcheckbox && CM.Client_Email != null)
+                                                {
+                                                    CallManagementMail(Convert.ToInt32(Result), CM.Client_Email.ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                                }
 
 
-                                            if (CM.FirstName != null)
-                                            {
-                                                // ServicebookingMail(CM,dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), CM.FirstName);  //------------------Emails
-                                                CallManagementMail(Convert.ToInt32(Result), dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                                if (CM.FirstName != null)
+                                                {
+                                                    // ServicebookingMail(CM,dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), CM.FirstName);  //------------------Emails
+                                                    CallManagementMail(Convert.ToInt32(Result), dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                                }
                                             }
 
                                         }
@@ -1560,22 +1577,25 @@ namespace TuvVision.Controllers
                             if (CM.FirstName != null)
                             {
                                 dsEmailDetails = objDalCalls.GetEmailDetails(Convert.ToInt32(splitcalls[0]));
-                                if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                if (dsEmailDetails.Tables[0].Rows[0]["SendMail"].ToString() == "YES")
                                 {
-                                    ContinuousCallMail(ListofCall, CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                                }
-                                if (CM.Vendorcheckbox && CM.Vendor_Email != null)
-                                {
-                                    ContinuousCallMail(ListofCall, CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                                }
-                                if (CM.ClientEmailcheckbox && CM.Client_Email != null)
-                                {
-                                    ContinuousCallMail(ListofCall, CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                                }
+                                    if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                    {
+                                        ContinuousCallMail(ListofCall, CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    }
+                                    if (CM.Vendorcheckbox && CM.Vendor_Email != null)
+                                    {
+                                        ContinuousCallMail(ListofCall, CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    }
+                                    if (CM.ClientEmailcheckbox && CM.Client_Email != null)
+                                    {
+                                        ContinuousCallMail(ListofCall, CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    }
 
-                                if (CM.FirstName != null)
-                                {
-                                    ContinuousCallMail(ListofCall, dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    if (CM.FirstName != null)
+                                    {
+                                        ContinuousCallMail(ListofCall, dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    }
                                 }
                             }
                         }
@@ -1653,22 +1673,25 @@ namespace TuvVision.Controllers
                                 if (CM.FirstName != null)
                                 {
                                     dsEmailDetails = objDalCalls.GetEmailDetails(Convert.ToInt32(Result));
-                                    if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                    if (dsEmailDetails.Tables[0].Rows[0]["SendMail"].ToString() == "YES")
                                     {
-                                        CallManagementMail(Convert.ToInt32(Result), CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
-                                    }
-                                    if (CM.Vendorcheckbox && CM.Vendor_Email != null)
-                                    {
-                                        CallManagementMail(Convert.ToInt32(Result), CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
-                                    }
-                                    if (CM.ClientEmailcheckbox && CM.Client_Email != null)
-                                    {
-                                        CallManagementMail(Convert.ToInt32(Result), CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo); //------------------Emails
-                                    }
+                                        if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                        {
+                                            CallManagementMail(Convert.ToInt32(Result), CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                        }
+                                        if (CM.Vendorcheckbox && CM.Vendor_Email != null)
+                                        {
+                                            CallManagementMail(Convert.ToInt32(Result), CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                        }
+                                        if (CM.ClientEmailcheckbox && CM.Client_Email != null)
+                                        {
+                                            CallManagementMail(Convert.ToInt32(Result), CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo); //------------------Emails
+                                        }
 
-                                    if (CM.FirstName != null)
-                                    {
-                                        CallManagementMail(Convert.ToInt32(Result), dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                        if (CM.FirstName != null)
+                                        {
+                                            CallManagementMail(Convert.ToInt32(Result), dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                        }
                                     }
                                 }
 
@@ -1736,7 +1759,8 @@ namespace TuvVision.Controllers
                     {
                         CheckPoDate = Convert.ToDateTime(DSCheckValidCall.Tables[0].Rows[0]["POValidity"]);
                         ManDays = Convert.ToString(DSCheckValidCall.Tables[0].Rows[0]["ManDays"]);
-                        ManDay = Convert.ToInt32(ManDays);
+                        // ManDay = Convert.ToInt32(ManDays);
+                        ManDay = Convert.ToDouble(ManDays);
 
                     }
                     if (DSCheckValidCall.Tables[1].Rows.Count > 0)
@@ -1827,22 +1851,25 @@ namespace TuvVision.Controllers
                             if (CM.FirstName != null)
                             {
                                 dsEmailDetails = objDalCalls.GetEmailDetails(Convert.ToInt32(CallID));
-                                if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                if (dsEmailDetails.Tables[0].Rows[0]["SendMail"].ToString() == "YES")
                                 {
-                                    CallManagementMail(Convert.ToInt32(CallID), CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
-                                }
-                                if (CM.Vendorcheckbox && CM.Vendor_Email != null)
-                                {
-                                    CallManagementMail(Convert.ToInt32(CallID), CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
-                                }
-                                if (CM.ClientEmailcheckbox && CM.Client_Email != null)
-                                {
-                                    CallManagementMail(Convert.ToInt32(CallID), CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
-                                }
+                                    if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                    {
+                                        CallManagementMail(Convert.ToInt32(CallID), CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                    }
+                                    if (CM.Vendorcheckbox && CM.Vendor_Email != null)
+                                    {
+                                        CallManagementMail(Convert.ToInt32(CallID), CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                    }
+                                    if (CM.ClientEmailcheckbox && CM.Client_Email != null)
+                                    {
+                                        CallManagementMail(Convert.ToInt32(CallID), CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);  //------------------Emails
+                                    }
 
-                                if (CM.FirstName != null)
-                                {
-                                    CallManagementMail(Convert.ToInt32(CallID), dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);//------------------Emails
+                                    if (CM.FirstName != null)
+                                    {
+                                        CallManagementMail(Convert.ToInt32(CallID), dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), CM.TopSubVendorName, CM.TopSubVendorPONo);//------------------Emails
+                                    }
                                 }
                             }
 
@@ -1921,6 +1948,13 @@ namespace TuvVision.Controllers
             ViewData["PrimaryMaterial"] = PrimaryM;
             #endregion
 
+            var delreason = objDalCalls.GetDelayedReason();
+            ViewBag.DelayReasonList = new SelectList(delreason, "Id", "DelayReason");
+
+
+            var Inspectorreason = objDalCalls.GetinspectorDelayedReason();
+            ViewBag.DelayInspectorReasonList = new SelectList(Inspectorreason, "Id", "DelayReason");
+
             DataTable DTGetProductLst = new DataTable();
             List<NameCodeProduct> lstEditInspector = new List<NameCodeProduct>();
 
@@ -1982,7 +2016,7 @@ namespace TuvVision.Controllers
             //ViewBag.SubCatlist = new SelectList(Data, "Br_Id", "Branch_Name");
 
 
-            var UserData = objDalCalls.GetInspectorList();
+            var UserData = objDalCalls.GetInspectorListService(Convert.ToInt32(PK_SubJob_Id), PK_Call_ID);
             ViewBag.Userlist = new SelectList(UserData, "PK_UserID", "FirstName");
 
             DataSet DSGetEmployeeType = new DataSet();
@@ -2122,9 +2156,13 @@ namespace TuvVision.Controllers
                     ObjModelsubJob.chkARC = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["chkARC"]);
                     ObjModelsubJob.SAP_no = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SAP_No"]);
                     ObjModelsubJob.MandayRate = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["MandayRate"]);
+                    ObjModelsubJob.operationalApprovalRequired = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["IsOprMgrApprovalReq"]);
                     ViewData["PrimaryMaterialchecked"] = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["PrimaryMaterial"]);
                     ObjModelsubJob.FinalInspectionValue = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["FinalInspection"]);
+                    // ObjModelsubJob.inspectorCompetant = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["iscompetant"]);
+                    //ObjModelsubJob.inspectorapproved = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Isinspectorapproved"]);
                     //added by shrutika salve 19032023
+
                     ObjModelJob.checkIFConcernDisplay = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["IfConcernsDisplayOfPDF"]);
                     if (Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["checkIFCustomerSpecificReportNo"]) == "1")
                     {
@@ -2501,25 +2539,28 @@ namespace TuvVision.Controllers
                             {
 
                                 dsEmailDetails = objDalCalls.GetEmailDetails(Convert.ToInt32(splitcalls[0]));
+                                if (dsEmailDetails.Tables[0].Rows[0]["SendMail"].ToString() == "YES")
+                                {
 
 
 
-                                if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
-                                {
-                                    ContinuousCallMail(ListofCall, CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                                }
-                                if (CM.Vendorcheckbox && CM.Vendor_Email != null)
-                                {
-                                    ContinuousCallMail(ListofCall, CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                                }
-                                if (CM.ClientEmailcheckbox && CM.Client_Email != null)
-                                {
-                                    ContinuousCallMail(ListofCall, CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                                }
+                                    if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                                    {
+                                        ContinuousCallMail(ListofCall, CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    }
+                                    if (CM.Vendorcheckbox && CM.Vendor_Email != null)
+                                    {
+                                        ContinuousCallMail(ListofCall, CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    }
+                                    if (CM.ClientEmailcheckbox && CM.Client_Email != null)
+                                    {
+                                        ContinuousCallMail(ListofCall, CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    }
 
-                                if (CM.FirstName != null)
-                                {
-                                    ContinuousCallMail(ListofCall, dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    if (CM.FirstName != null)
+                                    {
+                                        ContinuousCallMail(ListofCall, dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                                    }
                                 }
                             }
                         }
@@ -2872,22 +2913,25 @@ namespace TuvVision.Controllers
                     if (CM.FirstName != null)
                     {
                         dsEmailDetails = objDalCalls.GetEmailDetails(Convert.ToInt32(splitcalls[0]));
-                        if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                        if (dsEmailDetails.Tables[0].Rows[0]["SendMail"].ToString() == "YES")
                         {
-                            ContinuousCallMail(ListofCall, CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                        }
-                        if (CM.Vendorcheckbox && CM.Vendor_Email != null)
-                        {
-                            ContinuousCallMail(ListofCall, CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                        }
-                        if (CM.ClientEmailcheckbox && CM.Client_Email != null)
-                        {
-                            ContinuousCallMail(ListofCall, CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
-                        }
+                            if (CM.Homecheckbox == true && CM.Tuv_Branch != null)
+                            {
+                                ContinuousCallMail(ListofCall, CM.Tuv_Branch, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                            }
+                            if (CM.Vendorcheckbox && CM.Vendor_Email != null)
+                            {
+                                ContinuousCallMail(ListofCall, CM.Vendor_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                            }
+                            if (CM.ClientEmailcheckbox && CM.Client_Email != null)
+                            {
+                                ContinuousCallMail(ListofCall, CM.Client_Email, dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                            }
 
-                        if (CM.FirstName != null)
-                        {
-                            ContinuousCallMail(ListofCall, dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                            if (CM.FirstName != null)
+                            {
+                                ContinuousCallMail(ListofCall, dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString());  //------------------Emails
+                            }
                         }
                     }
                 }
@@ -3941,6 +3985,11 @@ namespace TuvVision.Controllers
                                 ManDays = Convert.ToString(dr["ManMonthsAssignment"]),
                                 inspectorapproved = Convert.ToString(dr["isinspectorApproved"]),
                                 JobBlock = Convert.ToString(dr["JobBlock"]),
+                                //added by shrutika 07/07/2025
+                                CallCancelledBy = Convert.ToString(dr["CallCancelledBy"]),
+                                CallClosureDate = Convert.ToString(dr["CallCancelledDate"]),
+                                CallNotDoneBy = Convert.ToString(dr["CallNotDoneBy"]),
+                                CallNotDoneDate = Convert.ToString(dr["CallNotDoneDate"]),
 
                             }
                             );
@@ -4056,7 +4105,12 @@ namespace TuvVision.Controllers
                                 TCEFilled = Convert.ToString(dr["TECFormfilled"]),
                                 FinalInspectionValue = Convert.ToString(dr["FinalInspection"]),
                                 ManDays = Convert.ToString(dr["ManMonthsAssignment"]),
-                                inspectorapproved = Convert.ToString(dr["isinspectorApproved"])
+                                inspectorapproved = Convert.ToString(dr["isinspectorApproved"]),
+                                //added by shrutika 07/07/2025
+                                CallCancelledBy = Convert.ToString(dr["CallCancelledBy"]),
+                                CallCancelledDate = Convert.ToString(dr["CallCancelledDate"]),
+                                CallNotDoneBy = Convert.ToString(dr["CallNotDoneBy"]),
+                                CallNotDoneDate = Convert.ToString(dr["CallNotDoneDate"]),
                             }
                             );
                     }
@@ -4174,6 +4228,8 @@ namespace TuvVision.Controllers
             var Data = objDalCalls.GetInspectorList();
             ViewBag.SubCatlist = new SelectList(Data, "PK_UserID", "FirstName");
 
+            var delreason = objDalCalls.GetinspectorDelayedReason();
+            ViewBag.DelayReasonList = new SelectList(delreason, "Id", "DelayReason");
 
             //if (vcm1.FromDate != null && vcm1.ToDate != null || vcm1.Call_No != null && vcm1.Call_No != "" || vcm1.Excuting_Branch != null && vcm1.Excuting_Branch != "" || vcm1.Originating_Branch != null && vcm1.Originating_Branch != "")
             if (vcm.FromDate != null && vcm.ToDate != null || vcm.Call_No != null && vcm.Call_No != "" || vcm.Excuting_Branch != null && vcm.Excuting_Branch != "" || vcm.Originating_Branch != null && vcm.Originating_Branch != "")
@@ -4261,7 +4317,7 @@ namespace TuvVision.Controllers
                                 ModifyDate = DateTime.Now,//Convert.ToDateTime(dr["ModifyDate"]),
                                 Project_Name = Convert.ToString(dr["Project_Name"]),
                                 JobType = Convert.ToString(dr["Job_type"]),
-                                ServiceType = Convert.ToString(dr["subserviceType"]),
+                                ServiceType = Convert.ToString(dr["ExecutingService"]),
                                 CreatedDate = Convert.ToString(dr["CreatedDate"]),
                                 Reasion = Convert.ToString(dr["Reasion"]),
                                 ExtendCall_Status = Convert.ToString(dr["ExtendCall_Status"]),
@@ -4293,6 +4349,8 @@ namespace TuvVision.Controllers
                                 ExecutingBranch = Convert.ToString(dr["ExecutingBranch"]),
                                 Call_Type = Convert.ToString(dr["Call_Type"]),
                                 EstimatedHours = Convert.ToString(dr["EstimatedHours"]),
+                                // ExecutingService=Convert.ToString(dr["ExecutingService"]),
+
                             }
                             );
                     }
@@ -4316,6 +4374,8 @@ namespace TuvVision.Controllers
             Session["ToDate"] = vcm.ToDate;
             Session["CallNo"] = vcm.Call_No;
             Session["BR_ID"] = vcm.Br_Id;
+            Session["Excuting_Branch"] = vcm.ExecutingBranch;
+            Session["Originating_Branch"] = vcm.OriginatingBranch;
             vcm.Actual_Visit_Date = FC["VisitDate"];
 
             //foreach (var key in FC.)
@@ -4335,12 +4395,14 @@ namespace TuvVision.Controllers
 
             //added by shrutika salve 04042023
             string isinspectorApproved = "";
+            string dReason = "";
+            string isapprovereq = "";
 
             List<Item> itemList = new List<Item>();
             List<ItemTest> itemListTest = new List<ItemTest>();
             List<abc> C = new List<abc>();
             int v = Convert.ToInt16(Session["count"]);
-            if (v > 9)
+            if (v > 10)
             {
                 v = FC.AllKeys.Count();
             }
@@ -4361,7 +4423,8 @@ namespace TuvVision.Controllers
 
                     //added by shrutika salve 04042023
                     isinspectorApproved = FC["CallListData[0].inspectorapproved"].ToString();
-
+                    dReason = string.IsNullOrWhiteSpace(FC["CallListData[0].DelayReason"]) ? null : FC["CallListData[0].DelayReason"].ToString();
+                    isapprovereq = string.IsNullOrWhiteSpace(FC["CallListData[0].isapprovereq"]) ? null : FC["CallListData[0].isapprovereq"].ToString();
                     break;
 
                 }
@@ -4373,6 +4436,8 @@ namespace TuvVision.Controllers
                 string[] Riscompedent = iscompedent.Split(',');
                 //added by shrutika salve 04042024
                 string[] RisinspectorApproved = isinspectorApproved.Split(',');
+                string[] dlReason = string.IsNullOrWhiteSpace(dReason) ? null : dReason.Split(',');
+                string[] appreq = string.IsNullOrWhiteSpace(isapprovereq) ? null : isapprovereq.Split(',');
 
                 for (int i = 0; i < RFirstName.Length; i++)
                 {
@@ -4385,7 +4450,8 @@ namespace TuvVision.Controllers
                         iscompedent = Riscompedent[i].ToString(),
                         //added by shrutika salve 04042024
                         isinspectorApproved = RisinspectorApproved[i].ToString(),
-
+                        isappreq = appreq[i].ToString(),
+                        InspReason = (dlReason != null && i < dlReason.Length) ? dlReason[i] : null,
                     });
 
                 }
@@ -4409,8 +4475,8 @@ namespace TuvVision.Controllers
                 // if (vcm1.FromDate != null && vcm1.ToDate != null || vcm1.Call_No != null && vcm1.Call_No != "" || vcm1.Excuting_Branch != null && vcm1.Excuting_Branch != "" || vcm1.Originating_Branch != null && vcm1.Originating_Branch != "")
                 {
 
-                    return RedirectToAction("CallsManagment", "CallsMaster", new { FromDate = vcm.FromDate, ToDate = vcm.ToDate, Call_No = vcm.Call_No, ExecutingBranch = vcm.ExecutingBranch, Originating_Branch = vcm.Originating_Branch });
-                    return RedirectToAction("CallsManagment", vcm);// http://localhost:54895/CallsMaster/CallsManagment
+                    return RedirectToAction("CallsManagment", "CallsMaster", new { FromDate = vcm.FromDate, ToDate = vcm.ToDate, Call_No = vcm1.Call_No, ExecutingBranch = vcm1.Excuting_Branch, Originating_Branch = vcm1.Originating_Branch });
+                    //return RedirectToAction("CallsManagment", vcm);// http://localhost:54895/CallsMaster/CallsManagment
                 }
             }
 
@@ -4457,31 +4523,37 @@ namespace TuvVision.Controllers
                                 ObjModelsubJob.inspectorCompetant = Convert.ToString(item.iscompedent);
                                 //added by shrutika salve 04042024
                                 ObjModelsubJob.inspectorapproved = Convert.ToString(item.isinspectorApproved);
+                                ObjModelsubJob.InspectorDelayReason = Convert.ToString(item.InspReason);
                                 ObjModelsubJob.AssignStatus = "1";
                                 ObjModelsubJob.Status = "Assigned";
+                                ObjModelsubJob.InspectorDelayReason = Convert.ToString(item.InspReason);
+                                ObjModelsubJob.IsAssignedUnderOprMngr = Convert.ToString(item.isappreq);
                                 Result = objDalCalls.UpdateCallAssignBydate(ObjModelsubJob);
                                 DataSet CM = new DataSet();
                                 CM = objDalCalls.EditCall(Convert.ToInt32(item.PK_Call_ID));
 
                                 dsEmailDetails = objDalCalls.GetEmailDetails(Convert.ToInt32(item.PK_Call_ID));
+                                if (dsEmailDetails.Tables[0].Rows[0]["SendMail"].ToString() == "YES")
+                                {
 
 
-                                if (Convert.ToBoolean(dsEmailDetails.Tables[0].Rows[0]["Homecheckbox"]) == true && dsEmailDetails.Tables[0].Rows[0]["Tuv_Branch"] != null)
-                                {
-                                    CallManagementMail(Convert.ToInt32(item.PK_Call_ID), dsEmailDetails.Tables[0].Rows[0]["Tuv_Branch"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Vendor_Name"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Po_Number"].ToString()); //------------------Emails
-                                }
-                                if (Convert.ToBoolean(dsEmailDetails.Tables[0].Rows[0]["Vendorcheckbox"]) == true && dsEmailDetails.Tables[0].Rows[0]["Vendor_Email"] != null)
-                                {
-                                    CallManagementMail(Convert.ToInt32(item.PK_Call_ID), dsEmailDetails.Tables[0].Rows[0]["Vendor_Email"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Vendor_Name"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Po_Number"].ToString());  //------------------Emails
-                                }
-                                if (Convert.ToBoolean(dsEmailDetails.Tables[0].Rows[0]["ClientEmailcheckbox"]) == true && dsEmailDetails.Tables[0].Rows[0]["Client_Email"] != null)
-                                {
-                                    CallManagementMail(Convert.ToInt32(item.PK_Call_ID), dsEmailDetails.Tables[0].Rows[0]["Client_Email"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Vendor_Name"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Po_Number"].ToString()); //------------------Emails
-                                }
-                                /// Inspector Mail
-                                if (dsEmailDetails.Tables[0].Rows[0]["EmailID"] != null)
-                                {
-                                    CallManagementMail(Convert.ToInt32(item.PK_Call_ID), dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Vendor_Name"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Po_Number"].ToString());  //------------------Emails
+                                    if (Convert.ToBoolean(dsEmailDetails.Tables[0].Rows[0]["Homecheckbox"]) == true && dsEmailDetails.Tables[0].Rows[0]["Tuv_Branch"] != null)
+                                    {
+                                        CallManagementMail(Convert.ToInt32(item.PK_Call_ID), dsEmailDetails.Tables[0].Rows[0]["Tuv_Branch"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Vendor_Name"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Po_Number"].ToString()); //------------------Emails
+                                    }
+                                    if (Convert.ToBoolean(dsEmailDetails.Tables[0].Rows[0]["Vendorcheckbox"]) == true && dsEmailDetails.Tables[0].Rows[0]["Vendor_Email"] != null)
+                                    {
+                                        CallManagementMail(Convert.ToInt32(item.PK_Call_ID), dsEmailDetails.Tables[0].Rows[0]["Vendor_Email"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Vendor_Name"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Po_Number"].ToString());  //------------------Emails
+                                    }
+                                    if (Convert.ToBoolean(dsEmailDetails.Tables[0].Rows[0]["ClientEmailcheckbox"]) == true && dsEmailDetails.Tables[0].Rows[0]["Client_Email"] != null)
+                                    {
+                                        CallManagementMail(Convert.ToInt32(item.PK_Call_ID), dsEmailDetails.Tables[0].Rows[0]["Client_Email"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Vendor_Name"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Po_Number"].ToString()); //------------------Emails
+                                    }
+                                    /// Inspector Mail
+                                    if (dsEmailDetails.Tables[0].Rows[0]["EmailID"] != null)
+                                    {
+                                        CallManagementMail(Convert.ToInt32(item.PK_Call_ID), dsEmailDetails.Tables[0].Rows[0]["EmailID"].ToString(), dsEmailDetails.Tables[0].Rows[0]["InspectorName"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Vendor_Name"].ToString(), dsEmailDetails.Tables[0].Rows[0]["Po_Number"].ToString());  //------------------Emails
+                                    }
                                 }
 
 
@@ -4501,8 +4573,10 @@ namespace TuvVision.Controllers
 
                             //added by shrutika salve 04042024
                             ObjModelsubJob.inspectorapproved = Convert.ToString(item.isinspectorApproved);
+                            ObjModelsubJob.InspectorDelayReason = Convert.ToString(item.InspReason);
                             ObjModelsubJob.AssignStatus = "1";
                             ObjModelsubJob.Status = "Assigned";
+                            ObjModelsubJob.IsAssignedUnderOprMngr = Convert.ToString(item.isappreq);
                             Result = objDalCalls.UpdateCallAssignBydate(ObjModelsubJob);
                             DataSet CM = new DataSet();
                             CM = objDalCalls.EditCall(Convert.ToInt32(item.PK_Call_ID));
@@ -4597,6 +4671,7 @@ namespace TuvVision.Controllers
                                     OriginatingBranch = Convert.ToString(dr["OriginatingBranch"]),
                                     ExecutingBranch = Convert.ToString(dr["ExecutingBranch"]),
                                     EstimatedHours = Convert.ToString(dr["EstimatedHours"]),
+                                    //ExecutingService = Convert.ToString(dr["ExecutingService"]),
                                 }
                                 );
                         }
@@ -4690,6 +4765,8 @@ namespace TuvVision.Controllers
                                 StageOfInspection = "NA",// Convert.ToString(dr["StageOfInspection"]),
                                 InspectionLocation = Convert.ToString(dr["Inspection_Location"]),
                                 ItemsToBeInpsected = "NA",// Convert.ToString(dr["ItemsToBeInpsected"]),
+                                //ExecutingService = Convert.ToString(dr["ExecutingService"]),
+
                             }
                             );
                     }
@@ -4969,7 +5046,6 @@ namespace TuvVision.Controllers
                 //    msg.To.Add(new MailAddress(MultiEmailTemp));
                 //}
                 msg.To.Add(EmailID);
-
                 //msg.CC.Add(MailCC);
                 //msg.Bcc.Add(MailBCC);
                 msg.Subject = "Confirmation of Inspection Visit";
@@ -5255,13 +5331,16 @@ namespace TuvVision.Controllers
                 DSEditQutationTabledata = objDalCalls.EditCallByInspector(PK_Call_ID);
                 if (DSEditQutationTabledata.Tables[0].Rows.Count > 0)
                 {
-
+                    ObjModelsubJob.OPEStatus = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["OPEStatus"]);
+                    ObjModelsubJob.AllowCallsAfterOPEProcess =Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["AllowCallsAfterOPEProcess"]);//added on 11112025
+                    ObjModelsubJob.OPE = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Ope"]);//added on 11112025
                     ObjModelsubJob.chkDoNotshareVendor = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["ChkIfShareReportVendor"]);
                     ObjModelsubJob.ServiceType = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["ReportType"]);
                     ObjModelsubJob.PK_SubJob_Id = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["PK_SubJob_Id"]);
                     ObjModelsubJob.Company_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Company_Name"]);
                     ObjModelsubJob.Status = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Status"]);
-
+                    ObjModelsubJob.operationalApprovalRequired = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["IsOprMgrApprovalReq"]);
+                    ObjModelsubJob.IsAssignedUnderOprMngr = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["IsAssignedUnderOprMngr"]);
                     ObjModelsubJob.Type = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Type"]);
                     ObjModelsubJob.Br_Id = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["Executing_Branch"]);
                     ObjModelsubJob.Originating_Branch = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Originating_Branch"]);
@@ -5269,42 +5348,29 @@ namespace TuvVision.Controllers
                     ObjModelsubJob.Sub_Job = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Sub_Job"]);
                     ObjModelsubJob.Project_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Project_Name"]);
                     ObjModelsubJob.End_Customer = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["End_Customer"]);
-
                     ObjModelsubJob.CallRemarks = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["callremarks"]);
                     ObjModelsubJob.TCEFilled = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["TECFormfilled"]);
-
                     ObjModelsubJob.CoordinatorEmail_ = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Tuv_Email_Id"]);  //added by nikita on 31122024
-
                     //ObjModelsubJob.Vendor_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Vendor_Name"]);
                     //ObjModelsubJob.PO_Number = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["PO_Number"]);
-
                     //ObjModelsubJob.Vendor_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubVendorName"]); ///Second Level Vendor Name
                     //ObjModelsubJob.PO_Number = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubVendorPONo"]); ///Second Level Vendor PO
                     //ObjModelsubJob.SubVendorPODate = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubVendorPODate"]); ///Second Level Vendor PO Date
-
                     //ObjModelsubJob.TopSubVendorName = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["TopVendor"]); /// First level Vendor Name
                     //ObjModelsubJob.TopSubVendorPONo = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["TopVendorPO"]); /// First level Vendor PO
                     //ObjModelsubJob.TopvendorPODate = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["TopvendorPODate"]); /// First level Vendor PO date
-
                     ObjModelsubJob.Vendor_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["v3"]); ///Second Level Vendor Name
                     ObjModelsubJob.PO_Number = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["p3"]); ///Second Level Vendor PO
                     ObjModelsubJob.SubVendorPODate = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["d3"]); ///Second Level Vendor PO Date
-
                     ObjModelsubJob.TopSubVendorName = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["v1"]); /// First level Vendor Name
                     ObjModelsubJob.TopSubVendorPONo = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["p1"]); /// First level Vendor PO
                     ObjModelsubJob.TopvendorPODate = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["d1"]); /// First level Vendor PO date
-
                     ////Sub Sub Sub Job
                     ObjModelsubJob.SubSubVendorName = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["v2"]);
                     ObjModelsubJob.SubSubVendorPO = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["p2"]);
                     ObjModelsubJob.SubSubVendorDate = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["d2"]);
-
-
                     ObjModelsubJob.SJobType = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Type"]);
                     ObjModelsubJob.SubSubSubJob_No = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubSubSubJob_No"]);
-
-
-
                     ObjModelsubJob.PK_Call_ID = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["PK_Call_ID"]);
                     ObjModelsubJob.Contact_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Contact_Name"]);
                     ObjModelsubJob.Call_Recived_date = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Call_Recived_date"]);
@@ -5322,27 +5388,19 @@ namespace TuvVision.Controllers
                     ObjModelsubJob.From_Date = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["From_Date"]);
                     ObjModelsubJob.To_Date = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["To_Date"]);
                     ObjModelsubJob.FirstName = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Inspector"]);
-
                     ObjModelsubJob.Client_Email = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Client_Email"]);
                     ObjModelsubJob.Vendor_Email = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Vendor_Email"]);
                     ObjModelsubJob.Tuv_Branch = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Tuv_Branch"]);
                     ObjModelsubJob.Homecheckbox = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["Homecheckbox"]);
                     ObjModelsubJob.Vendorcheckbox = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["Vendorcheckbox"]);
                     ObjModelsubJob.ClientEmailcheckbox = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["ClientEmailcheckbox"]);
-
                     ObjModelsubJob.Call_No = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Call_No"]);
                     ObjModelsubJob.Attachment = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Attachment"]);
                     ObjModelsubJob.Client_Contact = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Client_Contact"]);
                     ObjModelsubJob.Sub_Vendor_Contact = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Sub_Vendor_Contact"]);
                     ObjModelsubJob.Vendor_Contact = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Vendor_Contact"]);
                     ObjModelsubJob.Sub_Sub__Vendor_Contact = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubSub_Vendor_Contact"]);
-
                     ObjModelsubJob.SubVendorPODate = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubVendorPODate"]); ///Second Level Vendor PO Date
-
-
-
-
-
                     ObjModelsubJob.formats_Of_Report = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["formats_Of_Report"]);
                     ViewBag.File = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["formats_Of_Report"]);
                     ObjModelsubJob.Description = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Description"]);
@@ -5355,7 +5413,6 @@ namespace TuvVision.Controllers
                     ObjModelsubJob.FirstSubJob = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["FirstSubJob"]);
                     ObjModelsubJob.DECName = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["DECname"]);
                     ObjModelsubJob.DECNumber = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["DECNumber"]);
-
                     ObjModelsubJob.CoordinatorName = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CoordinatorName"]);
                     ObjModelsubJob.CoordinatorContactDetail = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CoordinatorContactDetail"]);
                     ObjModelsubJob.SAP_no = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SAP_no"]);
@@ -5363,8 +5420,8 @@ namespace TuvVision.Controllers
                     ObjModelsubJob.chkARC = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["chkARC"]);
                     ObjModelsubJob.PK_JOB_ID = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["pk_job_id"]);
                     ObjModelsubJob.ChkContinuousCall = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["ChkContinuousCall"]);
+                    ObjModelsubJob.CallCloseAllow = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CallClose"]);
                     ViewData["PrimaryMaterialchecked"] = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["PrimaryMaterial"]);
-
                     ObjModelJob.checkIFConcernDisplay = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["IfConcernsDisplayOfPDF"]);
                     if (Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["checkIFCustomerSpecificReportNo"]) == "1")
                     {
@@ -5494,12 +5551,12 @@ namespace TuvVision.Controllers
         }
         #endregion
 
-        public ActionResult DeleteCallsData(int? PK_Call_ID)
+        public ActionResult DeleteCallsData(int? PK_Call_ID, string reason)
         {
             int Result = 0;
             try
             {
-                Result = objDalCalls.DeleteCalls(PK_Call_ID);
+                Result = objDalCalls.DeleteCalls(PK_Call_ID, reason);
                 if (Result != 0)
                 {
                     TempData["DeleteBranch"] = Result;
@@ -5780,7 +5837,7 @@ namespace TuvVision.Controllers
                                 ModifyDate = DateTime.Now,//Convert.ToDateTime(dr["ModifyDate"]),
                                 Project_Name = Convert.ToString(dr["Project_Name"]),
                                 JobType = Convert.ToString(dr["Job_type"]),
-                                ServiceType = Convert.ToString(dr["subserviceType"]),
+                                ServiceType = Convert.ToString(dr["ExecutingService"]),
                                 CreatedDate = Convert.ToString(dr["CreatedDate"]),
                                 Reasion = Convert.ToString(dr["Reasion"]),
                                 ExtendCall_Status = Convert.ToString(dr["ExtendCall_Status"]),
@@ -5812,6 +5869,7 @@ namespace TuvVision.Controllers
                                 ExecutingBranch = Convert.ToString(dr["ExecutingBranch"]),
                                 Call_Type = Convert.ToString(dr["Call_Type"]),
                                 EstimatedHours = Convert.ToString(dr["EstimatedHours"]),
+                                //ExecutingService = Convert.ToString(dr["ExecutingService"]),
                             }
                             );
                     }
@@ -6069,7 +6127,10 @@ namespace TuvVision.Controllers
             //end
             grid.Columns.Add(model => model.PrimaryMaterial).Titled("Primary Material");
             // grid.Columns.Add(model => model.CreatedDate.Value.ToString("dd/MM/yyyy")).Titled("Created Date").Css("aa");
-            grid.Columns.Add(model => model.inspectorapproved).Titled("inspector Approved");
+            grid.Columns.Add(model => model.CallCancelledBy).Titled("Call Cancelled By");
+            grid.Columns.Add(model => model.CallCancelledDate).Titled("Call Cancelled Date");
+            grid.Columns.Add(model => model.CallNotDoneBy).Titled("Call NotDone By");
+            grid.Columns.Add(model => model.CallNotDoneDate).Titled("Call NotDone Date");
 
 
 
@@ -6147,7 +6208,12 @@ namespace TuvVision.Controllers
                                 TCEFilled = Convert.ToString(dr["TECFormfilled"]),
                                 FinalInspectionValue = Convert.ToString(dr["FinalInspection"]),
                                 ManDays = Convert.ToString(dr["ManMonthsAssignment"]),
-                                inspectorapproved = Convert.ToString(dr["isinspectorApproved"])
+                                inspectorapproved = Convert.ToString(dr["isinspectorApproved"]),
+                                //added by shrutika 07/07/2025
+                                CallCancelledBy = Convert.ToString(dr["CallCancelledBy"]),
+                                CallCancelledDate = Convert.ToString(dr["CallCancelledDate"]),
+                                CallNotDoneBy = Convert.ToString(dr["CallNotDoneBy"]),
+                                CallNotDoneDate = Convert.ToString(dr["CallNotDoneDate"]),
 
 
 
@@ -6690,40 +6756,85 @@ namespace TuvVision.Controllers
         }
         */
 
-        public JsonResult GetCompetancy(string Name, string Status, string stageOf)
+
+        public JsonResult GetCompetancy(string Name, string Status, string stageOf, string ExecutingService)
         {
 
 
             string Result = string.Empty;
             string strResult = string.Empty;
             DataTable dtScope = new DataTable();
+            bool scope133Exists = false;
+            bool scope187Exists = false;
+            bool scope133_OK = false;
+            bool scope187_OK = false;
             bool blnCompetant = false;
 
             try
             {
-                dtScope = objDalCalls.GetScopeDetails(Status, stageOf);
+                dtScope = objDalCalls.GetScopeDetails(Status, stageOf, ExecutingService);
 
                 if (dtScope.Rows.Count > 0)
                 {
 
                     DataView view = new DataView(dtScope);
 
+
                     DataTable distinctValues = view.ToTable(true, "Scope");
+                    DataTable distinct = view.ToTable(true, "Name");
 
                     for (int i = 0; i < distinctValues.Rows.Count; i++)
                     {
-                        Result = objDalCalls.GetCompetancy(Name, distinctValues.Rows[i]["Scope"].ToString());
-                        if (Result == "0")
+
+                        if (distinct.Rows[i]["Name"].ToString() == "Storage Tank" || distinct.Rows[i]["Name"].ToString() == "Tube sheet - Heat Exchanger" || distinct.Rows[i]["Name"].ToString() == "VFD Panel" || distinct.Rows[i]["Name"].ToString() == "API Seal Plan" || distinct.Rows[i]["Name"].ToString() == "VFD Panel" || distinct.Rows[i]["Name"].ToString() == "Casting")
                         {
-                            blnCompetant = false;
-                            break;
+                            Result = objDalCalls.GetCompetancyProductWise(Name, distinctValues.Rows[i]["Scope"].ToString());
                         }
-                        else if (Result == "1")
+
+                        else
                         {
-                            blnCompetant = true;
+                            Result = objDalCalls.GetCompetancy(Name, distinctValues.Rows[i]["Scope"].ToString());
+                        }
+                        if (distinctValues.Rows[i]["Scope"].ToString() == "133")
+                        {
+                            scope133Exists = true;
+                            scope133_OK = (Result == "1");
+                        }
+                        else if (distinctValues.Rows[i]["Scope"].ToString() == "187")
+                        {
+                            scope187Exists = true;
+                            scope187_OK = (Result == "1");
+                        }
+                        else
+                        {
+
+
+                            if (Result == "0")
+                            {
+                                blnCompetant = false;
+                                break;
+                            }
+                            else if (Result == "1")
+                            {
+                                blnCompetant = true;
+                            }
                         }
                     }
                 }
+
+                if (scope133Exists && scope187Exists)
+                {
+                    blnCompetant = scope133_OK || scope187_OK;
+                }
+                else if (scope133Exists)
+                {
+                    blnCompetant = scope133_OK;
+                }
+                else if (scope187Exists)
+                {
+                    blnCompetant = scope187_OK;
+                }
+
 
                 if (blnCompetant)
                 {
@@ -6746,6 +6857,76 @@ namespace TuvVision.Controllers
             return Json("failure", JsonRequestBehavior.AllowGet);
 
         }
+
+        //public JsonResult GetCompetancy(string Name, string Status, string stageOf, string ExecutingService)
+        //{
+
+
+        //    string Result = string.Empty;
+        //    string strResult = string.Empty;
+        //    DataTable dtScope = new DataTable();
+        //    bool blnCompetant = false;
+
+        //    try
+        //    {
+        //        dtScope = objDalCalls.GetScopeDetails(Status, stageOf, ExecutingService);
+
+        //        if (dtScope.Rows.Count > 0)
+        //        {
+
+        //            DataView view = new DataView(dtScope);
+
+
+        //            DataTable distinctValues = view.ToTable(true, "Scope");
+        //            DataTable distinct = view.ToTable(true, "Name");
+
+        //            for (int i = 0; i < distinctValues.Rows.Count; i++)
+        //            {
+        //                if (distinct.Rows[i]["Name"].ToString() == "Storage Tank" || distinct.Rows[i]["Name"].ToString() == "Tube sheet - Heat Exchanger" || distinct.Rows[i]["Name"].ToString() == "VFD Panel" || distinct.Rows[i]["Name"].ToString() == "API Seal Plan" || distinct.Rows[i]["Name"].ToString() == "VFD Panel" || distinct.Rows[i]["Name"].ToString() == "Casting")
+        //                {
+        //                    Result = objDalCalls.GetCompetancyProductWise(Name, distinctValues.Rows[i]["Scope"].ToString());
+        //                }
+        //                else
+        //                {
+        //                    Result = objDalCalls.GetCompetancy(Name, distinctValues.Rows[i]["Scope"].ToString());
+        //                }
+        //                if (Result == "0")
+        //                {
+        //                    blnCompetant = false;
+        //                    break;
+        //                }
+        //                else if (Result == "1")
+        //                {
+        //                    blnCompetant = true;
+        //                }
+        //            }
+        //        }
+
+        //        if (blnCompetant)
+        //        {
+        //            strResult = "YES";
+        //        }
+        //        else
+        //        {
+        //            strResult = "NO";
+        //        }
+
+
+
+        //        return Json(strResult, JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        string error = ex.Message.ToString();
+        //    }
+
+        //    return Json("failure", JsonRequestBehavior.AllowGet);
+
+        //}
+
+
+
+
 
 
 
@@ -6883,7 +7064,7 @@ namespace TuvVision.Controllers
 
         //chcek inspector is approverd or not 
 
-        public JsonResult Getisinspectorapproved(string Name, string CustomerName)
+        public JsonResult Getisinspectorapproved(string Name, string CustomerName, string ProductItem)
         {
 
 
@@ -6891,10 +7072,12 @@ namespace TuvVision.Controllers
             string strResult = string.Empty;
             DataTable dtScope = new DataTable();
             bool blnCompetant = false;
+            string Value = ",";
+            string CompanyNamevalue = CustomerName + Value;
 
             try
             {
-                Result = objDalCalls.GetcustomerApproved(Name, CustomerName);
+                Result = objDalCalls.GetcustomerApproved(Name, CompanyNamevalue, ProductItem);
 
 
                 return Json(Result, JsonRequestBehavior.AllowGet);
@@ -7014,6 +7197,7 @@ namespace TuvVision.Controllers
         public ActionResult InspectorCallDetails()
         {
 
+
             var ReasonData = objDalCalls.GetReasonList("");
             ViewBag.Reasonlist = new SelectList(ReasonData, "CReason_Id", "Reason");
 
@@ -7072,6 +7256,11 @@ namespace TuvVision.Controllers
                         Sub_Vendor_Contact = Convert.ToString(dr["Sub_Vendor_Contact"]),
                         CustomerRepresentative = Convert.ToString(dr["CustomerRepresentativeName"]),
                         JobBlock = Convert.ToString(dr["JobBlock"]),
+                        CallCloseAllow = Convert.ToString(dr["CallClose"]),
+                        IsAssignedUnderOprMngr = Convert.ToString(dr["IsOprMgrApprovalReq"]),
+                        status_ = Convert.ToString(dr["status_"]),
+                        AllowCallsAfterOPEProcess = Convert.ToInt32(dr["AllowCallsAfterOPEProcess"]),
+                        OPE = Convert.ToString(dr["OPE"])
                     });
 
                     ViewData["callDetails"] = lmd;
@@ -8015,23 +8204,150 @@ namespace TuvVision.Controllers
 
         }
 
+        //public void SendMAil_ConsumedMandays(int PK_SubJob_Id, int pk_job_id)
+        //{
+        //    string displayName = string.Empty;
+        //    string ClientEmail = string.Empty;
+        //    string bodyTxt = string.Empty;
+        //    string Job_number;
+        //    try
+        //    {
+        //        DataTable Details = objDalCalls.GetConsumedMandaysData(PK_SubJob_Id);
 
-        public void SendMAil_ConsumedMandays(int PK_SubJob_Id,int pk_job_id)
+        //        if (Details.Rows.Count > 0)
+        //        {
+
+        //            string ConsumeCallPercentage = Details.Rows[0]["ConsumeCallPercentage"].ToString();
+        //            string Coordinatorname = Details.Rows[0]["coordinatorname"].ToString();
+        //            string coordinatorEmail = Details.Rows[0]["CoordinatorEmail"].ToString();
+        //            Job_number = Details.Rows[0]["job_number"].ToString();
+        //            string AdminQA = Details.Rows[0]["AdminQA"].ToString();
+        //            string BranchQA = Details.Rows[0]["BranchQA"].ToString();
+        //            string ApprovalName_1 = Details.Rows[0]["ApprovalName_1"].ToString();
+        //            string ApprovalName_2 = Details.Rows[0]["ApprovalName_2"].ToString();
+        //            var Job_Created_TUV_Email_Id = Details.Rows[0]["Job_Created_TUV_Email_Id"].ToString();
+        //            string PCH_Name = Details.Rows[0]["PCH_Name"].ToString();
+        //            string End_USer_name = Details.Rows[0]["End_USer_name"].ToString();
+        //            string Company_Name = Details.Rows[0]["Company_Name"].ToString();
+        //            string SAP_No = Details.Rows[0]["SAP_No"].ToString();
+        //            string Project_Name = Details.Rows[0]["Project_Name"].ToString();
+        //            string Po_Date = Details.Rows[0]["Po_Date"].ToString();
+        //            string Po_Validity = Details.Rows[0]["Po_Validity"].ToString();
+        //            string Vendor_Po_No = Details.Rows[0]["Vendor_Po_No"].ToString();
+        //            string Consumedmandays = Details.Rows[0]["Consumedmandays"].ToString();
+        //            string ProposedCall = Details.Rows[0]["ProposedCall"].ToString();
+
+        //            string CcExtra = "rohini@tuv-nord.com";
+        //            string CCnikita = "nikita.yadav@tuvindia.co.in";
+        //            string CCmails = "pshrikant@tuv-nord.com";
+        //            MailMessage msg = new MailMessage();
+        //            string MailFrom = ConfigurationManager.AppSettings["MailFrom"].ToString();
+        //            string smtpHost = ConfigurationManager.AppSettings["SmtpServer"].ToString();
+        //            string ToEmail = coordinatorEmail + "," + Job_Created_TUV_Email_Id;
+        //            string CcEmail = $"{BranchQA};{ApprovalName_1};{ApprovalName_2};{PCH_Name};{CcExtra};{CCnikita};{CCmails},{AdminQA}";
+
+
+        //            bodyTxt = $@"
+        //    <html>
+        //        <head>
+        //            <title></title>
+        //        </head>
+        //        <body>
+        //            <div>
+        //                <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Dear {Coordinatorname},</span>
+        //                <br/><br/>
+        //                <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>70% of Man-days have been consumed For below Job.</span>
+        //                <br/><br/>
+        //                 <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Job Number: {JobNumber}.</span>
+        //                <br/><br/>
+        //                 <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>SAP Number: {SAP_No}</span>
+        //                <br/><br/>
+        //                 <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Customer Name: {Company_Name}.</span>
+        //                <br/><br/>
+        //                 <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>End customer Name: {End_USer_name}.</span>
+        //                <br/><br/>
+        //                 <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Project Name:{Project_Name}.</span>
+        //                <br/><br/>
+        //                 <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>PO Number:{Vendor_Po_No}.</span>
+        //                <br/><br/>
+        //                <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>PO Date:{Po_Date}.</span>
+        //                <br/><br/>
+        //                <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>PO Validity:{Po_Validity}.</span>
+        //                <br/><br/>
+        //                <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Estimated Man-days :{ProposedCall}.</span>
+        //                <br/><br/>
+        //                <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Consumed Man-days: :{Consumedmandays}.</span>
+        //                <br/><br/>
+        //                <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Please take further necessary action.</span>
+        //                <br/><br/>
+        //            </div>
+        //            <br/>
+        //            <div>
+        //                <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Best regards,<br/>Tiimes Team.</span>
+        //            </div>
+        //            <br/>
+        //            <div>
+        //                <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Note: This is an auto-generated mail. Please do not reply.</span>
+        //            </div>
+        //        </body>
+        //    </html>";
+
+
+        //            foreach (var email in ToEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+        //            {
+        //                msg.To.Add(new MailAddress(email));
+        //            }
+
+        //            foreach (var email in CcEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+        //            {
+        //                msg.CC.Add(new MailAddress(email));
+        //            }
+
+        //            msg.From = new MailAddress(MailFrom, ClientEmail);
+        //            msg.Subject = "TIIMES – Job-" + Job_number + " – 70% Of Mandays has been Consumed.";
+        //            msg.Body = bodyTxt;
+        //            msg.IsBodyHtml = true;
+        //            msg.Priority = MailPriority.Normal;
+
+        //            SmtpClient client = new SmtpClient();
+        //            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+        //            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+        //            client.Host = ConfigurationManager.AppSettings["smtpserver"];
+        //            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"], ConfigurationManager.AppSettings["Password"]);
+        //            client.EnableSsl = true;
+        //            client.Send(msg);
+
+        //            DataTable dt = new DataTable();
+        //            dt = objDalCalls.UpdateMailflag(pk_job_id);
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("No details found for the given call ID.");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+        //}
+        public void SendMAil_ConsumedMandays(int PK_SubJob_Id, int pk_job_id)
         {
             string displayName = string.Empty;
             string ClientEmail = string.Empty;
             string bodyTxt = string.Empty;
             string Job_number;
+            double percentage;
             try
             {
                 DataTable Details = objDalCalls.GetConsumedMandaysData(PK_SubJob_Id);
 
                 if (Details.Rows.Count > 0)
                 {
-                   
-                    string Coordinatorname = Details.Rows[0]["coordinatorname"].ToString();                    
+
+                    string ConsumeCallPercentage = Details.Rows[0]["ConsumeCallPercentage"].ToString();
+                    string Coordinatorname = Details.Rows[0]["coordinatorname"].ToString();
                     string coordinatorEmail = Details.Rows[0]["CoordinatorEmail"].ToString();
-                     Job_number = Details.Rows[0]["job_number"].ToString();
+                    Job_number = Details.Rows[0]["job_number"].ToString();
                     string AdminQA = Details.Rows[0]["AdminQA"].ToString();
                     string BranchQA = Details.Rows[0]["BranchQA"].ToString();
                     string ApprovalName_1 = Details.Rows[0]["ApprovalName_1"].ToString();
@@ -8047,16 +8363,21 @@ namespace TuvVision.Controllers
                     string Vendor_Po_No = Details.Rows[0]["Vendor_Po_No"].ToString();
                     string Consumedmandays = Details.Rows[0]["Consumedmandays"].ToString();
                     string ProposedCall = Details.Rows[0]["ProposedCall"].ToString();
-                    
+
                     string CcExtra = "rohini@tuv-nord.com";
                     string CCnikita = "nikita.yadav@tuvindia.co.in";
                     string CCmails = "pshrikant@tuv-nord.com";
                     MailMessage msg = new MailMessage();
                     string MailFrom = ConfigurationManager.AppSettings["MailFrom"].ToString();
                     string smtpHost = ConfigurationManager.AppSettings["SmtpServer"].ToString();
-                    string ToEmail = coordinatorEmail+ "," +Job_Created_TUV_Email_Id;
+                    string ToEmail = coordinatorEmail + "," + Job_Created_TUV_Email_Id;
                     string CcEmail = $"{BranchQA};{ApprovalName_1};{ApprovalName_2};{PCH_Name};{CcExtra};{CCnikita};{CCmails},{AdminQA}";
-                    bodyTxt = $@"
+                    if (double.TryParse(ConsumeCallPercentage, out percentage))
+                    {
+                        if (percentage >= 70 && percentage <= 72)
+                        {
+
+                            bodyTxt = $@"
             <html>
                 <head>
                     <title></title>
@@ -8096,42 +8417,228 @@ namespace TuvVision.Controllers
                     </div>
                     <br/>
                     <div>
-                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Note: This is an auto-generated mail. Please do not reply.</span>
+                        <span style='font-size:14px; font-family:verdana,geneva,sans-serif;;color:red;'>Note: This is an auto-generated mail. Please do not reply.</span>
                     </div>
                 </body>
             </html>";
+                            foreach (var email in ToEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                msg.To.Add(new MailAddress(email));
+                            }
 
-                    foreach (var email in ToEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        msg.To.Add(new MailAddress(email));
+                            foreach (var email in CcEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                msg.CC.Add(new MailAddress(email));
+                            }
+
+                            msg.From = new MailAddress(MailFrom, ClientEmail);
+                            if (percentage >= 70 && percentage <= 72)
+                            {
+                                msg.Subject = "TIIMES – Job-" + Job_number + " – 70% Of Mandays has been Consumed.";
+                            }
+                            else if (percentage >= 85 && percentage <= 87)
+                            {
+                                msg.Subject = "TIIMES – Job-" + Job_number + " – 85% Of Mandays has been Consumed.";
+                            }
+                            else if (percentage >= 95 && percentage <= 97)
+                            {
+                                msg.Subject = "TIIMES – Job-" + Job_number + " – 95% Of Mandays has been Consumed.";
+                            }
+                            msg.Body = bodyTxt;
+                            msg.IsBodyHtml = true;
+                            msg.Priority = MailPriority.Normal;
+
+                            SmtpClient client = new SmtpClient();
+                            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+                            client.Host = ConfigurationManager.AppSettings["smtpserver"];
+                            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"], ConfigurationManager.AppSettings["Password"]);
+                            client.EnableSsl = true;
+                            client.Send(msg);
+
+                            DataTable dt = new DataTable();
+                            dt = objDalCalls.UpdateMailflag(PK_SubJob_Id);
+                        }
+                        else if (percentage >= 85 && percentage <= 87)
+                        {
+                            bodyTxt = $@"
+            <html>
+                <head>
+                    <title></title>
+                </head>
+                <body>
+                    <div>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Dear {Coordinatorname},</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>85% of Man-days have been consumed For below Job.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Job Number: {JobNumber}.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>SAP Number: {SAP_No}</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Customer Name: {Company_Name}.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>End customer Name: {End_USer_name}.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Project Name:{Project_Name}.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>PO Number:{Vendor_Po_No}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>PO Date:{Po_Date}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>PO Validity:{Po_Validity}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Estimated Man-days :{ProposedCall}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Consumed Man-days: :{Consumedmandays}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Please take further necessary action.</span>
+                        <br/><br/>
+                    </div>
+                    <br/>
+                    <div>
+                        <span style='font-size:14px; font-family:verdana,geneva,sans-serif;'>Best regards,<br/>Tiimes Team.</span>
+                    </div>
+                    <br/>
+                    <div>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;;color:red;'>Note: This is an auto-generated mail. Please do not reply.</span>
+                    </div>
+                </body>
+            </html>";
+                            foreach (var email in ToEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                msg.To.Add(new MailAddress(email));
+                            }
+
+                            foreach (var email in CcEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                msg.CC.Add(new MailAddress(email));
+                            }
+
+                            msg.From = new MailAddress(MailFrom, ClientEmail);
+                            if (percentage >= 70 && percentage <= 72)
+                            {
+                                msg.Subject = "TIIMES – Job-" + Job_number + " – 70% Of Mandays has been Consumed.";
+                            }
+                            else if (percentage >= 85 && percentage <= 87)
+                            {
+                                msg.Subject = "TIIMES – Job-" + Job_number + " – 85% Of Mandays has been Consumed.";
+                            }
+                            else if (percentage >= 95 && percentage <= 97)
+                            {
+                                msg.Subject = "TIIMES – Job-" + Job_number + " – 95% Of Mandays has been Consumed.";
+                            }
+                            msg.Body = bodyTxt;
+                            msg.IsBodyHtml = true;
+                            msg.Priority = MailPriority.Normal;
+
+                            SmtpClient client = new SmtpClient();
+                            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+                            client.Host = ConfigurationManager.AppSettings["smtpserver"];
+                            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"], ConfigurationManager.AppSettings["Password"]);
+                            client.EnableSsl = true;
+                            client.Send(msg);
+
+                            DataTable dt = new DataTable();
+                            dt = objDalCalls.UpdateMailflag(PK_SubJob_Id);
+                        }
+
+                        else if (percentage >= 95 && percentage <= 97)
+                        {
+                            bodyTxt = $@"
+            <html>
+                <head>
+                    <title></title>
+                </head>
+                <body>
+                    <div>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Dear {Coordinatorname},</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>95% of Man-days have been consumed For below Job.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Job Number: {JobNumber}.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>SAP Number: {SAP_No}</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Customer Name: {Company_Name}.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>End customer Name: {End_USer_name}.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Project Name:{Project_Name}.</span>
+                        <br/><br/>
+                         <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>PO Number:{Vendor_Po_No}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>PO Date:{Po_Date}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>PO Validity:{Po_Validity}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Estimated Man-days :{ProposedCall}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Consumed Man-days: :{Consumedmandays}.</span>
+                        <br/><br/>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;'>Please take further necessary action.</span>
+                        <br/><br/>
+                    </div>
+                    <br/>
+                    <div>
+                        <span style='font-size:14px; font-family:verdana,geneva,sans-serif;'>Best regards,<br/>Tiimes Team.</span>
+                    </div>
+                    <br/>
+                    <div>
+                        <span style='font-size:12px; font-family:verdana,geneva,sans-serif;color:red;'>Note: This is an auto-generated mail. Please do not reply.</span>
+                    </div>
+                </body>
+            </html>";
+                            foreach (var email in ToEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                msg.To.Add(new MailAddress(email));
+                            }
+
+                            foreach (var email in CcEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                msg.CC.Add(new MailAddress(email));
+                            }
+
+                            msg.From = new MailAddress(MailFrom, ClientEmail);
+                            if (percentage >= 70 && percentage <= 72)
+                            {
+                                msg.Subject = "TIIMES – Job-" + Job_number + " – 70% Of Mandays has been Consumed.";
+                            }
+                            else if (percentage >= 85 && percentage <= 87)
+                            {
+                                msg.Subject = "TIIMES – Job-" + Job_number + " – 85% Of Mandays has been Consumed.";
+                            }
+                            else if (percentage >= 95 && percentage <= 97)
+                            {
+                                msg.Subject = "TIIMES – Job-" + Job_number + " – 95% Of Mandays has been Consumed.";
+                            }
+                            msg.Body = bodyTxt;
+                            msg.IsBodyHtml = true;
+                            msg.Priority = MailPriority.Normal;
+
+                            SmtpClient client = new SmtpClient();
+                            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+                            client.Host = ConfigurationManager.AppSettings["smtpserver"];
+                            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"], ConfigurationManager.AppSettings["Password"]);
+                            client.EnableSsl = true;
+                            client.Send(msg);
+
+                            DataTable dt = new DataTable();
+                            dt = objDalCalls.UpdateMailflag(PK_SubJob_Id);
+                        }
+
                     }
 
-                    foreach (var email in CcEmail.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        msg.CC.Add(new MailAddress(email));
-                    }
 
-                    msg.From = new MailAddress(MailFrom, ClientEmail);
-                    msg.Subject = "TIIMES – Job-" + Job_number + " – 70% Of Mandays has been Consumed.";
-                    msg.Body = bodyTxt;
-                    msg.IsBodyHtml = true;
-                    msg.Priority = MailPriority.Normal;
-
-                    SmtpClient client = new SmtpClient();
-                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                    client.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
-                    client.Host = ConfigurationManager.AppSettings["smtpserver"];
-                    client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"], ConfigurationManager.AppSettings["Password"]);
-                    client.EnableSsl = true;
-                    client.Send(msg);
-
-                    DataTable dt = new DataTable();
-                    dt= objDalCalls.UpdateMailflag(pk_job_id);
                 }
+
                 else
                 {
                     Console.WriteLine("No details found for the given call ID.");
                 }
+
             }
             catch (Exception ex)
             {
@@ -8139,5 +8646,2180 @@ namespace TuvVision.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult GetinspectorDateChcekc(string PlannedDate, string pk_call_id)
+        {
+
+
+            string Result = string.Empty;
+            string strResult = string.Empty;
+            DataTable dtScope = new DataTable();
+            bool blnDateChcek = false;
+
+            try
+            {
+
+                Result = objDalCalls.GetInspector(PlannedDate, pk_call_id);
+
+                if (Result == "0")
+                {
+                    blnDateChcek = false;
+
+                }
+                else if (Result == "1")
+                {
+                    blnDateChcek = true;
+                }
+
+
+                if (blnDateChcek)
+                {
+                    strResult = "YES";
+                }
+                else
+                {
+                    strResult = "NO";
+                }
+
+
+
+                return Json(strResult, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message.ToString();
+            }
+
+            return Json("failure", JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public ActionResult TCEReport()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult GetSearchProductData(string ProductList)
+        {
+            DataTable DTResult = new DataTable();
+            List<Report> lstAutoComplete = new List<Report>();
+
+            if (!string.IsNullOrEmpty(ProductList))
+            {
+                DTResult = objDalCalls.GetSearchProductList(ProductList);
+                if (DTResult.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in DTResult.Rows)
+                    {
+                        lstAutoComplete.Add(
+                           new Report
+                           {
+                               IAFScope = Convert.ToString(dr["IAFScopeNumber"]),
+                               IAFScopeName = Convert.ToString(dr["IAFScopeName"]),
+                               InspectionName = Convert.ToString(dr["FieldOfInspection"]),
+                               PK_RangeInspectionId = Convert.ToInt32(dr["PK_RangeInspectionId"]),
+                               RangeInspection = Convert.ToString(dr["RangeInspection"])
+
+                           }
+                        );
+                    }
+                    return Json(lstAutoComplete, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json("Failed", JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
+        public ActionResult CallsReview()
+        {
+            Session["GetExcelData1"] = "Yes";
+            Session["FromDate1"] = null;
+            Session["ToDate1"] = null;
+
+
+
+            DataTable CompanyDashBoard = new DataTable();
+            List<CallsModel> lstCallsReview = new List<CallsModel>();
+            CompanyDashBoard = objDalCalls.GetCallsReview();
+
+
+            var UserData = objDalCalls.GetMentorList();
+            ViewBag.Userlist = new SelectList(UserData, "PK_UserID", "FirstName");
+
+            try
+            {
+                if (CompanyDashBoard.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in CompanyDashBoard.Rows)
+                    {
+                        lstCallsReview.Add(
+                            new CallsModel
+                            {
+                                //Id = Convert.ToInt32(dr["Id"]),
+                                Call_No = Convert.ToString(dr["Call_No"]),
+                                Inspector = Convert.ToString(dr["Inspector"]),
+                                Originating_Branch = Convert.ToString(dr["Originating_Branch"]),
+                                VendorName = Convert.ToString(dr["Vendor_Name"]),
+                                StageOfInspection = Convert.ToString(dr["stageInspection"]),
+                                Product_Name = Convert.ToString(dr["Product_item"]),
+                                PrimaryMaterial = Convert.ToString(dr["PrimaryMaterial"]),
+                                CustomerRepresentative = Convert.ToString(dr["CustomerRepresentativeName"]),
+                                Actual_Visit_Date = dr["Actual_Visit_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Actual_Visit_Date"]).ToString("dd/MM/yyyy") : null,
+                                PK_Call_ID = Convert.ToInt32(dr["PK_Call_ID"]),
+                                callAssignDate = dr["callAssignDate"] != DBNull.Value ? Convert.ToDateTime(dr["callAssignDate"]).ToString("dd/MM/yyyy") : null,
+                                TCEFilled = Convert.ToString(dr["TECFormfilled"]),
+                                inspectorapproved = Convert.ToString(dr["Isinspectorapproved"]),
+                                iscompetent = Convert.ToString(dr["iscompetant"]),
+                                CreatedBy = Convert.ToString(dr["CreatedBy"]),
+                                callassignby = Convert.ToString(dr["CallAssignBy"]),
+                                DSubJob_No = Convert.ToString(dr["SubJob_No"]),
+                                Executing_Branch = Convert.ToString(dr["Executing_Branch"]),
+                                OBSName = Convert.ToString(dr["OBSName"]),
+                                EmployeeCode = Convert.ToString(dr["EmployeeCode"]),
+                                MainBranch = Convert.ToString(dr["Branch_Name"]),
+
+                            }
+                            );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            ViewData["BranchList"] = lstCallsReview;
+
+            ObjModelsubJob.lstCallsModel1 = lstCallsReview;
+
+            return View(ObjModelsubJob);
+        }
+
+        [HttpPost]
+        public ActionResult CallsReview(List<SelectedItem> ids, string isapprove, string isassign)
+        {
+            string Result = string.Empty;
+            DataSet DSGetddlList = new DataSet();
+            DataSet AppCalls = new DataSet();
+            string filterexpression = string.Empty;
+            DataRow[] foundCoordinatorRows;
+            DataRow[] foundPCHRows;
+            DataRow[] foundPCHRows1;
+            DataRow[] foundRows;
+
+            string id = "";
+            string reason = "";
+            string Remark = "";
+            string MentorID = "";
+            string isTCE = "";
+            string isapproved = "";
+            string result = "";
+            string Result1 = "";
+
+
+            List<string> splitIds = new List<string>();
+
+
+            foreach (var item in ids)
+            {
+                id = item.id;
+                reason = item.reason;
+                Remark = item.Remark;
+                MentorID = item.mentor;
+                isTCE = item.IsTCE;
+                isapproved = item.IsAppr;
+
+                Result = objDalCalls.InsertOprMgrStatus(id, isapprove, isassign, reason, Remark, MentorID, isTCE);
+                result = id.Replace("{", "").Replace("}", "");
+            }
+
+            splitIds = ids
+.SelectMany(item1 => item1.id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+.Select(x => x.Trim().Replace("{", "").Replace("}", ""))
+.Distinct() // Optional: ensure uniqueness
+.ToList();
+
+
+
+
+
+
+            if (isapprove == "1")
+            {
+
+
+                //SendApprovalMail(splitIds, ids);
+                GetDataMailSendApprove(splitIds, ids);
+
+                SendTCEMail(splitIds, ids);
+
+                SendMentorMail(splitIds, ids);
+
+                // SendNotApprovedMail(splitIds, ids);
+
+                foreach (var item in ids)
+                {
+                    id = item.id;
+                    Result1 = objDalCalls.InspetorUpdateLogStatus(id);
+                }
+
+
+            }
+
+            else
+            {
+
+                foreach (var item in ids)
+                {
+                    id = item.id;
+                    Result1 = objDalCalls.InspetorUpdateLogStatus(id);
+                }
+                //Comment By shrutika 
+                //SendRejectionMail(splitIds, ids);
+                GetDataMailSend(splitIds, ids);
+
+                //SendRejNotApprovedMail(splitIds, ids);
+
+
+                foreach (var item in ids)
+                {
+                    id = item.id;
+                    Result1 = objDalCalls.InspetorStatus(id);
+                }
+
+
+            }
+
+
+            if (Convert.ToInt16(Result) > 0)
+            {
+                ModelState.Clear();
+            }
+            return Json(new { success = true, message = "Data Updated Successfully", redirectUrl = Url.Action("CallsReview", "CallsMaster") });
+        }
+
+
+        public static void GetDataMailSendApprove(List<string> ids, List<SelectedItem> selectedItems)
+        {
+            string filterexpression = string.Empty;
+            string UserId = System.Web.HttpContext.Current.Session["UserIDs"].ToString();
+            DataRow[] foundPCHRows;
+            DataRow[] foundRows;
+            DataSet DTSEMDashBoard = new DataSet();
+            List<string> matchedIds = new List<string>();
+            string chkid = "";
+            string userName = "";
+            string Email = "";
+            string Email1 = "";
+
+            foreach (string callId in ids)
+            {
+                var item = selectedItems.FirstOrDefault(x => x.id.Contains(callId));
+                if (item != null)
+                {
+
+                    matchedIds.Add(item.id);
+                }
+            }
+
+            string commaSeparatedIds = string.Join(",", matchedIds);
+            string newids = commaSeparatedIds.Replace("{", "").Replace("}", "");
+            try
+            {
+                con.Open();
+
+                SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", "96");
+                CMDGetEnquriy.Parameters.AddWithValue("@PK_Call_ID1", newids);
+                // CMDGetEnquriy.Parameters.AddWithValue("@UserID", UserId);
+                //   CMDGetEnquriy.Parameters.AddWithValue("@type", "2");
+
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                SqlDataAdapter SDAGetEnquiry = new SqlDataAdapter(CMDGetEnquriy);
+                SDAGetEnquiry.Fill(DTSEMDashBoard);
+
+                if (DTSEMDashBoard.Tables[0].Rows.Count > 0)
+                {
+                    ///// Send PCH Mail 
+                    DataTable FinalData = new DataTable();
+                    for (int i = 0; i < DTSEMDashBoard.Tables[4].Rows.Count; i++)
+                    {
+                        string strBranch = Convert.ToString(DTSEMDashBoard.Tables[4].Rows[i]["br_id"]); /// .Split(',');
+                        //string userName = Convert.ToString(DTSEMDashBoard.Tables[4].Rows[i]["FirstName"].ToString() + ' ' + DTSEMDashBoard.Tables[4].Rows[i]["LastName"].ToString());
+                        // string strSocode = Convert.ToString(DTSEMDashBoard.Tables[5].Rows[i]["SoCode"]); //// .Split(',');
+
+
+                        filterexpression = "br_id in ( '" + strBranch + "')";
+                        foundPCHRows = DTSEMDashBoard.Tables[0].Select(filterexpression);
+                        DataTable dtNew = new DataTable();
+                        if (foundPCHRows.Count() > 0)
+                        {
+                            dtNew = foundPCHRows.CopyToDataTable();
+                            //foreach (DataRow dr in dtNew.Rows)
+                            //{
+                            //    FinalData.Rows.Add(dr.ItemArray);
+                            //    ///  FinalData.ImportRow(dr);
+                            //}
+
+                            List<string> emails = new List<string>
+                        {
+                            dtNew.Rows[0]["PCHEmail"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr1Email"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr2Email"].ToString().Trim(),
+                            dtNew.Rows[0]["QAEmail"].ToString().Trim(),
+                            dtNew.Rows[0]["AdminQAEmail"].ToString().Trim(),
+                            dtNew.Rows[0]["PCHEmail1"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr3Email"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr4Email"].ToString().Trim(),
+                            dtNew.Rows[0]["QAEmail1"].ToString().Trim(),
+                            dtNew.Rows[0]["AdminQAEmail1"].ToString().Trim()
+                        };
+
+                            //Email = string.Join(",", emails.Where(email => !string.IsNullOrEmpty(email)));
+                            Email = string.Join(",",
+    emails
+        .Where(email => !string.IsNullOrWhiteSpace(email))
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+);
+
+                            List<string> emails1 = new List<string>
+                                        {
+                                            dtNew.Rows[0]["CordinatorEmail"].ToString().Trim(),
+                                            dtNew.Rows[0]["CallAssignBy"].ToString().Trim(),
+
+                                        };
+
+
+
+                            //userName  = dtNew.Rows[0]["Rejectedby"].ToString().Trim();
+                            //dtNew.Rows[0]["CallAssignBy"].ToString().Trim(),
+
+
+                            //Email1 = string.Join(",", emails1.Where(email1 => !string.IsNullOrEmpty(email1)));
+                            Email1 = string.Join(",", emails1.Where(email => !string.IsNullOrWhiteSpace(email)).Distinct(StringComparer.OrdinalIgnoreCase));
+
+
+
+                        }
+
+
+
+
+                        //string userName = DTSEMDashBoard.Tables[5].Rows[i]["FirstName"]ToString() + ' ' + AppCalls.Tables[4].Rows[i]["LastName"].ToString();
+
+                        if (Email != "" || Email != null)
+                        {
+                            if (dtNew.Rows.Count > 0)
+                            {
+                                DataRow[] rows = dtNew.Select();
+
+                                if (dtNew.Rows[0]["iscompetant"].ToString() == "NO" && dtNew.Rows[0]["Isinspectorapproved"].ToString() == "NO")
+                                {
+                                    SendMailApprovalIsandCustomerNO(Email1, Email, rows, dtNew.Rows[0]["isTCE"].ToString());
+                                    FinalData.Clear();
+                                    dtNew.Clear();
+
+                                }
+                                else if (dtNew.Rows[0]["iscompetant"].ToString() == "YES" && dtNew.Rows[0]["Isinspectorapproved"].ToString() == "NO")
+                                {
+
+                                    SendMailApprovalIsandCustomerYES(Email1, Email, rows, dtNew.Rows[0]["isTCE"].ToString());
+                                }
+                                else
+                                {
+
+
+
+
+                                    //SendPCHMail(DTSEMDashBoard.Tables[1].Rows[i]["PCHEmail"].ToString(), DTSEMDashBoard.Tables[1].Rows[i]["CLEmail"].ToString(), DTSEMDashBoard.Tables[1].Rows[i]["APP1Email"].ToString(), DTSEMDashBoard.Tables[1].Rows[i]["APP2Email"].ToString(), dtNew);
+                                    //SendIndividualRejectionMail(Email1, Email, rows, chkid, userName);
+                                    SendIndividualApprovalMail(Email1, Email, rows, dtNew.Rows[0]["isTCE"].ToString());
+                                    FinalData.Clear();
+                                    dtNew.Clear();
+                                }
+
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+
+        public static void SendTCEMail(List<string> ids, List<SelectedItem> selectedItems)
+        {
+            string filterexpression = string.Empty;
+            string UserId = System.Web.HttpContext.Current.Session["UserIDs"].ToString();
+            DataRow[] foundPCHRows;
+            DataRow[] foundRows;
+            DataSet DTSEMDashBoard = new DataSet();
+            List<string> matchedIds = new List<string>();
+            string chkid = "";
+            string userName = "";
+            string QAEmail = "";
+            string Email1 = "";
+
+            foreach (string callId in ids)
+            {
+                var item = selectedItems.FirstOrDefault(x => x.id.Contains(callId));
+                if (item != null)
+                {
+
+                    matchedIds.Add(item.id);
+                }
+            }
+
+            string commaSeparatedIds = string.Join(",", matchedIds);
+            string newids = commaSeparatedIds.Replace("{", "").Replace("}", "");
+            try
+            {
+                con.Open();
+
+                SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", "103");
+                CMDGetEnquriy.Parameters.AddWithValue("@PK_Call_ID1", newids);
+                // CMDGetEnquriy.Parameters.AddWithValue("@UserID", UserId);
+                //   CMDGetEnquriy.Parameters.AddWithValue("@type", "2");
+
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                SqlDataAdapter SDAGetEnquiry = new SqlDataAdapter(CMDGetEnquriy);
+                SDAGetEnquiry.Fill(DTSEMDashBoard);
+
+                if (DTSEMDashBoard.Tables[0].Rows.Count > 0)
+                {
+                    ///// Send PCH Mail 
+                    DataTable FinalData = new DataTable();
+                    for (int i = 0; i < DTSEMDashBoard.Tables[4].Rows.Count; i++)
+                    {
+                        string strBranch = Convert.ToString(DTSEMDashBoard.Tables[4].Rows[i]["br_ID"]); /// .Split(',');
+                        //string userName = Convert.ToString(DTSEMDashBoard.Tables[4].Rows[i]["FirstName"].ToString() + ' ' + DTSEMDashBoard.Tables[4].Rows[i]["LastName"].ToString());
+                        // string strSocode = Convert.ToString(DTSEMDashBoard.Tables[5].Rows[i]["SoCode"]); //// .Split(',');
+
+
+                        filterexpression = "br_id in ( '" + strBranch + "')";
+                        foundPCHRows = DTSEMDashBoard.Tables[0].Select(filterexpression);
+                        DataTable dtNew = new DataTable();
+                        if (foundPCHRows.Count() > 0)
+                        {
+                            dtNew = foundPCHRows.CopyToDataTable();
+                            //foreach (DataRow dr in dtNew.Rows)
+                            //{
+                            //    FinalData.Rows.Add(dr.ItemArray);
+                            //    ///  FinalData.ImportRow(dr);
+                            //}
+
+                            List<string> emails = new List<string>
+                        {
+                            dtNew.Rows[0]["PCHEmail"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr1Email"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr2Email"].ToString().Trim(),
+                            dtNew.Rows[0]["QAEmail"].ToString().Trim(),
+                            dtNew.Rows[0]["AdminQAEmail"].ToString().Trim(),
+                            dtNew.Rows[0]["PCHEmail1"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr3Email"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr4Email"].ToString().Trim(),
+                            dtNew.Rows[0]["QAEmail1"].ToString().Trim(),
+                            dtNew.Rows[0]["AdminQAEmail1"].ToString().Trim(),
+                            dtNew.Rows[0]["CallAssignBy"].ToString().Trim(),
+                            dtNew.Rows[0]["PCHEmail1"].ToString().Trim(),
+                            dtNew.Rows[0]["CordinatorEmail"].ToString().Trim()
+
+                        };
+
+                            //Email = string.Join(",", emails.Where(email => !string.IsNullOrEmpty(email)));
+                            Email1 = string.Join(",",
+    emails
+        .Where(email => !string.IsNullOrWhiteSpace(email))
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+);
+
+
+
+                            QAEmail = dtNew.Rows[0]["QAEmail"].ToString();
+
+                        }
+
+
+
+                        if (dtNew.Rows.Count > 0)
+                        {
+                            if (dtNew.Rows[0]["isTCE"].ToString() == "1")
+                            {
+                                SendIndividualTCEMail(QAEmail, Email1, foundPCHRows, dtNew.Rows[0]["isTCE"].ToString());
+                                FinalData.Clear();
+                                dtNew.Clear();
+                            }
+                        }
+
+
+
+                    }
+
+
+
+
+
+
+
+
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+
+
+        public static void SendMailApprovalIsandCustomerNO(string Email, string CCEmail, DataRow[] FoundPCH, string isTCE)
+        {
+            string bodyTxt = string.Empty;
+
+            bodyTxt =
+                       @"<html>
+                <head>
+                    <title></title>
+                </head>
+                
+                <body>
+                    <style>
+                     table, th, td {
+                      border: 1px solid black;
+                      border-collapse: collapse;
+                    }
+                    </style>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Dear Sir(s) / Madam(s),</span></span></div>
+                    <div>
+                        &nbsp;</div>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Inspection engineers have been authorized by the Executing Branch administrators to carry out inspection activities for the inspection calls listed below, despite being marked as incompetent and not included in the customer-approved inspectors list in TIIMES.</br></br>";
+
+            bodyTxt = bodyTxt + "<div></br>";
+
+            bodyTxt = bodyTxt + "<table border='1' bordercolor='black' width='80%' style='font-family:verdana,geneva,sans-serif;font-size:12px;'><tr style='background-color:yellow;'>";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Remarks</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE to be Updated / Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Mentor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Call No</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Inspector Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Is Inspector Competent</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Approved Inspector</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Actual Visit Date</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Primary Material</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Item</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Activity</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Vendor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Originating Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Executing Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>ApprovedBy</td> ";
+            bodyTxt = bodyTxt + "</tr>";
+
+
+            for (int j = 0; j < FoundPCH.Length; j++)
+            {
+                bodyTxt += "<tr>";
+                bodyTxt += $"<td>" + FoundPCH[j]["remark"].ToString() + "</td>";
+                if (FoundPCH[j]["isTCE"].ToString() == "1")
+                {
+                    bodyTxt += $"<td>YES</td>";
+                }
+                else if (FoundPCH[j]["isTCE"].ToString() == "0")
+                {
+                    bodyTxt += $"<td>No</td>";
+                }
+                else
+                {
+                    bodyTxt += $"<td>NA</td>";
+                }
+                bodyTxt += $"<td>" + FoundPCH[j]["MentorName"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Call_No"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Inspector"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["iscompetant"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Isinspectorapproved"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["TECFormfilled"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Actual_Visit_Date"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["PrimaryMaterial"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Product_item"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["stageInspection"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Vendor_Name"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["CustomerRepresentativeName"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Originating_Branch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["ExecutingBranch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["ApprovedBy"].ToString() + "</td>";
+                bodyTxt += "</tr>";
+            }
+
+
+            bodyTxt = bodyTxt + "</table></span></span></div></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Thank You & Best regards," + "</br>";
+            bodyTxt = bodyTxt + "TUV India Private Limited. " + "</br></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>This is auto generated mail. Please do not reply.</span></span></div></br>";
+            //bodyTxt = bodyTxt + "<span><div>ToEmail : " + Email + "</div></span> ";
+            //bodyTxt = bodyTxt + "<span><div>CCEmail : " + CCEmail + "</div></span> ";
+            bodyTxt = bodyTxt + "</body></html> ";
+            // }
+
+
+            MailMessage mail = new MailMessage();
+            SmtpClient client = new SmtpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+
+            mail.CC.Add("sunilj@tuv-nord.com");
+            mail.CC.Add("pshrikant@tuv-nord.com");
+            mail.CC.Add("rohini@tuv-nord.com");
+            mail.CC.Add("rajvi.panchal@tuvindia.co.in");
+            mail.CC.Add("shrutika.salve@tuvindia.co.in");
+
+
+            mail.To.Add(Email);
+            mail.CC.Add(CCEmail);
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"].ToString());
+            client.Host = ConfigurationManager.AppSettings["smtpserver"].ToString();
+
+
+            mail.Subject = "List of Approved Inspection Calls Involving Engineers Marked as Incompetent and not included in the customer-approved inspectors list in TIIMES";//"TIIMES-DelayIVR";
+
+            mail.IsBodyHtml = true;
+            mail.Body = bodyTxt.ToString();
+
+
+
+            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            client.EnableSsl = true;
+
+
+            try
+            {
+                client.Send(mail);
+                bodyTxt = string.Empty;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+
+            }
+        }
+
+
+        public static void SendMailApprovalIsandCustomerYES(string Email, string CCEmail, DataRow[] FoundPCH, string isTCE)
+        {
+            string bodyTxt = string.Empty;
+
+            bodyTxt =
+                       @"<html>
+                <head>
+                    <title></title>
+                </head>
+                
+                <body>
+                    <style>
+                     table, th, td {
+                      border: 1px solid black;
+                      border-collapse: collapse;
+                    }
+                    </style>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Dear Sir(s) / Madam(s),</span></span></div>
+                    <div>
+                        &nbsp;</div>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Inspection engineers have been authorized by the Executing Branch administrators to carry out inspection activities for the inspection calls listed below, despite being not included in the customer-approved inspectors list in TIIMES..</br></br>";
+
+            bodyTxt = bodyTxt + "<div></br>";
+
+            bodyTxt = bodyTxt + "<table border='1' bordercolor='black' width='80%' style='font-family:verdana,geneva,sans-serif;font-size:12px;'><tr style='background-color:yellow;'>";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Remarks</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE to be Updated / Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Mentor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Call No</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Inspector Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Is Inspector Competent</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Approved Inspector</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Actual Visit Date</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Primary Material</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Item</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Activity</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Vendor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Originating Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Executing Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>ApprovedBy</td> ";
+            bodyTxt = bodyTxt + "</tr>";
+
+
+            for (int j = 0; j < FoundPCH.Length; j++)
+            {
+                bodyTxt += "<tr>";
+                bodyTxt += $"<td>" + FoundPCH[j]["remark"].ToString() + "</td>";
+                if (FoundPCH[j]["isTCE"].ToString() == "1")
+                {
+                    bodyTxt += $"<td>YES</td>";
+                }
+                else if (FoundPCH[j]["isTCE"].ToString() == "0")
+                {
+                    bodyTxt += $"<td>No</td>";
+                }
+                else
+                {
+                    bodyTxt += $"<td>NA</td>";
+                }
+                bodyTxt += $"<td>" + FoundPCH[j]["MentorName"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Call_No"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Inspector"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["iscompetant"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Isinspectorapproved"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["TECFormfilled"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Actual_Visit_Date"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["PrimaryMaterial"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Product_item"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["stageInspection"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Vendor_Name"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["CustomerRepresentativeName"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Originating_Branch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["ExecutingBranch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["ApprovedBy"].ToString() + "</td>";
+                bodyTxt += "</tr>";
+            }
+
+
+            bodyTxt = bodyTxt + "</table></span></span></div></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Thank You & Best regards," + "</br>";
+            bodyTxt = bodyTxt + "TUV India Private Limited. " + "</br></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>This is auto generated mail. Please do not reply.</span></span></div></br>";
+            //bodyTxt = bodyTxt + "<span><div>ToEmail : " + Email + "</div></span> ";
+            //bodyTxt = bodyTxt + "<span><div>CCEmail : " + CCEmail + "</div></span> ";
+            bodyTxt = bodyTxt + "</body></html> ";
+            // }
+
+
+            MailMessage mail = new MailMessage();
+            SmtpClient client = new SmtpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //mail.CC.Add("sunilj@tuv-nord.com");
+            mail.CC.Add("pshrikant@tuv-nord.com");
+            mail.CC.Add("rohini@tuv-nord.com");
+            mail.CC.Add("rajvi.panchal@tuvindia.co.in");
+            mail.CC.Add("shrutika.salve@tuvindia.co.in");
+
+            mail.To.Add(Email);
+            mail.CC.Add(CCEmail);
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"].ToString());
+            client.Host = ConfigurationManager.AppSettings["smtpserver"].ToString();
+
+
+            mail.Subject = "List of Approved Inspection Calls Involving Engineers not included in the customer-approved inspectors list in TIIMES";//"TIIMES-DelayIVR";
+
+            mail.IsBodyHtml = true;
+            mail.Body = bodyTxt.ToString();
+
+
+
+            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            client.EnableSsl = true;
+
+
+            try
+            {
+                client.Send(mail);
+                bodyTxt = string.Empty;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+
+            }
+        }
+
+
+        public static void SendIndividualTCEMail(string Email, string CCEmail, DataRow[] FoundPCH, string isTCE)
+        {
+            string bodyTxt = string.Empty;
+
+            bodyTxt =
+             @"<html>
+                <head>
+                    <title></title>
+                </head>
+                
+                <body>
+                    <style>
+                     table, th, td {
+                      border: 1px solid black;
+                      border-collapse: collapse;
+                    }
+                    </style>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Dear PC QA,</span></span></div>
+                    <div>
+                        &nbsp;</div>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Branch administrators are requested to update the Technical Competency Evaluation form of the inspection engineer(s) in TIIMES while approving the inspection calls listed below, where the engineers are currently marked as incompetent.</br></br>";
+
+            bodyTxt = bodyTxt + "<div></br>";
+
+            bodyTxt = bodyTxt + "<table border='1' bordercolor='black' width='80%' style='font-family:verdana,geneva,sans-serif;font-size:12px;'><tr style='background-color:yellow;'>";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Remarks</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE to be Updated / Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Mentor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Call No</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Inspector Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Is Inspector Competent</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Approved Inspector</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Actual Visit Date</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Primary Material</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Item</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Activity</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Vendor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Originating Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Executing Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Approved By</td> ";
+            bodyTxt = bodyTxt + "</tr>";
+
+
+
+            for (int j = 0; j < FoundPCH.Length; j++)
+            {
+                if (FoundPCH[j]["isTCE"].ToString() == "1")
+                {
+                    bodyTxt += "<tr>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["remark"].ToString() + "</td>";
+                    if (FoundPCH[j]["isTCE"].ToString() == "1")
+                    {
+                        bodyTxt += $"<td>YES</td>";
+                    }
+                    else if (FoundPCH[j]["isTCE"].ToString() == "0")
+                    {
+                        bodyTxt += $"<td>No</td>";
+                    }
+                    else
+                    {
+                        bodyTxt += $"<td>NA</td>";
+                    }
+                    bodyTxt += $"<td>" + FoundPCH[j]["MentorName"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Call_No"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Inspector"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["iscompetant"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Isinspectorapproved"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["TECFormfilled"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Actual_Visit_Date"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["PrimaryMaterial"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Product_item"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["stageInspection"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Vendor_Name"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["CustomerRepresentativeName"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Originating_Branch"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["ExecutingBranch"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["ApprovedBy"].ToString() + "</td>";
+                    bodyTxt += "</tr>";
+                }
+
+            }
+
+
+            bodyTxt = bodyTxt + "</table></span></span></div></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Thank You & Best regards," + "</br>";
+            // bodyTxt = bodyTxt + "<span><div>ToEmail : " + Email + "</div></span> ";
+            //bodyTxt = bodyTxt + "<span><div>CCEmail : " + CCEmail + "</div></span> ";
+            bodyTxt = bodyTxt + "TUV India Private Limited. " + "</br></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>This is auto generated mail. Please do not reply.</span></span></div></br>";
+
+            bodyTxt = bodyTxt + "</body></html> ";
+            // }
+
+            MailMessage mail = new MailMessage();
+            SmtpClient client = new SmtpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //mail.CC.Add("sunilj@tuv-nord.com");
+            mail.CC.Add("pshrikant@tuv-nord.com");
+            //mail.CC.Add("rohini@tuv-nord.com");
+            mail.CC.Add("rajvi.panchal@tuvindia.co.in");
+            mail.CC.Add("shrutika.salve@tuvindia.co.in");
+            //mail.CC.Add("skashyap@tuv-nord.com");
+
+            mail.To.Add(Email);
+            mail.CC.Add(CCEmail);
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"].ToString());
+            client.Host = ConfigurationManager.AppSettings["smtpserver"].ToString();
+
+
+            mail.Subject = "Updating / filling of the Technical Competency Evaluation Form in TIIME";//"TIIMES-DelayIVR";
+
+            mail.IsBodyHtml = true;
+            mail.Body = bodyTxt.ToString();
+
+
+
+            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            client.EnableSsl = true;
+
+
+            try
+            {
+                client.Send(mail);
+                bodyTxt = string.Empty;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+
+            }
+        }
+
+
+        public static void SendIndividualApprovalMail(string Email, string CCEmail, DataRow[] FoundPCH, string isTCE)
+        {
+            string bodyTxt = string.Empty;
+
+            bodyTxt =
+                       @"<html>
+                <head>
+                    <title></title>
+                </head>
+                
+                <body>
+                    <style>
+                     table, th, td {
+                      border: 1px solid black;
+                      border-collapse: collapse;
+                    }
+                    </style>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Dear Sir(s) / Madam(s),</span></span></div>
+                    <div>
+                        &nbsp;</div>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Inspection engineers have been authorized by the Executing Branch administrators to carry out inspection activities for the inspection calls listed below, despite being marked as incompetent in TIIMES.</br></br>";
+
+            bodyTxt = bodyTxt + "<div></br>";
+
+            bodyTxt = bodyTxt + "<table border='1' bordercolor='black' width='80%' style='font-family:verdana,geneva,sans-serif;font-size:12px;'><tr style='background-color:yellow;'>";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Remarks</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE to be Updated / Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Mentor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Call No</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Inspector Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Is Inspector Competent</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Approved Inspector</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Actual Visit Date</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Primary Material</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Item</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Activity</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Vendor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Originating Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Executing Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>ApprovedBy</td> ";
+            bodyTxt = bodyTxt + "</tr>";
+
+
+            for (int j = 0; j < FoundPCH.Length; j++)
+            {
+                bodyTxt += "<tr>";
+                bodyTxt += $"<td>" + FoundPCH[j]["remark"].ToString() + "</td>";
+                if (FoundPCH[j]["isTCE"].ToString() == "1")
+                {
+                    bodyTxt += $"<td>YES</td>";
+                }
+                else if (FoundPCH[j]["isTCE"].ToString() == "0")
+                {
+                    bodyTxt += $"<td>No</td>";
+                }
+                else
+                {
+                    bodyTxt += $"<td>NA</td>";
+                }
+                bodyTxt += $"<td>" + FoundPCH[j]["MentorName"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Call_No"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Inspector"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["iscompetant"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Isinspectorapproved"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["TECFormfilled"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Actual_Visit_Date"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["PrimaryMaterial"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Product_item"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["stageInspection"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Vendor_Name"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["CustomerRepresentativeName"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Originating_Branch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["ExecutingBranch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["ApprovedBy"].ToString() + "</td>";
+                bodyTxt += "</tr>";
+            }
+
+
+            bodyTxt = bodyTxt + "</table></span></span></div></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Thank You & Best regards," + "</br>";
+            bodyTxt = bodyTxt + "TUV India Private Limited. " + "</br></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>This is auto generated mail. Please do not reply.</span></span></div></br>";
+            // bodyTxt = bodyTxt + "<span><div>ToEmail : " + Email + "</div></span> ";
+            //bodyTxt = bodyTxt + "<span><div>CCEmail : " + CCEmail + "</div></span> ";
+            bodyTxt = bodyTxt + "</body></html> ";
+            // }
+
+
+            MailMessage mail = new MailMessage();
+            SmtpClient client = new SmtpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //mail.CC.Add("sunilj@tuv-nord.com");
+            mail.CC.Add("pshrikant@tuv-nord.com");
+            mail.CC.Add("rohini@tuv-nord.com");
+            mail.CC.Add("rajvi.panchal@tuvindia.co.in");
+            mail.CC.Add("shrutika.salve@tuvindia.co.in");
+
+            mail.To.Add(Email);
+            mail.CC.Add(CCEmail);
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"].ToString());
+            client.Host = ConfigurationManager.AppSettings["smtpserver"].ToString();
+
+
+            mail.Subject = "List of Approved Inspection Calls Involving Engineers Marked as Incompetent in TIIMES";//"TIIMES-DelayIVR";
+
+            mail.IsBodyHtml = true;
+            mail.Body = bodyTxt.ToString();
+
+
+
+            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            client.EnableSsl = true;
+
+
+            try
+            {
+                client.Send(mail);
+                bodyTxt = string.Empty;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+
+            }
+        }
+
+
+        public static void SendMentorMail(List<string> ids, List<SelectedItem> selectedItems)
+        {
+
+            string bodyTxt = string.Empty;
+            string Inspector = "";
+            string Reason = "";
+            string Email = "";
+            DataSet AppCalls = new DataSet();
+            DataRow[] foundCoordinatorRows;
+            DataRow[] foundPCHRows;
+            DataRow[] foundPCHRows1;
+            DataRow[] foundRows;
+            string filterexpression = string.Empty;
+            string SendmailValue = string.Empty;
+            string EmailNew = "";
+            string EmailNew1 = "";
+
+
+            List<string> matchedIds = new List<string>();
+            string chkid = "";
+            string Mentor = "";
+
+            foreach (string callId in ids)
+            {
+                var item = selectedItems.FirstOrDefault(x => x.id.Contains(callId));
+                if (item != null)
+                {
+                    chkid = item.IsTCE;
+                    Mentor = item.mentor;
+                    matchedIds.Add(item.id);
+                }
+            }
+
+            string commaSeparatedIds = string.Join(",", matchedIds);
+            string newids = commaSeparatedIds.Replace("{", "").Replace("}", "");
+
+            try
+            {
+                con.Open();
+
+                SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", "103");
+                CMDGetEnquriy.Parameters.AddWithValue("@PK_Call_ID1", newids);
+                SqlDataAdapter SDAGetEnquiry = new SqlDataAdapter(CMDGetEnquriy);
+                SDAGetEnquiry.Fill(AppCalls);
+
+                for (int k = 0; k < AppCalls.Tables[1].Rows.Count; k++)
+                {
+
+                    //SendmailValue= "br_ID = '" + AppCalls.Tables[0].Rows[k]["Originating_Branch"].ToString().Trim() + "'";
+
+                    filterexpression = "MentorEmailId = '" + AppCalls.Tables[1].Rows[k]["MentorEmailId"].ToString().Trim() + "'";
+
+
+
+                    foundPCHRows = AppCalls.Tables[0].Select(filterexpression);
+                    foundCoordinatorRows = AppCalls.Tables[0].Select(filterexpression);
+                    DataTable dtNew = new DataTable();
+                    if (foundCoordinatorRows.Count() > 0)
+                    {
+                        dtNew = foundCoordinatorRows.CopyToDataTable();
+
+                        List<string> emailsNew = new List<string>();
+
+                        foreach (DataRow row in dtNew.Rows)
+                        {
+                            var potentialEmails = new string[]
+                            {
+            row["PCHEmail"].ToString().Trim(),
+            row["Appr1Email"].ToString().Trim(),
+            row["Appr2Email"].ToString().Trim(),
+            row["QAEmail"].ToString().Trim(),
+            row["AdminQAEmail"].ToString().Trim(),
+            row["PCHEmail1"].ToString().Trim(),
+            row["Appr3Email"].ToString().Trim(),
+            row["Appr4Email"].ToString().Trim(),
+            row["QAEmail1"].ToString().Trim(),
+            row["AdminQAEmail1"].ToString().Trim(),
+            row["CallAssignBy"].ToString().Trim(),
+            row["PCHEmail1"].ToString().Trim(),
+            row["CordinatorEmail"].ToString().Trim()
+                            };
+
+                            emailsNew.AddRange(potentialEmails);
+                        }
+
+                        // Remove duplicates and empty strings
+                        EmailNew = string.Join(",",
+                            emailsNew
+                                .Where(email => !string.IsNullOrWhiteSpace(email))
+                                .Distinct(StringComparer.OrdinalIgnoreCase)
+                        );
+                    }
+
+
+
+
+                    EmailNew1 = dtNew.Rows[0]["MentorEmailId"].ToString();
+
+
+
+
+
+                    if (dtNew.Rows.Count > 0)
+                    {
+                        if (dtNew.Rows[0]["MentorEmailId"].ToString() != "")
+                        {
+                            SendIndividualMentorMail(EmailNew1, EmailNew, foundCoordinatorRows, dtNew.Rows[0]["isTCE"].ToString());
+                        }
+                    }
+
+
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
+        public static void SendIndividualMentorMail(string Email, string CCEmail, DataRow[] FoundPCH, string isTCE)
+        {
+            string bodyTxt = string.Empty;
+
+            bodyTxt =
+               @"<html>
+                <head>
+                    <title></title>
+                </head>                
+                <body>
+                    <style>
+                     table, th, td {
+                      border: 1px solid black;
+                      border-collapse: collapse;
+                    }
+                    </style>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Dear Mentor,</span></span></div>
+                    <div>
+                        &nbsp;</div>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>You are kindly requested to conduct the monitoring of the inspector for the inspection call(s) listed below and fill the monitoring report in TIIMES for record-keeping purposes.
+</br></br>Please note that this activity will be automatically monitored and tracked.</br></br>";
+
+            bodyTxt = bodyTxt + "<div></br>";
+
+            bodyTxt = bodyTxt + "<table border='1' bordercolor='black' width='80%' style='font-family:verdana,geneva,sans-serif;font-size:12px;'><tr style='background-color:yellow;'>";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Remarks</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE to be Updated / Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Mentor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Call No</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Inspector Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Is Inspector Competent</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Approved Inspector</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Actual Visit Date</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Primary Material</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Item</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Activity</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Vendor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Originating Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Executing Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Approved By</td> ";
+            bodyTxt = bodyTxt + "</tr>";
+
+
+
+            for (int j = 0; j < FoundPCH.Length; j++)
+            {
+                if (FoundPCH[j]["MentorName"].ToString() != "")
+                {
+
+
+                    bodyTxt += "<tr>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["remark"].ToString() + "</td>";
+                    if (FoundPCH[j]["isTCE"].ToString() == "1")
+                    {
+                        bodyTxt += $"<td>YES</td>";
+                    }
+                    else if (FoundPCH[j]["isTCE"].ToString() == "0")
+                    {
+                        bodyTxt += $"<td>No</td>";
+                    }
+                    else
+                    {
+                        bodyTxt += $"<td>NA</td>";
+                    }
+                    bodyTxt += $"<td>" + FoundPCH[j]["MentorName"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Call_No"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Inspector"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["iscompetant"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Isinspectorapproved"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["TECFormfilled"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Actual_Visit_Date"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["PrimaryMaterial"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Product_item"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["stageInspection"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Vendor_Name"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["CustomerRepresentativeName"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["Originating_Branch"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["ExecutingBranch"].ToString() + "</td>";
+                    bodyTxt += $"<td>" + FoundPCH[j]["ApprovedBy"].ToString() + "</td>";
+                    bodyTxt += "</tr>";
+                }
+            }
+
+
+            bodyTxt = bodyTxt + "</table></span></span></div></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Thank You & Best regards," + "</br>";
+            bodyTxt = bodyTxt + "TUV India Private Limited. " + "</br></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>This is auto generated mail. Please do not reply.</span></span></div></br>";
+            //bodyTxt = bodyTxt + "<span><div>ToEmail : " + Email + "</div></span> ";
+            //bodyTxt = bodyTxt + "<span><div>CCEmail : " + CCEmail + "</div></span> ";
+            bodyTxt = bodyTxt + "</body></html> ";
+            // }
+
+            MailMessage mail = new MailMessage();
+            SmtpClient client = new SmtpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //mail.CC.Add("sunilj@tuv-nord.com");
+            mail.CC.Add("pshrikant@tuv-nord.com");
+            //mail.CC.Add("rohini@tuv-nord.com");
+            mail.CC.Add("rajvi.panchal@tuvindia.co.in");
+            mail.CC.Add("shrutika.salve@tuvindia.co.in");
+            //mail.CC.Add("skashyap@tuv-nord.com");
+
+            mail.To.Add(Email);
+            mail.CC.Add(CCEmail);
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"].ToString());
+            client.Host = ConfigurationManager.AppSettings["smtpserver"].ToString();
+
+
+            mail.Subject = "Monitoring of Inspection Engineers Marked as Incompetent in TIIMES";//"TIIMES-DelayIVR";
+
+            mail.IsBodyHtml = true;
+            mail.Body = bodyTxt.ToString();
+
+
+
+            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            client.EnableSsl = true;
+
+
+            try
+            {
+                client.Send(mail);
+                bodyTxt = string.Empty;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+
+            }
+        }
+
+
+        public static void GetDataMailSend(List<string> ids, List<SelectedItem> selectedItems)
+        {
+            string filterexpression = string.Empty;
+            string UserId = System.Web.HttpContext.Current.Session["UserIDs"].ToString();
+            DataRow[] foundPCHRows;
+            DataRow[] foundRows;
+            DataSet DTSEMDashBoard = new DataSet();
+            List<string> matchedIds = new List<string>();
+            string chkid = "";
+            string userName = "";
+            string Email = "";
+            string Email1 = "";
+
+            foreach (string callId in ids)
+            {
+                var item = selectedItems.FirstOrDefault(x => x.id.Contains(callId));
+                if (item != null)
+                {
+
+                    matchedIds.Add(item.id);
+                }
+            }
+
+            string commaSeparatedIds = string.Join(",", matchedIds);
+            string newids = commaSeparatedIds.Replace("{", "").Replace("}", "");
+            try
+            {
+                con.Open();
+
+                SqlCommand CMDGetEnquriy = new SqlCommand("SP_CallsMaster", con);
+                CMDGetEnquriy.Parameters.AddWithValue("@SP_Type", "101");
+                CMDGetEnquriy.Parameters.AddWithValue("@PK_Call_ID1", newids);
+                CMDGetEnquriy.Parameters.AddWithValue("@UserID", UserId);
+                //   CMDGetEnquriy.Parameters.AddWithValue("@type", "2");
+
+                CMDGetEnquriy.CommandType = CommandType.StoredProcedure;
+                CMDGetEnquriy.CommandTimeout = 1000000;
+                SqlDataAdapter SDAGetEnquiry = new SqlDataAdapter(CMDGetEnquriy);
+                SDAGetEnquiry.Fill(DTSEMDashBoard);
+
+                if (DTSEMDashBoard.Tables[0].Rows.Count > 0)
+                {
+                    ///// Send PCH Mail 
+                    DataTable FinalData = new DataTable();
+                    for (int i = 0; i < DTSEMDashBoard.Tables[4].Rows.Count; i++)
+                    {
+                        string strBranch = Convert.ToString(DTSEMDashBoard.Tables[4].Rows[i]["br_id"]); /// .Split(',');
+                        //string userName = Convert.ToString(DTSEMDashBoard.Tables[4].Rows[i]["FirstName"].ToString() + ' ' + DTSEMDashBoard.Tables[4].Rows[i]["LastName"].ToString());
+                        // string strSocode = Convert.ToString(DTSEMDashBoard.Tables[5].Rows[i]["SoCode"]); //// .Split(',');
+
+
+                        filterexpression = "br_id in ( '" + strBranch + "')";
+                        foundPCHRows = DTSEMDashBoard.Tables[0].Select(filterexpression);
+                        DataTable dtNew = new DataTable();
+                        if (foundPCHRows.Count() > 0)
+                        {
+                            dtNew = foundPCHRows.CopyToDataTable();
+                            //foreach (DataRow dr in dtNew.Rows)
+                            //{
+                            //    FinalData.Rows.Add(dr.ItemArray);
+                            //    ///  FinalData.ImportRow(dr);
+                            //}
+
+                            List<string> emails = new List<string>
+                        {
+                            dtNew.Rows[0]["PCHEmail"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr1Email"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr2Email"].ToString().Trim(),
+                            dtNew.Rows[0]["QAEmail"].ToString().Trim(),
+                            dtNew.Rows[0]["AdminQAEmail"].ToString().Trim(),
+                            dtNew.Rows[0]["PCHEmail1"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr3Email"].ToString().Trim(),
+                            dtNew.Rows[0]["Appr4Email"].ToString().Trim(),
+                            dtNew.Rows[0]["QAEmail1"].ToString().Trim(),
+                            dtNew.Rows[0]["AdminQAEmail1"].ToString().Trim()
+                        };
+
+                            //Email = string.Join(",", emails.Where(email => !string.IsNullOrEmpty(email)));
+                            Email = string.Join(",",
+    emails
+        .Where(email => !string.IsNullOrWhiteSpace(email))
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+);
+
+                            List<string> emails1 = new List<string>
+                                        {
+                                            dtNew.Rows[0]["CordinatorEmail"].ToString().Trim(),
+                                            dtNew.Rows[0]["CallAssignBy"].ToString().Trim(),
+
+                                        };
+
+
+
+                            //userName  = dtNew.Rows[0]["Rejectedby"].ToString().Trim();
+                            //dtNew.Rows[0]["CallAssignBy"].ToString().Trim(),
+
+
+                            //Email1 = string.Join(",", emails1.Where(email1 => !string.IsNullOrEmpty(email1)));
+                            Email1 = string.Join(",", emails1.Where(email => !string.IsNullOrWhiteSpace(email)).Distinct(StringComparer.OrdinalIgnoreCase));
+
+
+
+                        }
+
+
+
+
+                        //string userName = DTSEMDashBoard.Tables[5].Rows[i]["FirstName"]ToString() + ' ' + AppCalls.Tables[4].Rows[i]["LastName"].ToString();
+
+                        if (Email != "" || Email != null)
+                        {
+                            if (dtNew.Rows.Count > 0)
+                            {
+
+                                DataRow[] rows = dtNew.Select();
+
+
+
+                                if (dtNew.Rows[0]["iscompetant"].ToString() == "NO" && dtNew.Rows[0]["Isinspectorapproved"].ToString() == "NO")
+                                {
+
+                                    SendMailRejectionIscompedentNOandCustomerNO(Email1, Email, rows, dtNew.Rows[0]["iscompetant"].ToString(), userName);
+                                    FinalData.Clear();
+                                    dtNew.Clear();
+                                }
+                                else if (dtNew.Rows[0]["iscompetant"].ToString() == "YES" && dtNew.Rows[0]["Isinspectorapproved"].ToString() == "NO")
+                                {
+
+                                    SendMailRejectionIscompedentYESandCustomerNO(Email1, Email, rows, dtNew.Rows[0]["iscompetant"].ToString(), userName);
+                                    FinalData.Clear();
+                                    dtNew.Clear();
+                                }
+                                else
+                                {
+
+                                    SendIndividualRejectionMail(Email1, Email, rows, dtNew.Rows[0]["iscompetant"].ToString(), userName);
+                                    FinalData.Clear();
+                                    dtNew.Clear();
+                                }
+
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+
+
+        public static void SendMailRejectionIscompedentNOandCustomerNO(string Email, string CCEmail, DataRow[] FoundPCH, string isTCE, string UserId)
+        {
+            string bodyTxt = string.Empty;
+
+            bodyTxt =
+                       @"<html>
+                <head>
+                    <title></title>
+                </head>
+                
+                <body>
+                    <style>
+                     table, th, td {
+                      border: 1px solid black;
+                      border-collapse: collapse;
+                    }
+                    </style>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Dear Sir(s) / Madam(s),</span></span></div>
+                    <div>
+                        &nbsp;</div>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>The assignment requests for the inspection calls listed below were rejected by the Executing Branch administrators,</br></br>
+</br></br>as the inspection engineers were marked as incompetent and not included in the customer-approved inspectors list in TIIMES.</br></br>The status of these inspection calls has been changed to 'OPEN'. Executing Branch coordinators must assign alternative inspection engineers to these calls.</br></br>The status of these inspection calls has been changed to 'OPEN'. Executing Branch coordinators must assign alternative inspection engineers to these calls.";
+
+            bodyTxt = bodyTxt + "<div></br>";
+
+            bodyTxt = bodyTxt + "<table border='1' bordercolor='black' width='80%' style='font-family:verdana,geneva,sans-serif;font-size:12px;'><tr style='background-color:yellow;'>";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Remarks</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE to be Updated / Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Mentor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Call No</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Inspector Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Is Inspector Competent</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Approved Inspector</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Actual Visit Date</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Primary Material</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Item</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Activity</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Vendor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Originating Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Executing Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Rejected By</td> ";
+            bodyTxt = bodyTxt + "</tr>";
+
+
+
+            for (int j = 0; j < FoundPCH.Length; j++)
+            {
+                bodyTxt += "<tr>";
+                bodyTxt += $"<td>" + FoundPCH[j]["remark"].ToString() + "</td>";
+                bodyTxt += $"<td></td>";
+                bodyTxt += $"<td></td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Call_No"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Inspector"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["iscompetant"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Isinspectorapproved"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["TECFormfilled"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Actual_Visit_Date"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["PrimaryMaterial"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Product_item"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["stageInspection"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Vendor_Name"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["CustomerRepresentativeName"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Originating_Branch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["ExecutingBranch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Rejectedby"].ToString() + "</td>";
+                bodyTxt += "</tr>";
+            }
+
+
+
+            bodyTxt = bodyTxt + "</table></span></span></div></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Thank You & Best regards," + "</br>";
+            //bodyTxt = bodyTxt + "<span><div>ToEmail : " + Email + "</div></span> ";
+            //bodyTxt = bodyTxt + "<span><div>CCEmail : " + CCEmail + "</div></span> ";
+            bodyTxt = bodyTxt + "TUV India Private Limited. " + "</br></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>This is auto generated mail. Please do not reply.</span></span></div></br>";
+
+            bodyTxt = bodyTxt + "</body></html> ";
+            // }
+
+            MailMessage mail = new MailMessage();
+            SmtpClient client = new SmtpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //mail.CC.Add("sunilj@tuv-nord.com");
+            mail.CC.Add("pshrikant@tuv-nord.com");
+            //mail.CC.Add("rohini@tuv-nord.com");
+            mail.CC.Add("rajvi.panchal@tuvindia.co.in");
+            mail.CC.Add("shrutika.salve@tuvindia.co.in");
+            //mail.CC.Add("skashyap@tuv-nord.com");
+
+            mail.To.Add(Email);
+            mail.CC.Add(CCEmail);
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"].ToString());
+            client.Host = ConfigurationManager.AppSettings["smtpserver"].ToString();
+
+
+            mail.Subject = "List of Rejected Inspection Calls Due to Engineer Incompetency in TIIMES and not approved by customer";
+
+            mail.IsBodyHtml = true;
+            mail.Body = bodyTxt.ToString();
+
+
+
+            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            client.EnableSsl = true;
+
+
+            try
+            {
+                client.Send(mail);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+
+            }
+        }
+
+
+        public static void SendMailRejectionIscompedentYESandCustomerNO(string Email, string CCEmail, DataRow[] FoundPCH, string isTCE, string UserId)
+        {
+            string bodyTxt = string.Empty;
+
+            bodyTxt =
+                       @"<html>
+                <head>
+                    <title></title>
+                </head>
+                
+                <body>
+                    <style>
+                     table, th, td {
+                      border: 1px solid black;
+                      border-collapse: collapse;
+                    }
+                    </style>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Dear Sir(s) / Madam(s),</span></span></div>
+                    <div>
+                        &nbsp;</div>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>The assignment requests for the inspection calls listed below were rejected by the Executing Branch administrators,</br></br>
+</br></br>as the inspection engineers were not included in the customer-approved inspectors list in TIIMES.";
+
+            bodyTxt = bodyTxt + "<div></br>";
+
+            bodyTxt = bodyTxt + "<table border='1' bordercolor='black' width='80%' style='font-family:verdana,geneva,sans-serif;font-size:12px;'><tr style='background-color:yellow;'>";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Remarks</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE to be Updated / Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Mentor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Call No</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Inspector Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Is Inspector Competent</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Approved Inspector</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Actual Visit Date</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Primary Material</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Item</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Activity</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Vendor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Originating Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Executing Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Rejected By</td> ";
+            bodyTxt = bodyTxt + "</tr>";
+
+
+
+            for (int j = 0; j < FoundPCH.Length; j++)
+            {
+                bodyTxt += "<tr>";
+                bodyTxt += $"<td>" + FoundPCH[j]["remark"].ToString() + "</td>";
+                bodyTxt += $"<td></td>";
+                bodyTxt += $"<td></td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Call_No"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Inspector"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["iscompetant"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Isinspectorapproved"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["TECFormfilled"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Actual_Visit_Date"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["PrimaryMaterial"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Product_item"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["stageInspection"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Vendor_Name"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["CustomerRepresentativeName"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Originating_Branch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["ExecutingBranch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Rejectedby"].ToString() + "</td>";
+                bodyTxt += "</tr>";
+            }
+
+
+
+            bodyTxt = bodyTxt + "</table></span></span></div></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Thank You & Best regards," + "</br>";
+            //bodyTxt = bodyTxt + "<span><div>ToEmail : " + Email + "</div></span> ";
+            //bodyTxt = bodyTxt + "<span><div>CCEmail : " + CCEmail + "</div></span> ";
+            bodyTxt = bodyTxt + "TUV India Private Limited. " + "</br></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>This is auto generated mail. Please do not reply.</span></span></div></br>";
+
+            bodyTxt = bodyTxt + "</body></html> ";
+            // }
+
+            MailMessage mail = new MailMessage();
+            SmtpClient client = new SmtpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //mail.CC.Add("sunilj@tuv-nord.com");
+            mail.CC.Add("pshrikant@tuv-nord.com");
+            //mail.CC.Add("rohini@tuv-nord.com");
+            mail.CC.Add("rajvi.panchal@tuvindia.co.in");
+            mail.CC.Add("shrutika.salve@tuvindia.co.in");
+            //mail.CC.Add("skashyap@tuv-nord.com");
+
+            mail.To.Add(Email);
+            mail.CC.Add(CCEmail);
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"].ToString());
+            client.Host = ConfigurationManager.AppSettings["smtpserver"].ToString();
+
+
+            mail.Subject = "List of Rejected Inspection Calls Due to Engineer not approved by customer.";
+
+            mail.IsBodyHtml = true;
+            mail.Body = bodyTxt.ToString();
+
+
+
+            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            client.EnableSsl = true;
+
+
+            try
+            {
+                client.Send(mail);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+
+            }
+        }
+
+        public static void SendIndividualRejectionMail(string Email, string CCEmail, DataRow[] FoundPCH, string isTCE, string UserId)
+        {
+            string bodyTxt = string.Empty;
+
+            bodyTxt =
+                       @"<html>
+                <head>
+                    <title></title>
+                </head>
+                
+                <body>
+                    <style>
+                     table, th, td {
+                      border: 1px solid black;
+                      border-collapse: collapse;
+                    }
+                    </style>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Dear Sir(s) / Madam(s),</span></span></div>
+                    <div>
+                        &nbsp;</div>
+                    <div>
+                        <span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>The assignment requests for the inspection calls listed below were rejected by the Executing Branch administrators, as the inspection engineers were marked as incompetent in TIIMES.</br></br>
+</br></br>The status of these inspection calls has been changed to 'OPEN'. Executing Branch coordinators must assign alternative inspection engineers to these calls.";
+
+            bodyTxt = bodyTxt + "<div></br>";
+
+            bodyTxt = bodyTxt + "<table border='1' bordercolor='black' width='80%' style='font-family:verdana,geneva,sans-serif;font-size:12px;'><tr style='background-color:yellow;'>";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Remarks</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE to be Updated / Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Mentor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Call No</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Inspector Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Is Inspector Competent</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Approved Inspector</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>TCE Filled</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Actual Visit Date</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Primary Material</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Item</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Activity</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Vendor</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Customer Name</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Originating Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Executing Branch</td> ";
+            bodyTxt = bodyTxt + "<td style='width:8%'>Rejected By</td> ";
+            bodyTxt = bodyTxt + "</tr>";
+
+
+
+            for (int j = 0; j < FoundPCH.Length; j++)
+            {
+                bodyTxt += "<tr>";
+                bodyTxt += $"<td>" + FoundPCH[j]["remark"].ToString() + "</td>";
+                bodyTxt += $"<td></td>";
+                bodyTxt += $"<td></td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Call_No"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Inspector"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["iscompetant"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Isinspectorapproved"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["TECFormfilled"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Actual_Visit_Date"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["PrimaryMaterial"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Product_item"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["stageInspection"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Vendor_Name"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["CustomerRepresentativeName"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Originating_Branch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["ExecutingBranch"].ToString() + "</td>";
+                bodyTxt += $"<td>" + FoundPCH[j]["Rejectedby"].ToString() + "</td>";
+                bodyTxt += "</tr>";
+            }
+
+
+
+            bodyTxt = bodyTxt + "</table></span></span></div></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>Thank You & Best regards," + "</br>";
+            //bodyTxt = bodyTxt + "<span><div>ToEmail : " + Email + "</div></span> ";
+            //bodyTxt = bodyTxt + "<span><div>CCEmail : " + CCEmail + "</div></span> ";
+            bodyTxt = bodyTxt + "TUV India Private Limited. " + "</br></br>";
+            bodyTxt = bodyTxt + "<div><span style='font-size:12px;'><span style='font-family:verdana,geneva,sans-serif;'>This is auto generated mail. Please do not reply.</span></span></div></br>";
+
+            bodyTxt = bodyTxt + "</body></html> ";
+            // }
+
+            MailMessage mail = new MailMessage();
+            SmtpClient client = new SmtpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //mail.CC.Add("sunilj@tuv-nord.com");
+            mail.CC.Add("pshrikant@tuv-nord.com");
+            //mail.CC.Add("rohini@tuv-nord.com");
+            mail.CC.Add("rajvi.panchal@tuvindia.co.in");
+            mail.CC.Add("shrutika.salve@tuvindia.co.in");
+            //mail.CC.Add("skashyap@tuv-nord.com");
+
+            mail.To.Add(Email);
+            mail.CC.Add(CCEmail);
+            mail.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+            client.Port = int.Parse(ConfigurationManager.AppSettings["Port"].ToString());
+            client.Host = ConfigurationManager.AppSettings["smtpserver"].ToString();
+
+
+            mail.Subject = "List of Rejected Inspection Calls Due to Engineer Incompetency in TIIMES";//"TIIMES-DelayIVR";
+
+            mail.IsBodyHtml = true;
+            mail.Body = bodyTxt.ToString();
+
+
+
+            client.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["User"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            client.EnableSsl = true;
+
+
+            try
+            {
+                client.Send(mail);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult CallsHistory()
+        {
+
+            DataTable CallsHistory = new DataTable();
+            List<CallsModel> lstCallsHistory = new List<CallsModel>();
+            CallsHistory = objDalCalls.GetCallsHistory();
+            try
+            {
+                if (CallsHistory.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in CallsHistory.Rows)
+                    {
+                        lstCallsHistory.Add(
+                            new CallsModel
+                            {
+                                Call_No = Convert.ToString(dr["Call_No"]),
+                                Inspector = Convert.ToString(dr["Inspector"]),
+                                Status = Convert.ToString(dr["ActionSelected"]),
+                                CreatedDate = dr["createddate"] != DBNull.Value ? Convert.ToDateTime(dr["createddate"]).ToString("dd/MM/yyyy") : null,
+                                Remark = Convert.ToString(dr["Remark"]),
+                                ApprovedBy = Convert.ToString(dr["AppRejBy"]),
+                                Originating_Branch = Convert.ToString(dr["Originating_Branch"]),
+                                VendorName = Convert.ToString(dr["Vendor_Name"]),
+                                StageOfInspection = Convert.ToString(dr["stageInspection"]),
+                                Product_Name = Convert.ToString(dr["Product_item"]),
+                                PrimaryMaterial = Convert.ToString(dr["PrimaryMaterial"]),
+                                CustomerRepresentative = Convert.ToString(dr["CustomerRepresentativeName"]),
+                                Actual_Visit_Date = dr["Actual_Visit_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Actual_Visit_Date"]).ToString("dd/MM/yyyy") : null,
+                                //PK_Call_ID = Convert.ToInt32(dr["PK_Call_ID"]),
+                                //callAssignDate = dr["callAssignDate"] != DBNull.Value ? Convert.ToDateTime(dr["callAssignDate"]).ToString("dd/MM/yyyy") : null,
+                                //TCEFilled = Convert.ToString(dr["TECFormfilled"]),
+                                inspectorapproved = Convert.ToString(dr["Isinspectorapproved"]),
+                                iscompetent = Convert.ToString(dr["iscompetent"]),
+                                CreatedBy = Convert.ToString(dr["CallGenBy"]),
+                                callassignby = Convert.ToString(dr["CallAssignBy"]),
+                                Mentor = Convert.ToString(dr["Mentor"]),
+                                icTCE = Convert.ToString(dr["IsTCE"]),
+                                IsApproveReject = Convert.ToString(dr["IsApproveReject"]),
+                                DJob_No = Convert.ToString(dr["SubJob_No"]),
+                                TCEFilled = Convert.ToString(dr["TCEFilled"]),
+                            }
+                            );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            ViewData["BranchList"] = lstCallsHistory;
+
+            ObjModelsubJob.lstCallsModel1 = lstCallsHistory;
+
+            return View(ObjModelsubJob);
+        }
+
+
+        #region export to excel CallReview Operation-Calls
+        public ActionResult ExportCallReview(CallsModel a)
+        {
+            // Using EPPlus from nuget
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                Int32 row = 2;
+                Int32 col = 1;
+
+                package.Workbook.Worksheets.Add("Data");
+                IGrid<CallsModel> grid = CreateExportableCallReview(a);
+                ExcelWorksheet sheet = package.Workbook.Worksheets["Data"];
+
+                foreach (IGridColumn column in grid.Columns)
+                {
+                    sheet.Cells[1, col].Value = column.Title;
+                    sheet.Column(col++).Width = 18;
+
+                    column.IsEncoded = false;
+                }
+
+                foreach (IGridRow<CallsModel> gridRow in grid.Rows)
+                {
+                    col = 1;
+                    foreach (IGridColumn column in grid.Columns)
+                        sheet.Cells[row, col++].Value = column.ValueFor(gridRow);
+
+                    row++;
+                }
+                //added by nikita yadav 05092023
+                var filename = DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss");
+                return File(package.GetAsByteArray(), "application/unknown", "CallReview-" + filename + ".xlsx");
+            }
+        }
+
+        private IGrid<CallsModel> CreateExportableCallReview(CallsModel a)
+        {
+            //IGrid<SubJobs> grid = new Grid<SubJobs>(repository.GetData());
+            IGrid<CallsModel> grid = new Grid<CallsModel>(GetDataCallReview(a));
+            grid.ViewContext = new ViewContext { HttpContext = HttpContext };
+
+
+            //grid.Columns.Add(model => model.Call_No).Titled("Call No");
+
+            grid.Columns.Add(model => model.Call_No).Titled("Call No");
+            grid.Columns.Add(model => model.Inspector).Titled("Inspector");
+            grid.Columns.Add(model => model.Originating_Branch).Titled("Originating Branch");
+            grid.Columns.Add(model => model.VendorName).Titled("Vendor Name");
+            grid.Columns.Add(model => model.StageOfInspection).Titled("Stage of Inspection");
+            grid.Columns.Add(model => model.Product_Name).Titled("Product Name");
+            grid.Columns.Add(model => model.PrimaryMaterial).Titled("Primary Material");
+            grid.Columns.Add(model => model.CustomerRepresentative).Titled("Customer Representative");
+            grid.Columns.Add(model => model.Actual_Visit_Date).Titled("Actual Visit Date");
+            grid.Columns.Add(model => model.PK_Call_ID).Titled("Call ID");
+            grid.Columns.Add(model => model.callAssignDate).Titled("Call Assign Date");
+            grid.Columns.Add(model => model.TCEFilled).Titled("TCE Filled");
+            grid.Columns.Add(model => model.inspectorapproved).Titled("Inspector Approved");
+            grid.Columns.Add(model => model.iscompetent).Titled("Is Competent");
+            grid.Columns.Add(model => model.CreatedBy).Titled("Created By");
+            grid.Columns.Add(model => model.callassignby).Titled("Call Assign By");
+            grid.Columns.Add(model => model.DSubJob_No).Titled("Sub Job No");
+            grid.Columns.Add(model => model.Executing_Branch).Titled("Executing Branch");
+
+
+
+
+
+            grid.Pager = new GridPager<CallsModel>(grid);
+            grid.Processors.Add(grid.Pager);
+            grid.Pager.RowsPerPage = ObjModelsubJob.lst1.Count;
+
+            foreach (IGridColumn column in grid.Columns)
+            {
+                column.Filter.IsEnabled = true;
+                column.Sort.IsEnabled = true;
+            }
+
+            return grid;
+        }
+
+        public List<CallsModel> GetDataCallReview(CallsModel a)
+        {
+            DataTable CompanyDashBoard = new DataTable();
+            List<CallsModel> lstCompanyDashBoard = new List<CallsModel>();
+
+
+            CompanyDashBoard = objDalCalls.GetCallsReview();
+            //CompanyDashBoard = objDalCalls.GetCallsList();
+
+            try
+            {
+                if (CompanyDashBoard.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in CompanyDashBoard.Rows)
+                    {
+                        lstCompanyDashBoard.Add(
+                            new CallsModel
+                            {
+                                Call_No = Convert.ToString(dr["Call_No"]),
+                                Inspector = Convert.ToString(dr["Inspector"]),
+                                Originating_Branch = Convert.ToString(dr["Originating_Branch"]),
+                                VendorName = Convert.ToString(dr["Vendor_Name"]),
+                                StageOfInspection = Convert.ToString(dr["stageInspection"]),
+                                Product_Name = Convert.ToString(dr["Product_item"]),
+                                PrimaryMaterial = Convert.ToString(dr["PrimaryMaterial"]),
+                                CustomerRepresentative = Convert.ToString(dr["CustomerRepresentativeName"]),
+                                Actual_Visit_Date = dr["Actual_Visit_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Actual_Visit_Date"]).ToString("dd/MM/yyyy") : null,
+                                PK_Call_ID = Convert.ToInt32(dr["PK_Call_ID"]),
+                                callAssignDate = dr["callAssignDate"] != DBNull.Value ? Convert.ToDateTime(dr["callAssignDate"]).ToString("dd/MM/yyyy") : null,
+                                TCEFilled = Convert.ToString(dr["TECFormfilled"]),
+                                inspectorapproved = Convert.ToString(dr["Isinspectorapproved"]),
+                                iscompetent = Convert.ToString(dr["iscompetant"]),
+                                CreatedBy = Convert.ToString(dr["CreatedBy"]),
+                                callassignby = Convert.ToString(dr["CallAssignBy"]),
+                                DSubJob_No = Convert.ToString(dr["SubJob_No"]),
+                                Executing_Branch = Convert.ToString(dr["Executing_Branch"]),
+
+
+
+                            }
+                            );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            ViewData["BranchCallReview"] = lstCompanyDashBoard;
+
+            ObjModelsubJob.lst1 = lstCompanyDashBoard;
+
+            return ObjModelsubJob.lst1;
+        }
+        #endregion
+
+
+        public JsonResult GetProductlist(string serviceId)
+        {
+            DataTable DT = new DataTable();
+            List<Calls> lstSite = new List<Calls>();
+            string CompAddress = string.Empty;
+            if (serviceId != null && serviceId != "")
+            {
+                DT = objDalCalls.GetProductList(serviceId);
+                if (DT.Rows.Count > 0)
+                {
+                    /// CompAddress = DTResult.Rows[0]["Address"].ToString();
+                    foreach (DataRow dr in DT.Rows)
+                    {
+                        lstSite.Add(
+                           new Calls
+                           {
+                               Name = Convert.ToString(dr["Name"]),
+                               Name1 = Convert.ToString(dr["Name"]),
+
+                           }
+                         );
+                    }
+                    return Json(lstSite, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json("failure", JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        public JsonResult GetItemlist(string serviceId)
+        {
+            DataTable DT = new DataTable();
+            List<Calls> lstSite = new List<Calls>();
+            string CompAddress = string.Empty;
+            if (serviceId != null && serviceId != "")
+            {
+                DT = objDalCalls.GetItemList(serviceId);
+                if (DT.Rows.Count > 0)
+                {
+                    /// CompAddress = DTResult.Rows[0]["Address"].ToString();
+                    foreach (DataRow dr in DT.Rows)
+                    {
+                        lstSite.Add(
+                           new Calls
+                           {
+                               Name = Convert.ToString(dr["Name"]),
+                               Name1 = Convert.ToString(dr["Value"]),
+
+                           }
+                         );
+                    }
+                    return Json(lstSite, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json("failure", JsonRequestBehavior.AllowGet);
+
+        }
+
     }
+
+
 }

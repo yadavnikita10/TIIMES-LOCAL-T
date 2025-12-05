@@ -10,12 +10,15 @@ using System.Web.Mvc;
 using System.Security.Cryptography;
 using System.IO;
 using System.Text;
+using System.Globalization;
 
 namespace TuvVision.DataAccessLayer
 {
     public class DALLogout
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["TuvConnection"].ConnectionString);
+        CultureInfo provider = CultureInfo.InvariantCulture;
+        IFormatProvider theCultureInfo = new System.Globalization.CultureInfo("en-GB", true);
         public void LastLoginHistory(string LastClientIP)
         {
             con.Open();
@@ -42,29 +45,6 @@ namespace TuvVision.DataAccessLayer
                 }
             }
         }
-        //public DataSet CheckValidUser()
-        //{
-        //    DataSet DSCheckUser = new DataSet();
-        //    try
-        //    {
-        //        SqlCommand CMDCheckUser = new SqlCommand("SP_ChangePassword", con);
-        //        CMDCheckUser.CommandType = CommandType.StoredProcedure;
-        //        CMDCheckUser.Parameters.AddWithValue("@SP_Type", '1');
-        //        CMDCheckUser.Parameters.AddWithValue("@LoginID", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
-        //        SqlDataAdapter SDACheckPassword = new SqlDataAdapter(CMDCheckUser);
-        //        SDACheckPassword.Fill(DSCheckUser);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string Error = ex.Message.ToString();
-        //    }
-        //    finally
-        //    {
-        //        DSCheckUser.Dispose();
-        //    }
-        //    return DSCheckUser;
-        //}
-
         public DataSet CheckValidUser(string Pk_userid = null)
         {
             DataSet DSCheckUser = new DataSet();
@@ -95,34 +75,6 @@ namespace TuvVision.DataAccessLayer
             }
             return DSCheckUser;
         }
-        //public Int32 ChangePassword(string NewPassword)
-        //{
-        //    int result = 0;
-        //    con.Open();
-        //    try
-        //    {
-        //        SqlCommand cmdChange = new SqlCommand("SP_ChangePassword", con) { CommandType = CommandType.StoredProcedure };
-        //        cmdChange.Parameters.AddWithValue("@SP_Type", '2');
-        //        cmdChange.Parameters.AddWithValue("@ChangePassword", NewPassword);
-        //        cmdChange.Parameters.AddWithValue("@EncryptChangePassword", Encrypt(NewPassword));
-        //        cmdChange.Parameters.AddWithValue("@LoginID", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
-        //        result = cmdChange.ExecuteNonQuery();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string Error = ex.Message.ToString();
-        //    }
-        //    finally
-        //    {
-        //        if (con.State != ConnectionState.Closed)
-        //        {
-        //            con.Close();
-        //        }
-
-        //    }
-        //    return result;
-        //}
-
         public Int32 ChangePassword(string NewPassword, string Pk_userid = null)
         {
             int result = 0;
@@ -178,6 +130,107 @@ namespace TuvVision.DataAccessLayer
                 }
             }
             return clearText;
+        }
+        public DataTable GetData(string pk_userid)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SP_ConfidentialityDeclaration", con) { CommandType = CommandType.StoredProcedure };
+                cmd.Parameters.AddWithValue("@Pk_UserId", pk_userid);
+                cmd.Parameters.AddWithValue("@SP_Type", "1");
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+                string Message = ex.Message;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+
+            return dt;
+
+        }
+
+        public DataTable SaveDeclarationData(Declaration item, string filePath, string place, string Location, string TimeField, bool chkDeclaration, bool chkRead_Understand, string Pk_userid)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SP_ConfidentialityDeclaration", con) { CommandType = CommandType.StoredProcedure };
+                cmd.Parameters.AddWithValue("@SP_Type", "2");
+                string formattedDate = item.FromDate.Contains("-") && item.FromDate.Split('-')[0].Length == 2
+           ? DateTime.ParseExact(item.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd")
+           : item.FromDate;
+
+                string todate = item.ToDate.Contains("-") && item.ToDate.Split('-')[0].Length == 2
+                    ? DateTime.ParseExact(item.ToDate, "dd/MM/yyy", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd")
+                    : item.ToDate;
+                cmd.Parameters.AddWithValue("@DOJ", DateTime.ParseExact(item.FromDate, "dd/MM/yyyy", theCultureInfo));
+                cmd.Parameters.AddWithValue("@Till_Date", DateTime.ParseExact(item.ToDate, "dd/MM/yyyy", theCultureInfo));
+                cmd.Parameters.AddWithValue("@OrganizationName", item.Organization);
+                cmd.Parameters.AddWithValue("@NatureOfWork", item.NatureOfWork);
+                cmd.Parameters.AddWithValue("@Full_Part_Time", item.FullOrPartTime);
+                cmd.Parameters.AddWithValue("@image", filePath);
+                cmd.Parameters.AddWithValue("@Time", TimeField);
+                cmd.Parameters.AddWithValue("@Location", Location);
+                cmd.Parameters.AddWithValue("@Address", place);
+                cmd.Parameters.AddWithValue("@Confirmation", chkDeclaration);
+                cmd.Parameters.AddWithValue("@Declaration", chkRead_Understand);
+
+                cmd.Parameters.AddWithValue("@Pk_UserId", Pk_userid);
+
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+                string Message = ex.Message;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+
+            return dt;
+
+        }
+
+
+        public DataTable GetData_PDF(string pk_userid)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SP_ConfidentialityDeclaration", con) { CommandType = CommandType.StoredProcedure };
+                cmd.Parameters.AddWithValue("@Pk_UserId", pk_userid);
+                cmd.Parameters.AddWithValue("@SP_Type", "3");
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+                string Message = ex.Message;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+
+            return dt;
+
         }
 
     }

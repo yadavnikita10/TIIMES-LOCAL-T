@@ -1237,12 +1237,12 @@ namespace TuvVision.Controllers
             return View();
         }
 
-        public ActionResult DeleteCallsData(int? PK_Call_ID)
+        public ActionResult DeleteCallsData(int? PK_Call_ID,string Reason)
         {
             int Result = 0;
             try
             {
-                Result = objDalCalls.DeleteCalls(PK_Call_ID);
+                Result = objDalCalls.DeleteCalls(PK_Call_ID, Reason);
                 if (Result != 0)
                 {
                     TempData["DeleteCall"] = Result;

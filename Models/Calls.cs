@@ -12,7 +12,7 @@ namespace TuvVision.Models
         public virtual ICollection<FileDetails> FileDetails { get; set; }
         public List<Calls> lstCallDashBoard1 { get; set; }
         public int Count { get; set; }
-        public int PK_Call_ID { get;set; }
+        public int PK_Call_ID { get; set; }
         [Required]
         public string[] Product_item_Collecton { get; set; }
         [Required]
@@ -46,13 +46,13 @@ namespace TuvVision.Models
         [Display(Name = "Contact Name")]
         public string ContactName { get; set; }
         [Required]
-      //  [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
+        //  [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         public string Call_received_date { get; set; }
         [Required]
         public string Sub_Type { get; set; }
         public string Job { get; set; }
         [Required]
-      //  [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
+        //  [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         public string Call_Request_Date { get; set; }
         [Required]
         public string Source { get; set; }
@@ -75,7 +75,7 @@ namespace TuvVision.Models
         [Required(ErrorMessage = "Please Enter Category"), MaxLength(500)]
         [Display(Name = "Category")]
         public string Category { get; set; }
-     
+
         [Required(ErrorMessage = "Please Enter Sub-Category"), MaxLength(500)]
         [Display(Name = "Sub-Category")]
         public string Sub_Category { get; set; }
@@ -117,15 +117,15 @@ namespace TuvVision.Models
         [Required(ErrorMessage = "Please Enter Branch"), MaxLength(500)]
         [Display(Name = "Executing Branch")]
         public string Executing_Branch { get; set; }
-     
+
         [Required(ErrorMessage = "Please Enter Sub-Job")]
-      
-        public Nullable<int>  Sub_Job_ID { get; set; }
+
+        public Nullable<int> Sub_Job_ID { get; set; }
 
         [Required(ErrorMessage = "Please Enter Job ID")]
         [Display(Name = "Job ID")]
         public Nullable<int> Job_ID { get; set; }
-   
+
         [Required(ErrorMessage = "Please Enter QT ID")]
         [Display(Name = "QT ID")]
         public Nullable<int> QT_ID { get; set; }
@@ -169,6 +169,10 @@ namespace TuvVision.Models
         public string UserRole { get; set; }
 
         public string AssignStatus { get; set; }
+
+        public string Name { get; set; }
+
+        public string Name1 { get; set; }
 
     }
     public class NameCodeProduct

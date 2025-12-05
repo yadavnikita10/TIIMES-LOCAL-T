@@ -7,6 +7,8 @@
     List<string> EditJobProdName = ViewBag.EditJobproductName as List<string>;
 }
 
+
+
 <script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jquery.min.js"></script>
 
@@ -28,11 +30,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-
-
-
 
 
 <script>
@@ -114,6 +111,8 @@
     });
 </script>
 
+
+
 <script>
     $(function () {
         $(".PoDates1").datepicker({
@@ -121,11 +120,10 @@
             changeMonth: true,
             changeYear: true,
             yearRange: "-100:+50",
-            //minDate: "-2m", // Set to the previous one month
-            //minDate: "-45d", // Set to the previous one month
-            minDate: "-60d",
-            //minDate: "-90d",
-            maxDate: "+40d"
+            //minDate: "-3m", // Set to the previous one month
+            minDate: "-45d", // Set to the previous one month
+            //minDate: "-15d",
+            maxDate: "+45d"
         });
     });
 </script>
@@ -141,9 +139,10 @@
             changeYear: true,
             yearRange: "-100:+50",
             //minDate: "-2m", // Set to the previous one month
-            //minDate: "-45d", // Set to the previous one month
-            minDate: "-60d",
-            maxDate: "+40d"
+            //minDate: "-3m", // Set to the previous one month
+            minDate: "-45d",
+           //minDate: "-15d",
+            maxDate: "+45d"
         });
     });
 </script>
@@ -157,12 +156,14 @@
             changeYear: true,
             yearRange: "-100:+50",
             //minDate: "-40d", // Set to the previous one month
-            //minDate: "-45d", // Set to the previous one month
-            minDate: "-60d",
-            maxDate: "+40d"
+            //minDate: "-3m", // Set to the previous one month
+            minDate: "-45d",
+            //minDate: "-15d",
+            maxDate: "+45d"
         });
     });
 </script>
+
 <script>
     $(function () {
         $(".CallRequestdate").datepicker({
@@ -171,9 +172,10 @@
             changeYear: true,
             yearRange: "-100:+50",
             //minDate: "-40d", // Set to the previous one month
-            //minDate: "-45d", // Set to the previous one month
-            minDate: "-60d",
-            maxDate: "+40d"
+            //minDate: "-3m", // Set to the previous one month
+            minDate: "-45d",
+            //minDate: "-15d",
+            maxDate: "+45d"
         });
     });
 </script>
@@ -186,9 +188,10 @@
             changeYear: true,
             yearRange: "-100:+50",
             // minDate: "-40d", // Set to the previous one month
-            //minDate: "-45d", // Set to the previous one month
-            minDate: "-60d",
-            maxDate: "+40d"
+            //minDate: "-3m", // Set to the previous one month
+            minDate: "-45d",
+            //minDate: "-15d",
+            maxDate: "+45d"
         });
     });
 </script>
@@ -201,9 +204,10 @@
             changeYear: true,
             yearRange: "-100:+50",
             //minDate: "-4m", // Set to the previous one month
-            //minDate: "-45d", // Set to the previous one month
-            minDate: "-60d",
-            maxDate: "+40d"
+            //minDate: "-3m", // Set to the previous one month
+            minDate: "-45d",
+            //minDate: "-15d",
+            maxDate: "+45d"
         });
     });
 </script>
@@ -215,9 +219,10 @@
             changeYear: true,
             yearRange: "-100:+50",
             //minDate: "-4m", // Set to the previous one month
-            //minDate: "-45d", // Set to the previous one month
-            minDate: "-60d",
-            maxDate: "+40d"
+            //minDate: "-3m", // Set to the previous one month
+            minDate: "-45d",
+            //minDate: "-15d",
+            maxDate: "+45d"
         });
     });
 </script>
@@ -243,6 +248,41 @@
             $('#WOSummaryTable').append(contactdiv); // Adding these controls to Main table class
         });
     });
+</script>
+
+<script>
+   @functions {
+       public List<string> SplitOutsideParentheses(string input)
+       {
+           List<string> result = new List<string>();
+       if (string.IsNullOrEmpty(input)) return result;
+
+       int level = 0;
+       var current = new System.Text.StringBuilder();
+
+       foreach (char c in input)
+       {
+           if (c == '(') level++;
+       if (c == ')') level--;
+
+       if (c == ',' && level == 0)
+       {
+           result.Add(current.ToString().Trim());
+           current.Clear();
+       }
+       else
+       {
+           current.Append(c);
+       }
+   }
+    if (current.Length > 0)
+        result.Add(current.ToString().Trim());
+
+    return result;
+    }
+    }
+
+
 </script>
 
 <style>
@@ -349,6 +389,7 @@
                                                     @Html.HiddenFor(m => m.PK_SubJob_Id)
                                                     @Html.HiddenFor(m => m.PK_Call_ID)
                                                     @Html.HiddenFor(m => m.Actual_Visit_Date)
+                                                    <input type="hidden" id="setvalue" />
                                                     @*@Html.HiddenFor(model => model.checkIFExpeditingReport)*@
                                                     <div class="row">
 
@@ -882,24 +923,83 @@
                                                             </div>
                                                         </div>
 
+                                                        @*<div class="col-xs-12 col-sm-3" id="divMandayRate">
+                                                                <div class="form-group">
+                                                                    <label>Man-day Rate ₹ <font color="#FB5F6B">(Editable)</font>:</label><span style="color:#ff0000;">*</span>
 
-                                                      @if (Model.MainBranch == Model.Originating_Branch)
-                                                      {
-                                                        <div class="col-xs-12 col-sm-3" id="divMandayRate">
+                                                                    @Html.TextBoxFor(model => model.MandayRate, new { @placeholder = "Manday Rate", @class = "form-control", @Maxlength = "5", @minlength = "4", @onkeypress = "return isNumberKey(event);" })
+                                                                    @Html.ValidationMessageFor(model => model.MandayRate, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>*@
+                                                        @if (Model.MainBranch == Model.Originating_Branch)
+                                                        {
+                                                            <div class="col-xs-12 col-sm-3" id="divMandayRate">
+                                                                <div class="form-group">
+                                                                    <label>Man-day Rate ₹ <font color="#FB5F6B">(Editable)</font>:</label><span style="color:#ff0000;">*</span>
+
+                                                                    @Html.TextBoxFor(model => model.MandayRate, new { @placeholder = "Manday Rate", @class = "form-control", @Maxlength = "5", @minlength = "4", @onkeypress = "return isNumberKey(event);" })
+                                                                    @Html.ValidationMessageFor(model => model.MandayRate, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+
+                                                        }
+                                                    </div>
+
+                                                    <div class="row">
+
+                                                        @*<div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                                                                <div class="form-group">
+                                                                    <label>Executing Service:</label><span style="color:#ff0000;">*</span>
+
+                                                                    @if (ViewBag.ExeService != null)
+                                                                    {
+                                                                        @Html.DropDownListFor(m => m.ExecutingService, ViewBag.ExeService as IEnumerable<SelectListItem>, "--Select Service--", new { @class = "form-control" })
+                                                                        @Html.HiddenFor(m => m.ExecutingService)
+                                                                    }
+                                                                    @Html.ValidationMessageFor(model => model.ExecutingService, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>*@
+
+                                                        <div class="col-xs-12 col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Man-day Rate ₹ <font color="#FB5F6B">(Editable)</font>:</label><span style="color:#ff0000;">*</span>
+                                                                <label>Executing Service:</label><span style="color:#ff0000;">*</span>
 
-                                                                @Html.TextBoxFor(model => model.MandayRate, new { @placeholder = "Manday Rate", @class = "form-control", @Maxlength = "5", @minlength = "4", @onkeypress = "return isNumberKey(event);" })
-                                                                @Html.ValidationMessageFor(model => model.MandayRate, "", new { @class = "text-danger validation-msg" })
+                                                                @if (ViewBag.ExeService != null)
+                                                                {
+                                                                    @Html.DropDownListFor(m => m.ExecutingService, ViewBag.ExeService as IEnumerable<SelectListItem>, "--Select Service--", new { @class = "form-control" })
+                                                                    @Html.HiddenFor(m => m.ExecutingService)
+                                                                }
+                                                                @Html.ValidationMessageFor(model => model.ExecutingService, "", new { @class = "text-danger validation-msg" })
                                                             </div>
                                                         </div>
-                                                      }
-                                                      else
-                                                      {
 
-                                                      }
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Executing Branch:</label><span style="color:#ff0000;">*</span>
+                                                                @*<input type="text" class="form-control" placeholder="Status Here">*@
+                                                                @*@Html.TextBoxFor(model => model.Executing_Branch, new { @placeholder = "Executing Branch", @class = "form-control" })*@
+                                                                @if (ViewBag.SubCatlist != null)
+                                                                {
+                                                                    @Html.DropDownListFor(m => m.Br_Id, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Branch--", new { @class = "form-control", @required = "required" })
 
+                                                                }
+
+                                                                @Html.ValidationMessageFor(model => model.Br_Id, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label>Call Status:</label>
+                                                                @*<input type="email" class="form-control" placeholder="Email Here">*@
+                                                                @Html.TextBoxFor(model => model.Status, new { @placeholder = "Call Status", @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
                                                     </div>
+
                                                     <div class="row">
 
                                                         <div class="col-xs-12 col-sm-4">
@@ -935,54 +1035,107 @@
                                                             </div>
                                                         </div>
 
+                                                        @{
+
+                                                            var selectedString1 = ViewBag.SubCategoryString as string ?? "";
+
+
+                                                            var selectedList1 = SplitOutsideParentheses(selectedString1);
+
+
+                                                            var extraItems1 = new List<string> {
+        "Lamp, Luminaires and Accessories",
+    };
+
+                                                            foreach (var extra1 in extraItems1)
+                                                            {
+                                                                if (!selectedList1.Contains(extra1))
+                                                                {
+                                                                    selectedList1.Add(extra1);
+                                                                }
+                                                            }
+
+                                                            // Join with a delimiter safe for JS splitting
+                                                            var selectedData1 = string.Join("|||", selectedList1);
+                                                        }
+
+
+
+
                                                         <div class="col-xs-12 col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Item to be Inspected:</label><span style="color:#ff0000;">*</span>
-                                                                <div class="drpdomn" id="drpdomn">
-                                                                </div>
-                                                                @if (ViewBag.check == "productcheck")
-                                                                {
 
-                                                                    <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required">
-                                                                        @foreach (var item in ViewBag.ProjectTypeItems)
-                                                                        {
-                                                                            if (EditProdName.Contains(item.Text))
-                                                                            {
-                                                                                <option value="@item.Value" selected>@item.Text</option>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <option value="@item.Value">@item.Text</option>
-                                                                            }
-
-                                                                        }
-                                                                    </select>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required">
-
-                                                                        @{
-                                                                            foreach (var item in ViewData["Drpproduct"] as IEnumerable<TuvVision.Models.Calls>)
-                                                                            {
-
-                                                                                <option value="@item.Product_Name">@item.Product_Name&nbsp; &nbsp;</option>
+                                                                <label>Item to be Inspected:</label>&nbsp;&nbsp;
 
 
-                                                                            }
-                                                                        }
-                                                                    </select>
-                                                                            }
+
+
+                                                                <select id="ProductLists"
+                                                                        class="form-control form-multiselect-city"
+                                                                        multiple="multiple"
+                                                                        name="ProductList"
+                                                                        placeholder="Select Option"
+                                                                        data-selected-products="@string.Join(",", (ViewBag.EditproductName as List<string>) ?? new List<string>())">
+                                                                    @*data-selected-products="@selectedData1">*@
+
+                                                                </select>
 
                                                                 @Html.ValidationMessageFor(model => model.ProductList, "", new { @class = "text-danger" })
 
+
+
+
                                                             </div>
-
-                                                            <input type="text" class="hidden" id="Scope" />
-
-
-                                                            <input type="text" class="hidden" id="ProductLists" />
                                                         </div>
+
+                                                        @*<div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Item to be Inspected:</label><span style="color:#ff0000;">*</span>
+                                                                    <div class="drpdomn" id="drpdomn">
+                                                                    </div>
+                                                                    @if (ViewBag.check == "productcheck")
+                                                                    {
+
+                                                                        <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required">
+                                                                            @foreach (var item in ViewBag.ProjectTypeItems)
+                                                                            {
+                                                                                if (EditProdName.Contains(item.Text))
+                                                                                {
+                                                                                    <option value="@item.Value" selected>@item.Text</option>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Value">@item.Text</option>
+                                                                                }
+
+                                                                            }
+                                                                        </select>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <select id="ProductLists" class="form-control form-multiselect-city" multiple="multiple" name="ProductList" placeholder="Select Option" required="required">
+
+                                                                            @{
+                                                                                foreach (var item in ViewData["Drpproduct"] as IEnumerable<TuvVision.Models.Calls>)
+                                                                                {
+
+                                                                                    <option value="@item.Product_Name">@item.Product_Name&nbsp; &nbsp;</option>
+
+
+                                                                                }
+                                                                            }
+                                                                        </select>
+                                                                                }
+
+                                                                    @Html.ValidationMessageFor(model => model.ProductList, "", new { @class = "text-danger" })
+
+                                                                </div>
+
+                                                                <input type="text" class="hidden" id="Scope" />
+
+
+                                                                <input type="text" class="hidden" id="ProductLists" />
+                                                            </div>*@
 
 
 
@@ -1006,48 +1159,106 @@
                                                                 </div>
                                                             </div>*@
 
+                                                        @*<div class="col-xs-12 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Stages of Inspection:</label><span style="color:#ff0000;">*</span>
+                                                                    <select id="Sub_Category" name="Sub_Category" class="form-control form-multiselect-city" multiple>
+                                                                        @{
+
+
+                                                                            var defaultOptions = ViewBag.DefaultOptions as SelectList;
+
+
+
+
+                                                                        if (defaultOptions != null)
+                                                                        {
+                                                                            foreach (var option in defaultOptions)
+                                                                            {
+                                                                                var isSelected = Model.Sub_Category != null && Model.Sub_Category.Contains(option.Text);
+                                                                                <option value="@option.Value" @(isSelected ? "selected" : "")>@option.Text</option>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="">Default Option</option>
+                                                                        }
+                                                                        }
+
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>*@
+
+                                                        @*@{
+                                                                                                                    var selectedString = Model.Sub_Category as string ?? "";
+
+                                                                                                                    var selectedList = SplitOutsideParentheses(selectedString);
+
+                                                                                                                    var extraItems = new List<string> {
+                                                                "Civil Vertical and lateral test, Plate Load test",
+                                                            };
+
+                                                                                                                    foreach (var extra in extraItems)
+                                                                                                                    {
+                                                                                                                        if (!selectedList.Contains(extra))
+                                                                                                                        {
+                                                                                                                            selectedList.Add(extra);
+                                                                                                                        }
+                                                                                                                    }
+
+                                                                                                                    var selectedData = string.Join("|||", selectedList);
+                                                                                                                }*@
+                                                        @{
+                                                            var selectedString = Model.Sub_Category as string ?? "";
+
+                                                            var selectedList = SplitOutsideParentheses(selectedString);
+
+                                                            var allowedExtraItems = new List<string> {
+        "Civil Vertical and lateral test, Plate Load test",
+    };
+
+
+                                                            var filteredExtras = allowedExtraItems.Where(extra => selectedString.Contains(extra)).ToList();
+
+
+                                                            foreach (var extra in filteredExtras)
+                                                            {
+                                                                if (!selectedList.Contains(extra))
+                                                                {
+                                                                    selectedList.Add(extra);
+                                                                }
+                                                            }
+
+                                                            var selectedData = string.Join("|||", selectedList);
+                                                        }
+
+
+
+
                                                         <div class="col-xs-12 col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Stages of Inspection:</label><span style="color:#ff0000;">*</span>
-                                                                <select id="Sub_Category" name="Sub_Category" class="form-control form-multiselect-city" multiple>
-                                                                    @{
+
+                                                                <label>Stages of Inspection:</label>&nbsp;&nbsp;
 
 
-                                                                        var defaultOptions = ViewBag.DefaultOptions as SelectList;
-
-                                                                        // Ensure that defaultOptions is not null before proceeding
-                                                                        @*if (defaultOptions != null)
-                                                                            {
-                                                                                foreach (var option in defaultOptions)
-                                                                                {
-                                                                                    <option value="@option.Value" @(Model.Sub_Category?.Split(',')?.Contains(option.Value) ?? false ? "selected" : "")>@option.Text</option>
-                                                                                }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <option value="">Default Option</option>
-                                                                            }*@
 
 
-                                                                    if (defaultOptions != null)
-                                                                    {
-                                                                        foreach (var option in defaultOptions)
-                                                                        {
-                                                                            var isSelected = Model.Sub_Category != null && Model.Sub_Category.Contains(option.Text);
-                                                                            <option value="@option.Value" @(isSelected ? "selected" : "")>@option.Text</option>
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <option value="">Default Option</option>
-                                                                    }
-                                                                    }
-
-
+                                                                <select id="Sub_Category"
+                                                                        class="form-control form-multiselect-city"
+                                                                        multiple="multiple"
+                                                                        name="Sub_Category"
+                                                                        placeholder="Select Option"
+                                                                        data-selected-products="@selectedData">
+                                                                    @*data-selected-products="@string.Join("|||", Model.Sub_Category)">*@
                                                                 </select>
+
+
+                                                                @Html.ValidationMessageFor(model => model.Sub_Category, "", new { @class = "text-danger" })
+
+
                                                             </div>
                                                         </div>
-
 
 
 
@@ -1387,61 +1598,31 @@
                                                                 @Html.ValidationMessageFor(model => model.Planned_Date, "", new { @class = "text-danger validation-msg" })
                                                             </div>
                                                         </div>
-                                                    </div>
-
-
-
-                                                    <div class="row">
-
-                                                        @*<div class="col-xs-12 col-sm-4" style="pointer-events:none;">
-                                                                <div class="form-group">
-                                                                    <label>Executing Service:</label><span style="color:#ff0000;">*</span>
-
-                                                                    @if (ViewBag.ExeService != null)
+                                                        <div class="col-xs-12 col-sm-4" style="display:none;">
+                                                            <div class="form-group">
+                                                                <label>Reason for delaying in call Generation calls:</label><span style="color:#ff0000;">*</span>
+                                                                @*@if (Model.DelayReason != null)
                                                                     {
-                                                                        @Html.DropDownListFor(m => m.ExecutingService, ViewBag.ExeService as IEnumerable<SelectListItem>, "--Select Service--", new { @class = "form-control" })
-                                                                        @Html.HiddenFor(m => m.ExecutingService)
+                                                                        @Html.TextBoxFor(model => model.DelayReason, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "DelayReason", @class = "form-control ", autocomplete = "off", @readonly = "readonly" })
                                                                     }
-                                                                    @Html.ValidationMessageFor(model => model.ExecutingService, "", new { @class = "text-danger validation-msg" })
-                                                                </div>
-                                                            </div>*@
+                                                                    else
+                                                                    {*@
 
-                                                        <div class="col-xs-12 col-sm-4">
-                                                            <div class="form-group">
-                                                                <label>Executing Service:</label><span style="color:#ff0000;">*</span>
-
-                                                                @if (ViewBag.ExeService != null)
+                                                                @if (ViewBag.DelayReasonList != null)
                                                                 {
-                                                                    @Html.DropDownListFor(m => m.ExecutingService, ViewBag.ExeService as IEnumerable<SelectListItem>, "--Select Service--", new { @class = "form-control" })
-                                                                    @Html.HiddenFor(m => m.ExecutingService)
-                                                                }
-                                                                @Html.ValidationMessageFor(model => model.ExecutingService, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-xs-12 col-sm-4">
-                                                            <div class="form-group">
-                                                                <label>Executing Branch:</label><span style="color:#ff0000;">*</span>
-                                                                @*<input type="text" class="form-control" placeholder="Status Here">*@
-                                                                @*@Html.TextBoxFor(model => model.Executing_Branch, new { @placeholder = "Executing Branch", @class = "form-control" })*@
-                                                                @if (ViewBag.SubCatlist != null)
-                                                                {
-                                                                    @Html.DropDownListFor(m => m.Br_Id, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Branch--", new { @class = "form-control", @required = "required" })
+                                                                    @Html.DropDownListFor(m => m.DelayReason, ViewBag.DelayReasonList as IEnumerable<SelectListItem>, "--Select Delay Reason--", new { @class = "form-control" })
 
                                                                 }
 
-                                                                @Html.ValidationMessageFor(model => model.Br_Id, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-3">
-                                                            <div class="form-group">
-                                                                <label>Call Status:</label>
-                                                                @*<input type="email" class="form-control" placeholder="Email Here">*@
-                                                                @Html.TextBoxFor(model => model.Status, new { @placeholder = "Call Status", @class = "form-control", @readonly = "readonly" })
-                                                                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger validation-msg" })
+
+                                                                @Html.ValidationMessageFor(model => model.DelayReason, "", new { @class = "text-danger validation-msg" })
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <input type="hidden" id="hiddendate" value="@Model.Planned_Date" />
+                                                    <input type="hidden" id="hiddenassdate" value="@Model.CreatedDate" />
+
+
 
 
                                                     <div class="row hidden">
@@ -1518,42 +1699,14 @@
                                                                 {
                                                                     if (Model.Status.ToUpper() == "CLOSED")
                                                                     {
-                                                                        @Html.DropDownListFor(m => m.FirstName, ViewBag.Userlist as IEnumerable<SelectListItem>, "--Select Inspector--", new { @class = "form-control", id = 'a', @disabled = "disabled", onchange = "updateLink()" })
+                                                                        @Html.DropDownListFor(m => m.FirstName, ViewBag.Userlist as IEnumerable<SelectListItem>, "--Select Inspector--", new { @class = "form-control inspname", id = 'a', @disabled = "disabled", onchange = "updateLink()" })
                                                                     }
                                                                     else
                                                                     {
-                                                                        @Html.DropDownListFor(m => m.FirstName, ViewBag.Userlist as IEnumerable<SelectListItem>, "--Select Inspector--", new { @class = "form-control", id = 'a', onBlur = "CheckIFLeaveAdded()", onchange = "updateLink()" })
+                                                                        @Html.DropDownListFor(m => m.FirstName, ViewBag.Userlist as IEnumerable<SelectListItem>, "--Select Inspector--", new { @class = "form-control inspname", id = 'a', onBlur = "CheckIFLeaveAdded()", onchange = "updateLink()" })
                                                                     }
                                                                 }
                                                                 @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-3">
-                                                            <div class="form-group">
-                                                                <label>Is inspector Competant:</label>
-                                                                @Html.TextBoxFor(model => model.inspectorCompetant, new { @class = "form-control", @readonly = "readonly", @id = "inspectorCompetant" })
-                                                                @Html.ValidationMessageFor(model => model.inspectorCompetant, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-2">
-                                                            <div class="form-group">
-                                                                <label>TCE Filled:</label>
-                                                                @Html.TextBoxFor(model => model.TCEFilled, new { @class = "form-control", @readonly = "readonly" })
-                                                                @Html.ValidationMessageFor(model => model.TCEFilled, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-                                                        @*<div class="col-xs-12 col-sm-2">
-                                                                <div class="form-group">
-                                                                    <label>TCE Filled:</label>
-                                                                    @Html.TextBoxFor(model => model.TCEFilled, new { @class = "form-control", @readonly = "readonly" })
-                                                                    @Html.ValidationMessageFor(model => model.TCEFilled, "", new { @class = "text-danger validation-msg" })
-                                                                </div>
-                                                            </div>*@
-                                                        <div class="col-xs-12 col-sm-3">
-                                                            <div class="form-group">
-                                                                <label>Is inspector Approved:</label>
-                                                                @Html.TextBoxFor(model => model.inspectorapproved, new { @class = "form-control", @readonly = "readonly" })
-                                                                @Html.ValidationMessageFor(model => model.inspectorapproved, "", new { @class = "text-danger validation-msg" })
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-1">
@@ -1574,36 +1727,78 @@
                                                                 </div>*@
 
                                                         </div>
-                                                    </div>
-
-                                                    @*<div class="row">
-                                                            <div class="col-xs-12 col-sm-6">
-                                                                <div class="form-group">
-                                                                    <label>Customer Representative's Name:</label>
-                                                                    @Html.TextBoxFor(model => model.CustomerRepresentative, new { @class = "form-control" })
-                                                                    @Html.ValidationMessageFor(model => model.CustomerRepresentative, "", new { @class = "text-danger validation-msg" })
-                                                                </div>
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label>Is inspector Competant:</label>
+                                                                @Html.TextBoxFor(model => model.inspectorCompetant, new { @class = "form-control", @readonly = "readonly", @id = "inspectorCompetant" })
+                                                                @Html.ValidationMessageFor(model => model.inspectorCompetant, "", new { @class = "text-danger validation-msg" })
                                                             </div>
-                                                        </div>*@
-                                                    <div class="row">
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4" style="display:none;">
+                                                            <div class="form-group">
+
+                                                                <label>Reason for delaying in assigning inspector:</label><span style="color:#ff0000;">*</span>
+                                                                @*@if (Model.InspectorDelayReason != null)
+                                                                    {
+                                                                        @Html.TextBoxFor(model => model.InspectorDelayReason, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Inspector Delay Reason", @class = "form-control ", autocomplete = "off", @readonly = "readonly" })
+                                                                    }
+                                                                    else
+                                                                    {*@
+
+                                                                @if (ViewBag.DelayInspectorReasonList != null)
+                                                                {
+                                                                    @Html.DropDownListFor(m => m.InspectorDelayReason, ViewBag.DelayInspectorReasonList as IEnumerable<SelectListItem>, "--Select Delay Reason--", new { @class = "form-control" })
+
+                                                                }
+
+
+                                                                @Html.ValidationMessageFor(model => model.InspectorDelayReason, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-2">
+                                                            <div class="form-group">
+                                                                <label>TCE Filled:</label>
+                                                                @Html.TextBoxFor(model => model.TCEFilled, new { @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.TCEFilled, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label>Is Operation Manager Approval Required:</label>
+                                                                @Html.TextBoxFor(model => model.operationalApprovalRequired, new { @class = "form-control", @readonly = "readonly", @id = "operationalApprovalRequired" })
+                                                                @Html.ValidationMessageFor(model => model.operationalApprovalRequired, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+                                                        @*<div class="col-xs-12 col-sm-2">
+                                                                <div class="form-group">
+                                                                    <label>TCE Filled:</label>
+                                                                    @Html.TextBoxFor(model => model.TCEFilled, new { @class = "form-control", @readonly = "readonly" })
+                                                                    @Html.ValidationMessageFor(model => model.TCEFilled, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+
+                                                            </div>*@
+                                                        <div class="col-xs-12 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label>Is inspector Approved:</label>
+                                                                @Html.TextBoxFor(model => model.inspectorapproved, new { @class = "form-control", @readonly = "readonly" })
+                                                                @Html.ValidationMessageFor(model => model.inspectorapproved, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
+                                                        </div>
+
+
                                                         <div class="col-xs-12 col-sm-6">
 
                                                             <div class="form-group">
                                                                 <div id="btnshowdataproject">
-                                                                    <div class="row">
-                                                                        @*<a id="lnkNewContact" href="@Url.Action("ContactDetails","EnquiryMaster")" style="margin-left: 15px;"
-                                                                               data-toggle="modal" data-target="#AddNewContactDetails">
-                                                                                <i class="fa fa-plus-circle"></i>Add New Contact Person
-                                                                            </a>*@
+
+
+
+                                                                    <div>
+                                                                        <label>Call raised by(customer):</label>
                                                                         <a id="lnkNewContact"
                                                                            data-toggle="modal" style="margin-left: 15px;" data-target="#AddNewContactDetails">
                                                                             <i class="fa fa-plus-circle"></i>Add New Contact Person
                                                                         </a>
-                                                                    </div>
-
-
-                                                                    <div>
-                                                                        <label>Call raised by:</label>
 
 
                                                                         @Html.DropDownListFor(
@@ -1618,6 +1813,17 @@
                                                         </div>
                                                     </div>
 
+                                                    @*<div class="row">
+                                                            <div class="col-xs-12 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Customer Representative's Name:</label>
+                                                                    @Html.TextBoxFor(model => model.CustomerRepresentative, new { @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.CustomerRepresentative, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                        </div>*@
+
+
                                                     <div class="row">
                                                         <div class="col-xs-12">
                                                             <hr class="custom-hr1">
@@ -1628,8 +1834,16 @@
                                                             <label style="color:#001ED2;">Action:</label>
                                                         </div>
                                                     </div>
+
+
+
                                                     @if (Model.PK_Call_ID != 0)
                                                     {
+                                                        if (Model.ActionHidden == "YES")
+                                                        {
+                                                            <p>The inspector has already submitted a declaration in the Visit Report therefore the dropdown will not be displayed.</p>
+                                                        }
+
                                                         if (Model.Status.ToUpper() == "OPEN")
                                                         {
                                                             @*<div class="row">
@@ -1729,40 +1943,45 @@
 
                                                     }
 
-
-
-
-                                                    @if (Model.ActionHidden != "YES")
+                                                    @if (Model.OPEStatus != null)
                                                     {
-
-                                                        if (Model.PK_Call_ID != null)
+                                                        if (Model.OPEStatus.ToUpper() == "YES")
                                                         {
-                                                            if (Model.Status.ToUpper() == "CLOSED")
+                                                            <p>OPE Has been proceess futher Action Cannot be taken.</p>
+                                                        }
+                                                        else
+                                                        {
+
+                                                            if (Model.ActionHidden != "YES")
                                                             {
-                                                                <div id="divdisplaytable">
-                                                                    <table id="WOSummaryTable" cellspacing="0" cellpadding="3" border="1" style="width: 100%;overflow-y:auto;margin-left: auto;margin-right: auto;">
-                                                                        <tr style="background-color:lightgray">
-                                                                            <td width="25%" style="text-align:center;">
-                                                                                Action
-                                                                            </td>
-                                                                            <td width="40%" style="text-align:center;">
-                                                                                Reason
-                                                                            </td>
-                                                                            <td width="20%" style="text-align:center;">
-                                                                                Actual Visit Date
-                                                                            </td>
-                                                                            <td>&nbsp;</td>
-                                                                        </tr>
+                                                                if (Model.PK_Call_ID != null)
+                                                                {
+                                                                    if (Model.Status.ToUpper() == "CLOSED")
+                                                                    {
+                                                                        <div id="divdisplaytable">
+                                                                            <table id="WOSummaryTable" cellspacing="0" cellpadding="3" border="1" style="width: 100%;overflow-y:auto;margin-left: auto;margin-right: auto;">
+                                                                                <tr style="background-color:lightgray">
+                                                                                    <td width="25%" style="text-align:center;">
+                                                                                        Action
+                                                                                    </td>
+                                                                                    <td width="40%" style="text-align:center;">
+                                                                                        Reason
+                                                                                    </td>
+                                                                                    <td width="20%" style="text-align:center;">
+                                                                                        Actual Visit Date
+                                                                                    </td>
+                                                                                    <td>&nbsp;</td>
+                                                                                </tr>
 
-                                                                        @if (Model.lstAddCallDetails != null && Model.lstAddCallDetails.Count() > 0)
-                                                                        {
+                                                                                @if (Model.lstAddCallDetails != null && Model.lstAddCallDetails.Count() > 0)
+                                                                                {
 
-                                                                            foreach (var item in Model.lstAddCallDetails)
-                                                                            {
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <input type="hidden" id="PK_AddCallID" name="PK_AddCallID" value="@item.PK_AddCallID" />
-                                                                                        @Html.DropDownListFor(model => model.ActionSelected, new List<SelectListItem>
+                                                                                    foreach (var item in Model.lstAddCallDetails)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <input type="hidden" id="PK_AddCallID" name="PK_AddCallID" value="@item.PK_AddCallID" />
+                                                                                                @Html.DropDownListFor(model => model.ActionSelected, new List<SelectListItem>
                                                                             {
                                                                                 new SelectListItem{ Text="Select Action", Value = "" },
                                                                                 new SelectListItem{ Text="Change Status to Assign", Value = "CHST" , Selected = (item.ActionSelected == "CHST") ?true : false} ,
@@ -1770,98 +1989,78 @@
                                                                                 new SelectListItem{ Text="Delete Date in IVR", Value = "DLDT" , Selected = (item.ActionSelected == "DLDT") ?true : false} ,
 
                                                                             }, new { @class = "form-control CActionType", @id = "ddlActionType", @style = "pointer-events: none" })
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <span>@item.Reason</span>
-                                                                                    </td>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <span>@item.Reason</span>
+                                                                                            </td>
 
-                                                                                    <td>
-                                                                                        <span>@item.NewPlannedDate</span>
-                                                                                        @*<input type="text" value="@item.NewPlannedDate" id="@("NewPlannedDate" + @item.PK_AddCallID)" name="NewPlannedDate" style="text-align:center;width:100%;font-size:smaller;" class="PoDate" />*@
+                                                                                            <td>
+                                                                                                <span>@item.NewPlannedDate</span>
+                                                                                                @*<input type="text" value="@item.NewPlannedDate" id="@("NewPlannedDate" + @item.PK_AddCallID)" name="NewPlannedDate" style="text-align:center;width:100%;font-size:smaller;" class="PoDate" />*@
 
-                                                                                    </td>
-                                                                                    <td style="text-align:center;font-size:smaller;">
-                                                                                        <button type="button" id="btnAdd" disabled="true" class="btn btn-xs btn-primary classAdd">Update</button>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            }
-                                                                        }
+                                                                                            </td>
+                                                                                            <td style="text-align:center;font-size:smaller;">
+                                                                                                <button type="button" id="btnAdd" disabled="true"
+                                                                                                        class="btn btn-xs btn-primary Update classAdd">
+                                                                                                    Update
+                                                                                                </button>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                }
 
-                                                                        @*else if (ViewBag.issendforapproval.ToString() == "Yes")
-                                                                              {
-                                                                                  <tr>
-                                                                                      <td>
+                                                                              
+                                                                                else
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td>
 
-                                                                                          @Html.DropDownListFor(model => model.ActionSelected, new List<SelectListItem>
-                                                                              {
-                                                                                  new SelectListItem{ Text="Select Action", Value = "" },
-                                                                                  new SelectListItem{ Text="Change Status to Assign", Value = "CHST"} ,
-                                                                                  new SelectListItem{ Text="Change Visit Date in IVR", Value = "CHDT"},
-                                                                                  new SelectListItem{ Text="Delete Date in IVR", Value = "DLDT"},
-                                                                              },
-                                                                            new { @class = "form-control CActionType", @id = "ddlActionType" })
-                                                                                      </td>
-                                                                                      <td>
-                                                                                          @Html.TextBoxFor(model => model.statusReason, new { @placeholder = "Reason", @class = "form-control Reason", autocomplete = "off", @readonly = "readonly", @id = "statusReason", @onclick = "onclickevent()" })
-                                                                                          @Html.ValidationMessageFor(model => model.statusReason, "", new { @class = "text-danger validation-msg" })
-                                                                                      </td>
+                                                                                            @Html.DropDownListFor(model => model.ActionSelected, new List<SelectListItem>
+                                                                                             {
+                                                                                                 new SelectListItem{ Text="Select Action", Value = "" },
+                                                                                                 new SelectListItem{ Text="Change Status to Assign", Value = "CHST"} ,
+                                                                                                 new SelectListItem{ Text="Change Visit Date in IVR", Value = "CHDT"},
+                                                                                                 new SelectListItem{ Text="Delete Date in IVR", Value = "DLDT"},
+                                                                                             },
+                                                                                               new { @class = "form-control CActionType", @id = "ddlActionType" })
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @Html.TextBoxFor(model => model.statusReason, new { @placeholder = "Reason", @class = "form-control Reason", autocomplete = "off", @id = "statusReason" })
+                                                                                            @Html.ValidationMessageFor(model => model.statusReason, "", new { @class = "text-danger validation-msg" })
+                                                                                        </td>
 
-                                                                                      <td>
-                                                                                          @Html.TextBoxFor(model => model.NewPlannedDate, htmlAttributes: new { placeholder = "New Planned Date", @class = "form-control NewPlannedDate ", @readonly = "readonly", autocomplete = "off", @onclick = "onclickevent()" })
-                                                                                          @Html.ValidationMessageFor(model => model.NewPlannedDate, "", new { @class = "text-danger validation-msg" })
-                                                                                      </td>
-                                                                                      <td style="text-align:center;font-size:smaller;">
-
-
-                                                                                          <button type="button" id="btnAdd" disabled="true" class="btn btn-xs btn-primary classAdd">Update</button>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                              }*@
-                                                                        else
-                                                                        {
-                                                                            <tr>
-                                                                                <td>
-
-                                                                                    @Html.DropDownListFor(model => model.ActionSelected, new List<SelectListItem>
-                                                                                                            {
-                                                                                                                new SelectListItem{ Text="Select Action", Value = "" },
-                                                                                                                new SelectListItem{ Text="Change Status to Assign", Value = "CHST"} ,
-                                                                                                                new SelectListItem{ Text="Change Visit Date in IVR", Value = "CHDT"},
-                                                                                                                new SelectListItem{ Text="Delete Date in IVR", Value = "DLDT"},
-                                                                                                            },
-                                               new { @class = "form-control CActionType", @id = "ddlActionType" })
-                                                                                </td>
-                                                                                <td>
-                                                                                    @Html.TextBoxFor(model => model.statusReason, new { @placeholder = "Reason", @class = "form-control Reason", autocomplete = "off", @id = "statusReason" })
-                                                                                    @Html.ValidationMessageFor(model => model.statusReason, "", new { @class = "text-danger validation-msg" })
-                                                                                </td>
-
-                                                                                <td>
-                                                                                    @Html.TextBoxFor(model => model.NewPlannedDate, htmlAttributes: new { placeholder = "New Planned Date", @class = "form-control NewPlannedDate ", autocomplete = "off" })
-                                                                                    @Html.ValidationMessageFor(model => model.NewPlannedDate, "", new { @class = "text-danger validation-msg" })
-                                                                                </td>
-                                                                                <td style="text-align:center;font-size:smaller;">
+                                                                                        <td>
+                                                                                            @Html.TextBoxFor(model => model.NewPlannedDate, htmlAttributes: new { placeholder = "New Planned Date", @class = "form-control NewPlannedDate ", autocomplete = "off" })
+                                                                                            @Html.ValidationMessageFor(model => model.NewPlannedDate, "", new { @class = "text-danger validation-msg" })
+                                                                                        </td>
+                                                                                        <td style="text-align:center;font-size:smaller;">
 
 
-                                                                                    <button type="button" id="btnAdd" class="Update">Update</button>
-                                                                                </td>
-                                                                            </tr>
-                                                                        }
-                                                                    </table>
+                                                                                            <button type="button" id="btnAdd" class="Update">Update</button>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                            </table>
 
-                                                                </div><br />
-                                                                <div class="row">
-                                                                    <div class="col-xs-12">
-                                                                        <hr class="custom-hr1">
-                                                                    </div>
-                                                                </div>
+                                                                        </div><br />
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <hr class="custom-hr1">
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                }
                                                             }
+                                                            else
+                                                            {
+                                                                <p>The inspector has already submitted a declaration in the Visit Report; therefore, the dropdown will not be displayed.</p>
+
+                                                            }
+
                                                         }
-                                                    }
-                                                    else
-                                                    {
 
                                                     }
+                                                    
 
 
 
@@ -2046,7 +2245,8 @@
                                                                             <li>
                                                                                 @*<a class="title" href="/CallsMaster/Download/?p=@(item.IDS + item.Extension)&d=@item.FileName">@item.FileName</a>*@
                                                                                 @*<a class="title" href="@Url.Action("Download", "CallsMaster", new { @p = item.IDS + item.Extension, @d = item.FileName})">@item.FileName</a>*@
-                                                                                <a class="title" href="~/CallsMaster/Download/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>
+                                                                                @*<a class="title" href="~/CallsMaster/Download/?p=@(item.IDS + item.Extension)&d=@item.PK_ID">@item.FileName</a>*@
+                                                                                <a class="title" href="~/CallsMaster/Download/?d=@item.PK_ID">@item.FileName</a>
                                                                                 <a href="javascript:void(0);" data-id="@item.IDS" class="deleteItem">X</a>
                                                                             </li>
                                                                         }
@@ -2401,8 +2601,6 @@
                                                     }
 
                                                 </div>
-
-                                                
                                                 @*</form>*@
                                             </div>
                                         </div>
@@ -2424,56 +2622,8 @@
 
         </div>
     </div>
+                                                                }
 
-}
-<div class="modal fade" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content mvc-grid-modal">
-            <div class="modal-header mvc-grid-modal-header">
-                <h5 class="modal-title" id="remarksModalLabel">Modal Title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body mvc-grid-modal-body">
-                <!-- Table to display remarks -->
-                <div class="table mvc-grid-table">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <div class="form-group">
-                                @Html.CheckBoxFor(m => m.Manufact_Contra_Prod_Fabri, new { @class = "custom-radio-group", @data_group = "partyType" })
-                                <b>1. Manufacturer / Contractor / Producer / Fabricator of item</b>
-                                @Html.ValidationMessageFor(m => m.Manufact_Contra_Prod_Fabri, "", new { @class = "text-danger" })
-                                @*</div>*@
-                                @*</div>
-                                    <div class="col-xs-4">*@
-                                @*<div class="form-group">*@
-                                @Html.CheckBoxFor(m => m.stock_Trade_Raw, new { @class = "custom-radio-group", @data_group = "partyType" })
-                                <b>2. Stockiest / Trader / Raw material Supplier</b>
-                                @Html.ValidationMessageFor(m => m.stock_Trade_Raw, "", new { @class = "text-danger" })
-                                @*</div>*@
-                                @**@@*</div>
-                                    <div class="col-xs-4">
-                                        <div class="form-group">*@
-                            </div>
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    @Html.CheckBoxFor(m => m.TUVICustomer_End_Plant, new { @class = "custom-radio-group", @data_group = "partyType" })
-                                    <b>3. TUVI Customer / End customer / Plant (Site assignment)</b>
-                                    @Html.ValidationMessageFor(m => m.TUVICustomer_End_Plant, "", new { @class = "text-danger" })
-                                    @*</div>*@
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer mvc-grid-modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal fade bs-example-modal-lg modal fade" id="AddNewContactDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -2675,19 +2825,97 @@
     </div>
 </div>
 
+<script>
+    //function checkInspectorCompetant() {
+    //    debugger
+    //    var value = $('#inspectorCompetant').val().trim().toUpperCase();
+    //    var isappr = $('#inspectorapproved').val().trim().toUpperCase();
+
+    //    if (value === 'NO' && isappr === 'NO') {
+    //        $('#operationalApprovalRequired').val('YES');
+
+    //    } else if (value === 'YES' && isappr === 'NO') {
+
+    //        $('#operationalApprovalRequired').val('YES');
+
+    //    } else if (value === 'NO' && isappr === 'YES') {
+
+    //        $('#operationalApprovalRequired').val('YES');
+    //    }
+    //    else if (value === 'NO' &&  isappr === 'NOT APPLICABLE') {
+
+    //        $('#operationalApprovalRequired').val('YES');
+    //    }
+    //    else if (value === 'YES' &&  isappr === 'NOT APPLICABLE') {
+
+    //        $('#operationalApprovalRequired').val('NO');
+    //    }
+    //    else if (value === 'YES' &&  isappr === 'YES') {
+
+    //        $('#operationalApprovalRequired').val('NO');
+    //    }
+
+    //    else {
+    //        $('#operationalApprovalRequired').val('');
+    //    }
+    //}
 
 
+    function checkInspectorCompetant() {
+        debugger
+        var Service=$("#ExecutingService").val();
+        var value = $('#inspectorCompetant').val().trim().toUpperCase();
+        var isappr = $('#inspectorapproved').val().trim().toUpperCase();
+
+        if(Service=='1' || Service=='3' ||Service=='4' || Service=='5' || Service=='6' || Service=='7'||Service=='8' || Service =="9" || Service =="10"){
+
+
+            if (value === 'NO' && isappr === 'NO') {
+                $('#operationalApprovalRequired').val('YES');
+
+            } else if (value === 'YES' && isappr === 'NO') {
+
+                $('#operationalApprovalRequired').val('YES');
+
+            } else if (value === 'NO' && isappr === 'YES') {
+
+                $('#operationalApprovalRequired').val('YES');
+            }
+            else if (value === 'NO' &&  isappr === 'NOT APPLICABLE') {
+
+                $('#operationalApprovalRequired').val('YES');
+            }
+            else if (value === 'YES' &&  isappr === 'NOT APPLICABLE') {
+
+                $('#operationalApprovalRequired').val('NO');
+            }
+            else if (value === 'YES' &&  isappr === 'YES') {
+
+                $('#operationalApprovalRequired').val('NO');
+            }
+
+            else {
+                $('#operationalApprovalRequired').val('');
+            }
+        }
+        else{
+            $('#operationalApprovalRequired').val('Not Applicable');
+        }
+    }
+</script>
 
 <script>
     (function() {
         var isSendForApproval = @Html.Raw(Json.Encode(ViewBag.issendforapproval));
         var dateStatus = @Html.Raw(Json.Encode(ViewBag.datestatus));
 
-        if (isSendForApproval === "Yes" || dateStatus === "Yes") {
+        if (isSendForApproval == "Yes" || dateStatus == "Yes") {
             document.getElementById('divdisplaytable').style.display = 'none';
         }
     })();
 </script>
+
+
 
 <script type="text/javascript">
     $(function () {
@@ -2717,22 +2945,75 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#Br_Id").change(function () {
+
+        $("#ExecutingService").change(function () {
+            debugger;
+
+
+            var ES = $('#ExecutingService').val();
+            loadProductListByService(ES);
+            loadItemListByService(ES)
+            var OBSID =  '@Session["UserOBSID"]';
+
+            if ((ES == '28' || ES == '29' || ES == '30') && (OBSID == '4' || OBSID == '5' || OBSID == '6' ) )
+            {
+                /// alert(111)
+
+                $("#FirstName").removeAttr("disabled");
+                $("#a").prop("disabled", false);
+            } else
+            {
+                //   alert(222)
+
+                $("#FirstName").attr("disabled", "disabled");
+                $("#a").prop("disabled", true);
+
+            }
+
+
+        })
+
+        $("#Br_Id").change(function ()
+        {
             debugger;
 
 
             var E = $('#Br_Id').val();
             var O = $('#Originating_Branch').val();
+            var OBSID =  '@Session["UserOBSID"]';
+            var ES = $('#ExecutingService').val();
 
-            if (E == O) {
+            /*
+            if (E == O )
+            {
+             //   alert(1)
 
                 $("#FirstName").removeAttr("disabled");
+                $("#a").prop("disabled", false);
+            }
+            else
+            {
+             //   alert(2)
+                $("#FirstName").attr("disabled", "disabled");
+                $("#a").prop("disabled", true);
+            }
+            */
 
-            } else {
+            if (E == O || ((ES == '28' || ES == '29' || ES == '30') && (OBSID == '4' || OBSID == '5' || OBSID == '6' )))
+            {
+
+
+                $("#FirstName").removeAttr("disabled");
+                $("#a").prop("disabled", false);
+            }
+            else
+            {
 
                 $("#FirstName").attr("disabled", "disabled");
-
+                $("#a").prop("disabled", true);
             }
+
+
 
 
         })
@@ -2807,6 +3088,9 @@
         var O = $('#Originating_Branch').val();
         var s = '@Session["UserBranchId"]';
 
+        var OBSID =  '@Session["UserOBSID"]';
+        var ES = $('#ExecutingService').val();
+
         //alert("User Branch" + s);
         //alert("Executing Branch" + E);
         //alert("Originating Branch" + O);
@@ -2829,13 +3113,15 @@
             }
         }
 
-
-        if (blnExist == false) {
+        if (blnExist == false && (OBSID != '4' && OBSID != '5' && OBSID != '6' ) && (ES !='28' && ES !='29' && ES !='30') )
+        {
+        //   alert(32);
             $("#FirstName").attr("disabled", "disabled");
 
             $("#a").prop("disabled", true);
 
         }
+
 
 
         if (PK_Call_IDVal != "0") {
@@ -3093,12 +3379,16 @@
 
                         var E = $('#Br_Id').val();
                         var O = $('#Originating_Branch').val();
+                        var OBSID =  '@Session["UserOBSID"]';
+                        var ES = $('#ExecutingService').val();
 
-                        if (E == O) {
-
+                        if (E == O || ((OBSID == '4' || OBSID == '5' || OBSID == '6' ) || (ES == '28' || ES =='29' || ES =='30')) )
+                        {
                             $("#a").removeAttr("disabled");
 
-                        } else {
+                        }
+                        else
+                        {
                             $("#a").attr("disabled", "disabled");
                         }
 
@@ -3176,15 +3466,18 @@
 
 
         var a = $('#ddlActionType').val();
+        $('#NewPlannedDate').prop('disabled', a !== "CHDT");
+
+        debugger
         ///alert(a)
-        if (a == "CHDT") {
-            //alert(123);
-            document.getElementById("NewPlannedDate").disabled = false;
-        }
-        else {
-            // alert(456);
-            document.getElementById("NewPlannedDate").disabled = true;
-        }
+        //if (a == "CHDT") {
+        //    //alert(123);
+        //    document.getElementById("NewPlannedDate").disabled = false;
+        //}
+        //else {
+        //    // alert(456);
+        //    document.getElementById("NewPlannedDate").disabled = true;
+        //}
 
 
 
@@ -3193,12 +3486,12 @@
 
     });
 </script>
-<script>
-    function fun()
-    {
-        alert("A");
-    }
-</script>
+@*<script>
+        function fun()
+        {
+            alert("A");
+        }
+    </script>*@
 
 <script type="text/javascript">
     $(function () {
@@ -3240,34 +3533,14 @@
 
 
 <script>
-    //$("#btnic").click(function myfunction() {
-    //    debugger;
-    //    $('#remarksModal').modal('show');
-    //    //$("#remarksModal").show();
-    //    //if (validateform() == false) {
-    //    //    return false;
-    //    //}
-    //    //else {
-    //    //    $("#formic").submit();
-    //    //}
-    //});
+    $("#btnic").click(function myfunction() {
+        if (validateform() == false) {
 
-    $("#btnic").click(function () {
-        $("#remarksModal").dialog({
-            modal: true,
-            buttons: {
-                Submit: function () {
-                    if (validateform() === false) {
-                        return;
-                    }
-                    $("#formic").submit();
-                    $(this).dialog("close");
-                },
-                Cancel: function () {
-                    $(this).dialog("close");
-                }
-            }
-        });
+            return false;
+        }
+        else {
+            $("#formic").submit();
+        }
     });
 
 
@@ -3293,14 +3566,30 @@
         var Job_Location = $("#Job_Location").val();
 
         var PrimaryMaterial = $("#IdPrimaryMaterial option:selected").val();
+        var Item = $("#ProductLists option:selected").val();
 
         var FinalInspectionValue = $("#FinalInspectionValue").val();
 
         var Sub_Category = $("#Sub_Category").val();
+        var delayValue=$("#setvalue").val();
+        var delayreason=$("#InspectorDelayReason option:selected").val();
+        //added by shrutika salve 22-05-2025
+
+        if(delayValue=="NO"){
+            if(delayreason==""){
+                alert("Please Select Reason for delaying in assigning inspector !!!");
+                return false;
+            }
+        }
 
         if (PrimaryMaterial == "" || PrimaryMaterial == null) {
             alert("Please Select Primary Material !!!");
             $("#IdPrimaryMaterial").focus()
+            return false;
+        }
+        if (Item == "" || Item == null) {
+            alert("Please Select Item to be Inspected !!!");
+            $("#ProductLists").focus()
             return false;
         }
         //alert(RecDate)
@@ -3379,6 +3668,7 @@
             return false;
         }
 
+
         //added by shrutika salve 27032024
         if (FinalInspectionValue == "" || FinalInspectionValue == null) {
             alert("Please select Final Inspection!");
@@ -3406,15 +3696,15 @@
 
 
 
-        //if ($('#a').val() != null || $('#a').val() != "") {
-        //    var iscompedent = $("#inspectorCompetant").val();
-        //    if (iscompedent == "" || iscompedent == null) {
-        //        alert("Please Enter inspector Competant  !!!");
-        //        $("#inspectorCompetant").focus()
-        //        return false;
-        //    }
+        if ($('#a').val() != "") {
+            var iscompedent = $("#inspectorCompetant").val();
+            if (iscompedent == "") {
+                alert("Please Enter inspector Competant  !!!");
+                $("#inspectorCompetant").focus()
+                return false;
+            }
 
-        //}
+        }
 
         if ($("#PK_Call_ID").val() == "0") {
             if ($('#chkManMonths').is(':checked')) {
@@ -3498,6 +3788,7 @@
     $('#ddlActionType').on('change', function () {
         debugger
         var a = $('#ddlActionType').val();
+       // var a=$("#ddlActionType option:selected").val();
         //alert(a);
         if (a == "CHDT") {
             //  alert(1234);
@@ -3524,6 +3815,7 @@
 
 
     $("body").on("click", "#WOSummaryTable .Update", function () {
+        debugger
         var row = $(this).closest("tr");
         //// var ddlvalue = row.find('td:eq(1)').html();
 
@@ -3597,7 +3889,8 @@
 </script>
 
 <script>
-    $("#a").change(function () {
+    //$("#a").change(function () {
+    $('#a').on('change', function () {
         debugger;
         var Inspector = "";
         var scopeVal = "";
@@ -3626,11 +3919,15 @@
             Scopefunction(ProdList, Inspector, StageList);
             FormFilled(Inspector);
             IsinspectorApproved();
+            InspectorAssignDateCheck();
+            checkInspectorCompetant();
 
         }
         else {
             $("#inspectorCompetant").val("");
             $("#TCEFilled").val("");
+            $("#operationalApprovalRequired").val("");
+            $("#inspectorapproved").val("");
 
         }
 
@@ -3667,6 +3964,8 @@
 
                 Scopefunction(ProdList, Inspector, StageList);
                 FormFilled(Inspector);
+                IsinspectorApproved();
+                checkInspectorCompetant();
 
             }
 
@@ -3705,6 +4004,8 @@
 
                 Scopefunction(ProdList, Inspector, StageList);
                 FormFilled(Inspector);
+                IsinspectorApproved();
+                checkInspectorCompetant();
 
             }
 
@@ -3718,11 +4019,20 @@
     function Scopefunction(ProdList, Inspector, StageList) {
         debugger;
         // alert(ProdList);
+        var ExecutingService= $('#ExecutingService').val();
+
+        var dataToSend = {
+            Name: Inspector,
+            Status: ProdList,
+            StageOf: StageList,
+            ExecutingService: ExecutingService
+        };
         $.ajax
        ({
            url: '@Url.Action("GetCompetancy", "CallsMaster")',
            type: "POST",
-           data: '{Name:' + JSON.stringify(Inspector) + ', Status: ' + JSON.stringify(ProdList) + ',StageOf: ' + JSON.stringify(StageList) + '}',
+           data: JSON.stringify(dataToSend),
+           //data: '{Name:' + JSON.stringify(Inspector) + ', Status: ' + JSON.stringify(ProdList) + ',StageOf: ' + JSON.stringify(StageList) + '}',
            datatype: "json",
            contentType: "application/json; charset=utf-8",
            async: false,
@@ -3778,7 +4088,7 @@
        });
     }
 
-    function IsinspectorApproved() {
+    @*function IsinspectorApproved() {
         debugger;
         var status = $('#Status').val();
         var CustomerName = $('#Company_Name').val();
@@ -3794,6 +4104,44 @@
               url: '@Url.Action("Getisinspectorapproved", "CallsMaster")',
               type: "POST",
               data: '{Name:' + JSON.stringify(Inspector) + ', CustomerName: ' + JSON.stringify(CustomerName) + '}',
+              datatype: "json",
+              contentType: "application/json; charset=utf-8",
+              async: false,
+              success: function (response) {
+                  //  alert(response);
+                  $("#inspectorapproved").val(response);
+
+
+              }
+
+          });
+
+        }
+
+
+    }*@
+
+    function IsinspectorApproved() {
+        debugger;
+        var status = $('#Status').val();
+        var CustomerName = $('#Company_Name').val();
+        var Inspector = $('#a').val();
+        //var ProductItem=$("#ProductLists").val();
+        var ProductItem = $("#ProductLists").val();
+        var ProductString = Array.isArray(ProductItem) ? ProductItem.join(",") : ProductItem || "";
+        //var ProductString = ProductItem.join(",");
+
+        if (status == "Open" && Inspector == "") {
+            $("#inspectorapproved").val("INA");
+
+        }
+        else {
+
+            $.ajax
+          ({
+              url: '@Url.Action("Getisinspectorapproved", "CallsMaster")',
+              type: "POST",
+              data: '{Name:' + JSON.stringify(Inspector) + ', CustomerName: ' + JSON.stringify(CustomerName) + ',ProductItem:' + JSON.stringify(ProductString) + '}',
               datatype: "json",
               contentType: "application/json; charset=utf-8",
               async: false,
@@ -4017,6 +4365,7 @@
     $('#Planned_Date').change(function () {
         CheckSundayOnSingleCall();
         UserHolidayCheckOnSingleDay();
+        Planned_DateCheck();
     });
 
 
@@ -4229,11 +4578,14 @@
     $("#btnAddNewContact").on('click', function () {
         debugger
         var testcompanynameparam = $('#Company_Name').val();
+
         var ContactNames = $("#ContactNames").val();
         var ddlContactCompanyName = ContactNames;
         var ddlCompanyName = testcompanynameparam;
+
         var HomePhoneNo = $("#HomePhone").val();
         var MobileNo = $("#Mobile").val();
+
         var MainContact = $('#IsMainContact').is(':checked');
         var CompanyName = $('#hidCompany').val();
         var Address = $("#ddlCaddr option:selected").val();
@@ -4241,6 +4593,8 @@
         var Fax_No = $("#Fax_No").val();
         var TitleName = $("#TitleName").val();
         var ContactStatus = $("#PT").val();
+
+
         //**************************************************************************
         if ($("#ContactNames").val() == "" || $("#ContactNames").val() == null) {
             alert("Please Enter Contact Name!!!");
@@ -4296,8 +4650,10 @@
                 enctype: "multipart/form-data",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
+
                     if (response.success == 1) {
                         alert("Contact Saved Successfully!!!")
+
                         //$('#AddNewContactDetails').modal('hide');
                         //Bind_EmailID();
                         //showMessage();
@@ -4313,6 +4669,7 @@
                         //Bind_EmailID();
                         $('#AddNewContactDetails').modal('hide');
                         //showMessage();
+
                     }
                     Bind_EmailID();
 
@@ -4335,23 +4692,34 @@
             type: "POST",
             contentType: "application/json; charset=utf-8",
             success: function (response) {
+                //  alert(response);
                 $("#ddlCaddr").empty();
+
                 var s = '<option value="-1">--Select Vendor Address--</option>';
                 for (var i = 0; i < response.length; i++) {
                     s += '<option value="' + response[i].pkID + '">' + response[i].Company_Name + '</option>';
                 }
                 $("#ddlCaddr").html(s);
+
             },
             error: function (response) {
+                // alert(response.responseText);
             },
             failure: function (response) {
+                //   alert(response.responseText);
             }
         });
     })
+
 </script>
 
 <script>
     function loadVendorDetails(CustomerName) {
+
+
+
+
+
         $.ajax({
             url: '@Url.Action("Getvendordetails", "subJobMaster")',
             data: JSON.stringify({ 'Pre': CustomerName }),
@@ -4360,6 +4728,7 @@
             contentType: "application/json; charset=utf-8",
             success: function (response) {
                 debugger
+                // Clear existing options
                 $('#Contact').empty();
 
                 var selectedContact = $('#Contact').data('selected-contact') || '';
@@ -4380,14 +4749,17 @@
         });
     }
 
+    // Event binding for vendor_name blur event
     $('#Company_Name').blur(function () {
         debugger;
         var CustomerName = this.value;
         loadVendorDetails(CustomerName);
     });
 
-    
+    // Initial load
     var initialVendorName = $('#Company_Name').val();
+
+    // Extract and store the initial selected contact from the model
     var selectedContact = '@Model.CustomerRepresentative';
     $('#Contact').data('selected-contact', selectedContact);
 
@@ -4408,6 +4780,10 @@
         } else {
             link.style.display = 'none';
         }
+
+        // setTimeout(function () {
+        //    checkInspectorCompetant();   // check after inspectorCompetant field updated
+        //}, 300);
     }
 
     window.onload = function() {
@@ -4417,12 +4793,26 @@
 
 @*//08.03.2025*@
 <script>
-
     $(document).ready(function () {
         debugger;
-        // chkForMaria();
-        fun();
-    });
+        var delayReason = $("#DelayReason").val();
+
+        if(delayReason!=""){
+
+            $('#DelayReason').closest('.col-sm-4').show();
+        }
+
+
+        var InspectorDelayReason = $("#InspectorDelayReason").val();
+
+        if(InspectorDelayReason!=""){
+            $('#InspectorDelayReason').closest('.col-sm-4').show();
+        }
+
+
+    })
+
+
 </script>
 
 <script type="text/javascript">
@@ -4435,6 +4825,7 @@
             return;
         }
 
+        // Assuming the date format is DD/MM/YYYY
         var dateParts = plannedDate.split('/');
         if (dateParts.length !== 3) {
             console.error('Invalid date format');
@@ -4442,23 +4833,437 @@
         }
 
         var day = parseInt(dateParts[0], 10);
-        var month = parseInt(dateParts[1], 10) - 1; 
+        var month = parseInt(dateParts[1], 10) - 1; // Month is zero-indexed
         var year = parseInt(dateParts[2], 10);
 
         var formattedDate = new Date(year, month, day);
-        var startDate = new Date(new Date().getFullYear(), 1, 21); 
-        var endDate = new Date(new Date().getFullYear(), 2, 6); 
+        var startDate = new Date(new Date().getFullYear(), 1, 21); // 21st Feb of current year
+        var endDate = new Date(new Date().getFullYear(), 2, 6); // 6th March of current year
 
         if (formattedDate >= startDate && formattedDate <= endDate) {
-            $("#Maria2").hide(); 
-            $("#Maria1").show(); 
+            $("#Maria2").hide(); // Hide div with id 'maria2'
+            $("#Maria1").show(); // Show div with id 'maria1'
         } else {
-            $("#Maria1").hide(); 
-            $("#Maria2").show(); 
+            $("#Maria1").hide(); // Hide div with id 'maria1'
+            $("#Maria2").show(); // Show div with id 'maria2'
         }
     }
 </script>
 
 <script>
+    // $('.PlannedDate').off('change').on('change', function () {
+    //function Planned_DateCheck(){
+    //    debugger;
+
+
+    //    var plannedDate = $('#Planned_Date').val();
+
+    //    if (!plannedDate) {
+    //        console.error('Planned Date is empty');
+    //        return;
+    //    }
+
+
+    //    var dateParts = plannedDate.split('/');
+    //    if (dateParts.length !== 3) {
+    //        console.error('Invalid date format');
+    //        return;
+    //    }
+
+    //    var day = parseInt(dateParts[0], 10);
+    //    var month = parseInt(dateParts[1], 10) - 1;
+    //    var year = parseInt(dateParts[2], 10);
+
+    //    var formattedDate = new Date(year, month, day);
+    //    var dd1 = String(formattedDate.getDate()).padStart(2, '0');
+    //    var mm1 = String(formattedDate.getMonth() + 1).padStart(2, '0');
+    //    var yyyy1 = formattedDate.getFullYear();
+
+    //    var plndate=dd1 + '-' + mm1 + '-' + yyyy1;
+
+
+    //    var today = new Date();
+
+    //    var dd = String(today.getDate()).padStart(2, '0');
+    //    var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    //    var yyyy = today.getFullYear();
+
+    //    var todayStr = dd + '-' + mm + '-' + yyyy;
+    //    var newplndateStr = todayStr;
+
+
+
+
+    //    if (newplndateStr > plndate) {
+    //        alert("Today date is greater than the planned date. Please enter reason for delay.");
+    //        $('#DelayReason').closest('.col-sm-4').show();
+    //    } else {
+    //        $('#DelayReason').closest('.col-sm-4').hide();
+    //    }
+
+    //}
+
+    //////function Planned_DateCheck() {
+    //////    debugger;
+
+    //////    var plannedDate = $('#Planned_Date').val();
+
+    //////    if (!plannedDate) {
+    //////        console.error('Planned Date is empty');
+    //////        return;
+    //////    }
+
+    //////    var dateParts = plannedDate.split('/');
+    //////    if (dateParts.length !== 3) {
+    //////        console.error('Invalid date format');
+    //////        return;
+    //////    }
+
+    //////    var day = parseInt(dateParts[0], 10);
+    //////    var month = parseInt(dateParts[1], 10) - 1; // Month is 0-indexed
+    //////    var year = parseInt(dateParts[2], 10);
+
+    //////    var plannedDateObj = new Date(year, month, day);
+    //////    var today = new Date();
+
+    //////    // Zero out time portion for accurate date-only comparison
+    //////    plannedDateObj.setHours(0, 0, 0, 0);
+    //////    today.setHours(0, 0, 0, 0);
+
+    //////    var isPastDate = today > plannedDateObj;
+    //////    var isSunday = plannedDateObj.getDay() === 0; // 0 = Sunday
+
+    //////    if (isPastDate || isSunday) {
+    //////        alert("Today's date is greater than the planned date or the planned date is on Sunday. Please enter reason for delay.");
+    //////        $('#DelayReason').closest('.col-sm-4').show();
+    //////    } else {
+    //////        $('#DelayReason').closest('.col-sm-4').hide();
+    //////    }
+    //////}
+
+    function Planned_DateCheck() {
+        debugger;
+
+        var plannedDate = $('#Planned_Date').val();
+        var Call_Request_Date =$('#Call_Request_Date').val();
+        if (!Call_Request_Date) {
+            //console.error('Call Request Date is empty');
+            alert("Call Request Date is empty");
+            $('#Planned_Date').val("");
+            return;
+        }
+
+        if (!plannedDate) {
+            // console.error('Planned Date is empty');
+            alert("Planned Date  is empty");
+            return;
+
+        }
+
+        var dateParts = plannedDate.split('/');
+        if (dateParts.length !== 3) {
+            console.error('Invalid date format');
+            return;
+        }
+
+        var day = parseInt(dateParts[0], 10);
+        var month = parseInt(dateParts[1], 10) - 1;
+        var year = parseInt(dateParts[2], 10);
+
+        ////////var plannedDateObj = new Date(year, month, day);
+
+
+       //////// if (plannedDateObj.getDay() === 0) {
+       ////////     plannedDateObj.setDate(plannedDateObj.getDate() + 1);
+       ////////     //console.log("Planned date was Sunday, moved to Monday.");
+       //////// }
+
+       //////// var today = new Date();
+
+
+       //////// plannedDateObj.setHours(0, 0, 0, 0);
+       //////// today.setHours(0, 0, 0, 0);
+
+
+       //////// var isPlannedDateSunday = plannedDateObj.getDay() === 0;
+       //////// var isPastDate = today > plannedDateObj;
+
+       ////////  if (isPastDate) {
+       //////// //added by shrutika salve 01/07/2025
+       ////////// if (isPastDate && !isPlannedDateSunday) {
+       ////////     alert("Today's date is greater than the planned date. Please enter reason for delay.");
+
+       ////////     $('#DelayReason').closest('.col-sm-4').show();
+       //////// } else {
+       ////////     $('#DelayReason').closest('.col-sm-4').hide();
+        //////// }
+
+        var plannedDateObj = new Date(year, month, day);
+        plannedDateObj.setHours(0, 0, 0, 0);
+
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        var isPastDate = today > plannedDateObj;
+        var isPlannedDateSunday = plannedDateObj.getDay() === 0;
+        var isTodayMonday = today.getDay() === 1;
+
+        if (isPastDate) {
+            // Allow Sunday planned date only if today is Monday
+            if (isPlannedDateSunday && isTodayMonday) {
+                $('#DelayReason').closest('.col-sm-4').hide();
+            } else {
+                alert("Today's date is greater than the planned date. Please enter reason for delay.");
+                $('#DelayReason').closest('.col-sm-4').show();
+            }
+        } else {
+            $('#DelayReason').closest('.col-sm-4').hide();
+        }
+
+
+        //var dd = String(plannedDateObj.getDate()).padStart(2, '0');
+        //var mm = String(plannedDateObj.getMonth() + 1).padStart(2, '0');
+        //var yyyy = plannedDateObj.getFullYear();
+
+        //$('#Planned_Date').val(dd + '/' + mm + '/' + yyyy);
+    }
+
+
+    //$('.inspname').off('change').on('change', function () {
+    //function InspectorAssignDate(){
+    //    debugger;
+
+    //    // Get the hidden assigned date as a string (assuming it's in "DD/MM/YYYY" format)
+    //    var hiddenDateStr = $('#hiddendate').val();
+    //    var crDate = $('#hiddenassdate').val();
+
+    //    //alert(crDate);
+
+    //    // Get the selected date from the inspector (assuming it's also in "DD/MM/YYYY" format)
+    //    var hiddenDate = $(this).val();
+
+    //    // Initialize today's date as a Date object
+    //    var today = new Date();
+    //    today.setHours(0, 0, 0, 0); // Normalize time to midnight
+
+    //    // Extract day, month, and year from the current date
+    //    var day = today.getDate().toString().padStart(2, '0'); // Ensures two digits for day
+    //    var month = (today.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is zero-based, so we add 1
+    //    var year = today.getFullYear();
+
+    //    // Format today's date as "DD/MM/YYYY"
+    //    var formattedDate = `${day}/${month}/${year}`;
+
+    //    // Alert the formatted date (optional for debugging)
+    //    //alert(hiddenDateStr);
+    //   // alert(formattedDate);
+
+    //    // Convert both formattedDate and hiddenDateStr to Date objects to compare them accurately
+    //    var formattedDateObj = new Date(`${year}-${month}-${day}`); // Today's date as Date object
+    //    var hiddenDateParts = hiddenDateStr.split('/'); // Split hidden date (DD/MM/YYYY)
+    //    var hiddenDateObj = new Date(`${hiddenDateParts[2]}-${hiddenDateParts[1]}-${hiddenDateParts[0]}`); // Convert to Date object
+
+    //    var crDateParts = crDate.split('/');
+    //    var crDateObj = new Date(`${crDateParts[2]}-${crDateParts[1]}-${crDateParts[0]}`); // yyyy-mm-dd
+    //    crDateObj.setHours(0, 0, 0, 0); // Normalize
+
+    //    // Calculate day difference
+    //    var diffMs = formattedDateObj - crDateObj;
+    //    var diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+    //    //alert(diffMs);
+    //    //alert(diffDays);
+
+    //    // Compare the dates
+    //    if (formattedDateObj > hiddenDateObj || diffDays > 1) {
+    //        alert("Inspector assign date is greater than the call assigned date. Please enter reason for delay.");
+    //        $('#InspectorDelayReason').closest('.col-sm-4').show();
+    //    } else {
+    //        $('#InspectorDelayReason').closest('.col-sm-4').hide();
+    //    }
+    //};
+
+    //});
+</script>
+
+
+
+<script>
+    function InspectorAssignDateCheck(){
+        debugger
+        var PlannedDate = $('.PlannedDate').val();
+        var pk_call_id=$("#PK_Call_ID").val();
+        if(PlannedDate==""){
+            alert("Please Select Planned Date!");
+            return false;
+        }
+
+        $.ajax
+              ({
+                  url: '@Url.Action("GetinspectorDateChcekc", "CallsMaster")',
+                  type: "POST",
+                  data: '{PlannedDate:' + JSON.stringify(PlannedDate) + ', pk_call_id: ' + JSON.stringify(pk_call_id) + '}',
+                  datatype: "json",
+                  contentType: "application/json; charset=utf-8",
+                  async: false,
+                  success: function (response) {
+                      //  alert(response);
+                      $("#setvalue").val(response);
+                      if (response == "YES") {
+
+                          $('#InspectorDelayReason').closest('.col-sm-4').hide();
+                      }
+                      else if (response == "NO") {
+                          alert("Inspector assign date is greater than the call assigned date. Please enter reason for delay.");
+                          $('#InspectorDelayReason').closest('.col-sm-4').show();
+                      }
+                      else {
+
+                      }
+                  }
+              })
+    };
+
+</script>
+
+
+<script>
+
+
+        function initializeMultiselect() {
+            $('#ProductLists').multiselect({
+                includeSelectAllOption: true,
+                selectAllText: 'Select All',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                maxHeight: 300
+            });
+        }
+
+        function loadProductListByService(serviceId) {
+            //if(serviceId==""){
+            //    alert("Please select Executing Service");
+            //    return false;
+            //}
+            debugger
+            $.ajax({
+                url: '@Url.Action("GetProductlist", "CallsMaster")',
+                type: 'POST',
+                data: JSON.stringify({ serviceId: serviceId}),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    debugger
+                    var $productList = $('#ProductLists');
+                    if ($productList.data('multiselect')) {
+                        $productList.multiselect('destroy');
+                    }
+                    $productList.empty();
+
+                    if (!response || response.length === 0) {
+                        alert("Please select Executing Service.");
+                        return;
+                    }
+                    var selectedProducts = $productList.data('selected-products') || '';
+                     var selectedArray = selectedProducts.split(',');
+                    //var selectedArray = selectedProducts.split('|||');
+
+                    $.each(response, function (index, item) {
+                        var selected = selectedArray.includes(item.Name1.toString()) ? ' selected' : '';
+                        $productList.append('<option value="' + item.Name1 + '"' + selected + '>' + item.Name + '</option>');
+                    });
+
+                    $productList.multiselect('destroy');
+                    initializeMultiselect();
+                },
+                error: function (xhr) {
+                    console.error("Error loading products: ", xhr.responseText);
+                }
+            });
+        }
+
+        //$('#ExecutingService').change(function () {
+        //    debugger
+        //    var selectedServiceId = $(this).val();
+        //    if (selectedServiceId) {
+        //        loadProductListByService(selectedServiceId);
+        //    } else {
+        //        $('#ProductLists').empty().multiselect('destroy');
+        //    }
+        //});
+
+
+        var initialServiceId = $('#ExecutingService').val();
+        if (initialServiceId) {
+            loadProductListByService(initialServiceId);
+        }
+
+        initializeMultiselect();
+
+
+</script>
+
+
+
+
+
+<script>
+
+
+        function initializeMultiselect1() {
+            $('#Sub_Category').multiselect({
+                includeSelectAllOption: true,
+                selectAllText: 'Select All',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                maxHeight: 300
+            });
+        }
+
+        function loadItemListByService(serviceId) {
+            debugger
+            $.ajax({
+                url: '@Url.Action("GetItemlist", "CallsMaster")',
+                type: 'POST',
+                data: JSON.stringify({ serviceId: serviceId}),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    debugger
+                    var $productList = $('#Sub_Category');
+                    $productList.empty();
+                    if ($productList.data('multiselect')) {
+                        $productList.multiselect('destroy');
+                    }
+
+                    var selectedProducts = $productList.data('selected-products') || '';
+                    //var selectedArray = selectedProducts.split(',');
+                    var selectedArray = selectedProducts.split('|||');
+                    //var selectedArray = selectedProducts.split('|||');
+
+                    $.each(response, function (index, item) {
+                        var selected = selectedArray.includes(item.Name1.toString()) ? ' selected' : '';
+                        $productList.append('<option value="' + item.Name1 + '"' + selected + '>' + item.Name + '</option>');
+                    });
+
+                    $productList.multiselect('destroy');
+                    initializeMultiselect1();
+                },
+                error: function (xhr) {
+                    console.error("Error loading products: ", xhr.responseText);
+                }
+            });
+        }
+
+
+
+
+        var initialServiceId = $('#ExecutingService').val();
+        if (initialServiceId) {
+            loadItemListByService(initialServiceId);
+        }
+
+        initializeMultiselect1();
+
 
 </script>

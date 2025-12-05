@@ -435,6 +435,7 @@ namespace TuvVision.DataAccessLayer
                         CMDInsertUpdateUsers.CommandType = CommandType.StoredProcedure;
                         CMDInsertUpdateUsers.Parameters.AddWithValue("@SP_Type", 40);
                         CMDInsertUpdateUsers.Parameters.AddWithValue("@PK_UserID", URS.PK_UserID);
+                        CMDInsertUpdateUsers.Parameters.AddWithValue("@ISA", URS.ISA);
                         CMDInsertUpdateUsers.Parameters.AddWithValue("@FirstName", URS.FirstName);
                         CMDInsertUpdateUsers.Parameters.AddWithValue("@LastName", URS.LastName);
 
@@ -518,6 +519,7 @@ namespace TuvVision.DataAccessLayer
                         CMDInsertUpdateUsers.CommandType = CommandType.StoredProcedure;
                         CMDInsertUpdateUsers.Parameters.AddWithValue("@SP_Type", 2);
                         CMDInsertUpdateUsers.Parameters.AddWithValue("@PK_UserID", URS.PK_UserID);
+                        CMDInsertUpdateUsers.Parameters.AddWithValue("@ISA", URS.ISA);
                         CMDInsertUpdateUsers.Parameters.AddWithValue("@FirstName", URS.FirstName);
                         CMDInsertUpdateUsers.Parameters.AddWithValue("@LastName", URS.LastName);
                         CMDInsertUpdateUsers.Parameters.AddWithValue("@UserName", URS.UserName);
@@ -628,6 +630,7 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdateUsers.CommandType = CommandType.StoredProcedure;
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@SP_Type", 2);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@PK_UserID", URS.PK_UserID);
+                    CMDInsertUpdateUsers.Parameters.AddWithValue("@ISA", URS.ISA);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@FirstName", URS.FirstName);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@LastName", URS.LastName);
                     CMDInsertUpdateUsers.Parameters.AddWithValue("@UserName", URS.UserName);
@@ -2963,6 +2966,35 @@ namespace TuvVision.DataAccessLayer
                 DOrderType.Dispose();
             }
             return DOrderType;
+        }
+
+
+        public DataTable GetFlashMessage(string userid) //User Role DashBoard
+        {
+
+            DataTable DTGetRoleDashBoard = new DataTable();
+            try
+            {
+                SqlCommand CMDRoleDashBoard = new SqlCommand("AddFlashMessage", con);
+                CMDRoleDashBoard.CommandType = CommandType.StoredProcedure;
+                CMDRoleDashBoard.CommandTimeout = 100000;
+                CMDRoleDashBoard.Parameters.AddWithValue("@SP_Type", 2);
+
+                CMDRoleDashBoard.Parameters.AddWithValue("@UserId", userid);
+
+                SqlDataAdapter SDADashBoardData = new SqlDataAdapter(CMDRoleDashBoard);
+                SDADashBoardData.Fill(DTGetRoleDashBoard);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTGetRoleDashBoard.Dispose();
+            }
+
+            return DTGetRoleDashBoard;
         }
 
     }

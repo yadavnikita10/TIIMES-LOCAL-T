@@ -209,7 +209,10 @@ namespace TuvVision.Models
 
         public bool IsComfirmation { get; set; }  //====================Convert To bool
 
-
+        public bool Manufact_Contra_Prod_Fabri { get; set; }
+        public bool stock_Trade_Raw { get; set; }
+        public bool TestingLaboratory { get; set; }
+        public bool TUVICustomer_End_Plant { get; set; }
         public string acceptedStages { get; set; }
         public string acceptedItems { get; set; }
         public string NonacceptedStages { get; set; }

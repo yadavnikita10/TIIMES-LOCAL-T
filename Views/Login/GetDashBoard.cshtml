@@ -1,0 +1,1494 @@
+﻿
+@model TuvVision.Models.Declaration
+@{
+    ViewBag.Title = "GetDashBoard";
+    Layout = null;
+}
+
+
+
+@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" language="javascript" src="~/AllJsAndCss/js/jquery.min.js"></script>*@
+
+<link href="~/AllJsAndCss/css/filepond.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/js/filepond.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="shortcut icon" href="~/AllJsAndCss/Favicon.svg" type="image/x-icon" style="height:12px;width:12px;">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+
+<!-- Bootstrap -->
+<link href="~/AllJsAndCss/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Start Other stylesheets -->
+<link href="~/AllJsAndCss/css/style.css" rel="stylesheet">
+<link href="~/AllJsAndCss/css/EditStyle.css" rel="stylesheet" />
+<link href="~/AllJsAndCss/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+<script src="~/Scripts/MvcGrid/mvc-grid.js"></script>
+<link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
+
+
+
+<link href="~/AllJsAndCss/css/aos.css" rel="stylesheet">
+
+<link href="~/AllJsAndCss/datatable/css/jquery.dataTables.css" rel="stylesheet" />
+
+
+
+<script src="~/AllJsAndCss/js/jquery.min.js"></script>
+<script src="~/AllJsAndCss/js/bootstrap.min.js"></script>
+<script src="~/AllJsAndCss/js/aos.js"></script>
+<script src="~/AllJsAndCss/js/aos-call.js"></script>
+
+<script src="~/AllJsAndCss/js/custom.js"></script>
+<script src="~/AllJsAndCss/js/scroll-to-top.js"></script>
+<script src="~/AllJsAndCss/js/navigation-top-fixed.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+
+<script>
+    $(function () {
+        $(".PoDate").datepicker({
+            dateFormat: 'dd/mm/yy', //check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50",
+            minDate: "-40d",
+            maxDate: "+3d",
+        });
+    });
+</script>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: auto; /* allow scrolling if needed */
+        background-color: #FDF6E3;
+        /*color:#333333;*/
+    }
+
+    .main-content {
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    #customAlert {
+        display: block !important;
+        position: static !important;
+        height: auto !important;
+        overflow: visible !important;
+        width: 100% !important;
+        margin: 0 auto;
+    }
+
+    .table-con {
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    .table-con {
+        width: 100%;
+        overflow: visible;
+    }
+
+
+    .alert-box {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 20px;
+    }
+</style>
+
+<style>
+    .highlight-row {
+        background-color: #FFEB00;
+    }
+
+
+    #example {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border: 1px solid #000;
+        font-family: 'TNG Pro';
+    }
+
+        #example th, #example td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-family: 'TNG Pro';
+        }
+
+        #example th {
+            background-color: #001ED2;
+            color: #fff;
+            font-family: 'TNG Pro';
+        }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
+
+
+    .custom-checkbox {
+        margin-top: -2px;
+    }
+
+
+    #example thead tr:first-child th:first-child {
+        padding-left: 15px;
+        font-family: 'TNG Pro';
+    }
+
+
+    #example tbody tr:hover {
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+
+
+
+    .image-cell {
+        text-align: center;
+        padding: 10px;
+    }
+
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .selfie-image {
+        max-width: 50px;
+        max-height: 50px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+
+<style>
+    .highlight {
+        background-color: yellow;
+    }
+
+    .fixedsize {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        .fixedsize td {
+            /*border:1px solid;*/
+            padding: 4px 0px;
+            font-size: 12px;
+        }
+
+        .fixedsize th {
+            /*border:1px solid;*/
+            padding: 4px 0px;
+            font-size: 12px;
+        }
+
+    .table-con {
+        width: 1334px;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    p {
+        color: #333333;
+    }
+</style>
+<script>
+    var modal = document.getElementById("customAlert1");
+    modal.style.display = "block";
+        var closeButton = document.getElementsByClassName("close")[0];
+
+        //modal.style.display = "block";
+
+        closeButton.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+</script>
+@Html.HiddenFor(m => m.Name)
+@Html.HiddenFor(m => m.Grade)
+@Html.HiddenFor(m => m.Datediff)
+<input type="text" id="txtGrade" hidden value="@Model.Grade.ToString()" />
+<input type="text" id="txtDatediff" hidden value="@Model.Datediff.ToString()" />
+<label id="hidntime" style="display:none;">@Html.Raw(ViewBag.Timer)</label>
+
+<body>
+    <div class="main-content">
+        <div id="customAlert" style="display:block;">
+            <div class="alert-box" style="border: 0px solid blue; padding: 20px;">
+
+
+                @*<div style="text-align: left; margin-bottom: 5px;">
+                        <img src="https://tiimes.tuv-india.com/AllJsAndCss/images/logo.png"
+                             alt="TUV India Logo"
+                             style="height: 50px; width: auto;" />
+                    </div>
+
+                    <div class="row" style="text-align:center;">
+                        <h2 style="font-size:24px;"><b>TUV India Private Limited</b></h2>
+                        <h4 style="margin-top:-13px;">Independence, Impartiality, Integrity and Confidentiality Declaration</h4>
+                        <p style="margin-top:-13px;font-weight:normal;">F/MR/12 Rev.: 04,  Revision Date : 22.12.2023</p>
+
+
+                    </div>*@
+                <div style="width: 95%; margin:20px auto;margin-left:0px;">
+                    <table width="100%" style="border-spacing:0;margin-top:-22px;">
+                        <tr>
+                            <td width="20%">
+                                <img src="https://tiimes.tuv-india.com/AllJsAndCss/images/logo.png"
+                                     alt="TUV India Logo"
+                                     style="height: 60px; width: auto;" />
+                                <!--<span><a href="#"><img src="AllJsAndCss/images/logo.SVG" alt="" style="width: 202px;height:82px;text-align: right; float: left;margin-left:15px;"></a></span>-->
+                            </td>
+                            <td width="80%" style="text-align: center;margin-top:13px;">
+                                <div style="margin-right: 140px;">
+                                    <!--line-height: 1.8;-->
+                                    <span style="font-size: 22px; color: #000000;font-weight:bold; font-family: 'TNG Pro';">TUV INDIA PRIVATE LIMITED</span>
+                                    <br>
+                                    <br />
+                                    <span style="font-size: 20px; color: #000000;font-weight:bold; font-family: 'TNG Pro';">Independence, Impartiality, Integrity and Confidentiality Declaration</span>
+                                    @*<br>*@
+                                </div>
+                            </td>
+                            <!--<td width="20%"><span><a href="#"><img src="[Logo]" alt="" style="width: 120px; text-align: right; float: right;"></a></span></td>-->
+                        </tr>
+                    </table>
+                </div>
+                @*<p>My name in TIIMES @Model.Name is correct and I affirm that:</p>
+
+                    <p>1.1.1	I shall carry out all activities in a fair and professional manner without bias towards any of the parties, maintaining independence, impartiality, integrity and confidentiality.</p>
+                    <p>1.1.2	I am not (part of) the designer, manufacturer, supplier, installer, purchaser, owner, user or maintainer of the items which I inspect, nor the authorized representative of  any  of  these parties.</p>
+                    <p>1.1.3	I do not engage in any activities or have any relationship with the  above  parties  that  may  conflict with my independence of judgment and integrity in relation to my inspection activities. Particularly I shall not provide any consultancy, advice, internal audits, training etc. that may influence my decisions during inspection for those clients.</p>
+                    <p>1.1.4	I have not worked for, engaged in any activities, provided any other services or had any relationship with the client/manufacturer for a period of 2 years prior to the inspection for that client/manufacturer.</p>
+                    <p>1.1.5	I shall maintain integrity by not accepting any conditional favors / gifts / gratuity from any of the parties involved except commonly accepted unconditional token gifts like diaries, calendars and sweet-boxes.</p>
+                    <p>1.1.6	I shall provide services impartially to all parties requesting such services and who sign a contract for services without any undue financial / other condition, in a non-discriminatory manner.</p>
+                    <p>1.1.7	I shall provide the inspection service in a comprehensive manner with the best possible technical judgment / justification, which is deemed to be part of the inspection service.</p>
+                    <p>1.1.8	I shall undertake to perform the inspection as per the scope of inspection in the contract, the requirement of the applicable Codes / standards (Incl. Edition & Addenda,/, latest applicable approved drawings, client specifications, P.O. QAP, ITP vendor’s approved procedure and any related documents and TUV India Quality Manuals (QM/TUVIPL/01  &  QM/TUVIPL/02),  Procedures and Work Instructions.</p>
+                    <p>1.1.9	I shall undertake to provide the necessary reports within the agreed timeframe and formats.</p>
+                    <p>1.1.10	While carrying out comprehensive inspection as above I shall use my time effectively and fully by coordinating with vendor and keep number of visits at optimum.</p>
+                    <p>1.1.11	I shall provide the necessary reports within the agreed timeframe and in  full  details  as per  agreed formats.</p>
+                    <p>1.1.12	I shall ask for any missing information. I shall inform my office & the client about apparent abnormalities noticed by me or notified to me before commencing the inspection activity  &  where there is any doubt as to the item’s suitability for the inspection carried out, or where the item does not confirm to the description provided.</p>
+                    <p>1.1.13	I shall keep myself aware and updated about the latest procedures and instructions, contractual requirements and technical knowledge.</p>
+                    <p>1.1.14	I shall ensure timely renewal of any professional qualifications, eye tests etc.</p>
+                    <p>1.1.15	I shall take up inspection only within the range of my competencies as documented in the Competency Matrix (Format No. F/MR/16) and when I am sure of doing a thorough inspection.</p>
+                    <p>1.1.16	I shall undertake to inform my PCH/ Head should they perceive any conflicts of interest or potential non-compliance with this procedure and where necessary, to withdraw from the inspection. Particularly I must inform about any external assignments.</p>
+                    <p>1.1.17	I shall maintain towards TUV India and its clients / vendors, complete confidentiality of projects, orders, specific documents, information and records gathered from any party during the course of any inspection. This confidentiality agreement shall extend even after the end of an individual inspection contract with a client or my employment contract with TUV India. This obligation will not apply to any technical information or operating data which was in the possession of TUV India before its disclosure in connection with the services, that is or becomes part of the public domain through no fault of TUV India or that otherwise becomes available to TUV India from an independent source not under a confidentiality obligation. TUV India shall be liable vis-â-vis the client for any willful or grossly negligent violations of this confidentiality obligation subject to the limitation of liability. However I shall maintain confidentiality towards TUV India of any information or data I gained from TUV India or its clients and their vendors. I shall not during the term of your contract with the Company or at any time thereafter, use or disclose to any other Company, firm or person any of the secrets, confidential information, business or affairs of the Company, at any time during the currency of employment, publish any book, booklet, brochure or pamphlet or contribute any article to any newspaper or other publication whether for remuneration or otherwise. I shall, on joining the Company as a part of this contract enter into and execute a secrecy agreement with the Company and I shall observe and perform the terms and conditions thereof and also the terms and conditions contained herein. I shall adhere to and comply with the security and confidentiality instructions of our client or their end-user like ILDC (Indian Licensed Defense Companies) Guidelines issued by DODP (Department of Defense Production), MOD (Ministry of Defense), Govt. of India and Official Secrets Act prevailing at present and those informed from time to time. I shall strictly follow IT / data security measures.</p>
+                    <p>1.1.18	I shall abide by all the clauses of my appointment letter / contract.</p>
+                    <p>1.1.19	I shall not discharge my duties under undue pressure resulting from financial,  marketing,  customer relations, personal matters or any other technical & non-technical conditions.</p>
+                    <p>1.1.20	I shall immediately report of any such pressure to my immediate superior. If this does not yield an effective solution I shall escalate to the next higher level & so on. I shall bear the responsibility & liability for correct inspections. I confirm that I have read &  understood  TU\/  IPL  procedure  QP/IB/01 — Procedure for Independence, Integrity, Impartiality & Confidentiality & the  code  of conduct contained within this procedure. I shall abide by the TUV IPL code of conduct at all time.</p>
+                    <p>1.1.21	My assignments for previous 2 years and current assignments are as below:</p>*@
+                <table style="width:100%; border-collapse: collapse; font-family:'TNG Pro';font-size:18px;text-align:justify;">
+                    <tr>
+                        <td style="width:5%; vertical-align:top;font-size:18px;"><strong>&nbsp;</strong></td>
+                        <td style="padding-right:13px;font-size:18px;"><p style="font-size:18px;font-style:italic;"><b>I, @Model.Name, affirm that:</b></p></td>
+                    </tr>
+                    <tr>
+                        <td style="width:5%; vertical-align:top;font-size:18px;"><strong>1.&nbsp;&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall carry out all activities in a fair and professional manner without bias towards any of the parties, maintaining independence, impartiality, integrity and confidentiality.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>2.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I am not (part of) the designer, manufacturer, supplier, installer, purchaser, owner, user or maintainer of the items which I inspect, nor the authorized representative of any of these parties.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>3.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I do not engage in any activities or have any relationship with the  above  parties  that  may  conflict with my independence of judgment and integrity in relation to my inspection activities. Particularly I shall not provide any consultancy, advice, internal audits, training etc. that may influence my decisions during inspection for those clients.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>4.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;font-style:italic;"><b>I shall not carry out any inspection / assignment on behalf of TUV India for the client / manufacturer / supplier / stockiest where I was engaged in any activity / provided any service / had any relationship for the period of past 2 years.</b></p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>5.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall maintain integrity by not accepting any conditional favors / gifts / gratuity from any of the parties involved except commonly accepted unconditional token gifts like diaries, calendars and sweet-boxes.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>6.&nbsp;</strong></td>
+                        <td style="vertical-align:top;font-size:18px;"><p style="font-size:18px;">I shall provide services impartially to all parties requesting such services and who sign a contract for services without any undue financial / other condition, in a non-discriminatory manner.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>7.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall provide the inspection service in a comprehensive manner with the best possible technical judgment / justification, which is deemed to be part of the inspection service.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>8.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;font-style:italic"><b>I shall undertake / perform the inspection / any other assignment as per the scope of inspection in the contract, the requirement of the applicable Codes / standards with latest / applicable version / revision / editions including Errata / Addenda / Annexures, latest applicable approved drawings, client specifications, Purchase Order on manufacturer, Quality Assurance Plan / Inspection Testing Plan, Approved Procedures,  any other  related documents and TUV India Quality Manuals (QM/TUVIPL/01  &  QM/TUVIPL/02),  Procedures and Work Instructions, etc.</b></p></td>
+                    </tr>
+
+
+                    @*<tr>
+                            <td style="vertical-align:top;font-size:18px;"><strong>9.&nbsp;</strong></td>
+                            <td><p style="font-size:18px;">I shall undertake to provide the necessary reports within the agreed timeframe and formats.</p></td>
+                        </tr>*@
+
+
+
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>9.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;font-family:'TNG Pro';font-style:italic;"><b>While carrying out inspection / other assignment for TUV India, I shall use my time effectively and fully by coordinating with vendor / stake holders and ensure optimum use of available time / inspection visit.</b></p></td>
+                    </tr>
+
+
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>10.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;font-family:'TNG Pro';font-style:italic;"><b>I shall provide the necessary reports / deliverables within the agreed timeframe and in  full  details  as per  agreed formats.</b></p></td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>11.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall ask for any missing information. I shall inform my office & the client about apparent abnormalities noticed by me or notified to me before commencing the inspection activity  &  where there is any doubt as to the item's suitability for the inspection carried out, or where the item does not confirm to the description provided.</p></td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>12.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall keep myself aware and updated about the latest procedures and instructions, contractual requirements and technical knowledge.</p></td>
+                    </tr>
+
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>13.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall ensure timely renewal of any professional qualifications, eye tests etc.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>14.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall take up inspection only within the range of my competencies as documented in the Competency Matrix (Format No. F/MR/16) and when I am sure of doing a thorough inspection.</p></td>
+                    </tr>
+                    <!-- Repeat for all points up to 1.1.21 -->
+
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>15.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall undertake to inform my PCH/ Head should they perceive any conflicts of interest or potential non-compliance with this procedure and where necessary, to withdraw from the inspection. Particularly I must inform about any external assignments.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>16.&nbsp;</strong></td>
+                        <td style="font-size:18px;"><p style="font-size:18px;">I shall maintain towards TUV India and its clients / vendors, complete confidentiality of projects, orders, specific documents, information and records gathered from any party during the course of any inspection. This confidentiality agreement shall extend even after the end of an individual inspection contract with a client or my employment contract with TUV India. This obligation will not apply to any technical information or operating data which was in the possession of TUV India before its disclosure in connection with the services, that is or becomes part of the public domain through no fault of TUV India or that otherwise becomes available to TUV India from an independent source not under a confidentiality obligation. TUV India shall be liable vis-a-vis the client for any willful or grossly negligent violations of this confidentiality obligation subject to the limitation of liability. However I shall maintain confidentiality towards TUV India of any information or data I gained from TUV India or its clients and their vendors. I shall not during the term of your contract with the Company or at any time thereafter, use or disclose to any other Company, firm or person any of the secrets, confidential information, business or affairs of the Company, at any time during the currency of employment, publish any book, booklet, brochure or pamphlet or contribute any article to any newspaper or other publication whether for remuneration or otherwise. I shall, on joining the Company as a part of this contract enter into and execute a secrecy agreement with the Company and I shall observe and perform the terms and conditions thereof and also the terms and conditions contained herein. I shall adhere to and comply with the security and confidentiality instructions of our client or their end-user like ILDC (Indian Licensed Defense Companies) Guidelines issued by DODP (Department of Defense Production), MOD (Ministry of Defense), Govt. of India and Official Secrets Act prevailing at present and those informed from time to time. I shall strictly follow IT / data security measures.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>17.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall abide by all the clauses of my appointment letter / contract.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>18.&nbsp;</strong></td>
+                        <td><div style="font-size:18px; line-height:1.5; font-family:Arial; white-space:normal;">I shall not discharge my duties under undue pressure resulting from financial,  marketing,  customer relations, personal matters or any other technical & non-technical conditions.</div></td>
+                    </tr>
+
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>19.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;">I shall immediately report of any such pressure to my immediate superior. If this does not yield an effective solution I shall escalate to the next higher level & so on. I shall bear the responsibility & liability for correct inspections. I confirm that I have read &  understood  TUV  IPL  procedure  QP/IB/01 - Procedure for Independence, Integrity, Impartiality & Confidentiality & the  code  of conduct contained within this procedure. I shall abide by the TUV IPL code of conduct at all time.</p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>20.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;font-family:'TNG Pro';font-style:italic;"><b>I shall always provide all information in forms , reports, emails, verbally or in any other manner of communication with complete honesty,  facts and courtesy.</b></p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>21.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;font-family:'TNG Pro';font-style:italic;"><b>I shall not portray TUV India in a negative manner. I shall not make, publish, or engage in any statement, act, or representation that may directly or indirectly damage, defame, or otherwise adversely affect the credentials, reputation, brand name, image, business, or interests of TUV India, whether through social media, digital platforms, emails or any other form of communication or publication.</b></p></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top;font-size:18px;"><strong>22.&nbsp;</strong></td>
+                        <td><p style="font-size:18px;font-family:'TNG Pro';">My assignments for previous 2 years and current assignments are as below.</p></td>
+                    </tr>
+
+
+
+                </table>
+                <div>
+                    <table class="display custom-table no-footer" style="overflow-y:auto" id="example">
+                        <thead style="font-family:'TNG Pro';">
+                            <tr>
+                                <th>Sl.No.</th>
+                                <th>From Date</th>
+                                <th>To Date</th>
+                                <th>Name of Organization</th>
+                                <th>Nature of Work</th>
+                                <th>Full / Part Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody"></tbody>
+
+                    </table>
+                    <button type="button" id="addRowBtn" class="btn  mt-3" style="color:white;">Add Row</button>
+
+                </div>
+                <br />
+                <table style="width:100%; border-collapse: collapse; font-family:'TNG Pro';font-size:18px;text-align:justify;">
+
+                    @if (Convert.ToString(Session["EmpCode_"]) == "10" || Convert.ToString(Session["EmpCode_"]) == "11")
+                    {
+                        <tr>
+                            <td style="vertical-align:top;font-size:18px;width:5%"><strong>23.&nbsp;</strong></td>
+                            <td>
+                                <p style="font-size:18px;">
+                                    I shall declare to TUV India those assignments undertaken by me or I wish to undertake, apart from the work assignments from TUV India, from time to time. TUV India shall have the right to judge if there is any breach of terms as defined in the procedure for Independence, Impartiality, Integrity & confidentiality - QP / IB / 01.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:top;font-size:18px;"><strong>24.&nbsp;</strong></td>
+                            <td>
+                                <p style="font-size:18px;">
+                                    I shall never approach clients of TUV India for my company's or my own assignments.
+                                </p>
+                            </td>
+                        </tr>
+                    }
+
+                    <tr>
+                        <td style='vertical-align:top; font-size:18px;width:5%;'>
+                            <strong>
+                                <input type="checkbox" id="chkdeclare" name="chk1123"
+                                       style="zoom:1.5; vertical-align:middle; margin-right:0px;">
+                            </strong>
+                        </td>
+                        <td>
+                            <p style="font-size:18px;font-style:italic;">
+                                <b>
+                                    I understand that TUV India may take appropriate legal and / or disciplinary action in case I knowingly or unknowingly commit any partial or full breach, violation, or infringement of the any of the above clauses to which I have affirmed and it is observed, reported, or identified.
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style='vertical-align:top; font-size:18px;width:5%'>
+                            <strong>
+                                <input type="checkbox" id="chkRead_Understand" name="chkRead_Understand"
+                                       style="zoom:1.5; vertical-align:middle; margin-right:0px;">
+                            </strong>
+                        </td>
+                        <td>
+                            <p style="font-size:18px;font-style:italic;">
+                                <b>
+                                    I have read and understood the contents of this Declaration and agree to follow and implement its provisions.
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+
+
+
+                @*@if (Convert.ToString(Session["EmpCode_"]) == "10" || Convert.ToString(Session["EmpCode_"]) == "11")
+                    {
+                        <p> 1.1.22 I shall declare to TUV India, those assignments undertaken by me or I wish to undertake, apart from the work assignments from TUV India, from time to time. TUV India shall have the right to judge if there is any breach of terms as defined in the procedure for Independence, Impartiality, Integrity & confidentiality — QP/IB/01.</p>
+                        <p>shall never approach clients of TUV India for my company’s or my own assignments</p>
+
+                    }*@
+
+
+                <div class="row">
+                    <span><b>Place:</b></span><input type="text" class="form-control form-control-custom" id="txtplace" />
+                    <span><b>Main Branch:</b></span><input type="text" class="form-control form-control-custom" id="txtlocation" readonly />
+                    <span><b>Date:</b></span><input type="text" class="form-control form-control-custom" id="txtdate" readonly />
+                    <span><b>Time:</b></span><input type="text" class="form-control form-control-custom" id="timeField" readonly />
+                    <span style="font-size: 18px; color: #000000; font-family: 'TNG Pro';">F/MR/12 Rev.: 04 (TIIMES), Revision Date: 22.12.2023</span>
+                    @*<span>Time:</span><input type="text" class="form-control form-control-custom" />*@
+                    @*<span>Picture:</span><input type="text" class="form-control form-control-custom" />*@
+                    <br />
+                    <div id="selfieCaptureSection" class="selfie-section">
+
+                        <label for="selfieInput" class="hidden">Capture Selfie:</label>
+                        <input type="file" id="selfieInput" style="display:none;" accept="image/*;capture=camera">
+
+                        <!-- Webcam Button -->
+
+                        <button type="button" style="padding: 10px 20px;font-size: 16px;cursor: pointer;" id="openWebcamButton">Take selfie</button>
+                        <button type="button" id="captureButton" style="display:none;padding: 10px 20px;font-size: 16px;cursor: pointer;background-color:#100ED2;color:#fff;">Capture Image</button>
+                        <button type="button" id="btnSave" style="font-size: 16px;cursor: pointer;background-color:#100ED2;color:#fff;padding: 10px 20px;" onclick="SaveData()">Save</button>
+                        <button type="button"
+                                style="font-size: 16px; cursor: pointer; background-color: #100ED2; color: #fff; padding: 10px 20px;margin-left:935px;"
+                                onclick="goHomeLater()">
+                            Back To Home
+                        </button>
+
+
+                        <br /><br /><br />
+                        <br /><br />
+
+
+
+                        <video id="webcamVideo" width="220" height="140" autoplay style="display:none;"></video>
+
+
+                        <canvas id="snapshotCanvas" width="220" height="140" style="display:none;transform: rotate(270deg);"></canvas>
+
+
+                        <img id="compressedImage" class="hidden" width="120" height="140" alt="Compressed Selfie" />
+
+                        <!-- Capture Button -->
+                        <br />
+                        <br />
+
+
+
+
+                        <!-- Hidden Base64 Input -->
+                        <input type="hidden" id="selfieBase64" name="selfieBase64" />
+
+                    </div>
+                    <input type="hidden" id="Latitude" name="Latitude" />
+                    <input type="hidden" id="Longitude" name="Longitude" /><br />
+                </div>
+            </div>
+            <div style="font-family: 'TNG Pro';font-size:8px; ">
+
+                <img src="https://tiimes.tuv-india.com/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg" alt="" style="width: 170px;height:30px;text-align: right; float: right;margin-right:-4px;margin-top:-10px;">
+            </div>
+            <button id="closeBtn" class="btn btn-close form-control" style="display: none;" onclick="closeAlert()">Close</button>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        var Datediff = $("#txtDatediff").val();
+        if (Datediff > 730) {
+            //$("#addRowBtn").hide();
+        }
+        GetDetails();
+    });
+
+
+    function goHomeLater() {
+        if (confirm('I will complete this form later.')) {
+            window.location.href = '@Url.Action("Welcome", "Login")';
+        } else {
+            alert('Please complete the form before leaving.');
+        }
+    }
+
+    function GetDetails(){
+        debugger;
+        $.ajax({
+            url: "@Url.Action("GetData", "Login")",
+            dataType: "json",
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                debugger;
+                var aa = JSON.parse(result);
+                //var Designation=aa.[0]["Designation"].ToString();
+                var DOJ = aa[0].TillDate;
+                var Branch_Name = aa[0].Branch_Name;
+                //var TillDate=aa.[0]["TillDate"].ToString();
+                var address1 = aa[0].address1;
+
+                //var Branch_Name=aa.[0]["Branch_Name"].ToString();
+                $("#txtplace").val(address1);
+                $("#txtlocation").val(Branch_Name);
+                $("#timeField").val(aa[0].Time_address1);
+                $("#txtdate").val(aa[0].Createddate);
+                if (aa == "Error") {
+                    $("#tbody").empty();
+                    tr = $('<tr/>');
+                    tr.append('<td colspan=14>No Record Found</td>');
+                    $('#example').append(tr);
+                }
+                else {
+                    $("#example tbody").empty();
+                    for (var i = 0; i < aa.length; i++) {
+                        var c = i + 1;
+                        var fromDate = convertToInputDateFormat(aa[i].DOJ);
+                        var toDate = convertToInputDateFormat(aa[i].TillDate);
+                        tr = $('<tr/>');
+                        tr.append("<td><label id='V_" + c + "'>" + c + "</label> </td>");
+
+
+                        tr.append("<td> <input type='text'  class ='PoDate form-control from-date' value='" + aa[i].DOJ + "' /></td>");
+                        tr.append("<td> <input type='text'  class ='PoDate form-control to-date'readonly value='" + aa[i].TillDate + "' /></td>");
+                        tr.append("<td><label id='V_" + c + "'>" + aa[i].Organization + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + aa[i].Designation + "</label> </td>");
+                        tr.append("<td><label id='V_" + c + "'>" + aa[i].Full_Part_Time + "</label> </td>");
+                        tr.append('<td class="text-center align-middle"><button type="button" class="btn btn-danger btn-sm delete-row">Delete</button></td>');
+
+                        $('#example').append(tr);
+                    }
+                    $('#example tbody tr:first .delete-row').hide();
+                    $(".PoDate").datepicker({
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "-100:+50"
+                    });
+                }
+
+            },
+            error: function (result) {
+
+            }
+        })
+    }
+
+    //function convertToInputDateFormat(dateStr) {
+    //    if (!dateStr) return '';
+
+    //    // If already in YYYY-MM-DD format, return as is (simple check)
+    //    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    //        return dateStr;
+    //    }
+
+    //    // Otherwise assume it's in DD-MM-YYYY and convert
+    //    var parts = dateStr.split('-');
+    //    if (parts.length !== 3) return '';
+
+    //    var day = parts[0].padStart(2, '0');
+    //    var month = parts[1].padStart(2, '0');
+    //    var year = parts[2];
+
+    //    return `${year}-${month}-${day}`;
+    //}
+    function convertToInputDateFormat(dateStr) {
+        if (!dateStr) return '';
+
+        // If already in YYYY-MM-DD, just return it
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            return dateStr;
+        }
+
+        // If it's like DD-MM-YYYY or DD/MM/YYYY, handle it
+        var parts = dateStr.includes('-') ? dateStr.split('-') : dateStr.split('/');
+
+        if (parts.length !== 3) return '';
+
+        var day = parts[0].padStart(2, '0');
+        var month = parts[1].padStart(2, '0');
+        var year = parts[2];
+
+        // Convert to YYYY-MM-DD (for input type="date" or server format)
+        return `${year}-${month}-${day}`;
+    }
+
+
+</script>
+<script>
+    //function getLocation() {
+    //    if (navigator.geolocation) {
+    //        navigator.geolocation.getCurrentPosition(function (position) {
+    //            const latitude = position.coords.latitude;
+    //            const longitude = position.coords.longitude;
+
+    //            // Optional: You can use a reverse geocoding API (like OpenCage or Google Maps) to get full address
+    //            const locationText = `Lat: ${latitude.toFixed(5)}, Long: ${longitude.toFixed(5)}`;
+
+    //            document.getElementById('txtlocation').value = locationText;
+    //        }, handleLocationError);
+    //    } else {
+    //        alert("Geolocation is not supported by this browser.");
+    //    }
+    //}
+
+
+    function checkLocationPermission() {
+        if (navigator.permissions) {
+            navigator.permissions.query({ name: 'geolocation' }).then(permissionStatus => {
+                if (permissionStatus.state === 'granted') {
+                    requestLocationAccess();
+                } else if (permissionStatus.state === 'prompt') {
+                    requestLocationAccess();
+
+                } else {
+                    alert('Location permission denied. Please allow location access in your browser settings.');
+                }
+            });
+        } else {
+
+            requestLocationAccess();
+        }
+    }
+
+    function requestLocationAccess() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    document.getElementById('Latitude').value = position.coords.latitude;
+                    document.getElementById('Longitude').value = position.coords.longitude;
+                    getLocationFromCoords(position.coords.latitude, position.coords.longitude);
+                },
+                function (error) {
+                    handleLocationError(error);
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    }
+
+
+    checkLocationPermission();
+
+    function handleLocationError(error) {
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                alert("Location access denied. Please allow the browser to access your location.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                alert("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                alert("Location request timed out. Please try again.");
+                break;
+            default:
+                alert("An unknown error occurred while fetching location.");
+        }
+    }
+
+
+    //function setCurrentTime() {
+    //    const now = new Date();
+    //    const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
+
+    //    // Find all text inputs
+    //    const timeInputs = document.querySelectorAll('input[type="text"]');
+
+    //    for (const input of timeInputs) {
+    //        const label = input.previousElementSibling;
+
+    //    // Check if label text includes "Time"
+    //        if (label && label.textContent.includes("Time")) {
+    //            input.value = timeStr;
+    //        }
+    //    }
+    //}
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const isMobileDevice = /Mobi/i.test(navigator.userAgent);
+            const today = new Date().getDay();
+            let currentOrientation = 0;
+            const webcamButton = document.getElementById('openWebcamButton');
+            const video = document.getElementById('webcamVideo');
+            const canvas = document.getElementById('snapshotCanvas');
+            const context = canvas.getContext('2d');
+            const captureButton = document.getElementById('captureButton');
+            const btnSave = document.getElementById('btnSave');
+            let stream;
+
+
+
+            function handleLocationError(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        alert("Location access denied. Please allow the browser to access your location.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert("Location information is unavailable.");
+                        break;
+                    case error.TIMEOUT:
+                        alert("Location request timed out. Please try again.");
+                        break;
+                    default:
+                        alert("An unknown error occurred while fetching location.");
+                }
+            }
+
+            function openCamera(videoConstraints) {
+                if (navigator.permissions) {
+                    navigator.permissions.query({ name: 'camera' }).then(permissionStatus => {
+                        if (permissionStatus.state === 'granted' || permissionStatus.state === 'prompt') {
+                            startCamera(videoConstraints);
+                        } else {
+                            alert('Camera permission denied. Please allow camera access in your browser settings.');
+                        }
+                    });
+                } else {
+                    // Fallback for browsers that do not support permissions API
+                    startCamera(videoConstraints);
+                }
+            }
+
+
+            function startCamera(videoConstraints) {
+                debugger
+                navigator.mediaDevices.getUserMedia({ video: videoConstraints })
+                    .then(mediaStream => {
+                        stream = mediaStream;
+                        video.style.display = 'block';
+                        video.srcObject = stream;
+                        video.play();
+                        captureButton.style.display = 'inline-block';
+
+
+                        // Handle camera orientation for mobile devices
+                        video.onloadedmetadata = function () {
+                            adjustRotation();
+                        };
+
+                        captureButton.addEventListener('click', () => {
+                            captureImage();
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Error accessing the camera:", error);
+                        handleCameraError(error);
+                    });
+            }
+
+            function handleCameraError(error) {
+                if (error.name === "NotAllowedError") {
+                    alert("Camera access is denied. Please allow the browser to access your camera.");
+                } else if (error.name === "NotFoundError") {
+                    alert("No camera was found. Please ensure your device has a camera.");
+                } else {
+                    alert("An unknown error occurred while accessing the camera.");
+                }
+            }
+
+            //function captureImage() {
+            //    const width = canvas.width;
+            //    const height = canvas.height;
+
+
+            //    canvas.width = currentOrientation === 0 ? width : height;
+            //    canvas.height = currentOrientation === 0 ? height : width;
+
+            //    context.save();
+            //    context.translate(canvas.width / 2, canvas.height / 2);
+            //    context.rotate(currentOrientation * Math.PI / 180);
+            //    context.drawImage(video, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+            //    context.restore();
+
+            //    video.style.display = 'none';
+            //    canvas.style.display = 'block';
+            //    btnSave.style.display = 'inline-block';
+            //    const base64Image = canvas.toDataURL('image/png');
+            //    document.getElementById('selfieBase64').value = base64Image;
+
+
+            //    stream.getTracks().forEach(track => track.stop());
+            //    //getLocation();
+            //    setCurrentTime();
+            //}
+
+
+            function captureImage() {
+                const width = canvas.width;
+                const height = canvas.height;
+
+                context.drawImage(video, 0, 0, width, height);
+
+                const imageData = context.getImageData(0, 0, width, height);
+                const data = imageData.data;
+                const totalPixels = data.length / 4;
+
+                let blackPixels = 0;
+
+                // Count black pixels
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+
+                    if (r < 10 && g < 10 && b < 10) {
+                        blackPixels++;
+                    }
+                }
+
+                const blackRatio = blackPixels / totalPixels;
+                console.log(`Black Ratio: ${(blackRatio * 100).toFixed(1)}%`);
+
+                // 🚫 Reject if mostly black
+                if (blackRatio > 0.75) { // 75%+ black pixels
+                    alert("Selfie is fully black. Please take your photo again.");
+
+                    context.clearRect(0, 0, width, height);
+                    canvas.style.display = 'none';
+                    video.style.display = 'block';
+                    document.getElementById('selfieBase64').value = '';
+                    document.getElementById('compressedImage').style.display = 'none';
+
+                    // Restart camera
+                    startCamera({ facingMode: "user" });
+                    return;
+                }
+
+                // ✅ Valid selfie
+                const base64Image = canvas.toDataURL('image/png');
+                document.getElementById('selfieBase64').value = base64Image;
+                document.getElementById('compressedImage').src = base64Image;
+                document.getElementById('compressedImage').style.display = 'block';
+                setCurrentTime();
+                stream.getTracks().forEach(track => track.stop());
+                canvas.style.display = 'block';
+                video.style.display = 'none';
+                btnSave.style.display = 'inline-block';
+            }
+
+
+            function setCurrentTime() {
+                const time = getCurrentTime();
+                document.getElementById('timeField').value = time;
+            }
+
+            function adjustRotation() {
+
+                if (isMobileDevice) {
+                    const isPortrait = video.videoHeight > video.videoWidth;
+                    currentOrientation = isPortrait ? 0 : 90;
+                    video.style.transform = `rotate(${currentOrientation}deg)`;
+                }
+            }
+
+
+            window.addEventListener('orientationchange', adjustRotation);
+
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+               webcamButton.addEventListener('click', () => {
+    const videoConstraints = isMobileDevice ? { video: { facingMode: { ideal: "environment" } } } : true;
+    console.log('Video constraints:', videoConstraints);
+    openCamera(videoConstraints);
+});
+
+            } else {
+                alert("Your browser does not support direct access to the camera.");
+            }
+        });
+
+
+
+             function getCurrentTime() {
+             const now = new Date();
+             return now.toLocaleTimeString('en-GB', { hour12: false });
+         }
+
+
+</script>
+
+
+@*<script>
+        $(document).ready(function () {
+            $('#addRowBtn').click(function () {
+
+                const newRow = `
+                     <tr>
+                    <td></td> <!-- SL NO will update -->
+                    <td><input type="date" class ="form-control" /></td>
+                    <td><input type="date" class ="form-control" /></td>
+                    <td><input type="text" class ="form-control"/></td>
+                    <td><input type="text" class ="form-control" /></td>
+                    <td><input type="text" class ="form-control" /></td>
+                    <td class ="text-center align-middle">
+                        <button type="button" class ="btn btn-danger btn-sm delete-row">Delete</button>
+                    </td>
+                </tr>
+                `;
+                $('#example').append(newRow);
+                updateSerialNumbers();
+
+            });
+        });
+        $('#example').on('click', '.delete-row', function () {
+            $(this).closest('tr').remove();
+        });
+        function updateSerialNumbers() {
+            $('#example tr').each(function (index) {
+                $(this).find('td:first').text(index + 0);
+            });
+        }
+    </script>*@
+<script>
+    //$(document).ready(function () {
+    //    $('#addRowBtn').click(function () {
+    //        debugger;
+    //        const lastRow = $('#example tbody tr:last');
+    //        const lastFromDateText = lastRow.find('td:nth-child(2) label').text().trim(); // ✅ this works
+
+    //        const lastFromDate = new Date(lastFromDateText);
+
+
+    //        //const firstToDateText = firstRow.find('td:nth-child(3) label').text().trim();
+    //        //const firstToDate = firstToDateText ? new Date(firstToDateText) : null;
+    //        const newRow = `
+    //            <tr>
+    //                <td></td>
+    //                <td><input type="date" class="form-control from-date" /></td>
+    //                <td><input type="date" class="form-control" /></td>
+    //                <td><input type="text" class="form-control" /></td>
+    //                <td><input type="text" class="form-control" /></td>
+    //                <td><input type="text" class="form-control" /></td>
+    //                <td class="text-center align-middle">
+    //                    <button type="button" class="btn btn-danger btn-sm delete-row">Delete</button>
+    //                </td>
+    //            </tr>
+    //        `;
+
+    //        $('#tbody').append(newRow);
+    //        updateSerialNumbers();
+    //        const $newRow = $('#example tbody tr:last');
+    //        const $newFromDateInput = $newRow.find('td:nth-child(2) input[type="date"]');
+
+    //        const $newToDateInput = $newRow.find('td:nth-child(3) input[type="date"]');
+
+    //        $newFromDateInput.on('change', function () {
+    //            const newFromDateStr = $(this).val();
+    //            if (!newFromDateStr) return;
+
+    //            const newFromDate = new Date(newFromDateStr); // from input: already in YYYY-MM-DD
+
+    //            if (newFromDate >= lastFromDate) {
+    //                alert('New "From Date" must be earlier than the previous row\'s "From Date".');
+    //                $(this).val('');
+    //            }
+    //        });
+    //        $newToDateInput.on('change', function () {
+    //            $newToDateInput.on('change', function () {
+    //                const newToDateStr = $(this).val();
+    //                const newFromDateStr = $newFromDateInput.val();
+
+    //                if (!newToDateStr || !newFromDateStr) return;
+
+    //                const newToDate = new Date(newToDateStr);
+    //                const newFromDate = new Date(newFromDateStr);
+
+    //                if (newToDate >= newFromDate) {
+    //                    alert('"To Date" must be earlier than its own "From Date" in the same row.');
+    //                    $(this).val('');
+    //                }
+    //            });
+    //    });
+
+$(document).ready(function () {
+
+    $('#addRowBtn').click(function () {
+        // Get last row
+        const lastRow = $('#example tbody tr:last');
+
+        // Get last row's From Date value (from input or label)
+        let lastFromDateStr = '';
+        const $lastFromDateInput = lastRow.find('td:nth-child(2) input[type="text"]');
+        if ($lastFromDateInput.length && $lastFromDateInput.val()) {
+            lastFromDateStr = $lastFromDateInput.val();
+        } else {
+            lastFromDateStr = lastRow.find('td:nth-child(2) label').text().trim();
+        }
+
+        // Parse last from date (dd/mm/yyyy → JS Date)
+        const lastFromDate = lastFromDateStr ? parseDate(lastFromDateStr) : null;
+
+        // Add new row with text inputs for datepicker
+        const newRow = `
+        <tr>
+            <td></td>
+            <td><input type="text" class="PoDate form-control from-date" /></td>
+            <td><input type="text" class="PoDate form-control to-date" /></td>
+            <td><input type="text" class="form-control" /></td>
+            <td><input type="text" class="form-control" /></td>
+            <td><input type="text" class="form-control" /></td>
+            <td class="text-center align-middle">
+                <button type="button" class="btn btn-danger btn-sm delete-row">Delete</button>
+            </td>
+        </tr>
+    `;
+
+        $('#tbody').append(newRow);
+
+        // Initialize datepicker for new row
+        $('#example tbody tr:last .PoDate').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+
+        updateSerialNumbers();
+
+        const $newRow = $('#example tbody tr:last');
+        const $newFromDateInput = $newRow.find('.from-date');
+        const $newToDateInput = $newRow.find('.to-date');
+
+        // ✅ Validate From Date - must be earlier than previous row's From Date
+        $newFromDateInput.on('change', function () {
+            const newFromDateStr = $(this).val();
+            if (!newFromDateStr) return;
+
+            const newFromDate = parseDate(newFromDateStr);
+
+            if (lastFromDate && newFromDate >= lastFromDate) {
+                alert('New "From Date" must be earlier than the previous row\'s "From Date".');
+                $(this).val('');
+            }
+
+            // Clear To Date if invalid after From Date change
+            const toDateVal = $newToDateInput.val();
+            if (toDateVal && parseDate(toDateVal) <= newFromDate) {
+                alert('"To Date" must be greater than its own "From Date". Clearing To Date.');
+                $newToDateInput.val('');
+            }
+        });
+
+        // ✅ Validate To Date
+        $newToDateInput.on('change', function () {
+            const newToDateStr = $(this).val();
+            const newFromDateStr = $newFromDateInput.val();
+
+            if (!newFromDateStr) {
+                alert('Please select the "From Date" first before selecting the "To Date".');
+                $(this).val('');
+                return;
+            }
+
+            const newToDate = parseDate(newToDateStr);
+            const newFromDate = parseDate(newFromDateStr);
+
+            // Get previous row's From Date dynamically
+            const prevRow = $newRow.prev('tr');
+            let prevFromDateStr = '';
+            const $prevFromDateInput = prevRow.find('td:nth-child(2) input[type="text"]');
+            if ($prevFromDateInput.length && $prevFromDateInput.val()) {
+                prevFromDateStr = $prevFromDateInput.val();
+            } else {
+                prevFromDateStr = prevRow.find('td:nth-child(2) label').text().trim();
+            }
+            const prevFromDate = prevFromDateStr ? parseDate(prevFromDateStr) : null;
+
+            // ✅ Validate: ToDate > current FromDate AND ToDate < previous FromDate
+            if (!(newToDate > newFromDate && (!prevFromDate || newToDate < prevFromDate))) {
+                alert('"To Date" must be greater than the current row\'s "From Date" and less than the previous row\'s "From Date".');
+                $(this).val('');
+            }
+        });
+    });
+
+
+        // Delete row button click handler
+
+
+        //$('#addRowBtn').click(function () {
+
+        //    const lastRow = $('#example tbody tr:last');
+        //    const lastFromDateText = lastRow.find('td:nth-child(2) label').text().trim(); // ✅ this works
+
+        //    const lastFromDate = new Date(lastFromDateText);
+        //    const newRow = `
+        //        <tr>
+        //            <td></td>
+        //            <td><input type="date" class="form-control from-date" /></td>
+        //            <td><input type="date" class="form-control" /></td>
+        //            <td><input type="text" class="form-control" /></td>
+        //            <td><input type="text" class="form-control" /></td>
+        //            <td><input type="text" class="form-control" /></td>
+        //            <td class="text-center align-middle">
+        //                <button type="button" class="btn btn-danger btn-sm delete-row">Delete</button>
+        //            </td>
+        //        </tr>
+        //    `;
+
+        //    $('#tbody').append(newRow);
+        //    updateSerialNumbers();
+        //    const $newRow = $('#example tbody tr:last');
+        //    const $newFromDateInput = $newRow.find('td:nth-child(2) input[type="date"]');
+
+        //    $newFromDateInput.on('change', function () {
+        //        const newFromDateStr = $(this).val();
+        //        if (!newFromDateStr) return;
+
+        //        const newFromDate = new Date(newFromDateStr); // from input: already in YYYY-MM-DD
+
+        //        if (newFromDate >= lastFromDate) {
+        //            alert('New "From Date" must be earlier than the previous row\'s "From Date".');
+        //            $(this).val('');
+        //        }
+        //    });
+        //});
+    //    });
+        // Delete row
+        $('#example').on('click', '.delete-row', function () {
+            $(this).closest('tr').remove();
+            updateSerialNumbers();
+        });
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('/');
+            if (parts.length !== 3) return null;
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1; // JS months start at 0
+            const year = parseInt(parts[2], 10);
+            return new Date(year, month, day);
+        }
+
+        // Update SL. NO.
+        function updateSerialNumbers() {
+
+            $('#example tbody tr').each(function (index) {
+                $(this).find('td:first').text(index + 1);
+            });
+        }
+    });
+</script>
+
+<script>
+    function SaveData() {
+        debugger;
+        $("#btnSave").prop('disabled', true).text("Saving...");
+
+        //$("body").prepend('<div id="preloader"></div>');
+        var data = [];
+        var totalDays = 0;
+        var totalcount = 0;
+    $('#example tr').each(function () {
+        var $tds = $(this).find('td');
+        var fromDate = $tds.eq(1).find('input').val() || $tds.eq(1).text().trim();
+        var toDate = $tds.eq(2).find('input').val() || $tds.eq(2).text().trim();
+        var orgName = $tds.eq(3).find('input').val() || $tds.eq(3).text().trim();
+        var natureOfWork = $tds.eq(4).find('input').val() || $tds.eq(4).text().trim();
+        var fullPartTime = $tds.eq(5).find('input').val() || $tds.eq(5).text().trim();
+
+
+
+
+
+        if (fromDate || toDate || orgName || natureOfWork || fullPartTime) {
+
+            if (fromDate.trim() == "") {
+                alert("Please enter valid dates in all rows.");
+                $("#btnSave").prop('disabled', false).text("Save");
+                return false;
+            }
+            const from = parseDate_ddmmyyyy(fromDate);
+            const to = parseDate_ddmmyyyy(toDate);;
+
+            if (isNaN(from.getTime()) || isNaN(to.getTime())) {
+                alert("Please enter valid dates in all rows.");
+                $("#btnSave").prop('disabled', false).text("Save");
+                return;
+            }
+
+            console.log('From:', from.toString());
+            console.log('To:', to.toString());
+
+            const diffTime = to - from;
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            totalDays += diffDays;
+            totalcount += diffTime;
+            data.push({
+                FromDate: fromDate,
+                ToDate: toDate,
+                Organization: orgName,
+                NatureOfWork: natureOfWork,
+                FullOrPartTime: fullPartTime
+            });
+        }
+    });
+    var chkDeclaration = $('#chkdeclare').is(':checked');
+    var chkRead_Understand = $("#chkRead_Understand").is(':checked');
+    var Grade = $("#txtGrade").val();
+    var Datediff = $("#txtDatediff").val();
+    if (!chkDeclaration) {
+        alert("Please confirm Declaration.");
+        $("#btnSave").prop('disabled', false).text("Save");
+        return false;
+    }
+    if (!chkRead_Understand) {
+        alert("Please confirm Declaration.");
+        $("#btnSave").prop('disabled', false).text("Save");
+        return false;
+    }
+    if (Grade == "42" || Grade == "44" || Grade == "45" || Grade == "46"||Grade == "43") {
+    }
+    //else if (Datediff > 730) {
+
+    //}
+        else{
+        if (totalDays < 730) {
+            alert("Experience entries must cover at least 2 years (730 days).\nYou’ve entered " + Math.floor(totalDays) + " days so far.");
+            $("#btnSave").prop('disabled', false).text("Save");
+            return;
+        }
+        else if(data.length < 2) {
+            alert("Please enter at least 2 rows of experience data.");
+            $("#btnSave").prop('disabled', false).text("Save");
+            return;
+        }
+    }
+
+    let place = $("#txtplace").val();
+    let Location = $("#txtlocation").val();
+    let TimeField = $("#timeField").val();
+    let CurrentDate = $("#txtdate").val();
+
+    console.log("Collected rows:", data);
+    const selfieBase64 = $('#selfieBase64').val();
+
+
+    if (!selfieBase64 || selfieBase64.trim() === "") {
+        alert("Please capture a selfie before submitting the form.");
+        $("#btnSave").prop('disabled', false).text("Save");
+        return;
+    }
+    if (place == "") {
+        alert("Please Enter Location");
+        $("#btnSave").prop('disabled', false).text("Save");
+        return;
+    }
+
+    const formData = new FormData();
+    console.log("Place:", place);
+    console.log("Location:", Location);
+    console.log("TimeField:", TimeField);
+    console.log("CurrentDate:", CurrentDate);
+    console.log("Row Data:", data);
+    formData.append('rowData', JSON.stringify(data));
+    formData.append("place", place);
+    formData.append("Location", Location);
+    formData.append("TimeField", TimeField);
+    formData.append("CurrentDate", CurrentDate);
+    formData.append("chkDeclaration", chkDeclaration)
+    formData.append("chkRead_Understand", chkRead_Understand)
+
+    if (selfieBase64) {
+        const selfieBlob = base64ToBlob(selfieBase64, 'image/jpeg');
+        formData.append('selfieImage', selfieBlob, 'selfie.jpg');
+    }
+    //$("#btnSave").prop('disabled', true);
+    $.ajax({
+        url: "@Url.Action("SaveData", "Login")",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.success) {
+                alert("Declaration submitted. You can download a copy from your profile page.");
+                //return RedirectToAction("Welcome", "Login");
+                location.href="@Url.Action("Welcome", "Login")"
+
+            } else {
+                alert("Save failed.");
+            }
+            //$("#preloader").remove();
+        },
+        error: function (err) {
+            alert("Error saving rows.");
+            console.error(err);
+        }
+    });
+    }
+
+    function parseDate_ddmmyyyy(dateStr) {
+        if (!dateStr) return null;
+        const parts = dateStr.split('/');
+        if (parts.length !== 3) return null;
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1; // months are 0-indexed
+        const year = parseInt(parts[2], 10);
+        return new Date(year, month, day);
+    }
+    function parseISODateString(dateStr) {
+        // Expected input format: "YYYY-MM-DD"
+        const parts = dateStr.split('-');
+        if (parts.length !== 3) return null;
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1; // JS months are 0-indexed
+        const day = parseInt(parts[2], 10);
+        return new Date(year, month, day);
+    }
+
+
+    function base64ToBlob(base64, mimeType) {
+        const byteChars = atob(base64.split(',')[1]); // Remove the prefix
+        const byteArrays = [];
+        for (let offset = 0; offset < byteChars.length; offset += 512) {
+            const slice = byteChars.slice(offset, offset + 512);
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+        return new Blob(byteArrays, { type: mimeType });
+    }
+
+    function getLocationFromCoords(lat, lon) {
+        const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                //verifyLocation();
+                //console.log('OpenStreetMap Geocoding Data:', data);
+                if (data && data.display_name) {
+                    document.getElementById('txtplace').value = data.display_name;
+                } else {
+                    console.error('No results from OSM:', data);
+                    alert('Could not determine location. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching location from OpenStreetMap:', error);
+                alert('Error fetching location. Please check your internet connection.');
+            });
+    }
+
+    function getCurrentTime() {
+        const now = new Date();
+        return now.toLocaleTimeString('en-GB', { hour12: false });
+    }
+
+</script>
+
+
+@*<script>
+            function startTimer() {
+                //var timeText = $("#hidntime").val();
+                debugger;
+
+                var timeLeft = $("#hidntime").text().trim();
+                //alert(timeLeft);
+                var timerDisplay = document.getElementById("timerDisplay");
+                var closeButton = document.getElementById("closeBtn");
+
+                var countdown = setInterval(function () {
+                    timerDisplay.textContent = "This Notification Can Be Closed After : " + timeLeft + "s";
+                    timeLeft--;
+
+                    if (timeLeft < 0) {
+                        clearInterval(countdown);
+                        //timerDisplay.textContent = "Time's up!";
+                        closeButton.style.display = "inline-block";
+                        timerDisplay.style.display = "none";
+                    }
+                }, 1000);
+            }
+
+            window.onload = function () {
+                document.getElementById('customAlert').style.display = 'block';
+                startTimer(); // ✅ call the function directly
+            };
+            function closeAlert() {
+                document.getElementById('customAlert').style.display = 'none';
+            }
+    </script>*@
+
+

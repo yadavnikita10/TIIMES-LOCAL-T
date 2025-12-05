@@ -130,6 +130,7 @@
                         @*<th><label>Remarks</label></th>*@
                         @*<th style="width:15%;"><label>Admin QA Remarks</label></th>*@
                         <th><label>Status</label></th>
+                        <th><label>Remarks</label></th>
                     </tr>
                 </thead>
             </table>
@@ -155,6 +156,38 @@
                 <textarea id="txtarea" name="txtarea" rows="6" cols="90"></textarea>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="saveRemarksButton" onclick="DelayRemark()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="remarksModal1" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="remarksModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table">
+                    <table class="table table-condensed table-responsive " id="tblusers" style="border:1px;font-size:12px;">
+                        <thead style="background-color:#001ED2;color:white;border:1px solid;">
+                            <tr class="" style="background-color:#001ED2;font-family:'TNG Pro';color:white;">
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Date</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Approval Stage</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Approver Name</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Remarks</th>
+                                <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Deducted OPE For Mandays</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userbody" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: black;"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -287,28 +320,13 @@
                         else {
                             if (a[i].Status == 'Send For Approval')
                                 //tr.append("<td><button type='button' id='btn_" + c + "'  value='Send For Approval' style='background-color: #00003C;color: white;' onclick=SendForApproval('" + a[i].OP_Number + "')</button></td>");
-                                tr.append(
-      "<td>" +
-        "<button type='button' id='btn_" + c + "' value='Send For Approval' " +
-        "style='background-color: #00003C; color: white;' " +
-        "onclick='SendForApproval(\"" + a[i].OP_Number + "\")'>" +
-        "Send For Approval" +
-        "</button>" +
-      "</td>"
-    );
-
+                                tr.append("<td style='width:20%;'><label id='V_" + c + "'>-</label></td>");
                             else
                                 tr.append("<td><label id='V_" + c + "'>" + a[i].Status + "</label></td>");
 
 
                         }
-
-                        //if (a[i].Status == 'Send For Approval')
-                        //    tr.append("<td style='width:20%;'><input type='button' id='btn_" + c + "'  value='Send For Approval' onclick=SendForApproval('" + a[i].OP_Number + "')></td>");
-                        //else
-                        //    tr.append("<td style='width:20%;'><label id='V_" + c + "'>" + a[i].Status + "</label></td>");
-
-
+                        tr.append("<td><i class='fas fa-info-circle' id='icon_" + i + "' style='cursor: pointer;' onclick='BindDescription(\"" + a[i].OP_Number + "\", \"" + a[i].Branch_Remarks + "\")'></i></td>");
                         $('#example').append(tr);
                     }
 
@@ -317,52 +335,9 @@
                 }
             },
             error: function (xhr, status, error) {
-                // Code to handle errors goes here
             }
 
         });
-        //$.ajax({
-        //    type: "GET",
-        //    url: "/MISOPEReportController/Get_OPE_SearchData",
-        //    contentType: "application/json; charset=utf-8",
-        //    dataType: "json",
-        //    success: function (response) {
-        //        var a = JSON.parse(response);
-        //        var aa = JSON.stringify(response);
-
-        //        if (a == "Error") {
-        //            $("#example tbody").empty();
-        //            tr = $('<tr/>');
-        //            tr.append('<td colspan=6 style="text-align: center;">No Record Found</td>');
-        //            $('#example').append(tr);
-        //        }
-        //        else {
-
-
-        //            $("#example tbody").empty();
-        //            for (var i = 0; i < a.length; i++) {
-        //                tr = $('<tr/>');
-        //                tr.append("<td><label id='V_" + c + "'>" + a[i].OP_Number + "</label> </td>");
-        //                tr.append("<td><label id='V_" + c + "'>" + a[i].WorkingDay + "</label> </td>");
-        //                tr.append("<td><label id='V_" + c + "'>" + a[i].AmountClaim + "</label> </td>");
-        //                tr.append("<td><label id='V_" + c + "'>" + a[i].ApprovedAmount + "</label> </td>");
-        //                tr.append("<td><label id='V_" + c + "'>" + a[i].Branch_Remarks + "</label> </td>");
-        //                tr.append("<td><label id='V_" + c + "'>" + a[i].Branch_Remarks + "</label> </td>");
-        //                //tr.append("<td><label id='V_" + c + "'>" + a[i].Status + "</label> </td>");
-        //                if (a[i].Status == 'Send For Approval')
-        //                    tr.append("<td style='width:20%;'><input type='button' id='btn_" + c + "'  value='Send For Approval' onclick=SendForApproval('" + a[i].OP_Number + "')></td>");
-        //                else
-        //                    tr.append("<td style='width:20%;'><label id='V_" + c + "'>" + a[i].Status + "</label></td>");
-
-        //                $('#example').append(tr);
-        //            }
-        //        }
-        //    },
-        //    error: function (xhr, status, error) {
-        //        // Code to handle errors goes here
-        //    }
-        //});
-
     };
 
     $('#chkChkAll').click(function (e) {
@@ -462,7 +437,56 @@
         });
     }
 
+     function BindDescription(opnumber) {
+         debugger;
+         var VoucherNo = opnumber;
+         var UrlLink = '@UrlLink';
 
+         $.ajax({
+             url: "@Url.Action("Op_Voucher_History_Description", "MISOPEReport")",
+             type: "get",
+         DataType: "json",
+         async: false,
+         contenttype: "application/json; charset=utf-8",
+         data: { VoucherNo: VoucherNo },
+         success: function (result) {
+             debugger;
+             var a = JSON.parse(result);
+             $("#tblusers tbody").empty();
+             let date = [a[0].PCH_Approval_Date, a[0].AdminQA_Approval_Date, a[0].CH_Approval_Date];
+             let DeductMandays = [a[0].DeductMandays_Pch, a[0].DeductMandays_Admin, a[0].DeductMandays_Ch];
+             let Name_ = [a[0].PCH_Name, a[0].AdminQA_Approval, a[0].CH_Approval];
+
+             var Data = ["PCH", "AdminQA", "ClusterHead"];
+             let k = 0;
+             var myArray = [];
+             for (var i = 0; i < a.length; i++) {
+                 if (!!a[i].PCH_Approval_Description) {
+                     myArray.push(a[i].PCH_Approval_Description);
+                     k++;
+                 }
+                 if (!!a[i].AdminQA_Description) {
+                     myArray.push(a[i].AdminQA_Description);
+                     k++;
+                 }
+                 if (!!a[i].CH_Approval_Description) {
+                     myArray.push(a[i].CH_Approval_Description);
+                     k++;
+
+                 }
+                 for (var j = 0; j < myArray.length; j++) {
+                     $("#tblusers").append('<tr><td>' + date[j] + '</td><td>' + Data[j] + '</td><td>' + Name_[j] + '</td><td>' + myArray[j] + '</td><td>' + DeductMandays[j] + '</td></tr>')
+                 }
+
+             }
+             $('#remarksModal1').modal('show');
+         },
+         error: function (result) {
+             debugger;
+             (result + "something went wrong");
+         }
+     });
+     }
 
 
     function proceedWithApproval(OP_Number) {

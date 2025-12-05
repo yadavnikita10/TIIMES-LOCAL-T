@@ -968,6 +968,8 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
                     ObjModelQuotationMast.Coordinators = Convert.ToString(DTEditQuotationMast.Rows[0]["Coordinators"]);
                     ObjModelQuotationMast.EscalationMatrix = Convert.ToString(DTEditQuotationMast.Rows[0]["EscalationMatrix"]);
                     ObjModelQuotationMast.ScopeOfWork = Convert.ToString(DTEditQuotationMast.Rows[0]["ScopeOfWork"]);
+
+                    
                     ObjModelQuotationMast.Validity = Convert.ToString(DTEditQuotationMast.Rows[0]["Validity"]);
                     ObjModelQuotationMast.CompanyAddress = Convert.ToString(DTEditQuotationMast.Rows[0]["CompanyAddress"]);
                     ObjModelQuotationMast.ThirdPartyInspectionService = Convert.ToString(DTEditQuotationMast.Rows[0]["ThirdPartyInspectionService"]);
@@ -999,6 +1001,7 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
                     ObjModelQuotationMast.TiimesEnquiryNumber = Convert.ToString(DTEditQuotationMast.Rows[0]["TiimesEnquiryNumber"]);
                     ObjModelQuotationMast.ValidityExpireStatus = Convert.ToString(DTEditQuotationMast.Rows[0]["expire"]);
                     ObjModelQuotationMast.wonlost_date = Convert.ToString(DTEditQuotationMast.Rows[0]["wonlost_date"]);
+
                     //14 jan
                     // ObjModelQuotationMast.InspectionLocation = Convert.ToString(DTEditQuotationMast.Rows[0]["InspectionLocation"]);
                     var EInspectionLocation = Convert.ToString(DTEditQuotationMast.Rows[0]["InspectionLocation"]);
@@ -2122,7 +2125,6 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
                             QM.PK_QTID = QuotationID;
                             QM.ManDaysRate = d.ManDaysRate;
                             QM.ActualManDays = d.ActualManDays;
-                            QM.DRemarks = d.DRemark;
                             QM.Type = "D";
                             Result = objDALQuotationMast.InsertUpdateOrderType(QM);
                         }
@@ -2146,7 +2148,6 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
                             QM.PK_QTID = QuotationID;
                             QM.IManDaysRate = d.IManDaysRate;
                             QM.IActualManDays = d.IActualManDays;
-                            QM.IRemarks = d.IRemark;
                             QM.Type = "I";
                             Result = objDALQuotationMast.InsertUpdateIOrderType(QM);
                         }
@@ -2199,7 +2200,6 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
                             QM.PK_QTID = QuotationID;
                             QM.ManDaysRate = d.ManDaysRate;
                             QM.ActualManDays = d.ActualManDays;
-                            QM.DRemarks = d.DRemark;
                             QM.Type = "D";
                             Result = objDALQuotationMast.InsertUpdateOrderType(QM);
                         }
@@ -2223,7 +2223,6 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
                             QM.PK_QTID = QuotationID;
                             QM.IManDaysRate = d.IManDaysRate;
                             QM.IActualManDays = d.IActualManDays;
-                            QM.IRemarks = d.IRemark;
                             QM.Type = "I";
                             Result = objDALQuotationMast.InsertUpdateIOrderType(QM);
                         }
@@ -4975,7 +4974,26 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
         }
 
 
+        public ActionResult ValidateEnquiryNumber(string EnquiryNumber)
+        {
+            DataTable dt = new DataTable();
+            var data = "";
+            try
+            {
+                dt= objDALQuotationMast.ValidateEnquiryNumber(EnquiryNumber);
+                if (dt.Rows.Count > 0)
+                {
+                    data = JsonConvert.SerializeObject(dt);
+                }
+            }
+            catch(Exception ex)
+            {
 
+            }
+            return Json(data, JsonRequestBehavior.AllowGet);
+
+
+        }
     }
 }
 

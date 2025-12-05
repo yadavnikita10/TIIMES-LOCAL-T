@@ -546,7 +546,11 @@ namespace TuvVision.Controllers
                         ObjModelVisitReport.CustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["CustomerSpecificReportNumber"]);
                         ObjModelVisitReport.chkIfEndUserEditable = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["chkIfEndUserEditable"]);
                         ObjModelVisitReport.FinalConfirmationVisible = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["FinalConfirmationVisible"]);
-                        
+                        ObjModelVisitReport.Manufact_Contra_Prod_Fabri = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["Manufact_Contra_Prod_Fabri"]);
+                        ObjModelVisitReport.stock_Trade_Raw = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["stock_Trade_Raw"]);
+                        ObjModelVisitReport.TUVICustomer_End_Plant = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["TUVICustomer_End_Plant"]);
+                        ObjModelVisitReport.TestingLaboratory = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["TestingLaboratory"]);
+
 
                         //added by satish yadav
                         ObjModelVisitReport.IsAutoSuggestion = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["IsAutoSuggestion"]);
@@ -607,6 +611,11 @@ namespace TuvVision.Controllers
 							ObjModelVisitReport.chkARC = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["chkARC"]);
                             ObjModelVisitReport.CallIDs = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CallIDs"]);
                             ObjModelVisitReport.chkIfEndUserEditable = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["chkIfEndUserEditable"]);
+                            ObjModelVisitReport.Manufact_Contra_Prod_Fabri = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["Manufact_Contra_Prod_Fabri"]);
+                            ObjModelVisitReport.stock_Trade_Raw = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["stock_Trade_Raw"]);
+                            ObjModelVisitReport.TUVICustomer_End_Plant = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["TUVICustomer_End_Plant"]);
+                            ObjModelVisitReport.TestingLaboratory = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["TestingLaboratory"]);
+                            ObjModelVisitReport.CMP_ID = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CMP_ID"]);
 
                         }
 
@@ -22334,7 +22343,7 @@ namespace TuvVision.Controllers
                 DateTime ToDt = DateTime.ParseExact(ToDate, "dd/MM/yyyy", theCultureInfo);
                 DataTable DTDashBoard = new DataTable();
                 List<VisitMonitoringRecord> lstPersonaldiary = new List<VisitMonitoringRecord>();
-                lstPersonaldiary = objDalVisitReport.GetPersonalDiaryData();
+                lstPersonaldiary = objDalVisitReport.GetPersonalDiaryDataDatewise(FromDate,ToDate);
                 ViewData["CallsRegister"] = lstPersonaldiary;
                 Personaldiary.lstData = lstPersonaldiary;
             }

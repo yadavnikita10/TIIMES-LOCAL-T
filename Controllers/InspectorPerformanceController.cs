@@ -1746,6 +1746,7 @@ namespace TuvVision.Controllers
                             EyeTest = Convert.ToString(dr["EyeTest"]),
                             ProffesionalQualificationDetails = Convert.ToString(dr["ProfCertsFill"]),
                             EducationDetails = Convert.ToString(dr["QualificationDetailFill"]),
+                            FMR = Convert.ToString(dr["FRM"]),
                             PerformancePercentage = Convert.ToString(dr["PerformancePercentage"])
 
 

@@ -127,6 +127,7 @@ namespace TuvVision.Models
         public bool Manufact_Contra_Prod_Fabri { get; set; }
         public bool stock_Trade_Raw { get; set; }
         public bool TUVICustomer_End_Plant { get; set; }
+        public bool TestingLaboratory { get; set; }
         [Required(ErrorMessage = "Please Select Location")]
         public string InspectionLocation { get; set; }
 
