@@ -5377,7 +5377,7 @@ namespace TuvVision.DataAccessLayer
                 SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
                 CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
                 CMDGetDdlLst.CommandTimeout = 0;
-                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 9);
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", "9");
                 CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                 CMDGetDdlLst.Parameters.AddWithValue("@FromD", FromDate);
                 CMDGetDdlLst.Parameters.AddWithValue("@ToD", ToDate);
@@ -5400,7 +5400,7 @@ namespace TuvVision.DataAccessLayer
                                 Person = Convert.ToString(dr["InspectorName"]),
                                 IVRRefNo = Convert.ToString(dr["ReportNo"]),
                                 Pk_id = Convert.ToInt32(dr["PK_RM_ID"]),
-                                inspectingAuthority = Convert.ToString(dr["Inspection_Authority_ReferenceNo"]),
+                                //inspectingAuthority = Convert.ToString(dr["Inspection_Authority_ReferenceNo"]),
                                 Boliers_Maker_No = Convert.ToString(dr["Boliers_Maker_No"]),
                                 Form_no_Certificate_No = Convert.ToString(dr["Form_no_Certificate_No"]),
                                 Quality_offered_Final_Inspection = Convert.ToString(dr["Quality_offered_Final_Inspection"]),
@@ -5432,7 +5432,16 @@ namespace TuvVision.DataAccessLayer
             {
                 if (fromdate != null && todate != null)
                 {
-                }
+                    SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
+                    CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+                    CMDGetDdlLst.CommandTimeout = 0;
+                    CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 20);
+                    CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                    CMDGetDdlLst.Parameters.AddWithValue("@FromD", fromdate);
+                    CMDGetDdlLst.Parameters.AddWithValue("@ToD", todate);
+                    SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                    SDAGetDdlLst.Fill(DSGetddlList);
+                }   
                 else
                 {
 

@@ -1051,11 +1051,38 @@
                                                             }
 
 
-
-                                                            @if (Model.FinalConfirmationVisible == "Yes")
+                                                            @if (Model.serviceid == "73" || Model.serviceid == "284")
                                                             {
                                                                 if (Model.PK_IVR_ID > 0)
                                                                 {
+
+                                                                    @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+
+                                                                    <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                                                                <label style="margin-left: 21px;">
+
+                                                                                    I hereby confirm that I have reviewed the content of the Inspection Visit Report (IVR) and found it accurate and in compliance with the guidelines for preparing IVR, IRN, and TUVI QMS. <br />
+
+                                                                                    <label style="color:#E12F24;">
+                                                                                        I authorize TIIMES to affix the digital signature on the IVR PDF.
+                                                                                    </label><br />
+                                                                                    <label style="color:#001ED2;"> Note:</label><br />
+                                                                                    <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
+
+                                                                                </label>
+
+
+
+                                                                                        @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (Model.FinalConfirmationVisible == "Yes")
+                                                                {
+                                                                    if (Model.PK_IVR_ID > 0)
+                                                                    {
 
 
                                                                     <div class="col-xs-12 col-sm-12" style="margin-left: -14px;" id="hidecomfirmation">
@@ -1103,18 +1130,16 @@
                                                                             }
                                                                         </div>
                                                                     </div>
+                                                                    }
                                                                 }
-                                                            }
-  else
-                                                            {
+                                                                else
+                                                                {
                                                                 <label style="color:red;"> Ensure the filling of mandatory fields for Declaration<br /></label><br>
-
-
                                                                 <label>• Stages witnessed / Document reviewed <br>
                                                                 • Identification of inspected item <br>
                                                                 • Result(Conclusion and Can IRN be issued ?) <br></label>
-
-                                                             }
+                                                                }
+                                                            }
 
 
 
