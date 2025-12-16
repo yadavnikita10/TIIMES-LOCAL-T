@@ -1,0 +1,1680 @@
+﻿@model TuvVision.Models.InspectionvisitReportModel
+@{
+    ViewBag.Title = "VisitReportFormArcJob";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int j = 0;
+    int k = 0;
+
+}
+
+<script src="~/AllJsAndCss/jquery-1.10.2.js"></script>
+<script src="~/AllJsAndCss/jquery-ui.js"></script>
+<link href="~/AllJsAndCss/jquery-ui.css" rel="stylesheet" />
+
+<style>
+    .addCSS {
+        pointer-events: none;
+    }
+</style>
+
+<script>
+
+
+
+    $(function () {
+        $(".SubSubVendorDate_of_PO").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".Date_of_PO").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+
+<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+<script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+<style>
+    /* Container for the scrollable table */
+   
+    th, td {
+        border: 1px solid black; /* Cell borders */
+        padding: 4px; /* Padding inside cells */
+        text-align: center; /* Center align text */
+    }
+
+    th {
+        background-color: #104193; /* Header background color */
+        color: white; /* Header text color */
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+@using (Html.BeginForm("VisitReportFormArcJob", "VisitReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1", onsubmit = "return checkForm(this);", }))
+{
+    @*<form method="post">*@
+
+
+    @Html.HiddenFor(m => m.Pk_callidAVR)
+    @Html.HiddenFor(m => m.PK_Call_ID)
+    @Html.HiddenFor(m => m.PK_IVR_ID)
+    @Html.HiddenFor(m => m.PK_SubJob_Id)
+    @Html.HiddenFor(m => m.Sap_And_Controle_No)
+    @Html.HiddenFor(m => m.Br_Id)
+    @Html.HiddenFor(m => m.SubJob_No)
+
+    @Html.HiddenFor(m => m.Conclusion)
+    @Html.HiddenFor(m => m.Pending_Activites)
+    @Html.HiddenFor(m => m.Non_Conformities_raised)
+    @Html.HiddenFor(m => m.chkARC)
+    @Html.HiddenFor(Model => Model.IVRCount)
+    @Html.HiddenFor(m => m.ARCFirstPrint)
+    @Html.HiddenFor(m => m.SubType)
+    @Html.HiddenFor(m => m.ReportNoForPDF)
+    @Html.HiddenFor(m => m.ReviseReportNoForPDF)
+    @Html.HiddenFor(m => m.CallIDs)
+    <input type="hidden" id="hdnarea" />
+    @*@Html.AntiForgeryToken()*@
+    <div class="main-content3 xs-max-height grey-bg-f3">
+        <div class="grey-bg-f3">
+            <!--Start of header-->
+            <div class="container-fluid">
+                @*class="container-fluid"*@
+                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                    @*row assignfixedwidth rp-5*@
+
+                    <div class="col-xs-12">
+                        @*form-col*@
+                        <div class="row">
+                            <br />
+
+                            <h5 class="dynamic-page-title dynamic-page-title-2" style="padding-left: 11px;">Inspection Visit Report Number:       @Html.DisplayFor(m => m.ReportNoName)</h5>
+
+
+                            @*<a href="@Url.Action("IvrReports","VisitReport")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-long-arrow-left"></i> Go Back</a>
+                                <br />*@
+
+                            @*Alert Message*@
+
+                            @if (Convert.ToString(TempData["ErrLeave"]) != "")
+                            {
+
+                                <div class="col-xs-12">
+
+                                    @{
+                                        if (Convert.ToString(TempData["ErrLeave"]) != null && Convert.ToString(TempData["ErrLeave"]) != "")
+                                        {
+                                            <h4 style="color:red;font-weight:bold;">@Convert.ToString(TempData["ErrLeave"])</h4>
+
+                                            TempData["ErrLeave"] = "";
+                                        }
+                                    }
+                                </div>
+                                        }
+                            @if (Convert.ToString(TempData["ErrAll24"]) != "")
+                            {
+
+                                <div class="col-xs-12">
+
+                                    @{
+                                        if (Convert.ToString(TempData["ErrAll24"]) != null && Convert.ToString(TempData["ErrAll24"]) != "")
+                                        {
+                                            <h4 style="color:red;font-weight:bold;">@Convert.ToString(TempData["ErrAll24"])</h4>
+
+                                            TempData["ErrAll24"] = "";
+                                        }
+                                    }
+                                </div>
+                                        }
+                            @if (Convert.ToString(TempData["ErrCurrent24"]) != "")
+                            {
+
+                                <div class="col-xs-12">
+
+                                    @{
+                                        if (Convert.ToString(TempData["ErrCurrent24"]) != null && Convert.ToString(TempData["ErrCurrent24"]) != "")
+                                        {
+                                            <h4 style="color:red;font-weight:bold;">@Convert.ToString(TempData["ErrCurrent24"])</h4>
+
+                                            TempData["ErrCurrent24"] = "";
+                                        }
+                                    }
+                                </div>
+                                        }
+
+                                        @*Alert Message End*@
+
+
+                                        <div class="col-xs-12">
+                                           
+                                            @*@if (Model.PK_Call_ID != null)
+                                            {
+                                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("VisitReportFormArcJob", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">General</button>
+                                                if (Model.PK_IVR_ID != 0)
+                                                {
+                                                    <button class="btn btn-default news-btn ItemDescription" type="button" id="itemid" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Item Description</button>
+                                                    <button class="btn btn-default news-btn ReferenceDocuments" type="button" id="refeid" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.Pk_callidAVR} )'">Reference Documents</button>
+                                                    <button class="btn btn-default news-btn InspectionActivites" type="button" id="inspe" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.Pk_callidAVR} )'">Stages Witnessed</button>
+                                                    <button class="btn btn-default news-btn DocumentReviewed" type="button" id="DocumId" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.Pk_callidAVR} )'">Document Reviewed</button>
+                                                    <button class="btn btn-default news-btn EquipmentDetails" type="button" id="EquiId" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.Pk_callidAVR} )'">Details Of Measuring Instrument</button>
+                                                    <button class="btn btn-default news-btn Conclusion" type="button" id="ConsId" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.Pk_callidAVR} )'">Conclusion</button>
+                                                    <button class="btn btn-default news-btn ReportImage" type="button" id="ReportId" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.Pk_callidAVR} )'">Image</button>
+                                                    <button class="btn btn-default news-btn" type="button" id="IvrId" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.Pk_callidAVR} )'">Report</button>
+                                                    <button class="btn btn-default news-btn" type="button"  id="VisitReport" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.Pk_callidAVR} )'">List of Issues</button>
+                                                    //Added By Satish Pawar on 16 May 2023
+                                                    //new { FKId = Model.PK_IVR_ID,Type="VSR" ,SubJobNo=Model.SubJob_No,PK_Call_Id=Model.PK_Call_ID }
+                                                    <button id="btnAddExpenses" class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem",new { FKId = Model.PK_IVR_ID,Type="IVR",SubJobNo=Model.SubJob_No,PK_Call_Id=Model.PK_Call_ID } )'">Add Expenses</button>
+
+                                                }
+
+                                                @*<button class="btn btn-info dynamic-function-btn ReportImage" type="button" onclick="location.href='@Url.Action("VisitReportAttchment", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Attachment</button>
+                                                @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_Call_ID} )'">Report</button>
+                                            }*@
+
+@{
+    // Get the ARCPK_Call_ID from the query string
+    var arcPK_Call_ID = Request.QueryString["Pk_callidAVR"];
+    // Check if ARCPK_Call_ID is not empty and contains multiple values
+    bool isMultipleArcPKCallID = !string.IsNullOrEmpty(arcPK_Call_ID) && arcPK_Call_ID.Contains(",");
+    // Determine the callId to use
+    Model.Pk_callidAVR= isMultipleArcPKCallID ? arcPK_Call_ID : Model.PK_Call_ID.ToString();
+}
+
+@if (Model.PK_Call_ID != null || isMultipleArcPKCallID)
+{
+    <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("VisitReportFormArcJob", "VisitReport",new { @Pk_callidAVR = Model.PK_Call_ID} )'">General</button>
+    if (Model.PK_IVR_ID != 0)
+    {
+        if (!string.IsNullOrEmpty(Model.Pk_callidAVR))
+        {
+            // Ensure buttons are displayed once, using the correct callId
+    <button class="btn btn-default news-btn ItemDescription" type="button" id="itemid" onclick="location.href='@Url.Action("ItemDescription", "VisitReport", new { @Pk_callidAVR = Model.Pk_callidAVR})'">Item Description</button>
+    <button class="btn btn-default news-btn ReferenceDocuments" type="button" id="refeid" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport", new { @Pk_callidAVR = Model.Pk_callidAVR })'">Reference Documents</button>
+    <button class="btn btn-default news-btn InspectionActivites" type="button" id="inspe" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport", new { @Pk_callidAVR = Model.Pk_callidAVR })'">Stages Witnessed</button>
+    <button class="btn btn-default news-btn DocumentReviewed" type="button" id="DocumId" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport", new { @Pk_callidAVR = Model.Pk_callidAVR })'">Document Reviewed</button>
+    <button class="btn btn-default news-btn EquipmentDetails" type="button" id="EquiId" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport", new { @Pk_callidAVR = Model.Pk_callidAVR })'">Details Of Measuring Instrument</button>
+    <button class="btn btn-default news-btn Conclusion" type="button" id="ConsId" onclick="location.href='@Url.Action("Conclusion", "VisitReport", new { @Pk_callidAVR = Model.Pk_callidAVR })'">Conclusion</button>
+    <button class="btn btn-default news-btn ReportImage" type="button" id="ReportId" onclick="location.href='@Url.Action("ReportImage", "VisitReport", new { @Pk_callidAVR = Model.Pk_callidAVR })'">Image</button>
+    <button class="btn btn-default news-btn" type="button" id="IvrId" onclick="location.href='@Url.Action("IvrReports", "VisitReport", new { @Pk_callidAVR = Model.Pk_callidAVR })'">Report</button>
+    <button class="btn btn-default news-btn" type="button" id="VisitReport" onclick="location.href='@Url.Action("AllConcern", "VisitReport", new { @Pk_callidAVR = Model.Pk_callidAVR })'">List of Issues</button>
+
+    <!-- Added By Satish Pawar on 16 May 2023 -->
+    <button id="btnAddExpenses" class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem", new { FKId = Model.PK_IVR_ID, Type = "IVR", SubJobNo = Model.SubJob_No, PK_Call_ID = Model.Pk_callidAVR })'">Add Expenses</button>
+        }
+        else
+        {
+            <button class="btn btn-default news-btn ItemDescription" type="button" id="itemid" onclick="location.href='@Url.Action("ItemDescription", "VisitReport", new { @PK_Call_ID = Model.PK_Call_ID })'">Item Description</button>
+            <button class="btn btn-default news-btn ReferenceDocuments" type="button" id="refeid" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport", new { PK_Call_ID = Model.PK_Call_ID  })'">Reference Documents</button>
+            <button class="btn btn-default news-btn InspectionActivites" type="button" id="inspe" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport", new { PK_Call_ID = Model.PK_Call_ID  })'">Stages Witnessed</button>
+            <button class="btn btn-default news-btn DocumentReviewed" type="button" id="DocumId" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport", new { PK_Call_ID = Model.PK_Call_ID  })'">Document Reviewed</button>
+            <button class="btn btn-default news-btn EquipmentDetails" type="button" id="EquiId" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport", new { PK_Call_ID = Model.PK_Call_ID  })'">Details Of Measuring Instrument</button>
+            <button class="btn btn-default news-btn Conclusion" type="button" id="ConsId" onclick="location.href='@Url.Action("Conclusion", "VisitReport", new { PK_Call_ID = Model.PK_Call_ID  })'">Conclusion</button>
+            <button class="btn btn-default news-btn ReportImage" type="button" id="ReportId" onclick="location.href='@Url.Action("ReportImage", "VisitReport", new { PK_Call_ID = Model.PK_Call_ID  })'">Image</button>
+            <button class="btn btn-default news-btn" type="button" id="IvrId" onclick="location.href='@Url.Action("IvrReports", "VisitReport", new { PK_Call_ID = Model.PK_Call_ID  })'">Report</button>
+            <button class="btn btn-default news-btn" type="button" id="VisitReport" onclick="location.href='@Url.Action("AllConcern", "VisitReport", new { PK_Call_ID = Model.PK_Call_ID  })'">List of Issues</button>
+
+    <!-- Added By Satish Pawar on 16 May 2023 -->
+            <button id="btnAddExpenses" class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("CreateExpenseItem", "ExpenseItem", new { FKId = Model.PK_IVR_ID, Type = "IVR", SubJobNo = Model.SubJob_No, PK_Call_ID = Model.PK_Call_ID})'">Add Expenses</button>
+        }
+    }
+}
+
+
+                                            @*<a href="@Url.Action("CallsListByInspector","CallsMaster")" class="btn btn-info dynamic-function-btn"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
+                                        </div>
+
+                                        @*@if (Model.IVRCount == 0 && Model.chkARC == true)*@
+                                        @if (Model.chkARC == true && Model.IVRCount == 0)
+                                        {
+                                            <div class="col-xs-12 text-left">
+                                                <h4 style="margin-top:10px;margin-bottom:8px; color:red;">Note : This is the first Visit report of ARC Job . Please enter details carefully</h4>
+                                            </div>
+
+                                        }
+                                        @*@if (Model.IVRCount == 0 || Model.IVRCount == 1 && Model.chkARC == true && Model.ARCFirstPrint != "Yes")
+                                            {
+                                                <div class="col-xs-12 text-left">
+                                                    <h3 style="margin-top:10px;margin-bottom:8px; color:red;">Note : This is the first Visit report of ARC Job . Please enter details carefully</h3>
+                                                </div>
+                                            }*@
+
+                                        @if (Model.PK_IVR_ID != 0)
+                                        {
+                                            <div class="row">
+                                                <div class="col-xs-12">
+
+                                                    <div class="col-xs-12">
+                                                        <h5 style="margin-top:10px;margin-bottom:8px; color:blue;">Upload Template:</h5>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-2">
+
+
+                                                        @*<a class="btn btn-default insert-form-btn" href="~/Excel/template.xlsx" role="button" download="IVRIRNTemplate.xlsx" style="margin-top:0px;">*@
+                                                        <a class="btn btn-default insert-form-btn" href="~/Excel/1.xlsm" role="button" download="IVRIRNTemplate.xlsm" style="margin-top:0px;">
+                                                            <i class="fa fa-download"></i>Download Format
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <div class="form-group">
+                                                            <input type="file" name="FileUpload1" class="form-control" id="FileUpload1">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-3">
+                                                        <button type="submit" class="btn btn-default insert-form-btn" style="margin-top:0px;"> Upload </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <!--Dummy-->
+                                        @*@if (Model.PK_IVR_ID == 0)*@
+                                        @if (Model.PK_IVR_ID != 0)
+                                        {
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="col-xs-12">
+                                                        <h5 style="margin-top:10px;margin-bottom:8px; color:blue;">Copy Report:</h5>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <div class="row">
+
+                                                            <div class="col-xs-12 col-sm-2">
+                                                                <div class="form-group" style="margin-bottom:0;">
+                                                                    <input type="text" class="form-control" name="SubJobNo" id="SubJobNo" placeholder="TUVI Control No with SubJob No." />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-1">
+                                                                <label style="padding-left: 18px;">OR</label>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-2">
+                                                                <div class="form-group" style="margin-bottom:0;">
+                                                                    <input type="text" class="form-control" name="VisitReport" id="VisitReport" placeholder="IVR Number" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-2">
+                                                                <div class="form-group" style="margin-bottom:0;">
+                                                                    <button type="button" id="filter1" class="btn btn-default insert-form-btn" style="margin-top:0px;"><i class="fa "></i> Search IVR</button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-2">
+                                                                @if (ViewBag.SubCatlist != null)
+                                                                {
+                                                                    @*<div  id='Others' style='display:none;'>
+                                                                            <div class="form-group" style="margin-bottom:8;">
+                                                                                @Html.DropDownListFor(model => model.ReportName, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Report--", new { @class = "form-control ", @style = "margin-top:15px; border-color:deepskyblue;", @id = "ddlContactType" })
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xs-12 col-sm-2" id='Systemhide'>
+                                                                            <div class="form-group" style="margin-bottom:8;">
+                                                                                @Html.DropDownListFor(model => model.ReportName, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Report--", new { @class = "form-control", @style = "margin-top:15px; border-color:deepskyblue;", @id = "ddlContactType" })
+                                                                            </div>
+                                                                        </div>*@
+
+                                                                    @*<div class="form-group" style="margin-bottom:8;display:none;" id='Others' >
+                                                                            @Html.DropDownListFor(model => model.ReportName, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Report--", new { @class = "form-control ", @style = "margin-top:0px; border-color:deepskyblue;", @id = "ddlContactType" })
+
+                                                                        </div>*@
+                                                                    <div class="form-group" style="margin-bottom:8;">
+                                                                        @Html.DropDownListFor(model => model.ReportName, ViewBag.SubCatlist as IEnumerable<SelectListItem>, "--Select Report--", new { @class = "form-control", @style = "margin-top:0px; border-color:deepskyblue;", @id = "ddlContactType" })
+                                                                    </div>
+
+                                                                }
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-3">
+                                                                <div class="form-group" style="margin-bottom:0;">
+                                                                    @*<button type="button" id="filter1" class="btn btn-default insert-form-btn" style="margin-top:5px;"><i class="fa "></i> Search IVR</button>*@
+                                                                    @*<button type="button" id="filter2" class="btn btn-default insert-form-btn" style="margin-top:5px;"><i class="fa "></i> Copy IVR</button>*@
+                                                                    <button type="button" id="btnCopyNew" class="btn btn-default insert-form-btn" style="margin-top:0px;"><i class="fa "></i> Copy IVR </button>
+                                                                    <button type="button" id="btnClearNew" class="btn btn-default insert-form-btn" style="margin-top:0px;background-color:#e63646" onclick="return confirm('Do you want to clear Content?')"><i class="fa "></i> Clear Content</button>
+
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div><!--End of search fields-->
+
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                    <!--Dummy End-->
+                                        }
+
+                                        @if (TempData["Message"] != null)
+                                        {
+                                            <p>@TempData["Message"] </p>
+                                        }
+
+
+
+                                        <div class="col-xs-12">
+                                            <div class="white-bg section-box-shadow">
+                                                <h3 class="form-page-title">General</h3>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                                        <div class="form-box">
+                                                            @*<form>*@
+
+
+                                                            <div class="row">
+
+                                                                <div class="col-xs-12 col-sm-12">
+                                                                    <div class="form-group">
+                                                                        <span style="color:#E12F24;">
+                                                                            <strong>Notes </strong> :
+                                                                        </span> 1) Verify each content. For correction of data, contact Originating Branch Coordinator's.<br />
+                                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) <span style="color:#2EFE2E;">*</span> - Editable in first IVR of ARC job.<br />
+                                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) <span style="color:#FA3746;">*</span> - Always editable.<br />
+                                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4) Read thoroughly
+
+                                                                        @*class="btn btn-default insert-form-btn"*@
+                                                                        <a href="~/Excel/Guidelines to prepare IVR-IRN WI-INSP-36-Annex 1 Rev 01.docx" role="button" download="Guidelines to prepare IVR-IRN WI-INSP-36-Annex 1 Rev 01.docx" style="margin-top:0px;">
+                                                                            Guidelines to prepare IVR-IRN WI-INSP-36-Annex 1 Rev 01 <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                        before preparing IVR.
+                                                                        <br /><br />
+
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="from-group">
+                                                                    <div class="col-xs-12">
+                                                                        <hr class="custom-hr1">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-xs-12 col-sm-12">
+                                                                    
+                                                                        <div class="form-group">
+                                                                            <label>Date(s) Of Inspection:</label>
+
+                                                                            @Html.TextBoxFor(model => model.Date_Of_Inspection, new { @placeholder = "Date Of Inspection", @class = "form-control", @readonly = "readonly" })
+                                                                            @Html.ValidationMessageFor(model => model.Date_Of_Inspection, "", new { @class = "text-danger validation-msg" })
+                                                                        </div>
+                                                                        </div>
+                                                                    
+
+                                                            </div>
+                                                           
+                                                                <div class="row">
+                                                                    @*<div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>TUV India Control No:</label>
+                    @*<input type="text" class="form-control" placeholder="Company Name Here">
+                    @Html.TextBoxFor(model => model.SubJob_No, new { @placeholder = "TUV India Controle No", @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Sap_And_Controle_No, "", new { @class = "text-danger validation-msg" })
+                                                                                </div>
+                                                                            </div>*@
+                                                                    <div class="col-xs-12 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label>Executing Branch:</label>
+                                                                            @*<input type="email" class="form-control" placeholder="Email Here">*@
+                                                                            @Html.TextBoxFor(model => model.Branch, new { @placeholder = "Branch", @class = "form-control", @readonly = "readonly" })
+                                                                            @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger validation-msg" })
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-12 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label>Client Name:</label>
+                                                                            @Html.TextBoxFor(model => model.Client_Name, new { @placeholder = "Client Name", @class = "form-control", @readonly = "readonly" })
+                                                                            @Html.ValidationMessageFor(model => model.Client_Name, "", new { @class = "text-danger validation-msg" })
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="from-group">
+                                                                        <div class="col-xs-12">
+                                                                            <hr class="custom-hr1">
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                               
+                                                              
+
+                                                                @*<div class="row">
+                @*<div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label>Date Of Inspection:</label>
+
+                            @Html.TextBoxFor(model => model.Date_Of_Inspection, new { @placeholder = "Date Of Inspection", @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.Date_Of_Inspection, "", new { @class = "text-danger validation-msg" })
+                        </div>
+                    </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div class="form-group">
+                        <label>End User Name:</label>&nbsp;<span style="color:#2EFE2E;">*</span>
+                        @Html.TextBoxFor(model => model.End_user_Name, new { @placeholder = "End User Name", @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.End_user_Name, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6">
+                    <div class="form-group">
+                        <label> Project Name & Location:</label>&nbsp;<span style="color:#2EFE2E;">*</span>
+                        @*<input type="text" class="form-control" placeholder="Fax Here">
+                        @Html.TextBoxFor(model => model.Project_Name_Location, new { @placeholder = "Project Name & Location", @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.Project_Name_Location, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+
+
+            </div>*@
+
+
+                                                                @*<div class="row">
+
+                @*<div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label>Client Name:</label>
+                            @Html.TextBoxFor(model => model.Client_Name, new { @placeholder = "Client Name", @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.Client_Name, "", new { @class = "text-danger validation-msg" })
+                        </div>
+                    </div>
+
+                @*<div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label>End User Name:</label>
+                            @Html.TextBoxFor(model => model.End_user_Name, new { @placeholder = "End User Name", @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.End_user_Name, "", new { @class = "text-danger validation-msg" })
+                        </div>
+                    </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div class="form-group">
+                        <label> DEC/PMC/EPC Name :</label>&nbsp;<span style="color:#2EFE2E;">*</span>
+                        @Html.TextBoxFor(model => model.DEC_PMC_EPC_Name, new { @placeholder = "DEC PMC EPC Name", @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.DEC_PMC_EPC_Name, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div class="form-group">
+                        <label> DEC/PMC/EPC Assignment No :</label>&nbsp;<span style="color:#2EFE2E;">*</span>
+                        @Html.TextBoxFor(model => model.DEC_PMC_EPC_Assignment_No, new { @placeholder = "DEC PMC EPC Assignment No", @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.DEC_PMC_EPC_Assignment_No, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+            </div>*@  
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+                <label>Vendor Name and Location:</label>
+
+                @Html.TextBoxFor(model => model.Vendor_Name_Location, new { @placeholder = "Vendor Name Location", @class = "form-control", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.Vendor_Name_Location, "", new { @class = "text-danger validation-msg" })
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+                <label>Notification No:</label>&nbsp;<span style="color:#FA3746;">*</span>
+                @*<input type="text" class="form-control" placeholder="Website Here">*@
+                @Html.TextBoxFor(model => model.Notification_Name_No_Date, new { @placeholder = "Notification No", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Notification_Name_No_Date, "", new { @class = "text-danger validation-msg" })
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+                <label>Inspection Location:</label>&nbsp;<span style="color:#FA3746;">*</span>
+                @*<input type="text" class="form-control" placeholder="Status Here">*@
+                @Html.TextBoxFor(model => model.Address_Of_Inspection, new { @placeholder = "Inspection Location", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Address_Of_Inspection, "", new { @class = "text-danger validation-msg" })
+            </div>
+        </div>
+
+        <div class="from-group">
+            <div class="col-xs-12">
+                <hr class="custom-hr1">
+            </div>
+        </div>
+
+    </div>
+                                                           
+
+ 
+
+    <div class="row">
+        <div id="DomesticCurrency" style="overflow-x: auto;width: 100%;">
+            <table id="DTestTable" cellspacing="0" cellpadding="3" border="1" style="width: 135%;" >
+                <tr style="background-color:#104193;color:white;">
+                    <td style="width: 200px">
+                        TUV India Control No:
+                    </td>
+                    <td style="width: 200px">
+                        PO Number (Client PO on Vendor) :
+                    </td>
+                    <td style="width: 100px">
+                        PO Date:
+                    </td>
+                    <td style="width: 300px">
+                        Project Name & Location:
+                    </td>
+                    <td style="width: 200px">
+                        End User Name:
+                    </td>
+                    <td style="width: 200px">
+                        DEC/PMC/EPC Name :
+                    </td>
+                    <td style="width: 200px">
+                        DEC/PMC/EPC Assignment No :
+
+                    </td>
+
+                    @{
+                        int i = 0;
+                    }
+
+                    @if (ViewBag.lstDOrderType != null)
+                    {
+
+                        foreach (var item in ViewBag.lstDOrderType as IEnumerable<TuvVision.Models.InspectionvisitReportModel>)
+                        {
+                            i = i + 1;
+                        <tr class="trDomestic" style="background-color:#FFFFFF">
+                            
+                            @Html.HiddenFor(m => m.vendorDetails[j].PK_SubJob_IdARC, new { @placeholder = "TUV India Controle No", @class = "form-control", @Value = item.PK_SubJob_IdARC })
+                            @Html.HiddenFor(m => m.vendorDetails[j].PK_Call_ID, new { @placeholder = "Pk_call_id", @class = "form-control", @Value = item.PK_Call_ID })
+
+
+                            <td>
+                                @Html.TextBoxFor(m => m.vendorDetails[j].SubJob_No, new { @placeholder = "TUV India Controle No", @class = "form-control", @Value = item.SubJob_No })
+                                @Html.ValidationMessageFor(m => m.vendorDetails[j].SubJob_No, "", new { @class = "text-danger validation-msg" })
+                            </td>
+
+                            <td>
+                                @if (Model.IVRCount == 1)
+                                {
+                                    @Html.TextBoxFor(m => m.vendorDetails[j].Po_No, new { @placeholder = "Po No", @class = "form-control", @Value = item.Po_No })
+                                    @Html.ValidationMessageFor(m => m.vendorDetails[j].Po_No, "", new { @class = "text-danger validation-msg" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => model.vendorDetails[j].Po_No, new { @placeholder = "Po No", @class = "form-control", @readonly = "readonly", @Value = item.Po_No })
+                                    @Html.ValidationMessageFor(model => model.vendorDetails[j].Po_No, "", new { @class = "text-danger validation-msg" })
+
+
+                                }
+
+                            </td>
+                            <td>
+                                @if (Model.IVRCount == 1)
+                                {
+                                    @Html.TextBoxFor(m => m.vendorDetails[j].Date_of_PO, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control Date_of_PO", autocomplete = "off", @Value = item.Date_of_PO })
+                                    @Html.ValidationMessageFor(m => m.vendorDetails[j].Date_of_PO, "", new { @class = "text-danger validation-msg" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.vendorDetails[j].Date_of_PO, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control Date_of_PO", autocomplete = "off", @readonly = "readonly", @Value = item.Date_of_PO })
+                                    @Html.ValidationMessageFor(m => m.vendorDetails[j].Date_of_PO, "", new { @class = "text-danger validation-msg" })
+                                }
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.vendorDetails[j].Project_Name_Location, new { @placeholder = "Project Name & Location", @class = "form-control", @readonly = "readonly", @Value = item.Project_Name_Location })
+                                @Html.ValidationMessageFor(m => m.vendorDetails[j].Project_Name_Location, "", new { @class = "text-danger validation-msg" })
+                            </td>
+
+                            <td>
+                                @Html.TextBoxFor(m => m.vendorDetails[j].End_user_Name, new { @placeholder = "End User Name", @class = "form-control", @readonly = "readonly", @Value = item.End_user_Name })
+                                @Html.ValidationMessageFor(m => m.vendorDetails[j].End_user_Name, "", new { @class = "text-danger validation-msg" })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.vendorDetails[j].DEC_PMC_EPC_Name, new { @placeholder = "DEC PMC EPC Name", @class = "form-control", @readonly = "readonly", @Value = item.DEC_PMC_EPC_Name })
+                                @Html.ValidationMessageFor(m => m.vendorDetails[j].DEC_PMC_EPC_Name, "", new { @class = "text-danger validation-msg" })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(m => m.vendorDetails[j].DEC_PMC_EPC_Assignment_No, new { @placeholder = "DEC PMC EPC Assignment No", @class = "form-control", @readonly = "readonly", @Value = item.DEC_PMC_EPC_Assignment_No })
+                                @Html.ValidationMessageFor(m => m.vendorDetails[j].DEC_PMC_EPC_Assignment_No, "", new { @class = "text-danger validation-msg" })
+                            </td>
+
+                        </tr>
+
+                            j++;
+                        }
+                    }
+
+
+
+                </table>
+            </div>
+        <div class="from-group">
+            <div class="col-xs-12">
+                <hr class="custom-hr1">
+            </div>
+        </div>
+        </div>
+
+        @*<div class="row">
+
+                @if (Model.IVRCount == 1 && Model.chkARC == true)
+                {
+                    <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                        <div class="form-group">
+                            <label>PO Number (Client PO on Vendor) :</label>
+                            @Html.TextBoxFor(model => model.Po_No, new { @placeholder = "Po No", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Po_No, "", new { @class = "text-danger validation-msg" })
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label>PO Number (Client PO on Vendor) : </label>
+                            @Html.TextBoxFor(model => model.Po_No, new { @placeholder = "Po No", @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.Po_No, "", new { @class = "text-danger validation-msg" })
+                        </div>
+                    </div>
+
+                }
+
+                @if (Model.IVRCount == 1 && Model.chkARC == true)
+                {
+                    <div class="col-xs-12 col-sm-4">
+                        <div class="form-group" id="divPODate">
+                            <label>PO Date:</label>
+                            @Html.TextBoxFor(model => model.Date_of_PO, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control Date_of_PO", autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.Date_of_PO, "", new { @class = "text-danger validation-msg" })
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                        <div class="form-group" id="divPODate">
+                            <label>PO Date:</label>
+                            @Html.TextBoxFor(model => model.Date_of_PO, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "Select Po Date", @class = "form-control Date_of_PO", autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.Date_of_PO, "", new { @class = "text-danger validation-msg" })
+                        </div>
+                    </div>
+                }
+
+            </div>*@
+
+       
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>Sub Vendor Name:</label>
+                    @*<textarea rows="3" class="form-control" placeholder="Type your address here..."></textarea>*@
+                    @Html.TextBoxFor(model => model.Sub_Vendor_Name, new { @placeholder = "Sub Vendor Name", @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Sub_Vendor_Name, "", new { @class = "text-danger validation-msg" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    <label>PO No.(Vendor PO on Sub-vendor):</label>&nbsp;<span style="color:#FA3746;">*</span>
+                    @Html.TextBoxFor(model => model.Po_No_SubVendor, new { @placeholder = "Sub Vendor Name", @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Po_No_SubVendor, "", new { @class = "text-danger validation-msg" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group" id="divSubPODate">
+                    <label>PO Date (Sub Vendor):</label>&nbsp;<span style="color:#FA3746;">*</span>
+                    @Html.TextBoxFor(model => model.SubSubVendorDate_of_PO, "{0:dd MMM yyyy}", htmlAttributes: new { placeholder = "PO Date (Sub Vendor):", @class = "form-control SubSubVendorDate_of_PO", autocomplete = "off", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.SubSubVendorDate_of_PO, "", new { @class = "text-danger validation-msg" })
+                </div>
+            </div>
+
+        </div>
+
+                                                            
+        <div class="from-group">
+            <div class="col-xs-12">
+                <hr class="custom-hr1">
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <label>Stages of Inspection (Tick applicable):</label>
+        <div class="row">
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.Kick_Off_Pre_Inspection, new { @type = "checkbox", @class = "checkBox" })
+                    @Html.ValidationMessageFor(model => model.Kick_Off_Pre_Inspection, "", new { @class = "text-danger validation-msg" })
+                    <label>Kick Off/Pre Inspection</label>
+
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.Material_identification, new { @type = "checkbox", @class = "checkBox" })
+                    @Html.ValidationMessageFor(model => model.Material_identification, "", new { @class = "text-danger validation-msg" })
+                    <label>Material Identification</label>
+
+                </div>
+            </div>
+
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.Interim_Stages, new { @type = "checkbox", @class = "checkBox" })
+                    @Html.ValidationMessageFor(model => model.Interim_Stages, "", new { @class = "text-danger validation-msg" })
+                    <label>Interim Stages</label>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.Document_review, new { @type = "checkbox", @class = "checkBox" })
+                    @Html.ValidationMessageFor(model => model.Document_review, "", new { @class = "text-danger validation-msg" })
+                    <label>Document Review</label>
+
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.Final_Inspection, new { @type = "checkbox", @class = "checkBox" })
+                    @Html.ValidationMessageFor(model => model.Final_Inspection, "", new { @class = "text-danger validation-msg" })
+                    <label>Final Inspection</label>
+
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.Re_inspection, new { @type = "checkbox", @class = "checkBox" })
+                    @Html.ValidationMessageFor(model => model.Re_inspection, "", new { @class = "text-danger validation-msg" })
+                    <label>Re-Inspection</label>
+
+                </div>
+            </div>
+        </div>
+        @if (Model.ReviseReportNoForPDF == "0" || Model.ReviseReportNoForPDF == null)
+        {
+
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-xs-12 col-sm-4">
+                    <div class="form-group">
+                        <label style="color:red;">Revise Reason :</label>
+                        @Html.DropDownListFor(m => m.ddlReviseReason, new List<SelectListItem>
+        {
+        new SelectListItem{ Text="Select", Value = "" },
+        new SelectListItem{ Text="Correction in typing error", Value = "Correction in typing error" },
+        new SelectListItem{ Text="Missing data added", Value = "Missing data added" },
+        new SelectListItem{ Text="Updated / modified data", Value = "Updated / modified data" },
+
+        }, new { @class = "form-control", @id = "ddlReviseReason" })
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-8">
+                    <div class="form-group">
+                        <label style="color:red;">Revise Reason Description:</label>
+                        @*<input type="text" class="form-control" placeholder="Status Here">*@
+                        @Html.TextAreaFor(model => model.ReviseReason, new { @placeholder = "Type..", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ReviseReason, "", new { @class = "text-danger validation-msg" })
+                    </div>
+                </div>
+            </div>
+        }
+
+        @*Activity Start*@
+        <div class="row">
+            <div class="col-xs-12">
+                <div>
+                    @if (ViewBag.Dates != null)
+                    {
+                        var dates = "";
+
+                        <h3 class="form-page-title">Time Sheet</h3>
+                        foreach (var item in ViewBag.Dates as IEnumerable<TuvVision.Models.NonInspectionActivity>)
+                        {
+
+
+                            @Html.HiddenFor(model => model.Activity[k].Id, new { @Value = item.Id })
+                            @Html.HiddenFor(model => model.Activity[k].CallId, new { @Value = item.CallId })
+                            @Html.HiddenFor(model => model.Activity[k].pk_call_idARC, new { @Value = item.pk_call_idARC })
+                            dates = Convert.ToDateTime(item.DateSE).ToString("yyyy-MM-dd") + "," + dates;
+
+                            <div class="row">
+
+                                <div class="col-xs-12 col-sm-2">
+                                    <div class="form-group">
+                                        <label>Start Date:</label>
+                                        @Html.TextBoxFor(model => model.Activity[k].StartDate, "{0:dd MMM yyyy}", htmlAttributes: new
+                                                                                               {
+                                                                                                   placeholder = "Select Start Date",
+                                                                                                   @Value = item.DateSE,
+                                                                                                   @class = "form-control form-control-custom ",
+                                                                                                   autocomplete = "off",
+                                                                                                   @readonly = "readonly"
+                                                                                               })
+                                        @Html.HiddenFor(model => model.Activity[k].StartDate, "{0:dd MMM yyyy}")
+                                        @*@Html.HiddenFor(m => m.Activity[j].StartDate, new { Value = item })*@
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xs-12 col-sm-2">
+                                    <div class="form-group">
+                                        <label>On Site Time:</label>
+
+                                        @Html.TextBoxFor(model => model.Activity[k].StartTime, new
+                                                                                               {
+                                                                                                   @placeholder = "Enter On Site Time",
+                                                                                                   @Value = item.StartTime @*@Value = item.EstimatedTime*@,
+                                                                                                   @class = "form-control"
+                                                                                               })
+                                        @Html.ValidationMessageFor(model => model.Activity[k].StartTime, "", new { @class = "text-danger validation-msg" })
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-2">
+                                    <div class="form-group">
+                                        <label>off Site Time:</label>
+
+                                        @Html.TextBoxFor(model => model.Activity[k].EndTime, new { @placeholder = "Enter Off Site Time", @Value = item.EndTime, @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Activity[k].EndTime, "", new { @class = "text-danger validation-msg" })
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-2">
+                                    <div class="form-group">
+                                        <label>Travel Time:</label>
+
+                                        @Html.TextBoxFor(model => model.Activity[k].TravelTime, new { @placeholder = "Enter Travel Time", @Value = item.TravelTime, @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Activity[k].TravelTime, "", new { @class = "text-danger validation-msg" })
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="form-group">
+                                        <label>Description:</label>
+
+                                        @Html.TextBoxFor(model => model.Activity[k].Description, new
+                                                                                               {
+                                                                                                   @placeholder = "Enter Description",
+                                                                                                   @Value = item.Description @*@Value = item.Vendor_Name*@,
+                                                                                                   @class = "form-control"
+                                                                                               })
+                                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger validation-msg" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                            k++;
+                        }
+                        TempData["VisitedDates"] = dates;
+                        //if(TempData["VisitedDates"]!=null)
+                        //{
+
+                        //}
+
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        @*Activity End*@
+        <div class="row">
+            <div class="col-xs-12">
+                <span style="color:#E12F24;">
+                    <strong>Note : </strong>
+                </span>
+                Insert correct actual On-Site Time, off-Site Time and travel time. Modify description suitably.
+            </div>
+        </div>
+
+        <div class="col-xs-12 text-center">
+            @if (Model.PK_IVR_ID != 0)
+            {
+
+                <button type="button" class="btn btn-default insert-form-btn" id="btnRevise" title="Submit" style="background-color:#001ED2;color:#FFFFFF;">Revise IVR </button>
+
+
+
+
+                                                                            @*<button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("Activity", "VisitReport",new { @kid = Model.PK_Call_ID} )'">Activity</button>*@
+                                                                            <button type="button" class="btn btn-default insert-form-btn" id="ddlInspectionLocation" style="width:125px; display:none"> Expense</button>
+            }
+        </div>
+
+        <div class="col-xs-12 text-center">
+
+
+            @if (Model.PK_IVR_ID != 0)
+            {
+                <button type="submit" id="myButton" class="btn btn-default insert-form-btn">@*<i class="fa fa-plus-circle"></i>*@ Update IVR</button>
+                if (Model.IVRCount == 0 && Model.chkARC == true)
+                {
+                    @*<button id="btnPrint" name="btnPrint" class="btn btn-default insert-form-btn" type="button" style="background-color:#e63646" onclick="location.href='@Url.Action("UpdateReports", "VisitReport", new { @PK_CALL_ID = Model.PK_Call_ID ,@Flag="Print"})'">Download IVR</button>*@
+                    <button type="button" class="btn btn-default insert-form-btn" id="btnPrint" title="Submit" style="background-color:#e63646;">Download IVR</button>
+                }
+                else
+                {
+                    @*<button id="btnPrint" name="btnPrint" class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("UpdateReports", "VisitReport", new { @PK_CALL_ID = Model.PK_Call_ID ,@Flag="Print"})'">Download IVR</button>*@
+                    <button type="button" class="btn btn-default insert-form-btn" id="btnPrint" title="Submit" style="width:125px;">Download IVR</button>
+                }
+
+
+
+            }
+            else
+            {
+                <button type="submit" id="myButton" class="btn btn-default insert-form-btn"> Save IVR</button>
+            }
+
+
+
+
+
+
+
+
+
+
+            <div class="modal" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+
+                        <div class="modal-header">
+                            <button type="button" class="close NO" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            Do you want to Add Expense and Trip Segment?
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            @*<a href="@Url.Action("VisitReportForm", "VisitReport", new {@PK_Call_ID = Model.PK_Call_ID })" class="btn btn-danger" style="background-color:green;" title="Edit">Yes</a>*@
+                            @*Added By Satish Pawar*@
+                            <a href="@Url.Action("CreateExpenseItem", "ExpenseItem", new { FKId = Model.PK_IVR_ID,Type="IVR" ,SubJobNo=Model.SubJob_No,PK_Call_Id=Model.PK_Call_ID })" class="btn btn-danger" style="background-color:green;" title="Edit">Add Expense</a>
+                            <a href="@Url.Action("CreateTripSegment", "TripSegment", new { FKId = Model.PK_IVR_ID,Type="VSR" ,SubJobNo=Model.SubJob_No,PK_Call_Id=Model.PK_Call_ID  })" class="btn btn-danger" style="background-color:green;" title="Edit">Add Trip Segment</a>
+
+                            <button type="button" class="btn btn-danger NO" data-dismiss="modal">No</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--End The Modal -->
+
+        </div>
+
+
+    </div>
+
+
+
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </div><!-- /.col -->
+
+                                            </div><!-- /.row -->
+                                        </div><!-- /.col -->
+
+
+
+                                    </div><!-- /.row -->
+                                </div><!-- /.container-fluid -->
+                                <!--End of header-->
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    @*</form>*@
+            }
+
+
+
+<script type="text/javascript">
+
+
+    $('#filter1').click(function () {
+        debugger;
+        console.log($('#CompanyName').val())
+        $('#ddlContactType').html('');
+        var VisitReport = $('#VisitReport').val();
+        var SubJobNo = $('#SubJobNo').val();
+        var ProjectName = $('#ProjectName').val();
+        var Vendor = $('#Vendor').val();
+        var Client = $('#Client').val();
+
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("GetSubSubSectionType", "VisitReport")',
+            //data: { CompanyName: $('#CompanyName').val() },
+            data: { VisitReport: VisitReport, SubJobNo: SubJobNo, ProjectName: ProjectName, Vendor: Vendor, Client: VisitReport },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                // alert(data)
+                $("#Others").show();
+                $("#Systemhide").hide();
+                ///alert(data)
+
+                var district = "<select id='ddlContactType'>";
+                district = district + '<option value="">--Select IVR--</option>';
+                for (var i = 0; i < data.length; i++) {
+                    district = district + '<option value=' + data[i].ReportName + '>' + data[i].ReportName + '</option>';
+                }
+                district = district + '</select>';
+                $('#ddlContactType').html(district);
+            }
+        });
+        //});
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        var chkARC = $('#chkARC').val();
+        var IVRCount = @Model.IVRCount;
+
+        // var IVRCount = $('#IVRCount').val();
+
+        var ARCFirstPrint = $('#ARCFirstPrint').val();
+        var SubType = $('#SubType').val().toUpperCase();
+
+        var myVisitedDates = '@TempData["VisitedDates"]';
+        var specificDates = myVisitedDates.split(",");
+        //var specificDates = ['2023-03-16', '2023-03-02', '2023-03-09'];
+
+        // Get the current date
+        var currentDate = new Date();
+
+        // Subtract 2 months from the current date
+        var twoMonthsAgo = new Date();
+        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+
+        // Filter the specificDates array to get dates within the last two months
+        var filteredDates = specificDates.filter(function (date) {
+            var dateObj = new Date(date);
+            return dateObj >= twoMonthsAgo && dateObj <= currentDate;
+        });
+        console.log(filteredDates);
+        if(filteredDates.length>0)
+        {
+            $('#btnAddExpenses').prop('disabled', false);
+            //$("#btnAddExpenses").show();
+        }
+        else{
+            // $('#btnAddExpenses').prop('disabled', true);
+            //$("#btnAddExpenses").hide();
+        }
+        // Use the tempDataValue in your JavaScript code
+        //console.log(tempDataValue);
+
+        $("input[type='text']").each(function () {
+
+            if (chkARC == "True" )
+            {
+                if(IVRCount == 0)
+                {
+                    if ($(this).attr('name') == 'SubJob_No' || $(this).attr('name') == 'Branch' || $(this).attr('name') == 'Date_Of_Inspection' || $(this).attr('name') == 'Client_Name' || $(this).attr('name') == 'Vendor_Name_Location' || $(this).attr('name') == 'Sub_Vendor_Name' )
+                    {
+                        $(this).prop('readonly', true);
+                    }
+                    else
+                    {
+                        $(this).prop('readonly', false);
+                    }
+
+                    if (($(this).attr('name') == 'Po_No'))
+                    {
+                        $(this).prop('readonly', false);
+                    }
+                    if (($(this).attr('name') == 'Date_of_PO'))
+                    {
+                        $("divPODate").removeClass(" addCSS");
+                    }
+                }
+                else
+                {
+                    //  alert(123);
+                    if ($(this).attr('name') == 'SubJob_No' || $(this).attr('name') == 'Branch' || $(this).attr('name') == 'Date_Of_Inspection' || $(this).attr('name') == 'Client_Name' || $(this).attr('name') == 'Vendor_Name_Location' || $(this).attr('name') == 'Sub_Vendor_Name' || $(this).attr('name') == 'End_user_Name' || $(this).attr('name') == 'Project_Name_Location' || $(this).attr('name') == 'DEC_PMC_EPC_Name' || $(this).attr('name') == 'DEC_PMC_EPC_Assignment_No')
+                    {
+                        $(this).prop('readonly', true);
+                    }
+
+                    if (($(this).attr('name') == 'Po_No'))
+                    {
+                        $(this).prop('readonly', true);
+                    }
+
+                    if (($(this).attr('name') == 'Date_of_PO'))
+                    {
+                        var DL = document.getElementById("divPODate");
+                        DL.className += " addCSS";
+                    }
+                }
+            }
+
+            if (SubType == "SUBSUB JOB")
+            {
+                if (($(this).attr('name') == 'Po_No_SubVendor')) {
+                    $(this).prop('readonly', false);
+                }
+
+                if (($(this).attr('name') == 'SubSubVendorDate_of_PO')) {
+                    $("divSubPODate").removeClass("addCSS");
+                }
+            }
+            else
+            {
+                if (($(this).attr('name') == 'Po_No_SubVendor')) {
+                    $(this).prop('readonly', true);
+                }
+
+                if (($(this).attr('name') == 'SubSubVendorDate_of_PO'))
+                {
+
+                    var DL = document.getElementById("divSubPODate");
+                    DL.className += " addCSS";
+                }
+            }
+        })
+    });
+</script>
+
+<script type="text/javascript">
+
+
+    $('#filter2').click(function () {
+        debugger;
+        var IVR = $('#ddlContactType').val();
+        //   alert(IVR)
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("GetIVRById", "VisitReport")',
+            //data: { CompanyName: $('#CompanyName').val() },
+            data: { IVR: IVR },
+            datatype: "json",
+            traditional: true,
+            success: function (ObjModelVisitReport) {
+                //if (ObjModelVisitReport.length > 0)
+                //{
+                //        console.log(lstCompanyDashBoard[i])
+                //        $('#partialtabledata').append('<tr> <td><input type="checkbox" class="checkBox" value="' + lstCompanyDashBoard[i].PK_RM_ID + '"> </td>  </tr>')
+                //}
+
+                if (ObjModelVisitReport.PK_Call_ID == null) {
+                    alert("Data is not Available");
+                }
+                else {
+                    alert("IVR Form Copied Successfully...");
+                }
+
+                var _call_id = ObjModelVisitReport.PK_Call_ID;
+                //alert(ObjModelVisitReport.PK_Call_ID);
+                //debugger;
+                $('.CallID').val(ObjModelVisitReport.PK_Call_ID);
+
+                $(".ItemDescription").removeAttr("onclick");
+                $(".ItemDescription").attr("onclick", "location.href='/VisitReport/ItemDescription?PK_Call_ID=" + _call_id + "'")
+
+                $(".ReferenceDocuments").removeAttr("onclick");
+                $(".ReferenceDocuments").attr("onclick", "location.href='/VisitReport/ReferenceDocuments?PK_Call_ID=" + _call_id + "'")
+
+                $(".InspectionActivites").removeAttr("onclick");
+                $(".InspectionActivites").attr("onclick", "location.href='/VisitReport/InspectionActivites?PK_Call_ID=" + _call_id + "'")
+
+                $(".DocumentReviewed").removeAttr("onclick");
+                $(".DocumentReviewed").attr("onclick", "location.href='/VisitReport/DocumentReviewed?PK_Call_ID=" + _call_id + "'")
+
+                $(".EquipmentDetails").removeAttr("onclick");
+                $(".EquipmentDetails").attr("onclick", "location.href='/VisitReport/EquipmentDetails?PK_Call_ID=" + _call_id + "'")
+
+                $(".Conclusion").removeAttr("onclick");
+                $(".Conclusion").attr("onclick", "location.href='/VisitReport/Conclusion?PK_Call_ID=" + _call_id + "'")
+
+                $(".ReportImage").removeAttr("onclick");
+                $(".ReportImage").attr("onclick", "location.href='/VisitReport/ReportImage?PK_Call_ID=" + _call_id + "'")
+                //URL: "localhost:1234/myProject/WebApp/Data?accountCode=" + ObjModelVisitReport.PK_Call_ID
+            }
+        });
+        //});
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlInspectionLocation').on('click', function () {
+            $('#myModal').show();
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.NO').click('change', function () {
+
+            $('#myModal').hide();
+        });
+    });
+</script>
+
+<script>
+    $('#btnCopyNew').on('click', function () {
+        debugger
+        var CopyNew =
+				{
+				    PK_Call_ID: $('#PK_Call_ID').val(),
+
+				    ReportNoName: $('#ddlContactType').val(),
+
+				}
+
+        $.ajax({
+
+            type: 'POST',
+            url: '@Url.Action("CopyNew", "VisitReport")',
+            dataType: 'json',
+            Async: false,
+            data: JSON.stringify({ CopyNew: CopyNew }),
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                debugger
+
+                if (response.success == 1) {
+                    alert("Data Copy Successfuly");
+                }
+                else {
+                    alert("Something went wrong please try again.");
+                }
+
+
+            }
+        })
+    });
+</script>
+
+<script>
+    $('#btnClearNew').on('click', function () {
+        debugger
+        var x = confirm("Are you sure you want to delete record?");
+        if (x) {
+            var ClearNew =
+              {
+                  PK_Call_ID: $('#PK_Call_ID').val(),
+
+
+
+              }
+
+            $.ajax({
+
+                type: 'POST',
+                url: '@Url.Action("Clear", "VisitReport")',
+                dataType: 'json',
+                Async: false,
+                data: JSON.stringify({ ClearNew: ClearNew }),
+                enctype: "multipart/form-data",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    debugger
+
+                    if (response.success == 1) {
+                        alert("Data Clear Successfuly");
+                    }
+                    else {
+                        alert("Something went wrong please try again.");
+                    }
+
+
+                }
+            })
+        }
+        else
+        {
+
+        }
+
+
+    });
+</script>
+
+
+
+
+<script>
+    $("#btnRevise").click(function myfunction() {
+        debugger;
+
+        if (validateform() == false) {
+
+            return false;
+        }
+        else {
+            $("#btnRevise").prop('disabled', true);
+            var PK_CALL_ID = $("#PK_Call_ID").val();
+
+            if(window.confirm('Do you want to revise this IVR?'))
+            {
+                //window.location.href = '@Url.Action("ReviseReports", "VisitReport", new { @PK_CALL_ID = Model.PK_Call_ID } )' ;
+                window.location.href = '@Url.Action("ReviseReportsNew", "VisitReport", new { @PK_CALL_ID = Model.PK_Call_ID } )' ;
+            }
+            else
+            {
+
+            }
+
+
+        }
+    });
+    function validateform() {
+        debugger;
+        var ReviseReason = $("#ReviseReason").val();
+        var ddlReviseReason = $("#ddlReviseReason").val();
+
+
+
+        //if (ddlReviseReason == "" || ddlReviseReason == null) {
+
+        //    alert("Please Select Revise Reason !");
+        //    $("#ddlReviseReason").focus()
+        //    return false;
+
+        //}
+        //else
+        //{
+
+        //    return true;
+        //}
+
+
+        //if (ReviseReason == "" || ReviseReason == null) {
+
+        //    alert("Please mentioned Revise Reason !");
+        //    $("#ReviseReason").focus()
+        //    return false;
+
+        //}
+        //else
+        //{
+
+        //    return true;
+        //}
+
+    }
+
+</script>
+<script>
+    $("#btnPrint").click(function myfunction() {
+        debugger;
+        signcheck();
+        //validateform();
+        validateform1();
+        validateform2()
+        if ($("#hdnarea").val() == '1') {
+
+            //if (validateform() == false) {
+
+            //    return false;
+            //}
+            if (signcheck() == false) {
+
+                return false;
+            }
+            else if (validateform1() == false) {
+
+                return false;
+            }
+            else if (validateform2() == false) {
+
+                return false;
+            }
+            else {
+
+                window.location.href = '@Url.Action("UpdateReports", "VisitReport", new { @PK_CALL_ID = Model.PK_Call_ID, @Flag = "Print" } )' ;
+            }
+        }
+        else{
+            //alert("Please attach sign")
+        }
+    });
+    function validateform2() {
+        debugger;
+        var ReportNoForPDF = $("#ReviseReportNoForPDF").val();
+        var ReviseReason = $("#ReviseReason").val();
+        var ddlReviseReason = $("#ddlReviseReason").val();
+
+
+        if (ReportNoForPDF != "0" ) {
+
+            if (ddlReviseReason == "" || ddlReviseReason == null) {
+
+                alert("Please Select Revise Reason !");
+                $("#ddlReviseReason").focus()
+                return false;
+
+            }
+            else if (ReviseReason==""||ReviseReason==null)
+            {
+                alert("Please Enter Revise Reason description!");
+                $("#ReviseReason").focus()
+                return false;
+            }
+            else
+            {
+
+                return true;
+            }
+        }
+
+        //if (ReportNoForPDF != "0" ) {
+        //    if (ReviseReason==""||ReviseReason==null)
+        //    {
+        //        alert("Please Enter Revise Reason description!");
+        //        $("#ReviseReason").focus()
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        return true;
+        //    }
+
+
+        //}
+        //else
+        //{
+
+        //    return true;
+        //}
+
+    }
+
+
+</script>
+
+
+<script>
+    function signcheck() {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetdownloadData", "VisitReport")',
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                //var parsedData = data;
+                debugger
+                if (data.Test == "Exits") {
+
+                    $("#hdnarea").val("1");
+                    return true;
+
+
+
+                } else if (data.Test == "Not Exits") {
+                    alert("Please Upload your signature in My profile Section.")
+                    $("#hdnarea").val("0");
+                    return false;
+
+
+                } else {
+
+
+                }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error("AJAX Error: " + error);
+                return false;
+            }
+        });
+
+
+    }
+
+</script>
+
+<script>
+        $('#btnRevise').on('click', function () {
+            debugger
+
+            var ReviseReason = $("#ReviseReason").val();
+
+
+            var PK_CALL_ID = $("#PK_Call_ID").val();
+
+
+            if (ReviseReason == "" || ReviseReason == null) {
+
+                alert("Please select Revise Reason !");
+                $("#ReviseReason").focus()
+                return false;
+            }
+
+
+
+
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ReviseReports", "VisitReport")',
+                dataType: 'json',
+                Async: false,
+                data: JSON.stringify({ "PK_CALL_ID": PK_CALL_ID }),
+                enctype: "multipart/form-data",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+
+                }
+
+
+            });
+        });
+    </script>
+
+
+<script type="text/javascript">
+
+    //function checkForm(form)
+    //{
+
+    //    form.myButton.disabled = true;
+    //    setTimeout(function () { document.getElementsByName("myButton").disabled = false; }, 5000);
+    //  return true;
+
+    //  }
+    //$('#myButton').on('click', function () {
+
+    //    $("#myButton").attr("disabled", "disabled");
+    //    setTimeout(function () {
+    //        $("#myButton").removeAttr("disabled");
+    //    }, 10000);
+    //});
+</script>
+
+
+<script>
+    $('#myButton').on('click', function () {
+        debugger;
+        var arcpk_call_id = $('#pk_call_idARC').val();
+        alert(arcpk_call_id);
+        if (validateform1() == false) {
+            return false;
+        }
+        else {
+            var arcpk_call_id = $('#pk_call_idARC').val();
+            alert(arcpk_call_id);
+            $("#form1").submit();
+
+        }
+
+    });
+
+
+    function validateform1() {
+        if ($('input:checkbox').filter(':checked').length >= 1)
+        {
+            return true;
+        }
+        else
+        {
+            alert("Please select Stages of Inspection")
+            return true;
+        }
+        debugger;
+    }
+</script>
+
+
+<script>
+    $(document).ready(function(){
+
+        var Pk_callidAVR =$('#Pk_callidAVR').val();
+
+        if(Pk_callidAVR != null){
+        
+            var itemid ='@Url.Action("VisitReportFormArcJob", "VisitReport")?ARCPK_Call_ID=' + Pk_callidAVR.join(',') + '&status=' + status;
+
+        }else{
+
+        }
+
+
+    })
+</script>

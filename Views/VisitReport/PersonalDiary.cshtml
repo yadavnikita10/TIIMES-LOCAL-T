@@ -40,34 +40,14 @@
             background-color: #001ED2;
             color: white;
         }
-
-
-        .col-xs-12 img {
+           .col-xs-12 img {
    -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none;    /* Firefox */
   -ms-user-select: none;     /* IE10+ */
   user-select: none;         /* Standard */
   cursor: move;   
 }
-
 </style>
-<style>
-    .editor-wrapper {
-        width: 230px;
-        height: 210px;
-        border: 1px solid #ccc;
-        padding: 5px;
-        overflow-y: auto;
-        background-color: white;
-    }
-
-    .editor {
-        width: 100%;
-        height: 100%;
-        outline: none;
-    }
-</style>
-
 
 <style>
     .special-table-container {
@@ -122,16 +102,7 @@
         overflow: auto;
         border: 1px solid #000;
     }
-
-    #preloader {
-        position: fixed;
-        width: 100%;
-        height: 100vh;
-        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
-        z-index: 9999;
-    }
-
-    .table-scroll-wrapper {
+      .table-scroll-wrapper {
     max-height: 400px;  /* Adjust height as needed */
     overflow-y: auto;   /* Enables vertical scroll */
     overflow-x: auto;   /* Enables horizontal scroll */
@@ -146,8 +117,30 @@
     z-index: 1;
 }
 
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;  
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+    }
 </style>
+<style>
+    .editor-wrapper {
+        width: 230px;
+        height: 210px;
+        border: 1px solid #ccc;
+        padding: 5px;
+        overflow-y: auto;
+        background-color: white;
+    }
 
+    .editor {
+        width: 100%;
+        height: 100%;
+        outline: none;
+    }
+</style>
 
 <script>
     $(function () {
@@ -265,24 +258,24 @@
                         <div class="col-xs-12">
                             <hr class="custom-hr1 line">
                         </div>
-                       
+
+
                         <div class="col-xs-12">
                             <p style="font-size: 1.2em; color: red;font-family:'TNG Pro'">
                                 Note: You can drag the icons to use them on Activities Events Column.
                             </p>
-                            <img src="~/low stress.png" style="width:40px;" draggable="true"
+                            <img src="~/low stress.png" style="width:24px;height:28px;" draggable="true"
                                  ondragstart="drag(event)" data-value="(low stress round stamp)" oncopy="return false" oncut="return false" onpaste="return false">
 
-                            <img src="~/Oval.png" style="width:40px;height:35px;" draggable="true"
+                            <img src="~/Oval.png" style="width:24px;height:28px;" draggable="true"
                                  ondragstart="drag(event)" data-value="(oval shape stamp)" oncopy="return false" oncut="return false" onpaste="return false">
 
-                            <img src="~/round.png" style="width:40px;height:35px;" draggable="true"
+                            <img src="~/round.png" style="width:24px;height:28px;" draggable="true"
                                  ondragstart="drag(event)" data-value="(round stamp)" oncopy="return false" oncut="return false" onpaste="return false">
                         </div>
 
-                        <input type="hidden" id="htmlField" name="Activities_EventsHtml" />
-                        <input type="hidden" id="valueField" name="Activities_EventsValues" />
                         <div class="table-scroll-wrapper">
+
                             <table class="special-table" id="example">
                                 <thead>
                                     <tr>
@@ -320,15 +313,15 @@
                                                     <textarea @*@(!string.IsNullOrEmpty(row.Boliers_Maker_No) ? row.Boliers_Maker_No : Model.Boliers_Maker_No)*@ class="form-control data-boilermakerno" style="width: 225px; height: 210px;" rows="5" cols="10">@(row.Boliers_Maker_No ?? "")</textarea>
                                                 </td>
                                                 @*<td>
-                                        <textarea class="form-control Activities_Events" style="width: 300px; height: 210px;" rows="5" cols="10" id="display">
-                                            @(row.Activities_Events ?? "")
-                                        </textarea>
-                                    </td>*@
+                                    <textarea class="form-control Activities_Events" style="width: 300px; height: 210px;" rows="5" cols="10">
+                                        @(row.Activities_Events ?? "")
+                                    </textarea>
+                                </td>*@
                                                 <td>
                                                     <div class="editor-wrapper">
                                                         <div class="Activities_Events editor"
                                                              contenteditable="true"
-                                                             ondrop="dropIntoEditor(event)"
+                                                             ondrop="dropIntoEditor(event)"                                                                                                                      
                                                              ondragover="allow(event)">
                                                             @Html.Raw(row.Activities_Events ?? "")
                                                         </div>
@@ -337,6 +330,7 @@
                                                 <td>
                                                     <select id="formDropdown" class="form-control data-formno" style="width:85px;">
                                                         <option value="">-- Select Form --</option>
+                                                        <option value="NA" @(row.Form_no_Certificate_No == "NA" ? "selected" : "")>NA</option>
                                                         <option value="I" @(row.Form_no_Certificate_No == "I" ? "selected" : "")>I</option>
                                                         <option value="II(1) , III , IV-A" @(row.Form_no_Certificate_No == "II(1) , III , IV-A" ? "selected" : "")>II(1) , III , IV-A</option>
                                                         <option value="II(2) , III , IV-A" @(row.Form_no_Certificate_No == "II(2) , III , IV-A" ? "selected" : "")>II(2) , III , IV-A</option>
@@ -396,30 +390,21 @@
 
                                             <td><textarea class="form-control date-referenceno" style="height:210px;"></textarea></td>
                                             <td><textarea class="form-control data-boilermakerno" style="width:225px; height: 210px;"></textarea></td>
-                                            @*<td><textarea class="form-control Activities_Events" style="width:230px;height: 210px;"  ondrop="dropIntoTextarea(event)"ondragover="allow(event)"></textarea></td>*@
-
-                                            @*<td>
-                                    <div id="dropDiv"
-                                         class="form-control Activities_Events"
-                                         contenteditable="true"
-                                         style="width:230px;height:210px;padding:5px;overflow:auto;"
-                                         ondrop="dropImage(event)"
-                                         ondragover="allow(event)">
-                                    </div>
-                                </td>*@
+                                            @*<td><textarea class="form-control Activities_Events" style="width:230px;height: 210px;"></textarea></td>*@
                                             <td>
                                                 <div class="editor-wrapper">
                                                     <div class="Activities_Events editor"
                                                          contenteditable="true"
-                                                         ondrop="dropIntoEditor(event)"
-                                                         ondragover="allow(event)"
-                                                         onpaste="handlePaste(event)">
+                                                         ondrop="dropIntoEditor(event)"                                                         
+                                                         ondragover="allow(event)">
                                                     </div>
                                                 </div>
                                             </td>
+
                                             <td>
                                                 <select id="formDropdown" class="form-control data-formno" style="width:85px;">
                                                     <option value="">-- Select Form --</option>
+                                                    <option>NA</option>
                                                     <option>I</option>
                                                     <option>II(1) , III , IV-A</option>
                                                     <option>II(2) , III , IV-A</option>
@@ -510,7 +495,7 @@
                                         <label style="color:#001ED2;"> Note:</label><br />
                                         <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                                                        @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
                                 }
                                 else
                                 {
@@ -543,9 +528,16 @@
                                 <button type="button" id="saveDataBtn" class="btn btn-default insert-form-btn" onclick="saveDataBtn()"> Save</button>
 
                             }
-                            <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF_PersonDiary", "VisitReport", new { pk_call_id = Model.pk_call_id,PK_RM_ID=Model.Pk_id })">
+@if (Model.IsComfirmation == true)
+{
+                            <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF_PersonDiary", "VisitReport", new { pk_call_id = Model.pk_call_id, PK_RM_ID = Model.Pk_id })">
                                 Export to PDF
                             </a>
+}
+else
+{
+
+}
                         </div>
                     </div>
                 </div>
@@ -589,14 +581,11 @@
             const size = row.find('.data-size').val();
             const Qualityoffered = row.find('.data-Qualityoffered').val();
             var finalinspection = row.find('.data-finalinspection').val();
-            //var Activities_Events = row.find('.Activities_Events').html();//row.find('.Activities_Events').val();
-            // Get the contenteditable Activities_Events div
+            //var Activities_Events = row.find('.Activities_Events').val();
             const activitiesEditor = row.find('.Activities_Events');
             const activitiesHTML = activitiesEditor.html();
 
-            // Clean version by replacing images with their data-value
             const activitiesClean = extractCleanText(activitiesHTML);
-
             var Certificateno = row.find('.data-Certificateno').val();
             const id = row.data("id");
             var VendorName = $("#VendorName").val();
@@ -626,6 +615,10 @@
             var PK_IVR_ID = $("#PK_IVR_ID").val();
             var PK_RM_ID = $("#Pk_id").val();
 
+
+            
+
+        //var ShopApproved = $(".ShopApproved").is(':checked');
             var ShopApproved = $(".ShopApproved:checked").val();// $(".ShopApproved").is(':checked');
             var ShopApproved_Number = $("#ShopApproved_Number").val();
             var ValidityDate = $("#Validity").val();
@@ -635,8 +628,9 @@
                     $('.checkBox_').prop('checked', false);
                     $("#preloader").remove();
                     return false;
+
                 }
-                
+              
                 if (ShopApproved.toLowerCase() == "true") {
                     if (ShopApproved_Number == null || ShopApproved_Number == "") {
                         alert("Please enter Shop Approved Number.");
@@ -653,6 +647,12 @@
                     }
 
                 }
+            }
+
+            if (PK_RM_ID == "0") {
+                alert("ID Cannot be 0");
+                $("#preloader").remove();
+                return false;
             }
 
 
@@ -699,20 +699,19 @@
                     </td>
                     <td><textarea class ="form-control date-referenceno" style="height: 210px;"></textarea></td>
                     <td><textarea class ="form-control data-boilermakerno" style="width: 225px; height: 210px;"></textarea></td>
-                       <td>
+                               <td>
                                                 <div class ="editor-wrapper">
                                                     <div class ="Activities_Events editor"
                                                          contenteditable="true"
-                                                          onpaste="handlePaste(event)"
                                                          ondrop="dropIntoEditor(event)"
                                                          ondragover="allow(event)">
                                                     </div>
                                                 </div>
                                             </td>
                       <td>
-
                                                                                    <select id="formDropdown" class ="form-control data-formno"  style="width:85px;">
                                                                                         <option value="">--Select Form--</option>
+                                                                                        <option>NA</option>
                                                                                         <option>I</option>
                                                                                         <option>II(1), III, IV-A</option>
                                                                                         <option>II(2), III, IV-A</option>
@@ -758,7 +757,7 @@
         $(this).closest('tr').remove();
     });
 
-  
+
 
     $(".ShopApproved").change(function () {
         debugger;
@@ -774,7 +773,6 @@
             $("#Validity").val('');
         }
     });
-
 </script>
 
 
@@ -782,7 +780,7 @@
 function drag(event) {
     const value = event.target.getAttribute('data-value');
     event.dataTransfer.setData("text/plain", event.target.src);
-    event.dataTransfer.setData("text/value", value); 
+    event.dataTransfer.setData("text/value", value);
 }
 
 function allow(event) {
@@ -797,95 +795,19 @@ function dropIntoEditor(event) {
 
     const img = document.createElement('img');
     img.src = fullSrc;
-    img.setAttribute('data-value', stampValue); 
-    img.style.width = '40px';
-    img.style.height = '36px';
+    img.setAttribute('data-value', stampValue);
+    img.style.width = '24px';
+    img.style.height = '28px';
     img.style.marginRight = '5px';
 
     editor.appendChild(img);
 }
 
-
-
-//function insertImageAtCaret(img) {
-//    const sel = window.getSelection();
-//    if (!sel.rangeCount) return;
-//    const range = sel.getRangeAt(0);
-//    range.deleteContents();
-//    range.insertNode(img);
-//    range.collapse(false);
-//    sel.removeAllRanges();
-//    sel.addRange(range);
-//}
 </script>
 
 
-
-
 <script>
-    //function handlePaste(e) {
-    //    const clipboard = e.clipboardData || window.clipboardData;
-    //    if (!clipboard) return;
 
-    //    e.preventDefault();
-
-    //    const items = clipboard.items || [];
-
-    //    for (let i = 0; i < items.length; i++) {
-    //        const item = items[i];
-
-    //        if (item.kind === "file" && item.type.startsWith("image/")) {
-    //            const file = item.getAsFile();
-    //            const reader = new FileReader();
-
-    //            reader.onload = function (event) {
-    //                const dataURL = event.target.result;
-
-    //                const img = document.createElement("img");
-    //                img.src = dataURL;
-    //                img.style.width = "40px";
-    //                img.style.height = "36px";
-    //                img.style.marginRight = "5px";
-
-    //                const value = getStampValueFromSrc(dataURL);
-    //                img.setAttribute("data-value", value);
-
-    //                insertImageAtCaret(img);
-    //            };
-
-    //            reader.readAsDataURL(file);
-    //            return; // only handle one item
-    //        }
-    //    }
-
-    //    const text = clipboard.getData("text/plain");
-    //    document.execCommand("insertText", false, text);
-    //}
-
-
-    //document.addEventListener("DOMContentLoaded", function () {
-    //    document.querySelectorAll('.Activities_Events.editor').forEach(editor => {
-    //        editor.addEventListener('paste', handlePaste, false);
-    //    });
-    //});
-
-
-    //function insertImageAtCaret(imgElement, imagePath, container) {
-    //    const sel = window.getSelection();
-    //    if (!sel || !sel.rangeCount) return;
-
-    //    const range = sel.getRangeAt(0);
-    //    range.deleteContents();
-
-    //    const imgClone = imgElement.cloneNode();
-    //    const fragment = document.createDocumentFragment();
-    //    fragment.appendChild(imgClone);
-
-    //    range.insertNode(fragment);
-    //    range.collapse(false);
-    //    sel.removeAllRanges();
-    //    sel.addRange(range);
-    //}
     function extractCleanText(htmlContent) {
         const temp = document.createElement("div");
         temp.innerHTML = htmlContent;
@@ -906,18 +828,11 @@ function dropIntoEditor(event) {
     };
 
 
-    //function getStampValueFromSrc(src) {
-    //    for (let file in imageValueMap) {
-    //        if (src.includes(file)) return imageValueMap[file];
+    //document.addEventListener('keydown', function (e) {
+  
+    //    if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'x' || e.key === 'v')) {
+    //        e.preventDefault();
     //    }
-    //    return "(stamp)"; // fallback
-    //}
-
-    document.addEventListener('keydown', function (e) {
-        // Ctrl+C (copy), Ctrl+X (cut), Ctrl+V (paste)
-        if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'x' || e.key === 'v')) {
-            e.preventDefault();
-        }
-    });
+    //});
 
 </script>

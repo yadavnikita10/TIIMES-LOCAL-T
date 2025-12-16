@@ -14,90 +14,138 @@ using System.Net.Http;
 using System.Security.Cryptography;
 
 public class CommonControl
+{
+
+    public CommonControl()
     {
 
-        public CommonControl()
-        {
+    }
+    public static string FileUpload(string path, HttpPostedFileBase fu)
+    {
 
-        }
-        public static string FileUpload(string path, HttpPostedFileBase fu)
+        if (fu != null)
         {
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + path.Replace("/", "\\") + fu.FileName;
+            string ImageDirectoryFP = path.Replace("/", "\\");
+            string ImageDirectory = "~/" + path;
+            string ImagePath = "~/" + path + fu.FileName;
+            string fileNameWithExtension = System.IO.Path.GetExtension(fu.FileName);
+            string fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fu.FileName);
+            string ImageName = fu.FileName;
 
-            if (fu != null)
+            int iteration = 1;
+
+            while (System.IO.File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath)))
             {
-                string filePath = AppDomain.CurrentDomain.BaseDirectory + path.Replace("/", "\\") + fu.FileName;
-                string ImageDirectoryFP = path.Replace("/", "\\");
-                string ImageDirectory = "~/" + path;
-                string ImagePath = "~/" + path + fu.FileName;
-                string fileNameWithExtension = System.IO.Path.GetExtension(fu.FileName);
-                string fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fu.FileName);
-                string ImageName = fu.FileName;
+                ImagePath = string.Concat(ImageDirectory, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
+                filePath = string.Concat(ImageDirectoryFP, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
+                ImageName = string.Concat(fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
+                iteration += 1;
+            }
 
-                int iteration = 1;
+            if (iteration == 1)
+            {
+                fu.SaveAs(filePath);
+            }
+            else
+            {
+                fu.SaveAs(AppDomain.CurrentDomain.BaseDirectory + filePath);
+            }
+            return ImageName;
+        }
+        else
+        {
+            return null;
+        }
 
+    }
+
+    public static string FileUploadCompress(string path, HttpPostedFileBase fu, int ImgId, string callID)
+    {
+
+        if (fu != null)
+        {
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + path.Replace("/", "\\") + fu.FileName;
+
+            string ImageDirectoryFP = path.Replace("/", "\\");
+            string ImageDirectory = "~/" + path;
+            string ImagePath = "~/" + path + fu.FileName;
+            string fileNameWithExtension = System.IO.Path.GetExtension(fu.FileName);
+            string fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fu.FileName);
+            string ImageName = callID + "_" + fu.FileName;
+
+
+            if (ImgId != 0)
+            {
                 while (System.IO.File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath)))
                 {
-                    ImagePath = string.Concat(ImageDirectory, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
-                    filePath = string.Concat(ImageDirectoryFP, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
-                    ImageName = string.Concat(fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
-                    iteration += 1;
-                }
 
-                if (iteration == 1)
-                {
-                    fu.SaveAs(filePath);
+                    System.IO.File.Delete(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath));
                 }
-                else
-                {
-                    fu.SaveAs(AppDomain.CurrentDomain.BaseDirectory + filePath);
-                }
-                return ImageName;
-            }
-            else
-            {
-                return null;
             }
 
+
+            string CompressfilePath = AppDomain.CurrentDomain.BaseDirectory + "CompressFiles\\" + ImageName;
+
+            fu.SaveAs(filePath);
+            GenerateThumbnails(0.5, filePath, CompressfilePath);
+
+            return ImageName;
         }
-
-        public static string FileUploadCompress(string path, HttpPostedFileBase fu, int ImgId,string callID)
+        else
         {
-
-            if (fu != null)
-            {
-                string filePath = AppDomain.CurrentDomain.BaseDirectory + path.Replace("/", "\\") + fu.FileName;
-
-                string ImageDirectoryFP = path.Replace("/", "\\");
-                string ImageDirectory = "~/" + path;
-                string ImagePath = "~/" + path + fu.FileName;
-                string fileNameWithExtension = System.IO.Path.GetExtension(fu.FileName);
-                string fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fu.FileName);
-                string ImageName = callID + "_" + fu.FileName;
-
-
-                if (ImgId != 0)
-                {
-                    while (System.IO.File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath)))
-                    {
-
-                        System.IO.File.Delete(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath));
-                    }
-                }
-
-
-                string CompressfilePath = AppDomain.CurrentDomain.BaseDirectory + "CompressFiles\\" + ImageName;
-
-                fu.SaveAs(filePath);
-                GenerateThumbnails(0.5, filePath, CompressfilePath);
-
-                return ImageName;
-            }
-            else
-            {
-                return null;
-            }
-
+            return null;
         }
+
+    }
+
+    public static string FileUploadCompressNew(string path, string FileName, int callID)
+    {
+
+        if (FileName != null)
+        {
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + path.Replace("/", "\\") + FileName;
+
+            string ImageDirectoryFP = path.Replace("/", "\\");
+            string ImageDirectory = "~/" + path;
+            string ImagePath = "~/" + path + FileName;
+            string fileNameWithExtension = System.IO.Path.GetExtension(FileName);
+            string fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(FileName);
+            string ImageName = callID.ToString() + "_" + FileName;
+
+            string currentMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(DateTime.Now.Month);
+            string currentYear = DateTime.Now.Year.ToString();
+
+            string finalRelativePath = $"~/Content/Uploads/Images/{currentYear}/{currentMonth}";
+            string finalPhysicalPath = HttpContext.Current.Server.MapPath(finalRelativePath);
+
+
+            //if (ImgId != 0)
+            //{
+            //    while (System.IO.File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath)))
+            //    {
+
+            //        System.IO.File.Delete(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath));
+            //    }
+            //}
+
+
+            //  string CompressfilePath = AppDomain.CurrentDomain.BaseDirectory + "CompressFiles\\" + ImageName;
+            //  string CompressfilePath = finalPhysicalPath;
+
+            // fu.SaveAs(filePath);
+
+            GenerateThumbnails(0.5, filePath, finalPhysicalPath);
+
+            return ImageName;
+            // return CompressfilePath;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
 
     public static string FileUploadResize(string path, HttpPostedFileBase fu, int ImgId, string callID)
     {
@@ -137,6 +185,10 @@ public class CommonControl
             originalImage.Dispose();
             resizedImage.Dispose();
 
+
+            /////Added by Rohini 24052025
+
+            File.Delete(filePath);
             return ImageName;
         }
         else
@@ -179,6 +231,8 @@ public class CommonControl
 
         // Save the image using the JPEG codec and compression quality
         image.Save(filename, jpegCodec, encoderParameters);
+
+
     }
 
     // GetEncoderInfo method to get the codec information for the specified image format
@@ -199,163 +253,163 @@ public class CommonControl
     }
 
     public static string FileUploadCompress_old(string path, HttpPostedFileBase fu, int ImgId)
+    {
+
+        if (fu != null)
         {
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + path.Replace("/", "\\") + fu.FileName;
 
-            if (fu != null)
+            string ImageDirectoryFP = path.Replace("/", "\\");
+            string ImageDirectory = "~/" + path;
+            string ImagePath = "~/" + path + fu.FileName;
+            string fileNameWithExtension = System.IO.Path.GetExtension(fu.FileName);
+            string fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fu.FileName);
+            string ImageName = fu.FileName;
+
+            int iteration = 1;
+
+            while (System.IO.File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath)))
             {
-                string filePath = AppDomain.CurrentDomain.BaseDirectory + path.Replace("/", "\\") + fu.FileName;
+                ImagePath = string.Concat(ImageDirectory, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
+                filePath = string.Concat(ImageDirectoryFP, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
+                ImageName = string.Concat(fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
+                iteration += 1;
+            }
 
-                string ImageDirectoryFP = path.Replace("/", "\\");
-                string ImageDirectory = "~/" + path;
-                string ImagePath = "~/" + path + fu.FileName;
-                string fileNameWithExtension = System.IO.Path.GetExtension(fu.FileName);
-                string fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fu.FileName);
-                string ImageName = fu.FileName;
+            // string CompressfilePath = AppDomain.CurrentDomain.BaseDirectory + "Content\\CompressFiles\\" + ImageName;
+            string CompressfilePath = AppDomain.CurrentDomain.BaseDirectory + "CompressFiles\\" + ImageName;
 
-                int iteration = 1;
-
-                while (System.IO.File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath)))
-                {
-                    ImagePath = string.Concat(ImageDirectory, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
-                    filePath = string.Concat(ImageDirectoryFP, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
-                    ImageName = string.Concat(fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
-                    iteration += 1;
-                }
-
-                // string CompressfilePath = AppDomain.CurrentDomain.BaseDirectory + "Content\\CompressFiles\\" + ImageName;
-                string CompressfilePath = AppDomain.CurrentDomain.BaseDirectory + "CompressFiles\\" + ImageName;
-
-                if (iteration == 1)
-                {
-                    fu.SaveAs(filePath); //
-                }
-                else
-                {
-                    fu.SaveAs(AppDomain.CurrentDomain.BaseDirectory + filePath);
-                }
-                GenerateThumbnails(0.5, AppDomain.CurrentDomain.BaseDirectory + filePath, CompressfilePath);
-
-                return ImageName;
+            if (iteration == 1)
+            {
+                fu.SaveAs(filePath); //
             }
             else
             {
-                return null;
+                fu.SaveAs(AppDomain.CurrentDomain.BaseDirectory + filePath);
             }
+            GenerateThumbnails(0.5, AppDomain.CurrentDomain.BaseDirectory + filePath, CompressfilePath);
 
+            return ImageName;
+        }
+        else
+        {
+            return null;
         }
 
-        private static void GenerateThumbnails(double scaleFactor, string sourcePath, string targetPath)
+    }
+
+    private static void GenerateThumbnails(double scaleFactor, string sourcePath, string targetPath)
+    {
+        try
         {
-            try
-            {
 
-                // Get a bitmap.
-                Bitmap bmp1 = new Bitmap(sourcePath);
+            // Get a bitmap.
+            Bitmap bmp1 = new Bitmap(sourcePath);
 
-                //Or you do can use buil-in method
-                //ImageCodecInfo jgpEncoder GetEncoderInfo("image/gif");//"image/jpeg",...
-                ImageCodecInfo jgpEncoder = GetEncoder(ImageFormat.Jpeg);
+            //Or you do can use buil-in method
+            //ImageCodecInfo jgpEncoder GetEncoderInfo("image/gif");//"image/jpeg",...
+            ImageCodecInfo jgpEncoder = GetEncoder(ImageFormat.Jpeg);
 
-                // Create an Encoder object based on the GUID
-                // for the Quality parameter category.
-                System.Drawing.Imaging.Encoder myEncoder =
-                System.Drawing.Imaging.Encoder.Quality;
+            // Create an Encoder object based on the GUID
+            // for the Quality parameter category.
+            System.Drawing.Imaging.Encoder myEncoder =
+            System.Drawing.Imaging.Encoder.Quality;
 
-                // Create an EncoderParameters object.
-                // An EncoderParameters object has an array of EncoderParameter
-                // objects. In this case, there is only one
-                // EncoderParameter object in the array.
-                EncoderParameters myEncoderParameters = new EncoderParameters(1);
+            // Create an EncoderParameters object.
+            // An EncoderParameters object has an array of EncoderParameter
+            // objects. In this case, there is only one
+            // EncoderParameter object in the array.
+            EncoderParameters myEncoderParameters = new EncoderParameters(1);
 
 
             //EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
             EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 15L);
             myEncoderParameters.Param[0] = myEncoderParameter;
-                bmp1.Save(targetPath, jgpEncoder, myEncoderParameters);
-            }
-            catch (Exception ex)
-            {
+            bmp1.Save(targetPath, jgpEncoder, myEncoderParameters);
+        }
+        catch (Exception ex)
+        {
 
-                string msg = ex.Message;
-            }
-
-
+            string msg = ex.Message;
         }
 
-        private static ImageCodecInfo GetEncoder(ImageFormat format)
-        {
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
 
-            foreach (ImageCodecInfo codec in codecs)
+    }
+
+    private static ImageCodecInfo GetEncoder(ImageFormat format)
+    {
+        ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+
+        foreach (ImageCodecInfo codec in codecs)
+        {
+            if (codec.FormatID == format.Guid)
             {
-                if (codec.FormatID == format.Guid)
-                {
-                    return codec;
-                }
+                return codec;
             }
+        }
+        return null;
+    }
+
+    public static string FileUploadDynamicName(string path, HttpPostedFileBase fu)
+    {
+
+        if (fu != null)
+        {
+            string fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fu.FileName);
+            string sTime = Convert.ToString(DateTime.Now.Hour) + "" + Convert.ToString(DateTime.Now.Minute) + "" + Convert.ToString(DateTime.Now.Second);
+            string ReportName = fileNameWithoutExtension + DateTime.Now.Year + "" + DateTime.Now.Month + "" + DateTime.Now.Day + "" + sTime + ".pdf";
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + path.Replace("/", "\\") + ReportName;
+            string ImageDirectoryFP = path.Replace("/", "\\");
+            string ImageDirectory = "~/" + path;
+            string ImagePath = "~/" + path + fu.FileName;
+            string fileNameWithExtension = System.IO.Path.GetExtension(ReportName);
+
+            string ImageName = ReportName;
+            fu.SaveAs(filePath);
+            //int iteration = 1;
+
+            //while (System.IO.File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath)))
+            //{
+            //    ImagePath = string.Concat(ImageDirectory, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
+            //    filePath = string.Concat(ImageDirectoryFP, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
+            //    ImageName = string.Concat(fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
+            //    iteration += 1;
+            //}
+
+            //if (iteration == 1)
+            //{
+            //    fu.SaveAs(filePath);
+            //}
+            //else
+            //{
+            //    fu.SaveAs(AppDomain.CurrentDomain.BaseDirectory + filePath);
+            //}
+            return ImageName;
+        }
+        else
+        {
             return null;
         }
 
-        public static string FileUploadDynamicName(string path, HttpPostedFileBase fu)
-        {
+    }
+    public static string Encode(string encodeMe)
+    {
+        byte[] encoded = System.Text.Encoding.UTF8.GetBytes(encodeMe);
+        return Convert.ToBase64String(encoded);
+    }
 
-            if (fu != null)
-            {
-                string fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(fu.FileName);
-                string sTime = Convert.ToString(DateTime.Now.Hour) + "" + Convert.ToString(DateTime.Now.Minute) + "" + Convert.ToString(DateTime.Now.Second);
-                string ReportName = fileNameWithoutExtension + DateTime.Now.Year + "" + DateTime.Now.Month + "" + DateTime.Now.Day + "" + sTime + ".pdf";
-                string filePath = AppDomain.CurrentDomain.BaseDirectory + path.Replace("/", "\\") + ReportName;
-                string ImageDirectoryFP = path.Replace("/", "\\");
-                string ImageDirectory = "~/" + path;
-                string ImagePath = "~/" + path + fu.FileName;
-                string fileNameWithExtension = System.IO.Path.GetExtension(ReportName);
+    public static string Decode(string decodeMe)
+    {
+        byte[] encoded = Convert.FromBase64String(decodeMe);
+        return System.Text.Encoding.UTF8.GetString(encoded);
+    }
 
-                string ImageName = ReportName;
-                fu.SaveAs(filePath);
-                //int iteration = 1;
+    internal static string FileUpload(string v, string signature)
+    {
+        throw new NotImplementedException();
+    }
 
-                //while (System.IO.File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(ImagePath)))
-                //{
-                //    ImagePath = string.Concat(ImageDirectory, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
-                //    filePath = string.Concat(ImageDirectoryFP, fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
-                //    ImageName = string.Concat(fileNameWithoutExtension, "-", iteration, fileNameWithExtension);
-                //    iteration += 1;
-                //}
-
-                //if (iteration == 1)
-                //{
-                //    fu.SaveAs(filePath);
-                //}
-                //else
-                //{
-                //    fu.SaveAs(AppDomain.CurrentDomain.BaseDirectory + filePath);
-                //}
-                return ImageName;
-            }
-            else
-            {
-                return null;
-            }
-
-        }
-        public static string Encode(string encodeMe)
-        {
-            byte[] encoded = System.Text.Encoding.UTF8.GetBytes(encodeMe);
-            return Convert.ToBase64String(encoded);
-        }
-
-        public static string Decode(string decodeMe)
-        {
-            byte[] encoded = Convert.FromBase64String(decodeMe);
-            return System.Text.Encoding.UTF8.GetString(encoded);
-        }
-
-        internal static string FileUpload(string v, string signature)
-        {
-            throw new NotImplementedException();
-        }
-		
-		public static string Wrap(string singleLineString, int columns)
+    public static string Wrap(string singleLineString, int columns)
     {
         if (singleLineString == null)
             throw new ArgumentNullException("singleLineString");
@@ -547,12 +601,12 @@ public class CommonControl
     public async Task<string> SignPdfWithDigitalSignature(string filePath, string SignLoc, string signannotation, string pfxId, string pfxPwd, string apiKey, string XYAxis, string ReportNo)
     {
         //string apiUrl = "http://10.10.10.46:8084/ws/v1/signpdf"; 
-        string apiUrl = "http://10.10.10.46:8084/ws/v1/signpdflocs"; 
-        
+        string apiUrl = "http://10.10.10.46:8084/ws/v1/signpdflocs";
+
         string timestamp = DateTime.Now.ToString("ddMMyyyyHH:mm:ss");
         string checksum = GenerateChecksum(apiKey, timestamp);  // Implement checksum logic
 
-        
+
 
         using (var client = new HttpClient())
         {
@@ -577,13 +631,14 @@ public class CommonControl
                 formData.Add(new StringContent(signloc), "signloc");
 
                 // Add the signannotation parameter
-                
+
                 formData.Add(new StringContent(signannotation), "signannotation");
 
                 // Add the descriptor parameter to send unique value
 
-                //string descriptor = ReportNo;
-                //formData.Add(new StringContent(descriptor), "descriptor");
+                //Get Last Generated Report Uniq report
+                string descriptor = ReportNo;
+                formData.Add(new StringContent(descriptor), "descriptor");
 
                 // Attach the generated PDF file
                 byte[] fileBytes = File.ReadAllBytes(filePath);
@@ -596,7 +651,7 @@ public class CommonControl
                     // Get signed PDF
                     byte[] signedPdf = await response.Content.ReadAsByteArrayAsync();
                     //string signedFilePath = Path.Combine(Path.GetDirectoryName(filePath), "Signed_" + Path.GetFileName(filePath));
-                    string signedFilePath = Path.Combine(Path.GetDirectoryName(filePath),  Path.GetFileName(filePath));
+                    string signedFilePath = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileName(filePath));
                     File.WriteAllBytes(signedFilePath, signedPdf);
                     return signedFilePath;
                 }
@@ -659,7 +714,7 @@ public class CommonControl
                     string signedFilePath = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileName(filePath));
                     File.WriteAllBytes(signedFilePath, signedPdf);
                     return signedFilePath;
-                    
+
                 }
                 else
                 {
@@ -773,6 +828,87 @@ public class CommonControl
         return ipAddress;
     }
 
+    public void SaveFileToPhysicalLocationVisitReport(List<FileDetails> lstFileDtls, int ID)
+    {
+        foreach (var item in lstFileDtls)
+        {
+            string currentMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(DateTime.Now.Month);
+            string currentYear = DateTime.Now.Year.ToString();
+
+            string finalRelativePath = $"~/Content/Uploads/Images/";
+            string finalPhysicalPath = HttpContext.Current.Server.MapPath(finalRelativePath);
+
+            string finalRelativePath1 = $"~/Content/Uploads/Images/{currentYear}/{currentMonth}";
+            string finalPhysicalPath1 = HttpContext.Current.Server.MapPath(finalRelativePath1);
+
+            if (!Directory.Exists(finalPhysicalPath))
+            {
+                Directory.CreateDirectory(finalPhysicalPath);
+            }
+
+            if (!Directory.Exists(finalPhysicalPath1))
+            {
+                Directory.CreateDirectory(finalPhysicalPath1);
+            }
+
+            string fileName = $"{ID}_{item.FileName}";
+            string fullPath = Path.Combine(finalPhysicalPath, fileName);
+            string fullPathNew = Path.Combine(finalPhysicalPath1, fileName);
+
+            // Compress and save the image
+            using (MemoryStream ms = new MemoryStream(item.FileContent))
+
+            using (Image image = Image.FromStream(ms))
+            {
+                ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+                if (jpgEncoder != null)
+                {
+                    EncoderParameters encoderParams = new EncoderParameters(1);
+                    encoderParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 75L); // adjust quality here (50-90 range)
+                                                                                                                // Get a bitmap.
+
+
+
+                    // string FinalPath = FileUploadCompressNew("Content/Uploads/Images/", fileName, ID);
+
+                    image.Save(fullPath, jpgEncoder, encoderParams);
+
+
+
+                    Bitmap bmp1 = new Bitmap(fullPath);
+
+                    //Or you do can use buil-in method
+                    //ImageCodecInfo jgpEncoder GetEncoderInfo("image/gif");//"image/jpeg",...
+                    ImageCodecInfo jgpEncoder = GetEncoder(ImageFormat.Jpeg);
+
+                    // Create an Encoder object based on the GUID
+                    // for the Quality parameter category.
+                    System.Drawing.Imaging.Encoder myEncoder =
+                    System.Drawing.Imaging.Encoder.Quality;
+
+                    EncoderParameters myEncoderParameters = new EncoderParameters(1);
+                    EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 15L);
+                    myEncoderParameters.Param[0] = myEncoderParameter;
+
+
+
+                    bmp1.Save(fullPathNew, jgpEncoder, myEncoderParameters);
+                    bmp1.Dispose();
+
+                }
+                else
+                {
+                    // Fallback if JPEG encoder not found
+                    image.Save(fullPath, ImageFormat.Jpeg);
+                }
+                image.Dispose();
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+            }
+        }
+    }
 
 }
 

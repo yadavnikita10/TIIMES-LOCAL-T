@@ -1,277 +1,615 @@
 ﻿@model TuvVision.Models.InspectionActivitiesModel
 
 @{
-    ViewBag.Title = "InspectionActivites";
+    ViewBag.Title = "Inspection Activites";
     Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int PK_RM_ID = Convert.ToInt32(Session["PK_RM_ID"]);
+    bool StagelstIsEmpty = ViewData["StageWitnesslst"] == null;
+    var isGrammerCheck = Convert.ToInt32(Model.IsGrammerCheck);
 }
 
-<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+<style>
+    .auto-expand {
+        text-align: left !important;
+        white-space: pre-wrap;
+        overflow: hidden;
+        resize: none;
+        min-height: 40px;
+        width: 100%;
+        padding: 8px 10px;
+        line-height: 20px;
+        direction: ltr;
+        margin-top: 10px;
+        font-family: 'TNG Pro';
+    }
+
+   
+
+    td {
+        position: relative;
+    }
+
+    h6 {
+        font-family: 'TNG Pro';
+        margin-top: 13px;
+    }
+
+   .QapTxt {
+        width: 100%;
+        padding: 8px 10px;
+        line-height: 20px;
+        text-align: left;
+        height: 25px;
+         border: 1px solid #dee2e6;
+    }
+
+    .QapTxt-Js {
+        width: 100%;
+        padding: 8px 10px;
+        line-height: 20px;
+        text-align: left;
+        height: 25px;
+        border: 1px solid #dee2e6;    
+    }
+
+    .sortable-placeholder {
+        background: #ffe6b3;
+        height: 40px;
+        border: 2px dashed #ff9900;
+        display: table-row;
+        text-align: left !important;
+    }
+
+    .suggestions-container {
+        position: absolute;
+        background: #fef9e7;
+        border: 1px solid #ccc;
+        z-index: 9999;
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+    }
+
+    .suggestion-item:hover {
+        background: #fff3b0;
+    }
+
+    .qap-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    }
+</style>
+
+<!-- Required JS -->
 <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script src="~/AllJsAndCss/js/datatable-custom.js"></script>
-@*<div class="white-bg section-box-shadow">
-    <h3 class="dynamic-page-title dynamic-page-title-2  " style="margin-left:10px;"> Stages Witnessed </h3>
-    <div class="row">*@
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
 
 <div class="main-content3 xs-max-height grey-bg-f3">
     <div class="grey-bg-f3">
-        <!--Start of header-->
         <div class="container-fluid">
             <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-
                 <div class="col-xs-12 form-col">
                     <div class="row">
                         <br />
-                        <h5 class="dynamic-page-title dynamic-page-title-2 " style="padding-left: 11px;">Inspection Visit Report Number : @Session["VisitReportNo"]</h5>
-                        @*<a href="@Url.Action("IvrReports","VisitReport")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
-
+                        <h5 class="dynamic-page-title dynamic-page-title-2" style="padding-left: 11px;">
+                            Inspection Visit Report Number : @Session["VisitReportNo"]
+                        </h5>
 
                         <div class="col-xs-12">
-
-
                             @if (Model.PK_CALL_ID != 0)
-            {
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid } )'">General</button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'"> Item Description</button>
-
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Reference Documents </button>
-                                        <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Stages Witnessed</button>
-
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Document Reviewed</button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Details Of Measuring Instrument</button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Conclusion</button>
-
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Image</button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Report</button>
-                                        @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID} )'">Report</button>*@
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID = Model.abcid} )'">List of Issues</button>
+                            {
+                                <button class="btn btn-default news-btn" type="button"
+                                        onclick="location.href='@Url.Action("VisitReportForm", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    General
+                                </button>
+                                <button class="btn btn-default news-btn" type="button"
+                                        onclick="location.href='@Url.Action("ItemDescription", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Item Description
+                                </button>
+                                <button class="btn btn-default news-btn" type="button"
+                                        onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Reference Documents
+                                </button>
+                                <button class="btn btn-default insert-form-btn" type="button"
+                                        onclick="location.href='@Url.Action("InspectionActivites", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Stages Witnessed
+                                </button>
+                                <button class="btn btn-default news-btn" type="button"
+                                        onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Document Reviewed
+                                </button>
+                                <button class="btn btn-default news-btn" type="button"
+                                        onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Details Of Measuring Instrument
+                                </button>
+                                <button class="btn btn-default news-btn" type="button"
+                                        onclick="location.href='@Url.Action("Conclusion", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Conclusion
+                                </button>
+                                <button class="btn btn-default news-btn" type="button"
+                                        onclick="location.href='@Url.Action("ReportImage", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Image
+                                </button>
+                                <button class="btn btn-default news-btn" type="button"
+                                        onclick="location.href='@Url.Action("IvrReports", "VisitReport", new { PK_CALL_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Report
+                                </button>
+                                <button class="btn btn-default news-btn" type="button"
+                                        onclick="location.href='@Url.Action("AllConcern", "VisitReport", new { PK_CALL_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    List of Issues
+                                </button>
                             }
-
-
-
-
                         </div>
 
-
-
+                        <!-- START FORM -->
                         <div class="col-xs-12">
                             <div class="white-bg section-box-shadow">
                                 <h3 class="form-page-title">Stages Witnessed</h3>
-                                
+
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-                                    
-
-
                                         <div class="form-box">
-                                            <form method="post" enctype="multipart/form-data">
+                                            @using (Html.BeginForm("InspectionActivites", "VisitReport", FormMethod.Post))
+                                            {
                                                 @Html.HiddenFor(m => m.PK_CALL_ID)
-                                                @Html.HiddenFor(m => m.PK_IA_ID)
-                                                @Html.HiddenFor(m=>m.abcid)
+                                                @Html.HiddenFor(m => m.abcid)
+                                                @Html.HiddenFor(m =>PK_RM_ID)
 
-                                                <div class="row">
-                                                    <div class="col-xs-12 col-sm-12">
-                                                        <div class="form-group">
-                                                            <label>Stages Witnessed:</label>
-                                                            <br />
-                                                            <span style="color:#E12F24;">
-                                                                <strong> &nbsp;Note : </strong>
-                                                            </span>
-                                                            Statement shall give clear idea to customer of performed activity <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(i.e. QAP Stage No.  - Inspection activity carried out - findings).
+                                                <div class="form-group">
+                                                    <label>Stages Witnessed:</label><br />
+                                                    <span style="color:#E12F24;"><strong>Note:</strong></span>
+                                                    Statement shall give clear idea to customer of performed activity.<br />
+                                                    (i.e. QAP Stage No. - Inspection activity carried out - findings)
+                                                    <br /><br />
+
+                                                    <div id="stagesContainer" style="margin-top:15px;">
+
+                                                        <div class="row">
+                                                            <div class="col-xs-12">
+
+                                                                <table id="stageTable" class="table table-bordered" style="width:100%; background: #fff;">
+                                                                    <thead>
+                                                                        <tr style="background:#f7f7f7;">
+                                                                            <th style="width:5%; text-align:center;">Sr</th>
+                                                                            <th style="width:90%; text-align:center;">Stages Witnessed</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody id="sortableRows">
+                                                                        @{
+                                                                            int i = 0;
+                                                                            var list = ViewData["StageWitnesslst"] as IEnumerable<TuvVision.Models.InspectionActivitiesModel>;
+                                                                            if (list != null)
+                                                                            {
+                                                                                foreach (var item in list)
+                                                                                {
+                                                                                    <tr class="row-item">
+                                                                                        <td style="text-align:center;">
+                                                                                            <span class="dragHandle" style="cursor:move; font-size:18px;">⠿</span><br />
+                                                                                            @(i + 1)
+                                                                                        </td>
+
+                                                                                        <td>
+                                                                                            <input type="hidden" name="StageList[@i].PK_IA_ID" value="@item.PK_IA_ID" />
+                                                                                            <input type="hidden" name="StageList[@i].Original_Stages_Witnessed" value="@item.Stages_Witnessed" />
+
+                                                                                            <!-- ✅ ADD THIS LINE - Missing Old_Sequence_No for existing rows -->
+                                                                                            <input type="hidden" name="StageList[@i].Old_Sequence_No" value="@item.Sequence_No" />
+
+                                                                                            <input type="hidden" name="StageList[@i].Sequence_No" class="seqField" value="@item.Sequence_No" />
+                                                                                            <input type="hidden" name="StageList[@i].Old_QAP_Clause_Number" value="@item.QAP_Clause_Number" />
+                                                                                            <h6 class="qap-row">
+                                                                                                <span style="margin-top: 8px;">
+                                                                                                    QAP / ITP Clause Number :
+                                                                                                </span>
+
+                                                                                                <button type="button" style="padding: 2px 5px;" class="btn btn-danger btn-sm removeStage">X</button>
+                                                                                            </h6> 
+                                                                                            <input type="text" placeholder="QAP / ITP Clause No." class="form-control-sm QapTxt" name="StageList[@i].QAP_Clause_Number" value="@item.QAP_Clause_Number" tabindex="-1" />                                                                                          
+
+                                                                                            <h6>Description : </h6>
+                                                                                            <textarea name="StageList[@i].Stages_Witnessed"
+                                                                                                      class="form-control auto-expand grammar-target" rows="2" tabindex="-1">@item.Stages_Witnessed</textarea>
+                                                                                            <div class="grammar-output"></div>
+
+                                                                                                <div class="suggestions-container"></div>
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                    i++;
+                                                                                }
+                                                                            }
+
+                                                                        }
+                                                                    </tbody>
+
+                                                                </table>
 
 
 
-                                                            @Html.TextAreaFor(model => model.Stages_Witnessed, 10, 40, new { @placeholder = "Stages Witnessed", @class = "form-control" })
-
-                                                            @Html.ValidationMessageFor(model => model.Stages_Witnessed, "", new { @class = "text-danger validation-msg" })
+                                                            </div>
                                                         </div>
+
+                                                        <hr />
+
+
                                                     </div>
+
+                                                    <button type="button" id="addStage" class="btn btn-success btn-sm" style="margin-top:10px;">
+                                                        + Add More
+                                                    </button>
                                                 </div>
+
                                                 <div class="col-xs-12 text-center" id="IVRPointerEvents">
-                                                    <button type="submit" class="btn btn-default insert-form-btn">Save </button>
+                                                    <button type="submit" class="btn btn-default insert-form-btn">Save</button>
                                                 </div>
-                                                <div class="col-xs-12">
 
-                                                    <span style="color:#E12F24;">
-                                                        <strong> &nbsp;Whenever required copy paste this statement : </strong>
-                                                    </span><br />
-                                                    All measuring instruments / equipment were verified for continued suitability for intended use, proper identification, calibration status, traceability to national standards & found acceptable.
-                                                </div>
-                                                @*added by satish yadav for showing autosuggestion message*@
-                                                <div id="suggestions-container" class="suggestions"></div>
-                                                @*end here autosuggestion message*@
-                                            </form>
+                                                                            }
+
+                                            <div class="col-xs-12">
+                                                <span style="color:#E12F24;">
+                                                    <strong>Whenever required copy-paste this statement:</strong>
+                                                </span><br />
+                                                All measuring instruments / equipment were verified for continued suitability for intended use, proper identification, calibration status, traceability to national standards & found acceptable.
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="col-xs-12">
-                                            <table id="example" class="display custom-table" cellspacing="0" width="100%">
-
-                                                <thead>
-                                                    <tr>
-                                                        <th class="remove-search" width="5%">Sr No</th>
-                                                        <th class="remove-search" width="90%">Stages Witnessed</th>
-
-                                                        <th class="remove-search" width="5%">Action</th>
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody>
-
-                                                    @{
-                                                                int i = 0;
-                                                    }
-                                                    @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.InspectionActivitiesModel>)
-                                                            {
-                                                                i = i + 1;
-                                                        <tr>
-
-                                                            <td width="5%">@i</td>
-                                                            <td style='white-space: pre-line;' width="90%">@item.Stages_Witnessed</td>
-
-                                                            <td class="less-width" width="5%">
-                                                                <a href="@Url.Action("InspectionActivites", "VisitReport", new {@PK_IA_ID = item.PK_IA_ID })" title="Edit"><span class="fa fa-pencil"></span>&nbsp;</a>
-                                                                <a href="@Url.Action("DeleteIInspectionActivitesData", "VisitReport", new {@PK_IA_ID = item.PK_IA_ID,@PK_CALL_ID = item.PK_CALL_ID})" onclick="return confirm('Are you sure you want to Delete this record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
-                                                                @{
-                                                                            if ((Convert.ToString(TempData["InsertCompany"])) != "" && Convert.ToString(TempData["InsertCompany"]) != null)
-                                                                            {
-                                                                                TempData["InsertCompany"] = null;
-                                                                        @*<script type="text/javascript" language="javascript">
-                                                                                    alert("Item Description Added Successfully...");
-                                                                        </script>*@
-                                                                            }
-                                                                            if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
-                                                                            {
-                                                                                TempData["UpdateCompany"] = null;
-                                                                        @*<script type="text/javascript" language="javascript">
-                                                                                    alert("Cost Sheet Approved Successfully...");
-                                                                        </script>*@
-                                                                            }
-                                                                }
-                                                            </td>
-
-                                                        </tr>
-                                                                            }
-
-                                                </tbody>
-
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
 
                             </div>
-                            <!--Contact Details By Manoj -->
-
-
-                        </div><!-- /.box-shadow -->
-
+                        </div>
+                        <!-- END FORM -->
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
-                                    @*<div class="main-content3 xs-max-height">
-
-                                       
-                                        <div class="container-fluid">
-                                           
-
-                                          
-
-
-                                        </div>
-
-
-                                    </div>
-                                    }*@
-@*added by satish yadav for Autosuggestion*@
 <script>
-        $(document).ready(function () {
-            const $textarea = $("#Stages_Witnessed");
-            const $suggestionsContainer = $("#suggestions-container");
 
-            $textarea.on("input", function () {
-                debugger;
-                const query = $(this).val().toLowerCase();
-                const id = $("#PK_CALL_ID").val();
-                if (query) {
-                    $.ajax({
-                        url: '@Url.Action("GetSuggestions", "VisitReport")',
-                        data: { Searchres: query, PK_CALL_ID:id },
-                        success: function (response) {
-                            if (response.success) {
-                                displaySuggestions(response.data);
-                            } else {
-                                console.error(response.error);
-                            }
-                        }
-                    });
-                } else {
-                    $suggestionsContainer.empty();
-                }
-            });
+    $(document).ready(function () {
 
-            $suggestionsContainer.on("click", ".suggestion-item", function () {
-                const text = $(this).text();
-                $textarea.val(text);
-                $suggestionsContainer.empty();
-            });
+        function autoExpand(el) {
+            el.style.height = "auto";
+            el.style.height = el.scrollHeight + "px";
+        }
 
-            $(document).on("click", function (event) {
-                if (!$(event.target).closest("#Stages_Witnessed, #suggestions-container").length) {
-                    $suggestionsContainer.empty();
-                }
-            });
+        $(".auto-expand").each(function () { autoExpand(this); });
+        $(document).on("input", ".auto-expand", function () { autoExpand(this); });
 
-            function displaySuggestions(items) {
-                $suggestionsContainer.empty();
-                items.forEach(item => {
-                    const $suggestionItem = $("<p>").addClass("suggestion-item").text(item.Name);
-                    $suggestionsContainer.append($suggestionItem);
+
+        // ENABLE DRAG & DROP
+        $("#sortableRows").sortable({
+            handle: ".dragHandle",
+            containment: "#stageTable",
+            axis: "y",
+            placeholder: "sortable-placeholder",
+            helper: function (e, tr) {
+                var $originals = tr.children();
+                var $helper = tr.clone();
+                $helper.children().each(function (index) {
+                    $(this).width($originals.eq(index).width());
                 });
+                return $helper;
+            },
+            update: function () {
+                reindex();
             }
         });
-</script>
-<style>
-    .suggestions {
-        border: 1px solid #ccc;
-        max-height: 150px;
-        overflow-y: auto;
-        position: absolute;
-        z-index: 1000;
-        background-color: white;
-    }
 
-    .suggestion-item {
-        padding: 10px;
-        cursor: pointer;
-        margin: 0;
-    }
 
-        .suggestion-item:hover {
-            background-color: #f0f0f0;
+        // 🔥 Auto-Suggestion for Every Textarea
+        $(document).on("input", "textarea[name*='Stages_Witnessed']", function () {
+            let $textarea = $(this);
+            let query = $textarea.val().trim();
+            let callId = $("#PK_CALL_ID").val();
+
+            let $container = $textarea.siblings(".suggestions-container");
+            if ($container.length === 0) {
+                $container = $('<div class="suggestions-container"></div>');
+                $textarea.after($container);
+            }
+
+            if (query.length === 0) {
+                $container.empty().hide();
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetSuggestions", "VisitReport")',
+                data: { Searchres: query, PK_CALL_ID: callId },
+                success: function (response) {
+
+                    if (!response.success) {
+                        console.error(response.error);
+                        return;
+                    }
+
+                    $container.empty().show();
+
+                    if (response.data.length === 0) return;
+
+                    response.data.forEach(item => {
+                        let $item = $("<p>")
+                            .addClass("suggestion-item")
+                            .text(item.Name)
+                            .css({
+                                padding: "6px",
+                                cursor: "pointer",
+                                background: "background:#f7f7f7",
+                                borderBottom: "1px solid #ccc"
+                            });
+
+                        $container.append($item);
+                    });
+                }
+            });
+        });
+
+
+        // 🔥 Click suggestion → fill textarea
+        $(document).on("click", ".suggestion-item", function () {
+            let text = $(this).text();
+            let $container = $(this).parent();
+            let $textarea = $container.siblings("textarea");
+
+            $textarea.val(text).trigger("input");
+            $container.empty().hide();
+        });
+
+
+        // 🔥 Hide suggestions
+        $(document).on("click", function (e) {
+            if (!$(e.target).closest("textarea, .suggestions-container").length) {
+                $(".suggestions-container").empty().hide();
+            }
+        });
+
+
+        // ADD NEW ROW
+        $("#addStage").click(function () {
+            $(".suggestions-container").empty().hide();
+            var index = $("#sortableRows tr").length;
+
+            var newRow = `
+                <tr class="row-item">
+                    <td style="text-align:center;">
+                        <span class="dragHandle" style="cursor:move; font-size:18px;">⠿</span>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        <input type="hidden" name="StageList[${index}].PK_IA_ID" value="0" />
+                        <input type="hidden" name="StageList[${index}].Original_Stages_Witnessed" value="" />
+
+                        <input type="hidden" name="StageList[${index}].Old_Sequence_No" value="${index + 1}" />
+
+                        <input type="hidden" name="StageList[${index}].Sequence_No" class="seqField" value="${index + 1}" />
+                        <input type="hidden" name="StageList[${index}].Old_QAP_Clause_Number" value="" /> <!-- ⭐️ new -->
+                         <h6 class="qap-row">
+                          <span style="margin-top: 8px;">QAP / ITP Clause Number : </span>
+                          <button type="button" style="padding: 2px 5px;" class="btn btn-danger btn-sm removeStage">X</button>
+                          </h6>
+                        <input type="text" class="QapTxt-Js" placeholder="QAP Clause No." name="StageList[${index}].QAP_Clause_Number" value="" tabindex="-1" /><br />
+                        <h6>Description : </h6>
+                        <textarea name="StageList[${index}].Stages_Witnessed"
+                            class="form-control auto-expand grammar-target"
+                            placeholder="Enter detailed description"
+                            rows="2" tabindex="-1"></textarea>
+                            <div class="grammar-output"></div>
+
+                        <div class="suggestions-container"></div>
+                    </td>
+                </tr>`;
+
+            $("#sortableRows").append(newRow);
+            $("#sortableRows").sortable("refresh");
+            reindex();
+        });
+
+
+        // DELETE ROW
+        $(document).on("click", ".removeStage", function () {
+
+            let row = $(this).closest("tr");
+
+            let pkIaId = row.find("input[name*='PK_IA_ID']").val();   // DB ID
+            let pkCallId = $("#PK_CALL_ID").val();
+            let pkRmId = @PK_RM_ID;
+            let abcid = $("#abcid").val();
+
+            // If this row is NEW (not saved in DB)
+            if (pkIaId == "0" || pkIaId == "" || pkIaId == null) {
+                row.remove();
+                reindex();
+                return;
+            }
+
+            // ---- DELETE FROM DATABASE ----
+            $.ajax({
+                url: '@Url.Action("DeleteIInspectionActivityByPK_IA_ID", "VisitReport")',
+                //type: 'POST',
+                data: {
+                    PK_IA_ID: pkIaId,
+                    PK_CALL_ID: pkCallId,
+                    PK_RM_ID: pkRmId,
+                    abcid: abcid
+                },
+                success: function (response) {
+
+                    //if (response.success) {
+                    //    // Remove row visually
+                    //    row.remove();
+                    //    reindex();
+                    //} else {
+                    //    alert("Could not delete! " + response.message);
+                    //}
+                   
+                    row.remove();
+                    reindex();
+                    alert("Delete Successfully");
+
+                },
+                error: function () {
+                    alert("Server error while deleting stage.");
+                }
+            });
+
+        });
+
+
+
+        var AddRowFlag = @StagelstIsEmpty.ToString().ToLower();
+        if (AddRowFlag) {
+            $("#addStage").click();
         }
-</style>
-
-@*end here autosuggestion*@
 
 
+        // ---------------------------
+        // ⭐⭐⭐ RE-INDEX FUNCTION ⭐⭐⭐
+        // ---------------------------
+        function reindex() {
 
+            $("#sortableRows tr").each(function (i) {
+
+                // 1. Read values BEFORE renaming
+                let pk = $(this).find("input[name*='PK_IA_ID']").val();
+                let org = $(this).find("input[name*='Original_Stages_Witnessed']").val();
+                let oldSeq = $(this).find("input[name*='Old_Sequence_No']").val();
+                let qap = $(this).find("input[name$='.QAP_Clause_Number']").val();
+                let stage = $(this).find("textarea").val();
+
+                let oldQap = $(this).find("input[name*='Old_QAP_Clause_Number']").val();  // ⭐️ Added
+
+
+                // 2. Update row number
+                $(this).find("td:first").html(
+                    `<span class="dragHandle" style="cursor:move; font-size:18px;">⠿</span><br>${i + 1}`
+                );
+
+
+                // 3. Rename inputs
+                $(this).find("input[name*='PK_IA_ID']")
+                    .attr("name", `StageList[${i}].PK_IA_ID`)
+                    .val(pk);
+
+                $(this).find("input[name*='Original_Stages_Witnessed']")
+                    .attr("name", `StageList[${i}].Original_Stages_Witnessed`)
+                    .val(org);
+
+                $(this).find("input[name*='Old_Sequence_No']")
+                    .attr("name", `StageList[${i}].Old_Sequence_No`)
+                    .val(oldSeq);
+
+                // ⭐️ Correctly rename Old_QAP_Clause_Number
+                $(this).find("input[name*='Old_QAP_Clause_Number']")
+                    .attr("name", `StageList[${i}].Old_QAP_Clause_Number`)
+                    .val(oldQap);  // ⭐️ KEEP ORIGINAL VALUE
+
+
+                $(this).find(".seqField")
+                    .attr("name", `StageList[${i}].Sequence_No`)
+                    .val(i + 1);
+
+
+
+                $(this).find("input[name$='.QAP_Clause_Number']")
+                    .attr("name", `StageList[${i}].QAP_Clause_Number`)
+                    .val(qap);
+
+                $(this).find("textarea")
+                    .attr("name", `StageList[${i}].Stages_Witnessed`)
+                    .val(stage);
+            });
+        }
+
+    });
+
+</script>
+
+@if (isGrammerCheck == 1)
+{
+    <script>
+        let grammarTimers = {};
+
+        $(document).on("input", ".grammar-target", function () {
+            let textarea = $(this);
+            let outputDiv = textarea.next(".grammar-output");
+
+            clearTimeout(grammarTimers[textarea[0]]);
+
+            grammarTimers[textarea[0]] = setTimeout(() => {
+                runGrammarCheck(textarea, outputDiv);
+            }, 600);
+        });
+
+
+        function runGrammarCheck($textarea, $outputDiv) {
+
+            let text = $textarea.val();
+
+            if (!text.trim()) {
+                $outputDiv.html("");
+                return;
+            }
+
+            $outputDiv.html("<i>Checking...</i>");
+
+            fetch("https://api.languagetool.org/v2/check", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    text: text,
+                    language: "en-US"
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                if (!data || !data.matches) {
+                    $outputDiv.html("");
+                    return;
+                }
+
+                if (data.matches.length === 0) {
+                    $outputDiv.html(`<p class="correct" style="color:green;">✔ Looks good! No grammar errors.</p>`);
+                    return;
+                }
+
+                let html = "";
+
+                data.matches.forEach(m => {
+                    html += `
+                        <div class="errorBox" style="background:#ffe4e4; border-left:4px solid red; padding:5px; margin-top:8px;">
+                            <b>Issue:</b> ${m.message}<br>
+                            <b>Error:</b> "${m.context.text}"<br>
+                            <b>Suggestions:</b> ${m.replacements.slice(0, 3).map(r => r.value).join(", ")}
+                        </div>
+                    `;
+                });
+
+                $outputDiv.html(html);
+            })
+            .catch(err => {
+                console.error(err);
+                $outputDiv.html("<span style='color:red;'>Error checking grammar.</span>");
+            });
+        }
+    </script>
+}
+
+<!-- ✅ Disable inputs when IVR confirmation -->
 <script>
     var isConfirmationIVR = @Session["IsConfirmationIVR"] ?? 0;
-    // JavaScript to disable pointer events if isConfirmationIVR is 1
-
     if (isConfirmationIVR == 1) {
         document.getElementById("IVRPointerEvents").style.pointerEvents = "none";
     }
 </script>
-
-

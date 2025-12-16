@@ -189,7 +189,6 @@ namespace TuvVision.DataAccessLayer
                 CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
                 CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 55);
                 CMDGetDdlLst.Parameters.AddWithValue("@PK_Call_ID", callId);
-
                 CMDGetDdlLst.Parameters.AddWithValue("@UserID", System.Web.HttpContext.Current.Session["UserIDs"]);
                 SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
                 SDAGetDdlLst.Fill(DSGetddlList);
@@ -203,8 +202,6 @@ namespace TuvVision.DataAccessLayer
                 DSGetddlList.Dispose();
             }
             return DSGetddlList;
-
-
         }
 
         public DataTable GetUserDetails(string PInspector)
@@ -3406,8 +3403,57 @@ namespace TuvVision.DataAccessLayer
             }
             return DTScripName;
         }
+        public DataTable getCallData(string pk_userid)
+        {
+            DataTable DTScripName = new DataTable();
 
+            try
+            {
+                SqlCommand CMDSearchNameCode = new SqlCommand("SP_CallsMaster", con);
+                CMDSearchNameCode.CommandType = CommandType.StoredProcedure;
+                CMDSearchNameCode.CommandTimeout = 1000000000;
+                CMDSearchNameCode.Parameters.AddWithValue("@SP_Type", 107);
+                CMDSearchNameCode.Parameters.AddWithValue("@CreatedBy", pk_userid);
+                SqlDataAdapter SDAScripName = new SqlDataAdapter(CMDSearchNameCode);
+                SDAScripName.Fill(DTScripName);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTScripName.Dispose();
+            }
+            return DTScripName;
+        }
 
+        public DataTable UpdateCallsAfterOPEProcess(string callNo)
+        {
+            DataTable DTScripName = new DataTable();
+
+            try
+            {
+                SqlCommand CMDSearchNameCode = new SqlCommand("SP_CallsMaster", con);
+                CMDSearchNameCode.CommandType = CommandType.StoredProcedure;
+                CMDSearchNameCode.CommandTimeout = 1000000000;
+                CMDSearchNameCode.Parameters.AddWithValue("@SP_Type", 108);
+                CMDSearchNameCode.Parameters.AddWithValue("@Call_No", callNo);
+                CMDSearchNameCode.Parameters.AddWithValue("@CreatedBy", System.Web.HttpContext.Current.Session["UserIDs"]);
+
+                SqlDataAdapter SDAScripName = new SqlDataAdapter(CMDSearchNameCode);
+                SDAScripName.Fill(DTScripName);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DTScripName.Dispose();
+            }
+            return DTScripName;
+        }
 
     }
 }

@@ -16,6 +16,7 @@ using System.Net;
 using NonFactors.Mvc.Grid;
 using OfficeOpenXml;
 using System.Globalization;
+using Newtonsoft.Json;
 
 //using System.Configuration;
 //using System.IO;
@@ -10818,8 +10819,48 @@ namespace TuvVision.Controllers
             return Json("failure", JsonRequestBehavior.AllowGet);
 
         }
+        public ActionResult AllowCallsForOPE()
+        {
+            return View();
+        }
 
+
+        public ActionResult GetCallsForOPEOpen()
+
+        {
+            DataTable ds = new DataTable();
+            string Role = Session["RoleName"].ToString(); //"Approval";
+
+            string UserId_ = Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]);
+            ds = objDalCalls.getCallData(UserId_);
+            string JsonString = "";
+            if (ds.Rows.Count > 0)
+            {
+                JsonString = JsonConvert.SerializeObject(ds);
+
+
+            }
+            return Json(JsonString, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult UpdateAllowCallsAfterOPEProcess(string call_no)
+        {
+            string mssg = "";
+            DataTable dt = new DataTable();
+            dt= objDalCalls.UpdateCallsAfterOPEProcess(call_no);
+            if (dt.Rows.Count > 0)
+            {
+                mssg = "SuccessFul";
+            }
+            else
+            {
+                mssg = "Something went wrong";
+            }
+            return Json(mssg, JsonRequestBehavior.AllowGet);
+        }
     }
+
 
 
 }

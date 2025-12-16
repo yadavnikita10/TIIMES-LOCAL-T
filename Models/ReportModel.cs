@@ -41,6 +41,7 @@ namespace TuvVision.Models
 
 
         public string IVRDownloadDate { get; set; } //added by nikita on 25092023
+        public string DiaryComfirmation { get; set; }
         public int checkIFCustomerSpecific { get; set; } //added by nikita on 25092023
         public string ReportprepareinTiimes { get; set; } //added by nikita on 25092023
 

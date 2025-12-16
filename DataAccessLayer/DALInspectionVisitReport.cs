@@ -213,7 +213,6 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@stock_Trade_Raw", CPM.stock_Trade_Raw);
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@TUVICustomer_End_Plant", CPM.TUVICustomer_End_Plant);
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@CMP_ID", CPM.CMP_ID);
-
                     if (CPM.Date_of_PO == null)
                     {
                         CMDInsertUpdatebranch.Parameters.AddWithValue("@date_of_po", CPM.Date_of_PO);
@@ -239,6 +238,21 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@IsAutoSuggestion", CPM.IsAutoSuggestion);
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@Product_Item", CPM.Productlst.Trim());
                     //end
+
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@MariaIVRNo", CPM.MariaIVRNo);
+                    if (CPM.MariaDateOfIssue == null)
+                    {
+                        CMDInsertUpdatebranch.Parameters.AddWithValue("@MariaDateOfIssue", CPM.MariaDateOfIssue);
+                    }
+                    else
+                    {
+                        CMDInsertUpdatebranch.Parameters.AddWithValue("@MariaDateOfIssue", DateTime.ParseExact(CPM.MariaDateOfIssue, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                    }
+
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@MariaAttachment", CPM.MariaAttachment);
+
+
                     Result = CMDInsertUpdatebranch.ExecuteNonQuery().ToString();
 
                 }
@@ -293,6 +307,7 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdateBranch.Parameters.AddWithValue("@PK_Call_ID", CPM.PK_Call_ID);
                     CMDInsertUpdateBranch.Parameters.AddWithValue("@PK_SubJob_Id", CPM.PK_SubJob_Id);
                     CMDInsertUpdateBranch.Parameters.AddWithValue("@ReviseReason", CPM.ReviseReason);
+                 
                     if (CPM.Date_of_PO == null)
                     {
                         CMDInsertUpdateBranch.Parameters.AddWithValue("@date_of_po", CPM.Date_of_PO);
@@ -321,7 +336,16 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdateBranch.Parameters.AddWithValue("@Product_Item", CPM.Productlst.Trim());
                     CMDInsertUpdateBranch.Parameters.AddWithValue("@IsComfirmation", CPM.IsComfirmation);
                     CMDInsertUpdateBranch.Parameters.AddWithValue("@ddlReviseReason", CPM.ddlReviseReason);
+                    CMDInsertUpdateBranch.Parameters.AddWithValue("@MariaIVRNo", CPM.MariaIVRNo);
+                    if (CPM.MariaDateOfIssue == null)
+                    {
+                        CMDInsertUpdateBranch.Parameters.AddWithValue("@MariaDateOfIssue", CPM.MariaDateOfIssue);
+                    }
+                    else
+                    {
+                        CMDInsertUpdateBranch.Parameters.AddWithValue("@MariaDateOfIssue", DateTime.ParseExact(CPM.MariaDateOfIssue, "dd/MM/yyyy", CultureInfo.InvariantCulture));
 
+                    }
                     //end
                     Result = CMDInsertUpdateBranch.ExecuteNonQuery().ToString();
                 }
@@ -724,7 +748,7 @@ namespace TuvVision.DataAccessLayer
             DataTable DSGetddlList = new DataTable();
             try
             {
-                SqlCommand CMDGetDdlLst = new SqlCommand("SP_ReportsMaster", con);
+                SqlCommand CMDGetDdlLst = new SqlCommand("SP_MISIVRReportData", con);
                 CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
                 CMDGetDdlLst.CommandTimeout = 10000;
                 CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", "89");
@@ -751,7 +775,7 @@ namespace TuvVision.DataAccessLayer
             DataTable DSGetddlList = new DataTable();
             try
             {
-                SqlCommand CMDGetDdlLst = new SqlCommand("SP_ReportsMaster", con);
+                SqlCommand CMDGetDdlLst = new SqlCommand("SP_MISIVRReportData", con);
                 CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
                 CMDGetDdlLst.CommandTimeout = 0;
                 CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", "10Newdate");
@@ -1627,6 +1651,8 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@Status", CPM.Status);
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@PK_CALL_ID", CPM.PK_CALL_ID);
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@Sequence_No", Convert.ToInt32(CPM.Sequence_No ?? 0));
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@QAP_Clause_Number", CPM.QAP_Clause_Number);
                     Result = CMDInsertUpdatebranch.ExecuteNonQuery().ToString();
                 }
                 else
@@ -1639,6 +1665,8 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdateItemDescription.Parameters.AddWithValue("@Status", CPM.Status);
                     CMDInsertUpdateItemDescription.Parameters.AddWithValue("@PK_CALL_ID", CPM.PK_CALL_ID);
                     CMDInsertUpdateItemDescription.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                    CMDInsertUpdateItemDescription.Parameters.AddWithValue("@Sequence_No", Convert.ToInt32(CPM.Sequence_No ?? 0));
+                    CMDInsertUpdateItemDescription.Parameters.AddWithValue("@QAP_Clause_Number", CPM.QAP_Clause_Number);
                     Result = CMDInsertUpdateItemDescription.ExecuteNonQuery().ToString();
                 }
 
@@ -1790,6 +1818,11 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@Status", CPM.Status);
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@PK_CALL_ID", CPM.PK_CALL_ID);
                     CMDInsertUpdatebranch.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                    //Added By Mohjjam_Dange_27112025
+                    //   CMDInsertUpdatebranch.Parameters.AddWithValue("@Type", CPM.Type);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@Sequence_No", CPM.Sequence_No ?? 0);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@QAP_Clause_Number", CPM.QAP_Clause_Number);
+                    //End By Mohjjam_Dange_27112025
                     Result = CMDInsertUpdatebranch.ExecuteNonQuery().ToString();
                 }
                 else
@@ -1800,6 +1833,11 @@ namespace TuvVision.DataAccessLayer
                     CMDInsertUpdateItemDescription.Parameters.AddWithValue("@PK_DR_ID", CPM.PK_DR_ID);
                     CMDInsertUpdateItemDescription.Parameters.AddWithValue("@Description", CPM.Description);
                     CMDInsertUpdateItemDescription.Parameters.AddWithValue("@Status", CPM.Status);
+                    //Added By Mohjjam_Dange_27112025
+                    // CMDInsertUpdateItemDescription.Parameters.AddWithValue("@Type", CPM.Type);
+                    CMDInsertUpdateItemDescription.Parameters.AddWithValue("@Sequence_No", CPM.Sequence_No ?? 0);
+                    CMDInsertUpdateItemDescription.Parameters.AddWithValue("@QAP_Clause_Number", CPM.QAP_Clause_Number);
+                    //End By Mohjjam_Dange_27112025
                     CMDInsertUpdateItemDescription.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                     Result = CMDInsertUpdateItemDescription.ExecuteNonQuery().ToString();
                 }
@@ -2215,6 +2253,83 @@ namespace TuvVision.DataAccessLayer
             }
             return Result;
         }
+
+        //Start Added by ADesh Sawant on 19/11/2025
+        public string InsertUpdateIRNReportImage(IRNReportImageModel CPM)
+        {
+            string Result = string.Empty;
+            con.Open();
+            try
+            {
+                if (CPM.PK_IP_Id == 0)
+                {
+                    SqlCommand CMDInsertUpdatebranch = new SqlCommand("SP_ReportImages", con);
+                    CMDInsertUpdatebranch.CommandType = CommandType.StoredProcedure;
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@SP_Type", 2);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@Heading", CPM.Heading);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@Image", CPM.Image);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@Type", CPM.Type);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@Status", CPM.Status);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@PK_CALL_ID", CPM.PK_IVR_ID);
+                    CMDInsertUpdatebranch.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                    Result = CMDInsertUpdatebranch.ExecuteNonQuery().ToString();
+                }
+                else
+                {
+                    SqlCommand CMDInsertUpdateItemDescription = new SqlCommand("SP_ReportImages", con);
+                    CMDInsertUpdateItemDescription.CommandType = CommandType.StoredProcedure;
+                    CMDInsertUpdateItemDescription.Parameters.AddWithValue("@SP_Type", 3);
+                    CMDInsertUpdateItemDescription.Parameters.AddWithValue("@Heading", CPM.Heading);
+                    CMDInsertUpdateItemDescription.Parameters.AddWithValue("@Image", CPM.Image);
+                    CMDInsertUpdateItemDescription.Parameters.AddWithValue("@PK_IP_Id", CPM.PK_IP_Id);
+                    CMDInsertUpdateItemDescription.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                    Result = CMDInsertUpdateItemDescription.ExecuteNonQuery().ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+            return Result;
+        }
+
+        public string UpdateIRNHeading(IRNReportImageModel CPM)
+        {
+            string Result = string.Empty;
+            con.Open();
+            try
+            {
+                SqlCommand CMDInsertUpdateItemDescription = new SqlCommand("SP_ReportImages", con);
+                CMDInsertUpdateItemDescription.CommandType = CommandType.StoredProcedure;
+                CMDInsertUpdateItemDescription.Parameters.AddWithValue("@SP_Type", 6);
+                CMDInsertUpdateItemDescription.Parameters.AddWithValue("@Heading", CPM.Heading);
+                CMDInsertUpdateItemDescription.Parameters.AddWithValue("@PK_IP_Id", CPM.PK_IP_Id);
+                CMDInsertUpdateItemDescription.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                CMDInsertUpdateItemDescription.Parameters.AddWithValue("@DisplayOrder", CPM.DisplayOrder);
+                Result = CMDInsertUpdateItemDescription.ExecuteNonQuery().ToString();
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+            return Result;
+        }
+        //End Added by ADesh Sawant on 19/11/2025
+
         public bool DeleteImage(int id)
         {
             SqlCommand CMDDeleteAcvt = new SqlCommand("SP_ItemDescription", con);
@@ -2357,8 +2472,8 @@ namespace TuvVision.DataAccessLayer
         public string InsertUpdateReport(ReportModel CPM)
         {
             string Result = string.Empty;
-            string ReturnId = "";
             con.Open();
+            string ReturnId = "";
             try
             {
                 if (CPM.PK_RM_ID == 0)
@@ -2875,7 +2990,7 @@ namespace TuvVision.DataAccessLayer
                 CMDEditContact.CommandType = CommandType.StoredProcedure;
                 CMDEditContact.Parameters.AddWithValue("@SP_Type", 9);
                 CMDEditContact.Parameters.AddWithValue("@ReportName", ReportName);
-                // CMDEditContact.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                //CMDEditContact.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                 SqlDataAdapter SDAEditContact = new SqlDataAdapter(CMDEditContact);
                 SDAEditContact.Fill(DTEditContact);
             }
@@ -3588,8 +3703,8 @@ namespace TuvVision.DataAccessLayer
                 CMDInsertUpdatebranch.CommandType = CommandType.StoredProcedure;
                 CMDInsertUpdatebranch.Parameters.AddWithValue("@SP_Type", 60);
                 CMDInsertUpdatebranch.Parameters.AddWithValue("@PK_CALL_ID", PK_CALL_ID);
-                CMDInsertUpdatebranch.Parameters.AddWithValue("@IVRDownloadDate", today.ToString("MM/dd/yyyy HH:mm:ss"));
-                CMDInsertUpdatebranch.Parameters.AddWithValue("@userId", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+               // CMDInsertUpdatebranch.Parameters.AddWithValue("@IVRDownloadDate", today.ToString("MM/dd/yyyy HH:mm:ss"));
+                //CMDInsertUpdatebranch.Parameters.AddWithValue("@userId", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                 Result = CMDInsertUpdatebranch.ExecuteNonQuery().ToString();
 
 
@@ -4803,8 +4918,7 @@ namespace TuvVision.DataAccessLayer
             }
             return DSGetddlList;
         }
-
-        public DataSet GetSection(string PK_CALL_ID, int PK_RM_ID)//Get All DropDownlist 
+        public DataSet GetSection(string PK_CALL_ID,int PK_RM_ID)//Get All DropDownlist 
         {
             DataSet DSGetddlList = new DataSet();
             try
@@ -4829,57 +4943,26 @@ namespace TuvVision.DataAccessLayer
             return DSGetddlList;
         }
 
-        //public DataTable InsertRecord(List<VisitMonitoringRecord> data, string PK_CALL_ID,string Additionalcomment,bool IsComfirmation,int PK_IVR_ID,int PK_RM_ID)//Get All DropDownlist 
+        //public DataTable InsertRecord(VisitMonitoringRecord record, string PK_CALL_ID, string Additionalcomment, bool IsComfirmation)//Get All DropDownlist 
         //{
         //    DataTable DSGetddlList = new DataTable();
         //    try
         //    {
-        //        con.Open();
-        //        //SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
-        //        //CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
-        //        //CMDGetDdlLst.CommandTimeout = 0;
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 2);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@Section", record.Section);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@Date", record.Date);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@Observation", record.Status);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@Comments", record.Comment);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@MonitoredBy", record.Person);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@PK_CALL_ID", PK_CALL_ID);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@Additionalcomment", Additionalcomment);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@IsComfirmation", IsComfirmation);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@PK_IVR_ID", PK_IVR_ID);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@PK_RM_ID", PK_RM_ID);
-        //        //CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
-        //        //SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
-        //        //SDAGetDdlLst.Fill(DSGetddlList);
-        //        using (SqlTransaction transaction = con.BeginTransaction())
-        //        {
-        //            foreach (var record in data)
-        //            {
-        //                using (SqlCommand cmd = new SqlCommand("Sp_VisitMonitoringRecord", con, transaction))
-        //                {
-        //                    cmd.CommandType = CommandType.StoredProcedure;
-        //                    cmd.Parameters.AddWithValue("@SP_Type", 2);
-        //                    cmd.Parameters.AddWithValue("@Section", record.Section ?? (object)DBNull.Value);
-        //                    cmd.Parameters.AddWithValue("@Date", record.Date);
-        //                    cmd.Parameters.AddWithValue("@Observation", record.Status ?? (object)DBNull.Value);
-        //                    cmd.Parameters.AddWithValue("@Comments", record.Comment ?? (object)DBNull.Value);
-        //                    cmd.Parameters.AddWithValue("@MonitoredBy", record.Person ?? (object)DBNull.Value);
-        //                    cmd.Parameters.AddWithValue("@PK_CALL_ID", PK_CALL_ID);
-        //                    cmd.Parameters.AddWithValue("@Additionalcomment", Additionalcomment ?? (object)DBNull.Value);
-        //                    cmd.Parameters.AddWithValue("@IsComfirmation", IsComfirmation);
-        //                    cmd.Parameters.AddWithValue("@PK_IVR_ID", PK_IVR_ID);
-        //                    cmd.Parameters.AddWithValue("@PK_RM_ID", PK_RM_ID);
-        //                    cmd.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
-
-        //                    cmd.ExecuteNonQuery();
-        //                }
-        //            }
-        //            transaction.Commit();
-        //        }
-
-
-        //        //return Json(new { success = true, message = "Records saved successfully!" });
+        //        SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
+        //        CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+        //        CMDGetDdlLst.CommandTimeout = 0;
+        //        CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 2);
+        //        CMDGetDdlLst.Parameters.AddWithValue("@Section", record.Section);
+        //        CMDGetDdlLst.Parameters.AddWithValue("@Date", record.Date);
+        //        CMDGetDdlLst.Parameters.AddWithValue("@Observation", record.Status);
+        //        CMDGetDdlLst.Parameters.AddWithValue("@Comments", record.Comment);
+        //        CMDGetDdlLst.Parameters.AddWithValue("@MonitoredBy", record.Person);
+        //        CMDGetDdlLst.Parameters.AddWithValue("@PK_CALL_ID", PK_CALL_ID);
+        //        CMDGetDdlLst.Parameters.AddWithValue("@Additionalcomment", Additionalcomment);
+        //        CMDGetDdlLst.Parameters.AddWithValue("@IsComfirmation", IsComfirmation);
+        //        CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+        //        SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+        //        SDAGetDdlLst.Fill(DSGetddlList);
         //    }
         //    catch (Exception ex)
         //    {
@@ -4891,33 +4974,33 @@ namespace TuvVision.DataAccessLayer
         //    }
         //    return DSGetddlList;
         //}
-        public DataTable BulkInsertToStaging(List<VisitMonitoringRecord> data, string PK_CALL_ID, string Additionalcomment, bool IsComfirmation, int PK_IVR_ID, int PK_RM_ID,bool ShopApproved, string ShopApproved_Number, string ValidityDate,string VendorName,bool BoilerComponentManufacturer, bool BolierOwner, bool BoilerManufacturer)
+        public DataTable BulkInsertToStaging(List<VisitMonitoringRecord> data, string PK_CALL_ID, string Additionalcomment, bool IsComfirmation, int PK_IVR_ID, int PK_RM_ID, bool ShopApproved, string ShopApproved_Number, string ValidityDate, string VendorName, bool BoilerComponentManufacturer, bool BolierOwner, bool BoilerManufacturer)
         {
             DataTable dt = new DataTable();
 
             try
-            { 
-            dt.Columns.Add("Section", typeof(string));
-            dt.Columns.Add("Date", typeof(string));
-            dt.Columns.Add("Observation", typeof(string));
-            dt.Columns.Add("Comments", typeof(string));
-            dt.Columns.Add("MonitoredBy", typeof(string));
-            dt.Columns.Add("Pk_Call_id", typeof(string));
-            dt.Columns.Add("CreatedBy", typeof(string));
-            dt.Columns.Add("Additionalcomment", typeof(string));
-            dt.Columns.Add("IsComfirmation", typeof(bool));
-            dt.Columns.Add("IsComfirmation_date", typeof(DateTime));
-            dt.Columns.Add("PK_IVR_ID", typeof(int));
-            dt.Columns.Add("PK_RM_ID", typeof(int));
-            dt.Columns.Add("ShopApproved", typeof(int));
-            dt.Columns.Add("ShopApproved_Number", typeof(string));
-            dt.Columns.Add("ValidityDate", typeof(DateTime));
-            dt.Columns.Add("Vendor_Name_Location", typeof(string));
+            {
+                dt.Columns.Add("Section", typeof(string));
+                dt.Columns.Add("Date", typeof(string));
+                dt.Columns.Add("Observation", typeof(string));
+                dt.Columns.Add("Comments", typeof(string));
+                dt.Columns.Add("MonitoredBy", typeof(string));
+                dt.Columns.Add("Pk_Call_id", typeof(string));
+                dt.Columns.Add("CreatedBy", typeof(string));
+                dt.Columns.Add("Additionalcomment", typeof(string));
+                dt.Columns.Add("IsComfirmation", typeof(bool));
+                dt.Columns.Add("IsComfirmation_date", typeof(DateTime));
+                dt.Columns.Add("PK_IVR_ID", typeof(int));
+                dt.Columns.Add("PK_RM_ID", typeof(int));
+                dt.Columns.Add("ShopApproved", typeof(int));
+                dt.Columns.Add("ShopApproved_Number", typeof(string));
+                dt.Columns.Add("ValidityDate", typeof(DateTime));
+                dt.Columns.Add("Vendor_Name_Location", typeof(string));
                 dt.Columns.Add("Boiler_Owner", typeof(int));
                 dt.Columns.Add("Boiler_Manufacturer", typeof(int));
                 dt.Columns.Add("Boiler_Component_Manufacturer", typeof(int));
                 string createdBy = Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]);
-            DateTime? confirmationDate = IsComfirmation ? DateTime.Now : (DateTime?)null;
+                DateTime? confirmationDate = IsComfirmation ? DateTime.Now : (DateTime?)null;
 
 
                 DateTime? validityDateParsed = null;
@@ -4932,66 +5015,66 @@ namespace TuvVision.DataAccessLayer
                 }
 
                 foreach (var record in data)
-            {
-                dt.Rows.Add(
-                    record.Section ?? (object)DBNull.Value,
-                    (record.Comment != null || record.Status != null) ? record.Date : (object)DBNull.Value,
-                    record.Status ?? (object)DBNull.Value,
-                    record.Comment ?? (object)DBNull.Value,
-                    record.Person ?? (object)DBNull.Value,
-                    PK_CALL_ID,
-                    createdBy,
-                    Additionalcomment ?? (object)DBNull.Value,
-                    IsComfirmation,
-                    confirmationDate ?? (object)DBNull.Value,
-                    PK_IVR_ID,
-                    PK_RM_ID,
-                    ShopApproved,
-                    ShopApproved_Number,
-                      validityDateParsed ?? (object)DBNull.Value,
-                    VendorName,
-                     BolierOwner,
-                     BoilerManufacturer,
-                     BoilerComponentManufacturer
-                );
-            }
+                {
+                    dt.Rows.Add(
+                        record.Section ?? (object)DBNull.Value,
+                        (record.Comment != null || record.Status != null) ? record.Date : (object)DBNull.Value,
+                        record.Status ?? (object)DBNull.Value,
+                        record.Comment ?? (object)DBNull.Value,
+                        record.Person ?? (object)DBNull.Value,
+                        PK_CALL_ID,
+                        createdBy,
+                        Additionalcomment ?? (object)DBNull.Value,
+                        IsComfirmation,
+                        confirmationDate ?? (object)DBNull.Value,
+                        PK_IVR_ID,
+                        PK_RM_ID,
+                        ShopApproved,
+                        ShopApproved_Number,
+                          validityDateParsed ?? (object)DBNull.Value,
+                        VendorName,
+                         BolierOwner,
+                         BoilerManufacturer,
+                         BoilerComponentManufacturer
+                    );
+                }
 
 
-            con.Open();
-            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(con))
-            {
-                bulkCopy.DestinationTableName = "dbo.tbl_VisitMonitoringData_Staging";
-                bulkCopy.ColumnMappings.Add("Section", "Section");
-                bulkCopy.ColumnMappings.Add("Date", "Date");
-                bulkCopy.ColumnMappings.Add("Observation", "Observation");
-                bulkCopy.ColumnMappings.Add("Comments", "Comments");
-                bulkCopy.ColumnMappings.Add("MonitoredBy", "MonitoredBy");
-                bulkCopy.ColumnMappings.Add("Pk_Call_id", "Pk_Call_id");
-                bulkCopy.ColumnMappings.Add("CreatedBy", "CreatedBy");
-                bulkCopy.ColumnMappings.Add("Additionalcomment", "Additionalcomment");
-                bulkCopy.ColumnMappings.Add("IsComfirmation", "IsComfirmation");
-                bulkCopy.ColumnMappings.Add("IsComfirmation_date", "IsComfirmation_date");
-                bulkCopy.ColumnMappings.Add("PK_IVR_ID", "PK_IVR_ID");
-                bulkCopy.ColumnMappings.Add("PK_RM_ID", "PK_RM_ID");
-                bulkCopy.ColumnMappings.Add("ShopApproved", "ShopApproved");
-                bulkCopy.ColumnMappings.Add("ShopApproved_Number", "ShopApproved_Number");
-                bulkCopy.ColumnMappings.Add("ValidityDate", "ValidityDate");
-                bulkCopy.ColumnMappings.Add("Vendor_Name_Location", "Vendor_Name_Location");
-                bulkCopy.ColumnMappings.Add("Boiler_Owner", "Boiler_Owner");
-                bulkCopy.ColumnMappings.Add("Boiler_Manufacturer", "Boiler_Manufacturer");
-                bulkCopy.ColumnMappings.Add("Boiler_Component_Manufacturer", "Boiler_Component_Manufacturer");
+                con.Open();
+                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(con))
+                {
+                    bulkCopy.DestinationTableName = "dbo.tbl_VisitMonitoringData_Staging";
+                    bulkCopy.ColumnMappings.Add("Section", "Section");
+                    bulkCopy.ColumnMappings.Add("Date", "Date");
+                    bulkCopy.ColumnMappings.Add("Observation", "Observation");
+                    bulkCopy.ColumnMappings.Add("Comments", "Comments");
+                    bulkCopy.ColumnMappings.Add("MonitoredBy", "MonitoredBy");
+                    bulkCopy.ColumnMappings.Add("Pk_Call_id", "Pk_Call_id");
+                    bulkCopy.ColumnMappings.Add("CreatedBy", "CreatedBy");
+                    bulkCopy.ColumnMappings.Add("Additionalcomment", "Additionalcomment");
+                    bulkCopy.ColumnMappings.Add("IsComfirmation", "IsComfirmation");
+                    bulkCopy.ColumnMappings.Add("IsComfirmation_date", "IsComfirmation_date");
+                    bulkCopy.ColumnMappings.Add("PK_IVR_ID", "PK_IVR_ID");
+                    bulkCopy.ColumnMappings.Add("PK_RM_ID", "PK_RM_ID");
+                    bulkCopy.ColumnMappings.Add("ShopApproved", "ShopApproved");
+                    bulkCopy.ColumnMappings.Add("ShopApproved_Number", "ShopApproved_Number");
+                    bulkCopy.ColumnMappings.Add("ValidityDate", "ValidityDate");
+                    bulkCopy.ColumnMappings.Add("Vendor_Name_Location", "Vendor_Name_Location");
+                    bulkCopy.ColumnMappings.Add("Boiler_Owner", "Boiler_Owner");
+                    bulkCopy.ColumnMappings.Add("Boiler_Manufacturer", "Boiler_Manufacturer");
+                    bulkCopy.ColumnMappings.Add("Boiler_Component_Manufacturer", "Boiler_Component_Manufacturer");
 
                     bulkCopy.WriteToServer(dt);
-            }
-            using (SqlCommand cmd = new SqlCommand("Sp_MergeVisitMonitoringDataFromStaging", con))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
+                }
+                using (SqlCommand cmd = new SqlCommand("Sp_MergeVisitMonitoringDataFromStaging", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
-                    cmd.CommandTimeout = 0; // No timeout or increase if needed
-                cmd.ExecuteNonQuery();
+                    cmd.CommandTimeout = 0;
+                    cmd.ExecuteNonQuery();
+                }
             }
-        }
-                 catch (Exception ex)
+            catch (Exception ex)
             {
                 string Error = ex.Message.ToString();
             }
@@ -5001,7 +5084,7 @@ namespace TuvVision.DataAccessLayer
                 con.Close();
             }
             return dt;
-            
+
         }
 
         public DataSet GetPersonDiaryData(string PK_CALL_ID,int PK_RM_ID)//Get All DropDownlist 
@@ -5028,6 +5111,7 @@ namespace TuvVision.DataAccessLayer
             }
             return DSGetddlList;
         }
+
         public DataTable BulkInsertToDiary(List<VisitMonitoringRecord> data, string pk_call_id, bool BoilerComponentManufacturer, bool BolierOwner, bool BoilerManufacturer, bool IsComfirmation, int PK_IVR_ID, int PK_RM_ID, bool ShopApproved, string ShopApproved_Number, string ValidityDate)
         {
             DataTable dt = new DataTable();
@@ -5049,20 +5133,20 @@ namespace TuvVision.DataAccessLayer
                 dt.Columns.Add("Boiler_Manufacturer", typeof(int));
                 dt.Columns.Add("Boiler_Component_Manufacturer", typeof(int));
                 dt.Columns.Add("isComfirmation", typeof(int));
-                dt.Columns.Add("isComfirmation_Date", typeof(DateTime));
+                dt.Columns.Add("isComfirmation_Date", typeof(DateTime)); 
                 dt.Columns.Add("PK_IVR_ID", typeof(int));
                 dt.Columns.Add("PK_RM_ID", typeof(int));
                 dt.Columns.Add("ID", typeof(int));
                 dt.Columns.Add("ShopApproved", typeof(int));
                 dt.Columns.Add("ShopApproved_Number", typeof(string));
-                dt.Columns.Add("ValidityDate", typeof(DateTime));
+                dt.Columns.Add("ValidityDate", typeof(DateTime));  
 
                 dt.Columns.Add("Vendor_Name_Location", typeof(string));
                 dt.Columns.Add("CertificateNo", typeof(string));
                 dt.Columns.Add("Activities_Events_Value", typeof(string));
 
                 DateTime? validityDateParsed = null;
-                DateTime tempDate;
+                DateTime tempDate;  
 
                 if (!string.IsNullOrEmpty(ValidityDate))
                 {
@@ -5076,7 +5160,7 @@ namespace TuvVision.DataAccessLayer
                 DateTime createdDateTime = DateTime.Now;
                 DateTime? confirmationDate = IsComfirmation ? DateTime.Now : (DateTime?)null;
 
-
+                
                 foreach (var record in data)
                 {
                     dt.Rows.Add(
@@ -5143,18 +5227,17 @@ namespace TuvVision.DataAccessLayer
                     bulkCopy.ColumnMappings.Add("Vendor_Name_Location", "Vendor_Name_Location");
                     bulkCopy.ColumnMappings.Add("CertificateNo", "CertificateNo");
                     bulkCopy.ColumnMappings.Add("Activities_Events_Value", "Activities_Events_Value");
-                    
 
                     bulkCopy.WriteToServer(dt);
                 }
 
-
+                
                 using (SqlCommand cmd = new SqlCommand("Sp_VisitMonitoringRecord", con))
                 {
                     cmd.Parameters.AddWithValue("@SP_Type", 4);
                     cmd.Parameters.AddWithValue("@Createdby", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandTimeout = 0;
+                    cmd.CommandTimeout = 0; 
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -5172,46 +5255,43 @@ namespace TuvVision.DataAccessLayer
         }
 
 
+        public DataTable InsertDiaryRecord(VisitMonitoringRecord record, string PK_CALL_ID, bool BoilerComponentManufacturer, bool BolierOwner, bool BoilerManufacturer, bool IsComfirmation)//Get All DropDownlist 
+        {
+            DataTable DSGetddlList = new DataTable();
+            try
+            {
+                SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
+                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+                CMDGetDdlLst.CommandTimeout = 0;
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 4);
+                CMDGetDdlLst.Parameters.AddWithValue("@Inspection_Authority_ReferenceNo", record.Inspection_Authority_ReferenceNo);
+                CMDGetDdlLst.Parameters.AddWithValue("@Date", record.Date);
+                CMDGetDdlLst.Parameters.AddWithValue("@Boliers_Maker_No", record.Boliers_Maker_No);
+                CMDGetDdlLst.Parameters.AddWithValue("@Form_no_Certificate_No", record.Form_no_Certificate_No);
+                CMDGetDdlLst.Parameters.AddWithValue("@Quality_offered_Final_Inspection", record.Quality_offered_Final_Inspection);
+                CMDGetDdlLst.Parameters.AddWithValue("@Size", record.Size);
+                CMDGetDdlLst.Parameters.AddWithValue("@No_For_lot_invoicing", record.No_For_lot_invoicing);
+                CMDGetDdlLst.Parameters.AddWithValue("@PK_CALL_ID", PK_CALL_ID);
+                CMDGetDdlLst.Parameters.AddWithValue("@Boiler_Component_Manufacturer", BoilerComponentManufacturer);
+                CMDGetDdlLst.Parameters.AddWithValue("@Boiler_Owner", BolierOwner);
+                CMDGetDdlLst.Parameters.AddWithValue("@Boiler_Manufacturer", BoilerManufacturer);
+                //CMDGetDdlLst.Parameters.AddWithValue("@Additionalcomment", Additionalcomment);
+                CMDGetDdlLst.Parameters.AddWithValue("@isComfirmation", IsComfirmation);
 
-        //public DataTable InsertDiaryRecord(VisitMonitoringRecord record, string PK_CALL_ID,bool BoilerComponentManufacturer,bool BolierOwner,bool BoilerManufacturer,bool IsComfirmation,int PK_IVR_ID,int PK_RM_ID)//Get All DropDownlist 
-
-        //{
-        //    DataTable DSGetddlList = new DataTable();
-        //    try
-        //    {
-        //        SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
-        //        CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
-        //        CMDGetDdlLst.CommandTimeout = 0;
-        //        CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 4);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@Inspection_Authority_ReferenceNo", record.Inspection_Authority_ReferenceNo);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@Date", record.Date);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@Boliers_Maker_No", record.Boliers_Maker_No);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@Form_no_Certificate_No", record.Form_no_Certificate_No);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@Quality_offered_Final_Inspection", record.Quality_offered_Final_Inspection);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@Size", record.Size);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@No_For_lot_invoicing", record.No_For_lot_invoicing);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@PK_CALL_ID", PK_CALL_ID);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@Boiler_Component_Manufacturer", BoilerComponentManufacturer);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@Boiler_Owner", BolierOwner);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@Boiler_Manufacturer", BoilerManufacturer);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@PK_IVR_ID", PK_IVR_ID);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@PK_RM_ID", PK_RM_ID);
-        //        CMDGetDdlLst.Parameters.AddWithValue("@isComfirmation", IsComfirmation);
-
-        //        CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
-        //        SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
-        //        SDAGetDdlLst.Fill(DSGetddlList);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string Error = ex.Message.ToString();
-        //    }
-        //    finally
-        //    {
-        //        DSGetddlList.Dispose();
-        //    }
-        //    return DSGetddlList;
-        //}
+                CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                SDAGetDdlLst.Fill(DSGetddlList);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DSGetddlList.Dispose();
+            }
+            return DSGetddlList;
+        }
 
         public List<VisitMonitoringRecord> GetMonitoringData()//Get All DropDownlist 
         {
@@ -5239,10 +5319,12 @@ namespace TuvVision.DataAccessLayer
                                 JobNumber = Convert.ToString(dr["job_number"]),
                                 VendorName = Convert.ToString(dr["Vendor_Name_Location"]),
                                 Downloadfile = Convert.ToString(dr["Pk_Call_id"]),
-                              Sapnumber=Convert.ToString(dr["SAP_No"]),
-                              Person=Convert.ToString(dr["InspectorName"]),
-                              IVRRefNo=Convert.ToString(dr["ReportNo"]),
-                              Pk_id= Convert.ToInt32(dr["PK_RM_ID"]),
+                                Sapnumber = Convert.ToString(dr["SAP_No"]),
+                                Person = Convert.ToString(dr["InspectorName"]),
+                                IVRRefNo = Convert.ToString(dr["ReportNo"]),
+                                Pk_id = Convert.ToInt32(dr["PK_RM_ID"]),
+                                Edit = Convert.ToInt32(dr["Edit"]),
+                                PK_IVR_ID = Convert.ToInt32(dr["PK_IVR_ID"]),
                             }
 
                    );
@@ -5260,7 +5342,7 @@ namespace TuvVision.DataAccessLayer
             return getdata;
         }
 
-        public List<VisitMonitoringRecord> GetMonitoringDataDatewise(string fromdate,string todate)//Get All DropDownlist 
+        public List<VisitMonitoringRecord> GetMonitoringDataDatewise(string fromdate, string todate)//Get All DropDownlist 
         {
             DataTable DSGetddlList = new DataTable();
             List<VisitMonitoringRecord> getdata = new List<VisitMonitoringRecord>();
@@ -5292,6 +5374,8 @@ namespace TuvVision.DataAccessLayer
                                 Person = Convert.ToString(dr["InspectorName"]),
                                 IVRRefNo = Convert.ToString(dr["ReportNo"]),
                                 Pk_id = Convert.ToInt32(dr["PK_RM_ID"]),
+                                Edit = Convert.ToInt32(dr["Edit"]),
+                                PK_IVR_ID = Convert.ToInt32(dr["PK_IVR_ID"]),
                             }
 
                    );
@@ -5348,6 +5432,7 @@ namespace TuvVision.DataAccessLayer
                                 BolierOwner = Convert.ToBoolean(dr["Boiler_Owner"]),
                                 BoilerManufacturer = Convert.ToBoolean(dr["Boiler_Manufacturer"]),
                                 BoilerComponentManufacturer = Convert.ToBoolean(dr["Boiler_Component_Manufacturer"]),
+                                Edit = Convert.ToInt32(dr["Edit"]),
                             }
                    );
                     }
@@ -5365,10 +5450,7 @@ namespace TuvVision.DataAccessLayer
         }
 
 
-
-
-
-        public List<VisitMonitoringRecord> GetPersonalDiaryDataDatewise(string FromDate,string ToDate)//Get All DropDownlist 
+        public List<VisitMonitoringRecord> GetPersonalDiaryDataDatewise(string FromDate, string ToDate)//Get All DropDownlist 
         {
             DataTable DSGetddlList = new DataTable();
             List<VisitMonitoringRecord> getdata = new List<VisitMonitoringRecord>();
@@ -5377,7 +5459,7 @@ namespace TuvVision.DataAccessLayer
                 SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
                 CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
                 CMDGetDdlLst.CommandTimeout = 0;
-                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", "9");
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 9);
                 CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                 CMDGetDdlLst.Parameters.AddWithValue("@FromD", FromDate);
                 CMDGetDdlLst.Parameters.AddWithValue("@ToD", ToDate);
@@ -5409,6 +5491,7 @@ namespace TuvVision.DataAccessLayer
                                 BolierOwner = Convert.ToBoolean(dr["Boiler_Owner"]),
                                 BoilerManufacturer = Convert.ToBoolean(dr["Boiler_Manufacturer"]),
                                 BoilerComponentManufacturer = Convert.ToBoolean(dr["Boiler_Component_Manufacturer"]),
+                                Edit = Convert.ToInt32(dr["Edit"]),
                             }
                    );
                     }
@@ -5425,7 +5508,7 @@ namespace TuvVision.DataAccessLayer
             return getdata;
         }
 
-        public DataSet GetPersonalDiaryData_Excel(string fromdate,string todate)//Get All DropDownlist 
+        public DataSet GetPersonalDiaryData_Excel(string fromdate, string todate)//Get All DropDownlist 
         {
             DataSet DSGetddlList = new DataSet();
             try
@@ -5441,7 +5524,7 @@ namespace TuvVision.DataAccessLayer
                     CMDGetDdlLst.Parameters.AddWithValue("@ToD", todate);
                     SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
                     SDAGetDdlLst.Fill(DSGetddlList);
-                }   
+                }
                 else
                 {
 
@@ -5497,6 +5580,7 @@ namespace TuvVision.DataAccessLayer
                                 Person = Convert.ToString(dr["InspectorName"]),
                                 IVRRefNo = Convert.ToString(dr["ReportNo"]),
                                 Pk_id = Convert.ToInt32(dr["PK_RM_ID"]),
+                                IsComfirmation = Convert.ToBoolean(dr["isComfirmation"]),
                             }
 
                    );
@@ -5524,7 +5608,7 @@ namespace TuvVision.DataAccessLayer
                 SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
                 CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
                 CMDGetDdlLst.CommandTimeout = 0;
-                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type",11);
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 11);
                 CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                 CMDGetDdlLst.Parameters.AddWithValue("@FromD", fromdate);
                 CMDGetDdlLst.Parameters.AddWithValue("@ToD", todate);
@@ -5547,6 +5631,7 @@ namespace TuvVision.DataAccessLayer
                                 Person = Convert.ToString(dr["InspectorName"]),
                                 IVRRefNo = Convert.ToString(dr["ReportNo"]),
                                 Pk_id = Convert.ToInt32(dr["PK_RM_ID"]),
+                                IsComfirmation = Convert.ToBoolean(dr["isComfirmation"]),
                             }
 
                    );
@@ -5620,7 +5705,7 @@ namespace TuvVision.DataAccessLayer
         }
 
 
-        public List<VisitMonitoringRecord> MISGetPersonalDiaryDataDatewise(string FromDate, string ToDate,string vendorname,string Inspector)//Get All DropDownlist 
+        public List<VisitMonitoringRecord> MISGetPersonalDiaryDataDatewise(string FromDate, string ToDate, string vendorname,string Inspector)//Get All DropDownlist 
         {
             DataTable DSGetddlList = new DataTable();
             List<VisitMonitoringRecord> getdata = new List<VisitMonitoringRecord>();
@@ -5645,8 +5730,6 @@ namespace TuvVision.DataAccessLayer
                         getdata.Add(
                             new VisitMonitoringRecord
                             {
-
-                                
                                 //Date = Convert.ToString(dr["Date"]),
                                 DateofInspection = Convert.ToString(dr["Date_Of_Inspection"]),
                                 JobNumber = Convert.ToString(dr["job_number"]),
@@ -5682,7 +5765,7 @@ namespace TuvVision.DataAccessLayer
         }
 
 
-        public DataSet MISGetPersonalDiaryData_Excel(string fromdate, string todate,string vendorname,string InspectorName_)//Get All DropDownlist 
+        public DataSet MISGetPersonalDiaryData_Excel(string fromdate, string todate, string vendorname,string InspectorName_)//Get All DropDownlist 
         {
             DataSet DSGetddlList = new DataSet();
             try
@@ -5692,14 +5775,14 @@ namespace TuvVision.DataAccessLayer
                     CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
                     CMDGetDdlLst.CommandTimeout = 0;
                     CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 15);
+                    //CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                     CMDGetDdlLst.Parameters.AddWithValue("@FromD", fromdate);
                     CMDGetDdlLst.Parameters.AddWithValue("@ToD", todate);
                     CMDGetDdlLst.Parameters.AddWithValue("@VendorName", vendorname);
                 CMDGetDdlLst.Parameters.AddWithValue("@InspectorName", InspectorName_);
-                //CMDGetDdlLst.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
                 SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
                     SDAGetDdlLst.Fill(DSGetddlList);
-               
+                //else
                 //{
 
                 //    SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
@@ -5723,19 +5806,18 @@ namespace TuvVision.DataAccessLayer
             return DSGetddlList;
         }
 
-        public DataSet GetSection_data(string PK_CALL_ID, int PK_RM_ID)//Get All DropDownlist 
+        public DataTable GetInspectorName(string Inspector)//Get All DropDownlist 
         {
-            DataSet DSGetddlList = new DataSet();
+            DataTable DSGetddlList = new DataTable();
             try
             {
-                SqlCommand CMDGetDdlLst = new SqlCommand("Sp_VisitMonitoringRecord", con);
-                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
-                CMDGetDdlLst.CommandTimeout = 0;
-                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 16);
-                CMDGetDdlLst.Parameters.AddWithValue("@PK_CALL_ID", PK_CALL_ID);
-                CMDGetDdlLst.Parameters.AddWithValue("@PK_RM_ID", PK_RM_ID);
-                SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
-                SDAGetDdlLst.Fill(DSGetddlList);
+                SqlCommand CMDSearchNameCode = new SqlCommand("Sp_VisitMonitoringRecord", con);
+                CMDSearchNameCode.CommandType = CommandType.StoredProcedure;
+                CMDSearchNameCode.CommandTimeout = 1000000000;
+                CMDSearchNameCode.Parameters.AddWithValue("@SP_Type", 19);
+                CMDSearchNameCode.Parameters.AddWithValue("@InspectorName", Inspector);
+                SqlDataAdapter SDAScripName = new SqlDataAdapter(CMDSearchNameCode);
+                SDAScripName.Fill(DSGetddlList);
             }
             catch (Exception ex)
             {
@@ -5747,8 +5829,6 @@ namespace TuvVision.DataAccessLayer
             }
             return DSGetddlList;
         }
-
-
         public DataSet GetPersonDiary_data1(string PK_CALL_ID, int PK_RM_ID)//Get All DropDownlist 
         {
             DataSet DSGetddlList = new DataSet();
@@ -5773,9 +5853,7 @@ namespace TuvVision.DataAccessLayer
             }
             return DSGetddlList;
         }
-
-
-        public DataSet GetPersonDiary_data_MIS_PDF(string fromDate,string ToDate,string VendorName,string InspectorName_)//Get All DropDownlist 
+        public DataSet GetPersonDiary_data_MIS_PDF(string fromDate, string ToDate, string VendorName,string InspectorName_)//Get All DropDownlist 
         {
             DataSet DSGetddlList = new DataSet();
             try
@@ -5805,20 +5883,24 @@ namespace TuvVision.DataAccessLayer
             return DSGetddlList;
         }
 
-
-
-        public DataTable GetInspectorName(string Inspector)//Get All DropDownlist 
+        public int DeleteDocumentById(int id)
         {
-            DataTable DSGetddlList = new DataTable();
+            int Result = 0;
+            con.Open();
             try
             {
-                SqlCommand CMDSearchNameCode = new SqlCommand("Sp_VisitMonitoringRecord", con);
-                CMDSearchNameCode.CommandType = CommandType.StoredProcedure;
-                CMDSearchNameCode.CommandTimeout = 1000000000;
-                CMDSearchNameCode.Parameters.AddWithValue("@SP_Type", 19);
-                CMDSearchNameCode.Parameters.AddWithValue("@InspectorName", Inspector);
-                SqlDataAdapter SDAScripName = new SqlDataAdapter(CMDSearchNameCode);
-                SDAScripName.Fill(DSGetddlList);
+                SqlCommand CMDContactDelete = new SqlCommand("SP_ReportsMaster", con);
+                CMDContactDelete.CommandType = CommandType.StoredProcedure;
+                CMDContactDelete.CommandTimeout = 100000;
+                CMDContactDelete.Parameters.AddWithValue("@SP_Type", 99);
+                CMDContactDelete.Parameters.AddWithValue("@PK_CALL_ID", id);
+                //CMDContactDelete.Parameters.AddWithValue("@ModifyBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                Result = Convert.ToInt32(CMDContactDelete.ExecuteScalar());
+                //Result = CMDContactDelete.ExecuteNonQuery();
+                if (Result != 0)
+                {
+                    return Result;
+                }
             }
             catch (Exception ex)
             {
@@ -5826,10 +5908,82 @@ namespace TuvVision.DataAccessLayer
             }
             finally
             {
-                DSGetddlList.Dispose();
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
             }
-            return DSGetddlList;
+            return Result;
         }
+
+        public int DeleteDocumentByIdIRN(int id)
+        {
+            int Result = 0;
+            con.Open();
+            try
+            {
+                SqlCommand CMDContactDelete = new SqlCommand("SP_ReportsMaster", con);
+                CMDContactDelete.CommandType = CommandType.StoredProcedure;
+                CMDContactDelete.CommandTimeout = 100000;
+                CMDContactDelete.Parameters.AddWithValue("@SP_Type", 100);
+                CMDContactDelete.Parameters.AddWithValue("@PK_CALL_ID", id);
+                //CMDContactDelete.Parameters.AddWithValue("@ModifyBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                Result = Convert.ToInt32(CMDContactDelete.ExecuteScalar());
+                //Result = CMDContactDelete.ExecuteNonQuery();
+                if (Result != 0)
+                {
+                    return Result;
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+            }
+            return Result;
+        }
+
+        public int DeleteIInspectionActivityByPK_IA_ID(int? PK_IA_ID)
+        {
+            int Result = 0;
+            con.Open();
+            try
+            {
+                SqlCommand CMDContactDelete = new SqlCommand("SP_InspectionActivites", con);
+                CMDContactDelete.CommandType = CommandType.StoredProcedure;
+                CMDContactDelete.CommandTimeout = 100000;
+                CMDContactDelete.Parameters.AddWithValue("@SP_Type", 9);
+                CMDContactDelete.Parameters.AddWithValue("@PK_IA_ID", PK_IA_ID);
+                //CMDContactDelete.Parameters.AddWithValue("@ModifyBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+                Result = CMDContactDelete.ExecuteNonQuery();
+                if (Result != 0)
+                {
+                    return Result;
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+            }
+            return Result;
+        }
+
 
     }
 }

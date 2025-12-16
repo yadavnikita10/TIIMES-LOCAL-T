@@ -675,6 +675,117 @@ namespace TuvVision.Controllers
         //        return File(fileBytes, "application/pdf", "ImagesWithCaptions.pdf");
         //    }
         //}
+        //public void GenerateReportBAKWorking(int? PK_CALL_ID, string ReportNo, string Call_No)
+        //{
+        //    //int? PK_CALL_ID = 1393361;
+        //    RMData.PK_CALL_ID = 1393361;
+
+        //    DataTable ImageReportDashBoard = objDalVisitReport.GetReportImageByCall_Id(PK_CALL_ID);
+        //    List<ReportImageModel> ImageDashBoard = new List<ReportImageModel>();
+
+        //    if (ImageReportDashBoard.Rows.Count > 0)
+        //    {
+        //        foreach (DataRow dr in ImageReportDashBoard.Rows)
+        //        {
+        //            DateTime CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+        //            int year = CreatedDate.Year;
+        //            string currentMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(CreatedDate.Month);
+
+        //            ImageDashBoard.Add(new ReportImageModel
+        //            {
+        //                Path = $"/Content/Uploads/Images/{year}/{currentMonth}",
+        //                Image = Convert.ToString(dr["Image"]),
+        //                Heading = Convert.ToString(dr["Heading"])
+        //            });
+        //        }
+        //    }
+
+        //    string pdfPath = Server.MapPath($"~/Content/" + Call_No + "/" + "Image_" + ".pdf");
+
+        //    using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+        //    using (Document doc = new Document(PageSize.A4, 20f, 20f, 70f, 50f))
+        //    {
+        //        PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+
+        //        // Attach header/footer
+        //        string relativePath = "/AllJsAndCss/images/logo.png";
+        //        string logoPath = Server.MapPath(relativePath);
+        //        string reportNo = ReportNo;
+
+        //        string relativePathFooter = "/AllJsAndCss/images/footerlogo.png";
+        //        string footerLogoPath = Server.MapPath(relativePathFooter);
+        //        writer.PageEvent = new PdfHeaderFooter(logoPath, reportNo, footerLogoPath);
+
+        //        doc.Open();
+
+        //        PdfPTable table = new PdfPTable(2) { WidthPercentage = 100 };
+        //        int imgCount = 0;
+
+        //        foreach (var item in ImageDashBoard)
+        //        {
+        //            string fullImagePath = Server.MapPath(item.Path + "/" + item.Image);
+
+        //            if (System.IO.File.Exists(fullImagePath))
+        //            {
+        //                iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(fullImagePath);
+        //                img.ScaleAbsolute(250f, 180f);
+        //                img.Alignment = Element.ALIGN_CENTER;
+
+        //                PdfPCell headingCell = new PdfPCell(new Phrase(item.Heading, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11)))
+        //                {
+        //                    Border = Rectangle.BOTTOM_BORDER,  // ❌ No border here
+        //                    HorizontalAlignment = Element.ALIGN_CENTER,
+        //                    VerticalAlignment = Element.ALIGN_MIDDLE,
+        //                    Padding = 4
+        //                };
+
+        //                PdfPCell imgCell = new PdfPCell(img, true)
+        //                {
+        //                    Border = Rectangle.NO_BORDER,  // ❌ No border here
+        //                    HorizontalAlignment = Element.ALIGN_CENTER,
+        //                    VerticalAlignment = Element.ALIGN_MIDDLE,
+        //                    Padding = 5,
+        //                    FixedHeight = 190f
+        //                };
+
+        //                PdfPTable nested = new PdfPTable(1) { WidthPercentage = 100 };
+        //                nested.AddCell(headingCell);
+        //                nested.AddCell(imgCell);
+
+        //                PdfPCell outerCell = new PdfPCell(nested)
+        //                {
+        //                    Border = Rectangle.BOX,   // ✅ Only one border around the block
+        //                    Padding = 5,
+        //                    HorizontalAlignment = Element.ALIGN_CENTER,
+        //                    VerticalAlignment = Element.ALIGN_MIDDLE
+        //                };
+
+        //                table.AddCell(outerCell);
+        //                imgCount++;
+        //            }
+
+        //            if (imgCount % 6 == 0)
+        //            {
+        //                doc.Add(table);
+        //                doc.NewPage();
+        //                table = new PdfPTable(2) { WidthPercentage = 100 };
+        //            }
+        //        }
+
+        //        if (imgCount % 6 != 0)
+        //        {
+        //            while (imgCount % 2 != 0)
+        //            {
+        //                table.AddCell(new PdfPCell(new Phrase("")) { Border = Rectangle.BOX });
+        //                imgCount++;
+        //            }
+        //            doc.Add(table);
+        //        }
+
+        //        doc.Close();
+        //    }
+        //}
+
 
         #endregion
 
@@ -682,10 +793,20 @@ namespace TuvVision.Controllers
         #region Image download 
 
 
-        public void GenerateReport(int? PK_CALL_ID, string ReportNo, string Call_No)
+
+
+        public void GenerateReport_25092025(int? PK_CALL_ID, string ReportNo, string Call_No, string CustomerSpecificNumber)
         {
-            //int? PK_CALL_ID = 1393361;
-            RMData.PK_CALL_ID = 1413123;
+            //RMData.PK_CALL_ID = 1393361;
+            //RMData.PK_CALL_ID = 1367385;
+            // Load Tunga font from system
+            string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "TNG Pro Regular.otf");
+            BaseFont bfTunga = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
+            // Define the font (normal, not bold)
+            iTextSharp.text.Font tungaFont = new iTextSharp.text.Font(bfTunga, 11, iTextSharp.text.Font.NORMAL);
+
+
 
             DataTable ImageReportDashBoard = objDalVisitReport.GetReportImageByCall_Id(PK_CALL_ID);
             List<ReportImageModel> ImageDashBoard = new List<ReportImageModel>();
@@ -705,92 +826,448 @@ namespace TuvVision.Controllers
                         Heading = Convert.ToString(dr["Heading"])
                     });
                 }
-            }
+                //}
 
-            string pdfPath = Server.MapPath($"~/Content/" + Call_No + "/" + "Image_" + ".pdf");
+                string pdfPath = Server.MapPath($"~/Content/" + Call_No + "/" + "Image_" + ".pdf");
 
-            using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
-            using (Document doc = new Document(PageSize.A4, 20f, 20f, 70f, 50f))
-            {
-                PdfWriter writer = PdfWriter.GetInstance(doc, fs);
 
-                // Attach header/footer
-                string relativePath = "/AllJsAndCss/images/logo.png";
-                string logoPath = Server.MapPath(relativePath);
-                string reportNo =  ReportNo;
-
-                string relativePathFooter = "/AllJsAndCss/images/footerlogo.png";
-                string footerLogoPath = Server.MapPath(relativePathFooter); 
-                writer.PageEvent = new PdfHeaderFooter(logoPath, reportNo, footerLogoPath);
-
-                doc.Open();
-
-                PdfPTable table = new PdfPTable(2) { WidthPercentage = 100 };
-                int imgCount = 0;
-
-                foreach (var item in ImageDashBoard)
+                using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (Document doc = new Document(PageSize.A4, 20f, 20f, 70f, 50f))
                 {
-                    string fullImagePath = Server.MapPath(item.Path + "/" + item.Image);
 
-                    if (System.IO.File.Exists(fullImagePath))
+                    PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+
+                    // Attach header/footer
+                    string relativePath = "/AllJsAndCss/images/logo.png";
+                    string logoPath = Server.MapPath(relativePath);
+                    string reportNo = ReportNo;
+
+                    string relativePathFooter = "/AllJsAndCss/images/footerlogo.png";
+                    string footerLogoPath = Server.MapPath(relativePathFooter);
+                    //writer.PageEvent = new PdfHeaderFooter(logoPath, reportNo, footerLogoPath, CustomerSpecificNumber, IsConfirmation);
+
+                    doc.Open();
+
+                    PdfPTable table = new PdfPTable(2) { WidthPercentage = 95 };
+                    int imgCount = 0;
+
+                    #region Bind Header Row
+                    doc.Add(CreateInspectionHeaderTable());
+                    #endregion
+
+                    foreach (var item in ImageDashBoard)
                     {
-                        iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(fullImagePath);
-                        img.ScaleAbsolute(250f, 180f);
-                        img.Alignment = Element.ALIGN_CENTER;
+                        string fullImagePath = Server.MapPath(item.Path + "/" + item.Image);
 
-                        PdfPCell headingCell = new PdfPCell(new Phrase(item.Heading, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11)))
+                        if (System.IO.File.Exists(fullImagePath))
                         {
-                            Border = Rectangle.BOTTOM_BORDER,  // ❌ No border here
-                            HorizontalAlignment = Element.ALIGN_CENTER,
-                            VerticalAlignment = Element.ALIGN_MIDDLE,
-                            Padding = 4
-                        };
+                            // Create image
+                            iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(fullImagePath);
+                            img.ScaleAbsolute(250f, 180f); // like CSS width/height
+                            img.Alignment = Element.ALIGN_CENTER;
 
-                        PdfPCell imgCell = new PdfPCell(img, true)
+                            // === Inner table simulating .cell-content ===
+                            PdfPTable inner = new PdfPTable(1);
+                            inner.WidthPercentage = 100;
+                            inner.DefaultCell.Border = Rectangle.NO_BORDER; // no double borders
+
+
+                            // Use in PdfPCell
+                            // PdfPCell headingCell = new PdfPCell(new Phrase(item.Heading, tungaFont))
+
+                            // Heading (like .heading CSS)
+                            //PdfPCell headingCell = new PdfPCell(new Phrase(item.Heading, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11)))
+
+                            Font tngProFont = FontFactory.GetFont("TNG Pro", 9, Font.NORMAL);
+                            // Use it in PdfPCell
+                            PdfPCell headingCell = new PdfPCell(new Phrase(item.Heading, tngProFont))
+                            {
+                                Border = Rectangle.BOTTOM_BORDER,   // only bottom border
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                PaddingTop = 4f,
+                                PaddingBottom = 4f,
+                                FixedHeight = 24f
+                            };
+
+                            // Image cell (like .img-cell CSS)
+                            PdfPCell imgCell = new PdfPCell(img, true)
+                            {
+                                Border = Rectangle.NO_BORDER,
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                Padding = 5,
+                                FixedHeight = 160f
+                            };
+
+                            // Add heading + image inside inner
+                            inner.AddCell(headingCell);
+                            inner.AddCell(imgCell);
+
+                            // === Outer cell (like <td> with border: 1px solid black) ===
+                            PdfPCell outerCell = new PdfPCell(inner)
+                            {
+                                Border = Rectangle.BOX,       // 1px black border around full block
+                                Padding = 0f,                 // remove extra spacing (CSS td padding: 0)
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_TOP,
+                                FixedHeight = 200f            // same as .cell-content { height: 230px }
+                            };
+
+                            // Add to main 2-column table
+                            table.AddCell(outerCell);
+                            imgCount++;
+                        }
+
+                        // Page break after 6 images
+                        if (imgCount % 6 == 0)
                         {
-                            Border = Rectangle.NO_BORDER,  // ❌ No border here
-                            HorizontalAlignment = Element.ALIGN_CENTER,
-                            VerticalAlignment = Element.ALIGN_MIDDLE,
-                            Padding = 5,
-                            FixedHeight = 190f
-                        };
-
-                        PdfPTable nested = new PdfPTable(1) { WidthPercentage = 100 };
-                        nested.AddCell(headingCell);
-                        nested.AddCell(imgCell);
-
-                        PdfPCell outerCell = new PdfPCell(nested)
-                        {
-                            Border = Rectangle.BOX,   // ✅ Only one border around the block
-                            Padding = 5,
-                            HorizontalAlignment = Element.ALIGN_CENTER,
-                            VerticalAlignment = Element.ALIGN_MIDDLE
-                        };
-
-                        table.AddCell(outerCell);
-                        imgCount++;
+                            doc.Add(table);
+                            doc.NewPage();
+                            //doc.Add(CreateInspectionHeaderTable()); // <-- repeat the header 23092025
+                            if (imgCount < ImageDashBoard.Count)
+                            {
+                                doc.Add(CreateInspectionHeaderTable());
+                            }
+                            table = new PdfPTable(2) { WidthPercentage = 95 };
+                        }
                     }
 
-                    if (imgCount % 6 == 0)
+                    //  if (imgCount % 6 != 0) 23092025
+                    if (imgCount % 6 == 0 && imgCount < ImageDashBoard.Count)
                     {
+                        while (imgCount % 2 != 0)
+                        {
+                            table.AddCell(new PdfPCell(new Phrase(""))
+                            {
+                                Border = Rectangle.BOX,
+                                FixedHeight = 230f
+                            });
+                            imgCount++;
+                        }
                         doc.Add(table);
-                        doc.NewPage();
-                        table = new PdfPTable(2) { WidthPercentage = 100 };
                     }
+
+                    doc.Close();
                 }
 
-                if (imgCount % 6 != 0)
-                {
-                    while (imgCount % 2 != 0)
-                    {
-                        table.AddCell(new PdfPCell(new Phrase("")) { Border = Rectangle.BOX });
-                        imgCount++;
-                    }
-                    doc.Add(table);
-                }
-
-                doc.Close();
             }
+        }
+
+        public void GenerateReport(int? PK_CALL_ID, string ReportNo, string Call_No, string CustomerSpecificNumber, bool IsConfirmation)
+        {
+            // Load Tunga font from system
+            string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "TNG Pro Regular.otf");
+            BaseFont bfTunga = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
+            // Define the font (normal, not bold)
+            iTextSharp.text.Font tungaFont = new iTextSharp.text.Font(bfTunga, 11, iTextSharp.text.Font.NORMAL);
+
+            DataTable ImageReportDashBoard = objDalVisitReport.GetReportImageByCall_Id(PK_CALL_ID);
+            List<ReportImageModel> ImageDashBoard = new List<ReportImageModel>();
+
+            if (ImageReportDashBoard.Rows.Count > 0)
+            {
+                foreach (DataRow dr in ImageReportDashBoard.Rows)
+                {
+                    DateTime CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                    int year = CreatedDate.Year;
+                    string currentMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(CreatedDate.Month);
+
+                    ImageDashBoard.Add(new ReportImageModel
+                    {
+                        Path = $"/Content/Uploads/Images/{year}/{currentMonth}",
+                        Image = Convert.ToString(dr["Image"]),
+                        Heading = Convert.ToString(dr["Heading"])
+                    });
+                }
+
+                string pdfPath = Server.MapPath($"~/Content/" + Call_No + "/" + "Image_" + ".pdf");
+
+                using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (Document doc = new Document(PageSize.A4, 20f, 20f, 70f, 50f))
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+
+                    // Attach header/footer
+                    string relativePath = "/AllJsAndCss/images/logo.png";
+                    string logoPath = Server.MapPath(relativePath);
+                    string reportNo = ReportNo;
+
+                    string relativePathFooter = "/AllJsAndCss/images/footerlogo.png";
+                    string footerLogoPath = Server.MapPath(relativePathFooter);
+                    writer.PageEvent = new PdfHeaderFooter(logoPath, reportNo, footerLogoPath, CustomerSpecificNumber, IsConfirmation);
+
+                    doc.Open();
+
+                    PdfPTable table = new PdfPTable(2) { WidthPercentage = 95 };
+                    int imgCount = 0;
+
+                    #region Bind Header Row
+                    doc.Add(CreateInspectionHeaderTable());
+                    #endregion
+
+                    foreach (var item in ImageDashBoard)
+                    {
+                        string fullImagePath = Server.MapPath(item.Path + "/" + item.Image);
+
+                        if (System.IO.File.Exists(fullImagePath))
+                        {
+                            // Create image
+                            iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(fullImagePath);
+                            img.ScaleAbsolute(250f, 180f); // like CSS width/height
+                            img.Alignment = Element.ALIGN_CENTER;
+
+                            // === Inner table for heading + image ===
+                            PdfPTable inner = new PdfPTable(1);
+                            inner.WidthPercentage = 100;
+                            inner.DefaultCell.Border = Rectangle.NO_BORDER;
+
+                            Font tngProFont = FontFactory.GetFont("TNG Pro", 9, Font.NORMAL);
+
+                            PdfPCell headingCell = new PdfPCell(new Phrase(item.Heading, tngProFont))
+                            {
+                                Border = Rectangle.BOTTOM_BORDER,
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                PaddingTop = 4f,
+                                PaddingBottom = 4f,
+                                FixedHeight = 24f
+                            };
+
+                            PdfPCell imgCell = new PdfPCell(img, true)
+                            {
+                                Border = Rectangle.NO_BORDER,
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                Padding = 5,
+                                FixedHeight = 160f
+                            };
+
+                            inner.AddCell(headingCell);
+                            inner.AddCell(imgCell);
+
+                            PdfPCell outerCell = new PdfPCell(inner)
+                            {
+                                Border = Rectangle.BOX,
+                                Padding = 0f,
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_TOP,
+                                FixedHeight = 200f
+                            };
+
+                            table.AddCell(outerCell);
+                            imgCount++;
+                        }
+
+                        // Page break after every 6 images
+                        if (imgCount % 6 == 0)
+                        {
+                            doc.Add(table);
+                            doc.NewPage();
+
+                            if (imgCount < ImageDashBoard.Count)
+                            {
+                                // Repeat header for next page
+                                doc.Add(CreateInspectionHeaderTable());
+                            }
+
+                            table = new PdfPTable(2) { WidthPercentage = 95 };
+                        }
+                    }
+
+                    // ✅ Ensure leftover images (<6) are also added
+                    if (imgCount % 6 != 0)
+                    {
+                        // If odd number of images, add empty cell to complete the last row
+                        while (imgCount % 2 != 0)
+                        {
+                            table.AddCell(new PdfPCell(new Phrase(""))
+                            {
+                                Border = Rectangle.BOX,
+                                FixedHeight = 200f
+                            });
+                            imgCount++;
+                        }
+
+                        doc.Add(table);  // <-- Add final table for remaining images
+                    }
+
+                    doc.Close();
+                }
+            }
+        }
+
+        public void GenerateReportIRN(int? PK_CALL_ID, string ReportNo, string Call_No, string CustomerSpecificNumber, bool IsConfirmation)
+        {
+            // Load Tunga font from system
+            string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "TNG Pro Regular.otf");
+            BaseFont bfTunga = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
+            // Define the font (normal, not bold)
+            iTextSharp.text.Font tungaFont = new iTextSharp.text.Font(bfTunga, 11, iTextSharp.text.Font.NORMAL);
+
+            DataTable ImageReportDashBoard = objDalVisitReport.GetReportImageByCall_Id(PK_CALL_ID);
+            List<ReportImageModel> ImageDashBoard = new List<ReportImageModel>();
+
+            if (ImageReportDashBoard.Rows.Count > 0)
+            {
+                foreach (DataRow dr in ImageReportDashBoard.Rows)
+                {
+                    DateTime CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                    int year = CreatedDate.Year;
+                    string currentMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(CreatedDate.Month);
+
+                    ImageDashBoard.Add(new ReportImageModel
+                    {
+                        Path = $"/Content/Uploads/Images/{year}/{currentMonth}",
+                        Image = Convert.ToString(dr["Image"]),
+                        Heading = Convert.ToString(dr["Heading"])
+                    });
+                }
+
+                string pdfPath = Server.MapPath($"~/Content/" + Call_No + "/" + "Image_" + ".pdf");
+
+                using (FileStream fs = new FileStream(pdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (Document doc = new Document(PageSize.A4, 20f, 20f, 70f, 50f))
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+
+                    // Attach header/footer
+                    string relativePath = "/AllJsAndCss/images/logo.png";
+                    string logoPath = Server.MapPath(relativePath);
+                    string reportNo = ReportNo;
+
+                    string relativePathFooter = "/AllJsAndCss/images/footerlogo.png";
+                    string footerLogoPath = Server.MapPath(relativePathFooter);
+                    string watermarkPath = Server.MapPath("~/WaterMark.png");
+                    writer.PageEvent = new PdfHeaderFooterIRN(logoPath, reportNo, footerLogoPath, CustomerSpecificNumber,
+                                                                IsConfirmation,
+                                                                watermarkPath);
+
+                    doc.Open();
+
+                    PdfPTable table = new PdfPTable(2) { WidthPercentage = 95 };
+                    int imgCount = 0;
+
+                    #region Bind Header Row
+                    doc.Add(CreateInspectionHeaderTable());
+                    #endregion
+
+                    foreach (var item in ImageDashBoard)
+                    {
+                        string fullImagePath = Server.MapPath(item.Path + "/" + item.Image);
+
+                        if (System.IO.File.Exists(fullImagePath))
+                        {
+                            // Create image
+                            iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(fullImagePath);
+                            img.ScaleAbsolute(250f, 180f); // like CSS width/height
+                            img.Alignment = Element.ALIGN_CENTER;
+
+                            // === Inner table for heading + image ===
+                            PdfPTable inner = new PdfPTable(1);
+                            inner.WidthPercentage = 100;
+                            inner.DefaultCell.Border = Rectangle.NO_BORDER;
+
+                            Font tngProFont = FontFactory.GetFont("TNG Pro", 9, Font.NORMAL);
+
+                            PdfPCell headingCell = new PdfPCell(new Phrase(item.Heading, tngProFont))
+                            {
+                                Border = Rectangle.BOTTOM_BORDER,
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                PaddingTop = 4f,
+                                PaddingBottom = 4f,
+                                FixedHeight = 24f
+                            };
+
+                            PdfPCell imgCell = new PdfPCell(img, true)
+                            {
+                                Border = Rectangle.NO_BORDER,
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                Padding = 5,
+                                FixedHeight = 160f
+                            };
+
+                            inner.AddCell(headingCell);
+                            inner.AddCell(imgCell);
+
+                            PdfPCell outerCell = new PdfPCell(inner)
+                            {
+                                Border = Rectangle.BOX,
+                                Padding = 0f,
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_TOP,
+                                FixedHeight = 200f
+                            };
+
+                            table.AddCell(outerCell);
+                            imgCount++;
+                        }
+
+                        // Page break after every 6 images
+                        if (imgCount % 6 == 0)
+                        {
+                            doc.Add(table);
+                            doc.NewPage();
+
+                            if (imgCount < ImageDashBoard.Count)
+                            {
+                                // Repeat header for next page
+                                doc.Add(CreateInspectionHeaderTable());
+                            }
+
+                            table = new PdfPTable(2) { WidthPercentage = 95 };
+                        }
+                    }
+
+                    // ✅ Ensure leftover images (<6) are also added
+                    if (imgCount % 6 != 0)
+                    {
+                        // If odd number of images, add empty cell to complete the last row
+                        while (imgCount % 2 != 0)
+                        {
+                            table.AddCell(new PdfPCell(new Phrase(""))
+                            {
+                                Border = Rectangle.BOX,
+                                FixedHeight = 200f
+                            });
+                            imgCount++;
+                        }
+
+                        doc.Add(table);  // <-- Add final table for remaining images
+                    }
+
+                    doc.Close();
+                }
+            }
+        }
+
+
+        private static PdfPTable CreateInspectionHeaderTable()
+        {
+            PdfPTable headerRowTable = new PdfPTable(2) { WidthPercentage = 95 };
+
+            Font headerFont = FontFactory.GetFont("TNG Pro", 9, Font.BOLD, BaseColor.BLACK);
+            PdfPCell headerCell = new PdfPCell(new Phrase("Inspection Pictures :", headerFont))
+
+            //PdfPCell headerCell = new PdfPCell(new Phrase("Inspection Pictures :",FontFactory.GetFont("Arial", 11, Font.BOLD, BaseColor.BLACK)))
+            {
+                Colspan = 2,
+                Border = Rectangle.BOX,
+                BorderWidthBottom = 0,
+                BackgroundColor = new BaseColor(239, 239, 239), // #efefef
+                PaddingTop = -10f,
+                PaddingBottom = -10f,
+                //FixedHeight = 33f,
+                FixedHeight = 21f,
+                VerticalAlignment = Element.ALIGN_MIDDLE
+            };
+
+            headerRowTable.AddCell(headerCell);
+            return headerRowTable;
         }
 
 

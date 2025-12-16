@@ -25,6 +25,10 @@ namespace TuvVision.Models
         public string DEC_PMC_EPC_Name { get; set; }
         public string DEC_PMC_EPC_Assignment_No { get; set; }
         public string Vendor_Name_Location { get; set; }
+        public bool Manufact_Contra_Prod_Fabri { get; set; }
+        public bool stock_Trade_Raw { get; set; }
+        public bool TestingLaboratory { get; set; }
+        public bool TUVICustomer_End_Plant { get; set; }
         public string Po_No { get; set; }
         public string Sub_Vendor_Name { get; set; }
         public string Po_No_SubVendor { get; set; }
@@ -34,7 +38,7 @@ namespace TuvVision.Models
 
         public string CMP_ID { get; set; }    //added by nikita on 22102024
 
-
+        public string serviceid { get; set; }
         public string POItems { get; set; }
         public string PODescription { get; set; }
 
@@ -148,19 +152,19 @@ namespace TuvVision.Models
         public string ReportNoForPDF { get; set; }
         public string SAPNo { get; set; }
         public string SubType { get; set; }
-		 public bool chkARC { get; set; }
+        public bool chkARC { get; set; }
 
         public int IVRCount { get; set; }
         public bool ExpenseCheckBox { get; set; }
         public bool chkDoNotshareVendor { get; set; }
 
+        public string IBRAssignment { get; set; }
+        public string IBRCompetent { get; set; }
         public bool TiimeCheckBox { get; set; }
 
         public string Expenses { get; set; }
 
         public string PkId { get; set; }
-
-        public string serviceid { get; set; }
 
         public Boolean POTotalCheckBox { get; set; }
 
@@ -186,14 +190,14 @@ namespace TuvVision.Models
         public double TravelTime { get; set; }
         public double Description { get; set; }
         public List<NonInspectionActivity> Activity { get; set; }
-			   public string ReopenBy { get; set; }
+        public string ReopenBy { get; set; }
         public string NCRID { get; set; }
 
         public string SubSubVendorDate_of_PO { get; set; }
         public string ARCFirstPrint { get; set; }
         public string DownloadPDF { get; set; }
 
-        
+
         public string ReasonName { get; set; }
         public int ReasonID { get; set; }
         public string ReasonIDs { get; set; }
@@ -209,16 +213,13 @@ namespace TuvVision.Models
 
         public bool IsComfirmation { get; set; }  //====================Convert To bool
 
-        public bool Manufact_Contra_Prod_Fabri { get; set; }
-        public bool stock_Trade_Raw { get; set; }
-        public bool TestingLaboratory { get; set; }
-        public bool TUVICustomer_End_Plant { get; set; }
+
         public string acceptedStages { get; set; }
         public string acceptedItems { get; set; }
         public string NonacceptedStages { get; set; }
         public string NonacceptedItems { get; set; }
         public string ddlReviseReason { get; set; }
-        
+
         public string strIsIssuePending { get; set; }
         public Boolean IsIssuePending { get; set; }
         public string Mitigateddate { get; set; }
@@ -265,7 +266,7 @@ namespace TuvVision.Models
         public string ChkCustomerSpcFormat { get; set; }
         public string chkIfEndUserEditable { get; set; }
 
-        
+
 
         public string ContactNames { get; set; }
         public string ContactCompanyName { get; set; }
@@ -302,5 +303,15 @@ namespace TuvVision.Models
         public string ReportDownloadDate { get; set; }
         public string Id { get; set; }
 
+        public string MariaIVRNo { get; set; }
+        public string MariaDateOfIssue { get; set; }
+        public string MariaAttachment { get; set; }
+        public string IsAbleToReviseReport { get; set; }
+
+        public string LastDateofinspection { get; set; }
+
+        public string Client_NameWithoutId { get; set; }
+
+        public bool AddIMGONIRN { get; set; } //Added by Adesh Sawant on 18/11/2025
     }
 }

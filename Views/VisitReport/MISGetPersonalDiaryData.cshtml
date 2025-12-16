@@ -15,29 +15,29 @@
 @*<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>*@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
-    
-@*<script>
-    $(function () {
-        $(".FromD").datepicker({
-            dateFormat: 'dd/mm/yy',//check change
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+50"
-        });
-    });
 
-   
-</script>
-<script>
-    $(function () {
-        $(".ToD").datepicker({
-            dateFormat: 'dd/mm/yy',//check change
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+50"
+@*<script>
+        $(function () {
+            $(".FromD").datepicker({
+                dateFormat: 'dd/mm/yy',//check change
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+50"
+            });
         });
-    });
-</script>*@
+
+
+    </script>
+    <script>
+        $(function () {
+            $(".ToD").datepicker({
+                dateFormat: 'dd/mm/yy',//check change
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+50"
+            });
+        });
+    </script>*@
 
 
 
@@ -123,66 +123,66 @@
                         @Html.TextBoxFor(model => model.LeadGivenBy, new { placeholder = "Vendor Name", @class = "form-control form-control-custom LeadGivenBy" })
                         @Html.ValidationMessageFor(model => model.LeadGivenBy, "", new { @class = "text-danger validation-msg" })
                     </div>
-                    </div>
-                    <div class="col-xs-2">
-                        <label></label>
-                        <div class="form-group" style="padding-left: 206px;width: 370px;">
-                            <button type="button" class="btn btn-primary form-control" id="btnSearch">Search</button>
-                        </div>
-                    </div>
-                    @*<div class="col-xs-2">
-                <div class="form-group">
+                </div>
+                <div class="col-xs-2">
                     <label></label>
-                    <button type="button" id="a" value="ExportToExcel" class="btn btn-primary form-control" onclick="location.href='@Url.Action("ExportBoilerInspectionExcel_MIS", "VisitReport")'">
-                        Export To Excel
-                    </button>
+                    <div class="form-group" style="padding-left: 206px;width: 370px;">
+                        <button type="button" class="btn btn-primary form-control" id="btnSearch">Search</button>
+                    </div>
                 </div>
-            </div>*@
-                </div>
+                @*<div class="col-xs-2">
+                        <div class="form-group">
+                            <label></label>
+                            <button type="button" id="a" value="ExportToExcel" class="btn btn-primary form-control" onclick="location.href='@Url.Action("ExportBoilerInspectionExcel_MIS", "VisitReport")'">
+                                Export To Excel
+                            </button>
+                        </div>
+                    </div>*@
+            </div>
             <div class="col-xs-12">
 
                 @*<table class="display dataTable no-footer evaluation" style="overflow-y:auto" id="gridMapping">
-                    <tr>
-                        <td>
-                            @(Html
-                            .Grid(Model.lstData)
-                            .Build(columns =>
-                            {
-                                //columns.Add().Titled("Edit").RenderedAs(c => Edit(c)).Sortable(true);
-                                columns.Add(c => c.Person).Titled("Inspector Name");
-                                //columns.Add(c => c.Downloadfile).Titled("Download File").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true);
-                                //columns.Add(c => c.Downloadfile).Titled("Download");
-                                columns.Add(c => c.DateofInspection).Titled("Date of Inspection");
-                                columns.Add(c => c.IVRRefNo).Titled("IVR No");
-                                columns.Add(c => c.VendorName).Titled("Vendor Name");
-                                columns.Add(c => c.JobNumber).Titled("Job Number");
-                                columns.Add(c => c.Sapnumber).Titled("SAP Number");
-                                columns.Add(c => c.Inspection_Authority_ReferenceNo).Titled("Inspection Authority ReferenceNo");
-                                columns.Add(c => c.Boliers_Maker_No).Titled("Boliers Maker No");
-                                columns.Add(c => c.Form_no_Certificate_No).Titled("Form no Certificate No");
-                                columns.Add(c => c.Quality_offered_Final_Inspection).Titled("Quality offered Final Inspection");
-                                columns.Add(c => c.Size).Titled("Size");
-                                columns.Add(c => c.No_For_lot_invoicing).Titled("No For lot invoicing");
-                                columns.Add(c => c.BolierOwner).Titled("Bolier Owner");
-                                columns.Add(c => c.BoilerManufacturer).Titled("Boiler Manufacturer");
-                                columns.Add(c => c.BoilerComponentManufacturer).Titled("Boiler Component Manufacturer");
-                                //columns.Add(c => c.Date).Titled("Date");
-                            })
-                            .Pageable(pager =>
-                            {
-                                pager.ShowPageSizes = true;
-                                pager.PagesToDisplay = 3;
-                                pager.CurrentPage = 1;
-                                pager.RowsPerPage = 2;
-                            })
-                            .UsingFilterMode(GridFilterMode.Row)
-                            .Empty("No data found")
-                            .Filterable()
-                            .Sortable()
-                            )
-                        </td>
-                    </tr>
-                </table>*@
+                        <tr>
+                            <td>
+                                @(Html
+                                .Grid(Model.lstData)
+                                .Build(columns =>
+                                {
+                                    //columns.Add().Titled("Edit").RenderedAs(c => Edit(c)).Sortable(true);
+                                    columns.Add(c => c.Person).Titled("Inspector Name");
+                                    //columns.Add(c => c.Downloadfile).Titled("Download File").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true);
+                                    //columns.Add(c => c.Downloadfile).Titled("Download");
+                                    columns.Add(c => c.DateofInspection).Titled("Date of Inspection");
+                                    columns.Add(c => c.IVRRefNo).Titled("IVR No");
+                                    columns.Add(c => c.VendorName).Titled("Vendor Name");
+                                    columns.Add(c => c.JobNumber).Titled("Job Number");
+                                    columns.Add(c => c.Sapnumber).Titled("SAP Number");
+                                    columns.Add(c => c.Inspection_Authority_ReferenceNo).Titled("Inspection Authority ReferenceNo");
+                                    columns.Add(c => c.Boliers_Maker_No).Titled("Boliers Maker No");
+                                    columns.Add(c => c.Form_no_Certificate_No).Titled("Form no Certificate No");
+                                    columns.Add(c => c.Quality_offered_Final_Inspection).Titled("Quality offered Final Inspection");
+                                    columns.Add(c => c.Size).Titled("Size");
+                                    columns.Add(c => c.No_For_lot_invoicing).Titled("No For lot invoicing");
+                                    columns.Add(c => c.BolierOwner).Titled("Bolier Owner");
+                                    columns.Add(c => c.BoilerManufacturer).Titled("Boiler Manufacturer");
+                                    columns.Add(c => c.BoilerComponentManufacturer).Titled("Boiler Component Manufacturer");
+                                    //columns.Add(c => c.Date).Titled("Date");
+                                })
+                                .Pageable(pager =>
+                                {
+                                    pager.ShowPageSizes = true;
+                                    pager.PagesToDisplay = 3;
+                                    pager.CurrentPage = 1;
+                                    pager.RowsPerPage = 2;
+                                })
+                                .UsingFilterMode(GridFilterMode.Row)
+                                .Empty("No data found")
+                                .Filterable()
+                                .Sortable()
+                                )
+                            </td>
+                        </tr>
+                    </table>*@
                 <table id="visitDiaryTable" class="display responsive nowrap" style="width:100%">
                     <thead>
                         <tr>
@@ -231,7 +231,7 @@
             </div>
         </div>
     </div>
-        @*</div>*@
+    @*</div>*@
 }
 
 <script type="text/javascript">
@@ -270,43 +270,43 @@
     }
 </script>
 @*<script>
-    $(document).ready(function () {
-        $('#visitDiaryTable').DataTable({
-            "scrollX": true, // optional: horizontal scroll
-            "pageLength": 10,
-            "lengthMenu": [5, 10, 25, 50, 100],
-            "order": [], // default no sorting
-            "columnDefs": [
-                { "orderable": true, "targets": "_all" } // all columns sortable
-            ],
-            "language": {
-                "emptyTable": "No data available in table"
-            }
+        $(document).ready(function () {
+            $('#visitDiaryTable').DataTable({
+                "scrollX": true, // optional: horizontal scroll
+                "pageLength": 10,
+                "lengthMenu": [5, 10, 25, 50, 100],
+                "order": [], // default no sorting
+                "columnDefs": [
+                    { "orderable": true, "targets": "_all" } // all columns sortable
+                ],
+                "language": {
+                    "emptyTable": "No data available in table"
+                }
+            });
         });
-    });
-</script>*@
+    </script>*@
 
 
 
 @*<script>
-           [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
-               new MvcGrid(element);
-           });
+               [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                   new MvcGrid(element);
+               });
 
 
-            $('.mvc-grid-value').each(function (i)
-            {
-                    $(this).quicksearch("#gridMapping tr:not(:has(th))",
-                    {
-                        'testQuery': function (query, txt, row)
+                $('.mvc-grid-value').each(function (i)
+                {
+                        $(this).quicksearch("#gridMapping tr:not(:has(th))",
                         {
-                            return $(row).children(":eq(" + i + ")").text().toLowerCase().indexOf(query[0].toLowerCase()) != -1;
-                        }
-                    });
-            });
+                            'testQuery': function (query, txt, row)
+                            {
+                                return $(row).children(":eq(" + i + ")").text().toLowerCase().indexOf(query[0].toLowerCase()) != -1;
+                            }
+                        });
+                });
 
 
-</script>*@
+    </script>*@
 
 
 
@@ -444,4 +444,4 @@
 
     });
 
- </script>
+</script>

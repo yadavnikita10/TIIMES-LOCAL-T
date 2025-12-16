@@ -1,0 +1,520 @@
+﻿@model TuvVision.Models.VisitMonitoringRecord
+@{
+    ViewBag.Title = "MonitoringRecord";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+
+
+
+<script src="~/AllJsAndCss/jquery-1.10.2.js"></script>
+<script src="~/AllJsAndCss/jquery-ui.js"></script>
+<link href="~/AllJsAndCss/jquery-ui.css" rel="stylesheet" />
+<script src="~/AllJsAndCss/ValidateTimeSheet.js"></script>
+<!--multiselect-->
+<link href="~/AllJsAndCss/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+<!--multiselect-->
+<script src="~/AllJsAndCss/js/bootstrap-multiselect.js"></script>
+
+
+<style>
+    .height-table {
+        height: auto;
+    }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+</style>
+<script>
+
+
+
+    $(function () {
+        $(".SubSubVendorDate_of_PO").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $(".Date_of_PO").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+50"
+        });
+    });
+</script>
+
+@*<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
+
+    <script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
+
+@Html.HiddenFor(m => m.Signature)
+@Html.HiddenFor(m => m.pk_call_id)
+@Html.HiddenFor(m => m.Pk_id)
+
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <br />
+    <!--Start of header-->
+    @if (Model.IsComfirmation == true)
+    {
+        <div class="container-fluid">
+            <div class="col-xs-12">
+                <div class="white-bg section-box-shadow">
+                    <h3 class="form-page-title">Monitoring Record</h3>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                            <input type="text" hidden value="@Model.pk_call_id" />
+                            <input type="text" hidden value="@Model.Pk_id" />
+                            <br />
+                            <br />
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <a href="@Url.Action("VisitReportForm", "VisitReport", new { PK_Call_ID = Model.pk_call_id, PK_RM_ID = Model.Pk_id })"
+                                       class="btn btn-default news-btn" style="float:right;">
+                                        Go Back
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12" style="pointer-events:none;">
+                                <div class="form-group">
+                                    <label><b>Name Of the Competent Person</b></label>
+                                    @Html.TextBoxFor(model => model.Person, new { @placeholder = "", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12" style="pointer-events:none;">
+                                <div class="form-group">
+                                    <label><b>Name of the Inspecting Authority</b></label>
+                                    @Html.TextBoxFor(model => model.inspectingAuthority, new { @placeholder = "", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.inspectingAuthority, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12" style="pointer-events:none;">
+                                <div class="form-group">
+                                    <label><b>Name of the Manufacturer</b> </label>
+                                    @Html.TextBoxFor(model => model.VendorName, new { @placeholder = "", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.inspectingAuthority, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+                            @*<div class="col-xs-12 col-sm-4">
+                                    <div class="form-group">
+                                        <label><b>IVR Ref No</b> </label>
+                                        @Html.TextBoxFor(model => model.IVRRefNo, new { @placeholder = "", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.IVRRefNo, "", new { @class = "text-danger validation-msg" })
+                                    </div>
+                                </div>*@
+                            <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                                <div class="form-group">
+                                    <label><b>Date Of Inspection</b> </label>
+                                    @Html.TextBoxFor(model => model.DateofInspection, new { @placeholder = "", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.DateofInspection, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+                            <table class="table table-bordered" id="example">
+                                <thead>
+                                    <tr>
+                                        <th>Section</th>
+                                        <th>Date Monitored</th>
+                                        <th>Observation *(Satisfactory/Unsatisfactory)</th>
+                                        <th>Comments</th>
+                                        <th>Monitored by (Name)</th>
+                                        <th>Signature</th>
+                                    </tr>
+                                </thead>
+                                @{
+                                    var rows = ViewData["MonitoringData"] as List<TuvVision.Models.VisitMonitoringRecord>;
+                                }
+
+                                <tbody>
+                                    @foreach (var row in rows)
+                                    {
+                                        <tr class="data-row" data-section="@row.Section">
+                                            <td>@row.Section</td>
+
+                                            <td>
+                                                <input type="text" class="form-control date-cell" style="pointer-events:none;" value="@row.Date" />
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control status-dropdown">
+                                                    <option value="">Select</option>
+                                                    <option value="Satisfactory" @(row.Status == "Satisfactory" ? "selected" : "")>Satisfactory</option>
+                                                    <option value="Unsatisfactory" @(row.Status == "Unsatisfactory" ? "selected" : "")>Unsatisfactory</option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <textarea class="form-control comment-box" rows="1">@row.Comment</textarea>
+                                            </td>
+
+                                            <td>
+                                                <input type="text" value="@(!string.IsNullOrEmpty(row.Person) ? row.Person : Model.Person)" class="form-control auditor-name" />
+                                            </td>
+
+                                            <td>
+                                                <img src="@Url.Content("~/Content/SIGN/" + Model.Signature)" alt="Signature" style="max-height: 35px;" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label><b>Additional Internal Comment (Will not be printed on pdf)</b> </label>
+                                    @Html.TextBoxFor(model => model.Additionalcomment, new { @placeholder = "", @class = "form-control", @id = "Additionalcomment" })
+                                    @Html.ValidationMessageFor(model => model.Additionalcomment, "", new { @class = "text-danger validation-msg" })
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12">
+                                <hr class="custom-hr1 line">
+                            </div>
+
+                            <div class="col-xs-12 col-sm-12" style="margin-left: -14px;" id="hidecomfirmation">
+                                <div class="form-group">
+
+                                    @if (Model.IsComfirmation != true)
+                                    {
+                                        @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+
+                                        <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                        <label style="margin-left: 21px;">
+
+                                            I hereby confirm that I have reviewed the content and found it accurate. <br />
+
+                                            <label style="color:#E12F24;">
+                                                I authorize TIIMES to affix the  signature.
+                                            </label><br />
+                                            <label style="color:#001ED2;"> Note:</label><br />
+                                            <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
+                                        </label>
+                                        @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                    }
+                                    else
+                                    {
+                                        <div style="pointer-events:none;">
+                                            @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+                                            <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                            <label style="margin-left: 21px;">
+
+                                                I hereby confirm that I have reviewed the content and found it accurate. <br />
+
+                                                <label style="color:#E12F24;">
+                                                    I authorize TIIMES to affix the signature.
+                                                </label><br />
+                                                <label style="color:#001ED2;"> Note:</label><br />
+                                                <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
+                                            </label>
+                                            @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div>
+                                <button type="button" id="saveDataBtn" class="btn btn-default insert-form-btn"> Save IVR</button>
+                                @*<button type="submit" id="myButton" class="btn btn-default insert-form-btn">Export To Pdf</button>*@
+                                <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF", "VisitReport", new { pk_call_id = Model.pk_call_id })">
+                                    Export to PDF
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="container-fluid">
+                                            <div class="col-xs-12">
+                                                <div class="white-bg section-box-shadow">
+                                                    <h3 class="form-page-title">Monitoring Record</h3>
+                                                    <div class="row">
+
+                                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                                            <input type="text" hidden value="@Model.pk_call_id" />
+                                                            <input type="text" hidden value="@Model.Pk_id" />
+
+                                                            <br />
+                                                            <br />
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <a href="@Url.Action("VisitReportForm", "VisitReport", new { PK_Call_ID = Model.pk_call_id, PK_RM_ID = Model.Pk_id })"
+                                                                       class="btn btn-default news-btn" style="float:right;">
+                                                                        Go Back
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12" style="pointer-events:none;">
+                                                                <div class="form-group">
+                                                                    <label><b>Name Of the Competent Person</b></label>
+                                                                    @Html.TextBoxFor(model => model.Person, new { @placeholder = "", @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.Person, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12" style="pointer-events:none;">
+                                                                <div class="form-group">
+                                                                    <label><b>Name of the Inspecting Authority</b></label>
+                                                                    @Html.TextBoxFor(model => model.inspectingAuthority, new { @placeholder = "", @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.inspectingAuthority, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12" style="pointer-events:none;">
+                                                                <div class="form-group">
+                                                                    <label><b>Name of the Manufacturer</b> </label>
+                                                                    @Html.TextBoxFor(model => model.VendorName, new { @placeholder = "", @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.inspectingAuthority, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                            @*<div class="col-xs-12 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label><b>IVR Ref No</b> </label>
+                                                                        @Html.TextBoxFor(model => model.IVRRefNo, new { @placeholder = "", @class = "form-control" })
+                                                                        @Html.ValidationMessageFor(model => model.IVRRefNo, "", new { @class = "text-danger validation-msg" })
+                                                                    </div>
+                                                                </div>*@
+                                                            <div class="col-xs-12 col-sm-4" style="pointer-events:none;">
+                                                                <div class="form-group">
+                                                                    <label><b>Date Of Inspection</b> </label>
+                                                                    @Html.TextBoxFor(model => model.DateofInspection, new { @placeholder = "", @class = "form-control" })
+                                                                    @Html.ValidationMessageFor(model => model.DateofInspection, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+                                                            <table class="table table-bordered" id="example">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Section</th>
+                                                                        <th>Date Monitored</th>
+                                                                        <th>Observation *(Satisfactory/Unsatisfactory)</th>
+                                                                        <th>Comments</th>
+                                                                        <th>Monitored by (Name)</th>
+                                                                        <th>Signature</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                @{
+                                                                    var rows = ViewData["MonitoringData"] as List<TuvVision.Models.VisitMonitoringRecord>;
+                                                                }
+                                                                <tbody>
+                                                                    @foreach (var row in rows)
+                                                                    {
+                                                                        <tr class="data-row" data-section="@row.Section">
+                                                                            <td>@row.Section</td>
+
+                                                                            <td>
+                                                                                <input type="text" class="form-control date-cell" style="pointer-events:none;" value="@row.Date" />
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <select class="form-control status-dropdown">
+                                                                                    <option value="">Select</option>
+                                                                                    <option value="Satisfactory" @(row.Status == "Satisfactory" ? "selected" : "")>Satisfactory</option>
+                                                                                    <option value="Unsatisfactory" @(row.Status == "Unsatisfactory" ? "selected" : "")>Unsatisfactory</option>
+                                                                                </select>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <textarea class="form-control comment-box" rows="1">@row.Comment</textarea>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <input type="text" value="@(!string.IsNullOrEmpty(row.Person) ? row.Person : Model.Person)" class="form-control auditor-name" />
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <img src="@Url.Content("~/Content/SIGN/" + Model.Signature)" alt="Signature" style="max-height: 35px;" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+
+                                                            </table>
+                                                            <div class="col-xs-12">
+                                                                <div class="form-group">
+                                                                    <label><b>Additional Internal Comment (Will not be printed on pdf)</b> </label>
+                                                                    @Html.TextBoxFor(model => model.Additionalcomment, new { @placeholder = "", @class = "form-control", @id = "Additionalcomment" })
+                                                                    @Html.ValidationMessageFor(model => model.Additionalcomment, "", new { @class = "text-danger validation-msg" })
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xs-12">
+                                                                <hr class="custom-hr1 line">
+                                                            </div>
+
+                                                            <div class="col-xs-12 col-sm-12" style="margin-left: -14px;" id="hidecomfirmation">
+                                                                <div class="form-group">
+
+                                                                    @if (Model.IsComfirmation != true)
+                                                                    {
+                                                                        @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+
+                                                                        <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                                                        <label style="margin-left: 21px;">
+
+                                                                            I hereby confirm that I have reviewed the content  and found it accurate. <br />
+
+                                                                            <label style="color:#E12F24;">
+                                                                                I authorize TIIMES to affix the  signature.
+                                                                            </label><br />
+                                                                            <label style="color:#001ED2;"> Note:</label><br />
+                                                                            <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
+                                                                        </label>
+                                                                        @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div style="pointer-events:none;">
+                                                                            @Html.CheckBoxFor(model => model.IsComfirmation, new { @class = "checkBox_" })
+                                                                            <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                                                            <label style="margin-left: 21px;">
+
+                                                                                I hereby confirm that I have reviewed the content and found it accurate. <br />
+
+                                                                                <label style="color:#E12F24;">
+                                                                                    I authorize TIIMES to affix the  signature.
+                                                                                </label><br />
+                                                                                <label style="color:#001ED2;"> Note:</label><br />
+                                                                                <label>After the above declaration, no further modifications will be allowed for this version of the Inspection Visit Report.</label>
+                                                                            </label>
+                                                                            @Html.ValidationMessageFor(model => model.IsComfirmation, "", new { @class = "text-danger validation-msg" })
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </div>
+
+                                                            <div>
+                                                                <button type="button" id="saveDataBtn" class="btn btn-default insert-form-btn"> Save IVR</button>
+                                                                @*<button type="submit" id="myButton" class="btn btn-default insert-form-btn">Export To Pdf</button>*@
+                                                                <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF", "VisitReport", new { pk_call_id = Model.pk_call_id })">
+                                                                    Export to PDF
+                                                                </a>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                                                    }
+</div>
+
+<script>
+    function getCurrentDateFormatted() {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    }
+
+    $(document).ready(function () {
+        $('.status-dropdown, .comment-box').on('change keyup', function () {
+            var row = $(this).closest('tr');
+            var dateCell = row.find('.date-cell');
+            //if (dateCell.text().trim() === "") {
+            //    dateCell.text(getCurrentDateFormatted());
+            //}
+            if (!dateCell.val()) {
+                dateCell.val(getCurrentDateFormatted());
+            }
+        });
+    });
+
+
+    $("#saveDataBtn").click(function () {
+
+        debugger;
+        const data = [];
+
+        $('#example tbody tr.data-row').each(function () {
+            const row = $(this);
+            const section = row.data('section');
+            const date = row.find('.date-cell').val();
+            const status = row.find('.status-dropdown').val();
+            const comment = row.find('.comment-box').val();
+            const auditor = row.find('.auditor-name').val();
+
+            data.push({
+                Section: section,
+                Date: date,
+                Status: status,
+                Comment: comment,
+                Person: auditor
+            });
+
+        });
+        var pk_call_id = $("#pk_call_id").val();
+        var Additionalcomment = $("#Additionalcomment").val();
+        var IsComfirmation = $('.checkBox_').is(':checked');
+
+        $.ajax({
+            url: '@Url.Action("SaveMonitoringAjax", "VisitReport")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                data: data,
+                pk_call_id: pk_call_id,
+                Additionalcomment: Additionalcomment,
+                IsComfirmation: IsComfirmation
+            }),
+            success: function (response) {
+                alert(response.message || "Saved successfully!");
+                window.location.reload();
+            },
+            error: function () {
+                alert("Error saving data.");
+            }
+        });
+    });
+</script>

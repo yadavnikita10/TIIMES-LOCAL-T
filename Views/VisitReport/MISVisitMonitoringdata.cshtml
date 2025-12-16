@@ -38,16 +38,23 @@
 @helper CustomRenderingOfReport1(TuvVision.Models.VisitMonitoringRecord Report)
         {
 
-    <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF", "VisitReport", new { PK_CALL_ID = Report.Downloadfile })">
-        Export to PDF
+if (Report.IsComfirmation == true)
+{
+    <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF", "VisitReport", new { PK_CALL_ID = Report.Downloadfile, PK_RM_ID = Report.Pk_id })">
+        <i class="fa fa-download"></i>  @*Export to PDF*@
     </a>
 }
-@helper Edit(TuvVision.Models.VisitMonitoringRecord Report)
+else
+{
+
+}
+}
+@*@helper Edit(TuvVision.Models.VisitMonitoringRecord Report)
 {
 
     <a href="@Url.Action("VisitReportForm", "VisitReport", new {@PK_CALL_ID = Convert.ToInt32(Report.Downloadfile),@PK_RM_ID =Report.Pk_id })" title="Edit"><i class="fa fa-pencil"></i></a>
 
-}
+}*@
 
 @using (Html.BeginForm("MISVisitMonitoringdata", "VisitReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
 
@@ -60,7 +67,7 @@
             <div class="row assignfixedwidth rp-15">
                 <form method="post">
                     <div class="col-xs-12">
-                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Monitoring Record</h3>
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Mfr. Monitoring Record (IBR)</h3>
                     </div>
                 </form>
 
@@ -109,7 +116,7 @@
                             .Grid(Model.lstData)
                             .Build(columns =>
                             {
-                                columns.Add().Titled("Edit").RenderedAs(c => Edit(c)).Sortable(true);
+                                //columns.Add().Titled("Edit").RenderedAs(c => Edit(c)).Sortable(true);
                                 columns.Add(c => c.Person).Titled("Inspector Name");
                                 columns.Add(c => c.Downloadfile).Titled("Download File").RenderedAs(c => CustomRenderingOfReport1(c)).Sortable(true);
                                 //columns.Add(c => c.Downloadfile).Titled("Download");

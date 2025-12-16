@@ -10,6 +10,10 @@
 <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
 <script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+@{
+    int PK_RM_ID = Convert.ToInt32(Session["PK_RM_ID"]);
+    //Session["PK_RM_ID"] = Model.abcid;
+}
 <div class="main-content3 xs-max-height grey-bg-f3">
     <div class="grey-bg-f3">
         <!--Start of header-->
@@ -27,18 +31,18 @@
 
                             @if (Model.PK_CALL_ID != 0)
             {
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">General</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'"> Item Description</button>
-                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Reference Documents</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID})'">General</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID })'"> Item Description</button>
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Reference Documents</button>
 
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Stages Witnessed</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Document Reviewed</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Details Of Measuring Instrument</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Conclusion</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID =PK_RM_ID })'">Stages Witnessed</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID })'">Document Reviewed</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID})'">Details Of Measuring Instrument</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID})'">Conclusion</button>
 
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid })'">Image</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Report</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID = Model.abcid} )'">List Of Issues</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport", new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID })'">Image</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Report</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID = PK_RM_ID} )'">List Of Issues</button>
 
                                 @*<button class="btn btn-info dynamic-function-btn ReportImage" type="button" onclick="location.href='@Url.Action("VisitReportAttchment", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID} )'">Attachment</button>*@
                                 @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID} )'">Report</button>*@

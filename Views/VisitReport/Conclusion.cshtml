@@ -17,6 +17,10 @@
         </script>*@
 }
 
+@{
+    int PK_RM_ID = Convert.ToInt32(Session["PK_RM_ID"]);
+    //Session["PK_RM_ID"] = Model.abcid;
+}
 
 <style>
     .ui-widget-header {
@@ -167,16 +171,16 @@ width: 820px;
                             <div class="col-xs-12">
                                 @if (Model.PK_Call_ID != 0)
                                 {
-                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid } )'">General</button>
-                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid } )'">Item Description</button>
-                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid } )'">Reference Documents</button>
-                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid } )'">Stages Witnessed</button>
-                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid } )'">Document Reviewed</button>
-                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid } )'">Details Of Measuring Instrument</button>
-                                    <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid } )'">Conclusion</button>
-                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid } )'">Image</button>
-                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid } )'">Report</button>
-                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_Call_ID, @PK_RM_ID = Model.abcid} )'">List of Issues</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, PK_RM_ID } )'">General</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = PK_RM_ID } )'">Item Description</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = PK_RM_ID } )'">Reference Documents</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID =PK_RM_ID} )'">Stages Witnessed</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = PK_RM_ID} )'">Document Reviewed</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = PK_RM_ID } )'">Details Of Measuring Instrument</button>
+                                    <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = PK_RM_ID } )'">Conclusion</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID, @PK_RM_ID = PK_RM_ID } )'">Image</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_Call_ID, @PK_RM_ID = PK_RM_ID } )'">Report</button>
+                                    <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_Call_ID, @PK_RM_ID = PK_RM_ID} )'">List of Issues</button>
                                 }
 
                             </div>
@@ -731,7 +735,7 @@ width: 820px;
 
 
                                                     <div class="col-xs-12 text-center">
-                                                        <button type="submit" id="btnSaveConcerns" name="btnSave" class="btn btn-default insert-form-btn" onclick="insertdataConcern()" style="background-color:#FF9900;"> Save Concerns & Pending activity </button>
+                                                        <button type="button" id="btnSaveConcerns" name="btnSave" class="btn btn-default insert-form-btn" onclick="insertdataConcern()" style="background-color:#FF9900;"> Save Concerns & Pending activity </button>
 
                                                     </div>
 
@@ -1423,7 +1427,7 @@ width: 820px;
                                 <li><label><input type="checkbox" class="chkbox"><span>All plates stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> or check testing as per specified requirements.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>Plates selected per heat/per size hard stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>All accepted plates hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer's marking.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>All accepted plates hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted plates hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>All accepted plates identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""></span></label></li>
                             </ul>
                         </div>
@@ -1432,26 +1436,26 @@ width: 820px;
                                 <li><label><input type="checkbox" class="chkbox"><span>All pipes stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>Pipes selected per heat/per size hard stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>All accepted pipes hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>All accepted pipes hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected pipes hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining pipes hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected pipes hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""><img src="images/logo.png" style="width:30px;height:30px;" alt=""> &amp; the remaining pipes hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All accepted pipes hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected pipes hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="" /> &amp; the remaining pipes hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected pipes hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""><img src="@key/logo.png" style="width:30px;height:30px;" alt=""> &amp; the remaining pipes hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>All accepted pipes identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="">.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>___ randomly selected &amp; inspected pipes identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining pipes as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___ randomly selected &amp; inspected pipes identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="" /> &amp; the remaining pipes as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" role="tabpanel" id="tubes">
                             <ul class="checkbox-ul">
-                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected tubes identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining tubes as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected tubes identified with electro etched TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="" /> &amp; the remaining tubes as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>100% tubes identified with hard stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the metal tags attached to the bundles.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>Inspected tubes identified with undersigned inspectors signature.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>Inspected tubes identified with hard stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the metal tags attached to the tube bundles &amp; remaining tubes with <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the metal tags.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Inspected tubes identified with hard stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="" /> on the metal tags attached to the tube bundles &amp; remaining tubes with <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the metal tags.</span></label></li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" role="tabpanel" id="fasteners">
                             <ul class="checkbox-ul">
                                 <li><label><input type="checkbox" class="chkbox"><span>Fasteners randomly selected per heat/per size hard stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp;Inspected fasteners hard stamped on the face as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining quantity identified with soft stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the tags attached with gunny bags/boxes.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp;Inspected fasteners hard stamped on the face as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> &amp; the remaining quantity identified with soft stamp as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> on the tags attached with gunny bags/boxes.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp;Inspected fasteners hard stamped on the face as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> &amp; the remaining quantity identified with soft stamp as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> on the tags attached with gunny bags/boxes.</span></label></li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" role="tabpanel" id="pressurevessels">
@@ -1468,7 +1472,7 @@ width: 820px;
                         <div class="tab-pane fade" role="tabpanel" id="instruments">
                             <ul class="checkbox-ul">
                                 <li><label><input type="checkbox" class="chkbox"><span>All accepted items identified with soft TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on stickers.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected items identified with soft TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining items as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on stickers.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___randomly selected &amp; inspected items identified with soft TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="" /> &amp; the remaining items as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on stickers.</span></label></li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" role="tabpanel" id="motors">
@@ -1484,32 +1488,32 @@ width: 820px;
                         <div class="tab-pane fade" role="tabpanel" id="valves">
                             <ul class="checkbox-ul">
                                 <li><label><input type="checkbox" class="chkbox"><span>All inspected valves hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>All inspected valves hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>___per size per class randomly selected &amp; inspected valves double hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> &amp; the remaining valves single hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>___per size per class randomly selected &amp; inspected valves double hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""><img src="images/logo.png" style="width:30px;height:30px;" alt=""> &amp; the remaining valves single hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All inspected valves hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___per size per class randomly selected &amp; inspected valves double hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="" /> &amp; the remaining valves single hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>___per size per class randomly selected &amp; inspected valves double hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""><img src="@key/logo.png" style="width:30px;height:30px;" alt=""> &amp; the remaining valves single hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> near manufacturer’s marking.</span></label></li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" role="tabpanel" id="random">
                             <ul class="checkbox-ul">
                                 <li><label><input type="checkbox" class="chkbox"><span>All accepted items identified with soft TUV stamp as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on stickers.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near manufacturers marking.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near manufacturers marking.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> near manufacturers marking.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> on the material.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> on the material.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Inspected items hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> on the material.</span></label></li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" role="tabpanel" id="castings">
                             <ul class="checkbox-ul">
                                 <li><label><input type="checkbox" class="chkbox"><span>Integral test bar stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near the heat number for check testing as per specified requirements.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>Integral test bar stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""> near the heat number for check testing as per specified requirements.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Integral test bar stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""> near the heat number for check testing as per specified requirements.</span></label></li>
                                 <li><label><input type="checkbox" class="chkbox"><span>Integral test bar hard stamped on Steel strip as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""> near the heat number before/during pouring witness.</span></label></li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" role="tabpanel" id="generalstatements">
                             <ul class="checkbox-ul">
-                                <li><label><input type="checkbox" class="chkbox"><span>All randomly selected and inspected items hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture3.jpg" style="width:30px;height:30px;" alt=""> and remaining quantity hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="">.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>All randomly selected and inspected items hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt=""><img src="images/logo.png" style="width:30px;height:30px;" alt=""> and remaining quantity hard stamped as "<img src="images/logo.png" style="width:30px;height:30px;" alt="">.</span></label></li>
-                                <li><label><input type="checkbox" class="chkbox"><span>Randomly selected samples stamped as <img src=ConfigurationManager.AppSettings["Web"].ToString()+ "/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All randomly selected and inspected items hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt=""><img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="" /> and remaining quantity hard stamped as <img src="@key/Picture3.jpg" style="width:30px;height:30px;" alt="">.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>All randomly selected and inspected items hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt=""><img src="@key/logo.png" style="width:30px;height:30px;" alt=""> and remaining quantity hard stamped as "<img src="@key/logo.png" style="width:30px;height:30px;" alt="">.</span></label></li>
+                                <li><label><input type="checkbox" class="chkbox"><span>Randomly selected samples stamped as <img src="@key/Picture2.jpg" style="width:30px;height:30px;" alt=""> for check testing as per specified requirements.</span></label></li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" role="tabpanel" id="stampimageonly">
@@ -1534,6 +1538,26 @@ width: 820px;
             </div>
         </div>
     </div>
+</div>
+<div id="customAlert" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:20px; width:500px; box-shadow:0 0 10px #aaa; z-index:9999; font-family:Arial, sans-serif; font-size:14px; line-height:1.6;">
+    <div style="color: red; font-weight: bold; margin-bottom: 10px;">Attention!</div>
+    <div>
+        <strong style="color: red;">On Areas of Concerns or Pending Activities fields:</strong><br><br>
+        If there are <strong style="color: red;">
+    “NO - Areas of Concerns or Pending Activities during the current visit”,</strong> leave the respective <strong style="color: red;">
+    “FIELD BLANK”.
+</strong><br><br>
+    System will <strong style="color: red;">
+    AUTOMATICALLY
+</strong> print <strong style="color: red;">
+    “NONE”
+</strong> in those fields on PDF copy.<br><br>
+    <strong style="color: red;">DO NOT USE</strong> words such as <strong style="color: red;">
+    “None, NIL, N/A, Not Applicable / Balance as per QAP / Stages as per QAP”.
+</strong><br><br>
+    In the <strong style="color: red;">“Pending Activities”</strong> field, mention <strong style="color: red;">ONLY UNOFFERED ACTIVITIES</strong> from those <strong style="color: red;">PLANNED</strong> in the inspection call for the day(s) of the <strong style="color: red;">VISIT</strong> only.
+</div>
+    <button id="okBtn" style="display:none; margin-top: 20px;" onclick="closeAlert()">OK</button>
 </div>
 <script>
     $(document).ready(function () {
@@ -2808,7 +2832,7 @@ width: 820px;
 </script>*@
 
 <script>
-    function insertdataConcern() {
+    @*function insertdataConcern() {
         debugger
         var DArray = [];
         var DPArray = [];
@@ -2915,7 +2939,322 @@ width: 820px;
 
 
 
+    };*@
+
+    @*function insertdataConcern() {
+        debugger
+    var DArray = [];
+    var DPArray = [];
+    var isValid = true;
+    var hasValidData = false;
+    var PK_Call_Id = $('#PK_Call_ID').val();
+
+    
+    $('.trDomestic').each(function () {
+        debugger
+        var trD = {};
+        var PKID = $(this).find('.CPKID').val();
+        var AreaOfConcerns = $(this).find('.CDetails').val();
+        var Category = $(this).find('.CProductlidt').val();
+
+        //if (AreaOfConcerns && AreaOfConcerns.trim() !== "") {
+        //    if (AreaOfConcerns.length < 50) {
+        //        //alert("Please enter at least 50 characters in 'Area Of Concerns'!");
+        //        showCustomAlertWithDelay();
+        //        isValid = false;
+        //        return false;
+        //    }
+
+            if (!Category || Category === "-1") {
+                alert("Please select a valid category.");
+                isValid = false;
+                return false;
+            //}
+
+            trD['Areas_Of_Concerns'] = AreaOfConcerns;
+            trD['PKID'] = PKID;
+            trD['Category'] = Category;
+            DArray.push(trD);
+            //hasValidData = true;
+        }
+    });
+
+    
+    $('.PendingDomestic').each(function () {
+        var trDP = {};
+        var PKID = $(this).find('.PCPKID').val();
+        var pendingActivity = $(this).find('.PDetails').val();
+
+        //if (pendingActivity && pendingActivity.trim() !== "") {
+        //    if (pendingActivity.length < 50) {
+        //        //alert("Please enter at least 50 characters in 'Pending Activity'!");
+        //        //showCustomAlertWithDelay();
+        //        isValid = false;
+        //        return false;
+        //    }
+
+            trDP['Pending_Activites'] = pendingActivity;
+            trDP['PKID'] = PKID;
+            DPArray.push(trDP);
+            hasValidData = true;
+        //}
+    });
+
+    
+    if (!isValid) {
+        return false;
+    }
+
+    
+    if (!hasValidData) {
+        //alert("Please fill at least one valid 'Area Of Concern' or 'Pending Activity' with minimum 50 characters.");
+        showCustomAlertWithDelay();
+        return false;
+    }
+
+    
+    var ModelVisitReport = {
+        PK_Call_Id: PK_Call_Id
     };
+
+    
+    $.ajax({
+        type: 'POST',
+        url: '@Url.Action("InsertConcern1", "VisitReport")',
+        dataType: 'json',
+        async: false,
+        data: JSON.stringify({
+            Conclusion: ModelVisitReport,
+            DArray: DArray,
+            DPArray: DPArray
+        }),
+        enctype: "multipart/form-data",
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+            if (response.result === 'Redirect') {
+                alert("Details have been saved successfully!");
+                window.location.href = response.url;
+            } else if (response.result === 'Update') {
+                alert("Details have been updated successfully!");
+                window.location.href = response.url;
+            }
+        }
+    });
+}*@
+
+
+   
+    @*function insertdataConcern() {
+            debugger
+            var DArray = [];
+            var DPArray = [];
+            var a = "1";
+            var PK_Call_Id = $('#PK_Call_ID').val();
+            $('.trDomestic').each(function () {
+                debugger;
+                var trD = {};
+
+                var PKID = $(this).find('.CPKID').val();
+                var AreaOfConcerns = $(this).find('.CDetails').val();
+                var Category = $(this).find('.CProductlidt').val();
+
+                if (AreaOfConcerns != null && AreaOfConcerns != "") {
+                    if (Category == "" || Category == "-1") {
+                        a="2"
+
+                    }
+                }
+
+
+                if (a == "1") {
+                    trD['Areas_Of_Concerns'] = AreaOfConcerns;
+                    trD['PKID'] = PKID;
+                    trD['Category'] = Category;
+
+
+
+                    DArray.push(trD);
+                }
+                else
+                {
+                    return false;
+                }
+            })
+
+            debugger;
+
+
+            $('.PendingDomestic').each(function () {
+                debugger
+                var trDP = {};
+                var PKID = $(this).find('.PCPKID').val();
+                var pendingActivity = $(this).find('.PDetails').val();
+
+
+                trDP['Pending_Activites'] = pendingActivity;
+                trDP['PKID'] = PKID;
+                //trDP['Category'] = Category;
+
+                DPArray.push(trDP);
+
+            })
+
+
+            if (a == "2") {
+                alert("Please Select Category Name!");
+                return false;
+            }
+
+            var ModelVisitReport =
+         {
+             PK_Call_Id: PK_Call_Id,
+
+         }
+
+            //var Conclusion =
+            //		{
+            //		    Areas_Of_Concerns: $("#Areas_Of_Concerns").val(),
+
+            //		    PK_Call_ID: $("#PK_Call_ID").val(),
+            //		}
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("InsertConcern1", "VisitReport")',
+                dataType: 'json',
+                Async: false,
+                data: JSON.stringify({ Conclusion: ModelVisitReport, "DArray": DArray, "DPArray": DPArray }),
+                enctype: "multipart/form-data",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    if (response.result == 'Redirect') {
+                        alert("Details has been Save successfully!!!")
+                        window.location.href = response.url;
+                        //$("#preloader").remove();
+                        //window.location = response.url;
+                    }
+
+                    if (response.result == 'Update') {
+                        alert("Details has been updated successfully!!!")
+                        window.location.href = response.url;
+                        //$("#preloader").remove();
+                        // window.location = response.url;
+                    }
+
+
+
+
+                }
+            });
+
+
+
+
+
+        };*@
+
+    function insertdataConcern() {
+        debugger
+        var DArray = [];
+        var DPArray = [];
+        var isValid = true;
+        var hasValidData = false;
+        var PK_Call_Id = $('#PK_Call_ID').val();
+
+
+        $('.trDomestic').each(function () {
+            var trD = {};
+            var PKID = $(this).find('.CPKID').val();
+            var AreaOfConcerns = $(this).find('.CDetails').val();
+            var Category = $(this).find('.CProductlidt').val();
+
+            if (AreaOfConcerns && AreaOfConcerns.trim() !== "") {
+                if (AreaOfConcerns.length < 15) {
+                    showCustomAlertWithDelay();
+                    //alert("Please enter at least 15 characters in 'Area Of Concerns'!");
+                    isValid = false;
+                    return false;
+                }
+
+                if (!Category || Category === "-1") {
+                    alert("Please select a valid category.");
+                    isValid = false;
+                    return false;
+                }
+
+                trD['Areas_Of_Concerns'] = AreaOfConcerns;
+                trD['PKID'] = PKID;
+                trD['Category'] = Category;
+                DArray.push(trD);
+                hasValidData = true;
+            }
+        });
+
+
+        $('.PendingDomestic').each(function () {
+            var trDP = {};
+            var PKID = $(this).find('.PCPKID').val();
+            var pendingActivity = $(this).find('.PDetails').val();
+
+            if (pendingActivity && pendingActivity.trim() !== "") {
+                if (pendingActivity.length < 15) {
+                    showCustomAlertWithDelay();
+                    //alert("Please enter at least 15 characters in 'Pending Activity'!");
+                    isValid = false;
+                    return false;
+                }
+
+                trDP['Pending_Activites'] = pendingActivity;
+                trDP['PKID'] = PKID;
+                DPArray.push(trDP);
+                hasValidData = true;
+            }
+        });
+
+
+        if (!isValid) {
+            showCustomAlertWithDelay();
+            return false;
+        }
+
+
+        if (!hasValidData) {
+            showCustomAlertWithDelay();
+            // alert("Please fill at least one valid 'Area Of Concern' or 'Pending Activity' with minimum 15 characters.");
+            return false;
+        }
+
+        var ModelVisitReport = {
+            PK_Call_Id: PK_Call_Id
+        };
+
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("InsertConcern1", "VisitReport")',
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify({
+                Conclusion: ModelVisitReport,
+                DArray: DArray,
+                DPArray: DPArray
+            }),
+            enctype: "multipart/form-data",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response.result === 'Redirect') {
+                    alert("Details have been saved successfully!");
+                    window.location.href = response.url;
+                } else if (response.result === 'Update') {
+                    alert("Details have been updated successfully!");
+                    window.location.href = response.url;
+                }
+            }
+        });
+    }
+
+   
+
 
 </script>
 
@@ -2927,4 +3266,21 @@ width: 820px;
     if (isConfirmationIVR == 1) {
         document.getElementById("IVRPointerEvents").style.pointerEvents = "none";
     }
+</script>
+
+<script>
+    function showCustomAlertWithDelay() {
+        debugger
+        document.getElementById('customAlert').style.display = 'block';
+        document.getElementById('okBtn').style.display = 'none';
+
+        setTimeout(function () {
+            document.getElementById('okBtn').style.display = 'inline-block';
+        }, 10000); 
+    }
+
+    function closeAlert() {
+        document.getElementById('customAlert').style.display = 'none';
+    }
+
 </script>

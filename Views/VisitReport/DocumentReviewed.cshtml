@@ -3,236 +3,349 @@
 @{
     ViewBag.Title = "DocumentReviewed";
     Layout = "~/Views/Shared/_TuvVision.cshtml";
+    Model.abcid = Model.PK_RM_ID;
+    var isGrammerCheck = Convert.ToInt32(Model.IsGrammerCheck);
 }
 
 <script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+
+
+<style>
+    .auto-expand {
+        white-space: pre-wrap;
+        overflow: hidden;
+        resize: none;
+        padding: 8px 10px;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .QapTxt {
+        width: 100%;
+        border: 1px solid #e6e2de;
+        font-weight: bold;
+    }
+
+    .dragHandle {
+        cursor: move;
+        font-size: 18px;
+    }
+
+    .removeRow {
+        margin-top: 8px;
+    }
+
+    .suggestions-container {
+        position: absolute;
+        background: #fef9e7;
+        border: 1px solid #ccc;
+        z-index: 9999;
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+        width: 85%;
+    }
+
+    .suggestion-item:hover {
+        background: #fff3b0;
+    }
+
+    .sortable-placeholder {
+        background: #ffe6b3 !important;
+        height: 40px;
+        border: 2px dashed #ff9900;
+    }
+</style>
+
+
+@{
+    int PK_RM_ID = Convert.ToInt32(Session["PK_RM_ID"]);
+    bool DocListEmpty = ViewData["DocumentReviewList"] == null;
+}
+
+
 @*<div class="white-bg section-box-shadow">
     <h3 class="dynamic-page-title dynamic-page-title-2  " style="margin-left:10px;"> Document Reviewed </h3>
     <div class="row">*@
 
-        <div class="main-content3 xs-max-height grey-bg-f3">
-            <div class="grey-bg-f3">
-                <!--Start of header-->
-                <div class="container-fluid">
-                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+<div class="main-content3 xs-max-height grey-bg-f3">
+    <div class="grey-bg-f3">
 
-                        <div class="col-xs-12 form-col">
-                            <div class="row">
-                                <br />
-                                <h5 class="dynamic-page-title dynamic-page-title-2 " style="padding-left: 11px;">Inspection Visit Report Number : @Session["VisitReportNo"]</h5>
-                                @*<a href="@Url.Action("CallsListByInspector","CallsMaster")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
+        <!--Start of header-->
+        <div class="container-fluid">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                <div class="col-xs-12 form-col">
+                    <div class="row">
+                        <br />
+                        <h5 class="dynamic-page-title dynamic-page-title-2" style="padding-left: 11px;">
+                            Inspection Visit Report Number : @Session["VisitReportNo"]
+                        </h5>
 
+                        <div class="col-xs-12">
+                            @if (Model.PK_CALL_ID != 0)
+                            {
+                                <button class="btn btn-default news-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("VisitReportForm", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    General
+                                </button>
 
-                                <div class="col-xs-12">
+                                <button class="btn btn-default news-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("ItemDescription", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Item Description
+                                </button>
 
+                                <button class="btn btn-default news-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Reference Documents
+                                </button>
 
-                                    @if (Model.PK_CALL_ID != 0)
-            {
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">General</button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'"> Item Description</button>
+                                <button class="btn btn-default news-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("InspectionActivites", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Stages Witnessed
+                                </button>
 
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Reference Documents </button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'"> Stages Witnessed</button>
-                                        <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Document Reviewed</button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Details Of Measuring Instrument</button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Conclusion</button>
+                                <button class="btn btn-default insert-form-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Document Reviewed
+                                </button>
 
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Image</button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID,@PK_RM_ID = Model.abcid} )'">Report</button>
-                                        <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID = Model.abcid } )'">List of Issues</button>
+                                <button class="btn btn-default news-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Details Of Measuring Instrument
+                                </button>
 
-                                        @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID} )'">Report</button>*@
-            }
+                                <button class="btn btn-default news-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("Conclusion", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Conclusion
+                                </button>
 
+                                <button class="btn btn-default news-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("ReportImage", "VisitReport", new { PK_Call_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Image
+                                </button>
 
+                                <button class="btn btn-default news-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("IvrReports", "VisitReport", new { PK_CALL_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    Report
+                                </button>
 
+                                <button class="btn btn-default news-btn"
+                                        type="button"
+                                        onclick="location.href='@Url.Action("AllConcern", "VisitReport", new { PK_CALL_ID = Model.PK_CALL_ID, PK_RM_ID = PK_RM_ID })'">
+                                    List of Issues
+                                </button>
+                            }
+                        </div>
+                    </div>
 
-                                </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="white-bg section-box-shadow">
 
-                            </div>
+                                <h3 class="form-page-title">Document Review</h3>
 
-                            <div class="row">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                        <div class="form-box">
 
+                                            @using (Html.BeginForm("DocumentReviewed", "VisitReport", FormMethod.Post))
+                                            {
+                                                @Html.HiddenFor(m => m.PK_CALL_ID)
+                                                @Html.HiddenFor(m => m.abcid)
+                                                @Html.HiddenFor(m => m.PK_RM_ID)
 
-                                <div class="col-xs-12">
-                                    <div class="white-bg section-box-shadow">
-                                        <h3 class="form-page-title">Document Review</h3>
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                                                <div class="form-group">
+                                                    <label>Document Reviewed:</label><br />
+                                                    <span style="color:#E12F24;"><strong>Note:</strong></span>
+                                                    Statement shall give clear idea to customer of performed activity.<br />
+                                                    (i.e. QAP Stage No. - Inspection activity carried out - findings)
+                                                    <br /><br />
 
-                                                <div class="form-box">
-                                                    <form method="post" enctype="multipart/form-data">
-                                                        @Html.HiddenFor(m => m.PK_CALL_ID)
-                                                        @Html.HiddenFor(m => m.PK_DR_ID)
-
-                                                        <div class="row">
-                                                            <div class="col-xs-12 col-sm-12">
-                                                                <div class="form-group">
-                                                                    <label>Document Reviewed:</label>
-                                                                    <br />
-                                                                    <span style="color:#E12F24;">
-                                                                        <strong> &nbsp;Note : </strong>
-                                                                    </span>
-                                                                    Statement shall give clear idea to customer of performed activity <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(i.e. QAP Stage No.  - Inspection activity carried out - findings).
-                                                                    <br />
-                                                                    @Html.TextAreaFor(model => model.Description, 10, 40, new { @placeholder = "Enter in Detailed Description", @class = "form-control" })
-                                                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger validation-msg" })
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 text-center" id="IVRPointerEvents">
-                                                            <button type="submit" class="btn btn-default insert-form-btn">Save </button>
-                                                        </div>
-                                                        @*added by satish yadav for showing autosuggestion message*@
-                                                        <div id="suggestions-container" class="suggestions"></div>
-                                                        @*end here autosuggestion message*@
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="col-xs-12">
-                                                    <table id="example" class="display custom-table" cellspacing="0" width="100%">
-
+                                                    <table id="DocumentTable" class="table table-bordered">
                                                         <thead>
-                                                            <tr>
-                                                                <th class="remove-search" width="5%">Sr No</th>
-                                                                <th class="remove-search" width="90%">Document Reviewed</th>
-
-                                                                <th class="remove-search" width="5%">Action</th>
+                                                            <tr style="background:#f7f7f7;">
+                                                                <th style="width:5%; text-align:center;">Sr</th>
+                                                                <th>Description</th>
                                                             </tr>
                                                         </thead>
 
-                                                        <tbody>
-
+                                                        <tbody id="sortableRows">
                                                             @{
-                                                            int i = 0;
+                                                                int i = 0;
+                                                                var list = ViewData["DocumentReviewList"] as IEnumerable<TuvVision.Models.DocumentRevieweModel>;
+
+                                                                if (list != null)
+                                                                {
+                                                                    foreach (var item in list)
+                                                                    {
+                                                                        <tr class="row-item">
+                                                                            <td style="text-align:center;">
+                                                                                <span class="dragHandle">⠿</span><br />
+                                                                                @(i + 1)
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <input type="hidden" name="DocumentList[@i].PK_DR_ID" value="@item.PK_DR_ID" />
+                                                                                <input type="hidden" name="DocumentList[@i].Old_Sequence_No" value="@item.Sequence_No" />
+                                                                                <input type="hidden" name="DocumentList[@i].Sequence_No" class="seqField" value="@item.Sequence_No" />
+                                                                                <input type="hidden" name="DocumentList[@i].Old_QAP_Clause_Number" value="@item.QAP_Clause_Number" />
+                                                                                <input type="hidden" name="DocumentList[@i].Old_Description" value="@item.Description" />
+
+                                                                                <h6>QAP Clause No:</h6>
+                                                                                <input type="text"
+                                                                                       name="DocumentList[@i].QAP_Clause_Number"
+                                                                                       class="form-control-sm QapTxt"
+                                                                                       placeholder="QAP Clause No."
+                                                                                       value="@item.QAP_Clause_Number" />
+
+                                                                                <h6>Description:</h6>
+                                                                                <textarea name="DocumentList[@i].Description"
+                                                                                          class="form-control auto-expand grammar-target"
+                                                                                          placeholder="Enter detailed description"
+                                                                                          rows="2">@item.Description</textarea>
+
+                                                                                <button type="button"
+                                                                                        class="btn btn-danger btn-sm deleteRow"
+                                                                                        data-id="@item.PK_DR_ID">
+                                                                                    X
+                                                                                </button>
+
+                                                                                    @*<button type="button"
+                                                                                                class="btn btn-danger btn-sm removeRow">
+                                                                                            X
+                                                                                        </button>*@
+                                                                                </td>
+                                                                            </tr>
+
+                                                                        i++;
+                                                                    }
+                                                                }
                                                             }
-                                                            @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.DocumentRevieweModel>)
-                                                        {
-                                                            i = i + 1;
-                                                                <tr>
-
-                                                                    <td width="5%">@i</td>
-                                                                    <td style='white-space: pre-line;' width="90%">@item.Description</td>
-
-                                                                    <td class="less-width" width="5%">
-                                                                        <a href="@Url.Action("DocumentReviewed", "VisitReport", new {@PK_DR_ID = item.PK_DR_ID })" title="Edit"><span class="fa fa-pencil"></span>&nbsp;</a>
-                                                                        <a href="@Url.Action("DeleteDocumentReviewedData", "VisitReport", new {@PK_DR_ID = item.PK_DR_ID,@PK_CALL_ID = item.PK_CALL_ID })" onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
-                                                                        @{
-                                                                        if ((Convert.ToString(TempData["InsertCompany"])) != "" && Convert.ToString(TempData["InsertCompany"]) != null)
-                                                                        {
-                                                                            TempData["InsertCompany"] = null;
-                                                                                @*<script type="text/javascript" language="javascript">
-                                                                alert("Item Description Added Successfully...");
-                                                            </script>*@
-                                                                        }
-                                                                        if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
-                                                                        {
-                                                                            TempData["UpdateCompany"] = null;
-                                                                                @*<script type="text/javascript" language="javascript">
-                                                                alert("Cost Sheet Approved Successfully...");
-                                                            </script>*@
-                                                                        }
-                                                                        }
-                                                                    </td>
-
-                                                                </tr>
-                                                                        }
-
                                                         </tbody>
-
                                                     </table>
+
+                                                    <button type="button" id="addRow" class="btn btn-success btn-sm">+ Add More</button>
                                                 </div>
 
+                                                <div class="col-xs-12 text-center" id="IVRPointerEvents">
+                                                    <button type="submit" class="btn btn-default insert-form-btn">Save</button>
+                                                </div>
+                                                                }
+
+                                            <div class="col-xs-12">
+                                                <span style="color:#E12F24;">
+                                                    <strong>Whenever required copy-paste this statement:</strong>
+                                                </span>
+                                                <br />
+                                                All measuring instruments / equipment were verified for continued suitability for intended use, proper identification, calibration status, traceability to national standards & found acceptable.
                                             </div>
-                                            <!--Contact Details By Manoj -->
 
-
-                                        </div><!-- /.box-shadow -->
-
+                                        </div>
                                     </div>
                                 </div>
 
                             </div>
-
-
-
                         </div>
                     </div>
+
                 </div>
-
             </div>
-            </div>
-                                                @*<div class="main-content3 xs-max-height">
-
-                                                    
-                                                    <div class="container-fluid">
-                                                        
-
-                                                    
+        </div>
+    </div>
+</div>
 
 
-                                                    </div>
 
-
-                                                </div>
-                                                }*@
 
 
 <script>
-    @*added by satish yadav for Autosuggestion*@
-        $(document).ready(function () {
-            const $textarea = $("#Description");
-            const $suggestionsContainer = $("#suggestions-container");
+    $(document).on("click", ".deleteRow", function () {
+        debugger;
+    var id = $(this).data("id");
+    var row = $(this).closest("tr");
 
-            $textarea.on("input", function () {
-                debugger;
-                const query = $(this).val().toLowerCase();
-                const id = $("#PK_CALL_ID").val();
-                if (query) {
-                    $.ajax({
-                        url: '@Url.Action("GetSuggestions", "VisitReport")',
-                        data: { Searchres: query, PK_CALL_ID:id },
-                        success: function (response) {
-                            if (response.success) {
-                                displaySuggestions(response.data);
-                            } else {
-                                console.error(response.error);
-                            }
-                        }
-                    });
+    if (confirm("Are you sure you want to delete this item?")) {
+        $.ajax({
+            url: '/VisitReport/DeleteDocument',   // Controller action
+            type: 'POST',
+            data: { id: id },
+            success: function (result) {
+                if (result.success) {
+                    row.remove();   // Remove row from UI
+                    alert("Deleted successfully");
                 } else {
-                    $suggestionsContainer.empty();
+                    alert("Error: " + result.message);
                 }
-            });
-
-            $suggestionsContainer.on("click", ".suggestion-item", function () {
-                const text = $(this).text();
-                $textarea.val(text);
-                $suggestionsContainer.empty();
-            });
-
-            $(document).on("click", function (event) {
-                if (!$(event.target).closest("#Description, #suggestions-container").length) {
-                    $suggestionsContainer.empty();
-                }
-            });
-
-            function displaySuggestions(items) {
-                $suggestionsContainer.empty();
-                items.forEach(item => {
-                    const $suggestionItem = $("<p>").addClass("suggestion-item").text(item.Name);
-                    $suggestionsContainer.append($suggestionItem);
-                });
             }
         });
+    }
+});
+</script>
+
+<script>
+    @*added by satish yadav for Autosuggestion*@
+    $(document).ready(function () {
+        const $textarea = $("#Description");
+        const $suggestionsContainer = $("#suggestions-container");
+
+        $textarea.on("input", function () {
+            debugger;
+            const query = $(this).val().toLowerCase();
+            const id = $("#PK_CALL_ID").val();
+            if (query) {
+                $.ajax({
+                    url: '@Url.Action("GetSuggestions", "VisitReport")',
+                    data: { Searchres: query, PK_CALL_ID:id },
+                    success: function (response) {
+                        debugger;
+                        console.log(response.data);
+                        if (response.success) {
+                            displaySuggestions(response.data);
+                        } else {
+                            console.error(response.error);
+                        }
+                    }
+                });
+            } else {
+                $suggestionsContainer.empty();
+            }
+        });
+
+        $suggestionsContainer.on("click", ".suggestion-item", function () {
+            const text = $(this).text();
+            $textarea.val(text);
+            $suggestionsContainer.empty();
+        });
+
+        $(document).on("click", function (event) {
+            if (!$(event.target).closest("#Description, #suggestions-container").length) {
+                $suggestionsContainer.empty();
+            }
+        });
+
+        function displaySuggestions(items) {
+            $suggestionsContainer.empty();
+            items.forEach(item => {
+                const $suggestionItem = $("<p>").addClass("suggestion-item").text(item.Name);
+                $suggestionsContainer.append($suggestionItem);
+            });
+        }
+    });
 </script>
 <style>
     .suggestions {
@@ -256,6 +369,413 @@
 </style>
 
 @*end here autosuggestion*@
+
+@*<script>
+        $(document).ready(function () {
+
+            // ----------------------------------
+            // AUTO EXPAND TEXTAREA
+            // ----------------------------------
+            function autoExpand(el) {
+                el.style.height = "auto";
+                el.style.height = (el.scrollHeight + 2) + "px";
+            }
+            $(".auto-expand").each(function () { autoExpand(this); });
+            $(document).on("input", ".auto-expand", function () { autoExpand(this); });
+
+
+            // ----------------------------------
+            // SORTABLE
+            // ----------------------------------
+            $("#sortableRows").sortable({
+                handle: ".dragHandle",
+                axis: "y",
+                update: function () { reindex(); }
+            });
+
+
+            // ----------------------------------
+            // ADD NEW ROW
+            // ----------------------------------
+            $("#addRow").click(function () {
+                let index = $("#sortableRows tr").length;
+
+                let newRow = `
+                <tr class="row-item">
+                    <td style="text-align:center;">
+                        <span class="dragHandle">⠿</span><br />${index + 1}
+                    </td>
+
+                    <td>
+
+                        <input type="hidden" name="DocumentList[${index}].PK_DR_ID" value="0" />
+                        <input type="hidden" name="DocumentList[${index}].Old_Sequence_No" value="${index + 1}" />
+                        <input type="hidden" name="DocumentList[${index}].Old_QAP_Clause_Number" value="" /> <!-- ⭐️ new -->
+
+                        <input type="hidden" name="DocumentList[${index}].Sequence_No"
+                               class="seqField" value="${index + 1}" />
+
+                        <h6>QAP Clause No:</h6>
+                        <input type="text" name="DocumentList[${index}].QAP_Clause_Number"
+                               class="form-control-sm QapTxt" value="" />
+
+                        <h6>Description:</h6>
+                        <textarea name="DocumentList[${index}].Description"
+                                  class="form-control auto-expand" rows="2"></textarea>
+
+                        <button type="button" class="btn btn-danger btn-sm removeRow">X</button>
+                    </td>
+                </tr>`;
+
+                $("#sortableRows").append(newRow);
+                reindex();
+            });
+
+
+            // ----------------------------------
+            // DELETE ROW
+            // ----------------------------------
+            $(document).on("click", ".removeRow", function () {
+                $(this).closest("tr").remove();
+                reindex();
+            });
+
+
+            // ----------------------------------
+            // REINDEX (VERY IMPORTANT)
+            // ----------------------------------
+            function reindex() {
+
+                $("#sortableRows tr").each(function (i) {
+
+                    // Read current values
+                    let pk = $(this).find("input[name$='.PK_DR_ID']").val();
+                    let oldSeq = $(this).find("input[name$='.Old_Sequence_No']").val();
+                    let qap = $(this).find("input[name$='.QAP_Clause_Number']").val();
+                    let desc = $(this).find("textarea[name$='.Description']").val();
+
+                    // Update row number
+                    $(this).find("td:first").html(`<span class="dragHandle">⠿</span><br />${i + 1}`);
+
+                    // Rename inputs
+                    $(this).find("input[name$='.PK_DR_ID']")
+                        .attr("name", `DocumentList[${i}].PK_DR_ID`)
+                        .val(pk);
+
+                    $(this).find("input[name$='.Old_Sequence_No']")
+                        .attr("name", `DocumentList[${i}].Old_Sequence_No`)
+                        .val(oldSeq);
+
+                    $(this).find(".seqField")
+                        .attr("name", `DocumentList[${i}].Sequence_No`)
+                        .val(i + 1);
+
+                    $(this).find("input[name$='.QAP_Clause_Number']")
+                        .attr("name", `DocumentList[${i}].QAP_Clause_Number`)
+                        .val(qap);
+
+                    $(this).find("textarea[name$='.Description']")
+                        .attr("name", `DocumentList[${i}].Description`)
+                        .val(desc);
+                });
+            }
+
+        });
+    </script>*@
+
+
+
+<script>
+    $(document).ready(function () {
+
+        /* ------------------------------------------
+           AUTO EXPAND TEXTAREA
+        --------------------------------------------*/
+        function autoExpand(el) {
+            el.style.height = "auto";
+            el.style.height = el.scrollHeight + "px";
+        }
+        $(document).on("input", ".auto-expand", function () {
+            autoExpand(this);
+        });
+        $(".auto-expand").each(function () {
+            autoExpand(this);
+        });
+
+
+        /* ------------------------------------------
+           SORTABLE ROWS (LIKE INSPECTION ACTIVITY)
+        --------------------------------------------*/
+        $("#sortableRows").sortable({
+            handle: ".dragHandle",
+            containment: "#DocumentTable",
+            axis: "y",
+            placeholder: "sortable-placeholder",
+            helper: function (e, tr) {
+                var $originals = tr.children();
+                var $helper = tr.clone();
+                $helper.children().each(function (index) {
+                    $(this).width($originals.eq(index).width());
+                });
+                return $helper;
+            },
+            update: function () {
+                reindex();
+            }
+        });
+
+
+        /* ------------------------------------------
+           AUTOSUGGEST (LIKE INSPECTION ACTIVITY)
+        --------------------------------------------*/
+        $(document).on("input", "textarea[name*='Description']", function () {
+            let $textarea = $(this);
+            let query = $textarea.val().trim();
+            let callId = $("#PK_CALL_ID").val();
+
+            let $container = $textarea.siblings(".suggestions-container");
+            if ($container.length === 0) {
+                $container = $('<div class="suggestions-container"></div>');
+                $textarea.after($container);
+            }
+
+            if (query.length === 0) {
+                $container.empty().hide();
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetSuggestions", "VisitReport")',
+                data: { Searchres: query, PK_CALL_ID: callId },
+                success: function (response) {
+
+                    $container.empty().show();
+
+                    if (!response.success || response.data.length === 0) return;
+
+                    response.data.forEach(item => {
+                        let $item = $("<p>")
+                            .addClass("suggestion-item")
+                            .text(item.Name)
+                            .css({
+                                padding: "6px",
+                                cursor: "pointer",
+                                borderBottom: "1px solid #ccc",
+                                background: "#fafafa"
+                            });
+
+                        $container.append($item);
+                    });
+                }
+            });
+        });
+
+        /* Fill textarea on click */
+        $(document).on("click", ".suggestion-item", function () {
+            let text = $(this).text();
+            let $container = $(this).parent();
+            let $textarea = $container.siblings("textarea");
+
+            $textarea.val(text).trigger("input");
+            $container.empty().hide();
+        });
+
+        /* Hide suggestion box */
+        $(document).on("click", function (e) {
+            if (!$(e.target).closest("textarea, .suggestions-container").length) {
+                $(".suggestions-container").empty().hide();
+            }
+        });
+
+
+        /* ------------------------------------------
+           ADD NEW ROW
+        --------------------------------------------*/
+        $("#addRow").click(function () {
+
+            let index = $("#sortableRows tr").length;
+
+            let newRow = `
+                <tr class="row-item">
+                    <td style="text-align:center;">
+                        <span class="dragHandle">⠿</span><br />${index + 1}
+                    </td>
+                    <td>
+
+                        <input type="hidden" name="DocumentList[${index}].PK_DR_ID" value="0" />
+                        <input type="hidden" name="DocumentList[${index}].Old_Sequence_No" value="${index + 1}" />
+                        <input type="hidden" name="DocumentList[${index}].Sequence_No" class="seqField" value="${index + 1}" />
+
+                        <input type="hidden" name="DocumentList[${index}].Old_QAP_Clause_Number" value="" />
+                        <input type="hidden" name="DocumentList[${index}].Old_Description" value="" />
+
+                        <h6>QAP Clause No:</h6>
+                        <input type="text"
+                               name="DocumentList[${index}].QAP_Clause_Number"
+                               placeholder="QAP Clause No."
+                               class="form-control-sm QapTxt" value="" />
+
+                        <h6>Description:</h6>
+                        <textarea name="DocumentList[${index}].Description"
+                                  class="form-control auto-expand grammar-target"
+                                  placeholder="Enter detailed description"
+                                  rows="2"></textarea>
+                                  <div class="grammar-output"></div>
+
+                        <div class="suggestions-container"></div>
+
+                        <button type="button" class="btn btn-danger btn-sm removeRow">X</button>
+
+                    </td>
+                </tr>`;
+
+            $("#sortableRows").append(newRow);
+            $("#sortableRows").sortable("refresh");
+            reindex();
+        });
+
+
+        /* ------------------------------------------
+           DELETE ROW
+        --------------------------------------------*/
+        $(document).on("click", ".removeRow", function () {
+            $(this).closest("tr").remove();
+            reindex();
+        });
+
+        var AddRowFlag = @DocListEmpty.ToString().ToLower();
+        if (AddRowFlag) {
+            $("#addRow").click();
+        }
+
+
+        /* ------------------------------------------
+           RE-INDEX ALL ROWS (MAIN MC BINDER LOGIC)
+        --------------------------------------------*/
+        function reindex() {
+
+            $("#sortableRows tr").each(function (i) {
+
+                let pk = $(this).find("input[name*='PK_DR_ID']").val();
+                let oldSeq = $(this).find("input[name*='Old_Sequence_No']").val();
+                let oldQap = $(this).find("input[name*='Old_QAP_Clause_Number']").val();
+                let oldDesc = $(this).find("input[name*='Old_Description']").val();
+
+                let qap = $(this).find("input[name$='.QAP_Clause_Number']").val();
+                let desc = $(this).find("textarea").val();
+
+                $(this).find("td:first").html(
+                    `<span class='dragHandle'>⠿</span><br />${i + 1}`
+                );
+
+                $(this).find("input[name*='PK_DR_ID']")
+                    .attr("name", `DocumentList[${i}].PK_DR_ID`)
+                    .val(pk);
+
+                $(this).find("input[name*='Old_Sequence_No']")
+                    .attr("name", `DocumentList[${i}].Old_Sequence_No`)
+                    .val(oldSeq);
+
+                $(this).find("input[name*='Old_QAP_Clause_Number']")
+                    .attr("name", `DocumentList[${i}].Old_QAP_Clause_Number`)
+                    .val(oldQap);
+
+                $(this).find("input[name*='Old_Description']")
+                    .attr("name", `DocumentList[${i}].Old_Description`)
+                    .val(oldDesc);
+
+                $(this).find(".seqField")
+                    .attr("name", `DocumentList[${i}].Sequence_No`)
+                    .val(i + 1);
+
+                $(this).find("input[name$='.QAP_Clause_Number']")
+                    .attr("name", `DocumentList[${i}].QAP_Clause_Number`)
+                    .val(qap);
+
+                $(this).find("textarea")
+                    .attr("name", `DocumentList[${i}].Description`)
+                    .val(desc);
+            });
+        }
+
+    });
+</script>
+
+
+
+@if (isGrammerCheck == 1)
+{
+    <script>
+let grammarTimers = {};
+
+$(document).on("input", ".grammar-target", function () {
+    let textarea = $(this);
+    let outputDiv = textarea.next(".grammar-output");
+
+    clearTimeout(grammarTimers[textarea[0]]);
+
+    grammarTimers[textarea[0]] = setTimeout(() => {
+        runGrammarCheck(textarea, outputDiv);
+    }, 600);
+});
+
+
+function runGrammarCheck($textarea, $outputDiv) {
+
+    let text = $textarea.val();
+
+    if (!text.trim()) {
+        $outputDiv.html("");
+        return;
+    }
+
+    $outputDiv.html("<i>Checking...</i>");
+
+    fetch("https://api.languagetool.org/v2/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+            text: text,
+            language: "en-US"
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (!data || !data.matches) {
+            $outputDiv.html("");
+            return;
+        }
+
+        if (data.matches.length === 0) {
+            $outputDiv.html(`<p class="correct" style="color:green;">✔ Looks good! No grammar errors.</p>`);
+            return;
+        }
+
+        let html = "";
+
+        data.matches.forEach(m => {
+            html += `
+                <div class="errorBox" style="background:#ffe4e4; border-left:4px solid red; padding:5px; margin-top:8px;">
+                    <b>Issue:</b> ${m.message}<br>
+                    <b>Error:</b> "${m.context.text}"<br>
+                    <b>Suggestions:</b> ${m.replacements.slice(0, 3).map(r => r.value).join(", ")}
+                </div>
+            `;
+        });
+
+        $outputDiv.html(html);
+    })
+    .catch(err => {
+        console.error(err);
+        $outputDiv.html("<span style='color:red;'>Error checking grammar.</span>");
+    });
+}
+    </script>
+
+}
+
+
 
 
 <script>

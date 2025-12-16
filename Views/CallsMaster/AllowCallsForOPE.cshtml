@@ -1,0 +1,239 @@
+﻿@model TuvVision.Models.CallsModel
+
+@{
+    ViewBag.Title = "AllowCallsForOPE";
+    Layout = "~/Views/Shared/_TuvVision.cshtml";
+}
+<link rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+<style>
+    .height-table {
+        height: auto;
+    }
+
+    body {
+        font-family: 'TNG Pro';
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        font-family: 'TNG Pro';
+    }
+
+    th {
+        background-color: #001ED2;
+        color: #ffffff;
+        font-family: 'TNG Pro';
+        font-weight: normal;
+    }
+
+    @@media (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+                display: block;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                display: block;
+                text-align: right;
+            }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+    }
+
+    .label1 {
+        font-weight: normal !important;
+    }
+
+    #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
+
+    #example tbody tr.highlight-row {
+        background-color: #FFEB00;
+    }
+
+    label {
+        font-weight: normal;
+        font-family: 'TNG Pro';
+    }
+
+    #example tbody tr.highlight-row_ {
+        background-color: #FED7DA;
+    }
+
+    .btn.btn-info.dynamic-function-btn.highlighted {
+        background-color: #001ED2; /* Change the color as desired */
+    }
+</style>
+
+
+
+<div class="main-content3 xs-max-height">
+    <div class="container-fluid">
+        <div>
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <div class="table">
+                <table class="table table-condensed table-responsive " id="example" style="border:1px;font-size:12px;">
+                    <thead style="background-color:#001ED2;color:white;border:1px solid;">
+                        <tr class="" style="background-color:#001ED2;font-family:'TNG Pro';color:white;">
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Inspector Name</th>
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Employee Code</th>
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Branch</th>
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">call No</th>
+
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Actual Visit Date</th>
+
+                            <th scope="col" style="font-size: 14px;font-family:'TNG Pro';font-weight:normal;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="example" style="border:1px solid;font-size:13px;font-family:'TNG Pro';color: black;"></tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+
+
+    $(document).ready(function () {
+        debugger;
+        BindCalls();
+    });
+    function BindCalls() {
+        debugger;
+
+        $("body").prepend('<div id="preloader"></div>');
+
+        $.ajax({
+            type: "GET",
+            url: "/CallsMaster/GetCallsForOPEOpen",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+
+                $("#example tbody").empty();
+
+                if (!response) {
+                    appendNoRecordRow();
+                    $("#preloader").remove();
+                    return;
+                }
+
+                let data;
+               
+                    data = JSON.parse(response);
+               
+                if (data === "Error" || data.length === 0) {
+                    appendNoRecordRow();
+                } else {
+                    for (let i = 0; i < data.length; i++) {
+
+                        // Create row for each record
+                        let tr = $('<tr/>');
+
+                        tr.append(`<td><label class='label1'>${data[i].InspectorName}</label></td>`);
+                        tr.append(`<td><label class='label1'>${data[i].EmployeeCode}</label></td>`);
+                        tr.append(`<td><label class='label1'>${data[i].Branch_Name}</label></td>`);
+                        tr.append(`<td><label class='label1'>${data[i].call_no}</label></td>`);
+                        tr.append(`<td><label class='label1'>${data[i].actual_visit_date}</label></td>`);
+                        tr.append(`<td style='width:20%;'>
+                        <input type='button' value='Approve' onclick="Allow('${data[i].call_no}')">
+                        </td>`);
+
+                        $("#example tbody").append(tr);
+                    }
+                    $('#example').DataTable();
+                    $("#btnApprove").prop('disabled', false);
+                    $("#preloader").remove();
+
+                }
+
+                //$("#preloader").remove();
+            },
+
+            error: function () {
+                $("#preloader").remove();
+                appendNoRecordRow();
+            }
+        });
+
+        function appendNoRecordRow() {
+            let tr = $('<tr/>');
+            tr.append('<td colspan="6" style="text-align:center;">No Records Found</td>');
+            $("#example tbody").append(tr);
+            $("#preloader").remove();
+
+        }
+    }
+
+
+
+    function Allow(call_no) {
+        debugger;
+
+        $.ajax({
+            url: "@Url.Action("UpdateAllowCallsAfterOPEProcess", "CallsMaster")",
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { call_no: call_no },
+            success: function (result) {
+                debugger;
+                if (result == "SuccessFul") {
+                    alert("Data Updated Successfully!");
+                    BindCalls();
+                }
+                else {
+                    alert("Something Went Wrong");
+                    $("#preloader").remove();
+
+                }
+
+            },
+            error: function (result) {
+                $("#preloader").remove();
+
+            }
+        })
+    }
+
+</script>
+
+
+
+

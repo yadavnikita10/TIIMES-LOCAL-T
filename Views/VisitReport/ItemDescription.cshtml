@@ -1,5 +1,6 @@
 ﻿@model TuvVision.Models.ItemDescriptionModel
 
+
 @{
     ViewBag.Title = "ItemDescription";
     Layout = "~/Views/Shared/_TuvVision.cshtml";
@@ -9,6 +10,15 @@
 <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
 
+
+@{
+    int PK_RM_ID =Convert.ToInt32(Session["PK_RM_ID"]);
+    //Session["PK_RM_ID"] = Model.abcid;
+}
+
+@{
+    var items = ViewData["CostSheet"] as List<TuvVision.Models.ItemDescriptionModel>;
+}
 
 <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script src="~/AllJsAndCss/js/datatable-custom.js"></script>
@@ -31,20 +41,20 @@
 
                             @if (Model.PK_CALL_ID != 0)
                             {
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'"> General</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'"> General</button>
                                 @*<button class="btn btn-info dynamic-function-btn ItemDescription" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Item Description</button>*@
 
-                                <button  class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Item Description</button>
+                                <button  class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Item Description</button>
 
-                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Reference Documents</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Stages Witnessed</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Document Reviewed</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Details Of Measuring Instrument</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Conclusion</button>
+                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Reference Documents</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Stages Witnessed</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Document Reviewed</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Details Of Measuring Instrument</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID =PK_RM_ID} )'">Conclusion</button>
 
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Image</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID, @PK_RM_ID = Model.abcid} )'">Report</button>
-                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID = Model.abcid} )'">List Of Issues</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID =PK_RM_ID} )'">Image</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Report</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID =PK_RM_ID} )'">List Of Issues</button>
                                 
                             }
 
@@ -59,152 +69,114 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-offset-1 col-sm-10">
                                         <div class="form-box">
-                                            <form method="post" enctype="multipart/form-data">
+                                            <form method="post">
 
                                                 @Html.HiddenFor(m => m.PK_CALL_ID)
                                                 @Html.HiddenFor(m => m.abcid)
-                                                <div class="row">
 
-                                                    <div class="col-xs-12 col-sm-2">
-                                                        <div class="form-group">
-                                                            <label>PO Item No:</label>
+                                                <div id="itemsContainer">
 
-                                                            @Html.TextBoxFor(model => model.Po_Item_No, new { @placeholder = "Po Item No", @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.Po_Item_No, "", new { @class = "text-danger validation-msg" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-4">
-                                                        <div class="form-group">
-                                                            <label>Item Code:</label>
+                                                    @for (int i = 0; i < items.Count; i++)
+                                                    {
+                                                        <div class="item-box white-bg section-box-shadow" style="margin-bottom:20px; padding:15px;">
 
-                                                            @Html.TextBoxFor(model => model.Item_Code, new { @placeholder = "Item Code", @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.Item_Code, "", new { @class = "text-danger validation-msg" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-12 col-sm-12">
-                                                        <div class="form-group">
-                                                            <label>Item Description:</label>
-                                                            @Html.TextAreaFor(model => model.ItemCode_Description, 10, 40, new { @placeholder = "Item Description", @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.ItemCode_Description, "", new { @class = "text-danger validation-msg" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-12 col-sm-4">
-                                                        <div class="form-group">
-                                                            <label>UOM:</label>
-                                                            @{
-                                                                if (Model != null)
-                                                                {
-                                                                    if (ViewBag.UOM != null)
-                                                                    {
-                                                                        @Html.DropDownListFor(model => model.Unit, new SelectList(@ViewBag.UOM, "Code", "Name"), "---Select UOM---", new { @id = "ddlProjectType", @class = "form-control" })
-                                                                    }
+                                                            <input type="hidden" name="Items[@i].PK_ItemD_Id" value="@items[i].PK_ItemD_Id" />
+                                                            <input type="hidden" name="Items[@i].PK_CALL_ID" value="@items[i].PK_CALL_ID" />
 
-                                                                    @*else if (ViewData["ProjectTypeItems"] != null)
-                            {
-                                @Html.DropDownListFor(model => model.ProjectType, (IEnumerable<SelectListItem>)ViewData["ProjectTypeItems"], "---Select UOM---", new { @id = "ddlProjectType", @class = "form-control" })
-                            }*@
+                                                            <div class="row">
+                                                                <div class="col-sm-2">
+                                                                    <label>PO Item No</label>
+                                                                    <input class="form-control"
+                                                                           name="Items[@i].Po_Item_No"
+                                                                           value="@items[i].Po_Item_No" />
+                                                                </div>
 
+                                                                <div class="col-sm-4">
+                                                                    <label>Item Code</label>
+                                                                    <input class="form-control"
+                                                                           name="Items[@i].Item_Code"
+                                                                           value="@items[i].Item_Code" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <label>Item Description</label>
+                                                                    <textarea class="form-control"
+                                                                              name="Items[@i].ItemCode_Description">
+                                                                        @items[i].ItemCode_Description
+                                                                        </textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-sm-4">
+                                                                        <label>UOM</label>
+                                                                        @Html.DropDownList(
+                            $"Items[{i}].Unit",
+                            new SelectList(ViewBag.UOM, "Code", "Name", items[i].Unit),
+                            "---Select UOM---",
+                            new { @class = "form-control" })
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-sm-4">
+                                                                        <label>PO Quantity</label>
+                                                                        <input class="form-control"
+                                                                               name="Items[@i].Po_Quantity"
+                                                                               value="@items[i].Po_Quantity" />
+                                                                    </div>
+
+                                                                    <div class="col-sm-4">
+                                                                        <label>Offered Quantity</label>
+                                                                        <input class="form-control"
+                                                                               name="Items[@i].Offered_Quantity"
+                                                                               value="@items[i].Offered_Quantity" />
+                                                                    </div>
+
+                                                                    <div class="col-sm-4">
+                                                                        <label>Accepted Quantity</label>
+                                                                        <input class="form-control"
+                                                                               name="Items[@i].Accepted_Quantity"
+                                                                               value="@items[i].Accepted_Quantity" />
+                                                                    </div>
+                                                                </div>
+
+                                                                @if (items[i].HeatNoShow == "Yes")
+                {
+                                                                    <div class="row">
+                                                                        <div class="col-sm-4">
+                                                                            <label>Heat Number</label>
+                                                                            <input class="form-control"
+                                                                                   name="Items[@i].HeatNumber"
+                                                                                   value="@items[i].HeatNumber" />
+                                                                        </div>
+                                                                    </div>
                                                                 }
-                                                                else
-                                                                {
-                                                                    @Html.DropDownListFor(model => model.Unit, new SelectList(@ViewBag.UOM, "Code", "Name"), "---Select UOM---", new { @id = "ddlProjectType", @class = "form-control" })
-                                                                }
-                                                                @Html.ValidationMessageFor(m => m.Unit, "", new { @class = "text-danger validation-msg" })
-                                                            }
-                                                        </div>
-                                                    </div>
+
+                                                                <div class="text-right">
+                                                                    <button type="button" class="btn btn-danger remove-item">
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+
+                                                            </div>
+                                                    }
                                                 </div>
-                                                <div class="row">
 
+                                                <button type="button" id="addItem" class="btn btn-primary">
+                                                    Add Item
+                                                </button>
 
-                                                    <div class="col-xs-12 col-sm-4">
-                                                        <div class="form-group">
-                                                            <label>PO Quantity:</label>
+                                                <br /><br />
 
-                                                            @Html.TextBoxFor(model => model.Po_Quantity, new { @placeholder = "Po Quantity", @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.Po_Quantity, "", new { @class = "text-danger validation-msg" })
-                                                        </div>
-                                                    </div>
+                                                <button type="submit" class="btn btn-default insert-form-btn">
+                                                    Save
+                                                </button>
 
-                                                    <div class="col-xs-12 col-sm-4">
-                                                        <div class="form-group">
-                                                            <label>Offered Quantity:</label>
+                                            </form>
 
-                                                            @Html.TextBoxFor(model => model.Offered_Quantity, new { @placeholder = "Offered Quantity", @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.Offered_Quantity, "", new { @class = "text-danger validation-msg" })
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-xs-12 col-sm-4">
-                                                        <div class="form-group">
-                                                            <label>Accepted Quantity:</label>
-
-                                                            @Html.TextBoxFor(model => model.Accepted_Quantity, new { @placeholder = "Accepted Quantity", @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.Accepted_Quantity, "", new { @class = "text-danger validation-msg" })
-                                                        </div>
-                                                    </div>
-@if (Model.HeatNoShow == "Yes")
-{
-    <div class="col-xs-12 col-sm-4">
-        <div class="form-group">
-            <label>Heat number:</label>
-
-            @Html.TextBoxFor(model => model.HeatNumber, new { @placeholder = "Heat Number", @class = "form-control", @oninput = "validateNumber(this)" })
-            @Html.ValidationMessageFor(model => model.HeatNumber, "", new { @class = "text-danger validation-msg" })
-        </div>
-    </div>
-}
-
-                                                    @*<div class="col-xs-12 col-sm-4">
-                                                        <div class="form-group">
-                                                            <label>Heat number:</label>
-
-                                                            @Html.TextBoxFor(model => model.HeatNumber, new { @placeholder = "Heat Number", @class = "form-control", @oninput = "validateNumber(this)" })
-                                                            @Html.ValidationMessageFor(model => model.HeatNumber, "", new { @class = "text-danger validation-msg" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-4">
-                                                        <div class="form-group">
-                                                            <label>Total Quantity:</label>
-
-                                                            @Html.TextBoxFor(model => model.TotalQuantity, new { @placeholder = "Total Quantity", @class = "form-control", @oninput = "validateNumber(this)" })
-                                                            @Html.ValidationMessageFor(model => model.TotalQuantity, "", new { @class = "text-danger validation-msg" })
-                                                        </div>
-                                                    </div>*@
-
-                                                </div>
-                                                @*<div class="row">
-
-                                                    <div class="col-xs-8 col-sm-6">
-                                                        <div class="form-group">
-                                                            <label>Upload Excel :</label>
-                                                            <input type="file" name="FileUpload" class="form-control" id="FileUpload">
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-xs-8 col-sm-4">
-                                                        <a class="btn btn-default insert-form-btn" href="~/Excel/ExcellData.xlsx" role="button" download="ExcellData.xlsx">
-                                                            <i class="fa fa-download"></i> Download Template
-                                                        </a>
-
-                                                    </div>
-                                                </div>*@
-                                                <div class="row">
-                                                    <span style="color:#E12F24;">
-                                                        <strong> &nbsp;&nbsp;&nbsp;&nbsp;Note : </strong>
-                                                    </span>
-                                                    If concerns are raised, verify data inserted in accepted quantity.
-
-
-                                                    <div class="col-xs-12 text-center" id="IVRPointerEvents">
-                                                        <button type="submit" class="btn btn-default insert-form-btn">Save</button>
-                                                    </div>
-                                                    </div>
-</form>
                                         </div>
                                     </div>
                                 </div>
@@ -222,8 +194,6 @@
                                                         <td class="remove-search" width="10%">PO Quantity</td>
                                                         <td class="remove-search" width="10%">Offered Quantity</td>
                                                         <td class="remove-search" width="10%">Accepted Quantity</td>
-                                                        @*<td class="remove-search" width="10%">Heat Number</td>
-                                                        <td class="remove-search" width="10%">Total Quantity</td>*@
                                                         <td class="remove-search" width="5%">Action</td>
                                                     </tr>
                                                 </thead>
@@ -314,4 +284,42 @@
     if (isConfirmationIVR == 1) {
         document.getElementById("IVRPointerEvents").style.pointerEvents = "none";
     }
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        $("#addItem").click(function () {
+            var index = $(".item-box").length;
+            var clone = $(".item-box:first").clone();
+
+            clone.find("input, textarea, select").each(function () {
+                var name = $(this).attr("name");
+                if (name) {
+                    var newName = name.replace(/\[\d+\]/, "[" + index + "]");
+                    $(this).attr("name", newName).val("");
+                }
+            });
+
+            $("#itemsContainer").append(clone);
+        });
+
+        $(document).on("click", ".remove-item", function () {
+            if ($(".item-box").length > 1) {
+                $(this).closest(".item-box").remove();
+                reIndex();
+            }
+        });
+
+        function reIndex() {
+            $(".item-box").each(function (i) {
+                $(this).find("input, textarea, select").each(function () {
+                    var name = $(this).attr("name");
+                    if (name) {
+                        $(this).attr("name", name.replace(/\[\d+\]/, "[" + i + "]"));
+                    }
+                });
+            });
+        }
+    });
 </script>

@@ -40,7 +40,6 @@ using OfficeOpenXml.Style;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace TuvVision.Controllers
 {
@@ -86,9 +85,18 @@ namespace TuvVision.Controllers
             //ViewBag.SubCatlist = new SelectList(Data, "Br_Id", "Branch_Name");
 
             Session["VisitReportNo"] = null;
-            if (PK_RM_ID != null)
+            if (abc.abcid != 0)
+            {
+                Session["PK_RM_ID"] = abc.abcid;
+            }
+            else if (PK_RM_ID != null)
             {
                 ObjModelVisitReport.abcid = Convert.ToInt32(PK_RM_ID);
+                Session["PK_RM_ID"] = ObjModelVisitReport.abcid;
+            }
+            else
+            {
+                Session["PK_RM_ID"] = Convert.ToInt32(PK_RM_ID);
             }
           
             //added by satish 
@@ -119,11 +127,13 @@ namespace TuvVision.Controllers
 
                     if (DSJobMasterByQtId.Tables[0].Rows.Count > 0)
                     {
+                        ObjModelVisitReport.IsAbleToReviseReport = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsAbleToReviseReport"]);
                         Session["IsConfirmationIVR"] = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);
                         ObjModelVisitReport.CMP_ID = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["FK_CMP_ID"]); //added by nikita on 10102024
-                        Session["IsComfirmationToHideSaveIVR"] = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);//Nikita
                         ObjModelVisitReport.serviceid = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["serviceid"]); //added by nikita on 10102024
-
+                        ObjModelVisitReport.IBRAssignment = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IBRAssignment"]); //added by nikita on 10102024
+                        ObjModelVisitReport.IBRCompetent = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IBRCompetent"]); //added by nikita on 10102024
+                        Session["IsComfirmationToHideSaveIVR"] = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);//Nikita
                         ObjModelVisitReport.chkDoNotshareVendor = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["ChkIfShareReportVendor"]);
                         ObjModelVisitReport.IsComfirmation = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);
                         ObjModelVisitReport.Branch = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Branch"]);
@@ -198,6 +208,11 @@ namespace TuvVision.Controllers
                         ObjModelVisitReport.IsCustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsCustomerSpecificReportNumber"]);
                         ObjModelVisitReport.CustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["CustomerSpecificReportNumber"]);
                         ObjModelVisitReport.FinalConfirmationVisible = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["FinalConfirmationVisible"]);
+                        ObjModelVisitReport.Manufact_Contra_Prod_Fabri = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["Manufact_Contra_Prod_Fabri"]);
+                        ObjModelVisitReport.stock_Trade_Raw = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["stock_Trade_Raw"]);
+                        ObjModelVisitReport.TUVICustomer_End_Plant = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["TUVICustomer_End_Plant"]);
+                        ObjModelVisitReport.TestingLaboratory = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["TestingLaboratory"]);
+
                         if (DSJobMasterByQtId.Tables[1].Rows.Count > 0)
                         {
                             ObjModelVisitReport.IVRCount = Convert.ToInt32(DSJobMasterByQtId.Tables[1].Rows[0]["IVRCount"]);
@@ -245,6 +260,7 @@ namespace TuvVision.Controllers
                     else
                     {
                         DSEditQutationTabledata = objDalVisitReport.GetCallDetails(PK_Call_ID);
+                        ObjModelVisitReport.IsAbleToReviseReport = "Yes";
                         Session["IsComfirmationToHideSaveIVR"] = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);//Nikita
                         ObjModelVisitReport.IsComfirmation= Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);//Nikita
                         ObjModelVisitReport.Vendor_Name_Location = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Vendor_Name"]);
@@ -278,6 +294,12 @@ namespace TuvVision.Controllers
                         ObjModelVisitReport.Notification_Name_No_Date = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["source"]);
                         ObjModelVisitReport.SubType = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["JobType"]);
                         ObjModelVisitReport.chkARC = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["chkARC"]);
+                        ObjModelVisitReport.Manufact_Contra_Prod_Fabri = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["Manufact_Contra_Prod_Fabri"]);
+                        ObjModelVisitReport.stock_Trade_Raw = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["stock_Trade_Raw"]);
+                        ObjModelVisitReport.TUVICustomer_End_Plant = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["TUVICustomer_End_Plant"]);
+                        ObjModelVisitReport.TestingLaboratory = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["TestingLaboratory"]);
+                        ObjModelVisitReport.CMP_ID = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CMP_ID"]);
+
                         if (DSEditQutationTabledata.Tables[2].Rows.Count > 0)
                         {
                             ObjModelVisitReport.IVRCount = Convert.ToInt32(DSEditQutationTabledata.Tables[2].Rows[0]["IVRCount"]);
@@ -437,12 +459,20 @@ namespace TuvVision.Controllers
                             ViewBag.Dates = lmd;
                         }
                         #endregion
+                        ObjModelVisitReport.Manufact_Contra_Prod_Fabri = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["Manufact_Contra_Prod_Fabri"]);
+                        ObjModelVisitReport.stock_Trade_Raw = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["stock_Trade_Raw"]);
+                        ObjModelVisitReport.TUVICustomer_End_Plant = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["TUVICustomer_End_Plant"]);
+                        ObjModelVisitReport.TestingLaboratory = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["TestingLaboratory"]);
+
+                        ObjModelVisitReport.IsAbleToReviseReport = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsAbleToReviseReport"]);
+                        Session["chkifOthersHideForToyo"] = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["chkifOthersHideForToyo"]);
                         Session["IsConfirmationIVR"] = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);
+                      ObjModelVisitReport.serviceid = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["serviceid"]);
                         //First Level
                         ObjModelVisitReport.CMP_ID = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["FK_CMP_ID"]); //added by nikita on 10102024
                         ObjModelVisitReport.chkDoNotshareVendor = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["ChkIfShareReportVendor"]);
-                        ObjModelVisitReport.serviceid = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["serviceid"]); //added by nikita on 10102024
-
+                        ObjModelVisitReport.IBRAssignment = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IBRAssignment"]); //added by nikita on 10102024
+                        ObjModelVisitReport.IBRCompetent = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IBRCompetent"]); //added by nikita on 10102024
                         Session["IsComfirmationToHideSaveIVR"] = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);//Nikita
                         ObjModelVisitReport.Vendor_Name_Location = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Vendor_Name"]);
                         ObjModelVisitReport.Po_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["PO_Number"]);
@@ -546,11 +576,9 @@ namespace TuvVision.Controllers
                         ObjModelVisitReport.CustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["CustomerSpecificReportNumber"]);
                         ObjModelVisitReport.chkIfEndUserEditable = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["chkIfEndUserEditable"]);
                         ObjModelVisitReport.FinalConfirmationVisible = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["FinalConfirmationVisible"]);
-                        ObjModelVisitReport.Manufact_Contra_Prod_Fabri = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["Manufact_Contra_Prod_Fabri"]);
-                        ObjModelVisitReport.stock_Trade_Raw = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["stock_Trade_Raw"]);
-                        ObjModelVisitReport.TUVICustomer_End_Plant = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["TUVICustomer_End_Plant"]);
-                        ObjModelVisitReport.TestingLaboratory = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["TestingLaboratory"]);
 
+                        ObjModelVisitReport.MariaIVRNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["MariaIVRNo"]);
+                        ObjModelVisitReport.MariaDateOfIssue = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["MariaDateOfIssue"]);
 
                         //added by satish yadav
                         ObjModelVisitReport.IsAutoSuggestion = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["IsAutoSuggestion"]);
@@ -571,7 +599,13 @@ namespace TuvVision.Controllers
                         {
 
                             //First Level
+                            ObjModelVisitReport.IsAbleToReviseReport = "Yes";
                             Session["IsComfirmationToHideSaveIVR"] = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["IsComfirmation"]);//Nikita
+                            ObjModelVisitReport.Manufact_Contra_Prod_Fabri = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["Manufact_Contra_Prod_Fabri"]);
+                            ObjModelVisitReport.stock_Trade_Raw = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["stock_Trade_Raw"]);
+                            ObjModelVisitReport.TUVICustomer_End_Plant = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["TUVICustomer_End_Plant"]);
+                            ObjModelVisitReport.TestingLaboratory = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["TestingLaboratory"]);
+                            ObjModelVisitReport.CMP_ID = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CMP_ID"]);
                             ObjModelVisitReport.Vendor_Name_Location = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["v1"]);
                             ObjModelVisitReport.Po_No = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["p1"]);
                             ObjModelVisitReport.Date_of_PO = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["d1"]);
@@ -611,11 +645,6 @@ namespace TuvVision.Controllers
 							ObjModelVisitReport.chkARC = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["chkARC"]);
                             ObjModelVisitReport.CallIDs = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CallIDs"]);
                             ObjModelVisitReport.chkIfEndUserEditable = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["chkIfEndUserEditable"]);
-                            ObjModelVisitReport.Manufact_Contra_Prod_Fabri = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["Manufact_Contra_Prod_Fabri"]);
-                            ObjModelVisitReport.stock_Trade_Raw = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["stock_Trade_Raw"]);
-                            ObjModelVisitReport.TUVICustomer_End_Plant = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["TUVICustomer_End_Plant"]);
-                            ObjModelVisitReport.TestingLaboratory = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["TestingLaboratory"]);
-                            ObjModelVisitReport.CMP_ID = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CMP_ID"]);
 
                         }
 
@@ -920,7 +949,7 @@ namespace TuvVision.Controllers
                                 if (DTChkLeave.Rows.Count > 0)
                                 {
                                     TempData["ErrLeave"] = "Leave has been added for " + StDt.ToString("dd/MM/yyyy");
-                                    return RedirectToAction("VisitReportForm", "VisitReport", IVR.PK_Call_ID);
+                                    return RedirectToAction("VisitReportForm", "VisitReport",new { @PK_Call_ID = IVR.PK_Call_ID,@PK_RM_ID= IVR.abcid });
                                 }
                                 else
                                 {
@@ -937,13 +966,13 @@ namespace TuvVision.Controllers
                                         if (GrandTotal > 24)
                                         {
                                             TempData["ErrAll24"] = "Exceeded limit of 24 hours for the day " + StDt.ToString("dd/MM/yyyy");
-                                            return RedirectToAction("VisitReportForm", "VisitReport", IVR.PK_Call_ID);
+                                            return RedirectToAction("VisitReportForm", "VisitReport", new { @PK_Call_ID = IVR.PK_Call_ID, @PK_RM_ID = IVR.abcid });
                                         }
                                     }
                                     else if (CurrentTotal > 24)
                                     {
                                         TempData["ErrCurrent24"] = "Exceeded limit of 24 hours for the day " + StDt.ToString("dd/MM/yyyy");
-                                        return RedirectToAction("VisitReportForm", "VisitReport", IVR.PK_Call_ID);
+                                        return RedirectToAction("VisitReportForm", "VisitReport", new { @PK_Call_ID = IVR.PK_Call_ID, @PK_RM_ID = IVR.abcid });
                                     }
                                     else
                                     {
@@ -1101,7 +1130,8 @@ namespace TuvVision.Controllers
                                 dtSrNo = objDalVisitReport.GetSrNo(IVR.SubJob_No);
                                 if (dtSrNo.Tables[0].Rows.Count > 0)
                                 {
-                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+                                    //SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]).Replace("A", "");
                                     intSrNo = Convert.ToInt32(SrNo) + 1;
                                 }
                                 else
@@ -1109,7 +1139,7 @@ namespace TuvVision.Controllers
                                     intSrNo = 1;
                                 }
                                 //RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
-                                RM.ReportNo = "IVR-" + IVR.SubJob_No + "-" + intSrNo + "-Rev." + countNo;
+                                RM.ReportNo = "IVR-" + IVR.SubJob_No + "-" +"A"+ intSrNo + "-Rev." + countNo;
 
 
                             }
@@ -1186,6 +1216,8 @@ namespace TuvVision.Controllers
                                 }
                             }
                             RMData.PK_CALL_ID = IVR.PK_Call_ID;
+                            //RMData.abcid = IVR.abcid;
+                            RMData.abcid = Convert.ToInt32(Session["GetReportId"]); // IVR.abcid;
                             return RedirectToAction("VisitReportForm", RMData);
                           //  return RedirectToAction("UpdateReportsRedirectGeneralTab", new { PK_Call_ID = IVR.PK_Call_ID });
                             #endregion
@@ -1249,7 +1281,7 @@ namespace TuvVision.Controllers
                                 if (DTChkLeave.Rows.Count > 0)
                                 {
                                     TempData["ErrLeave"] = "Leave is added for the day" + StDt.ToString("dd/MM/yyyy");
-                                    return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = IVR.PK_Call_ID });
+                                    return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = IVR.PK_Call_ID,@PK_RM_ID=IVR.abcid });
                                 }
                                 else
                                 {
@@ -1269,7 +1301,7 @@ namespace TuvVision.Controllers
                                         if (CurrentTotal > 24)
                                         {
                                             TempData["ErrCurrent24"] = "You have excided 24 hrs for the day of " + StDt.ToString("dd/MM/yyyy");
-                                            return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = IVR.PK_Call_ID });
+                                            return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = IVR.PK_Call_ID, @PK_RM_ID = IVR.abcid });
                                         }
                                         else
                                         {
@@ -1285,13 +1317,13 @@ namespace TuvVision.Controllers
                                             if (GrandTotal > 24)
                                             {
                                                 TempData["ErrAll24"] = "You have excided 24 hrs for the day of " + StDt.ToString("dd/MM/yyyy");
-                                                return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = IVR.PK_Call_ID });
+                                                return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = IVR.PK_Call_ID, @PK_RM_ID = IVR.abcid });
                                             }
                                         }
                                         else if (CurrentTotal > 24)
                                         {
                                             TempData["ErrCurrent24"] = "You have excided 24 hrs for the day of " + StDt.ToString("dd/MM/yyyy");
-                                            return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = IVR.PK_Call_ID });
+                                            return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = IVR.PK_Call_ID, @PK_RM_ID = IVR.abcid });
                                         }
                                         else
                                         {
@@ -1530,41 +1562,48 @@ namespace TuvVision.Controllers
                                             RD.PK_CALL_ID = IVR.PK_Call_ID;
                                             Result = objDalVisitReport.InsertUpdateReferenceDocuments(RD);
                                         }
-                                    }
-                                }
-                                else if (excelSheets[i] == "Stages Witnessed")
-                                {
-                                    for (int j = 2; j <= RowsCount; j++)
-                                    {
-                                        string StagesWitness = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 1]).Value);
-                                        if (StagesWitness != null)
-                                        {
-                                            StW.Type = "IVR";
-                                            StW.Status = "1";
-                                            StW.Stages_Witnessed = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 1]).Value);
-                                            StW.PK_CALL_ID = IVR.PK_Call_ID;
-                                            Result = objDalVisitReport.InsertUpdateInspectionActivities(StW);
-                                        }
 
 
                                     }
                                 }
-                                else if (excelSheets[i] == "Document reviewed")
-                                {
-                                    for (int j = 2; j <= RowsCount; j++)
+                                    else if (excelSheets[i] == "Stages Witnessed")
                                     {
-                                        string DocumentRe = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 1]).Value);
-                                        if (DocumentRe != null)
+                                        for (int j = 2; j <= RowsCount; j++)
                                         {
-                                            DR.Type = "IVR";
-                                            DR.Status = "1";
-                                            DR.PK_CALL_ID = IVR.PK_Call_ID;
-                                            DR.Description = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 1]).Value);
-                                            Result = objDalVisitReport.InsertUpdateDocumentReviewe(DR);
+                                            string StagesWitness = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 1]).Value);
+                                            if (StagesWitness != null)
+                                            {
+                                                StW.Type = "IVR";
+                                                StW.Status = "1";
+                                                StW.Stages_Witnessed = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 1]).Value);
+                                                StW.PK_CALL_ID = IVR.PK_Call_ID;
+                                                StW.PK_IA_ID = 0;
+                                                StW.QAP_Clause_Number = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 2]).Value);
+                                                Result = objDalVisitReport.InsertUpdateInspectionActivities(StW);
+                                            }
+
+
                                         }
                                     }
-                                }
-                                else if (excelSheets[i] == "Details of measuring instrument")
+                                    else if (excelSheets[i] == "Document reviewed")
+                                    {
+                                        for (int j = 2; j <= RowsCount; j++)
+                                        {
+                                            string DocumentRe = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 1]).Value);
+                                            if (DocumentRe != null)
+                                            {
+                                                DR.Type = "IVR";
+                                                DR.Status = "1";
+                                                DR.PK_CALL_ID = IVR.PK_Call_ID;
+                                                DR.Description = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 1]).Value);
+                                                DR.QAP_Clause_Number = Convert.ToString(((Microsoft.Office.Interop.Excel.Range)wSheet.Cells[j, 2]).Value); //Added by Mohjjam_Dange_29112025
+                                                DR.PK_DR_ID = 0;
+                                                Result = objDalVisitReport.InsertUpdateDocumentReviewe(DR);
+
+                                            }
+                                        }
+                                    }
+                                    else if (excelSheets[i] == "Details of measuring instrument")
                                 {
 
                                     for (int j = 2; j <= RowsCount; j++)
@@ -1702,7 +1741,15 @@ namespace TuvVision.Controllers
 
                                 i++;
                             }
-                            excelBook.Close();
+                                if (Result == "-1")
+                                {
+                                    Session["ExcelUploadMsg"] = "Data Upload Succesfully";
+                                }
+                                else
+                                {
+                                    Session["ExcelUploadMsg"] = "Data Upload Failed...!";
+                                }
+                                excelBook.Close();
 
 
                         }
@@ -1767,7 +1814,7 @@ namespace TuvVision.Controllers
                             TempData["UpdateCompany"] = Result;
 
 
-                            return RedirectToAction("VisitReportForm", "VisitReport", new { @PK_Call_Id = IVR.PK_Call_ID,@PK_RM_ID=IVR.abcid });
+                            return RedirectToAction("VisitReportForm", "VisitReport", new { @PK_Call_Id = IVR.PK_Call_ID, @PK_RM_ID = IVR.abcid });
                             return View(IVR);
                         }
 
@@ -3911,147 +3958,103 @@ namespace TuvVision.Controllers
         #endregion
 
         #region  Inspection Activities
-
         [HttpGet]
-        public ActionResult InspectionActivites(InspectionActivitiesModel IVR)
-        {/*, int? PK_RM_ID*/
-
-            DataTable CostSheetDashBoard = new DataTable();
-            DataSet ItemDescriptionData = new DataSet();
-            List<InspectionActivitiesModel> lstCompanyDashBoard = new List<InspectionActivitiesModel>();
-
-            //if (PK_RM_ID != null)
-            //{
-            //    IVR.abcid = Convert.ToInt32(PK_RM_ID);
-            //}
-
-            if (IVR.PK_IA_ID != 0)
-            {
-                ItemDescriptionData = objDalVisitReport.GetInspectionActivitiesByPKIAID(IVR.PK_IA_ID);
-                if (ItemDescriptionData.Tables[0].Rows.Count > 0)
-                {
-                    IVR.Stages_Witnessed = Convert.ToString(ItemDescriptionData.Tables[0].Rows[0]["Stages_Witnessed"]);
-                    IVR.PK_IA_ID = Convert.ToInt32(ItemDescriptionData.Tables[0].Rows[0]["PK_IA_ID"]);
-                    IVR.PK_CALL_ID = Convert.ToInt32(ItemDescriptionData.Tables[0].Rows[0]["PK_CALL_ID"]);
-
-
-                    CostSheetDashBoard = objDalVisitReport.GetInspectionActivities(IVR.PK_CALL_ID);
-                    if (CostSheetDashBoard.Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in CostSheetDashBoard.Rows)
-                        {
-                            lstCompanyDashBoard.Add(
-                                new InspectionActivitiesModel
-                                {
-                                    Stages_Witnessed = Convert.ToString(dr["Stages_Witnessed"]),
-                                    PK_IA_ID = Convert.ToInt32(dr["PK_IA_ID"]),
-                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
-
-                                }
-                                );
-                        }
-                    }
-
-                }
-
-            }
-            else
-            {
-                try
-                {
-                    CostSheetDashBoard = objDalVisitReport.GetInspectionActivities(IVR.PK_CALL_ID);
-                    if (CostSheetDashBoard.Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in CostSheetDashBoard.Rows)
-                        {
-                            lstCompanyDashBoard.Add(
-                                new InspectionActivitiesModel
-                                {
-                                    Stages_Witnessed = Convert.ToString(dr["Stages_Witnessed"]),
-                                    PK_IA_ID = Convert.ToInt32(dr["PK_IA_ID"]),
-                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
-                                }
-                                );
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string Error = ex.Message.ToString();
-                    return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
-                }
-            }
-
-            ViewData["CostSheet"] = lstCompanyDashBoard;
-            return View(IVR);
-        }
-
-
-        [HttpPost]
-        public ActionResult InspectionActivites(InspectionActivitiesModel IVR, FormCollection fc)
+        public ActionResult InspectionActivites(InspectionActivitiesModel model)
         {
-            string Result = string.Empty;
             try
             {
-                if (IVR.PK_IA_ID == 0)
+                DataTable dt = objDalVisitReport.GetInspectionActivities(model.PK_CALL_ID);
+                model.StageList = new List<InspectionActivitiesModel>();
+                if (dt != null && dt.Rows.Count > 0)
                 {
-                    IVR.Type = "IVR";
-                    IVR.Status = "1";
-                    Result = objDalVisitReport.InsertUpdateInspectionActivities(IVR);
-                    if (Result != "" && Result != null)
+                    foreach (DataRow dr in dt.Rows)
                     {
-                        TempData["InsertCompany"] = Result;
+                        model.StageList.Add(new InspectionActivitiesModel
+                        {
+                            PK_IA_ID = Convert.ToInt32(dr["PK_IA_ID"]),
+                            PK_CALL_ID = dr["PK_CALL_ID"] != DBNull.Value ? Convert.ToInt32(dr["PK_CALL_ID"]) : 0,
+                            Stages_Witnessed = dr["Stages_Witnessed"] != DBNull.Value ? dr["Stages_Witnessed"].ToString() : "",
+                            Original_Stages_Witnessed = dr["Stages_Witnessed"] != DBNull.Value ? dr["Stages_Witnessed"].ToString() : "",
+                            Old_Sequence_No = dr["Sequence_No"] != DBNull.Value ? Convert.ToInt32(dr["Sequence_No"]) : 0,
+                            Sequence_No = dr["Sequence_No"] != DBNull.Value ? Convert.ToInt32(dr["Sequence_No"]) : 0,
+                            QAP_Clause_Number = dr["QAP_Clause_Number"] != DBNull.Value ? dr["QAP_Clause_Number"].ToString() : "",
+                        });
                     }
 
+                    ViewData["StageWitnesslst"] = model.StageList;
                 }
                 else
                 {
-                    Result = objDalVisitReport.InsertUpdateInspectionActivities(IVR);
-                    if (Result != null && Result != "")
-                    {
-                        TempData["UpdateCompany"] = Result;
-                    }
-
+                    ViewData["StageWitnesslst"] = null;
                 }
+
             }
             catch (Exception ex)
             {
-                string Error = ex.Message.ToString();
-                return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
+                return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { Error = ex.Message });
             }
-            #region
-            DataTable CostSheetDashBoard = new DataTable();
-            List<InspectionActivitiesModel> lstCompanyDashBoard = new List<InspectionActivitiesModel>();
-            CostSheetDashBoard = objDalVisitReport.GetInspectionActivities(IVR.PK_CALL_ID);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult InspectionActivites(InspectionActivitiesModel model, FormCollection fc)
+        {
+            bool bFlag = false;
             try
             {
-                if (CostSheetDashBoard.Rows.Count > 0)
+                // Check if StageList is null and initialize it
+                if (model.StageList == null)
                 {
-                    foreach (DataRow dr in CostSheetDashBoard.Rows)
+                    model.StageList = new List<InspectionActivitiesModel>();
+                }
+
+                if (model.StageList.Count > 0)
+                {
+                    foreach (var stage in model.StageList)
                     {
-                        lstCompanyDashBoard.Add(
-                            new InspectionActivitiesModel
+
+                        if (string.IsNullOrWhiteSpace(stage.Stages_Witnessed) &&
+                            string.IsNullOrWhiteSpace(stage.Original_Stages_Witnessed))
+                        {
+                            continue;
+                        }
+
+
+                        string currentStage = (stage.Stages_Witnessed ?? "").Replace("\n", "").Trim();
+                        string originalStage = (stage.Original_Stages_Witnessed ?? "").Replace("\n", "").Trim();
+
+                        bFlag = (currentStage != originalStage || stage.Sequence_No != stage.Old_Sequence_No || stage.QAP_Clause_Number != stage.Old_QAP_Clause_Number);
+
+                        if (!string.IsNullOrWhiteSpace(currentStage))
+                        {
+                            var newStage = new InspectionActivitiesModel
                             {
-                                Stages_Witnessed = Convert.ToString(dr["Stages_Witnessed"]),
-                                PK_IA_ID = Convert.ToInt32(dr["PK_IA_ID"]),
-                                PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
+                                PK_CALL_ID = model.PK_CALL_ID,
+                                PK_IA_ID = stage.PK_IA_ID ?? 0,
+                                Stages_Witnessed = currentStage,
+                                Sequence_No = stage.Sequence_No ?? 0,
+                                QAP_Clause_Number = stage.QAP_Clause_Number ?? "",
+                                Type = "IVR",
+                                Status = "1"
+                            };
+                            if (bFlag == true)
+                            {
+                                objDalVisitReport.InsertUpdateInspectionActivities(newStage);
                             }
-                            );
+                        }
                     }
+                    TempData["InsertCompany"] = "Records saved successfully.";
+                }
+                else
+                {
+                    TempData["InsertCompany"] = "No data to save.";
                 }
             }
             catch (Exception ex)
             {
-                string Error = ex.Message.ToString();
-                return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
+                return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { Error = ex.Message });
             }
-            ViewData["CostSheet"] = lstCompanyDashBoard;
-            #endregion
-
-            InspectionActivitiesModel IVRNEW = new InspectionActivitiesModel();
-            IVRNEW.PK_CALL_ID = IVR.PK_CALL_ID;
-            // return View(IVR);
-            return RedirectToAction("InspectionActivites", IVRNEW);
+            return RedirectToAction("InspectionActivites", new InspectionActivitiesModel() { PK_CALL_ID = model.PK_CALL_ID, PK_RM_ID = model.PK_RM_ID, abcid = model.PK_RM_ID });
         }
 
 
@@ -4086,145 +4089,111 @@ namespace TuvVision.Controllers
         #region  Document Reviewd
 
         [HttpGet]
-        public ActionResult DocumentReviewed(DocumentRevieweModel IVR) /*int? PK_RM_ID*/
+        public ActionResult DocumentReviewed(DocumentRevieweModel model)
         {
-
-            DataTable CostSheetDashBoard = new DataTable();
-            DataSet ItemDescriptionData = new DataSet();
-            List<DocumentRevieweModel> lstCompanyDashBoard = new List<DocumentRevieweModel>();
-
-            //if (PK_RM_ID != null)
-            //{
-            //    IVR.abcid = Convert.ToInt32(PK_RM_ID);
-            //}
-
-            if (IVR.PK_DR_ID != 0)
-            {
-                ItemDescriptionData = objDalVisitReport.GetDocumentRevieweModelById(IVR.PK_DR_ID);
-                if (ItemDescriptionData.Tables[0].Rows.Count > 0)
-                {
-                    IVR.Description = Convert.ToString(ItemDescriptionData.Tables[0].Rows[0]["Description"]);
-                    IVR.PK_DR_ID = Convert.ToInt32(ItemDescriptionData.Tables[0].Rows[0]["PK_DR_ID"]);
-                    IVR.PK_CALL_ID = Convert.ToInt32(ItemDescriptionData.Tables[0].Rows[0]["PK_CALL_ID"]);
-
-
-                    CostSheetDashBoard = objDalVisitReport.GetDocumentRevieweModelByCall_Id(IVR.PK_CALL_ID);
-                    if (CostSheetDashBoard.Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in CostSheetDashBoard.Rows)
-                        {
-                            lstCompanyDashBoard.Add(
-                                new DocumentRevieweModel
-                                {
-                                    Description = Convert.ToString(dr["Description"]),
-                                    PK_DR_ID = Convert.ToInt32(dr["PK_DR_ID"]),
-                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
-
-                                }
-                                );
-                        }
-                    }
-
-                }
-
-            }
-            else
-            {
-                try
-                {
-                    CostSheetDashBoard = objDalVisitReport.GetDocumentRevieweModelByCall_Id(IVR.PK_CALL_ID);
-                    if (CostSheetDashBoard.Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in CostSheetDashBoard.Rows)
-                        {
-                            lstCompanyDashBoard.Add(
-                                new DocumentRevieweModel
-                                {
-                                    Description = Convert.ToString(dr["Description"]),
-                                    PK_DR_ID = Convert.ToInt32(dr["PK_DR_ID"]),
-                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
-                                }
-                                );
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string Error = ex.Message.ToString();
-                    return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
-                }
-            }
-
-            ViewData["CostSheet"] = lstCompanyDashBoard;
-            return View(IVR);
-        }
-
-        [HttpPost]
-        public ActionResult DocumentReviewed(DocumentRevieweModel IVR, FormCollection fc)
-        {
-            string Result = string.Empty;
             try
             {
-                if (IVR.PK_DR_ID == 0)
+                DataTable dt = objDalVisitReport.GetDocumentRevieweModelByCall_Id(model.PK_CALL_ID);
+                model.DocumentList = new List<DocumentRevieweModel>();
+                if (dt != null && dt.Rows.Count > 0)
                 {
-                    IVR.Type = "IVR";
-                    IVR.Status = "1";
-                    Result = objDalVisitReport.InsertUpdateDocumentReviewe(IVR);
-                    if (Result != "" && Result != null)
+                    foreach (DataRow dr in dt.Rows)
                     {
-                        TempData["InsertCompany"] = Result;
+                        model.DocumentList.Add(new DocumentRevieweModel
+                        {
+                            PK_DR_ID = Convert.ToInt32(dr["PK_DR_ID"]),
+                            PK_CALL_ID = dr["PK_CALL_ID"] != DBNull.Value ? Convert.ToInt32(dr["PK_CALL_ID"]) : 0,
+                            Description = dr["Description"] != DBNull.Value ? dr["Description"].ToString() : "",
+                            Old_Description = dr["Description"] != DBNull.Value ? dr["Description"].ToString() : "",
+                            // Original_Stages_Witnessed = dr["Stages_Witnessed"].ToString(),
+                            Old_Sequence_No = dr["Sequence_No"] != DBNull.Value ? Convert.ToInt32(dr["Sequence_No"]) : 0,
+                            Sequence_No = dr["Sequence_No"] != DBNull.Value ? Convert.ToInt32(dr["Sequence_No"]) : 0,
+                            QAP_Clause_Number = dr["QAP_Clause_Number"] != DBNull.Value ? dr["QAP_Clause_Number"].ToString() : "",
+                            Old_QAP_Clause_Number = dr["QAP_Clause_Number"] != DBNull.Value ? dr["QAP_Clause_Number"].ToString() : "",
+                        });
+
                     }
+
+                    ViewData["DocumentReviewList"] = model.DocumentList;
 
                 }
                 else
                 {
-                    Result = objDalVisitReport.InsertUpdateDocumentReviewe(IVR);
-                    if (Result != null && Result != "")
-                    {
-                        TempData["UpdateCompany"] = Result;
-                    }
+                    ViewData["DocumentReviewList"] = null;
 
                 }
+
             }
             catch (Exception ex)
             {
                 string Error = ex.Message.ToString();
-                return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
+                //        return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
             }
-            #region
-            DataTable CostSheetDashBoard = new DataTable();
-            List<DocumentRevieweModel> lstCompanyDashBoard = new List<DocumentRevieweModel>();
-            CostSheetDashBoard = objDalVisitReport.GetDocumentRevieweModelByCall_Id(IVR.PK_CALL_ID);
+
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult DocumentReviewed(DocumentRevieweModel model, FormCollection fc)
+        {
+            bool bFlag = false;
             try
             {
-                if (CostSheetDashBoard.Rows.Count > 0)
+                // Check if StageList is null and initialize it
+                if (model.DocumentList == null)
                 {
-                    foreach (DataRow dr in CostSheetDashBoard.Rows)
+                    model.DocumentList = new List<DocumentRevieweModel>();
+                }
+
+                if (model.DocumentList.Count > 0)
+                {
+                    foreach (var stage in model.DocumentList)
                     {
-                        lstCompanyDashBoard.Add(
-                            new DocumentRevieweModel
+
+                        if (string.IsNullOrWhiteSpace(stage.Description) &&
+                            string.IsNullOrWhiteSpace(stage.Old_Description))
+                        {
+                            continue;
+                        }
+
+
+                        string currentDescription = (stage.Description ?? "").Replace("\n", "").Trim();
+                        string originalDescription = (stage.Old_Description ?? "").Replace("\n", "").Trim();
+
+                        bFlag = (currentDescription != originalDescription || stage.Sequence_No != stage.Old_Sequence_No || stage.QAP_Clause_Number != stage.Old_QAP_Clause_Number);
+
+                        if (!string.IsNullOrWhiteSpace(currentDescription))
+                        {
+                            var newStage = new DocumentRevieweModel
                             {
-                                Description = Convert.ToString(dr["Description"]),
-                                PK_DR_ID = Convert.ToInt32(dr["PK_DR_ID"]),
-                                PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
+                                PK_CALL_ID = model.PK_CALL_ID,
+                                PK_DR_ID = stage.PK_DR_ID ?? 0,
+                                Description = currentDescription,
+                                Sequence_No = stage.Sequence_No ?? 0,
+                                QAP_Clause_Number = stage.QAP_Clause_Number ?? "",
+                                Type = "IVR",
+                                Status = "1"
+                            };
+                            if (bFlag == true)
+                            {
+                                objDalVisitReport.InsertUpdateDocumentReviewe(newStage);
                             }
-                            );
+                        }
                     }
+                    TempData["InsertCompany"] = "Records saved successfully.";
+                }
+                else
+                {
+                    TempData["InsertCompany"] = "No data to save.";
                 }
             }
             catch (Exception ex)
             {
-                string Error = ex.Message.ToString();
-                return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
+                return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { Error = ex.Message });
             }
-            ViewData["CostSheet"] = lstCompanyDashBoard;
-            IVR.PK_DR_ID = 0;
-            #endregion
 
-            DocumentRevieweModel IVRNEW = new DocumentRevieweModel();
-            IVRNEW.PK_CALL_ID = IVR.PK_CALL_ID;
-            //return View(IVR);
-            return RedirectToAction("DocumentReviewed", IVRNEW);
+
+
+            return RedirectToAction("DocumentReviewed", new DocumentRevieweModel() { PK_CALL_ID = model.PK_CALL_ID, abcid = model.PK_RM_ID, PK_RM_ID = model.PK_RM_ID });
         }
 
         public ActionResult DeleteDocumentReviewedData(DocumentRevieweModel IVR)
@@ -4448,6 +4417,287 @@ namespace TuvVision.Controllers
         #endregion
 
 
+        #region  ReportImage 12082025
+
+        //     [HttpGet]
+        //     public ActionResult ReportImage(ReportImageModel IVR, int? sid/*, int? PK_RM_ID*/)
+        //     {
+        //         if (Convert.ToInt32(sid) != 0)
+        //         {
+        //             IVR.PK_CALL_ID = Convert.ToInt32(sid);
+        //         }
+
+        //         //if (PK_RM_ID != null)
+        //         //{
+        //         //    IVR.abcid = Convert.ToInt32(PK_RM_ID);
+        //         //}
+        //         DataTable CostSheetDashBoard = new DataTable();
+        //         DataSet ItemDescriptionData = new DataSet();
+        //         List<ReportImageModel> lstCompanyDashBoard = new List<ReportImageModel>();
+
+
+
+        //         if (IVR.PK_IP_Id != 0)
+        //         {
+        //             ItemDescriptionData = objDalVisitReport.GetReportImageById(IVR.PK_IP_Id);
+        //             if (ItemDescriptionData.Tables[0].Rows.Count > 0)
+        //             {
+        //                 IVR.Heading = Convert.ToString(ItemDescriptionData.Tables[0].Rows[0]["Heading"]);
+        //                 IVR.Image = Convert.ToString(ItemDescriptionData.Tables[0].Rows[0]["Image"]);
+        //                 IVR.PK_IP_Id = Convert.ToInt32(ItemDescriptionData.Tables[0].Rows[0]["PK_IP_Id"]);
+        //                 IVR.PK_CALL_ID = Convert.ToInt32(ItemDescriptionData.Tables[0].Rows[0]["PK_CALL_ID"]);
+
+
+        //                 CostSheetDashBoard = objDalVisitReport.GetReportImageByCall_Id(IVR.PK_CALL_ID);
+        //                 if (CostSheetDashBoard.Rows.Count > 0)
+        //                 {
+        //                     foreach (DataRow dr in CostSheetDashBoard.Rows)
+        //                     {
+        //                         lstCompanyDashBoard.Add(
+        //                             new ReportImageModel
+        //                             {
+        //                                 Image = Convert.ToString(dr["Image"]),
+        //                                 Heading = Convert.ToString(dr["Heading"]),
+        //                                 PK_IP_Id = Convert.ToInt32(dr["PK_IP_Id"]),
+        //                                 PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
+
+        //                             }
+        //                             );
+        //                     }
+        //                 }
+
+        //             }
+
+        //         }
+        //         else
+        //         {
+        //             try
+        //             {
+        //                 CostSheetDashBoard = objDalVisitReport.GetReportImageByCall_Id(IVR.PK_CALL_ID);
+        //                 if (CostSheetDashBoard.Rows.Count > 0)
+        //                 {
+        //                     foreach (DataRow dr in CostSheetDashBoard.Rows)
+        //                     {
+        //                         lstCompanyDashBoard.Add(
+        //                             new ReportImageModel
+        //                             {
+        //                                 Image = Convert.ToString(dr["Image"]),
+        //                                 Heading = Convert.ToString(dr["Heading"]),
+        //                                 PK_IP_Id = Convert.ToInt32(dr["PK_IP_Id"]),
+        //                                 PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
+        //                             }
+        //                             );
+        //                     }
+        //                 }
+        //             }
+        //             catch (Exception ex)
+        //             {
+        //                 string Error = ex.Message.ToString();
+        //                 return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
+        //             }
+        //         }
+
+        //         ViewData["CostSheet"] = lstCompanyDashBoard;
+        //ViewBag.CostSheet = lstCompanyDashBoard;										
+        //         return View(IVR);
+        //     }
+
+        //     [HttpPost]
+        //     public ActionResult ReportImage(ReportImageModel IVR, FormCollection fc, HttpPostedFileBase  File, List<HttpPostedFileBase> img_Banner)
+        //     {
+        //         string Result = string.Empty;
+        //         try
+        //         {
+        //             if (IVR.PK_IP_Id == 0)
+        //             {
+        //                 HttpPostedFileBase Imagesection;
+        //                 if (!string.IsNullOrEmpty(Convert.ToString(Request.Files["img_Banner"])))
+        //                 {
+        //                     foreach (HttpPostedFileBase single in img_Banner) // Added by Sagar Panigrahi
+
+
+
+
+
+
+        //                     {
+        //                         Imagesection = single;//Request.Files["img_Banner"];
+        //                         if (Imagesection != null && Imagesection.FileName != "")
+        //                         {
+
+        //                             IVR.Image = CommonControl.FileUploadResize("Content/Uploads/Images/", Imagesection, IVR.PK_IP_Id, IVR.PK_CALL_ID.ToString());
+        //                         }
+        //                         else
+        //                         {
+        //                             if (Imagesection.FileName != "")
+        //                             {
+        //                                 IVR.Image = "NoImage.gif";
+        //                             }
+        //                         }
+
+        //                         IVR.Type = "IVR";
+        //                         IVR.Status = "1";
+        //                         Result = objDalVisitReport.InsertUpdateReportImage(IVR);
+        //                         if (Result != "" && Result != null)
+        //                         {
+        //                             ModelState.Clear();
+        //                             TempData["InsertCompany"] = Result;
+        //                         }
+        //                     }
+
+
+
+
+
+
+
+
+        //                 }
+
+        //                 return RedirectToAction("ReportImage", IVR);
+        //             }
+        //             else
+        //             {
+        //                 HttpPostedFileBase Imagesection;
+        //                 if (!string.IsNullOrEmpty(Convert.ToString(Request.Files["img_Banner"])))
+        //                 {
+        //                     Imagesection = Request.Files["img_Banner"];
+        //                     if (Imagesection != null && Imagesection.FileName != "")
+        //                     {
+
+        //                         IVR.Image = CommonControl.FileUploadResize("Content/Uploads/Images/", Imagesection, IVR.PK_IP_Id, IVR.PK_CALL_ID.ToString());
+        //                     }
+        //                     else
+        //                     {
+        //                         if (Imagesection.FileName != "")
+        //                         {
+        //                             IVR.Image = "NoImage.gif";
+        //                         }
+        //                     }
+        //                 }
+        //                 Result = objDalVisitReport.InsertUpdateReportImage(IVR);
+        //                 if (Result != null && Result != "")
+        //                 {
+        //                     ModelState.Clear();
+        //                     TempData["UpdateCompany"] = Result;
+        //                 }
+        //                 return RedirectToAction("ReportImage", IVR);
+        //             }
+        //         }
+        //         //catch (Exception ex)
+        //         //{
+
+        //         //    string Error = ex.Message.ToString();
+        //         //}
+
+        //         catch (Exception ex)
+        //         {
+        //             string error = ex.Message;
+
+        //             // Define the file path (adjust the path as needed)
+        //             string filePath = Server.MapPath("~/ErrorLog.txt");
+
+        //             // Append the error message to the file
+        //             try
+        //             {
+        //                 System.IO.File.AppendAllText(filePath, $"{DateTime.Now}: {error}{Environment.NewLine}");
+        //             }
+        //             catch (Exception logEx)
+        //             {
+        //                 // Handle potential exceptions when writing to the file
+        //                // Console.WriteLine($"Failed to log error: {logEx.Message}");
+        //             }
+        //         }
+
+
+
+        //         #region
+        //         DataTable CostSheetDashBoard = new DataTable();
+        //         List<ReportImageModel> lstCompanyDashBoard = new List<ReportImageModel>();
+        //         CostSheetDashBoard = objDalVisitReport.GetReportImageByCall_Id(IVR.PK_CALL_ID);
+        //         try
+        //         {
+        //             if (CostSheetDashBoard.Rows.Count > 0)
+        //             {
+        //                 foreach (DataRow dr in CostSheetDashBoard.Rows)
+        //                 {
+        //                     lstCompanyDashBoard.Add(
+        //                         new ReportImageModel
+        //                         {
+        //                             Image = Convert.ToString(dr["Image"]),
+        //                             Heading = Convert.ToString(dr["Heading"]),
+        //                             PK_IP_Id = Convert.ToInt32(dr["PK_IP_Id"]),
+        //                             PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
+        //                         }
+        //                         );
+        //                 }
+        //             }
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             string Error = ex.Message.ToString();
+        //             return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
+        //         }
+        //         ViewData["CostSheet"] = lstCompanyDashBoard;
+        //         IVR.PK_IP_Id = 0;
+        //         #endregion
+        //         IVR.PK_IP_Id = 0;
+        //         IVR.Image = null;
+        //         // IVR.Heading = null;
+        //         return View(IVR);
+        //     }
+
+
+        //     public ActionResult DeleteImage(int? aid, int? kid)
+        //     {
+        //         ObjModel.PK_Call_ID = Convert.ToInt32(kid);
+        //         try
+        //         {
+        //             if (objDalVisitReport.DeleteImage(Convert.ToInt32(aid)))
+        //             {
+        //                 TempData["Deleted"] = "Activity Details Deleted Successfully ..!";
+        //             }
+        //             return RedirectToAction("ReportImage", new { @sid = Convert.ToInt32(ObjModel.PK_Call_ID) });
+        //         }
+        //         catch (Exception)
+        //         {
+        //             return View();
+        //         }
+        //     }
+
+
+
+
+
+        //     [HttpPost]
+        //     public ActionResult SaveHeading(ReportImageModel IVR, FormCollection fc)
+        //     {
+        //         string Result = string.Empty;
+
+        //         foreach (var item in IVR.Activity)
+        //         {
+        //             if(item.chkbox==true)
+        //             {
+        //                 int aid = item.PK_IP_Id;
+        //                 bool s = objDalVisitReport.DeleteImage(Convert.ToInt32(aid));
+        //             }
+        //             else
+        //             {
+        //                 IVR.PK_CALL_ID = item.PK_CALL_ID;
+        //                 IVR.Heading = item.Heading;
+        //                 IVR.PK_IP_Id = item.PK_IP_Id;
+        //                 Result = objDalVisitReport.UpdateHeading(IVR);
+        //             }
+
+        //         }
+
+        //         int? sid = IVR.PK_CALL_ID;
+        //             return RedirectToAction("ReportImage",new { sid= IVR.PK_CALL_ID } );
+        //     }
+        #endregion
+
+
+        #region 
         #region  ReportImage
 
         [HttpGet]
@@ -4507,12 +4757,24 @@ namespace TuvVision.Controllers
                     CostSheetDashBoard = objDalVisitReport.GetReportImageByCall_Id(IVR.PK_CALL_ID);
                     if (CostSheetDashBoard.Rows.Count > 0)
                     {
+
+
+
                         foreach (DataRow dr in CostSheetDashBoard.Rows)
                         {
+                            DateTime CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                            int year = CreatedDate.Year;
+                            int month = CreatedDate.Month;
+                            string currentMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month);
+                            string fileName = Convert.ToString(dr["Image"]);
+                            //string path = Server.MapPath("~/Content/Uploads/Images/" + year + "/" + currentMonth + "/") + fileName;
+                            string path = $"/Content/Uploads/Images/{year}/{currentMonth}/{fileName}";
                             lstCompanyDashBoard.Add(
                                 new ReportImageModel
                                 {
-                                    Image = Convert.ToString(dr["Image"]),
+
+                                    //Image = Convert.ToString(dr["Image"]),
+                                    Image = path,
                                     Heading = Convert.ToString(dr["Heading"]),
                                     PK_IP_Id = Convert.ToInt32(dr["PK_IP_Id"]),
                                     PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
@@ -4529,46 +4791,54 @@ namespace TuvVision.Controllers
             }
 
             ViewData["CostSheet"] = lstCompanyDashBoard;
-			ViewBag.CostSheet = lstCompanyDashBoard;										
+            ViewBag.CostSheet = lstCompanyDashBoard;
             return View(IVR);
         }
 
         [HttpPost]
-        public ActionResult ReportImage(ReportImageModel IVR, FormCollection fc, HttpPostedFileBase  File, List<HttpPostedFileBase> img_Banner)
+        public ActionResult ReportImage(ReportImageModel IVR, FormCollection fc, HttpPostedFileBase File, List<HttpPostedFileBase> img_Banner)
         {
+            CommonControl objCommonControl = new CommonControl();
             string Result = string.Empty;
             try
             {
                 if (IVR.PK_IP_Id == 0)
                 {
-                    HttpPostedFileBase Imagesection;
-                    if (!string.IsNullOrEmpty(Convert.ToString(Request.Files["img_Banner"])))
+
+                    #region File Save New Code
+                    List<FileDetails> fileList = new List<FileDetails>();
+
+                    if (img_Banner != null && img_Banner.Count > 0)
                     {
-                        foreach (HttpPostedFileBase single in img_Banner) // Added by Sagar Panigrahi
-																				
-						 
-																											
-																																						   
-						 
-							
+                        foreach (var file in img_Banner)
                         {
-                            Imagesection = single;//Request.Files["img_Banner"];
-                            if (Imagesection != null && Imagesection.FileName != "")
+                            if (file != null && file.ContentLength > 0)
                             {
-                                //IVR.Image = CommonControl.FileUpload("Content/Uploads/Images/", Imagesection);
-                                //IVR.Image = CommonControl.FileUploadCompress("Content/Uploads/Images/", Imagesection, IVR.PK_IP_Id, IVR.PK_CALL_ID.ToString());
-                                IVR.Image = CommonControl.FileUploadResize("Content/Uploads/Images/", Imagesection, IVR.PK_IP_Id, IVR.PK_CALL_ID.ToString());
-                            }
-                            else
-                            {
-                                if (Imagesection.FileName != "")
+                                using (var binaryReader = new BinaryReader(file.InputStream))
                                 {
-                                    IVR.Image = "NoImage.gif";
+                                    FileDetails details = new FileDetails
+                                    {
+
+                                        FileName = Path.GetFileName(file.FileName),
+                                        FileContent = binaryReader.ReadBytes(file.ContentLength)
+                                    };
+                                    fileList.Add(details);
                                 }
                             }
+                        }
+                    }
 
-                            IVR.Type = "IVR";
-                            IVR.Status = "1";
+                    objCommonControl.SaveFileToPhysicalLocationVisitReport(fileList, Convert.ToInt32(IVR.PK_CALL_ID));
+
+
+                    IVR.Type = "IVR";
+                    IVR.Status = "1";
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(Request.Files["img_Banner"])))
+                    {
+                        foreach (HttpPostedFileBase single in img_Banner)
+                        {
+                            IVR.Image = IVR.PK_CALL_ID.ToString() + "_" + single.FileName;
                             Result = objDalVisitReport.InsertUpdateReportImage(IVR);
                             if (Result != "" && Result != null)
                             {
@@ -4576,16 +4846,53 @@ namespace TuvVision.Controllers
                                 TempData["InsertCompany"] = Result;
                             }
                         }
-                        
-									 
-									 
-																			
-													   
-					 
-										   
-														   
                     }
-                  
+
+
+
+
+                    #endregion
+
+                    #region old code
+                    //HttpPostedFileBase Imagesection;
+                    //if (!string.IsNullOrEmpty(Convert.ToString(Request.Files["img_Banner"])))
+                    //{
+                    //    foreach (HttpPostedFileBase single in img_Banner) // Added by Sagar Panigrahi
+
+
+
+
+
+
+                    //    {
+                    //        Imagesection = single;//Request.Files["img_Banner"];
+                    //        if (Imagesection != null && Imagesection.FileName != "")
+                    //        {
+                    //            IVR.Image = CommonControl.FileUploadResize("Content/Uploads/Images/", Imagesection, IVR.PK_IP_Id, IVR.PK_CALL_ID.ToString());
+                    //        }
+                    //        else
+                    //        {
+                    //            if (Imagesection.FileName != "")
+                    //            {
+                    //                IVR.Image = "NoImage.gif";
+                    //            }
+                    //        }
+
+                    //        IVR.Type = "IVR";
+                    //        IVR.Status = "1";
+                    //        Result = objDalVisitReport.InsertUpdateReportImage(IVR);
+                    //        if (Result != "" && Result != null)
+                    //        {
+                    //            ModelState.Clear();
+                    //            TempData["InsertCompany"] = Result;
+                    //        }
+                    //    }
+
+
+                    //}
+                    #endregion
+
+
                     return RedirectToAction("ReportImage", IVR);
                 }
                 else
@@ -4637,7 +4944,7 @@ namespace TuvVision.Controllers
                 catch (Exception logEx)
                 {
                     // Handle potential exceptions when writing to the file
-                   // Console.WriteLine($"Failed to log error: {logEx.Message}");
+                    // Console.WriteLine($"Failed to log error: {logEx.Message}");
                 }
             }
 
@@ -4678,7 +4985,7 @@ namespace TuvVision.Controllers
             // IVR.Heading = null;
             return View(IVR);
         }
-        
+
 
         public ActionResult DeleteImage(int? aid, int? kid)
         {
@@ -4697,7 +5004,7 @@ namespace TuvVision.Controllers
             }
         }
 
-       
+
 
 
 
@@ -4708,7 +5015,7 @@ namespace TuvVision.Controllers
 
             foreach (var item in IVR.Activity)
             {
-                if(item.chkbox==true)
+                if (item.chkbox == true)
                 {
                     int aid = item.PK_IP_Id;
                     bool s = objDalVisitReport.DeleteImage(Convert.ToInt32(aid));
@@ -4720,12 +5027,13 @@ namespace TuvVision.Controllers
                     IVR.PK_IP_Id = item.PK_IP_Id;
                     Result = objDalVisitReport.UpdateHeading(IVR);
                 }
-                
+
             }
 
             int? sid = IVR.PK_CALL_ID;
-                return RedirectToAction("ReportImage",new { sid= IVR.PK_CALL_ID } );
+            return RedirectToAction("ReportImage", new { sid = IVR.PK_CALL_ID });
         }
+        #endregion
         #endregion
 
 
@@ -4868,6 +5176,7 @@ namespace TuvVision.Controllers
                                 //added by shrutika salve 041012023
                                 checkIFCustomer = Convert.ToString(dr["checkIFCustomerSpecific"]),
                                 IVRDownloadDate = Convert.ToString(dr["IVRDownloadDate"]),
+                                DiaryComfirmation = Convert.ToString(dr["DiaryComfirmation"]),
 
                             }
                             );
@@ -5298,7 +5607,11 @@ namespace TuvVision.Controllers
                     ImageContentname += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>";
 
                     ImageContent += "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Sign/" + v.Image + "' style='width:100px;height:100px;  ' alt=''></td></tr>";
-                    ImageContentnameTest += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>" + "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px; ' alt=''></td></tr>";
+                    // ImageContentnameTest += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>" + "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px; ' alt=''></td></tr>";
+                    ImageContentnameTest += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>" + "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString()+ "/Imagepath/" + v.Image + "' style='width:100px;height:100px; ' alt=''></td></tr>";
+
+                   
+
 
                 }
                 bodys = bodys.Replace("[Image]", ImageContent);
@@ -7185,8 +7498,11 @@ namespace TuvVision.Controllers
                     N = N + 1;
                     ImageContentname += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>";
 
-                    ImageContent += "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px;  ' alt=''></td></tr>";
-                    ImageContentnameTest += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>" + "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px; ' alt=''></td></tr>";
+                    //ImageContent += "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px;  ' alt=''></td></tr>";
+                    //ImageContentnameTest += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>" + "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px; ' alt=''></td></tr>";
+
+                    ImageContent += "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Imagepath/" + v.Image + "' style='width:100px;height:100px;  ' alt=''></td></tr>";
+                    ImageContentnameTest += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>" + "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Imagepath/" + v.Image + "' style='width:100px;height:100px; ' alt=''></td></tr>";
 
                 }
                 bodys = bodys.Replace("[Image]", ImageContent);
@@ -7807,7 +8123,11 @@ namespace TuvVision.Controllers
                     N = N + 1;
                     ImageContentname += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>";
 
-                    ImageContent += "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px;  ' alt=''></td></tr>";
+                    //ImageContent += "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px;  ' alt=''></td></tr>";
+                    //ImageContentnameTest += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>" + "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px; ' alt=''></td></tr>";
+
+
+                    ImageContent += "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Imagepath/" + v.Image + "' style='width:100px;height:100px;  ' alt=''></td></tr>";
                     ImageContentnameTest += "<tr><td style='padding: 10px; width: 50 %;'>" + v.Heading + "</td></tr>" + "<tr><td style='padding:10px;' valign='top'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + v.Image + "' style='width:100px;height:100px; ' alt=''></td></tr>";
 
                 }
@@ -7899,7 +8219,7 @@ namespace TuvVision.Controllers
 
                     if (ObjModelVisitReport.SubType == "SubSubSub Job")
                     {
-                        if (ObjModelVisitReport.Po_No_SubVendor != string.Empty)
+                        if (ObjModelVisitReport.Po_No_SubVendor != string.Empty && ObjModelVisitReport.SubSubSubPoNo != string.Empty)
                         {
                             body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO + " and" + "<br/> " + ObjModelVisitReport.SubSubSubPoNo + " Dated " + ObjModelVisitReport.SubSubSubPoDate);
                         }
@@ -8235,8 +8555,7 @@ namespace TuvVision.Controllers
                     RM.Po_No = ObjModelVisitReport.Po_No;
 
                     Result = objDalVisitReport.InsertUpdateReport(RM);
-
-                    RM.PK_RM_ID =Convert.ToInt32(Session["GetReportId"]);
+                    RM.PK_RM_ID = Convert.ToInt32(Session["GetReportId"]);
                     DataTable dt = new DataTable();
                     dt = objDalVisitReport.updateIscomfirmation(PK_CALL_ID, RM); //Nikita 
                     if (Result != "" && Result != null)
@@ -8270,7 +8589,7 @@ namespace TuvVision.Controllers
                 //return RedirectToAction("IvrReports", RMData);
                 // return RedirectToAction("VisitReportForm", RM.PK_CALL_ID);
 
-                return RedirectToAction("VisitReportForm", new { PK_Call_ID = RM.PK_CALL_ID, PK_RM_ID=RM.PK_RM_ID });
+                return RedirectToAction("VisitReportForm", new { PK_Call_ID = RM.PK_CALL_ID, PK_RM_ID = RM.PK_RM_ID });
 
             }
             else
@@ -8279,7 +8598,7 @@ namespace TuvVision.Controllers
 
                 //return RedirectToAction("IvrReports", RMData);
                 //return RedirectToAction("VisitReportForm", RM.PK_CALL_ID);
-                return RedirectToAction("VisitReportForm", new { PK_Call_ID = RM.PK_CALL_ID, PK_RM_ID = RM.PK_RM_ID });
+                return RedirectToAction("VisitReportForm", new { PK_Call_ID = RM.PK_CALL_ID  ,PK_RM_ID = RM.PK_RM_ID });
 
             }
         }
@@ -8479,3198 +8798,3240 @@ namespace TuvVision.Controllers
 
 
 
-        //public ActionResult UpdateReports(int? PK_CALL_ID, string flag)
-        //{
-        //    RMData.PK_CALL_ID = Convert.ToInt32(PK_CALL_ID);
-        //    DataTable ItemDescriptionDashBoard = new DataTable();
-        //    DataTable RefranceDocumentsDashBoard = new DataTable();
-        //    DataTable InspectionActivitesDashBoard = new DataTable();
-        //    DataTable DocumentsReviewBoard = new DataTable();
-        //    DataTable EquipmentDetailsBoard = new DataTable();
-        //    DataTable DTVisitTime = new DataTable();
-        //    DataSet DSJobMasterByQtId = new DataSet();
-        //    DataTable ReportDashBoard = new DataTable();
-        //    DataSet UpdateReport = new DataSet();
-        //    DataTable CostSheetDashBoard = new DataTable();
-        //    int count = 0;
-        //    DataTable ImageReportDashBoard = new DataTable();
-        //    List<ReportImageModel> ImageDashBoard = new List<ReportImageModel>();
-        //    List<ItemDescriptionModel> lstCompanyDashBoard = new List<ItemDescriptionModel>();
-        //    List<ReferenceDocumentsModel> RefranceDocuments = new List<ReferenceDocumentsModel>();
-        //    List<InspectionActivitiesModel> InspectionDocuments = new List<InspectionActivitiesModel>();
-        //    List<DocumentRevieweModel> DocumentReview = new List<DocumentRevieweModel>();
-        //    List<EquipmentDetailsModel> EquipmentDetails = new List<EquipmentDetailsModel>();
-        //    List<ReportModel> ReportDashboard = new List<ReportModel>();
-
-        //    List<InspectionvisitReportModel> lstAreasOfConcern = new List<InspectionvisitReportModel>();
-        //    List<InspectionvisitReportModel> lstPendingActivity = new List<InspectionvisitReportModel>();
-
-        //    List<InspectionvisitReportModel> lstVisitReportTime = new List<InspectionvisitReportModel>();
-
-
-        //    DataTable dtAreasOfConcern = new DataTable();
-        //    DataTable dtAreasOfConcernOnPDF = new DataTable();
-        //    DataTable dtPendingActivity = new DataTable();
-
-        //    DataSet dtSrNo = new DataSet();
-        //    string SrNo = "";
-        //    string SubJobDate = string.Empty;
-
-        //    ReportModel RM = new ReportModel();
-        //    string Result = "";
-        //    try
-        //    {
-
-
-        //        if (PK_CALL_ID != 0 || PK_CALL_ID != null)
-        //        {
-
-        //            int i = 0;
-        //            int J = 0;
-        //            int K = 0;
-        //            int L = 0;
-        //            int M = 0;
-        //            int N = 0;
-        //            int A = 0;
-        //            int PA = 0;
-        //            int VT = 0;
-
-        //            #region 
-        //            DSJobMasterByQtId = objDalVisitReport.EditInspectionVisitReportByPKCallID(PK_CALL_ID);
-
-        //            //DSJobMasterByQtId = objDalVisitReport.PrintVisitReport(PK_CALL_ID);
-
-        //            #region ARC first Visit Flag
-        //            string chkIfARC = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["chkARC"]);
-        //            string Count = Convert.ToString(DSJobMasterByQtId.Tables[1].Rows[0]["IVRCount"]);
-
-        //            if (chkIfARC == "1" /*& Count=="1"*/ )
-        //            {
-
-        //                Result = objDalVisitReport.UpdateARCFlagFirstClick(PK_CALL_ID);
-        //            }
-
-        //            //added by shrutika salve  on 16/06/2023 
-        //            if (PK_CALL_ID != 0 || PK_CALL_ID != null)
-        //            {
-
-        //                Result = objDalVisitReport.UpdateDownloadDate(PK_CALL_ID);
-        //            }
-
-        //            #endregion
-
-
-        //            if (DSJobMasterByQtId.Tables[0].Rows.Count > 0)
-        //            {
-        //                ObjModelVisitReport.ItemDescriptionDynamic = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ItemDescriptionDynamic"]);
-        //                ObjModelVisitReport.SAPNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SAP_No"]);
-        //                ObjModelVisitReport.Branch = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Branch"]);
-        //                ObjModelVisitReport.Sap_And_Controle_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sap_And_Controle_No"]);
-        //                ObjModelVisitReport.PK_IVR_ID = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_IVR_ID"]);
-        //                ObjModelVisitReport.Project_Name_Location = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Project_Name_Location"]);
-        //                ObjModelVisitReport.Address_Of_Inspection = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Address_Of_Inspection"]);
-        //                ObjModelVisitReport.End_user_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["End_user_Name"]);
-        //                ObjModelVisitReport.Vendor_Name_Location = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Vendor_Name_Location"]);
-        //                ObjModelVisitReport.PK_Call_ID = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_Call_ID"]);
-        //                ObjModelVisitReport.Notification_Name_No_Date = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Notification_Name_No_Date"]);
-
-        //                ObjModelVisitReport.Date_Of_Inspection = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Date_Of_Inspection"]);
-        //                ObjModelVisitReport.Client_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Client_Name"]);
-        //                ObjModelVisitReport.DEC_PMC_EPC_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["DEC_PMC_EPC_Name"]);
-        //                ObjModelVisitReport.DEC_PMC_EPC_Assignment_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["DEC_PMC_EPC_Assignment_No"]);
-        //                ObjModelVisitReport.Po_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Po_No"]);
-        //                //ObjModelVisitReport.Sub_Vendor_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_Name"]);
-        //                //ObjModelVisitReport.Po_No_SubVendor = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Po_No_SubVendor"]);
-        //                //ObjModelVisitReport.SubJob_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubJob_No"]);
-
-        //                ObjModelVisitReport.Po_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Po_Number"]);
-        //                ObjModelVisitReport.Sub_Vendor_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubVendorName"]);
-        //                ObjModelVisitReport.Po_No_SubVendor = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubVendorPoNo"]);
-        //                ObjModelVisitReport.SubJob_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubJob_No"]);
-        //                ObjModelVisitReport.Date_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Date_of_PO"]);
-        //                ObjModelVisitReport.SubSubVendorDate_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubSubVendorPODate"]);
-
-        //                ObjModelVisitReport.SubSubSubVendorName = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorName"]);
-        //                ObjModelVisitReport.SubSubSubPoNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorPoNo"]);
-        //                ObjModelVisitReport.SubSubSubPoDate = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorPoDate"]);
-        //                ObjModelVisitReport.SubType = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["JobType"]);
-
-
-        //                DataSet DsSubJobDate = new DataSet();
-        //                DsSubJobDate = objDalVisitReport.getsubJobdate(ObjModelVisitReport.SubJob_No);
-
-
-        //                if (DsSubJobDate.Tables[0].Rows.Count > 0)
-        //                {
-        //                    SubJobDate = DsSubJobDate.Tables[0].Rows[0]["SubJobDate"].ToString();
-        //                }
-
-
-        //                int kick = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Kick_Off_Pre_Inspection"]);
-        //                ObjModelVisitReport.Kick_Off_Pre_Inspection = Convert.ToBoolean(kick);
-
-        //                int Mi = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Material_identification"]);
-        //                ObjModelVisitReport.Material_identification = Convert.ToBoolean(Mi);
-
-        //                int Interim_Stages = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Interim_Stages"]);
-        //                ObjModelVisitReport.Interim_Stages = Convert.ToBoolean(Interim_Stages);
-
-        //                int Document_review = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Document_review"]);
-        //                ObjModelVisitReport.Document_review = Convert.ToBoolean(Document_review);
-
-        //                int Final_Inspection = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Final_Inspection"]);
-        //                ObjModelVisitReport.Final_Inspection = Convert.ToBoolean(Final_Inspection);
-
-        //                int Re_inspection = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Re_inspection"]);
-        //                ObjModelVisitReport.Re_inspection = Convert.ToBoolean(Re_inspection);
-
-        //                int MasterListOfcalibratedInstruments = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["MasterListOfcalibratedInstruments"]);
-        //                ObjModelVisitReport.MasterListOfcalibratedInstruments = Convert.ToBoolean(MasterListOfcalibratedInstruments);
-
-
-        //                ObjModelVisitReport.CanIRNbeissued = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["CanIRNbeissued"]);
-        //                ObjModelVisitReport.IssuedPOItemNumbers = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IssuedPOItemNumbers"]);
-        //                ObjModelVisitReport.ReasonName = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReasonName"]);
-
-        //                //if (ObjModelVisitReport.CanIRNbeissued == "Yes")
-        //                //{
-        //                //    ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for all items " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + ".";
-        //                //}
-        //                //else if (ObjModelVisitReport.CanIRNbeissued == "Partially")
-        //                //{
-        //                //    ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for PO item Numbers " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + " for remaining " + ObjModelVisitReport.ReasonName.ToString() + ".";
-        //                //}
-        //                //else if (ObjModelVisitReport.CanIRNbeissued == "No")
-        //                //{
-        //                //    ObjModelVisitReport.CanIRNbeissued = "IRN can not be issued for all PO items because " + ObjModelVisitReport.ReasonName.ToString() + ".";
-        //                //}
-        //                //else
-        //                //{
-        //                //    ObjModelVisitReport.CanIRNbeissued = "";
-        //                //}
-        //                if (ObjModelVisitReport.CanIRNbeissued == "Yes")
-        //                {
-        //                    // ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for all items " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + ".";
-        //                    ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for all inspected items " + "(" + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + ") .";
-        //                }
-        //                else if (ObjModelVisitReport.CanIRNbeissued == "Partially")
-        //                {
-        //                    ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for PO item Numbers " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + " for remaining " + ObjModelVisitReport.ReasonName.ToString() + ".";
-        //                }
-        //                else if (ObjModelVisitReport.CanIRNbeissued == "No")
-        //                {
-        //                    ObjModelVisitReport.CanIRNbeissued = "IRN can not be issued for all PO items because " + ObjModelVisitReport.ReasonName.ToString() + ".";
-        //                }
-        //                else
-        //                {
-        //                    ObjModelVisitReport.CanIRNbeissued = "";
-        //                }
-
-
-
-        //                ObjModelVisitReport.Conclusion = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Conclusion"]);
-        //                ObjModelVisitReport.Pending_Activites = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Pending_Activites"]);
-        //                ObjModelVisitReport.Identification_Of_Inspected = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Identification_Of_Inspected"]);
-        //                ObjModelVisitReport.Areas_Of_Concerns = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Areas_Of_Concerns"]);
-        //                ObjModelVisitReport.Non_Conformities_raised = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Non_Conformities_raised"]);
-        //                ObjModelVisitReport.Signatures = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Signatures"]);
-        //                ObjModelVisitReport.Type = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Type"]);
-        //                //ObjModelVisitReport.Report_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Report_No"]);
-        //                ObjModelVisitReport.Report_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReportNo"]);
-        //                ObjModelVisitReport.Call_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Call_No"]);
-        //                //ObjModelVisitReport.Signatures = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Signature"]);
-        //                ObjModelVisitReport.Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["FirstName"]) + " " + Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["LastName"]);
-        //                ObjModelVisitReport.ReportCreatedDate = Convert.ToDateTime(DSJobMasterByQtId.Tables[0].Rows[0]["CreatedDate"]).ToString("dd/MM/yyyy");
-
-        //                int Inspection_records = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Inspection_records"]);
-        //                ObjModelVisitReport.Inspection_records = Convert.ToBoolean(Inspection_records);
-
-        //                int Inspection_Photo = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Inspection_Photo"]);
-        //                ObjModelVisitReport.Inspection_Photo = Convert.ToBoolean(Inspection_Photo);
-
-        //                int Other_Specify = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Other_Specify"]);
-        //                ObjModelVisitReport.Other_Specify = Convert.ToBoolean(Other_Specify);
-        //                ObjModelVisitReport.InspectiobRecord_Remark = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["InspectiobRecord_Remark"]);
-        //                ObjModelVisitReport.OtherSpecifyRecords = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["OtherSpecifyRecords"]);
-
-
-        //                ObjModelVisitReport.SubJob_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubJob_No"]);
-        //                ObjModelVisitReport.PK_SubJob_Id = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_SubJob_Id"]);
-
-
-        //                ObjModelVisitReport.Type = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Type"]);
-
-
-        //                ObjModelVisitReport.TempInspectionPhotosNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["TempInspectionPhotosNo"]);
-        //                ObjModelVisitReport.TempMaster_List_Of_calibrated_Instruments = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["TempMaster_List_Of_calibrated_Instruments"]);
-        //                int DTUVIndiaClientEndUser = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["DTUVIndiaClientEndUser"]);
-        //                ObjModelVisitReport.DTUVIndiaClientEndUser = Convert.ToBoolean(DTUVIndiaClientEndUser);
-        //                int DTUVIndiaExecuting_Originating_Branch = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["DTUVIndiaExecuting_Originating_Branch"]);
-        //                ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch = Convert.ToBoolean(DTUVIndiaExecuting_Originating_Branch);
-        //                int DVendor_Sub_Vendor = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["DVendor_Sub_Vendor"]);
-        //                ObjModelVisitReport.DVendor_Sub_Vendor = Convert.ToBoolean(DVendor_Sub_Vendor);
-        //                ObjModelVisitReport.ReviseReason = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReviseReason"]);
-        //                ObjModelVisitReport.ReviseReportNoForPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReviseReportNoForPDF"]);
-        //                ObjModelVisitReport.ReportNoForPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReportNoForPDF"]);
-        //                // ObjModelVisitReport.Date_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Date_of_PO"]);
-        //                //ObjModelVisitReport.SubSubVendorDate_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubvendorPODate1"]);
-        //                ObjModelVisitReport.Expenses = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Expenses"]);
-        //                ObjModelVisitReport.DownloadPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Report"]);
-        //                ObjModelVisitReport.Intime = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Intime"]);
-        //                ObjModelVisitReport.Outtime = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Outtime"]);
-        //                ObjModelVisitReport.CustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["CustomerSpecificReportNumber"]);
-        //                ObjModelVisitReport.IsCustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsCustomerSpecificReportNumber"]);
-        //                ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IfConcernsDisplayOfPDF"]);
-        //                ObjModelVisitReport.ShowCount = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ShowCount"]);
-        //                ObjModelVisitReport.DisplayTotalQuantity = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["DisplayTotalQuantity"]);
-
-
-        //                ObjModelVisitReport.PO_QuantityTotal1 = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["PO_QuantityTotal"]);
-        //                ObjModelVisitReport.Offered_QuantityTotal1 = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Offered_QuantityTotal"]);
-        //                ObjModelVisitReport.Accepted_QuantityTotal1 = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Accepted_QuantityTotal"]);
-        //                ObjModelVisitReport.IsComfirmation = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);
-
-        //            }
-        //            else
-        //            {
-
-        //                InspectionvisitReportModel Abc = new InspectionvisitReportModel();
-        //                Abc.PK_Call_ID = PK_CALL_ID;
-        //                return RedirectToAction("VisitReportForm", Abc);
-        //            }
-        //            #endregion
-
-
-        //            #region  item Description
-
-        //            ItemDescriptionDashBoard = objDalVisitReport.GetitemDescription(PK_CALL_ID);
-        //            if (ItemDescriptionDashBoard.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in ItemDescriptionDashBoard.Rows)
-        //                {
-        //                    lstCompanyDashBoard.Add(
-        //                        new ItemDescriptionModel
-        //                        {
-        //                            PK_ItemD_Id = Convert.ToInt32(dr["PK_ItemD_Id"]),
-        //                            Po_Item_No = Convert.ToString(dr["Po_Item_No"]),
-        //                            ItemCode_Description = Convert.ToString(dr["ItemCode_Description"]),
-        //                            Po_Quantity = Convert.ToString(dr["Po_Quantity"]),
-        //                            Offered_Quantity = Convert.ToString(dr["Offered_Quantity"]),
-        //                            PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
-        //                            Item_Code = Convert.ToString(dr["Item_Code"]),
-        //                            Accepted_Quantity = Convert.ToString(dr["Accepted_Quantity"]),
-        //                            Cumulative_Accepted_Qty = Convert.ToString(dr["Cumulative_Accepted_Qty"]),
-        //                            Unit = Convert.ToString(dr["Unit"]),
-        //                            HeatNumber = Convert.ToString(dr["HeatNumber"]),
-        //                            TotalQuantity = Convert.ToString(dr["TotalQuantity"]),
-        //                        }
-        //                        );
-        //                }
-        //            }
-        //            #endregion
-
-
-        //            #region Reference Documents
-
-        //            RefranceDocumentsDashBoard = objDalVisitReport.GetReferenceDocuments(PK_CALL_ID);
-        //            if (RefranceDocumentsDashBoard.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in RefranceDocumentsDashBoard.Rows)
-        //                {
-        //                    RefranceDocuments.Add(
-        //                        new ReferenceDocumentsModel
-        //                        {
-        //                            Document_No = Convert.ToString(dr["Document_No"]),
-        //                            Document_Name = Convert.ToString(dr["Document_Name"]),
-        //                            Approval_Status = Convert.ToString(dr["Approval_Status"]),
-        //                            PK_RD_ID = Convert.ToInt32(dr["PK_RD_ID"]),
-        //                            PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
-        //                            VendorDocumentNumber = Convert.ToString(dr["VendorDocumentNumber"])
-        //                        }
-        //                        );
-        //                }
-        //            }
-        //            #endregion
-
-
-        //            #region Inspection Activities
-        //            InspectionActivitesDashBoard = objDalVisitReport.GetInspectionActivities(PK_CALL_ID);
-        //            if (InspectionActivitesDashBoard.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in InspectionActivitesDashBoard.Rows)
-        //                {
-        //                    InspectionDocuments.Add(
-        //                        new InspectionActivitiesModel
-        //                        {
-        //                            Stages_Witnessed = Convert.ToString(dr["Stages_Witnessed"]),
-        //                            PK_IA_ID = Convert.ToInt32(dr["PK_IA_ID"]),
-        //                            PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
-
-        //                        }
-        //                        );
-        //                }
-        //            }
-        //            #endregion
-
-        //            #region Documents Review
-        //            DocumentsReviewBoard = objDalVisitReport.GetDocumentRevieweModelByCall_Id(PK_CALL_ID);
-        //            if (DocumentsReviewBoard.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in DocumentsReviewBoard.Rows)
-        //                {
-        //                    DocumentReview.Add(
-        //                        new DocumentRevieweModel
-        //                        {
-        //                            Description = Convert.ToString(dr["Description"]),
-        //                            PK_DR_ID = Convert.ToInt32(dr["PK_DR_ID"]),
-        //                            PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
-
-        //                        }
-        //                        );
-        //                }
-        //            }
-        //            #endregion
-
-        //            #region Equipments Details
-        //            EquipmentDetailsBoard = objDalVisitReport.GetEquipmentDetailsModelByCall_Id(PK_CALL_ID);
-        //            if (EquipmentDetailsBoard.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in EquipmentDetailsBoard.Rows)
-        //                {
-        //                    EquipmentDetails.Add(
-        //                        new EquipmentDetailsModel
-        //                        {
-        //                            Name_Of_Equipments = Convert.ToString(dr["Name_Of_Equipments"]),
-        //                            Range = Convert.ToString(dr["Range"]),
-        //                            Id = Convert.ToString(dr["Id"]),
-        //                            CalibrationValid_Till_date = Convert.ToString(dr["CalibrationValid_Till_date"]),
-        //                            Certification_No_Date = Convert.ToString(dr["Certification_No_Date"]),
-        //                            PK_DOE_Id = Convert.ToInt32(dr["PK_DOE_Id"]),
-        //                            PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
-        //                            SNABLseenote1 = Convert.ToString(dr["NABLseenote1"]) == "True" ? "Yes" : "-",
-
-        //                            SNonNABLseenote2 = Convert.ToString(dr["NonNABLseenote2"]) == "True" ? "Yes" : "-"
-        //                        }
-        //                        );
-        //                }
-        //            }
-        //            #endregion
-
-        //            #region Get Visit Time
-        //            DTVisitTime = objDalVisitReport.GetVisitTime(PK_CALL_ID);
-        //            if (DTVisitTime.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in DTVisitTime.Rows)
-        //                {
-        //                    lstVisitReportTime.Add(
-        //                        new InspectionvisitReportModel
-        //                        {
-        //                            DateSe = Convert.ToString(dr["DateSe"]),
-        //                            Intime = Convert.ToString(dr["Intime"]),
-        //                            Outtime = Convert.ToString(dr["Outtime"]),
-
-        //                        }
-        //                        );
-        //                }
-        //            }
-        //            #endregion
-
-
-
-        //            #region report Count
-        //            UpdateReport = objDalVisitReport.GetReportByLastId(PK_CALL_ID);
-        //            if (UpdateReport.Tables[0].Rows.Count > 0)
-        //            {
-        //                RM.PK_RM_ID = Convert.ToInt32(UpdateReport.Tables[0].Rows[0]["PK_RM_ID"]);
-        //                RM.Report = Convert.ToString(UpdateReport.Tables[0].Rows[0]["Report"]);
-        //                //RM.ImageReport = Convert.ToString(UpdateReport.Tables[0].Rows[0]["ImageReport"]);
-        //            }
-
-        //            #region report Count
-        //            ReportDashBoard = objDalVisitReport.GetReportByCall_Id(PK_CALL_ID);
-        //            if (ReportDashBoard.Rows.Count > 0)
-        //            {
-        //                int counts = ReportDashBoard.Rows.Count;
-        //                count = counts - 1;
-        //            }
-        //            string countNo = Convert.ToString(count);
-        //            #endregion
-        //            #endregion
-
-
-        //            #region Report Image data
-        //            ImageReportDashBoard = objDalVisitReport.GetReportImageByCall_Id(PK_CALL_ID);
-        //            if (ImageReportDashBoard.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in ImageReportDashBoard.Rows)
-        //                {
-        //                    ImageDashBoard.Add(
-        //                        new ReportImageModel
-        //                        {
-        //                            Image = Convert.ToString(dr["Image"]),
-        //                            Heading = Convert.ToString(dr["Heading"]),
-        //                        }
-        //                        );
-        //                }
-        //            }
-        //            #endregion
-
-
-        //            #region  Areas of Concern
-        //            dtAreasOfConcern = objDalVisitReport.GetAreasOfConcern(PK_CALL_ID);
-        //            if (dtAreasOfConcern.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in dtAreasOfConcern.Rows)
-        //                {
-        //                    lstAreasOfConcern.Add(
-        //                        new InspectionvisitReportModel
-        //                        {
-        //                            Areas_Of_Concerns = Convert.ToString(dr["Areas_Of_Concerns"]),
-
-        //                        }
-        //                        );
-        //                }
-        //            }
-
-        //            #endregion
-
-        //            #region  Pending Activities
-        //            dtPendingActivity = objDalVisitReport.GetPendingActivity(PK_CALL_ID);
-        //            if (dtPendingActivity.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in dtPendingActivity.Rows)
-        //                {
-        //                    lstPendingActivity.Add(
-        //                        new InspectionvisitReportModel
-        //                        {
-        //                            Pending_Activites = Convert.ToString(dr["Pending_Activity"]),
-
-        //                        }
-        //                        );
-        //                }
-        //            }
-
-        //            #endregion
-
-        //            #region Image Save to pdf
-        //            SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";
-        //            System.Text.StringBuilder strss = new System.Text.StringBuilder();
-
-        //            string bodys = string.Empty;
-        //            string ImageContent = string.Empty;
-        //            string ReportNames = string.Empty;
-        //            string paths = string.Empty;
-        //            int img = 0;
-        //            int imagecount = ImageReportDashBoard.Rows.Count;
-        //            int rows = imagecount / 2;
-        //            int imageposted = 0;
-        //            int reminder = (imagecount % 2);
-        //            int iteration = 1;
-        //            StreamReader reader;
-
-        //            //using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //            //{
-        //            //    bodys = reader.ReadToEnd();
-        //            //}
-
-
-        //            ///First File start
-        //            PdfPageSize pageSizes = PdfPageSize.A4;
-        //            PdfPageOrientation pdfOrientations = PdfPageOrientation.Portrait;
-
-        //            HtmlToPdf converters = new HtmlToPdf();
-
-        //            #endregion
-
-        //            #region Comment 11 June
-
-        //            converters.Options.DisplayFooter = true || true || true;
-
-        //            if (Directory.Exists(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No)))
-        //            {
-        //                string[] files = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
-        //                foreach (string file in files)
-        //                {
-        //                    System.IO.File.Delete(file);
-
-        //                }
-
-        //                Directory.Delete(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
-        //            }
-
-        //            Directory.CreateDirectory(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
-
-        //            #region Vaibhav If Images count less than 6
-
-        //            if (imagecount <= 6)
-        //            {
-        //                for (int ic = 0; ic < rows; ic++)
-        //                {
-        //                    if (imageposted > 0)
-        //                    {
-        //                        if ((imageposted % 6) == 0)
-        //                        {
-        //                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //                            {
-        //                                bodys = reader.ReadToEnd();
-        //                            }
-
-        //                            bodys = bodys.Replace("[Image]", ImageContent);
-        //                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
-
-        //                            #region Initial setting vaibhav
-        //                            //strs.Append(body);
-        //                            PdfPageSize vpageSize = PdfPageSize.A4;
-        //                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
-        //                            HtmlToPdf Vconverter = new HtmlToPdf();
-
-        //                            // set the page timeout (in seconds)
-        //                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                            Vconverter.Options.PdfPageSize = vpageSize;
-        //                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
-        //                            #endregion
-
-
-        //                            #region Header and Footer Vaibhav
-        //                            #region Heder code
-        //                            string _VHeader = string.Empty;
-        //                            string _Vfooter = string.Empty;
-
-        //                            // for Report header by abel
-        //                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //                            _VHeader = _VreadHeader_File.ReadToEnd();
-        //                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
-        //                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-        //                            //_VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
-        //                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-        //                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
-        //                            #endregion
-
-
-        //                            #region Generate no
-        //                            if (RM.Report == null)
-        //                            {
-
-        //                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                                if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                                {
-        //                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                                }
-        //                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
-        //                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
-
-        //                            }
-        //                            else
-        //                            {
-        //                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                                if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                                {
-        //                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                                }
-
-        //                                //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-        //                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
-        //                                {
-        //                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
-        //                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
-        //                                }
-        //                                else
-        //                                {
-        //                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-
-        //                                }
-        //                            }
-        //                            #endregion
-
-        //                            #region Footer Code
-
-        //                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                            _Vfooter = _VreadFooter_File.ReadToEnd();
-        //                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
-        //                            // header settings
-        //                            Vconverter.Options.DisplayHeader = true || true || true;
-        //                            Vconverter.Header.DisplayOnFirstPage = true;
-        //                            Vconverter.Header.DisplayOnOddPages = true;
-        //                            Vconverter.Header.DisplayOnEvenPages = true;
-        //                            Vconverter.Header.Height = 75;
-
-        //                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
-        //                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                            Vconverter.Header.Add(VheaderHtml);
-
-        //                            // footer settings
-        //                            Vconverter.Options.DisplayFooter = true || true || true;
-        //                            Vconverter.Footer.DisplayOnFirstPage = true;
-        //                            Vconverter.Footer.DisplayOnOddPages = true;
-        //                            Vconverter.Footer.DisplayOnEvenPages = true;
-
-        //                            //Vconverter.Footer.Height = 150;
-        //                            Vconverter.Footer.Height = 105;
-        //                            //converter.Footer.Height = 120;
-
-        //                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
-        //                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                            Vconverter.Footer.Add(VfooterHtml);
-
-        //                            //end abel code
-
-
-        //                            //// page numbers can be added using a PdfTextSection object
-        //                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-        //                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
-        //                            //Vconverter.Footer.Add(Vtext1);
-        //                            #endregion
-        //                            #endregion
-
-        //                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
-        //                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
-
-
-
-        //                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
-        //                            docs.Save(paths + '\\' + ReportNames);
-        //                            docs.Close();
-        //                            bodys = string.Empty;
-        //                            ImageContent = string.Empty;
-        //                            iteration = iteration + 1;
-        //                            ViewBag.Reminder = "1";
-        //                        }
-        //                    }
-
-        //                    ImageContent += "<tr><td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img]["Heading"].ToString() + "</td>";
-        //                    ImageContent += "<td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img + 1]["Heading"].ToString() + "</td></tr>";
-
-        //                    ImageContent += "<tr><td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[img]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td>";
-        //                    ImageContent += "<td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[img + 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
-
-        //                    img = img + 2;
-        //                    imageposted = imageposted + 2;
-        //                }
-
-
-
-        //                #region Reminder = 1
-
-        //                if (reminder == 1)
-        //                {
-        //                    //if (ImageContent != string.Empty)
-        //                    //{
-        //                    //    ImageContent += "<tr><td style='padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
-        //                    //    ImageContent += "<tr><td style='padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
-        //                    //}
-        //                    //else
-        //                    //{
-        //                    //    ImageContent = "<tr><td style='padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
-        //                    //    ImageContent += "<tr><td style='padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
-        //                    //}
-
-        //                    if (ImageContent != string.Empty)
-        //                    {
-        //                        ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
-        //                        ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
-        //                    }
-        //                    else
-        //                    {
-        //                        ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
-        //                        ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
-        //                    }
-
-
-        //                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //                    {
-        //                        bodys = reader.ReadToEnd();
-        //                    }
-        //                    bodys = bodys.Replace("[Image]", ImageContent);
-        //                    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
-
-        //                    #region Initial setting vaibhav
-        //                    //strs.Append(body);
-        //                    PdfPageSize vpageSize = PdfPageSize.A4;
-        //                    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
-        //                    HtmlToPdf Vconverter = new HtmlToPdf();
-
-        //                    // set the page timeout (in seconds)
-        //                    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                    Vconverter.Options.PdfPageSize = vpageSize;
-        //                    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
-        //                    #endregion
-
-
-        //                    #region Header and Footer Vaibhav
-        //                    #region Heder code
-        //                    string _VHeader = string.Empty;
-        //                    string _Vfooter = string.Empty;
-
-        //                    // for Report header by abel
-        //                    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //                    _VHeader = _VreadHeader_File.ReadToEnd();
-        //                    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
-        //                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-        //                    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-        //                    _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
-
-        //                    #endregion
-
-
-        //                    #region Generate no
-        //                    if (RM.Report == null)
-        //                    {
-
-        //                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                        }
-        //                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
-        //                        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
-
-        //                    }
-        //                    else
-        //                    {
-        //                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                        }
-
-        //                        // _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-        //                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
-        //                        {
-        //                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
-        //                            _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
-        //                        }
-        //                        else
-        //                        {
-        //                            _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-
-        //                        }
-        //                    }
-        //                    #endregion
-
-        //                    #region Footer Code
-
-        //                    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                    _Vfooter = _VreadFooter_File.ReadToEnd();
-        //                    _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
-        //                    // header settings
-        //                    Vconverter.Options.DisplayHeader = true || true || true;
-        //                    Vconverter.Header.DisplayOnFirstPage = true;
-        //                    Vconverter.Header.DisplayOnOddPages = true;
-        //                    Vconverter.Header.DisplayOnEvenPages = true;
-        //                    Vconverter.Header.Height = 75;
-
-        //                    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
-        //                    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Header.Add(VheaderHtml);
-
-        //                    // footer settings
-        //                    Vconverter.Options.DisplayFooter = true || true || true;
-        //                    Vconverter.Footer.DisplayOnFirstPage = true;
-        //                    Vconverter.Footer.DisplayOnOddPages = true;
-        //                    Vconverter.Footer.DisplayOnEvenPages = true;
-
-        //                    //Vconverter.Footer.Height = 150;
-        //                    Vconverter.Footer.Height = 105;
-        //                    //converter.Footer.Height = 120;
-
-        //                    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
-        //                    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Footer.Add(VfooterHtml);
-
-        //                    //end abel code
-
-
-        //                    //// page numbers can be added using a PdfTextSection object
-        //                    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-        //                    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
-        //                    //Vconverter.Footer.Add(Vtext1);
-        //                    #endregion
-        //                    #endregion
-
-
-
-        //                    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
-        //                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
-
-        //                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
-        //                    docs.Save(paths + '\\' + ReportNames);
-        //                    docs.Close();
-        //                    bodys = string.Empty;
-        //                    ImageContent = string.Empty;
-        //                    ViewBag.Reminder = "1";
-        //                }
-
-        //                #region 4 Image If not reminder =0
-        //                if (imageposted <= imagecount)
-        //                {
-        //                    if (reminder == 0)
-        //                    {
-        //                        ViewBag.Reminder = "2";
-        //                        using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //                        {
-        //                            bodys = reader.ReadToEnd();
-        //                        }
-        //                        bodys = bodys.Replace("[Image]", ImageContent);
-
-        //                        bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
-
-
-
-        //                        #region Initial setting vaibhav
-        //                        //strs.Append(body);
-        //                        PdfPageSize vpageSize = PdfPageSize.A4;
-        //                        PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
-        //                        HtmlToPdf Vconverter = new HtmlToPdf();
-
-        //                        // set the page timeout (in seconds)
-        //                        Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                        Vconverter.Options.PdfPageSize = vpageSize;
-        //                        Vconverter.Options.PdfPageOrientation = vpdfOrientation;
-        //                        #endregion
-
-
-        //                        #region Header and Footer Vaibhav
-        //                        #region Heder code
-        //                        string _VHeader = string.Empty;
-        //                        string _Vfooter = string.Empty;
-
-        //                        // for Report header by abel
-        //                        StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //                        _VHeader = _VreadHeader_File.ReadToEnd();
-        //                        _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                        _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
-        //                        /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-        //                        _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-        //                        _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
-
-        //                        #endregion
-
-
-        //                        #region Generate no
-        //                        if (RM.Report == null)
-        //                        {
-
-        //                            dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                            if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                            {
-        //                                SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                            }
-        //                            RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
-        //                            _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
-
-        //                        }
-        //                        else
-        //                        {
-        //                            //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                            dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                            if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                            {
-        //                                SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                            }
-
-        //                            //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-        //                            if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
-        //                            {
-        //                                string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
-        //                                _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
-        //                            }
-        //                            else
-        //                            {
-        //                                _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-
-        //                            }
-        //                        }
-        //                        #endregion
-
-        //                        #region Footer Code
-
-        //                        StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                        _Vfooter = _VreadFooter_File.ReadToEnd();
-        //                        _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
-        //                        // header settings
-        //                        Vconverter.Options.DisplayHeader = true || true || true;
-        //                        Vconverter.Header.DisplayOnFirstPage = true;
-        //                        Vconverter.Header.DisplayOnOddPages = true;
-        //                        Vconverter.Header.DisplayOnEvenPages = true;
-        //                        Vconverter.Header.Height = 75;
-
-        //                        PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
-        //                        VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                        Vconverter.Header.Add(VheaderHtml);
-
-        //                        // footer settings
-        //                        Vconverter.Options.DisplayFooter = true || true || true;
-        //                        Vconverter.Footer.DisplayOnFirstPage = true;
-        //                        Vconverter.Footer.DisplayOnOddPages = true;
-        //                        Vconverter.Footer.DisplayOnEvenPages = true;
-
-        //                        //Vconverter.Footer.Height = 150;
-        //                        Vconverter.Footer.Height = 105;
-        //                        //converter.Footer.Height = 120;
-
-        //                        PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
-        //                        VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                        Vconverter.Footer.Add(VfooterHtml);
-
-        //                        //end abel code
-
-
-        //                        //// page numbers can be added using a PdfTextSection object
-        //                        //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-        //                        //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
-        //                        //Vconverter.Footer.Add(Vtext1);
-        //                        #endregion
-        //                        #endregion
-
-        //                        Vconverter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
-        //                        Vconverter.Options.AutoFitHeight = HtmlToPdfPageFitMode.NoAdjustment;
-
-
-
-        //                        // SelectPdf.PdfDocument docs = converters.ConvertHtmlString(bodys);
-        //                        SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
-
-        //                        ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
-        //                        paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
-        //                        docs.Save(paths + '\\' + ReportNames);
-        //                        docs.Close();
-        //                        bodys = string.Empty;
-        //                        ImageContent = string.Empty;
-        //                        iteration = iteration + 1;
-        //                    }
-        //                }
-
-        //                #endregion
-
-
-        //                #region 20 Feb 2021 Resolve blank page if Image count 6 
-        //                #region 6 Images
-        //                //if (((imageposted % 6) == 0) && imageposted > 0)
-        //                //{
-        //                //    ViewBag.Reminder = "2";
-        //                //    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //                //    {
-        //                //        bodys = reader.ReadToEnd();
-        //                //    }
-        //                //    bodys = bodys.Replace("[Image]", ImageContent);
-        //                //    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
-
-
-
-        //                //    #region Initial setting vaibhav
-        //                //    //strs.Append(body);
-        //                //    PdfPageSize vpageSize = PdfPageSize.A4;
-        //                //    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
-        //                //    HtmlToPdf Vconverter = new HtmlToPdf();
-
-        //                //    // set the page timeout (in seconds)
-        //                //    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                //    Vconverter.Options.PdfPageSize = vpageSize;
-        //                //    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
-        //                //    #endregion
-
-
-        //                //    #region Header and Footer Vaibhav
-        //                //    #region Heder code
-        //                //    string _VHeader = string.Empty;
-        //                //    string _Vfooter = string.Empty;
-
-        //                //    // for Report header by abel
-        //                //    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //                //    _VHeader = _VreadHeader_File.ReadToEnd();
-        //                //    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                //    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
-        //                //    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-        //                //    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
-
-
-        //                //    #endregion
-
-
-        //                //    #region Generate no
-        //                //    if (RM.Report == null)
-        //                //    {
-
-        //                //        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                //        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                //        {
-        //                //            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                //        }
-        //                //        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
-        //                //        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
-
-        //                //    }
-        //                //    else
-        //                //    {
-        //                //        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                //        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                //        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                //        {
-        //                //            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                //        }
-
-        //                //        _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-        //                //    }
-        //                //    #endregion
-
-        //                //    #region Footer Code
-
-        //                //    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                //    _Vfooter = _VreadFooter_File.ReadToEnd();
-
-        //                //    // header settings
-        //                //    Vconverter.Options.DisplayHeader = true || true || true;
-        //                //    Vconverter.Header.DisplayOnFirstPage = true;
-        //                //    Vconverter.Header.DisplayOnOddPages = true;
-        //                //    Vconverter.Header.DisplayOnEvenPages = true;
-        //                //    Vconverter.Header.Height = 75;
-
-        //                //    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
-        //                //    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                //    Vconverter.Header.Add(VheaderHtml);
-
-        //                //    // footer settings
-        //                //    Vconverter.Options.DisplayFooter = true || true || true;
-        //                //    Vconverter.Footer.DisplayOnFirstPage = true;
-        //                //    Vconverter.Footer.DisplayOnOddPages = true;
-        //                //    Vconverter.Footer.DisplayOnEvenPages = true;
-
-        //                //    //Vconverter.Footer.Height = 150;
-        //                //    Vconverter.Footer.Height = 105;
-        //                //    //converter.Footer.Height = 120;
-
-        //                //    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
-        //                //    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                //    Vconverter.Footer.Add(VfooterHtml);
-
-        //                //    //end abel code
-
-
-        //                //    // page numbers can be added using a PdfTextSection object
-        //                //    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-        //                //    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
-        //                //    //Vconverter.Footer.Add(Vtext1);
-        //                //    #endregion
-        //                //    #endregion
-
-
-
-
-
-        //                //    // SelectPdf.PdfDocument docs = converters.ConvertHtmlString(bodys);
-        //                //    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
-
-        //                //    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
-        //                //    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
-        //                //    docs.Save(paths + '\\' + ReportNames);
-        //                //    docs.Close();
-        //                //    bodys = string.Empty;
-        //                //    ImageContent = string.Empty;
-        //                //    iteration = iteration + 1;
-        //                //}
-        //                #endregion
-        //                #endregion
-
-
-
-
-        //            }
-        //            #endregion
-
-
-
-
-
-
-        //            #endregion
-
-
-        //            #region Vaibhav If Images count more than 6
-        //            else
-        //            {
-        //                for (int ic = 0; ic < rows; ic++)
-        //                {
-        //                    if (imageposted > 0)
-        //                    {
-        //                        if ((imageposted % 6) == 0)
-        //                        {
-        //                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //                            {
-        //                                bodys = reader.ReadToEnd();
-        //                            }
-
-        //                            bodys = bodys.Replace("[Image]", ImageContent);
-
-        //                            bodys = bodys.Replace("[Logos]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
-
-        //                            #region Initial setting vaibhav
-        //                            //strs.Append(body);
-        //                            PdfPageSize vpageSize = PdfPageSize.A4;
-        //                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
-        //                            HtmlToPdf Vconverter = new HtmlToPdf();
-
-        //                            // set the page timeout (in seconds)
-        //                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                            Vconverter.Options.PdfPageSize = vpageSize;
-        //                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
-        //                            #endregion
-
-
-        //                            #region Header and Footer Vaibhav
-        //                            #region Heder code
-        //                            string _VHeader = string.Empty;
-        //                            string _Vfooter = string.Empty;
-
-        //                            // for Report header by abel
-        //                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //                            _VHeader = _VreadHeader_File.ReadToEnd();
-        //                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
-        //                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-        //                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-        //                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
-
-        //                            #endregion
-
-
-        //                            #region Generate no
-        //                            if (RM.Report == null)
-        //                            {
-
-        //                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                                if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                                {
-        //                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                                }
-        //                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
-        //                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
-
-        //                            }
-        //                            else
-        //                            {
-        //                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                                if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                                {
-        //                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                                }
-
-        //                                //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-        //                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
-        //                                {
-        //                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
-        //                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
-        //                                }
-        //                                else
-        //                                {
-        //                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-
-        //                                }
-        //                            }
-        //                            #endregion
-
-        //                            #region Footer Code
-
-        //                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                            _Vfooter = _VreadFooter_File.ReadToEnd();
-        //                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
-        //                            // header settings
-        //                            Vconverter.Options.DisplayHeader = true || true || true;
-        //                            Vconverter.Header.DisplayOnFirstPage = true;
-        //                            Vconverter.Header.DisplayOnOddPages = true;
-        //                            Vconverter.Header.DisplayOnEvenPages = true;
-        //                            Vconverter.Header.Height = 75;
-
-        //                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
-        //                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                            Vconverter.Header.Add(VheaderHtml);
-
-        //                            // footer settings
-        //                            Vconverter.Options.DisplayFooter = true || true || true;
-        //                            Vconverter.Footer.DisplayOnFirstPage = true;
-        //                            Vconverter.Footer.DisplayOnOddPages = true;
-        //                            Vconverter.Footer.DisplayOnEvenPages = true;
-
-        //                            //Vconverter.Footer.Height = 150;
-        //                            Vconverter.Footer.Height = 105;
-        //                            //converter.Footer.Height = 120;
-
-        //                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
-        //                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                            Vconverter.Footer.Add(VfooterHtml);
-
-        //                            //end abel code
-
-
-        //                            // page numbers can be added using a PdfTextSection object
-        //                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-        //                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
-        //                            //Vconverter.Footer.Add(Vtext1);
-        //                            #endregion
-        //                            #endregion
-
-
-
-
-        //                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
-        //                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
-
-
-
-        //                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
-        //                            docs.Save(paths + '\\' + ReportNames);
-        //                            docs.Close();
-        //                            bodys = string.Empty;
-        //                            ImageContent = string.Empty;
-        //                            iteration = iteration + 1;
-        //                        }
-        //                    }
-
-        //                    ImageContent += "<tr><td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img]["Heading"].ToString() + "</td>";
-        //                    ImageContent += "<td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img + 1]["Heading"].ToString() + "</td></tr>";
-
-        //                    ImageContent += "<tr><td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[img]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td>";
-        //                    ImageContent += "<td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[img + 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
-
-        //                    img = img + 2;
-        //                    imageposted = imageposted + 2;
-        //                }
-
-
-
-
-
-
-
-
-
-        //                ViewBag.Reminder = "2";
-        //                /*
-        //                #region  reminder
-
-
-        //                if (reminder == 1)
-        //                {                       
-        //                    if (ImageContent != string.Empty)
-        //                    {
-        //                        ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
-        //                        ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
-        //                    }
-        //                    else
-        //                    {
-        //                        ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
-        //                        ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
-        //                    }
-
-        //                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //                    {
-        //                        bodys = reader.ReadToEnd();
-        //                    }
-        //                    bodys = bodys.Replace("[Image]", ImageContent);
-        //                    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
-
-        //                    #region Initial setting vaibhav
-        //                    //strs.Append(body);
-        //                    PdfPageSize vpageSize = PdfPageSize.A4;
-        //                    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
-        //                    HtmlToPdf Vconverter = new HtmlToPdf();
-
-        //                    // set the page timeout (in seconds)
-        //                    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                    Vconverter.Options.PdfPageSize = vpageSize;
-        //                    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
-        //                    #endregion
-
-
-        //                    #region Header and Footer Vaibhav
-        //                    #region Heder code
-        //                    string _VHeader = string.Empty;
-        //                    string _Vfooter = string.Empty;
-
-        //                    // for Report header by abel
-        //                    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //                    _VHeader = _VreadHeader_File.ReadToEnd();
-        //                    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);                        
-        //                    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
-
-        //                    #endregion
-
-        //                    #region Generate no
-        //                    if (RM.Report == null)
-        //                    {
-
-        //                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                        }
-        //                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
-        //                        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
-
-        //                    }
-        //                    else
-        //                    {
-        //                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                        }
-
-        //                        _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-        //                    }
-        //                    #endregion
-
-        //                    #region Footer Code
-
-        //                    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                    _Vfooter = _VreadFooter_File.ReadToEnd();
-
-        //                    // header settings
-        //                    Vconverter.Options.DisplayHeader = true || true || true;
-        //                    Vconverter.Header.DisplayOnFirstPage = true;
-        //                    Vconverter.Header.DisplayOnOddPages = true;
-        //                    Vconverter.Header.DisplayOnEvenPages = true;
-        //                    Vconverter.Header.Height = 75;
-
-        //                    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
-        //                    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Header.Add(VheaderHtml);
-
-        //                    // footer settings
-        //                    Vconverter.Options.DisplayFooter = true || true || true;
-        //                    Vconverter.Footer.DisplayOnFirstPage = true;
-        //                    Vconverter.Footer.DisplayOnOddPages = true;
-        //                    Vconverter.Footer.DisplayOnEvenPages = true;
-
-        //                    //Vconverter.Footer.Height = 150;
-        //                    Vconverter.Footer.Height = 105;
-        //                    //converter.Footer.Height = 120;
-
-        //                    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
-        //                    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Footer.Add(VfooterHtml);
-
-        //                    //end abel code
-
-
-        //                    // page numbers can be added using a PdfTextSection object
-        //                    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-        //                    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
-        //                    //Vconverter.Footer.Add(Vtext1);
-        //                    #endregion
-        //                    #endregion
-
-
-
-        //                    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
-        //                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
-
-        //                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
-        //                    docs.Save(paths + '\\' + ReportNames);
-        //                    docs.Close();
-        //                    bodys = string.Empty;
-        //                    ImageContent = string.Empty;
-        //                    ViewBag.Reminder = "1";
-        //                }
-
-
-        //                #endregion
-        //                */
-
-
-        //                #region  reminder
-        //                if (reminder == 1)
-        //                {
-
-        //                    if (ImageContent != string.Empty)
-        //                    {
-        //                        if ((imageposted % 6) == 0)
-        //                        {
-        //                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //                            {
-        //                                bodys = reader.ReadToEnd();
-        //                            }
-        //                            bodys = bodys.Replace("[Image]", ImageContent);
-        //                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
-
-        //                            #region Initial setting vaibhav
-        //                            //strs.Append(body);
-        //                            PdfPageSize vpageSize1 = PdfPageSize.A4;
-        //                            PdfPageOrientation vpdfOrientation1 = PdfPageOrientation.Portrait;
-        //                            HtmlToPdf Vconverter1 = new HtmlToPdf();
-
-        //                            // set the page timeout (in seconds)
-        //                            Vconverter1.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                            Vconverter1.Options.PdfPageSize = vpageSize1;
-        //                            Vconverter1.Options.PdfPageOrientation = vpdfOrientation1;
-        //                            #endregion
-
-        //                            #region Heder code
-        //                            string _VHeader1 = string.Empty;
-        //                            string _Vfooter1 = string.Empty;
-
-        //                            // for Report header by abel
-        //                            StreamReader _VreadHeader_File1 = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-
-        //                            _VHeader1 = _VreadHeader_File1.ReadToEnd();
-        //                            _VHeader1 = _VHeader1.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                            _VHeader1 = _VHeader1.Replace("[RevisionNo]", countNo);
-        //                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-        //                            _VHeader1 = _VHeader1.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-        //                            _VHeader1 = _VHeader1.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
-
-        //                            #endregion
-
-
-        //                            #region Generate no
-        //                            if (RM.Report == null)
-        //                            {
-
-        //                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                                if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                                {
-        //                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                                }
-        //                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
-        //                                _VHeader1 = _VHeader1.Replace("[ReportNo]", RM.ReportNo);
-
-        //                            }
-        //                            else
-        //                            {
-
-        //                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                                if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                                {
-        //                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                                }
-        //                                // _VHeader1 = _VHeader1.Replace("[ReportNo]", SrNo);
-        //                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
-        //                                {
-        //                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
-        //                                    _VHeader1 = _VHeader1.Replace("[ReportNo]", strReportNo);
-        //                                }
-        //                                else
-        //                                {
-        //                                    _VHeader1 = _VHeader1.Replace("[ReportNo]", SrNo);
-
-        //                                }
-        //                            }
-        //                            #endregion
-
-        //                            #region Footer Code
-
-        //                            StreamReader _VreadFooter_File1 = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                            _Vfooter1 = _VreadFooter_File1.ReadToEnd();
-        //                            _Vfooter1 = _Vfooter1.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
-        //                            // header settings
-        //                            Vconverter1.Options.DisplayHeader = true || true || true;
-        //                            Vconverter1.Header.DisplayOnFirstPage = true;
-        //                            Vconverter1.Header.DisplayOnOddPages = true;
-        //                            Vconverter1.Header.DisplayOnEvenPages = true;
-        //                            Vconverter1.Header.Height = 75;
-
-        //                            PdfHtmlSection VheaderHtml1 = new PdfHtmlSection(_VHeader1, string.Empty);
-        //                            VheaderHtml1.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                            Vconverter1.Header.Add(VheaderHtml1);
-
-        //                            // footer settings
-        //                            Vconverter1.Options.DisplayFooter = true || true || true;
-        //                            Vconverter1.Footer.DisplayOnFirstPage = true;
-        //                            Vconverter1.Footer.DisplayOnOddPages = true;
-        //                            Vconverter1.Footer.DisplayOnEvenPages = true;
-        //                            Vconverter1.Footer.Height = 105;
-
-
-        //                            PdfHtmlSection VfooterHtml1 = new PdfHtmlSection(_Vfooter1, string.Empty);
-        //                            VfooterHtml1.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                            Vconverter1.Footer.Add(VfooterHtml1);
-
-
-        //                            #endregion
-
-        //                            SelectPdf.PdfDocument docs1 = Vconverter1.ConvertHtmlString(bodys);
-        //                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
-
-        //                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
-        //                            docs1.Save(paths + '\\' + ReportNames);
-        //                            docs1.Close();
-
-        //                            bodys = string.Empty;
-        //                            ImageContent = string.Empty;
-        //                            iteration = iteration + 1;
-
-        //                            ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
-        //                            ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
-        //                        }
-        //                        else
-        //                        {
-        //                            ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
-        //                            ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
-        //                        ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
-        //                    }
-
-
-        //                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //                    {
-        //                        bodys = reader.ReadToEnd();
-        //                    }
-        //                    bodys = bodys.Replace("[Image]", ImageContent);
-        //                    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
-
-        //                    #region Initial setting vaibhav
-        //                    //strs.Append(body);
-        //                    PdfPageSize vpageSize = PdfPageSize.A4;
-        //                    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
-        //                    HtmlToPdf Vconverter = new HtmlToPdf();
-
-        //                    // set the page timeout (in seconds)
-        //                    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                    Vconverter.Options.PdfPageSize = vpageSize;
-        //                    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
-        //                    #endregion
-
-
-        //                    #region Header and Footer Vaibhav
-        //                    #region Heder code
-        //                    string _VHeader = string.Empty;
-        //                    string _Vfooter = string.Empty;
-
-        //                    // for Report header by abel
-        //                    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //                    _VHeader = _VreadHeader_File.ReadToEnd();
-        //                    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
-        //                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-        //                    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-        //                    _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
-
-        //                    #endregion
-
-        //                    #region Generate no
-        //                    if (RM.Report == null)
-        //                    {
-
-        //                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                        }
-        //                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
-        //                        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
-
-        //                    }
-        //                    else
-        //                    {
-        //                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                        }
-
-        //                        // _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-        //                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
-        //                        {
-        //                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
-        //                            _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
-        //                        }
-        //                        else
-        //                        {
-        //                            _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-
-        //                        }
-
-        //                    }
-        //                    #endregion
-
-        //                    #region Footer Code
-
-        //                    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                    _Vfooter = _VreadFooter_File.ReadToEnd();
-        //                    _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
-
-        //                    // header settings
-        //                    Vconverter.Options.DisplayHeader = true || true || true;
-        //                    Vconverter.Header.DisplayOnFirstPage = true;
-        //                    Vconverter.Header.DisplayOnOddPages = true;
-        //                    Vconverter.Header.DisplayOnEvenPages = true;
-        //                    Vconverter.Header.Height = 75;
-
-        //                    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
-        //                    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Header.Add(VheaderHtml);
-
-        //                    // footer settings
-        //                    Vconverter.Options.DisplayFooter = true || true || true;
-        //                    Vconverter.Footer.DisplayOnFirstPage = true;
-        //                    Vconverter.Footer.DisplayOnOddPages = true;
-        //                    Vconverter.Footer.DisplayOnEvenPages = true;
-
-        //                    //Vconverter.Footer.Height = 150;
-        //                    Vconverter.Footer.Height = 105;
-        //                    //converter.Footer.Height = 120;
-
-        //                    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
-        //                    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Footer.Add(VfooterHtml);
-        //                    #endregion
-        //                    #endregion
-
-
-
-        //                    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
-        //                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
-
-        //                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
-        //                    docs.Save(paths + '\\' + ReportNames);
-        //                    docs.Close();
-        //                    bodys = string.Empty;
-        //                    ImageContent = string.Empty;
-        //                    ViewBag.Reminder = "1";
-        //                }
-        //                #endregion
-
-
-        //                #region If ImageContent not null
-
-        //                if (ViewBag.Reminder != "1")
-        //                {
-        //                    ViewBag.Reminder = "2";
-        //                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
-        //                    {
-        //                        bodys = reader.ReadToEnd();
-        //                    }
-        //                    bodys = bodys.Replace("[Image]", ImageContent);
-        //                    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
-
-
-
-        //                    #region Initial setting vaibhav
-        //                    //strs.Append(body);
-        //                    PdfPageSize vpageSize = PdfPageSize.A4;
-        //                    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
-        //                    HtmlToPdf Vconverter = new HtmlToPdf();
-
-        //                    // set the page timeout (in seconds)
-        //                    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                    Vconverter.Options.PdfPageSize = vpageSize;
-        //                    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
-        //                    #endregion
-
-
-        //                    #region Header and Footer Vaibhav
-        //                    #region Heder code
-        //                    string _VHeader = string.Empty;
-        //                    string _Vfooter = string.Empty;
-
-        //                    // for Report header by abel
-        //                    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //                    _VHeader = _VreadHeader_File.ReadToEnd();
-        //                    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
-        //                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-        //                    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-        //                    _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
-
-        //                    #endregion
-
-
-        //                    #region Generate no
-        //                    if (RM.Report == null)
-        //                    {
-
-        //                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                        }
-        //                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
-        //                        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
-
-        //                    }
-        //                    else
-        //                    {
-        //                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                        }
-
-        //                        //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-        //                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
-        //                        {
-        //                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
-        //                            _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
-        //                        }
-        //                        else
-        //                        {
-        //                            _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-
-        //                        }
-        //                    }
-        //                    #endregion
-
-        //                    #region Footer Code
-
-        //                    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                    _Vfooter = _VreadFooter_File.ReadToEnd();
-        //                    _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
-
-        //                    // header settings
-        //                    Vconverter.Options.DisplayHeader = true || true || true;
-        //                    Vconverter.Header.DisplayOnFirstPage = true;
-        //                    Vconverter.Header.DisplayOnOddPages = true;
-        //                    Vconverter.Header.DisplayOnEvenPages = true;
-        //                    Vconverter.Header.Height = 75;
-
-        //                    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
-        //                    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Header.Add(VheaderHtml);
-
-        //                    // footer settings
-        //                    Vconverter.Options.DisplayFooter = true || true || true;
-        //                    Vconverter.Footer.DisplayOnFirstPage = true;
-        //                    Vconverter.Footer.DisplayOnOddPages = true;
-        //                    Vconverter.Footer.DisplayOnEvenPages = true;
-
-        //                    //Vconverter.Footer.Height = 150;
-        //                    Vconverter.Footer.Height = 105;
-        //                    //converter.Footer.Height = 120;
-
-        //                    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
-        //                    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Footer.Add(VfooterHtml);
-
-        //                    //end abel code
-
-
-        //                    //// page numbers can be added using a PdfTextSection object
-        //                    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-        //                    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
-        //                    //Vconverter.Footer.Add(Vtext1);
-        //                    #endregion
-        //                    #endregion
-
-
-        //                    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
-
-        //                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
-        //                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
-        //                    docs.Save(paths + '\\' + ReportNames);
-        //                    docs.Close();
-        //                    bodys = string.Empty;
-        //                    ImageContent = string.Empty;
-        //                    iteration = iteration + 1;
-        //                }
-        //                #endregion
-
-        //            }
-        //            #endregion
-
-
-
-        //            string[] pdfs = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
-
-        //            PdfSharp.Pdf.PdfDocument ImageDoc = new PdfSharp.Pdf.PdfDocument();
-
-
-
-
-        //            foreach (string pdfFile in pdfs)
-        //            {
-        //                if (pdfFile.Contains("Img_"))
-        //                {
-        //                    #region Initial setting vaibhav
-        //                    //strs.Append(body);
-        //                    PdfPageSize vpageSize = PdfPageSize.A4;
-        //                    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
-        //                    HtmlToPdf Vconverter = new HtmlToPdf();
-
-        //                    // set the page timeout (in seconds)
-        //                    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
-        //                    Vconverter.Options.PdfPageSize = vpageSize;
-        //                    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
-        //                    #endregion
-        //                    #region Header footer Vaibhav Test 28-07-2020
-        //                    #region Header and Footer Vaibhav
-        //                    #region Heder code
-        //                    string _VHeader = string.Empty;
-        //                    string _Vfooter = string.Empty;
-
-        //                    // for Report header by abel
-        //                    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //                    _VHeader = _VreadHeader_File.ReadToEnd();
-        //                    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //                    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
-        //                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-        //                    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-        //                    _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
-
-        //                    #endregion
-
-
-        //                    #region Generate no
-        //                    if (RM.Report == null)
-        //                    {
-
-        //                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                        }
-        //                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
-        //                        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
-
-        //                    }
-        //                    else
-        //                    {
-        //                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                        if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                        {
-        //                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-
-        //                        }
-
-        //                        // _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-        //                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
-        //                        {
-        //                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
-        //                            _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
-        //                        }
-        //                        else
-        //                        {
-        //                            _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
-
-        //                        }
-        //                    }
-        //                    #endregion
-
-        //                    #region Footer Code
-
-        //                    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //                    _Vfooter = _VreadFooter_File.ReadToEnd();
-        //                    _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");//1
-        //                    // header settings
-        //                    Vconverter.Options.DisplayHeader = true || true || true;
-        //                    Vconverter.Header.DisplayOnFirstPage = true;
-        //                    Vconverter.Header.DisplayOnOddPages = true;
-        //                    Vconverter.Header.DisplayOnEvenPages = true;
-        //                    Vconverter.Header.Height = 75;
-
-        //                    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
-        //                    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Header.Add(VheaderHtml);
-
-        //                    // footer settings
-        //                    Vconverter.Options.DisplayFooter = true || true || true;
-        //                    Vconverter.Footer.DisplayOnFirstPage = true;
-        //                    Vconverter.Footer.DisplayOnOddPages = true;
-        //                    Vconverter.Footer.DisplayOnEvenPages = true;
-
-        //                    //Vconverter.Footer.Height = 150;
-        //                    Vconverter.Footer.Height = 105;
-        //                    //converter.Footer.Height = 120;
-
-        //                    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
-        //                    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //                    Vconverter.Footer.Add(VfooterHtml);
-
-        //                    //end abel code
-
-
-        //                    // page numbers can be added using a PdfTextSection object
-        //                    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-        //                    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
-        //                    //Vconverter.Footer.Add(Vtext1);
-        //                    SelectPdf.PdfDocument docs = converters.ConvertHtmlString(bodys);
-        //                    #endregion
-        //                    #endregion
-        //                    #endregion
-        //                    PdfSharp.Pdf.PdfDocument ImagePDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
-        //                    ImageDoc.Version = ImagePDFDocument.Version;
-
-        //                    foreach (PdfSharp.Pdf.PdfPage page in ImagePDFDocument.Pages)
-        //                    {
-        //                        ImageDoc.AddPage(page);
-        //                    }
-        //                }
-        //            }
-        //            int ImageC = ImageDoc.PageCount;
-        //            if (System.IO.File.Exists(paths + "/Image_" + countNo + ".pdf"))
-        //            {
-        //                // If file found, delete it    
-        //                System.IO.File.Delete(paths + "/Image_" + countNo + ".pdf");
-
-        //            }
-
-
-        //            //PdfDocument docs = converters.ConvertHtmlString(bodys);
-
-
-        //            /****Final Report Saving ****/
-        //            if (ImageReportDashBoard.Rows.Count > 0)
-        //            {
-        //                if (RM.ImageReport == null || RM.ImageReport == "")
-        //                {
-        //                    paths = Server.MapPath("~/Content/");
-
-        //                    ImageDoc.Save(paths + ObjModelVisitReport.Call_No + "/Image_" + countNo + ".pdf");
-        //                    ImageDoc.Close();
-
-        //                }
-        //                else
-        //                {
-        //                    ReportNames = RM.ImageReport;
-        //                    paths = Server.MapPath("~/Content/");
-
-        //                    ImageDoc.Save(paths + ReportNames);
-        //                    ImageDoc.Close();
-        //                }
-        //            }
-
-
-
-        //            #endregion
-
-        //            #region Save to Pdf Code 
-        //            SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";
-        //            System.Text.StringBuilder strs = new System.Text.StringBuilder();
-        //            string body = string.Empty;
-        //            string Userole = Convert.ToString(Session["RoleID"]);
-        //            string ItemDescriptioncontent = "";
-        //            string ReferenceDocumentscontent = "";
-        //            string InspectionDocumentsContent = "";
-        //            string DocumentreviewContent = "";
-        //            string EquipmentDetailscontent = "";
-        //            string AreasOfConcernContent = "";
-        //            string PendingActivityContent = "";
-        //            string AreaOfConcernOnPDF = "";
-        //            string AreaOfConcernOnPDFHeading = "";
-
-
-        //            string check1 = "";
-        //            string check2 = "";
-        //            string check3 = "";
-        //            string check4 = "";
-        //            string check5 = "";
-        //            string check6 = "";
-        //            string check7 = "";
-        //            string check8 = "";
-        //            string check9 = "";
-        //            string check10 = "";
-        //            string checkNABL = "";
-
-        //            string check11 = "";
-        //            string check12 = "";
-        //            string check13 = "";
-        //            using (StreamReader reader1 = new StreamReader(Server.MapPath("~/inspection-visit-report.html")))
-        //            {
-        //                body = reader1.ReadToEnd();
-        //            }
-
-
-
-
-        //            body = body.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //            body = body.Replace("[SAPNo]", ObjModelVisitReport.SAPNo);
-        //            body = body.Replace("[Branch]", ObjModelVisitReport.Branch);
-        //            body = body.Replace("[NotificationNameNo_Date]", ObjModelVisitReport.Notification_Name_No_Date);
-        //            body = body.Replace("[DateOfInspection]", ObjModelVisitReport.Date_Of_Inspection);
-        //            body = body.Replace("[ProjectNameLocation]", ObjModelVisitReport.Project_Name_Location);
-        //            body = body.Replace("[AddressOfInspection]", ObjModelVisitReport.Address_Of_Inspection);
-        //            body = body.Replace("[ClientName]", /*ObjModelVisitReport.Client_Name*/Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Client_NameWithoutId"]));
-        //            body = body.Replace("[Enduser_Name]", ObjModelVisitReport.End_user_Name);
-        //            body = body.Replace("[DECPMCEPC_Name]", ObjModelVisitReport.DEC_PMC_EPC_Name);
-        //            body = body.Replace("[DECPMCEPCAssignment_No]", ObjModelVisitReport.DEC_PMC_EPC_Assignment_No);
-        //            body = body.Replace("[VendorNameLocation]", /*ObjModelVisitReport.Vendor_Name_Location*/Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Vendor_Name_LocationWithoutId"]));
-
-
-        //            if (SubJobDate == null || SubJobDate == "")
-        //            {
-        //                body = body.Replace("[PoNo]", ObjModelVisitReport.Po_No);
-        //            }
-        //            else
-        //            {
-        //                body = body.Replace("[PoNo]", ObjModelVisitReport.Po_No + " Dated " + SubJobDate);
-        //            }
-
-        //            if (ObjModelVisitReport.SubType == "Sub Job")
-        //            {
-        //                body = body.Replace("[PoNoSubVendor]", "");
-        //                body = body.Replace("[SubVendorName]", "");
-        //            }
-        //            else
-        //            {
-
-        //                if (ObjModelVisitReport.SubType == "SubSubSub Job")
-        //                {
-        //                    if (ObjModelVisitReport.SubSubVendorDate_of_PO != string.Empty)
-        //                    {
-        //                        body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO + " and" + "<br/> " + ObjModelVisitReport.SubSubSubPoNo + " Dated " + ObjModelVisitReport.SubSubSubPoDate);
-        //                    }
-        //                    else
-        //                    {
-        //                        body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor);
-        //                    }
-        //                    body = body.Replace("[SubVendorName]", Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_NameWithoutId"]) + " and" + "<br/>" + Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorName"]));
-
-        //                }
-        //                else
-        //                {
-        //                    if (ObjModelVisitReport.SubSubVendorDate_of_PO != string.Empty)
-        //                    {
-        //                        body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO);
-        //                    }
-        //                    else
-        //                    {
-        //                        body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor);
-        //                    }
-        //                    body = body.Replace("[SubVendorName]", Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_NameWithoutId"]));
-
-        //                }
-
-
-
-        //            }
-
-        //            body = body.Replace("[SubVendorName]", /*ObjModelVisitReport.Sub_Vendor_Name*/Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_NameWithoutId"]));
-        //            if (ObjModelVisitReport.Po_No_SubVendor != string.Empty)
-        //            {
-        //                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO);
-        //            }
-        //            else
-        //            {
-        //                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor);
-        //            }
-        //            body = body.Replace("[Conclusion]", ObjModelVisitReport.Conclusion);
-        //            body = body.Replace("[CanIRNbeissued]", ObjModelVisitReport.CanIRNbeissued);
-
-
-        //            //body = body.Replace("[PendingActivites]", ObjModelVisitReport.Pending_Activites);
-        //            //body = body.Replace("[AreasOfConcerns]", ObjModelVisitReport.Areas_Of_Concerns);
-        //            body = body.Replace("[IdentificationOfInspected]", ObjModelVisitReport.Identification_Of_Inspected);
-
-        //            body = body.Replace("[NonConformitiesraised]", ObjModelVisitReport.Non_Conformities_raised);
-        //            body = body.Replace("[Name]", ObjModelVisitReport.Name);
-        //            body = body.Replace("[date]", ObjModelVisitReport.ReportCreatedDate);
-
-        //            if (countNo == "0")
-        //            {
-        //                body = body.Replace("[RevisionNo]", "0");
-        //            }
-        //            else
-        //            {
-        //                body = body.Replace("[RevisionNo]", countNo);
-        //            }
-
-        //            //body = body.Replace("[TempInspectionPhotosNo]", ObjModelVisitReport.TempInspectionPhotosNo);//24
-        //            body = body.Replace("[TempMaster_List_Of_calibrated_Instruments]", ObjModelVisitReport.TempMaster_List_Of_calibrated_Instruments);
-        //            if (ObjModelVisitReport.ReviseReason != "-" && ObjModelVisitReport.ReviseReason != "")
-        //            {
-        //                body = body.Replace("[ReviseReason]", "Reason for Revision - " + Convert.ToString(ObjModelVisitReport.ReviseReason));
-        //            }
-        //            else
-        //            {
-        //                body = body.Replace("[ReviseReason]", "-");
-        //            }
-        //            body = body.Replace("[ReviseReportNoForPDF]", ObjModelVisitReport.ReviseReportNoForPDF);
-        //            body = body.Replace("[ReportNo]", ObjModelVisitReport.Report_No);
-        //            body = body.Replace("[ReportNoForPDF]", ObjModelVisitReport.ReportNoForPDF);
-
-
-
-        //            //if (ObjModelVisitReport.Sap_And_Controle_No == "050104219221")
-        //            //{
-        //            //    body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //            //    body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor PO Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //            //    body = body.Replace("[VendorName]", "<td width='25 % ; style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px;border-top-width: 0px;border-right-width: 0px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
-        //            //    body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Contractor PO Number on Vendor)</i></span></td>");
-        //            //    body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub-Contractor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //            //    body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Contractor PO Number on Sub-Contractor)</i></span></td>");
-        //            //}
-        //            //else
-        //            //{
-        //            //    body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //            //    body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Assignment Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //            //    body = body.Replace("[VendorName]", "<td width='25 % ; style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
-        //            //    body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Client PO on Vendor)</i></span></td>");
-        //            //    body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub Vendor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-
-        //            //    body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Vendor PO on Sub Vendor)</i></span></td>");
-        //            //}
-
-
-        //            if (ObjModelVisitReport.Sap_And_Controle_No == "050104219221")
-        //            {
-        //                body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //                body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor PO Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //                body = body.Replace("[VendorName]", "<td width='25 %'; style='border: 1px solid #000000;vertical-align:top; border-top-width: 1px;border-right-width: 0px; '><span style='font-size: 14px;border-top-width: 0px;border-right-width: 0px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
-        //                body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-left-width: 0px;  '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Contractor PO Number on Vendor)</i></span></td>");
-        //                body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub-Contractor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //                body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Contractor PO Number on Sub-Contractor)</i></span></td>");
-        //            }
-        //            else
-        //            {
-        //                //body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //                //body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Assignment Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //                //body = body.Replace("[VendorName]", "<td width='25 %'; style='border: 1px solid #000000;vertical-align:top; border-top-width: 1px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
-        //                //body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Client PO on Vendor)</i></span></td>");
-        //                //body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub Vendor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-
-        //                //body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Vendor PO on Sub Vendor)</i></span></td>");
-
-
-        //                body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //                body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Assignment Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-        //                //nikiyta
-        //                body = body.Replace("[VendorName]", "<td width='25 %'; style='border: 1px solid #000000;vertical-align:top; border-top-width: 1px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
-        //                body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Client PO on Vendor)</i></span></td>");
-        //                body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub Vendor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
-
-        //                body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Vendor PO on Sub Vendor)</i></span></td>");
-
-        //            }
-
-        //            //ItemDescription Heading 
-        //            if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes" && ObjModelVisitReport.ShowCount == "Yes" && ObjModelVisitReport.DisplayTotalQuantity == "Yes")
-        //            {
-        //                body = body.Replace("[POItemNo]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;vertical-align: text-top;text-align:center;' width='5%'><span><strong> PO Item No.</strong></span></td>");
-        //                body = body.Replace("[ItemCode]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;' width='10%'><span><strong>Item Code</strong></span></td>");
-        //                body = body.Replace("[Identification_MTCNumber]", "<td width='47%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;'><span><strong>Item Description / Identification / MTC Number</strong></span></td>");
-        //                body = body.Replace("[HeatNumber]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Heat Number</strong></span></td>");
-        //                body = body.Replace("[UOM]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;'><span><strong>UOM</strong></span></td>");
-        //                body = body.Replace("[POQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>P.O. Quantity</strong></span></td>");
-        //                body = body.Replace("[OfferedQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Offered Quantity</strong></span></td>");
-        //                body = body.Replace("[AcceptableQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Acceptable Quantity</strong></span></td>");
-
-        //            }
-        //            else if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes")
-        //            {
-        //                body = body.Replace("[POItemNo]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;vertical-align: text-top;text-align:center;' width='5%'><span><strong> PO Item No.</strong></span></td>");
-        //                body = body.Replace("[ItemCode]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;' width='10%'><span><strong>Item Code</strong></span></td>");
-        //                body = body.Replace("[Identification_MTCNumber]", "<td width='47%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;'><span><strong>Item Description / Identification / MTC Number</strong></span></td>");
-        //                body = body.Replace("[HeatNumber]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Heat Number</strong></span></td>");
-        //                body = body.Replace("[UOM]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;'><span><strong>UOM</strong></span></td>");
-        //                body = body.Replace("[POQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>P.O. Quantity</strong></span></td>");
-        //                body = body.Replace("[OfferedQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Offered Quantity</strong></span></td>");
-        //                body = body.Replace("[AcceptableQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Acceptable Quantity</strong></span></td>");
-
-
-        //            }
-        //            else
-        //            {
-        //                body = body.Replace("[POItemNo]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;vertical-align: text-top;text-align:center;' width='5%'><span><strong> PO Item No.</strong></span></td>");
-        //                body = body.Replace("[ItemCode]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;' width='10%'><span><strong>Item Code</strong></span></td>");
-        //                body = body.Replace("[Identification_MTCNumber]", "<td width='47%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;'><span><strong>Item Description / Identification / MTC Number</strong></span></td>");
-        //                body = body.Replace("[HeatNumber]", "");
-        //                body = body.Replace("[UOM]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;'><span><strong>UOM</strong></span></td>");
-        //                body = body.Replace("[POQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>P.O. Quantity</strong></span></td>");
-        //                body = body.Replace("[OfferedQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Offered Quantity</strong></span></td>");
-        //                body = body.Replace("[AcceptableQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Acceptable Quantity</strong></span></td>");
-
-        //            }
-
-
-        //            if (ObjModelVisitReport.DTUVIndiaClientEndUser == true)
-        //            {
-        //                check11 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaClientEndUser + " checked></span>";
-        //            }
-        //            else
-        //            {
-        //                check11 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaClientEndUser + " ></span>";
-        //            }
-        //            if (ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch == true)
-        //            {
-        //                check12 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch + " checked></span>";
-        //            }
-        //            else
-        //            {
-        //                check12 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch + " ></span>";
-        //            }
-        //            if (ObjModelVisitReport.DVendor_Sub_Vendor == true)
-        //            {
-        //                check13 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DVendor_Sub_Vendor + " checked></span>";
-        //            }
-        //            else
-        //            {
-        //                check13 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DVendor_Sub_Vendor + " ></span>";
-        //            }
-
-
-        //            if (ObjModelVisitReport.Kick_Off_Pre_Inspection == true)
-        //            {
-        //                check1 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Kick_Off_Pre_Inspection + " checked></span>";
-        //            }
-        //            else
-        //            {
-        //                check1 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Kick_Off_Pre_Inspection + "></span>";
-        //            }
-        //            if (ObjModelVisitReport.Material_identification == true)
-        //            {
-        //                check2 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Material_identification + " checked></span>";
-        //            }
-        //            else
-        //            {
-        //                check2 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Material_identification + " ></span>";
-        //            }
-        //            if (ObjModelVisitReport.Interim_Stages == true)
-        //            {
-        //                check3 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Interim_Stages + " checked></span>";
-        //            }
-        //            else
-        //            {
-        //                check3 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Interim_Stages + "></span>";
-        //            }
-        //            if (ObjModelVisitReport.Document_review == true)
-        //            {
-        //                check4 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Document_review + " checked></span>";
-        //            }
-        //            else
-        //            {
-        //                check4 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Document_review + "></span>";
-        //            }
-        //            if (ObjModelVisitReport.Final_Inspection == true)
-        //            {
-        //                check5 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Final_Inspection + " checked></span>";
-        //            }
-        //            else
-        //            {
-        //                check5 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Final_Inspection + " ></span>";
-        //            }
-        //            if (ObjModelVisitReport.Re_inspection == true)
-        //            {
-        //                check6 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Re_inspection + " checked></span>";
-        //            }
-        //            else
-        //            {
-        //                check6 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Re_inspection + " ></span>";
-        //            }
-
-        //            if (ObjModelVisitReport.Inspection_records == true)
-        //            {
-        //                check7 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_records + " checked></span></td>";
-        //            }
-        //            else
-        //            {
-        //                check7 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_records + " ></span></td>";
-        //            }
-        //            if (ObjModelVisitReport.Other_Specify == true)
-        //            {
-        //                check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " checked></span></td>";
-        //            }
-        //            else
-        //            {
-        //                check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " ></span></td>";
-        //            }
-        //            //27.01.2025
-        //            if (ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF == "Yes")
-        //            {
-        //                check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " checked></span></td>";
-        //            }
-        //            else
-        //            {
-        //                check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " ></span></td>";
-        //            }
-        //            //if (ObjModelVisitReport.Inspection_Photo == true)
-        //            if (imagecount > 0)
-        //            {
-        //                ObjModelVisitReport.Inspection_Photo = true;
-
-        //                check9 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_Photo + " checked></span></td>";
-        //            }
-        //            else
-        //            {
-        //                check9 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_Photo + "></span></td>";
-        //            }
-        //            if (ObjModelVisitReport.MasterListOfcalibratedInstruments == true)
-        //            {
-        //                check10 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.MasterListOfcalibratedInstruments + " checked></span></td>";
-        //            }
-        //            else
-        //            {
-        //                check10 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.MasterListOfcalibratedInstruments + "></span></td>";
-        //            }
-
-        //            //foreach (ItemDescriptionModel v in lstCompanyDashBoard)
-        //            //{
-        //            //    i = i + 1;
-        //            //    ItemDescriptioncontent += "<tr><td width='10%' align='center' style='font - size: 14px; color: #000; font-family: Arial;'>" + Convert.ToString(v.Po_Item_No) + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Item_Code + " </td><td width='30%' style='font - size: 14px; color: #000; font-family: Arial;white-space: pre-line;'>" + v.ItemCode_Description + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Unit + "</td><td width='10%'>" + v.Po_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Offered_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Accepted_Quantity + "</td></tr>";
-        //            //}
-
-        //            //foreach (ReferenceDocumentsModel v in RefranceDocuments)
-        //            //{
-        //            //    J = J + 1;
-        //            //    // ReferenceDocumentscontent += "<tr><td> " + J + " </td><td>" + Convert.ToString(v.Document_Name) + "</td><td>" + v.Document_No + " </td><td>" + v.Approval_Status + "</td></tr>";
-        //            //    //ReferenceDocumentscontent += "<tr><td align='center'> " + J + ')' + " </td><td style='white-space: pre-line;'>" + Convert.ToString(v.Document_Name) + "</td><td><span style='white-space: pre-line;'>" + v.Document_No + " </span></td><td style='white-space: pre-line;'>" + v.VendorDocumentNumber + "</td><td style='white-space: pre-line;'>" + v.Approval_Status + "</td></tr>";
-        //            //    ReferenceDocumentscontent += "<tr><td style='white-space: pre-line;vertical-align:top;text-align:center;'> " + J + ')' + " </td><td align='top' style='white-space: pre-line;vertical-align:top;'>" + Convert.ToString(v.Document_Name) + "</td><td align='top' style='white-space: pre-line;vertical-align:top;'>" + v.Document_No + " </span></td><td align='top' style='white-space: pre-line;vertical-align:top;'>" + v.VendorDocumentNumber + "</td><td  style='white-space: pre-line;vertical-align:top;'>" + v.Approval_Status + "</td></tr>";
-        //            //}
-
-        //            string ItemDescriptioncontentTotal = "";
-
-        //            if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes" && ObjModelVisitReport.ShowCount == "Yes" && ObjModelVisitReport.DisplayTotalQuantity == "Yes")
-        //            {
-        //                //09.02.2024
-        //                foreach (ItemDescriptionModel v in lstCompanyDashBoard)
-        //                {
-        //                    i = i + 1;
-
-        //                    if (i == lstCompanyDashBoard.Count)
-        //                        ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-        //                    else
-        //                        ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-
-        //                }
-        //                ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.PO_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Offered_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Accepted_QuantityTotal1 + " </span></td></tr>";
-        //            }
-        //            else if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes")
-        //            {
-        //                //09.02.2024 curr
-        //                foreach (ItemDescriptionModel v in lstCompanyDashBoard)
-        //                {
-        //                    i = i + 1;
-
-        //                    if (i == lstCompanyDashBoard.Count)
-        //                        ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-        //                    else
-        //                        ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-
-        //                }
-        //                //ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.PO_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Offered_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Accepted_QuantityTotal1 + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td></tr>";
-        //            }
-        //            else if (ObjModelVisitReport.DisplayTotalQuantity == "Yes")
-        //            {
-        //                foreach (ItemDescriptionModel v in lstCompanyDashBoard)
-        //                {
-        //                    i = i + 1;
-        //                    //ItemDescriptioncontent += "<tr><td width='3%' align='center' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;'>" + Convert.ToString(v.Po_Item_No) + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Item_Code + " </td><td width='47%' style='font - size: 14px; color: #000; font-family: Arial;;vertical-align:top;text-align:left;'>" + v.ItemCode_Description + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Unit + "</td><td width='10%' style='vertical-align:top;text-align:center;'>" + v.Po_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Offered_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Accepted_Quantity + "</td></tr>";
-        //                    //if (i == lstCompanyDashBoard.Count)
-        //                    //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid color: #000;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:left;border-right-width: 0px;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-        //                    //else
-        //                    //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid  color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-        //                    if (i == lstCompanyDashBoard.Count)
-        //                        ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-        //                    else
-        //                        ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-
-        //                }
-        //                ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.PO_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Offered_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Accepted_QuantityTotal1 + " </span></td></tr>";
-        //            }
-        //            else
-        //            {
-        //                foreach (ItemDescriptionModel v in lstCompanyDashBoard)
-        //                {
-        //                    i = i + 1;
-        //                    //ItemDescriptioncontent += "<tr><td width='3%' align='center' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;'>" + Convert.ToString(v.Po_Item_No) + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Item_Code + " </td><td width='47%' style='font - size: 14px; color: #000; font-family: Arial;;vertical-align:top;text-align:left;'>" + v.ItemCode_Description + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Unit + "</td><td width='10%' style='vertical-align:top;text-align:center;'>" + v.Po_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Offered_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Accepted_Quantity + "</td></tr>";
-        //                    //if (i == lstCompanyDashBoard.Count)
-        //                    //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid color: #000;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:left;border-right-width: 0px;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-        //                    //else
-        //                    //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid  color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-        //                    if (i == lstCompanyDashBoard.Count)
-        //                        ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-        //                    else
-        //                        ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-
-        //                }
-        //                // ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td></tr>";
-        //            }
-
-
-
-
-        //            foreach (ReferenceDocumentsModel v in RefranceDocuments)
-        //            {
-        //                J = J + 1;
-        //                // ReferenceDocumentscontent += "<tr><td> " + J + " </td><td>" + Convert.ToString(v.Document_Name) + "</td><td>" + v.Document_No + " </td><td>" + v.Approval_Status + "</td></tr>";
-        //                //ReferenceDocumentscontent += "<tr><td align='center'> " + J + ')' + " </td><td style='white-space: pre-line;'>" + Convert.ToString(v.Document_Name) + "</td><td><span style='white-space: pre-line;'>" + v.Document_No + " </span></td><td style='white-space: pre-line;'>" + v.VendorDocumentNumber + "</td><td style='white-space: pre-line;'>" + v.Approval_Status + "</td></tr>";
-        //                // ReferenceDocumentscontent += "<tr><td style='border:1px solid #000000;white-space: pre-line;vertical-align:top;text-align:center;border-left-width: 0px;border-bottom-width: 0px;color: #000;'> " + J + " </td><td align='top' style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + Convert.ToString(v.Document_Name) + "</td><td align='top' style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + v.Document_No + " </span></td><td align='top' style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + v.VendorDocumentNumber + "</td><td  style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + v.Approval_Status + "</td></tr>";
-
-        //                if (J == RefranceDocuments.Count)
-        //                    ReferenceDocumentscontent += "<tr><td width='2%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;text-align:center;border-left-width: 0px;border-bottom-width: 0px;color: #000;border-left-width: 0px;font-size:14px;'> " + J + " </td><td width='17%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + Convert.ToString(v.Document_Name) + "</td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.Document_No + " </span></td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.VendorDocumentNumber + "</td><td width='27%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;border-right-width: 1px;color: #000;font-size:14px;'>" + v.Approval_Status + "</td></tr>";
-        //                else
-        //                    ReferenceDocumentscontent += "<tr><td width='2%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;text-align:center;border-left-width: 0px;border-bottom-width: 0px;color: #000;border-left-width: 0px;font-size:14px;'> " + J + " </td><td width='17%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + Convert.ToString(v.Document_Name) + "</td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.Document_No + " </span></td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.VendorDocumentNumber + "</td><td width='27%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;border-right-width: 1px;color: #000;font-size:14px;'>" + v.Approval_Status + "</td></tr>";
-
-        //            }
-        //            foreach (InspectionActivitiesModel v in InspectionDocuments)
-        //            {
-        //                K = K + 1;
-        //                // InspectionDocumentsContent += "<tr><td width='10%' align='center'> " + K + ')' + " </td><td width='90%' colspan='5'><span style='font-size: 14px;white-space: pre-line;'>" + Convert.ToString(v.Stages_Witnessed) + "</span></td></tr>";
-        //                InspectionDocumentsContent += "<tr><td style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;' width='5%' align='center'> " + K + " </td><td width='95%' colspan='5' style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;'><span style='font-size: 14px;white-space: pre-line;'>" + Convert.ToString(v.Stages_Witnessed) + "</span></td></tr>";
-        //            }
-        //            foreach (DocumentRevieweModel v in DocumentReview)
-        //            {
-        //                L = L + 1;
-        //                //DocumentreviewContent += "<tr><td width='10%' align='center'><span> " + L + ')' + " </span></td><td width='90%' colspan='5'><span style='font-size:14px;white-space: pre-line;'>" + Convert.ToString(v.Description) + "</span></td></tr>";
-        //                DocumentreviewContent += "<tr><td style='font-family:TNG Pro;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;' width='5%' align='center'><span> " + L + " </span></td><td style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;' width='95%' colspan='5'><span style='border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;white-space: pre-line;'>" + Convert.ToString(v.Description) + "</span></td></tr>";
-        //            }
-
-
-        //            foreach (EquipmentDetailsModel v in EquipmentDetails)
-        //            {
-        //                if (v.NABLseenote1 == true)
-        //                {
-        //                    // checkNABL = "<td > " + M + " </td> <td width='5%' align='center' style='border-right-width: 0px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + " checked></span></td>";
-        //                    checkNABL = "<td style='border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;'> " + M + " </td> <td width='5%' align='center' style='border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;text-align:center;font-size:14px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + " checked></span></td>";
-        //                }
-        //                else
-        //                {
-        //                    //checkNABL = "<td width='5%' align='center' style='border-right-width: 0px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + "></span></td>";
-        //                    checkNABL = "<td width='5%' align='center' style='border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;text-align:center;font-size:14px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + "></span></td>";
-        //                }
-        //            }
-
-
-        //            dtAreasOfConcernOnPDF = objDalVisitReport.GetAreasOfConcernOnPDF(PK_CALL_ID);
-        //            if (dtAreasOfConcernOnPDF.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in dtAreasOfConcernOnPDF.Rows)
-        //                {
-        //                    lstAreasOfConcernOnPDF.Add(
-        //                        new InspectionvisitReportModel
-        //                        {
-        //                            PDF_Type = Convert.ToString(dr["PDF_Type"]),
-        //                            PDF_Description = Convert.ToString(dr["PDF_Description"]),
-        //                            PDF_MitigatedBy = Convert.ToString(dr["PDF_MitigatedBy"]),
-        //                            PDF_MitigatedDate = Convert.ToString(dr["PDF_MitigatedDate"]),
-        //                            PDF_RaisedBy = Convert.ToString(dr["PDF_RaisedBy"]),
-        //                            PDF_ReportNo = Convert.ToString(dr["PDF_ReportNo"]),
-        //                            PDF_PreviousComment = Convert.ToString(dr["PDF_PreviousComment"]),
-        //                            PDF_Status = Convert.ToString(dr["PDF_Status"]),
-        //                        }
-        //                        );
-        //                }
-        //            }
-
-        //            if (ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF == "Yes")
-        //            {
-        //                // AreaOfConcernOnPDFHeading += " <tr><td colspan='7' style='border: 1px solid #000000;border-bottom-width: 0px;border-top-width: 0px;background-color: #D7DBDD;padding-top: -1em;padding-bottom: -1em;border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;'>Concern:</span></td></tr>                <tr><td width='5 % ' style='border - left - width: 0px; '><span style='font - size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Type </strong></span></td><td width='45%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Description </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedDate </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>RaisedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>ReportNo </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Status</strong></span></td></tr>   ";
-        //                AreaOfConcernOnPDFHeading += " <tr><td colspan='7' style='border: 1px solid #000000;border-bottom-width: 0px;border-top-width: 0px;background-color: #D7DBDD;padding-top: -1em;padding-bottom: -1em;border-left-width: 0px;page-break-before: always;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;'>List Of Issues:</span></td></tr>                <tr><td width='5 % ' style='border - left - width: 0px; '><span style='font - size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Type </strong></span></td><td width='45%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Description </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedDate </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>RaisedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>ReportNo </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Status</strong></span></td></tr>   ";
-        //            }
-        //            else
-        //            {
-        //                AreaOfConcernOnPDFHeading += "";
-        //            }
-
-        //            if (ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF == "Yes")
-        //            {
-        //                foreach (InspectionvisitReportModel ac in lstAreasOfConcernOnPDF)
-        //                {
-
-        //                    //   i = i + 1;
-        //                    //if (i == lstAreasOfConcernOnPDF.Count)
-        //                    //AreaOfConcernOnPDF += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '5%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Type) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-top-width: 0px;font-size:14px;border-left-width: 0px;' width = '45%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Description) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedDate) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_RaisedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_ReportNo) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_PreviousComment) /*+ ''*/ + " </span></td></tr>";
-
-        //                    AreaOfConcernOnPDF += " <tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '5%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Type) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-top-width: 0px;font-size:14px;border-left-width: 0px;' width = '45%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Description) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedDate) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_RaisedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_ReportNo) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Status) /*+ ''*/ + " </span></td></tr>";
-        //                    //else
-        //                    //    AreaOfConcernOnPDF += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Description) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
-
-        //                }
-        //            }
-        //            else
-        //            {
-        //                AreaOfConcernOnPDF += "";
-        //            }
-
-        //            //foreach (EquipmentDetailsModel v in EquipmentDetails)
-        //            //{
-        //            //    M = M + 1;
-        //            //    //   EquipmentDetailscontent += "<tr><td> " + M + " </td><td>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td>" + v.Range + " </td><td>" + v.Id + "</td><td>" + v.CalibrationValid_Till_date + "</td><td>" + v.Certification_No_Date + "</td></tr>";
-        //            //    EquipmentDetailscontent += "<tr><td align='center'> " + M + ')' + " </td><td>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td>" + v.Range + " </td><td>" + v.Id + "</td><td>" + v.CalibrationValid_Till_date + "</td><td>" + v.Certification_No_Date + "</td><td>" + v.SNABLseenote1 + "</td><td>" + v.SNonNABLseenote2 + "</td></tr>";
-
-        //            //}
-        //            foreach (EquipmentDetailsModel v in EquipmentDetails)
-        //            {
-        //                M = M + 1;
-        //                //   EquipmentDetailscontent += "<tr><td> " + M + " </td><td>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td>" + v.Range + " </td><td>" + v.Id + "</td><td>" + v.CalibrationValid_Till_date + "</td><td>" + v.Certification_No_Date + "</td></tr>";
-        //                EquipmentDetailscontent += "<tr><td width='5%' align='center' style='font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top;text-align:center;font-size:14px;'> " + M + " </td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.Range + " </td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.Id + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.CalibrationValid_Till_date + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.Certification_No_Date + "</td><td style='font-family:TNG Pro;vertical-align:top;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;text-align:center;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;text-align:center;'>" + v.SNABLseenote1 + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-left-width: 0px;border-bottom-width: 0px;text-align:center;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;text-align:center;'>" + v.SNonNABLseenote2 + "</td></tr>";
-
-        //            }
-
-        //            foreach (InspectionvisitReportModel v in lstAreasOfConcern)
-        //            {
-        //                A = A + 1;
-        //                //AreasOfConcernContent += "<tr><td style='font-family:TNG Pro;border:1px solid #fa3746;border-bottom-width: 0px;border-top-width: 0px;color: #fa3746;font-family: italic;font-size:14px;' width='90%' colspan='8'><span style='font-size: 14px;color: #fa3746;font-style: italic;font-family:TNG Pro;'>" + A + ". " + Convert.ToString(v.Areas_Of_Concerns) + "</span></td></tr>";
-        //                AreasOfConcernContent += "<tr><td style='font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;border-top-width: 0px;font-family: italic;font-size:14px;' width='90%' colspan='8'><span style='font-size: 14px;color: #fa3746;font-style: italic;font-family:TNG Pro;'>" + A + ". " + Convert.ToString(v.Areas_Of_Concerns) + "</span></td></tr>";
-        //            }
-        //            foreach (InspectionvisitReportModel v in lstPendingActivity)
-        //            {
-        //                PA = PA + 1;
-        //                PendingActivityContent += "<tr><td style='font-family:TNG Pro;border:1px solid #fa3746;border-bottom-width: 0px;border-top-width: 0px;color: #fa3746;font-size:14px;' width='90%' colspan='8'><span style='font-size:14px;'>" + PA + ". " + Convert.ToString(v.Pending_Activites) + "</span></td></tr>";
-        //            }
-
-
-        //            //body = body.Replace("[PendingActivites]", PendingActivityContent);
-        //            //body = body.Replace("[AreasOfConcerns]", AreasOfConcernContent);
-
-        //            if (AreasOfConcernContent == "" || AreasOfConcernContent == null)
-        //            {
-        //                // body = body.Replace("[AreasOfConcerns]", "<tr><td colspan='8' style = 'font-family:TNG Pro;border:1px solid ;white-space: pre-line;vertical-align:top;text-align:left;border-top-width: 0px;border-bottom-width: 0px;color: #fa3746;font-size:14px;' > " + "None" + " </td>");
-        //                body = body.Replace("[AreasOfConcerns]", "<tr><td colspan='8' style = 'font-family:TNG Pro;border:1px solid ;white-space: pre-line;vertical-align:top;text-align:left;border-top-width: 0px;border-bottom-width: 0px;font-size:14px;' > " + "None" + " </td>");
-        //            }
-        //            else
-        //            {
-        //                body = body.Replace("[AreasOfConcerns]", AreasOfConcernContent);
-        //            }
-        //            if (PendingActivityContent == "" || PendingActivityContent == null)
-        //            {
-        //                body = body.Replace("[PendingActivites]", "<tr><td colspan='8' style = 'border:1px solid ;white-space: pre-line;vertical-align:top;text-align:left;border-top-width: 0px;border-bottom-width: 0px;font-size:14px;' > " + "None" + " </td>");
-        //            }
-        //            else
-        //            {
-        //                body = body.Replace("[PendingActivites]", PendingActivityContent);
-        //            }
-
-        //            body = body.Replace("[ItemDescriptionContent]", ItemDescriptioncontent);
-        //            body = body.Replace("[ItemDescriptioncontentTotal]", ItemDescriptioncontentTotal);
-
-
-        //            body = body.Replace("[AreaOfConcernOnPDF]", AreaOfConcernOnPDF);
-        //            body = body.Replace("[AreaOfConcernOnPDFHeading]", AreaOfConcernOnPDFHeading);
-
-        //            body = body.Replace("[ReferenceDocumentsContent]", ReferenceDocumentscontent);
-        //            body = body.Replace("[InspectionDocumentsContent]", InspectionDocumentsContent);
-        //            body = body.Replace("[DocumentreviewContent]", DocumentreviewContent);
-        //            body = body.Replace("[EquipmentDetailscontent]", EquipmentDetailscontent);
-        //            body = body.Replace("[InspectiobRecord_Remark]", ObjModelVisitReport.InspectiobRecord_Remark);//24
-        //            body = body.Replace("[OtherSpecifyRecords]", ObjModelVisitReport.OtherSpecifyRecords);
-
-
-
-        //            int ExpenseCheckBox = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["ExpenseCheckBox"]);
-        //            ObjModelVisitReport.ExpenseCheckBox = Convert.ToBoolean(ExpenseCheckBox);
-
-        //            if (ObjModelVisitReport.ExpenseCheckBox == true)
-        //            {
-        //                string strE = "<tr><td align='left' style='font-family:TNG Pro;background-color: #efefef;border:1px solid #000000;border-top-width: 0px;font-size:14px;'><span><strong>Travel Expenses in INR :</strong></span> " + ObjModelVisitReport.Expenses + " </td></tr>";
-        //                body = body.Replace("[Expenses]", strE);
-        //            }
-        //            else
-        //            {
-        //                body = body.Replace("[Expenses]", "");
-        //            }
-
-        //            int TiimeCheckBox = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["TiimeCheckBox"]);
-        //            ObjModelVisitReport.TiimeCheckBox = Convert.ToBoolean(TiimeCheckBox);
-
-        //            //if (ObjModelVisitReport.TiimeCheckBox == true)
-        //            //{
-        //            //    string strT = "<tr><td align='left' style='background-color: #efefef;border:1px solid #000000;border-top-width: 0px;font-size:14px;'><span><strong>In Time: </span></strong> " + ObjModelVisitReport.Intime + "   <span><strong>Out Time :</span></strong> " + ObjModelVisitReport.Outtime + " </td></tr>";
-        //            //    body = body.Replace("[TiimeCheckBox]", strT);
-        //            //}
-        //            //else
-        //            //{
-        //            //    body = body.Replace("[TiimeCheckBox]", "");
-        //            //}
-        //            string strT = "";
-        //            if (ObjModelVisitReport.TiimeCheckBox == true)
-        //            {
-        //                VT = VT + 1;
-        //                foreach (InspectionvisitReportModel vt in lstVisitReportTime)
-        //                {
-        //                    strT += "<tr><td align='left' style='font-family:TNG Pro;background-color: #efefef;border:1px solid #000000;border-top-width: 0px;font-size:14px;'><span><strong>Date: </span></strong> " + vt.DateSe + " <span><strong>In Time: </span></strong> " + vt.Intime + "   <span><strong>Out Time :</span></strong> " + vt.Outtime + " </td></tr>";
-        //                }
-
-        //                // body = body.Replace("[TiimeCheckBox]", strT);
-        //            }
-        //            //else
-        //            //{
-        //            //    body = body.Replace("[TiimeCheckBox]", "");
-        //            //}
-
-        //            if (strT == "" || strT == null)
-        //            {
-        //                body = body.Replace("[TiimeCheckBox]", "");
-        //            }
-        //            else
-        //            {
-        //                body = body.Replace("[TiimeCheckBox]", strT);
-        //            }
-
-
-
-        //            body = body.Replace("[Stamp]", "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Stamp.png' style='width:100px;height:50px; ' align='center'>");
-        //            // body = body.Replace("[Signature]", ConfigurationManager.AppSettings["Web"].ToString() + "/signature.jpg");
-        //            body = body.Replace("[Signature]", ConfigurationManager.AppSettings["Web"].ToString() + ObjModelVisitReport.Signatures);
-        //            string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/sign/" + ObjModelVisitReport.Signatures + "' style='width:225px;height:125px; ' align='center'>";
-        //            //string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "' style='width:100px;height:50px; ' align='center'>";
-        //            //  string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Sign/" + ObjModelVisitReport.Signatures + "' style='width:100px;height:50px; ' align='center'>";
-
-        //            if (Userole == "61" || Userole == "62")
-        //            {
-        //                if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
-        //                {
-        //                    if (ObjModelVisitReport.Signatures != null)
-        //                    {
-        //                        //  body = body.Replace("[Signature1]", ConfigurationManager.AppSettings["Web"].ToString()+ "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "");
-        //                        body = body.Replace("[Signature1]",I);
-
-        //                    }
-        //                    else
-        //                    {
-        //                        body = body.Replace("[Signature1]", "");
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    body = body.Replace("[Signature1]", "");
-        //                }
-
-        //            }
-
-        //           else
-        //            {
-        //                body = body.Replace("[Signature1]", "");
-
-        //            }
-
-
-
-        //            //if (ObjModelVisitReport.Signatures != null)
-        //            //{
-        //            //    //  body = body.Replace("[Signature1]", ConfigurationManager.AppSettings["Web"].ToString()+ "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "");
-        //            //    body = body.Replace("[Signature1]", I);
-
-        //            //}
-        //            //else
-        //            //{
-
-        //            //}
-        //            body = body.Replace("[Checkbox1]", check1);
-        //            body = body.Replace("[Checkbox2]", check2);
-        //            body = body.Replace("[Checkbox3]", check3);
-        //            body = body.Replace("[Checkbox4]", check4);
-        //            body = body.Replace("[Checkbox5]", check5);
-        //            body = body.Replace("[Checkbox6]", check6);
-        //            body = body.Replace("[Checkbox7]", check7);
-        //            body = body.Replace("[Checkbox8]", check8);
-        //            body = body.Replace("[Checkbox9]", check9);
-        //            body = body.Replace("[Checkbox10]", check10);
-        //            body = body.Replace("[Checkbox11]", check11);
-        //            body = body.Replace("[Checkbox12]", check12);
-        //            body = body.Replace("[Checkbox13]", check13);
-        //            //strs.Append(body);//24
-        //            PdfPageSize pageSize = PdfPageSize.A4;
-        //            PdfPageOrientation pdfOrientation = PdfPageOrientation.Portrait;
-        //            HtmlToPdf converter = new HtmlToPdf();
-
-
-
-
-        //            // set the page timeout (in seconds)
-        //            //converter.Options.MaxPageLoadTime = 2400;  //=========================5-Aug-2019
-        //            //converter.Options.PdfPageSize = pageSize;
-        //            //converter.Options.PdfPageOrientation = pdfOrientation;
-        //            //converter.Options.WebPageFixedSize = false;
-
-        //            #region Heder code
-        //            string _Header = string.Empty;
-        //            string _footer = string.Empty;
-
-        //            // for Report header by abel
-        //            StreamReader _readHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
-        //            _Header = _readHeader_File.ReadToEnd();
-        //            _Header = _Header.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
-        //            _Header = _Header.Replace("[RevisionNo]", countNo);
-        //            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
-
-        //            //_Header = _Header.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-
-        //                if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
-        //                {
-        //                    _Header = _Header.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
-
-        //                }
-        //                else
-        //                {
-        //                    _Header = _Header.Replace("[Logo]", "");
-
-        //                }
-        //            _Header = _Header.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
-
-        //            #endregion
-
-
-        //            #region Generate no
-        //            if (RM.Report == null)
-        //            {
-
-        //                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //                if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                {
-        //                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //                }
-        //                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
-        //                _Header = _Header.Replace("[ReportNo]", RM.ReportNo);
-
-        //            }
-        //            else
-        //            {
-        //                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
-        //                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
-        //                if (dtSrNo.Tables[0].Rows.Count > 0)
-        //                {
-        //                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
-        //                    RM.ReportNo = SrNo;
-        //                }
-
-        //                //_Header = _Header.Replace("[ReportNo]", SrNo);
-        //                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
-        //                {
-        //                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
-        //                    _Header = _Header.Replace("[ReportNo]", strReportNo);
-        //                }
-        //                else
-        //                {
-        //                    _Header = _Header.Replace("[ReportNo]", SrNo);
-
-        //                }
-        //            }
-        //            #endregion
-
-        //            #region Footer Code
-
-        //            StreamReader _readFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
-        //            _footer = _readFooter_File.ReadToEnd();
-
-
-
-        //                if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
-        //                {
-        //                    _footer = _footer.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
-
-        //                }
-        //                else
-        //                {
-        //                    _footer = _footer.Replace("[LogoFooter]", "");
-
-        //                }
-
-
-        //            // header settings
-
-        //            converter.Options.MaxPageLoadTime = 40; // Timeout in seconds
-        //            converter.Options.PdfPageSize = pageSize;
-        //            converter.Options.PdfPageOrientation = pdfOrientation;
-        //            converter.Options.WebPageFixedSize = false;
-
-        //            converter.Options.DisplayHeader = true || true || true;
-        //            converter.Header.DisplayOnFirstPage = true;
-        //            converter.Header.DisplayOnOddPages = true;
-        //            converter.Header.DisplayOnEvenPages = true;
-        //            //converter.Header.Height = 75;
-        //            converter.Header.Height = 65;
-
-        //            PdfHtmlSection headerHtml = new PdfHtmlSection(_Header, string.Empty);
-        //            headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //            converter.Header.Add(headerHtml);
-
-        //            // footer settings
-        //            converter.Options.DisplayFooter = true || true || true;
-        //            converter.Footer.DisplayOnFirstPage = true;
-        //            converter.Footer.DisplayOnOddPages = true;
-        //            converter.Footer.DisplayOnEvenPages = true;
-
-        //            //converter.Footer.Height = 150;
-        //            converter.Footer.Height = 105;
-
-        //            PdfHtmlSection footerHtml = new PdfHtmlSection(_footer, string.Empty);
-        //            footerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //            converter.Footer.Add(footerHtml);
-
-        //            //end abel code
-
-
-        //            // page numbers can be added using a PdfTextSection object
-        //            //PdfTextSection text1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-        //            //PdfTextSection text1 = new PdfTextSection(0, 135, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
-
-        //            //text1.HorizontalAlign = PdfTextHorizontalAlign.Right;
-        //            //converter.Footer.Add(text1);
-        //            #endregion
-
-        //            converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
-        //            converter.Options.AutoFitHeight = HtmlToPdfPageFitMode.NoAdjustment;
-
-        //            #region test Total Page Count
-        //            //string path1 = Server.MapPath("~/IVRReport");
-
-        //            //string[] datafile1 = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
-        //            //dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //            //if (dtSrNo.Tables[0].Rows.Count > 0)
-        //            //{
-        //            //    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //            //}
-        //            //string finalReportName1 = "IVR-" + ObjModelVisitReport.SubJob_No.Replace('/', '_') + "-" + SrNo + "-Rev." + countNo.ToString() + ".pdf";
-        //            //PdfSharp.Pdf.PdfDocument FinalDoc1 = new PdfSharp.Pdf.PdfDocument();
-
-        //            //if (System.IO.File.Exists(path1 + "\\" + finalReportName1))
-        //            //{
-        //            //    // If file found, delete it    
-        //            //    System.IO.File.Delete(path1 + "\\" + finalReportName1);
-
-        //            //}
-        //            //// create a new pdf document
-        //            //foreach (string pdfFile in datafile1)
-        //            //{
-        //            //    if (pdfFile.Contains("Image_") || pdfFile.Contains("Data_"))
-        //            //    {
-        //            //        PdfSharp.Pdf.PdfDocument inputPDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
-
-        //            //        FinalDoc1.Version = inputPDFDocument.Version;
-
-        //            //        foreach (PdfSharp.Pdf.PdfPage page in inputPDFDocument.Pages)
-        //            //        {
-        //            //            FinalDoc1.AddPage(page);
-        //            //        }
-
-        //            //    }
-        //            //}
-
-
-        //            // Create variable that store page count  
-
-        //            SelectPdf.PdfDocument doc1 = converter.ConvertHtmlString(body);
-        //            doc1.Security.CanCopyContent = false;
-
-        //            int P;
-        //            string ImagePageTotalCount1 = "";
-        //            if (imagecount == 0)
-        //            {
-        //                P = doc1.Pages.Count;
-        //                ImagePageTotalCount1 = "0";
-        //            }
-        //            else
-        //            {
-        //                P = doc1.Pages.Count + ImageC;
-        //                ImagePageTotalCount1 = Convert.ToString(ImageC);
-        //            }
-        //            string noPages1 = Convert.ToString(P);
-
-
-        //            #region get Image page no & Total Page no
-
-        //            string ImagePage1 = "";
-        //            string TotalPage1 = "";
-        //            //string ImagePageTotalCount1 = Convert.ToString(ImageC);
-        //            if (ImagePageTotalCount1 == "0")
-        //            {
-
-        //                ImagePage1 = "-";
-        //                TotalPage1 = noPages1;
-        //                //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
-        //                body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
-
-        //            }
-        //            else if (ImagePageTotalCount1 == "1")
-        //            {
-        //                int ImagePageNo = doc1.Pages.Count + 1;
-        //                ImagePage1 = Convert.ToString(ImagePageNo);
-        //                TotalPage1 = noPages1;
-        //                //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
-        //                body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
-
-        //            }
-        //            else
-        //            {
-        //                int ImagePageNo = doc1.Pages.Count + 1; //Convert.ToInt32(noPages1) - Convert.ToInt32(ImagePageTotalCount1);
-        //                                                        //ImagePage1 = Convert.ToString(ImagePageNo);
-        //                ImagePage1 = Convert.ToString(ImagePageNo + " to " + noPages1);
-        //                TotalPage1 = noPages1;
-        //                //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
-        //                body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
-        //            }
-
-        //            #endregion
-
-        //            strs.Append(body);
-        //            #endregion
-
-
-
-        //            SelectPdf.PdfDocument doc = converter.ConvertHtmlString(body);
-
-        //                if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 1)
-        //                {
-        //                    string imgFile1 = Server.MapPath("~/WaterMark.png");
-        //                    PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
-        //                    PdfImageElement img1 = new PdfImageElement(150, 150, imgFile1);
-        //                    img1.Transparency = 15;
-        //                    template1.Add(img1);
-        //                }
-
-
-        //            doc.Security.CanCopyContent = false;
-
-
-        //            //doc.CompressionLevel = (PdfCompressionLevel)Enum.Parse(
-        //            //typeof(PdfCompressionLevel),"",true);
-
-        //            string ReportName = RM.Report;
-        //            paths = Server.MapPath("~/Content/");
-
-        //            if (System.IO.File.Exists(paths + ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf"))
-        //            {
-        //                // If file found, delete it    
-        //                System.IO.File.Delete(paths + ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf");
-
-        //            }
-
-        //            if (ReportName == null)
-        //            {
-        //                ReportName = ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf";
-        //                doc.Save(paths + '\\' + ReportName);
-        //                doc.Close();
-        //            }
-        //            else
-        //            {
-        //                ReportName = ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf";
-        //                doc.Save(paths + '\\' + ReportName);
-        //                doc.Close();
-        //            }
-
-        //            string path = Server.MapPath("~/IVRReport");
-
-        //            string[] datafile = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
-        //            dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
-        //            if (dtSrNo.Tables[0].Rows.Count > 0)
-        //            {
-        //                SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
-
-        //            }
-        //            //string finalReportName = "IVR-" + ObjModelVisitReport.SubJob_No + " - " + SrNo + "-Rev." + countNo.ToString() + ObjModelVisitReport.Call_No.ToString() + ".pdf";
-        //            // string finalReportName = "IVR-" + ObjModelVisitReport.SubJob_No.Replace('/', '_') + "-" + SrNo + "-Rev." + countNo.ToString() + ".pdf";
-        //            string finalReportName = RM.ReportNo.Replace('/', '_') + ".pdf"; //23 Feb 2022
-        //                                                                             //string finalReportName = RM.ReportNo + ".pdf";
-
-        //            PdfSharp.Pdf.PdfDocument FinalDoc = new PdfSharp.Pdf.PdfDocument();
-
-        //            if (System.IO.File.Exists(path + "\\" + finalReportName))
-        //            {
-        //                // If file found, delete it    
-        //                System.IO.File.Delete(path + "\\" + finalReportName);
-
-        //            }
-        //            // create a new pdf document
-        //            foreach (string pdfFile in datafile)
-        //            {
-        //                if (pdfFile.Contains("Image_") || pdfFile.Contains("Data_"))
-        //                {
-        //                    PdfSharp.Pdf.PdfDocument inputPDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
-
-        //                    FinalDoc.Version = inputPDFDocument.Version;
-
-        //                    foreach (PdfSharp.Pdf.PdfPage page in inputPDFDocument.Pages)
-        //                    {
-        //                        FinalDoc.AddPage(page);
-        //                    }
-
-        //                }
-        //            }
-
-        //            XFont font = new XFont("Verdana", 9);
-        //            XBrush brush = XBrushes.Black;
-        //            // Create variable that store page count  
-        //            string noPages = FinalDoc.Pages.Count.ToString();
-
-
-
-
-        //            for (int c = 0; c < FinalDoc.Pages.Count; ++c)
-        //            {
-        //                PdfSharp.Pdf.PdfPage page = FinalDoc.Pages[c];
-        //                // Make a layout rectangle.  
-        //                //XRect layoutRectangle = new XRect(240 /*X*/ , page.Height - font.Height - 10 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
-        //                //XRect layoutRectangle = new XRect(232 /*X*/ , page.Height - font.Height - 15 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
-        //                XRect layoutRectangle = new XRect(33 /*X*/ , page.Height - font.Height - 7 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
-        //                using (XGraphics gfx = XGraphics.FromPdfPage(page))
-        //                {
-        //                    //gfx.DrawString("Page " + (c + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.Center);
-        //                    gfx.DrawString("Page " + (c + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.BottomLeft);
-        //                }
-        //            }
-
-        //            PdfSharp.Pdf.Security.PdfSecuritySettings securitySettings = FinalDoc.SecuritySettings;
-
-        //            // Set the owner password (password required to change permissions)
-        //            securitySettings.OwnerPassword = "!$!)!(*%"; // Required for setting permissions
-
-        //            // Set document permissions to disable editing
-        //            securitySettings.PermitModifyDocument = false;   // Disallow editing the document
-        //            securitySettings.PermitFormsFill = true;        // Disallow filling forms
-        //            securitySettings.PermitAnnotations = true;      // Disallow adding annotations
-        //            securitySettings.PermitAssembleDocument = false; // Disallow document assembly
-        //            securitySettings.PermitExtractContent = true;   // Disallow content extraction
-        //            securitySettings.PermitFullQualityPrint = false; // Disallow full quality printing (optional)
-        //            securitySettings.PermitPrint = true;
-        //            FinalDoc.Save(path + "\\" + finalReportName);
-        //            FinalDoc.Close();
-
-
-        //            #endregion
-
-        //            if (RM.PK_RM_ID != 0)
-        //            {
-
-        //                RM.Type = "IVR";
-        //                RM.Status = "1";
-        //                RM.ImageReport = ReportNames;
-        //                RM.Report = finalReportName;
-        //                RM.ReportName = ReportName;
-        //                RM.PK_CALL_ID = PK_CALL_ID;
-        //                RM.SubJob_No = ObjModelVisitReport.SubJob_No;
-        //                RM.PK_SubJob_Id = ObjModelVisitReport.PK_SubJob_Id;
-        //                RM.ProjectName = ObjModelVisitReport.End_user_Name;
-        //                RM.Po_No = ObjModelVisitReport.Po_No;
-        //                RM.Report_No = ObjModelVisitReport.Report_No;
-        //                Result = objDalVisitReport.InsertUpdateReport(RM);
-        //                if (Result != "" && Result != null)
-        //                {
-        //                    TempData["InsertCompany"] = Result;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                RM.Type = "IVR";
-        //                RM.Status = "1";
-        //                RM.ImageReport = ReportNames;
-        //                RM.Report = finalReportName;
-        //                RM.ReportName = ReportName;
-        //                RM.PK_CALL_ID = PK_CALL_ID;
-        //                RM.SubJob_No = ObjModelVisitReport.SubJob_No;
-        //                RM.PK_SubJob_Id = ObjModelVisitReport.PK_SubJob_Id;
-        //                RM.ProjectName = ObjModelVisitReport.End_user_Name;
-        //                RM.Po_No = ObjModelVisitReport.Po_No;
-        //                RM.Report_No = ObjModelVisitReport.Report_No;
-
-        //                Result = objDalVisitReport.InsertUpdateReport(RM);
-
-        //                if (Result != "" && Result != null)
-        //                {
-        //                    TempData["InsertCompany"] = Result;
-        //                }
-        //            }
-
-
-
-
-
-        //            #region
-        //            CostSheetDashBoard = objDalVisitReport.GetReportByCall_Id(PK_CALL_ID);
-        //            if (CostSheetDashBoard.Rows.Count > 0)
-        //            {
-        //                foreach (DataRow dr in CostSheetDashBoard.Rows)
-        //                {
-        //                    ReportDashboard.Add(
-        //                        new ReportModel
-        //                        {
-        //                            ReportName = Convert.ToString(dr["ReportName"]),
-        //                            Report = Convert.ToString(dr["Report"]),
-        //                            CraetedDate = Convert.ToString(dr["CraetedDate"]),
-        //                            PK_RM_ID = Convert.ToInt32(dr["PK_RM_ID"]),
-        //                            PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
-        //                        }
-        //                        );
-        //                }
-        //            }
-        //            ViewData["CostSheet"] = ReportDashboard;
-        //            #endregion
-
-
-
-        //            string newpath = Server.MapPath("~/IVRReport/");
-
-        //            byte[] fileBytes = System.IO.File.ReadAllBytes(newpath + @"\" + finalReportName);
-
-
-        //            if (System.IO.Directory.Exists(paths + ObjModelVisitReport.Call_No))
-        //            {
-        //                System.IO.Directory.Delete(paths + ObjModelVisitReport.Call_No, true);
-        //            }
-        //            if (Userole == "61" || Userole == "62")
-        //            {
-        //                return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
-        //            }
-        //            else
-        //            {
-        //                if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
-        //                {
-        //                    if (Userole == "61" || Userole == "62")
-        //                    {
-
-        //                    }
-        //                    #region Digital Signature
-        //                    else
-        //                    {
-        //                        string PPPP = Server.MapPath("~/IVRReport/" + finalReportName);// newpath + finalReportName;
-        //                        string Path = PPPP; string SignLoc = "TUV India representative:"; string signannotation = ObjModelVisitReport.Name; string PReportName = finalReportName;
-        //                        return RedirectToAction(nameof(VisitReportPrintWithDigitalSign), new { Path = Path, SignLoc = SignLoc, signannotation = signannotation, PReportName = PReportName });
-        //                    }
-        //                    #endregion
-        //                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
-
-        //                }
-        //                else
-        //                {
-        //                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "draft.pdf");
-
-
-        //                }
-        //            }
-
-        //            //return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
-
-        //            return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = PK_CALL_ID });
-
-        //            return RedirectToAction("IvrReports", RMData);
-
-        //        }
-
-        //        else
-        //        {
-        //            return RedirectToAction("IvrReports", RMData);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string Error = ex.Message.ToString();
-        //        return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
-        //    }
-
-        //}
-
+        public ActionResult UpdateReports_22082025(int? PK_CALL_ID, string flag)
+        {
+            RMData.PK_CALL_ID = Convert.ToInt32(PK_CALL_ID);
+            DataTable ItemDescriptionDashBoard = new DataTable();
+            DataTable RefranceDocumentsDashBoard = new DataTable();
+            DataTable InspectionActivitesDashBoard = new DataTable();
+            DataTable DocumentsReviewBoard = new DataTable();
+            DataTable EquipmentDetailsBoard = new DataTable();
+            DataTable DTVisitTime = new DataTable();
+            DataSet DSJobMasterByQtId = new DataSet();
+            DataTable ReportDashBoard = new DataTable();
+            DataSet UpdateReport = new DataSet();
+            DataTable CostSheetDashBoard = new DataTable();
+            int count = 0;
+            DataTable ImageReportDashBoard = new DataTable();
+            List<ReportImageModel> ImageDashBoard = new List<ReportImageModel>();
+            List<ItemDescriptionModel> lstCompanyDashBoard = new List<ItemDescriptionModel>();
+            List<ReferenceDocumentsModel> RefranceDocuments = new List<ReferenceDocumentsModel>();
+            List<InspectionActivitiesModel> InspectionDocuments = new List<InspectionActivitiesModel>();
+            List<DocumentRevieweModel> DocumentReview = new List<DocumentRevieweModel>();
+            List<EquipmentDetailsModel> EquipmentDetails = new List<EquipmentDetailsModel>();
+            List<ReportModel> ReportDashboard = new List<ReportModel>();
+
+            List<InspectionvisitReportModel> lstAreasOfConcern = new List<InspectionvisitReportModel>();
+            List<InspectionvisitReportModel> lstPendingActivity = new List<InspectionvisitReportModel>();
+
+            List<InspectionvisitReportModel> lstVisitReportTime = new List<InspectionvisitReportModel>();
+
+
+            DataTable dtAreasOfConcern = new DataTable();
+            DataTable dtAreasOfConcernOnPDF = new DataTable();
+            DataTable dtPendingActivity = new DataTable();
+
+            DataSet dtSrNo = new DataSet();
+            string SrNo = "";
+            string SubJobDate = string.Empty;
+
+            ReportModel RM = new ReportModel();
+            string Result = "";
+            string Result1 = "";
+            try
+            {
+
+
+                if (PK_CALL_ID != 0 || PK_CALL_ID != null)
+                {
+
+                    int i = 0;
+                    int J = 0;
+                    int K = 0;
+                    int L = 0;
+                    int M = 0;
+                    int N = 0;
+                    int A = 0;
+                    int PA = 0;
+                    int VT = 0;
+
+                   
+
+                   Result1 = objDalVisitReport.UpdateDownloadDate(PK_CALL_ID);
+                   
+
+                    #region 
+                    DSJobMasterByQtId = objDalVisitReport.EditInspectionVisitReportByPKCallID(PK_CALL_ID);
+
+                    //DSJobMasterByQtId = objDalVisitReport.PrintVisitReport(PK_CALL_ID);
+
+                    #region ARC first Visit Flag
+                    string chkIfARC = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["chkARC"]);
+                    string Count = Convert.ToString(DSJobMasterByQtId.Tables[1].Rows[0]["IVRCount"]);
+
+                    if (chkIfARC == "1" /*& Count=="1"*/ )
+                    {
+
+                        Result = objDalVisitReport.UpdateARCFlagFirstClick(PK_CALL_ID);
+                    }
+
+                   
+
+                    #endregion
+
+
+                    if (DSJobMasterByQtId.Tables[0].Rows.Count > 0)
+                    {
+                        ObjModelVisitReport.ItemDescriptionDynamic = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ItemDescriptionDynamic"]);
+                        ObjModelVisitReport.SAPNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SAP_No"]);
+                        ObjModelVisitReport.Branch = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Branch"]);
+                        ObjModelVisitReport.Sap_And_Controle_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sap_And_Controle_No"]);
+                        ObjModelVisitReport.PK_IVR_ID = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_IVR_ID"]);
+                        ObjModelVisitReport.Project_Name_Location = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Project_Name_Location"]);
+                        ObjModelVisitReport.Address_Of_Inspection = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Address_Of_Inspection"]);
+                        ObjModelVisitReport.End_user_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["End_user_Name"]);
+                        ObjModelVisitReport.Vendor_Name_Location = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Vendor_Name_Location"]);
+                        ObjModelVisitReport.PK_Call_ID = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_Call_ID"]);
+                        ObjModelVisitReport.Notification_Name_No_Date = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Notification_Name_No_Date"]);
+
+                        ObjModelVisitReport.Date_Of_Inspection = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Date_Of_Inspection"]);
+                        ObjModelVisitReport.Client_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Client_Name"]);
+                        ObjModelVisitReport.DEC_PMC_EPC_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["DEC_PMC_EPC_Name"]);
+                        ObjModelVisitReport.DEC_PMC_EPC_Assignment_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["DEC_PMC_EPC_Assignment_No"]);
+                        ObjModelVisitReport.Po_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Po_No"]);
+                        //ObjModelVisitReport.Sub_Vendor_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_Name"]);
+                        //ObjModelVisitReport.Po_No_SubVendor = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Po_No_SubVendor"]);
+                        //ObjModelVisitReport.SubJob_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubJob_No"]);
+
+                        ObjModelVisitReport.Po_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Po_Number"]);
+                        ObjModelVisitReport.Sub_Vendor_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubVendorName"]);
+                        ObjModelVisitReport.Po_No_SubVendor = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubVendorPoNo"]);
+                        ObjModelVisitReport.SubJob_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubJob_No"]);
+                        ObjModelVisitReport.Date_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Date_of_PO"]);
+                        ObjModelVisitReport.SubSubVendorDate_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubSubVendorPODate"]);
+
+                        ObjModelVisitReport.SubSubSubVendorName = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorName"]);
+                        ObjModelVisitReport.SubSubSubPoNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorPoNo"]);
+                        ObjModelVisitReport.SubSubSubPoDate = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorPoDate"]);
+                        ObjModelVisitReport.SubType = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["JobType"]);
+
+
+                        DataSet DsSubJobDate = new DataSet();
+                        DsSubJobDate = objDalVisitReport.getsubJobdate(ObjModelVisitReport.SubJob_No);
+
+
+                        if (DsSubJobDate.Tables[0].Rows.Count > 0)
+                        {
+                            SubJobDate = DsSubJobDate.Tables[0].Rows[0]["SubJobDate"].ToString();
+                        }
+
+
+                        int kick = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Kick_Off_Pre_Inspection"]);
+                        ObjModelVisitReport.Kick_Off_Pre_Inspection = Convert.ToBoolean(kick);
+
+                        int Mi = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Material_identification"]);
+                        ObjModelVisitReport.Material_identification = Convert.ToBoolean(Mi);
+
+                        int Interim_Stages = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Interim_Stages"]);
+                        ObjModelVisitReport.Interim_Stages = Convert.ToBoolean(Interim_Stages);
+
+                        int Document_review = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Document_review"]);
+                        ObjModelVisitReport.Document_review = Convert.ToBoolean(Document_review);
+
+                        int Final_Inspection = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Final_Inspection"]);
+                        ObjModelVisitReport.Final_Inspection = Convert.ToBoolean(Final_Inspection);
+
+                        int Re_inspection = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Re_inspection"]);
+                        ObjModelVisitReport.Re_inspection = Convert.ToBoolean(Re_inspection);
+
+                        int MasterListOfcalibratedInstruments = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["MasterListOfcalibratedInstruments"]);
+                        ObjModelVisitReport.MasterListOfcalibratedInstruments = Convert.ToBoolean(MasterListOfcalibratedInstruments);
+
+
+                        ObjModelVisitReport.CanIRNbeissued = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["CanIRNbeissued"]);
+                        ObjModelVisitReport.IssuedPOItemNumbers = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IssuedPOItemNumbers"]);
+                        ObjModelVisitReport.ReasonName = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReasonName"]);
+
+                        //if (ObjModelVisitReport.CanIRNbeissued == "Yes")
+                        //{
+                        //    ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for all items " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + ".";
+                        //}
+                        //else if (ObjModelVisitReport.CanIRNbeissued == "Partially")
+                        //{
+                        //    ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for PO item Numbers " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + " for remaining " + ObjModelVisitReport.ReasonName.ToString() + ".";
+                        //}
+                        //else if (ObjModelVisitReport.CanIRNbeissued == "No")
+                        //{
+                        //    ObjModelVisitReport.CanIRNbeissued = "IRN can not be issued for all PO items because " + ObjModelVisitReport.ReasonName.ToString() + ".";
+                        //}
+                        //else
+                        //{
+                        //    ObjModelVisitReport.CanIRNbeissued = "";
+                        //}
+                        if (ObjModelVisitReport.CanIRNbeissued == "Yes")
+                        {
+                            // ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for all items " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + ".";
+                            ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for all inspected items " + "(" + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + ") .";
+                        }
+                        else if (ObjModelVisitReport.CanIRNbeissued == "Partially")
+                        {
+                            ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for PO item Numbers " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + " for remaining " + ObjModelVisitReport.ReasonName.ToString() + ".";
+                        }
+                        else if (ObjModelVisitReport.CanIRNbeissued == "No")
+                        {
+                            ObjModelVisitReport.CanIRNbeissued = "IRN can not be issued for all PO items because " + ObjModelVisitReport.ReasonName.ToString() + ".";
+                        }
+                        else
+                        {
+                            ObjModelVisitReport.CanIRNbeissued = "";
+                        }
+
+
+
+                        ObjModelVisitReport.Conclusion = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Conclusion"]);
+                        ObjModelVisitReport.Pending_Activites = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Pending_Activites"]);
+                        ObjModelVisitReport.Identification_Of_Inspected = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Identification_Of_Inspected"]);
+                        ObjModelVisitReport.Areas_Of_Concerns = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Areas_Of_Concerns"]);
+                        ObjModelVisitReport.Non_Conformities_raised = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Non_Conformities_raised"]);
+                        ObjModelVisitReport.Signatures = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Signatures"]);
+                        ObjModelVisitReport.Type = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Type"]);
+                        //ObjModelVisitReport.Report_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Report_No"]);
+                        ObjModelVisitReport.Report_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReportNo"]);
+                        ObjModelVisitReport.Call_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Call_No"]);
+                        //ObjModelVisitReport.Signatures = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Signature"]);
+                        ObjModelVisitReport.Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["FirstName"]) + " " + Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["LastName"]);
+                        ObjModelVisitReport.ReportCreatedDate = Convert.ToDateTime(DSJobMasterByQtId.Tables[0].Rows[0]["CreatedDate"]).ToString("dd/MM/yyyy");
+
+                        int Inspection_records = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Inspection_records"]);
+                        ObjModelVisitReport.Inspection_records = Convert.ToBoolean(Inspection_records);
+
+                        int Inspection_Photo = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Inspection_Photo"]);
+                        ObjModelVisitReport.Inspection_Photo = Convert.ToBoolean(Inspection_Photo);
+
+                        int Other_Specify = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Other_Specify"]);
+                        ObjModelVisitReport.Other_Specify = Convert.ToBoolean(Other_Specify);
+                        ObjModelVisitReport.InspectiobRecord_Remark = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["InspectiobRecord_Remark"]);
+                        ObjModelVisitReport.OtherSpecifyRecords = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["OtherSpecifyRecords"]);
+
+
+                        ObjModelVisitReport.SubJob_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubJob_No"]);
+                        ObjModelVisitReport.PK_SubJob_Id = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_SubJob_Id"]);
+
+
+                        ObjModelVisitReport.Type = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Type"]);
+
+
+                        ObjModelVisitReport.TempInspectionPhotosNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["TempInspectionPhotosNo"]);
+                        ObjModelVisitReport.TempMaster_List_Of_calibrated_Instruments = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["TempMaster_List_Of_calibrated_Instruments"]);
+                        int DTUVIndiaClientEndUser = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["DTUVIndiaClientEndUser"]);
+                        ObjModelVisitReport.DTUVIndiaClientEndUser = Convert.ToBoolean(DTUVIndiaClientEndUser);
+                        int DTUVIndiaExecuting_Originating_Branch = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["DTUVIndiaExecuting_Originating_Branch"]);
+                        ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch = Convert.ToBoolean(DTUVIndiaExecuting_Originating_Branch);
+                        int DVendor_Sub_Vendor = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["DVendor_Sub_Vendor"]);
+                        ObjModelVisitReport.DVendor_Sub_Vendor = Convert.ToBoolean(DVendor_Sub_Vendor);
+                        ObjModelVisitReport.ReviseReason = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReviseReason"]);
+                        ObjModelVisitReport.ReviseReportNoForPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReviseReportNoForPDF"]);
+                        ObjModelVisitReport.ReportNoForPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReportNoForPDF"]);
+                        // ObjModelVisitReport.Date_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Date_of_PO"]);
+                        //ObjModelVisitReport.SubSubVendorDate_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubvendorPODate1"]);
+                        ObjModelVisitReport.Expenses = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Expenses"]);
+                        ObjModelVisitReport.DownloadPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Report"]);
+                        ObjModelVisitReport.Intime = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Intime"]);
+                        ObjModelVisitReport.Outtime = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Outtime"]);
+                        ObjModelVisitReport.CustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["CustomerSpecificReportNumber"]);
+                        ObjModelVisitReport.IsCustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsCustomerSpecificReportNumber"]);
+                        ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IfConcernsDisplayOfPDF"]);
+                        ObjModelVisitReport.ShowCount = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ShowCount"]);
+                        ObjModelVisitReport.DisplayTotalQuantity = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["DisplayTotalQuantity"]);
+
+
+                        ObjModelVisitReport.PO_QuantityTotal1 = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["PO_QuantityTotal"]);
+                        ObjModelVisitReport.Offered_QuantityTotal1 = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Offered_QuantityTotal"]);
+                        ObjModelVisitReport.Accepted_QuantityTotal1 = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Accepted_QuantityTotal"]);
+                        ObjModelVisitReport.IsComfirmation = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);
+                        ObjModelVisitReport.abcid = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_RM_ID"]); //22082025
+                        RMData.abcid = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_RM_ID"]); //22082025
+
+                    }
+                    else
+                    {
+
+                        InspectionvisitReportModel Abc = new InspectionvisitReportModel();
+                        Abc.PK_Call_ID = PK_CALL_ID;
+                        return RedirectToAction("VisitReportForm", Abc);
+                    }
+                    #endregion
+
+
+                    #region  item Description
+
+                    ItemDescriptionDashBoard = objDalVisitReport.GetitemDescription(PK_CALL_ID);
+                    if (ItemDescriptionDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in ItemDescriptionDashBoard.Rows)
+                        {
+                            lstCompanyDashBoard.Add(
+                                new ItemDescriptionModel
+                                {
+                                    PK_ItemD_Id = Convert.ToInt32(dr["PK_ItemD_Id"]),
+                                    Po_Item_No = Convert.ToString(dr["Po_Item_No"]),
+                                    ItemCode_Description = Convert.ToString(dr["ItemCode_Description"]),
+                                    Po_Quantity = Convert.ToString(dr["Po_Quantity"]),
+                                    Offered_Quantity = Convert.ToString(dr["Offered_Quantity"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
+                                    Item_Code = Convert.ToString(dr["Item_Code"]),
+                                    Accepted_Quantity = Convert.ToString(dr["Accepted_Quantity"]),
+                                    Cumulative_Accepted_Qty = Convert.ToString(dr["Cumulative_Accepted_Qty"]),
+                                    Unit = Convert.ToString(dr["Unit"]),
+                                    HeatNumber = Convert.ToString(dr["HeatNumber"]),
+                                    TotalQuantity = Convert.ToString(dr["TotalQuantity"]),
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+
+                    #region Reference Documents
+
+                    RefranceDocumentsDashBoard = objDalVisitReport.GetReferenceDocuments(PK_CALL_ID);
+                    if (RefranceDocumentsDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in RefranceDocumentsDashBoard.Rows)
+                        {
+                            RefranceDocuments.Add(
+                                new ReferenceDocumentsModel
+                                {
+                                    Document_No = Convert.ToString(dr["Document_No"]),
+                                    Document_Name = Convert.ToString(dr["Document_Name"]),
+                                    Approval_Status = Convert.ToString(dr["Approval_Status"]),
+                                    PK_RD_ID = Convert.ToInt32(dr["PK_RD_ID"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
+                                    VendorDocumentNumber = Convert.ToString(dr["VendorDocumentNumber"])
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+
+                    #region Inspection Activities
+                    InspectionActivitesDashBoard = objDalVisitReport.GetInspectionActivities(PK_CALL_ID);
+                    if (InspectionActivitesDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in InspectionActivitesDashBoard.Rows)
+                        {
+                            InspectionDocuments.Add(
+                                new InspectionActivitiesModel
+                                {
+                                    Stages_Witnessed = Convert.ToString(dr["Stages_Witnessed"]),
+                                    PK_IA_ID = Convert.ToInt32(dr["PK_IA_ID"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
+
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+                    #region Documents Review
+                    DocumentsReviewBoard = objDalVisitReport.GetDocumentRevieweModelByCall_Id(PK_CALL_ID);
+                    if (DocumentsReviewBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in DocumentsReviewBoard.Rows)
+                        {
+                            DocumentReview.Add(
+                                new DocumentRevieweModel
+                                {
+                                    Description = Convert.ToString(dr["Description"]),
+                                    PK_DR_ID = Convert.ToInt32(dr["PK_DR_ID"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
+
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+                    #region Equipments Details
+                    EquipmentDetailsBoard = objDalVisitReport.GetEquipmentDetailsModelByCall_Id(PK_CALL_ID);
+                    if (EquipmentDetailsBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in EquipmentDetailsBoard.Rows)
+                        {
+                            EquipmentDetails.Add(
+                                new EquipmentDetailsModel
+                                {
+                                    Name_Of_Equipments = Convert.ToString(dr["Name_Of_Equipments"]),
+                                    Range = Convert.ToString(dr["Range"]),
+                                    Id = Convert.ToString(dr["Id"]),
+                                    CalibrationValid_Till_date = Convert.ToString(dr["CalibrationValid_Till_date"]),
+                                    Certification_No_Date = Convert.ToString(dr["Certification_No_Date"]),
+                                    PK_DOE_Id = Convert.ToInt32(dr["PK_DOE_Id"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
+                                    SNABLseenote1 = Convert.ToString(dr["NABLseenote1"]) == "True" ? "Yes" : "-",
+
+                                    SNonNABLseenote2 = Convert.ToString(dr["NonNABLseenote2"]) == "True" ? "Yes" : "-"
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+                    #region Get Visit Time
+                    DTVisitTime = objDalVisitReport.GetVisitTime(PK_CALL_ID);
+                    if (DTVisitTime.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in DTVisitTime.Rows)
+                        {
+                            lstVisitReportTime.Add(
+                                new InspectionvisitReportModel
+                                {
+                                    DateSe = Convert.ToString(dr["DateSe"]),
+                                    Intime = Convert.ToString(dr["Intime"]),
+                                    Outtime = Convert.ToString(dr["Outtime"]),
+
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+
+
+                    #region report Count
+                    UpdateReport = objDalVisitReport.GetReportByLastId(PK_CALL_ID);
+                    if (UpdateReport.Tables[0].Rows.Count > 0)
+                    {
+                        RM.PK_RM_ID = Convert.ToInt32(UpdateReport.Tables[0].Rows[0]["PK_RM_ID"]);
+                        RM.Report = Convert.ToString(UpdateReport.Tables[0].Rows[0]["Report"]);
+                        //RM.ImageReport = Convert.ToString(UpdateReport.Tables[0].Rows[0]["ImageReport"]);
+                    }
+
+                    #region report Count
+                    ReportDashBoard = objDalVisitReport.GetReportByCall_Id(PK_CALL_ID);
+                    if (ReportDashBoard.Rows.Count > 0)
+                    {
+                        int counts = ReportDashBoard.Rows.Count;
+                        count = counts - 1;
+                    }
+                    string countNo = Convert.ToString(count);
+                    #endregion
+                    #endregion
+
+
+                    #region Report Image data
+                    //ImageReportDashBoard = objDalVisitReport.GetReportImageByCall_Id(PK_CALL_ID);
+                    //if (ImageReportDashBoard.Rows.Count > 0)
+                    //{
+                    //    foreach (DataRow dr in ImageReportDashBoard.Rows)
+                    //    {
+                    //        ImageDashBoard.Add(
+                    //            new ReportImageModel
+                    //            {
+                    //                Image = Convert.ToString(dr["Image"]),
+                    //                Heading = Convert.ToString(dr["Heading"]),
+                    //            }
+                    //            );
+                    //    }
+                    //}
+
+                    string Imagepath = "";
+                    ImageReportDashBoard = objDalVisitReport.GetReportImageByCall_Id(PK_CALL_ID);
+                    if (ImageReportDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in ImageReportDashBoard.Rows)
+                        {
+                            DateTime CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                            int year = CreatedDate.Year;
+                            int month = CreatedDate.Month;
+                            string currentMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month);
+
+                            Imagepath = $"/Content/Uploads/Images/{year}/{currentMonth}";
+
+                            ImageDashBoard.Add(
+                                new ReportImageModel
+                                {
+                                    Path = Convert.ToString(Imagepath),
+                                    Image = Convert.ToString(dr["Image"]),
+                                    Heading = Convert.ToString(dr["Heading"]),
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+
+                    #region  Areas of Concern
+                    dtAreasOfConcern = objDalVisitReport.GetAreasOfConcern(PK_CALL_ID);
+                    if (dtAreasOfConcern.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dtAreasOfConcern.Rows)
+                        {
+                            lstAreasOfConcern.Add(
+                                new InspectionvisitReportModel
+                                {
+                                    Areas_Of_Concerns = Convert.ToString(dr["Areas_Of_Concerns"]),
+
+                                }
+                                );
+                        }
+                    }
+
+                    #endregion
+
+                    #region  Pending Activities
+                    dtPendingActivity = objDalVisitReport.GetPendingActivity(PK_CALL_ID);
+                    if (dtPendingActivity.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dtPendingActivity.Rows)
+                        {
+                            lstPendingActivity.Add(
+                                new InspectionvisitReportModel
+                                {
+                                    Pending_Activites = Convert.ToString(dr["Pending_Activity"]),
+
+                                }
+                                );
+                        }
+                    }
+
+                    #endregion
+
+                    #region Image Save to pdf
+                    SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";
+                    System.Text.StringBuilder strss = new System.Text.StringBuilder();
+
+                    string bodys = string.Empty;
+                    string ImageContent = string.Empty;
+                    string ReportNames = string.Empty;
+                    string paths = string.Empty;
+                    int img = 0;
+                    int imagecount = ImageReportDashBoard.Rows.Count;
+                    int rows = imagecount / 2;
+                    int imageposted = 0;
+                    int reminder = (imagecount % 2);
+                    int iteration = 1;
+                    StreamReader reader;
+
+                    //using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                    //{
+                    //    bodys = reader.ReadToEnd();
+                    //}
+
+
+                    ///First File start
+                    PdfPageSize pageSizes = PdfPageSize.A4;
+                    PdfPageOrientation pdfOrientations = PdfPageOrientation.Portrait;
+
+                    HtmlToPdf converters = new HtmlToPdf();
+                   
+
+                    #endregion
+
+                    #region Comment 11 June
+
+                    converters.Options.DisplayFooter = true || true || true;
+
+                    if (Directory.Exists(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No)))
+                    {
+                        string[] files = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+                        foreach (string file in files)
+                        {
+                            System.IO.File.Delete(file);
+
+                        }
+
+                        Directory.Delete(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+                    }
+
+                    Directory.CreateDirectory(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+
+                    #region Vaibhav If Images count less than 6
+
+                    if (imagecount <= 6)
+                    {
+                        for (int ic = 0; ic < rows; ic++)
+                        {
+                            if (imageposted > 0)
+                            {
+                                if ((imageposted % 6) == 0)
+                                {
+                                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                                    {
+                                        bodys = reader.ReadToEnd();
+                                    }
+
+                                    bodys = bodys.Replace("[Image]", ImageContent);
+                                    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                                    #region Initial setting vaibhav
+                                    //strs.Append(body);
+                                    PdfPageSize vpageSize = PdfPageSize.A4;
+                                    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                                    HtmlToPdf Vconverter = new HtmlToPdf();
+
+                                    // set the page timeout (in seconds)
+                                    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                                    Vconverter.Options.PdfPageSize = vpageSize;
+                                    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                                    #endregion
+
+
+                                    #region Header and Footer Vaibhav
+                                    #region Heder code
+                                    string _VHeader = string.Empty;
+                                    string _Vfooter = string.Empty;
+
+                                    // for Report header by abel
+                                    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                                    _VHeader = _VreadHeader_File.ReadToEnd();
+                                    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                                    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                                    //_VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
+                                    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                                    _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+                                    #endregion
+
+
+                                    #region Generate no
+                                    if (RM.Report == null)
+                                    {
+
+                                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                        }
+                                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                                    }
+                                    else
+                                    {
+                                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                        }
+
+                                        //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                        {
+                                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                            _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                        }
+                                        else
+                                        {
+                                            _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                        }
+                                    }
+                                    #endregion
+
+                                    #region Footer Code
+
+                                    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                                    _Vfooter = _VreadFooter_File.ReadToEnd();
+                                    _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                                    // header settings
+                                    Vconverter.Options.DisplayHeader = true || true || true;
+                                    Vconverter.Header.DisplayOnFirstPage = true;
+                                    Vconverter.Header.DisplayOnOddPages = true;
+                                    Vconverter.Header.DisplayOnEvenPages = true;
+                                    Vconverter.Header.Height = 75;
+
+                                    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                                    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter.Header.Add(VheaderHtml);
+
+                                    // footer settings
+                                    Vconverter.Options.DisplayFooter = true || true || true;
+                                    Vconverter.Footer.DisplayOnFirstPage = true;
+                                    Vconverter.Footer.DisplayOnOddPages = true;
+                                    Vconverter.Footer.DisplayOnEvenPages = true;
+
+                                    //Vconverter.Footer.Height = 150;
+                                    Vconverter.Footer.Height = 105;
+                                    //converter.Footer.Height = 120;
+
+                                    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                                    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter.Footer.Add(VfooterHtml);
+
+                                    //end abel code
+
+
+                                    //// page numbers can be added using a PdfTextSection object
+                                    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                                    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                                    //Vconverter.Footer.Add(Vtext1);
+                                    #endregion
+                                    #endregion
+
+                                    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+
+
+                                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                                    docs.Save(paths + '\\' + ReportNames);
+                                    docs.Close();
+                                    bodys = string.Empty;
+                                    ImageContent = string.Empty;
+                                    iteration = iteration + 1;
+                                    ViewBag.Reminder = "1";
+                                }
+                            }
+
+                            ImageContent += "<tr><td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img]["Heading"].ToString() + "</td>";
+                            ImageContent += "<td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img + 1]["Heading"].ToString() + "</td></tr>";
+
+                            ImageContent += "<tr><td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[img]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td>";
+                            ImageContent += "<td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[img + 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+
+                            img = img + 2;
+                            imageposted = imageposted + 2;
+                        }
+
+
+
+                        #region Reminder = 1
+
+                        if (reminder == 1)
+                        {
+                            //if (ImageContent != string.Empty)
+                            //{
+                            //    ImageContent += "<tr><td style='padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                            //    ImageContent += "<tr><td style='padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+                            //}
+                            //else
+                            //{
+                            //    ImageContent = "<tr><td style='padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                            //    ImageContent += "<tr><td style='padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+                            //}
+
+                            if (ImageContent != string.Empty)
+                            {
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+                            }
+                            else
+                            {
+                                ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+                            }
+
+
+                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                            {
+                                bodys = reader.ReadToEnd();
+                            }
+                            bodys = bodys.Replace("[Image]", ImageContent);
+                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+
+
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                            #endregion
+
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                // _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                {
+                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                }
+                                else
+                                {
+                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                }
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+
+                            //end abel code
+
+
+                            //// page numbers can be added using a PdfTextSection object
+                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                            //Vconverter.Footer.Add(Vtext1);
+                            #endregion
+                            #endregion
+
+
+
+                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                            docs.Save(paths + '\\' + ReportNames);
+                            docs.Close();
+                            bodys = string.Empty;
+                            ImageContent = string.Empty;
+                            ViewBag.Reminder = "1";
+                        }
+
+                        #region 4 Image If not reminder =0
+                        if (imageposted <= imagecount)
+                        {
+                            if (reminder == 0)
+                            {
+                                ViewBag.Reminder = "2";
+                                using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                                {
+                                    bodys = reader.ReadToEnd();
+                                }
+                                bodys = bodys.Replace("[Image]", ImageContent);
+
+                                bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+
+
+                                #region Initial setting vaibhav
+                                //strs.Append(body);
+                                PdfPageSize vpageSize = PdfPageSize.A4;
+                                PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                                HtmlToPdf Vconverter = new HtmlToPdf();
+
+                                // set the page timeout (in seconds)
+                                Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                                Vconverter.Options.PdfPageSize = vpageSize;
+                                Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                                #endregion
+
+
+                                #region Header and Footer Vaibhav
+                                #region Heder code
+                                string _VHeader = string.Empty;
+                                string _Vfooter = string.Empty;
+
+                                // for Report header by abel
+                                StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                                _VHeader = _VreadHeader_File.ReadToEnd();
+                                _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                                _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                                /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                                _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                                _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                                #endregion
+
+
+                                #region Generate no
+                                if (RM.Report == null)
+                                {
+
+                                    dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                    if (dtSrNo.Tables[0].Rows.Count > 0)
+                                    {
+                                        SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                    }
+                                    RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
+                                    _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                                }
+                                else
+                                {
+                                    //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                    dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                    if (dtSrNo.Tables[0].Rows.Count > 0)
+                                    {
+                                        SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                    }
+
+                                    //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                    if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                    {
+                                        string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                        _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                    }
+                                    else
+                                    {
+                                        _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                    }
+                                }
+                                #endregion
+
+                                #region Footer Code
+
+                                StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                                _Vfooter = _VreadFooter_File.ReadToEnd();
+                                _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                                // header settings
+                                Vconverter.Options.DisplayHeader = true || true || true;
+                                Vconverter.Header.DisplayOnFirstPage = true;
+                                Vconverter.Header.DisplayOnOddPages = true;
+                                Vconverter.Header.DisplayOnEvenPages = true;
+                                Vconverter.Header.Height = 75;
+
+                                PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                                VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                Vconverter.Header.Add(VheaderHtml);
+
+                                // footer settings
+                                Vconverter.Options.DisplayFooter = true || true || true;
+                                Vconverter.Footer.DisplayOnFirstPage = true;
+                                Vconverter.Footer.DisplayOnOddPages = true;
+                                Vconverter.Footer.DisplayOnEvenPages = true;
+
+                                //Vconverter.Footer.Height = 150;
+                                Vconverter.Footer.Height = 105;
+                                //converter.Footer.Height = 120;
+
+                                PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                                VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                Vconverter.Footer.Add(VfooterHtml);
+
+                                //end abel code
+
+
+                                //// page numbers can be added using a PdfTextSection object
+                                //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                                //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                                //Vconverter.Footer.Add(Vtext1);
+                                #endregion
+                                #endregion
+
+                                Vconverter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
+                                Vconverter.Options.AutoFitHeight = HtmlToPdfPageFitMode.NoAdjustment;
+
+
+
+                                // SelectPdf.PdfDocument docs = converters.ConvertHtmlString(bodys);
+                                SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+
+                                ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+                                paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                                docs.Save(paths + '\\' + ReportNames);
+                                docs.Close();
+                                bodys = string.Empty;
+                                ImageContent = string.Empty;
+                                iteration = iteration + 1;
+                            }
+                        }
+
+                        #endregion
+
+
+                        #region 20 Feb 2021 Resolve blank page if Image count 6 
+                        #region 6 Images
+                        //if (((imageposted % 6) == 0) && imageposted > 0)
+                        //{
+                        //    ViewBag.Reminder = "2";
+                        //    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                        //    {
+                        //        bodys = reader.ReadToEnd();
+                        //    }
+                        //    bodys = bodys.Replace("[Image]", ImageContent);
+                        //    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+
+
+                        //    #region Initial setting vaibhav
+                        //    //strs.Append(body);
+                        //    PdfPageSize vpageSize = PdfPageSize.A4;
+                        //    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                        //    HtmlToPdf Vconverter = new HtmlToPdf();
+
+                        //    // set the page timeout (in seconds)
+                        //    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                        //    Vconverter.Options.PdfPageSize = vpageSize;
+                        //    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                        //    #endregion
+
+
+                        //    #region Header and Footer Vaibhav
+                        //    #region Heder code
+                        //    string _VHeader = string.Empty;
+                        //    string _Vfooter = string.Empty;
+
+                        //    // for Report header by abel
+                        //    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                        //    _VHeader = _VreadHeader_File.ReadToEnd();
+                        //    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                        //    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                        //    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                        //    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
+
+
+                        //    #endregion
+
+
+                        //    #region Generate no
+                        //    if (RM.Report == null)
+                        //    {
+
+                        //        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                        //        if (dtSrNo.Tables[0].Rows.Count > 0)
+                        //        {
+                        //            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                        //        }
+                        //        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                        //        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                        //    }
+                        //    else
+                        //    {
+                        //        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                        //        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                        //        if (dtSrNo.Tables[0].Rows.Count > 0)
+                        //        {
+                        //            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                        //        }
+
+                        //        _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                        //    }
+                        //    #endregion
+
+                        //    #region Footer Code
+
+                        //    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                        //    _Vfooter = _VreadFooter_File.ReadToEnd();
+
+                        //    // header settings
+                        //    Vconverter.Options.DisplayHeader = true || true || true;
+                        //    Vconverter.Header.DisplayOnFirstPage = true;
+                        //    Vconverter.Header.DisplayOnOddPages = true;
+                        //    Vconverter.Header.DisplayOnEvenPages = true;
+                        //    Vconverter.Header.Height = 75;
+
+                        //    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                        //    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                        //    Vconverter.Header.Add(VheaderHtml);
+
+                        //    // footer settings
+                        //    Vconverter.Options.DisplayFooter = true || true || true;
+                        //    Vconverter.Footer.DisplayOnFirstPage = true;
+                        //    Vconverter.Footer.DisplayOnOddPages = true;
+                        //    Vconverter.Footer.DisplayOnEvenPages = true;
+
+                        //    //Vconverter.Footer.Height = 150;
+                        //    Vconverter.Footer.Height = 105;
+                        //    //converter.Footer.Height = 120;
+
+                        //    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                        //    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                        //    Vconverter.Footer.Add(VfooterHtml);
+
+                        //    //end abel code
+
+
+                        //    // page numbers can be added using a PdfTextSection object
+                        //    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                        //    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                        //    //Vconverter.Footer.Add(Vtext1);
+                        //    #endregion
+                        //    #endregion
+
+
+
+
+
+                        //    // SelectPdf.PdfDocument docs = converters.ConvertHtmlString(bodys);
+                        //    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+
+                        //    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+                        //    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                        //    docs.Save(paths + '\\' + ReportNames);
+                        //    docs.Close();
+                        //    bodys = string.Empty;
+                        //    ImageContent = string.Empty;
+                        //    iteration = iteration + 1;
+                        //}
+                        #endregion
+                        #endregion
+
+
+
+
+                    }
+                    #endregion
+
+
+
+
+
+
+                    #endregion
+
+
+                    #region Vaibhav If Images count more than 6
+                    else
+                    {
+                        for (int ic = 0; ic < rows; ic++)
+                        {
+                            if (imageposted > 0)
+                            {
+                                if ((imageposted % 6) == 0)
+                                {
+                                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                                    {
+                                        bodys = reader.ReadToEnd();
+                                    }
+
+                                    bodys = bodys.Replace("[Image]", ImageContent);
+
+                                    bodys = bodys.Replace("[Logos]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
+
+                                    #region Initial setting vaibhav
+                                    //strs.Append(body);
+                                    PdfPageSize vpageSize = PdfPageSize.A4;
+                                    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                                    HtmlToPdf Vconverter = new HtmlToPdf();
+
+                                    // set the page timeout (in seconds)
+                                    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                                    Vconverter.Options.PdfPageSize = vpageSize;
+                                    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                                    #endregion
+
+
+                                    #region Header and Footer Vaibhav
+                                    #region Heder code
+                                    string _VHeader = string.Empty;
+                                    string _Vfooter = string.Empty;
+
+                                    // for Report header by abel
+                                    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                                    _VHeader = _VreadHeader_File.ReadToEnd();
+                                    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                                    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                                    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                                    _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                                    #endregion
+
+
+                                    #region Generate no
+                                    if (RM.Report == null)
+                                    {
+
+                                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                        }
+                                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                                    }
+                                    else
+                                    {
+                                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                        }
+
+                                        //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                        {
+                                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                            _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                        }
+                                        else
+                                        {
+                                            _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                        }
+                                    }
+                                    #endregion
+
+                                    #region Footer Code
+
+                                    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                                    _Vfooter = _VreadFooter_File.ReadToEnd();
+                                    _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                                    // header settings
+                                    Vconverter.Options.DisplayHeader = true || true || true;
+                                    Vconverter.Header.DisplayOnFirstPage = true;
+                                    Vconverter.Header.DisplayOnOddPages = true;
+                                    Vconverter.Header.DisplayOnEvenPages = true;
+                                    Vconverter.Header.Height = 75;
+
+                                    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                                    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter.Header.Add(VheaderHtml);
+
+                                    // footer settings
+                                    Vconverter.Options.DisplayFooter = true || true || true;
+                                    Vconverter.Footer.DisplayOnFirstPage = true;
+                                    Vconverter.Footer.DisplayOnOddPages = true;
+                                    Vconverter.Footer.DisplayOnEvenPages = true;
+
+                                    //Vconverter.Footer.Height = 150;
+                                    Vconverter.Footer.Height = 105;
+                                    //converter.Footer.Height = 120;
+
+                                    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                                    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter.Footer.Add(VfooterHtml);
+
+                                    //end abel code
+
+
+                                    // page numbers can be added using a PdfTextSection object
+                                    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                                    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                                    //Vconverter.Footer.Add(Vtext1);
+                                    #endregion
+                                    #endregion
+
+
+
+
+                                    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+
+
+                                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                                    docs.Save(paths + '\\' + ReportNames);
+                                    docs.Close();
+                                    bodys = string.Empty;
+                                    ImageContent = string.Empty;
+                                    iteration = iteration + 1;
+                                }
+                            }
+
+                            ImageContent += "<tr><td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img]["Heading"].ToString() + "</td>";
+                            ImageContent += "<td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img + 1]["Heading"].ToString() + "</td></tr>";
+
+                            ImageContent += "<tr><td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[img]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td>";
+                            ImageContent += "<td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[img + 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+
+                            img = img + 2;
+                            imageposted = imageposted + 2;
+                        }
+
+
+
+
+
+
+
+
+
+                        ViewBag.Reminder = "2";
+                        /*
+                        #region  reminder
+
+
+                        if (reminder == 1)
+                        {                       
+                            if (ImageContent != string.Empty)
+                            {
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                            }
+                            else
+                            {
+                                ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                            }
+
+                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                            {
+                                bodys = reader.ReadToEnd();
+                            }
+                            bodys = bodys.Replace("[Image]", ImageContent);
+                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+
+
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);                        
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
+
+                            #endregion
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+
+                            //end abel code
+
+
+                            // page numbers can be added using a PdfTextSection object
+                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                            //Vconverter.Footer.Add(Vtext1);
+                            #endregion
+                            #endregion
+
+
+
+                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                            docs.Save(paths + '\\' + ReportNames);
+                            docs.Close();
+                            bodys = string.Empty;
+                            ImageContent = string.Empty;
+                            ViewBag.Reminder = "1";
+                        }
+
+
+                        #endregion
+                        */
+
+
+                        #region  reminder
+                        if (reminder == 1)
+                        {
+
+                            if (ImageContent != string.Empty)
+                            {
+                                if ((imageposted % 6) == 0)
+                                {
+                                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                                    {
+                                        bodys = reader.ReadToEnd();
+                                    }
+                                    bodys = bodys.Replace("[Image]", ImageContent);
+                                    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                                    #region Initial setting vaibhav
+                                    //strs.Append(body);
+                                    PdfPageSize vpageSize1 = PdfPageSize.A4;
+                                    PdfPageOrientation vpdfOrientation1 = PdfPageOrientation.Portrait;
+                                    HtmlToPdf Vconverter1 = new HtmlToPdf();
+
+                                    // set the page timeout (in seconds)
+                                    Vconverter1.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                                    Vconverter1.Options.PdfPageSize = vpageSize1;
+                                    Vconverter1.Options.PdfPageOrientation = vpdfOrientation1;
+                                    #endregion
+
+                                    #region Heder code
+                                    string _VHeader1 = string.Empty;
+                                    string _Vfooter1 = string.Empty;
+
+                                    // for Report header by abel
+                                    StreamReader _VreadHeader_File1 = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+
+                                    _VHeader1 = _VreadHeader_File1.ReadToEnd();
+                                    _VHeader1 = _VHeader1.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                                    _VHeader1 = _VHeader1.Replace("[RevisionNo]", countNo);
+                                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                                    _VHeader1 = _VHeader1.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                                    _VHeader1 = _VHeader1.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                                    #endregion
+
+
+                                    #region Generate no
+                                    if (RM.Report == null)
+                                    {
+
+                                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                        }
+                                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
+                                        _VHeader1 = _VHeader1.Replace("[ReportNo]", RM.ReportNo);
+
+                                    }
+                                    else
+                                    {
+
+                                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                        }
+                                        // _VHeader1 = _VHeader1.Replace("[ReportNo]", SrNo);
+                                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                        {
+                                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                            _VHeader1 = _VHeader1.Replace("[ReportNo]", strReportNo);
+                                        }
+                                        else
+                                        {
+                                            _VHeader1 = _VHeader1.Replace("[ReportNo]", SrNo);
+
+                                        }
+                                    }
+                                    #endregion
+
+                                    #region Footer Code
+
+                                    StreamReader _VreadFooter_File1 = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                                    _Vfooter1 = _VreadFooter_File1.ReadToEnd();
+                                    _Vfooter1 = _Vfooter1.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                                    // header settings
+                                    Vconverter1.Options.DisplayHeader = true || true || true;
+                                    Vconverter1.Header.DisplayOnFirstPage = true;
+                                    Vconverter1.Header.DisplayOnOddPages = true;
+                                    Vconverter1.Header.DisplayOnEvenPages = true;
+                                    Vconverter1.Header.Height = 75;
+
+                                    PdfHtmlSection VheaderHtml1 = new PdfHtmlSection(_VHeader1, string.Empty);
+                                    VheaderHtml1.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter1.Header.Add(VheaderHtml1);
+
+                                    // footer settings
+                                    Vconverter1.Options.DisplayFooter = true || true || true;
+                                    Vconverter1.Footer.DisplayOnFirstPage = true;
+                                    Vconverter1.Footer.DisplayOnOddPages = true;
+                                    Vconverter1.Footer.DisplayOnEvenPages = true;
+                                    Vconverter1.Footer.Height = 105;
+
+
+                                    PdfHtmlSection VfooterHtml1 = new PdfHtmlSection(_Vfooter1, string.Empty);
+                                    VfooterHtml1.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter1.Footer.Add(VfooterHtml1);
+
+
+                                    #endregion
+
+                                    SelectPdf.PdfDocument docs1 = Vconverter1.ConvertHtmlString(bodys);
+                                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+                                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                                    docs1.Save(paths + '\\' + ReportNames);
+                                    docs1.Close();
+
+                                    bodys = string.Empty;
+                                    ImageContent = string.Empty;
+                                    iteration = iteration + 1;
+
+                                    ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                    ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                                }
+                                else
+                                {
+                                    ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                    ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                                }
+                            }
+                            else
+                            {
+                                ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                            }
+
+
+                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                            {
+                                bodys = reader.ReadToEnd();
+                            }
+                            bodys = bodys.Replace("[Image]", ImageContent);
+                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+
+
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                            #endregion
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                // _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                {
+                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                }
+                                else
+                                {
+                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                }
+
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+                            #endregion
+                            #endregion
+
+
+
+                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                            docs.Save(paths + '\\' + ReportNames);
+                            docs.Close();
+                            bodys = string.Empty;
+                            ImageContent = string.Empty;
+                            ViewBag.Reminder = "1";
+                        }
+                        #endregion
+
+
+                        #region If ImageContent not null
+
+                        if (ViewBag.Reminder != "1")
+                        {
+                            ViewBag.Reminder = "2";
+                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                            {
+                                bodys = reader.ReadToEnd();
+                            }
+                            bodys = bodys.Replace("[Image]", ImageContent);
+                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+
+
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+
+
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                            #endregion
+
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                {
+                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                }
+                                else
+                                {
+                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                }
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+
+                            //end abel code
+
+
+                            //// page numbers can be added using a PdfTextSection object
+                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                            //Vconverter.Footer.Add(Vtext1);
+                            #endregion
+                            #endregion
+
+
+                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+
+                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                            docs.Save(paths + '\\' + ReportNames);
+                            docs.Close();
+                            bodys = string.Empty;
+                            ImageContent = string.Empty;
+                            iteration = iteration + 1;
+                        }
+                        #endregion
+
+                    }
+                    #endregion
+
+
+
+                    string[] pdfs = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+                    
+
+                    PdfSharp.Pdf.PdfDocument ImageDoc = new PdfSharp.Pdf.PdfDocument();
+
+
+
+
+                    foreach (string pdfFile in pdfs)
+                    {
+                        if (pdfFile.Contains("Img_"))
+                        {
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+                            #region Header footer Vaibhav Test 28-07-2020
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                            #endregion
+
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                // _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                {
+                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                }
+                                else
+                                {
+                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                }
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");//1
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+
+                            //end abel code
+
+
+                            // page numbers can be added using a PdfTextSection object
+                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                            //Vconverter.Footer.Add(Vtext1);
+                            SelectPdf.PdfDocument docs = converters.ConvertHtmlString(bodys);
+                            #endregion
+                            #endregion
+                            #endregion
+                            PdfSharp.Pdf.PdfDocument ImagePDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
+                            ImageDoc.Version = ImagePDFDocument.Version;
+
+                            foreach (PdfSharp.Pdf.PdfPage page in ImagePDFDocument.Pages)
+                            {
+                                ImageDoc.AddPage(page);
+                            }
+                        }
+                    }
+                    int ImageC = ImageDoc.PageCount;
+                    if (System.IO.File.Exists(paths + "/Image_" + countNo + ".pdf"))
+                    {
+                        // If file found, delete it    
+                        System.IO.File.Delete(paths + "/Image_" + countNo + ".pdf");
+
+                    }
+
+
+                    //PdfDocument docs = converters.ConvertHtmlString(bodys);
+
+
+                    /****Final Report Saving ****/
+                    if (ImageReportDashBoard.Rows.Count > 0)
+                    {
+                        if (RM.ImageReport == null || RM.ImageReport == "")
+                        {
+                            paths = Server.MapPath("~/Content/");
+
+                            ImageDoc.Save(paths + ObjModelVisitReport.Call_No + "/Image_" + countNo + ".pdf");
+                            ImageDoc.Close();
+
+                        }
+                        else
+                        {
+                            ReportNames = RM.ImageReport;
+                            paths = Server.MapPath("~/Content/");
+
+                            ImageDoc.Save(paths + ReportNames);
+                            ImageDoc.Close();
+                        }
+                    }
+
+
+
+                    #endregion
+
+                    #region Save to Pdf Code 
+                    SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";
+                    System.Text.StringBuilder strs = new System.Text.StringBuilder();
+                    string body = string.Empty;
+                    string Userole = Convert.ToString(Session["RoleID"]);
+                    string ItemDescriptioncontent = "";
+                    string ReferenceDocumentscontent = "";
+                    string InspectionDocumentsContent = "";
+                    string DocumentreviewContent = "";
+                    string EquipmentDetailscontent = "";
+                    string AreasOfConcernContent = "";
+                    string PendingActivityContent = "";
+                    string AreaOfConcernOnPDF = "";
+                    string AreaOfConcernOnPDFHeading = "";
+
+
+                    string check1 = "";
+                    string check2 = "";
+                    string check3 = "";
+                    string check4 = "";
+                    string check5 = "";
+                    string check6 = "";
+                    string check7 = "";
+                    string check8 = "";
+                    string check9 = "";
+                    string check10 = "";
+                    string checkNABL = "";
+
+                    string check11 = "";
+                    string check12 = "";
+                    string check13 = "";
+                    using (StreamReader reader1 = new StreamReader(Server.MapPath("~/inspection-visit-report.html")))
+                    {
+                        body = reader1.ReadToEnd();
+                    }
+
+
+
+
+                    body = body.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                    body = body.Replace("[SAPNo]", ObjModelVisitReport.SAPNo);
+                    body = body.Replace("[Branch]", ObjModelVisitReport.Branch);
+                    body = body.Replace("[NotificationNameNo_Date]", ObjModelVisitReport.Notification_Name_No_Date);
+                    body = body.Replace("[DateOfInspection]", ObjModelVisitReport.Date_Of_Inspection);
+                    body = body.Replace("[ProjectNameLocation]", ObjModelVisitReport.Project_Name_Location);
+                    body = body.Replace("[AddressOfInspection]", ObjModelVisitReport.Address_Of_Inspection);
+                    body = body.Replace("[ClientName]", /*ObjModelVisitReport.Client_Name*/Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Client_NameWithoutId"]));
+                    body = body.Replace("[Enduser_Name]", ObjModelVisitReport.End_user_Name);
+                    body = body.Replace("[DECPMCEPC_Name]", ObjModelVisitReport.DEC_PMC_EPC_Name);
+                    body = body.Replace("[DECPMCEPCAssignment_No]", ObjModelVisitReport.DEC_PMC_EPC_Assignment_No);
+                    body = body.Replace("[VendorNameLocation]", /*ObjModelVisitReport.Vendor_Name_Location*/Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Vendor_Name_LocationWithoutId"]));
+
+
+                    if (SubJobDate == null || SubJobDate == "")
+                    {
+                        body = body.Replace("[PoNo]", ObjModelVisitReport.Po_No);
+                    }
+                    else
+                    {
+                        body = body.Replace("[PoNo]", ObjModelVisitReport.Po_No + " Dated " + SubJobDate);
+                    }
+
+                    if (ObjModelVisitReport.SubType == "Sub Job")
+                    {
+                        body = body.Replace("[PoNoSubVendor]", "");
+                        body = body.Replace("[SubVendorName]", "");
+                    }
+                    else
+                    {
+
+                        if (ObjModelVisitReport.SubType == "SubSubSub Job")
+                        {
+                            if (ObjModelVisitReport.SubSubVendorDate_of_PO != string.Empty && ObjModelVisitReport.SubSubSubPoNo != string.Empty)
+                            {
+                                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO + " and" + "<br/> " + ObjModelVisitReport.SubSubSubPoNo + " Dated " + ObjModelVisitReport.SubSubSubPoDate);
+                            }
+                            else
+                            {
+                                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor);
+                            }
+                            body = body.Replace("[SubVendorName]", Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_NameWithoutId"]) + " and" + "<br/>" + Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorName"]));
+
+                        }
+                        else
+                        {
+                            if (ObjModelVisitReport.SubSubVendorDate_of_PO != string.Empty)
+                            {
+                                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO);
+                            }
+                            else
+                            {
+                                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor);
+                            }
+                            body = body.Replace("[SubVendorName]", Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_NameWithoutId"]));
+
+                        }
+
+
+
+                    }
+
+                    body = body.Replace("[SubVendorName]", /*ObjModelVisitReport.Sub_Vendor_Name*/Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_NameWithoutId"]));
+                    if (ObjModelVisitReport.Po_No_SubVendor != string.Empty)
+                    {
+                        body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO);
+                    }
+                    else
+                    {
+                        body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor);
+                    }
+                    body = body.Replace("[Conclusion]", ObjModelVisitReport.Conclusion);
+                    body = body.Replace("[CanIRNbeissued]", ObjModelVisitReport.CanIRNbeissued);
+
+
+                    //body = body.Replace("[PendingActivites]", ObjModelVisitReport.Pending_Activites);
+                    //body = body.Replace("[AreasOfConcerns]", ObjModelVisitReport.Areas_Of_Concerns);
+                    body = body.Replace("[IdentificationOfInspected]", ObjModelVisitReport.Identification_Of_Inspected);
+
+                    body = body.Replace("[NonConformitiesraised]", ObjModelVisitReport.Non_Conformities_raised);
+                    body = body.Replace("[Name]", ObjModelVisitReport.Name);
+                    body = body.Replace("[date]", ObjModelVisitReport.ReportCreatedDate);
+
+                    if (countNo == "0")
+                    {
+                        body = body.Replace("[RevisionNo]", "0");
+                    }
+                    else
+                    {
+                        body = body.Replace("[RevisionNo]", countNo);
+                    }
+
+                    //body = body.Replace("[TempInspectionPhotosNo]", ObjModelVisitReport.TempInspectionPhotosNo);//24
+                    body = body.Replace("[TempMaster_List_Of_calibrated_Instruments]", ObjModelVisitReport.TempMaster_List_Of_calibrated_Instruments);
+                    if (ObjModelVisitReport.ReviseReason != "-" && ObjModelVisitReport.ReviseReason != "")
+                    {
+                        body = body.Replace("[ReviseReason]", "Reason for Revision - " + Convert.ToString(ObjModelVisitReport.ReviseReason));
+                    }
+                    else
+                    {
+                        body = body.Replace("[ReviseReason]", "-");
+                    }
+                    body = body.Replace("[ReviseReportNoForPDF]", ObjModelVisitReport.ReviseReportNoForPDF);
+                    body = body.Replace("[ReportNo]", ObjModelVisitReport.Report_No);
+                    body = body.Replace("[ReportNoForPDF]", ObjModelVisitReport.ReportNoForPDF);
+
+
+
+                    //if (ObjModelVisitReport.Sap_And_Controle_No == "050104219221")
+                    //{
+                    //    body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor PO Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[VendorName]", "<td width='25 % ; style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px;border-top-width: 0px;border-right-width: 0px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                    //    body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Contractor PO Number on Vendor)</i></span></td>");
+                    //    body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub-Contractor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Contractor PO Number on Sub-Contractor)</i></span></td>");
+                    //}
+                    //else
+                    //{
+                    //    body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Assignment Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[VendorName]", "<td width='25 % ; style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                    //    body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Client PO on Vendor)</i></span></td>");
+                    //    body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub Vendor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+
+                    //    body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Vendor PO on Sub Vendor)</i></span></td>");
+                    //}
+
+
+                    if (ObjModelVisitReport.Sap_And_Controle_No == "050104219221")
+                    {
+                        body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor PO Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        body = body.Replace("[VendorName]", "<td width='25 %'; style='border: 1px solid #000000;vertical-align:top; border-top-width: 1px;border-right-width: 0px; '><span style='font-size: 14px;border-top-width: 0px;border-right-width: 0px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                        body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-left-width: 0px;  '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Contractor PO Number on Vendor)</i></span></td>");
+                        body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub-Contractor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Contractor PO Number on Sub-Contractor)</i></span></td>");
+                    }
+                    else
+                    {
+                        //body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        //body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Assignment Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        //body = body.Replace("[VendorName]", "<td width='25 %'; style='border: 1px solid #000000;vertical-align:top; border-top-width: 1px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                        //body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Client PO on Vendor)</i></span></td>");
+                        //body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub Vendor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+
+                        //body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Vendor PO on Sub Vendor)</i></span></td>");
+
+
+                        body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Assignment Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        //nikiyta
+                        body = body.Replace("[VendorName]", "<td width='25 %'; style='border: 1px solid #000000;vertical-align:top; border-top-width: 1px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                        body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Client PO on Vendor)</i></span></td>");
+                        body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub Vendor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+
+                        body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Vendor PO on Sub Vendor)</i></span></td>");
+
+                    }
+
+                    //ItemDescription Heading 
+                    if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes" && ObjModelVisitReport.ShowCount == "Yes" && ObjModelVisitReport.DisplayTotalQuantity == "Yes")
+                    {
+                        body = body.Replace("[POItemNo]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;vertical-align: text-top;text-align:center;' width='5%'><span><strong> PO Item No.</strong></span></td>");
+                        body = body.Replace("[ItemCode]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;' width='10%'><span><strong>Item Code</strong></span></td>");
+                        body = body.Replace("[Identification_MTCNumber]", "<td width='47%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;'><span><strong>Item Description / Identification / MTC Number</strong></span></td>");
+                        body = body.Replace("[HeatNumber]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Heat Number</strong></span></td>");
+                        body = body.Replace("[UOM]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;'><span><strong>UOM</strong></span></td>");
+                        body = body.Replace("[POQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>P.O. Quantity</strong></span></td>");
+                        body = body.Replace("[OfferedQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Offered Quantity</strong></span></td>");
+                        body = body.Replace("[AcceptableQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Acceptable Quantity</strong></span></td>");
+
+                    }
+                    else if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes")
+                    {
+                        body = body.Replace("[POItemNo]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;vertical-align: text-top;text-align:center;' width='5%'><span><strong> PO Item No.</strong></span></td>");
+                        body = body.Replace("[ItemCode]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;' width='10%'><span><strong>Item Code</strong></span></td>");
+                        body = body.Replace("[Identification_MTCNumber]", "<td width='47%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;'><span><strong>Item Description / Identification / MTC Number</strong></span></td>");
+                        body = body.Replace("[HeatNumber]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Heat Number</strong></span></td>");
+                        body = body.Replace("[UOM]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;'><span><strong>UOM</strong></span></td>");
+                        body = body.Replace("[POQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>P.O. Quantity</strong></span></td>");
+                        body = body.Replace("[OfferedQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Offered Quantity</strong></span></td>");
+                        body = body.Replace("[AcceptableQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Acceptable Quantity</strong></span></td>");
+
+
+                    }
+                    else
+                    {
+                        body = body.Replace("[POItemNo]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;vertical-align: text-top;text-align:center;' width='5%'><span><strong> PO Item No.</strong></span></td>");
+                        body = body.Replace("[ItemCode]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;' width='10%'><span><strong>Item Code</strong></span></td>");
+                        body = body.Replace("[Identification_MTCNumber]", "<td width='47%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;'><span><strong>Item Description / Identification / MTC Number</strong></span></td>");
+                        body = body.Replace("[HeatNumber]", "");
+                        body = body.Replace("[UOM]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;'><span><strong>UOM</strong></span></td>");
+                        body = body.Replace("[POQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>P.O. Quantity</strong></span></td>");
+                        body = body.Replace("[OfferedQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Offered Quantity</strong></span></td>");
+                        body = body.Replace("[AcceptableQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Acceptable Quantity</strong></span></td>");
+
+                    }
+
+
+                    if (ObjModelVisitReport.DTUVIndiaClientEndUser == true)
+                    {
+                        check11 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaClientEndUser + " checked></span>";
+                    }
+                    else
+                    {
+                        check11 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaClientEndUser + " ></span>";
+                    }
+                    if (ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch == true)
+                    {
+                        check12 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch + " checked></span>";
+                    }
+                    else
+                    {
+                        check12 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch + " ></span>";
+                    }
+                    if (ObjModelVisitReport.DVendor_Sub_Vendor == true)
+                    {
+                        check13 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DVendor_Sub_Vendor + " checked></span>";
+                    }
+                    else
+                    {
+                        check13 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DVendor_Sub_Vendor + " ></span>";
+                    }
+
+
+                    if (ObjModelVisitReport.Kick_Off_Pre_Inspection == true)
+                    {
+                        check1 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Kick_Off_Pre_Inspection + " checked></span>";
+                    }
+                    else
+                    {
+                        check1 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Kick_Off_Pre_Inspection + "></span>";
+                    }
+                    if (ObjModelVisitReport.Material_identification == true)
+                    {
+                        check2 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Material_identification + " checked></span>";
+                    }
+                    else
+                    {
+                        check2 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Material_identification + " ></span>";
+                    }
+                    if (ObjModelVisitReport.Interim_Stages == true)
+                    {
+                        check3 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Interim_Stages + " checked></span>";
+                    }
+                    else
+                    {
+                        check3 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Interim_Stages + "></span>";
+                    }
+                    if (ObjModelVisitReport.Document_review == true)
+                    {
+                        check4 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Document_review + " checked></span>";
+                    }
+                    else
+                    {
+                        check4 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Document_review + "></span>";
+                    }
+                    if (ObjModelVisitReport.Final_Inspection == true)
+                    {
+                        check5 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Final_Inspection + " checked></span>";
+                    }
+                    else
+                    {
+                        check5 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Final_Inspection + " ></span>";
+                    }
+                    if (ObjModelVisitReport.Re_inspection == true)
+                    {
+                        check6 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Re_inspection + " checked></span>";
+                    }
+                    else
+                    {
+                        check6 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Re_inspection + " ></span>";
+                    }
+
+                    if (ObjModelVisitReport.Inspection_records == true)
+                    {
+                        check7 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_records + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check7 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_records + " ></span></td>";
+                    }
+                    if (ObjModelVisitReport.Other_Specify == true)
+                    {
+                        check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " ></span></td>";
+                    }
+                    //27.01.2025
+                    if (ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF == "Yes")
+                    {
+                        check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " ></span></td>";
+                    }
+                    //if (ObjModelVisitReport.Inspection_Photo == true)
+                    if (imagecount > 0)
+                    {
+                        ObjModelVisitReport.Inspection_Photo = true;
+
+                        check9 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_Photo + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check9 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_Photo + "></span></td>";
+                    }
+                    if (ObjModelVisitReport.MasterListOfcalibratedInstruments == true)
+                    {
+                        check10 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.MasterListOfcalibratedInstruments + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check10 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.MasterListOfcalibratedInstruments + "></span></td>";
+                    }
+
+                    //foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                    //{
+                    //    i = i + 1;
+                    //    ItemDescriptioncontent += "<tr><td width='10%' align='center' style='font - size: 14px; color: #000; font-family: Arial;'>" + Convert.ToString(v.Po_Item_No) + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Item_Code + " </td><td width='30%' style='font - size: 14px; color: #000; font-family: Arial;white-space: pre-line;'>" + v.ItemCode_Description + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Unit + "</td><td width='10%'>" + v.Po_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Offered_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Accepted_Quantity + "</td></tr>";
+                    //}
+
+                    //foreach (ReferenceDocumentsModel v in RefranceDocuments)
+                    //{
+                    //    J = J + 1;
+                    //    // ReferenceDocumentscontent += "<tr><td> " + J + " </td><td>" + Convert.ToString(v.Document_Name) + "</td><td>" + v.Document_No + " </td><td>" + v.Approval_Status + "</td></tr>";
+                    //    //ReferenceDocumentscontent += "<tr><td align='center'> " + J + ')' + " </td><td style='white-space: pre-line;'>" + Convert.ToString(v.Document_Name) + "</td><td><span style='white-space: pre-line;'>" + v.Document_No + " </span></td><td style='white-space: pre-line;'>" + v.VendorDocumentNumber + "</td><td style='white-space: pre-line;'>" + v.Approval_Status + "</td></tr>";
+                    //    ReferenceDocumentscontent += "<tr><td style='white-space: pre-line;vertical-align:top;text-align:center;'> " + J + ')' + " </td><td align='top' style='white-space: pre-line;vertical-align:top;'>" + Convert.ToString(v.Document_Name) + "</td><td align='top' style='white-space: pre-line;vertical-align:top;'>" + v.Document_No + " </span></td><td align='top' style='white-space: pre-line;vertical-align:top;'>" + v.VendorDocumentNumber + "</td><td  style='white-space: pre-line;vertical-align:top;'>" + v.Approval_Status + "</td></tr>";
+                    //}
+
+                    string ItemDescriptioncontentTotal = "";
+
+                    if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes" && ObjModelVisitReport.ShowCount == "Yes" && ObjModelVisitReport.DisplayTotalQuantity == "Yes")
+                    {
+                        //09.02.2024
+                        foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                        {
+                            i = i + 1;
+
+                            if (i == lstCompanyDashBoard.Count)
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            else
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                        ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.PO_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Offered_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Accepted_QuantityTotal1 + " </span></td></tr>";
+                    }
+                    else if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes")
+                    {
+                        //09.02.2024 curr
+                        foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                        {
+                            i = i + 1;
+
+                            if (i == lstCompanyDashBoard.Count)
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            else
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                        //ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.PO_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Offered_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Accepted_QuantityTotal1 + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td></tr>";
+                    }
+                    else if (ObjModelVisitReport.DisplayTotalQuantity == "Yes")
+                    {
+                        foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                        {
+                            i = i + 1;
+                            //ItemDescriptioncontent += "<tr><td width='3%' align='center' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;'>" + Convert.ToString(v.Po_Item_No) + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Item_Code + " </td><td width='47%' style='font - size: 14px; color: #000; font-family: Arial;;vertical-align:top;text-align:left;'>" + v.ItemCode_Description + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Unit + "</td><td width='10%' style='vertical-align:top;text-align:center;'>" + v.Po_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Offered_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Accepted_Quantity + "</td></tr>";
+                            //if (i == lstCompanyDashBoard.Count)
+                            //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid color: #000;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:left;border-right-width: 0px;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            //else
+                            //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid  color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            if (i == lstCompanyDashBoard.Count)
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            else
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                        ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.PO_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Offered_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Accepted_QuantityTotal1 + " </span></td></tr>";
+                    }
+                    else
+                    {
+                        foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                        {
+                            i = i + 1;
+                            //ItemDescriptioncontent += "<tr><td width='3%' align='center' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;'>" + Convert.ToString(v.Po_Item_No) + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Item_Code + " </td><td width='47%' style='font - size: 14px; color: #000; font-family: Arial;;vertical-align:top;text-align:left;'>" + v.ItemCode_Description + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Unit + "</td><td width='10%' style='vertical-align:top;text-align:center;'>" + v.Po_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Offered_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Accepted_Quantity + "</td></tr>";
+                            //if (i == lstCompanyDashBoard.Count)
+                            //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid color: #000;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:left;border-right-width: 0px;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            //else
+                            //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid  color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            if (i == lstCompanyDashBoard.Count)
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            else
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                        // ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td></tr>";
+                    }
+
+
+
+
+                    foreach (ReferenceDocumentsModel v in RefranceDocuments)
+                    {
+                        J = J + 1;
+                        // ReferenceDocumentscontent += "<tr><td> " + J + " </td><td>" + Convert.ToString(v.Document_Name) + "</td><td>" + v.Document_No + " </td><td>" + v.Approval_Status + "</td></tr>";
+                        //ReferenceDocumentscontent += "<tr><td align='center'> " + J + ')' + " </td><td style='white-space: pre-line;'>" + Convert.ToString(v.Document_Name) + "</td><td><span style='white-space: pre-line;'>" + v.Document_No + " </span></td><td style='white-space: pre-line;'>" + v.VendorDocumentNumber + "</td><td style='white-space: pre-line;'>" + v.Approval_Status + "</td></tr>";
+                        // ReferenceDocumentscontent += "<tr><td style='border:1px solid #000000;white-space: pre-line;vertical-align:top;text-align:center;border-left-width: 0px;border-bottom-width: 0px;color: #000;'> " + J + " </td><td align='top' style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + Convert.ToString(v.Document_Name) + "</td><td align='top' style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + v.Document_No + " </span></td><td align='top' style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + v.VendorDocumentNumber + "</td><td  style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + v.Approval_Status + "</td></tr>";
+
+                        if (J == RefranceDocuments.Count)
+                            ReferenceDocumentscontent += "<tr><td width='2%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;text-align:center;border-left-width: 0px;border-bottom-width: 0px;color: #000;border-left-width: 0px;font-size:14px;'> " + J + " </td><td width='17%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + Convert.ToString(v.Document_Name) + "</td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.Document_No + " </span></td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.VendorDocumentNumber + "</td><td width='27%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;border-right-width: 1px;color: #000;font-size:14px;'>" + v.Approval_Status + "</td></tr>";
+                        else
+                            ReferenceDocumentscontent += "<tr><td width='2%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;text-align:center;border-left-width: 0px;border-bottom-width: 0px;color: #000;border-left-width: 0px;font-size:14px;'> " + J + " </td><td width='17%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + Convert.ToString(v.Document_Name) + "</td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.Document_No + " </span></td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.VendorDocumentNumber + "</td><td width='27%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;border-right-width: 1px;color: #000;font-size:14px;'>" + v.Approval_Status + "</td></tr>";
+
+                    }
+                    foreach (InspectionActivitiesModel v in InspectionDocuments)
+                    {
+                        K = K + 1;
+                        // InspectionDocumentsContent += "<tr><td width='10%' align='center'> " + K + ')' + " </td><td width='90%' colspan='5'><span style='font-size: 14px;white-space: pre-line;'>" + Convert.ToString(v.Stages_Witnessed) + "</span></td></tr>";
+                        InspectionDocumentsContent += "<tr><td style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;' width='5%' align='center'> " + K + " </td><td width='95%' colspan='5' style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;'><span style='font-size: 14px;white-space: pre-line;'>" + Convert.ToString(v.Stages_Witnessed) + "</span></td></tr>";
+                    }
+                    foreach (DocumentRevieweModel v in DocumentReview)
+                    {
+                        L = L + 1;
+                        //DocumentreviewContent += "<tr><td width='10%' align='center'><span> " + L + ')' + " </span></td><td width='90%' colspan='5'><span style='font-size:14px;white-space: pre-line;'>" + Convert.ToString(v.Description) + "</span></td></tr>";
+                        DocumentreviewContent += "<tr><td style='font-family:TNG Pro;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;' width='5%' align='center'><span> " + L + " </span></td><td style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;' width='95%' colspan='5'><span style='border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;white-space: pre-line;'>" + Convert.ToString(v.Description) + "</span></td></tr>";
+                    }
+
+
+                    foreach (EquipmentDetailsModel v in EquipmentDetails)
+                    {
+                        if (v.NABLseenote1 == true)
+                        {
+                            // checkNABL = "<td > " + M + " </td> <td width='5%' align='center' style='border-right-width: 0px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + " checked></span></td>";
+                            checkNABL = "<td style='border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;'> " + M + " </td> <td width='5%' align='center' style='border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;text-align:center;font-size:14px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + " checked></span></td>";
+                        }
+                        else
+                        {
+                            //checkNABL = "<td width='5%' align='center' style='border-right-width: 0px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + "></span></td>";
+                            checkNABL = "<td width='5%' align='center' style='border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;text-align:center;font-size:14px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + "></span></td>";
+                        }
+                    }
+
+
+                    dtAreasOfConcernOnPDF = objDalVisitReport.GetAreasOfConcernOnPDF(PK_CALL_ID);
+                    if (dtAreasOfConcernOnPDF.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dtAreasOfConcernOnPDF.Rows)
+                        {
+                            lstAreasOfConcernOnPDF.Add(
+                                new InspectionvisitReportModel
+                                {
+                                    PDF_Type = Convert.ToString(dr["PDF_Type"]),
+                                    PDF_Description = Convert.ToString(dr["PDF_Description"]),
+                                    PDF_MitigatedBy = Convert.ToString(dr["PDF_MitigatedBy"]),
+                                    PDF_MitigatedDate = Convert.ToString(dr["PDF_MitigatedDate"]),
+                                    PDF_RaisedBy = Convert.ToString(dr["PDF_RaisedBy"]),
+                                    PDF_ReportNo = Convert.ToString(dr["PDF_ReportNo"]),
+                                    PDF_PreviousComment = Convert.ToString(dr["PDF_PreviousComment"]),
+                                    PDF_Status = Convert.ToString(dr["PDF_Status"]),
+                                }
+                                );
+                        }
+                    }
+
+                    if (ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF == "Yes")
+                    {
+                        // AreaOfConcernOnPDFHeading += " <tr><td colspan='7' style='border: 1px solid #000000;border-bottom-width: 0px;border-top-width: 0px;background-color: #D7DBDD;padding-top: -1em;padding-bottom: -1em;border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;'>Concern:</span></td></tr>                <tr><td width='5 % ' style='border - left - width: 0px; '><span style='font - size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Type </strong></span></td><td width='45%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Description </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedDate </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>RaisedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>ReportNo </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Status</strong></span></td></tr>   ";
+                        AreaOfConcernOnPDFHeading += " <tr><td colspan='7' style='border: 1px solid #000000;border-bottom-width: 0px;border-top-width: 0px;background-color: #D7DBDD;padding-top: -1em;padding-bottom: -1em;border-left-width: 0px;page-break-before: always;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;'>List Of Issues:</span></td></tr>                <tr><td width='5 % ' style='border - left - width: 0px; '><span style='font - size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Type </strong></span></td><td width='45%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Description </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedDate </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>RaisedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>ReportNo </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Status</strong></span></td></tr>   ";
+                    }
+                    else
+                    {
+                        AreaOfConcernOnPDFHeading += "";
+                    }
+
+                    if (ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF == "Yes")
+                    {
+                        foreach (InspectionvisitReportModel ac in lstAreasOfConcernOnPDF)
+                        {
+
+                            //   i = i + 1;
+                            //if (i == lstAreasOfConcernOnPDF.Count)
+                            //AreaOfConcernOnPDF += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '5%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Type) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-top-width: 0px;font-size:14px;border-left-width: 0px;' width = '45%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Description) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedDate) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_RaisedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_ReportNo) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_PreviousComment) /*+ ''*/ + " </span></td></tr>";
+
+                            AreaOfConcernOnPDF += " <tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '5%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Type) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-top-width: 0px;font-size:14px;border-left-width: 0px;' width = '45%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Description) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedDate) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_RaisedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_ReportNo) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Status) /*+ ''*/ + " </span></td></tr>";
+                            //else
+                            //    AreaOfConcernOnPDF += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Description) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                    }
+                    else
+                    {
+                        AreaOfConcernOnPDF += "";
+                    }
+
+                    //foreach (EquipmentDetailsModel v in EquipmentDetails)
+                    //{
+                    //    M = M + 1;
+                    //    //   EquipmentDetailscontent += "<tr><td> " + M + " </td><td>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td>" + v.Range + " </td><td>" + v.Id + "</td><td>" + v.CalibrationValid_Till_date + "</td><td>" + v.Certification_No_Date + "</td></tr>";
+                    //    EquipmentDetailscontent += "<tr><td align='center'> " + M + ')' + " </td><td>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td>" + v.Range + " </td><td>" + v.Id + "</td><td>" + v.CalibrationValid_Till_date + "</td><td>" + v.Certification_No_Date + "</td><td>" + v.SNABLseenote1 + "</td><td>" + v.SNonNABLseenote2 + "</td></tr>";
+
+                    //}
+                    foreach (EquipmentDetailsModel v in EquipmentDetails)
+                    {
+                        M = M + 1;
+                        //   EquipmentDetailscontent += "<tr><td> " + M + " </td><td>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td>" + v.Range + " </td><td>" + v.Id + "</td><td>" + v.CalibrationValid_Till_date + "</td><td>" + v.Certification_No_Date + "</td></tr>";
+                        EquipmentDetailscontent += "<tr><td width='5%' align='center' style='font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top;text-align:center;font-size:14px;'> " + M + " </td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.Range + " </td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.Id + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.CalibrationValid_Till_date + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.Certification_No_Date + "</td><td style='font-family:TNG Pro;vertical-align:top;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;text-align:center;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;text-align:center;'>" + v.SNABLseenote1 + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-left-width: 0px;border-bottom-width: 0px;text-align:center;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;text-align:center;'>" + v.SNonNABLseenote2 + "</td></tr>";
+
+                    }
+
+                    foreach (InspectionvisitReportModel v in lstAreasOfConcern)
+                    {
+                        A = A + 1;
+                        //AreasOfConcernContent += "<tr><td style='font-family:TNG Pro;border:1px solid #fa3746;border-bottom-width: 0px;border-top-width: 0px;color: #fa3746;font-family: italic;font-size:14px;' width='90%' colspan='8'><span style='font-size: 14px;color: #fa3746;font-style: italic;font-family:TNG Pro;'>" + A + ". " + Convert.ToString(v.Areas_Of_Concerns) + "</span></td></tr>";
+                        AreasOfConcernContent += "<tr><td style='font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;border-top-width: 0px;font-family: italic;font-size:14px;' width='90%' colspan='8'><span style='font-size: 14px;color: #fa3746;font-style: italic;font-family:TNG Pro;'>" + A + ". " + Convert.ToString(v.Areas_Of_Concerns) + "</span></td></tr>";
+                    }
+                    foreach (InspectionvisitReportModel v in lstPendingActivity)
+                    {
+                        PA = PA + 1;
+                        PendingActivityContent += "<tr><td style='font-family:TNG Pro;border:1px solid #fa3746;border-bottom-width: 0px;border-top-width: 0px;color: #fa3746;font-size:14px;' width='90%' colspan='8'><span style='font-size:14px;'>" + PA + ". " + Convert.ToString(v.Pending_Activites) + "</span></td></tr>";
+                    }
+
+
+                    //body = body.Replace("[PendingActivites]", PendingActivityContent);
+                    //body = body.Replace("[AreasOfConcerns]", AreasOfConcernContent);
+
+                    if (AreasOfConcernContent == "" || AreasOfConcernContent == null)
+                    {
+                        // body = body.Replace("[AreasOfConcerns]", "<tr><td colspan='8' style = 'font-family:TNG Pro;border:1px solid ;white-space: pre-line;vertical-align:top;text-align:left;border-top-width: 0px;border-bottom-width: 0px;color: #fa3746;font-size:14px;' > " + "None" + " </td>");
+                        body = body.Replace("[AreasOfConcerns]", "<tr><td colspan='8' style = 'font-family:TNG Pro;border:1px solid ;white-space: pre-line;vertical-align:top;text-align:left;border-top-width: 0px;border-bottom-width: 0px;font-size:14px;' > " + "None" + " </td>");
+                    }
+                    else
+                    {
+                        body = body.Replace("[AreasOfConcerns]", AreasOfConcernContent);
+                    }
+                    if (PendingActivityContent == "" || PendingActivityContent == null)
+                    {
+                        body = body.Replace("[PendingActivites]", "<tr><td colspan='8' style = 'border:1px solid ;white-space: pre-line;vertical-align:top;text-align:left;border-top-width: 0px;border-bottom-width: 0px;font-size:14px;' > " + "None" + " </td>");
+                    }
+                    else
+                    {
+                        body = body.Replace("[PendingActivites]", PendingActivityContent);
+                    }
+
+                    body = body.Replace("[ItemDescriptionContent]", ItemDescriptioncontent);
+                    body = body.Replace("[ItemDescriptioncontentTotal]", ItemDescriptioncontentTotal);
+
+
+                    body = body.Replace("[AreaOfConcernOnPDF]", AreaOfConcernOnPDF);
+                    body = body.Replace("[AreaOfConcernOnPDFHeading]", AreaOfConcernOnPDFHeading);
+
+                    body = body.Replace("[ReferenceDocumentsContent]", ReferenceDocumentscontent);
+                    body = body.Replace("[InspectionDocumentsContent]", InspectionDocumentsContent);
+                    body = body.Replace("[DocumentreviewContent]", DocumentreviewContent);
+                    body = body.Replace("[EquipmentDetailscontent]", EquipmentDetailscontent);
+                    body = body.Replace("[InspectiobRecord_Remark]", ObjModelVisitReport.InspectiobRecord_Remark);//24
+                    body = body.Replace("[OtherSpecifyRecords]", ObjModelVisitReport.OtherSpecifyRecords);
+
+
+
+                    int ExpenseCheckBox = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["ExpenseCheckBox"]);
+                    ObjModelVisitReport.ExpenseCheckBox = Convert.ToBoolean(ExpenseCheckBox);
+
+                    if (ObjModelVisitReport.ExpenseCheckBox == true)
+                    {
+                        string strE = "<tr><td align='left' style='font-family:TNG Pro;background-color: #efefef;border:1px solid #000000;border-top-width: 0px;font-size:14px;'><span><strong>Travel Expenses in INR :</strong></span> " + ObjModelVisitReport.Expenses + " </td></tr>";
+                        body = body.Replace("[Expenses]", strE);
+                    }
+                    else
+                    {
+                        body = body.Replace("[Expenses]", "");
+                    }
+
+                    int TiimeCheckBox = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["TiimeCheckBox"]);
+                    ObjModelVisitReport.TiimeCheckBox = Convert.ToBoolean(TiimeCheckBox);
+
+                    //if (ObjModelVisitReport.TiimeCheckBox == true)
+                    //{
+                    //    string strT = "<tr><td align='left' style='background-color: #efefef;border:1px solid #000000;border-top-width: 0px;font-size:14px;'><span><strong>In Time: </span></strong> " + ObjModelVisitReport.Intime + "   <span><strong>Out Time :</span></strong> " + ObjModelVisitReport.Outtime + " </td></tr>";
+                    //    body = body.Replace("[TiimeCheckBox]", strT);
+                    //}
+                    //else
+                    //{
+                    //    body = body.Replace("[TiimeCheckBox]", "");
+                    //}
+                    string strT = "";
+                    if (ObjModelVisitReport.TiimeCheckBox == true)
+                    {
+                        VT = VT + 1;
+                        foreach (InspectionvisitReportModel vt in lstVisitReportTime)
+                        {
+                            strT += "<tr><td align='left' style='font-family:TNG Pro;background-color: #efefef;border:1px solid #000000;border-top-width: 0px;font-size:14px;'><span><strong>Date: </span></strong> " + vt.DateSe + " <span><strong>In Time: </span></strong> " + vt.Intime + "   <span><strong>Out Time :</span></strong> " + vt.Outtime + " </td></tr>";
+                        }
+
+                        // body = body.Replace("[TiimeCheckBox]", strT);
+                    }
+                    //else
+                    //{
+                    //    body = body.Replace("[TiimeCheckBox]", "");
+                    //}
+
+                    if (strT == "" || strT == null)
+                    {
+                        body = body.Replace("[TiimeCheckBox]", "");
+                    }
+                    else
+                    {
+                        body = body.Replace("[TiimeCheckBox]", strT);
+                    }
+
+
+
+                    body = body.Replace("[Stamp]", "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Stamp.png' style='width:100px;height:50px; ' align='center'>");
+                    // body = body.Replace("[Signature]", ConfigurationManager.AppSettings["Web"].ToString() + "/signature.jpg");
+                    body = body.Replace("[Signature]", ConfigurationManager.AppSettings["Web"].ToString() + ObjModelVisitReport.Signatures);
+                    //string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/sign/" + ObjModelVisitReport.Signatures + "' style='width:225px;height:125px; ' align='center'>";
+                    string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/sign/" + ObjModelVisitReport.Signatures + "' style='width:225px;height:125px; ' align='center'>";
+
+
+
+                    //string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "' style='width:100px;height:50px; ' align='center'>";
+                    //  string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Sign/" + ObjModelVisitReport.Signatures + "' style='width:100px;height:50px; ' align='center'>";
+
+                    if (Userole == "61" || Userole == "62")
+                    {
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                        {
+                            if (ObjModelVisitReport.Signatures != null)
+                            {
+                                //  body = body.Replace("[Signature1]", ConfigurationManager.AppSettings["Web"].ToString()+ "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "");
+                                body = body.Replace("[Signature1]", I);//I);
+
+                            }
+                            else
+                            {
+                                body = body.Replace("[Signature1]", "");
+                            }
+                        }
+                        else
+                        {
+                            body = body.Replace("[Signature1]", "");
+                        }
+
+                    }
+
+                   else
+                    {
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0) // added by vaibhav on 05032025 for comfirmation
+                        {
+                            body = body.Replace("[Signature1]", "");//I);
+                        }
+                        else
+                        {
+                            body = body.Replace("[Signature1]", "");
+                        }
+                    }
+
+
+
+                    //if (ObjModelVisitReport.Signatures != null)
+                    //{
+                    //    //  body = body.Replace("[Signature1]", ConfigurationManager.AppSettings["Web"].ToString()+ "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "");
+                    //    body = body.Replace("[Signature1]", I);
+
+                    //}
+                    //else
+                    //{
+
+                    //}
+                    body = body.Replace("[Checkbox1]", check1);
+                    body = body.Replace("[Checkbox2]", check2);
+                    body = body.Replace("[Checkbox3]", check3);
+                    body = body.Replace("[Checkbox4]", check4);
+                    body = body.Replace("[Checkbox5]", check5);
+                    body = body.Replace("[Checkbox6]", check6);
+                    body = body.Replace("[Checkbox7]", check7);
+                    body = body.Replace("[Checkbox8]", check8);
+                    body = body.Replace("[Checkbox9]", check9);
+                    body = body.Replace("[Checkbox10]", check10);
+                    body = body.Replace("[Checkbox11]", check11);
+                    body = body.Replace("[Checkbox12]", check12);
+                    body = body.Replace("[Checkbox13]", check13);
+                    //strs.Append(body);//24
+                    PdfPageSize pageSize = PdfPageSize.A4;
+                    PdfPageOrientation pdfOrientation = PdfPageOrientation.Portrait;
+                    HtmlToPdf converter = new HtmlToPdf();
+
+
+
+
+                    // set the page timeout (in seconds)
+                    //converter.Options.MaxPageLoadTime = 2400;  //=========================5-Aug-2019
+                    //converter.Options.PdfPageSize = pageSize;
+                    //converter.Options.PdfPageOrientation = pdfOrientation;
+                    //converter.Options.WebPageFixedSize = false;
+
+                    
+
+                    #region Heder code
+                    string _Header = string.Empty;
+                    string _footer = string.Empty;
+
+                    // for Report header by abel
+                    StreamReader _readHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                    _Header = _readHeader_File.ReadToEnd();
+                    _Header = _Header.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                    _Header = _Header.Replace("[RevisionNo]", countNo);
+                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+
+                    //_Header = _Header.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                 
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                        {
+                            _Header = _Header.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+
+                        }
+                        else
+                        {
+                            _Header = _Header.Replace("[Logo]", "");
+
+                        }
+                    _Header = _Header.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                    #endregion
+
+
+                    #region Generate no
+                    if (RM.Report == null)
+                    {
+
+                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                        {
+                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                        }
+                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                        _Header = _Header.Replace("[ReportNo]", RM.ReportNo);
+
+                    }
+                    else
+                    {
+                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                        {
+                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+                            RM.ReportNo = SrNo;
+                        }
+
+                        //_Header = _Header.Replace("[ReportNo]", SrNo);
+                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                        {
+                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                            _Header = _Header.Replace("[ReportNo]", strReportNo);
+                        }
+                        else
+                        {
+                            _Header = _Header.Replace("[ReportNo]", SrNo);
+
+                        }
+                    }
+                    #endregion
+
+                    #region Footer Code
+
+                    StreamReader _readFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                    _footer = _readFooter_File.ReadToEnd();
+
+
+                  
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                        {
+                            _footer = _footer.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+
+                        }
+                        else
+                        {
+                            _footer = _footer.Replace("[LogoFooter]", "");
+
+                        }
+                   
+                  
+                    // header settings
+
+                    converter.Options.MaxPageLoadTime = 40; // Timeout in seconds
+                    converter.Options.PdfPageSize = pageSize;
+                    converter.Options.PdfPageOrientation = pdfOrientation;
+                    converter.Options.WebPageFixedSize = false;
+
+                    converter.Options.DisplayHeader = true || true || true;
+                    converter.Header.DisplayOnFirstPage = true;
+                    converter.Header.DisplayOnOddPages = true;
+                    converter.Header.DisplayOnEvenPages = true;
+                    //converter.Header.Height = 75;
+                    converter.Header.Height = 65;
+
+                    PdfHtmlSection headerHtml = new PdfHtmlSection(_Header, string.Empty);
+                    headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                    converter.Header.Add(headerHtml);
+
+                    // footer settings
+                    converter.Options.DisplayFooter = true || true || true;
+                    converter.Footer.DisplayOnFirstPage = true;
+                    converter.Footer.DisplayOnOddPages = true;
+                    converter.Footer.DisplayOnEvenPages = true;
+
+                    //converter.Footer.Height = 150;
+                    converter.Footer.Height = 105;
+
+                    PdfHtmlSection footerHtml = new PdfHtmlSection(_footer, string.Empty);
+                    footerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                    converter.Footer.Add(footerHtml);
+
+                    //end abel code
+
+
+                    // page numbers can be added using a PdfTextSection object
+                    //PdfTextSection text1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                    //PdfTextSection text1 = new PdfTextSection(0, 135, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+
+                    //text1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                    //converter.Footer.Add(text1);
+                    #endregion
+
+                    converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
+                    converter.Options.AutoFitHeight = HtmlToPdfPageFitMode.NoAdjustment;
+
+                    #region test Total Page Count
+                    //string path1 = Server.MapPath("~/IVRReport");
+
+                    //string[] datafile1 = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+                    //dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                    //if (dtSrNo.Tables[0].Rows.Count > 0)
+                    //{
+                    //    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                    //}
+                    //string finalReportName1 = "IVR-" + ObjModelVisitReport.SubJob_No.Replace('/', '_') + "-" + SrNo + "-Rev." + countNo.ToString() + ".pdf";
+                    //PdfSharp.Pdf.PdfDocument FinalDoc1 = new PdfSharp.Pdf.PdfDocument();
+
+                    //if (System.IO.File.Exists(path1 + "\\" + finalReportName1))
+                    //{
+                    //    // If file found, delete it    
+                    //    System.IO.File.Delete(path1 + "\\" + finalReportName1);
+
+                    //}
+                    //// create a new pdf document
+                    //foreach (string pdfFile in datafile1)
+                    //{
+                    //    if (pdfFile.Contains("Image_") || pdfFile.Contains("Data_"))
+                    //    {
+                    //        PdfSharp.Pdf.PdfDocument inputPDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
+
+                    //        FinalDoc1.Version = inputPDFDocument.Version;
+
+                    //        foreach (PdfSharp.Pdf.PdfPage page in inputPDFDocument.Pages)
+                    //        {
+                    //            FinalDoc1.AddPage(page);
+                    //        }
+
+                    //    }
+                    //}
+
+
+                    // Create variable that store page count  
+
+                    SelectPdf.PdfDocument doc1 = converter.ConvertHtmlString(body);
+                    doc1.Security.CanCopyContent = false;
+
+                    int P;
+                    string ImagePageTotalCount1 = "";
+                    if (imagecount == 0)
+                    {
+                        P = doc1.Pages.Count;
+                        ImagePageTotalCount1 = "0";
+                    }
+                    else
+                    {
+                        P = doc1.Pages.Count + ImageC;
+                        ImagePageTotalCount1 = Convert.ToString(ImageC);
+                    }
+                    string noPages1 = Convert.ToString(P);
+
+
+                    #region get Image page no & Total Page no
+
+                    string ImagePage1 = "";
+                    string TotalPage1 = "";
+                    //string ImagePageTotalCount1 = Convert.ToString(ImageC);
+                    if (ImagePageTotalCount1 == "0")
+                    {
+
+                        ImagePage1 = "-";
+                        TotalPage1 = noPages1;
+                        //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
+                        body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
+
+                    }
+                    else if (ImagePageTotalCount1 == "1")
+                    {
+                        int ImagePageNo = doc1.Pages.Count + 1;
+                        ImagePage1 = Convert.ToString(ImagePageNo);
+                        TotalPage1 = noPages1;
+                        //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
+                        body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
+
+                    }
+                    else
+                    {
+                        int ImagePageNo = doc1.Pages.Count + 1; //Convert.ToInt32(noPages1) - Convert.ToInt32(ImagePageTotalCount1);
+                                                                //ImagePage1 = Convert.ToString(ImagePageNo);
+                        ImagePage1 = Convert.ToString(ImagePageNo + " to " + noPages1);
+                        TotalPage1 = noPages1;
+                        //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
+                        body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
+                    }
+
+                    #endregion
+
+                    strs.Append(body);
+                    #endregion
+
+
+
+                    SelectPdf.PdfDocument doc = converter.ConvertHtmlString(body);
+
+                  
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 1)
+                        {
+                            string imgFile1 = Server.MapPath("~/WaterMark.png");
+                            PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
+                            PdfImageElement img1 = new PdfImageElement(150, 150, imgFile1);
+                            img1.Transparency = 15;
+                            template1.Add(img1);
+                        }
+                    
+
+                    doc.Security.CanCopyContent = false;
+
+
+                    //doc.CompressionLevel = (PdfCompressionLevel)Enum.Parse(
+                    //typeof(PdfCompressionLevel),"",true);
+
+                    string ReportName = RM.Report;
+                    paths = Server.MapPath("~/Content/");
+
+                    if (System.IO.File.Exists(paths + ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf"))
+                    {
+                        // If file found, delete it    
+                        System.IO.File.Delete(paths + ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf");
+
+                    }
+
+                    if (ReportName == null)
+                    {
+                        ReportName = ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf";
+                        doc.Save(paths + '\\' + ReportName);
+                        doc.Close();
+                    }
+                    else
+                    {
+                        ReportName = ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf";
+                        doc.Save(paths + '\\' + ReportName);
+                        doc.Close();
+                    }
+
+                    string path = Server.MapPath("~/IVRReport");
+
+                    string[] datafile = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+                    dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                    if (dtSrNo.Tables[0].Rows.Count > 0)
+                    {
+                        SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                    }
+                    //string finalReportName = "IVR-" + ObjModelVisitReport.SubJob_No + " - " + SrNo + "-Rev." + countNo.ToString() + ObjModelVisitReport.Call_No.ToString() + ".pdf";
+                    // string finalReportName = "IVR-" + ObjModelVisitReport.SubJob_No.Replace('/', '_') + "-" + SrNo + "-Rev." + countNo.ToString() + ".pdf";
+                    string finalReportName = RM.ReportNo.Replace('/', '_') + ".pdf"; //23 Feb 2022
+                                                                                     //string finalReportName = RM.ReportNo + ".pdf";
+
+                    PdfSharp.Pdf.PdfDocument FinalDoc = new PdfSharp.Pdf.PdfDocument();
+
+                    if (System.IO.File.Exists(path + "\\" + finalReportName))
+                    {
+                        // If file found, delete it    
+                        System.IO.File.Delete(path + "\\" + finalReportName);
+
+                    }
+                    // create a new pdf document
+                    foreach (string pdfFile in datafile)
+                    {
+                        if (pdfFile.Contains("Image_") || pdfFile.Contains("Data_"))
+                        {
+                            PdfSharp.Pdf.PdfDocument inputPDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
+
+                            FinalDoc.Version = inputPDFDocument.Version;
+
+                            foreach (PdfSharp.Pdf.PdfPage page in inputPDFDocument.Pages)
+                            {
+                                FinalDoc.AddPage(page);
+                            }
+
+                        }
+                    }
+
+                    XFont font = new XFont("Verdana", 9);
+                    XBrush brush = XBrushes.Black;
+                    // Create variable that store page count  
+                    string noPages = FinalDoc.Pages.Count.ToString();
+
+
+
+
+                    for (int c = 0; c < FinalDoc.Pages.Count; ++c)
+                    {
+                        PdfSharp.Pdf.PdfPage page = FinalDoc.Pages[c];
+                        // Make a layout rectangle.  
+                        //XRect layoutRectangle = new XRect(240 /*X*/ , page.Height - font.Height - 10 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
+                        //XRect layoutRectangle = new XRect(232 /*X*/ , page.Height - font.Height - 15 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
+                        XRect layoutRectangle = new XRect(33 /*X*/ , page.Height - font.Height - 7 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
+                        using (XGraphics gfx = XGraphics.FromPdfPage(page))
+                        {
+                            //gfx.DrawString("Page " + (c + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.Center);
+                            gfx.DrawString("Page " + (c + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.BottomLeft);
+                        }
+                    }
+
+                    PdfSharp.Pdf.Security.PdfSecuritySettings securitySettings = FinalDoc.SecuritySettings;
+
+                    // Set the owner password (password required to change permissions)
+                    securitySettings.OwnerPassword = "!$!)!(*%"; // Required for setting permissions
+
+                    // Set document permissions to disable editing
+                    securitySettings.PermitModifyDocument = false;   // Disallow editing the document
+                    securitySettings.PermitFormsFill = true;        // Disallow filling forms
+                    securitySettings.PermitAnnotations = true;      // Disallow adding annotations
+                    securitySettings.PermitAssembleDocument = false; // Disallow document assembly
+                    securitySettings.PermitExtractContent = true;   // Disallow content extraction
+                    securitySettings.PermitFullQualityPrint = false; // Disallow full quality printing (optional)
+                    securitySettings.PermitPrint = true;
+                    FinalDoc.Save(path + "\\" + finalReportName);
+                    FinalDoc.Close();
+
+
+                    #endregion
+
+                    if (RM.PK_RM_ID != 0)
+                    {
+
+                        RM.Type = "IVR";
+                        RM.Status = "1";
+                        RM.ImageReport = ReportNames;
+                        RM.Report = finalReportName;
+                        RM.ReportName = ReportName;
+                        RM.PK_CALL_ID = PK_CALL_ID;
+                        RM.SubJob_No = ObjModelVisitReport.SubJob_No;
+                        RM.PK_SubJob_Id = ObjModelVisitReport.PK_SubJob_Id;
+                        RM.ProjectName = ObjModelVisitReport.End_user_Name;
+                        RM.Po_No = ObjModelVisitReport.Po_No;
+                        RM.Report_No = ObjModelVisitReport.Report_No;
+                        Result = objDalVisitReport.InsertUpdateReport(RM);
+                        if (Result != "" && Result != null)
+                        {
+                            TempData["InsertCompany"] = Result;
+                        }
+                    }
+                    else
+                    {
+                        RM.Type = "IVR";
+                        RM.Status = "1";
+                        RM.ImageReport = ReportNames;
+                        RM.Report = finalReportName;
+                        RM.ReportName = ReportName;
+                        RM.PK_CALL_ID = PK_CALL_ID;
+                        RM.SubJob_No = ObjModelVisitReport.SubJob_No;
+                        RM.PK_SubJob_Id = ObjModelVisitReport.PK_SubJob_Id;
+                        RM.ProjectName = ObjModelVisitReport.End_user_Name;
+                        RM.Po_No = ObjModelVisitReport.Po_No;
+                        RM.Report_No = ObjModelVisitReport.Report_No;
+
+                        Result = objDalVisitReport.InsertUpdateReport(RM);
+
+                        if (Result != "" && Result != null)
+                        {
+                            TempData["InsertCompany"] = Result;
+                        }
+                    }
+
+
+
+
+
+                    #region
+                    CostSheetDashBoard = objDalVisitReport.GetReportByCall_Id(PK_CALL_ID);
+                    if (CostSheetDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in CostSheetDashBoard.Rows)
+                        {
+                            ReportDashboard.Add(
+                                new ReportModel
+                                {
+                                    ReportName = Convert.ToString(dr["ReportName"]),
+                                    Report = Convert.ToString(dr["Report"]),
+                                    CraetedDate = Convert.ToString(dr["CraetedDate"]),
+                                    PK_RM_ID = Convert.ToInt32(dr["PK_RM_ID"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
+                                }
+                                );
+                        }
+                    }
+                    ViewData["CostSheet"] = ReportDashboard;
+                    #endregion
+
+
+
+                    string newpath = Server.MapPath("~/IVRReport/");
+
+                    byte[] fileBytes = System.IO.File.ReadAllBytes(newpath + @"\" + finalReportName);
+
+
+                    if (System.IO.Directory.Exists(paths + ObjModelVisitReport.Call_No))
+                    {
+                        System.IO.Directory.Delete(paths + ObjModelVisitReport.Call_No, true);
+                    }
+                    if (Userole == "61" || Userole == "62")
+                    {
+                        return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                        {
+                            if (Userole == "61" || Userole == "62")
+                            {
+
+                            }
+                            #region Digital Signature
+                            else
+                            {
+                                string PPPP = Server.MapPath("~/IVRReport/" + finalReportName);// newpath + finalReportName;
+                                string Path = PPPP; string SignLoc = "TUV India representative:"; string signannotation = ObjModelVisitReport.Name; string PReportName = finalReportName;
+                                return RedirectToAction(nameof(VisitReportPrintWithDigitalSign), new { Path = Path, SignLoc = SignLoc, signannotation = signannotation, PReportName = PReportName });
+                                // return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
+                            }
+                            #endregion
+                            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
+
+                        }
+                        else
+                        {
+                            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "draft.pdf");
+
+
+                        }
+                    }
+
+                    //return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
+
+                    return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = PK_CALL_ID });
+
+                    return RedirectToAction("IvrReports", RMData);
+
+                }
+
+                else
+                {
+                    return RedirectToAction("IvrReports", RMData);
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+                return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
+            }
+
+        }
 
         public ActionResult UpdateReports(int? PK_CALL_ID, string flag)
         {
@@ -11998,6 +12359,1879 @@ namespace TuvVision.Controllers
                                 {
                                     Stages_Witnessed = Convert.ToString(dr["Stages_Witnessed"]),
                                     PK_IA_ID = Convert.ToInt32(dr["PK_IA_ID"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
+                                    QAP_Clause_Number = Convert.ToString(dr["QAP_Clause_Number"])
+
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+                    #region Documents Review
+                    DocumentsReviewBoard = objDalVisitReport.GetDocumentRevieweModelByCall_Id(PK_CALL_ID);
+                    if (DocumentsReviewBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in DocumentsReviewBoard.Rows)
+                        {
+                            DocumentReview.Add(
+                                new DocumentRevieweModel
+                                {
+                                    Description = Convert.ToString(dr["Description"]),
+                                    PK_DR_ID = Convert.ToInt32(dr["PK_DR_ID"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
+                                    QAP_Clause_Number = Convert.ToString(dr["QAP_Clause_Number"])
+
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+                    #region Equipments Details
+                    EquipmentDetailsBoard = objDalVisitReport.GetEquipmentDetailsModelByCall_Id(PK_CALL_ID);
+                    if (EquipmentDetailsBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in EquipmentDetailsBoard.Rows)
+                        {
+                            EquipmentDetails.Add(
+                                new EquipmentDetailsModel
+                                {
+                                    Name_Of_Equipments = Convert.ToString(dr["Name_Of_Equipments"]),
+                                    Range = Convert.ToString(dr["Range"]),
+                                    Id = Convert.ToString(dr["Id"]),
+                                    CalibrationValid_Till_date = Convert.ToString(dr["CalibrationValid_Till_date"]),
+                                    Certification_No_Date = Convert.ToString(dr["Certification_No_Date"]),
+                                    PK_DOE_Id = Convert.ToInt32(dr["PK_DOE_Id"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
+                                    SNABLseenote1 = Convert.ToString(dr["NABLseenote1"]) == "True" ? "Yes" : "-",
+
+                                    SNonNABLseenote2 = Convert.ToString(dr["NonNABLseenote2"]) == "True" ? "Yes" : "-"
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+                    #region Get Visit Time
+                    DTVisitTime = objDalVisitReport.GetVisitTime(PK_CALL_ID);
+                    if (DTVisitTime.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in DTVisitTime.Rows)
+                        {
+                            lstVisitReportTime.Add(
+                                new InspectionvisitReportModel
+                                {
+                                    DateSe = Convert.ToString(dr["DateSe"]),
+                                    Intime = Convert.ToString(dr["Intime"]),
+                                    Outtime = Convert.ToString(dr["Outtime"]),
+
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+
+
+                    #region report Count
+                    UpdateReport = objDalVisitReport.GetReportByLastId(PK_CALL_ID);
+                    if (UpdateReport.Tables[0].Rows.Count > 0)
+                    {
+                        RM.PK_RM_ID = Convert.ToInt32(UpdateReport.Tables[0].Rows[0]["PK_RM_ID"]);
+                        RM.Report = Convert.ToString(UpdateReport.Tables[0].Rows[0]["Report"]);
+                        //RM.ImageReport = Convert.ToString(UpdateReport.Tables[0].Rows[0]["ImageReport"]);
+                    }
+
+                    #region report Count
+                    ReportDashBoard = objDalVisitReport.GetReportByCall_Id(PK_CALL_ID);
+                    if (ReportDashBoard.Rows.Count > 0)
+                    {
+                        int counts = ReportDashBoard.Rows.Count;
+                        count = counts - 1;
+                    }
+                    string countNo = Convert.ToString(count);
+                    #endregion
+                    #endregion
+
+
+                    #region Report Image data
+                    //ImageReportDashBoard = objDalVisitReport.GetReportImageByCall_Id(PK_CALL_ID);
+                    //if (ImageReportDashBoard.Rows.Count > 0)
+                    //{
+                    //    foreach (DataRow dr in ImageReportDashBoard.Rows)
+                    //    {
+                    //        ImageDashBoard.Add(
+                    //            new ReportImageModel
+                    //            {
+                    //                Image = Convert.ToString(dr["Image"]),
+                    //                Heading = Convert.ToString(dr["Heading"]),
+                    //            }
+                    //            );
+                    //    }
+                    //}
+
+                    string Imagepath = "";
+                    ImageReportDashBoard = objDalVisitReport.GetReportImageByCall_Id(PK_CALL_ID);
+                    if (ImageReportDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in ImageReportDashBoard.Rows)
+                        {
+                            DateTime CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                            int year = CreatedDate.Year;
+                            int month = CreatedDate.Month;
+                            string currentMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(month);
+
+                            Imagepath = $"/Content/Uploads/Images/{year}/{currentMonth}";
+
+                            ImageDashBoard.Add(
+                                new ReportImageModel
+                                {
+                                    Path = Convert.ToString(Imagepath),
+                                    Image = Convert.ToString(dr["Image"]),
+                                    Heading = Convert.ToString(dr["Heading"]),
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+
+                    #region  Areas of Concern
+                    dtAreasOfConcern = objDalVisitReport.GetAreasOfConcern(PK_CALL_ID);
+                    if (dtAreasOfConcern.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dtAreasOfConcern.Rows)
+                        {
+                            lstAreasOfConcern.Add(
+                                new InspectionvisitReportModel
+                                {
+                                    Areas_Of_Concerns = Convert.ToString(dr["Areas_Of_Concerns"]),
+
+                                }
+                                );
+                        }
+                    }
+
+                    #endregion
+
+                    #region  Pending Activities
+                    dtPendingActivity = objDalVisitReport.GetPendingActivity(PK_CALL_ID);
+                    if (dtPendingActivity.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dtPendingActivity.Rows)
+                        {
+                            lstPendingActivity.Add(
+                                new InspectionvisitReportModel
+                                {
+                                    Pending_Activites = Convert.ToString(dr["Pending_Activity"]),
+
+                                }
+                                );
+                        }
+                    }
+
+                    #endregion
+
+                    #region Image Save to pdf
+                    SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";
+                    System.Text.StringBuilder strss = new System.Text.StringBuilder();
+
+                    string bodys = string.Empty;
+                    string ImageContent = string.Empty;
+                    string ReportNames = string.Empty;
+                    string paths = string.Empty;
+                    int img = 0;
+                    int imagecount = ImageReportDashBoard.Rows.Count;
+                    int rows = imagecount / 2;
+                    int imageposted = 0;
+                    int reminder = (imagecount % 2);
+                    int iteration = 1;
+                    StreamReader reader;
+
+                    //using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                    //{
+                    //    bodys = reader.ReadToEnd();
+                    //}
+
+
+                    ///First File start
+                    PdfPageSize pageSizes = PdfPageSize.A4;
+                    PdfPageOrientation pdfOrientations = PdfPageOrientation.Portrait;
+
+                    HtmlToPdf converters = new HtmlToPdf();
+
+
+                    #endregion
+
+                    #region Comment 11 June
+
+
+
+
+
+                    #endregion
+
+                    #region Save to Pdf Code 
+                    SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";
+                    System.Text.StringBuilder strs = new System.Text.StringBuilder();
+                    string body = string.Empty;
+                    string Userole = Convert.ToString(Session["RoleID"]);
+                    string ItemDescriptioncontent = "";
+                    string ReferenceDocumentscontent = "";
+                    string InspectionDocumentsContent = "";
+                    string DocumentreviewContent = "";
+                    string EquipmentDetailscontent = "";
+                    string AreasOfConcernContent = "";
+                    string PendingActivityContent = "";
+                    string AreaOfConcernOnPDF = "";
+                    string AreaOfConcernOnPDFHeading = "";
+
+
+                    string check1 = "";
+                    string check2 = "";
+                    string check3 = "";
+                    string check4 = "";
+                    string check5 = "";
+                    string check6 = "";
+                    string check7 = "";
+                    string check8 = "";
+                    string check9 = "";
+                    string check10 = "";
+                    string checkNABL = "";
+
+                    string check11 = "";
+                    string check12 = "";
+                    string check13 = "";
+                    using (StreamReader reader1 = new StreamReader(Server.MapPath("~/inspection-visit-report.html")))
+                    {
+                        body = reader1.ReadToEnd();
+                    }
+
+
+
+
+                    body = body.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                    body = body.Replace("[SAPNo]", ObjModelVisitReport.SAPNo);
+                    body = body.Replace("[Branch]", ObjModelVisitReport.Branch);
+                    body = body.Replace("[NotificationNameNo_Date]", ObjModelVisitReport.Notification_Name_No_Date);
+                    body = body.Replace("[DateOfInspection]", ObjModelVisitReport.Date_Of_Inspection);
+                    body = body.Replace("[ProjectNameLocation]", ObjModelVisitReport.Project_Name_Location);
+                    body = body.Replace("[AddressOfInspection]", ObjModelVisitReport.Address_Of_Inspection);
+                    body = body.Replace("[ClientName]", /*ObjModelVisitReport.Client_Name*/Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Client_NameWithoutId"]));
+                    body = body.Replace("[Enduser_Name]", ObjModelVisitReport.End_user_Name);
+                    body = body.Replace("[DECPMCEPC_Name]", ObjModelVisitReport.DEC_PMC_EPC_Name);
+                    body = body.Replace("[DECPMCEPCAssignment_No]", ObjModelVisitReport.DEC_PMC_EPC_Assignment_No);
+                    body = body.Replace("[VendorNameLocation]", /*ObjModelVisitReport.Vendor_Name_Location*/Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Vendor_Name_LocationWithoutId"]));
+
+
+                    if (SubJobDate == null || SubJobDate == "")
+                    {
+                        body = body.Replace("[PoNo]", ObjModelVisitReport.Po_No);
+                    }
+                    else
+                    {
+                        body = body.Replace("[PoNo]", ObjModelVisitReport.Po_No + " Dated " + SubJobDate);
+                    }
+
+                    if (ObjModelVisitReport.SubType == "Sub Job")
+                    {
+                        body = body.Replace("[PoNoSubVendor]", "");
+                        body = body.Replace("[SubVendorName]", "");
+                    }
+                    else
+                    {
+
+                        if (ObjModelVisitReport.SubType == "SubSubSub Job")
+                        {
+                            if (ObjModelVisitReport.SubSubVendorDate_of_PO != string.Empty && ObjModelVisitReport.SubSubSubPoNo != string.Empty)
+                            {
+                                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO + " and" + "<br/> " + ObjModelVisitReport.SubSubSubPoNo + " Dated " + ObjModelVisitReport.SubSubSubPoDate);
+                            }
+                            else
+                            {
+                                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO);
+                            }
+                            body = body.Replace("[SubVendorName]", Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_NameWithoutId"]) + " and" + "<br/>" + Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorName"]));
+
+                        }
+                        else
+                        {
+                            if (ObjModelVisitReport.SubSubVendorDate_of_PO != string.Empty)
+                            {
+                                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO);
+                            }
+                            else
+                            {
+                                body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor);
+                            }
+                            body = body.Replace("[SubVendorName]", Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_NameWithoutId"]));
+
+                        }
+
+
+
+                    }
+
+                    body = body.Replace("[SubVendorName]", /*ObjModelVisitReport.Sub_Vendor_Name*/Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_NameWithoutId"]));
+                    if (ObjModelVisitReport.Po_No_SubVendor != string.Empty)
+                    {
+                        body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor + " Dated " + ObjModelVisitReport.SubSubVendorDate_of_PO);
+                    }
+                    else
+                    {
+                        body = body.Replace("[PoNoSubVendor]", ObjModelVisitReport.Po_No_SubVendor);
+                    }
+                    body = body.Replace("[Conclusion]", ObjModelVisitReport.Conclusion);
+                    body = body.Replace("[CanIRNbeissued]", ObjModelVisitReport.CanIRNbeissued);
+
+
+                    //body = body.Replace("[PendingActivites]", ObjModelVisitReport.Pending_Activites);
+                    //body = body.Replace("[AreasOfConcerns]", ObjModelVisitReport.Areas_Of_Concerns);
+                    body = body.Replace("[IdentificationOfInspected]", ObjModelVisitReport.Identification_Of_Inspected);
+
+                    body = body.Replace("[NonConformitiesraised]", ObjModelVisitReport.Non_Conformities_raised);
+                    body = body.Replace("[Name]", ObjModelVisitReport.Name);
+                    body = body.Replace("[date]", ObjModelVisitReport.ReportCreatedDate);
+
+                    if (countNo == "0")
+                    {
+                        body = body.Replace("[RevisionNo]", "0");
+                    }
+                    else
+                    {
+                        body = body.Replace("[RevisionNo]", countNo);
+                    }
+
+                    //body = body.Replace("[TempInspectionPhotosNo]", ObjModelVisitReport.TempInspectionPhotosNo);//24
+                    body = body.Replace("[TempMaster_List_Of_calibrated_Instruments]", ObjModelVisitReport.TempMaster_List_Of_calibrated_Instruments);
+                    if (ObjModelVisitReport.ReviseReason != "-" && ObjModelVisitReport.ReviseReason != "")
+                    {
+                        body = body.Replace("[ReviseReason]", "Reason for Revision - " + Convert.ToString(ObjModelVisitReport.ReviseReason));
+                    }
+                    else
+                    {
+                        body = body.Replace("[ReviseReason]", "-");
+                    }
+                    body = body.Replace("[ReviseReportNoForPDF]", ObjModelVisitReport.ReviseReportNoForPDF);
+                    body = body.Replace("[ReportNo]", ObjModelVisitReport.Report_No);
+                    body = body.Replace("[ReportNoForPDF]", ObjModelVisitReport.ReportNoForPDF);
+
+
+
+                    //if (ObjModelVisitReport.Sap_And_Controle_No == "050104219221")
+                    //{
+                    //    body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor PO Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[VendorName]", "<td width='25 % ; style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px;border-top-width: 0px;border-right-width: 0px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                    //    body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Contractor PO Number on Vendor)</i></span></td>");
+                    //    body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub-Contractor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Contractor PO Number on Sub-Contractor)</i></span></td>");
+                    //}
+                    //else
+                    //{
+                    //    body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Assignment Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                    //    body = body.Replace("[VendorName]", "<td width='25 % ; style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                    //    body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Client PO on Vendor)</i></span></td>");
+                    //    body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub Vendor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+
+                    //    body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Vendor PO on Sub Vendor)</i></span></td>");
+                    //}
+
+
+                    if (ObjModelVisitReport.Sap_And_Controle_No == "050104219221")
+                    {
+                        body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Contractor PO Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        body = body.Replace("[VendorName]", "<td width='25 %'; style='border: 1px solid #000000;vertical-align:top; border-top-width: 1px;border-right-width: 0px; '><span style='font-size: 14px;border-top-width: 0px;border-right-width: 0px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                        body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-left-width: 0px;  '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Contractor PO Number on Vendor)</i></span></td>");
+                        body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub-Contractor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Contractor PO Number on Sub-Contractor)</i></span></td>");
+                    }
+                    else
+                    {
+                        //body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        //body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Assignment Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        //body = body.Replace("[VendorName]", "<td width='25 %'; style='border: 1px solid #000000;vertical-align:top; border-top-width: 1px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                        //body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Client PO on Vendor)</i></span></td>");
+                        //body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub Vendor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+
+                        //body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Vendor PO on Sub Vendor)</i></span></td>");
+
+
+                        body = body.Replace("[EPCName]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Name:</strong></span><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        body = body.Replace("[EPCNumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>DEC / PMC / EPC Assignment Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+                        //nikiyta
+                        body = body.Replace("[VendorName]", "<td width='25 %'; style='border: 1px solid #000000;vertical-align:top; border-top-width: 1px;border-right-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Vendor Name & Location:</strong></span></td>");
+                        body = body.Replace("[PONumber]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(Client PO on Vendor)</i></span></td>");
+                        body = body.Replace("[SubVendorNameHeading]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px; '><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong>Sub Vendor Name & Location:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable)</i></span></td>");
+
+                        body = body.Replace("[SubPONumberH]", "<td width='25 % ' style='border: 1px solid #000000;vertical-align:top; border-top-width: 0px;border-right-width: 0px;border-bottom-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:left;'><strong> P.O. Number:</strong></span><br><span style='font-size: 8px; color: #000; font-family: 'TNG Pro'; font-weight: bold; display:block;'><i style='line-height:2px'>(If applicable – Vendor PO on Sub Vendor)</i></span></td>");
+
+                    }
+
+                    //ItemDescription Heading 
+                    if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes" && ObjModelVisitReport.ShowCount == "Yes" && ObjModelVisitReport.DisplayTotalQuantity == "Yes")
+                    {
+                        body = body.Replace("[POItemNo]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;vertical-align: text-top;text-align:center;' width='5%'><span><strong> PO Item No.</strong></span></td>");
+                        body = body.Replace("[ItemCode]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;' width='10%'><span><strong>Item Code</strong></span></td>");
+                        body = body.Replace("[Identification_MTCNumber]", "<td width='47%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;'><span><strong>Item Description / Identification / MTC Number</strong></span></td>");
+                        body = body.Replace("[HeatNumber]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Heat Number</strong></span></td>");
+                        body = body.Replace("[UOM]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;'><span><strong>UOM</strong></span></td>");
+                        body = body.Replace("[POQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>P.O. Quantity</strong></span></td>");
+                        body = body.Replace("[OfferedQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Offered Quantity</strong></span></td>");
+                        body = body.Replace("[AcceptableQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Acceptable Quantity</strong></span></td>");
+
+                    }
+                    else if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes")
+                    {
+                        body = body.Replace("[POItemNo]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;vertical-align: text-top;text-align:center;' width='5%'><span><strong> PO Item No.</strong></span></td>");
+                        body = body.Replace("[ItemCode]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;' width='10%'><span><strong>Item Code</strong></span></td>");
+                        body = body.Replace("[Identification_MTCNumber]", "<td width='47%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;'><span><strong>Item Description / Identification / MTC Number</strong></span></td>");
+                        body = body.Replace("[HeatNumber]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Heat Number</strong></span></td>");
+                        body = body.Replace("[UOM]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;'><span><strong>UOM</strong></span></td>");
+                        body = body.Replace("[POQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>P.O. Quantity</strong></span></td>");
+                        body = body.Replace("[OfferedQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Offered Quantity</strong></span></td>");
+                        body = body.Replace("[AcceptableQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Acceptable Quantity</strong></span></td>");
+
+
+                    }
+                    else
+                    {
+                        body = body.Replace("[POItemNo]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;vertical-align: text-top;text-align:center;' width='5%'><span><strong> PO Item No.</strong></span></td>");
+                        body = body.Replace("[ItemCode]", "<td style='border: 1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;' width='10%'><span><strong>Item Code</strong></span></td>");
+                        body = body.Replace("[Identification_MTCNumber]", "<td width='47%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px;vertical-align: text-top;text-align:left;'><span><strong>Item Description / Identification / MTC Number</strong></span></td>");
+                        body = body.Replace("[HeatNumber]", "");
+                        body = body.Replace("[UOM]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;'><span><strong>UOM</strong></span></td>");
+                        body = body.Replace("[POQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>P.O. Quantity</strong></span></td>");
+                        body = body.Replace("[OfferedQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Offered Quantity</strong></span></td>");
+                        body = body.Replace("[AcceptableQuantity]", "<td width='10%' style='font-size: 14px;border:1px solid #000000;border-bottom-width: 0px;border-left-width: 0px; color: #000000; font-family: 'TNG Pro'; font-weight: bold;vertical-align:top;text-align:center;'><span><strong>Acceptable Quantity</strong></span></td>");
+
+                    }
+
+
+                    if (ObjModelVisitReport.DTUVIndiaClientEndUser == true)
+                    {
+                        check11 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaClientEndUser + " checked></span>";
+                    }
+                    else
+                    {
+                        check11 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaClientEndUser + " ></span>";
+                    }
+                    if (ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch == true)
+                    {
+                        check12 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch + " checked></span>";
+                    }
+                    else
+                    {
+                        check12 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch + " ></span>";
+                    }
+                    if (ObjModelVisitReport.DVendor_Sub_Vendor == true)
+                    {
+                        check13 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DVendor_Sub_Vendor + " checked></span>";
+                    }
+                    else
+                    {
+                        check13 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.DVendor_Sub_Vendor + " ></span>";
+                    }
+
+
+                    if (ObjModelVisitReport.Kick_Off_Pre_Inspection == true)
+                    {
+                        check1 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Kick_Off_Pre_Inspection + " checked></span>";
+                    }
+                    else
+                    {
+                        check1 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Kick_Off_Pre_Inspection + "></span>";
+                    }
+                    if (ObjModelVisitReport.Material_identification == true)
+                    {
+                        check2 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Material_identification + " checked></span>";
+                    }
+                    else
+                    {
+                        check2 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Material_identification + " ></span>";
+                    }
+                    if (ObjModelVisitReport.Interim_Stages == true)
+                    {
+                        check3 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Interim_Stages + " checked></span>";
+                    }
+                    else
+                    {
+                        check3 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Interim_Stages + "></span>";
+                    }
+                    if (ObjModelVisitReport.Document_review == true)
+                    {
+                        check4 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Document_review + " checked></span>";
+                    }
+                    else
+                    {
+                        check4 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Document_review + "></span>";
+                    }
+                    if (ObjModelVisitReport.Final_Inspection == true)
+                    {
+                        check5 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Final_Inspection + " checked></span>";
+                    }
+                    else
+                    {
+                        check5 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Final_Inspection + " ></span>";
+                    }
+                    if (ObjModelVisitReport.Re_inspection == true)
+                    {
+                        check6 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Re_inspection + " checked></span>";
+                    }
+                    else
+                    {
+                        check6 = "<span><input type='checkbox'  value=" + ObjModelVisitReport.Re_inspection + " ></span>";
+                    }
+
+                    if (ObjModelVisitReport.Inspection_records == true)
+                    {
+                        check7 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_records + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check7 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_records + " ></span></td>";
+                    }
+                    if (ObjModelVisitReport.Other_Specify == true)
+                    {
+                        check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " ></span></td>";
+                    }
+                    //27.01.2025
+                    if (ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF == "Yes")
+                    {
+                        check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check8 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Other_Specify + " ></span></td>";
+                    }
+                    //if (ObjModelVisitReport.Inspection_Photo == true)
+                    if (imagecount > 0)
+                    {
+                        ObjModelVisitReport.Inspection_Photo = true;
+
+                        check9 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_Photo + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check9 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.Inspection_Photo + "></span></td>";
+                    }
+                    if (ObjModelVisitReport.MasterListOfcalibratedInstruments == true)
+                    {
+                        check10 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.MasterListOfcalibratedInstruments + " checked></span></td>";
+                    }
+                    else
+                    {
+                        check10 = "<td width='5%' align='center' style='border:1px solid #000000;border-right-width: 0px;border-bottom-width: 0px;'><span><input type='checkbox'  value=" + ObjModelVisitReport.MasterListOfcalibratedInstruments + "></span></td>";
+                    }
+
+                    //foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                    //{
+                    //    i = i + 1;
+                    //    ItemDescriptioncontent += "<tr><td width='10%' align='center' style='font - size: 14px; color: #000; font-family: Arial;'>" + Convert.ToString(v.Po_Item_No) + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Item_Code + " </td><td width='30%' style='font - size: 14px; color: #000; font-family: Arial;white-space: pre-line;'>" + v.ItemCode_Description + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Unit + "</td><td width='10%'>" + v.Po_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Offered_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;'>" + v.Accepted_Quantity + "</td></tr>";
+                    //}
+
+                    //foreach (ReferenceDocumentsModel v in RefranceDocuments)
+                    //{
+                    //    J = J + 1;
+                    //    // ReferenceDocumentscontent += "<tr><td> " + J + " </td><td>" + Convert.ToString(v.Document_Name) + "</td><td>" + v.Document_No + " </td><td>" + v.Approval_Status + "</td></tr>";
+                    //    //ReferenceDocumentscontent += "<tr><td align='center'> " + J + ')' + " </td><td style='white-space: pre-line;'>" + Convert.ToString(v.Document_Name) + "</td><td><span style='white-space: pre-line;'>" + v.Document_No + " </span></td><td style='white-space: pre-line;'>" + v.VendorDocumentNumber + "</td><td style='white-space: pre-line;'>" + v.Approval_Status + "</td></tr>";
+                    //    ReferenceDocumentscontent += "<tr><td style='white-space: pre-line;vertical-align:top;text-align:center;'> " + J + ')' + " </td><td align='top' style='white-space: pre-line;vertical-align:top;'>" + Convert.ToString(v.Document_Name) + "</td><td align='top' style='white-space: pre-line;vertical-align:top;'>" + v.Document_No + " </span></td><td align='top' style='white-space: pre-line;vertical-align:top;'>" + v.VendorDocumentNumber + "</td><td  style='white-space: pre-line;vertical-align:top;'>" + v.Approval_Status + "</td></tr>";
+                    //}
+
+                    string ItemDescriptioncontentTotal = "";
+
+                    if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes" && ObjModelVisitReport.ShowCount == "Yes" && ObjModelVisitReport.DisplayTotalQuantity == "Yes")
+                    {
+                        //09.02.2024
+                        foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                        {
+                            i = i + 1;
+
+                            if (i == lstCompanyDashBoard.Count)
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            else
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                        ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.PO_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Offered_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Accepted_QuantityTotal1 + " </span></td></tr>";
+                    }
+                    else if (ObjModelVisitReport.ItemDescriptionDynamic == "Yes")
+                    {
+                        //09.02.2024 curr
+                        foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                        {
+                            i = i + 1;
+
+                            if (i == lstCompanyDashBoard.Count)
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            else
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.HeatNumber + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                        //ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.PO_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Offered_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Accepted_QuantityTotal1 + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td></tr>";
+                    }
+                    else if (ObjModelVisitReport.DisplayTotalQuantity == "Yes")
+                    {
+                        foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                        {
+                            i = i + 1;
+                            //ItemDescriptioncontent += "<tr><td width='3%' align='center' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;'>" + Convert.ToString(v.Po_Item_No) + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Item_Code + " </td><td width='47%' style='font - size: 14px; color: #000; font-family: Arial;;vertical-align:top;text-align:left;'>" + v.ItemCode_Description + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Unit + "</td><td width='10%' style='vertical-align:top;text-align:center;'>" + v.Po_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Offered_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Accepted_Quantity + "</td></tr>";
+                            //if (i == lstCompanyDashBoard.Count)
+                            //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid color: #000;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:left;border-right-width: 0px;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            //else
+                            //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid  color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            if (i == lstCompanyDashBoard.Count)
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            else
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                        ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.PO_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Offered_QuantityTotal1 + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + ObjModelVisitReport.Accepted_QuantityTotal1 + " </span></td></tr>";
+                    }
+                    else
+                    {
+                        foreach (ItemDescriptionModel v in lstCompanyDashBoard)
+                        {
+                            i = i + 1;
+                            //ItemDescriptioncontent += "<tr><td width='3%' align='center' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;'>" + Convert.ToString(v.Po_Item_No) + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Item_Code + " </td><td width='47%' style='font - size: 14px; color: #000; font-family: Arial;;vertical-align:top;text-align:left;'>" + v.ItemCode_Description + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:left;'>" + v.Unit + "</td><td width='10%' style='vertical-align:top;text-align:center;'>" + v.Po_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Offered_Quantity + "</td><td width='10%' style='font - size: 14px; color: #000; font-family: Arial;vertical-align:top;text-align:center;'>" + v.Accepted_Quantity + "</td></tr>";
+                            //if (i == lstCompanyDashBoard.Count)
+                            //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid color: #000;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:left;border-right-width: 0px;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid color: #000;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            //else
+                            //    ItemDescriptioncontent += "<tr><td style = ' border:1px solid  color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'border-left-width: 0px;border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'border:1px solid color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px color: #000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            if (i == lstCompanyDashBoard.Count)
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-bottom-width: 0px;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:left;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+                            else
+                                ItemDescriptioncontent += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Po_Item_No) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                        // ItemDescriptioncontentTotal = "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + "Total" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td><td style = 'border:1px solid #000000;vertical-align:top; text-align:center;border-left-width: 0px;border-bottom-width: 0px;font-size:14px;' width = '10%' ><span> " + "" + " </span></td></tr>";
+                    }
+
+
+
+
+                    foreach (ReferenceDocumentsModel v in RefranceDocuments)
+                    {
+                        J = J + 1;
+                        // ReferenceDocumentscontent += "<tr><td> " + J + " </td><td>" + Convert.ToString(v.Document_Name) + "</td><td>" + v.Document_No + " </td><td>" + v.Approval_Status + "</td></tr>";
+                        //ReferenceDocumentscontent += "<tr><td align='center'> " + J + ')' + " </td><td style='white-space: pre-line;'>" + Convert.ToString(v.Document_Name) + "</td><td><span style='white-space: pre-line;'>" + v.Document_No + " </span></td><td style='white-space: pre-line;'>" + v.VendorDocumentNumber + "</td><td style='white-space: pre-line;'>" + v.Approval_Status + "</td></tr>";
+                        // ReferenceDocumentscontent += "<tr><td style='border:1px solid #000000;white-space: pre-line;vertical-align:top;text-align:center;border-left-width: 0px;border-bottom-width: 0px;color: #000;'> " + J + " </td><td align='top' style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + Convert.ToString(v.Document_Name) + "</td><td align='top' style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + v.Document_No + " </span></td><td align='top' style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + v.VendorDocumentNumber + "</td><td  style='border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;'>" + v.Approval_Status + "</td></tr>";
+
+                        if (J == RefranceDocuments.Count)
+                            ReferenceDocumentscontent += "<tr><td width='2%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;text-align:center;border-left-width: 0px;border-bottom-width: 0px;color: #000;border-left-width: 0px;font-size:14px;'> " + J + " </td><td width='17%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + Convert.ToString(v.Document_Name) + "</td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.Document_No + " </span></td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.VendorDocumentNumber + "</td><td width='27%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;border-right-width: 1px;color: #000;font-size:14px;'>" + v.Approval_Status + "</td></tr>";
+                        else
+                            ReferenceDocumentscontent += "<tr><td width='2%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;text-align:center;border-left-width: 0px;border-bottom-width: 0px;color: #000;border-left-width: 0px;font-size:14px;'> " + J + " </td><td width='17%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + Convert.ToString(v.Document_Name) + "</td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.Document_No + " </span></td><td width='27%' align='top' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;color: #000;font-size:14px;'>" + v.VendorDocumentNumber + "</td><td width='27%' style='font-family:TNG Pro;border:1px solid #000000;white-space: pre-line;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;border-right-width: 1px;color: #000;font-size:14px;'>" + v.Approval_Status + "</td></tr>";
+
+                    }
+                    string QapNo = "";
+
+                    foreach (InspectionActivitiesModel v in InspectionDocuments)
+                    {
+                        K = K + 1;
+
+                        // NULL + EMPTY safe check
+                        if (!string.IsNullOrWhiteSpace(v.QAP_Clause_Number))
+                        {
+                            QapNo = "<b>QAP / ITP Clause Number: " + v.QAP_Clause_Number + "</b><br />";
+
+                            InspectionDocumentsContent +=
+                                "<tr><td style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;' " +
+                                "width='5%' align='center'> " + K + " </td>" +
+                                "<td width='95%' colspan='5' style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;'>" +
+                                "<span style='font-size: 14px;white-space: pre-line;'>" +
+                                QapNo + Convert.ToString(v.Stages_Witnessed) +
+                                "</span></td></tr>";
+                        }
+                        else
+                        {
+                            InspectionDocumentsContent +=
+                                "<tr><td style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;' " +
+                                "width='5%' align='center'> " + K + " </td>" +
+                                "<td width='95%' colspan='5' style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;'>" +
+                                "<span style='font-size: 14px;white-space: pre-line;'>" +
+                                Convert.ToString(v.Stages_Witnessed) +
+                                "</span></td></tr>";
+                        }
+                        QapNo = string.Empty;
+
+                    }
+
+                    QapNo = String.Empty;
+                    foreach (DocumentRevieweModel v in DocumentReview)
+                    {
+                        L = L + 1;
+
+                        if (!string.IsNullOrWhiteSpace(v.QAP_Clause_Number))
+                        {
+                            QapNo = "<b>QAP / ITP Clause Number: " + v.QAP_Clause_Number + "</b><br />";
+
+                            DocumentreviewContent += "<tr><td style='font-family:TNG Pro;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;' width='5%' align='center'><span> " + L + " </span></td><td style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;' width='95%' colspan='5'><span style='border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;white-space: pre-line;'>" + QapNo + Convert.ToString(v.Description) + "</span></td></tr>";
+                        }
+                        else
+                        {
+                            DocumentreviewContent += "<tr><td style='font-family:TNG Pro;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;' width='5%' align='center'><span> " + L + " </span></td><td style='font-family:TNG Pro;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;' width='95%' colspan='5'><span style='border-left-width: 0px;border-bottom-width: 0px;color: #000;font-size:14px;white-space: pre-line;'>" + Convert.ToString(v.Description) + "</span></td></tr>";
+                        }
+                        //DocumentreviewContent += "<tr><td width='10%' align='center'><span> " + L + ')' + " </span></td><td width='90%' colspan='5'><span style='font-size:14px;white-space: pre-line;'>" + Convert.ToString(v.Description) + "</span></td></tr>";
+                        QapNo = String.Empty;
+                    }
+                    foreach (EquipmentDetailsModel v in EquipmentDetails)
+                    {
+                        if (v.NABLseenote1 == true)
+                        {
+                            // checkNABL = "<td > " + M + " </td> <td width='5%' align='center' style='border-right-width: 0px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + " checked></span></td>";
+                            checkNABL = "<td style='border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;vertical-align:top;font-size:14px;'> " + M + " </td> <td width='5%' align='center' style='border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;text-align:center;font-size:14px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + " checked></span></td>";
+                        }
+                        else
+                        {
+                            //checkNABL = "<td width='5%' align='center' style='border-right-width: 0px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + "></span></td>";
+                            checkNABL = "<td width='5%' align='center' style='border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;color: #000;text-align:center;font-size:14px;'><span><input type='checkbox'  value=" + v.NABLseenote1 + "></span></td>";
+                        }
+                    }
+
+
+                    dtAreasOfConcernOnPDF = objDalVisitReport.GetAreasOfConcernOnPDF(PK_CALL_ID);
+                    if (dtAreasOfConcernOnPDF.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dtAreasOfConcernOnPDF.Rows)
+                        {
+                            lstAreasOfConcernOnPDF.Add(
+                                new InspectionvisitReportModel
+                                {
+                                    PDF_Type = Convert.ToString(dr["PDF_Type"]),
+                                    PDF_Description = Convert.ToString(dr["PDF_Description"]),
+                                    PDF_MitigatedBy = Convert.ToString(dr["PDF_MitigatedBy"]),
+                                    PDF_MitigatedDate = Convert.ToString(dr["PDF_MitigatedDate"]),
+                                    PDF_RaisedBy = Convert.ToString(dr["PDF_RaisedBy"]),
+                                    PDF_ReportNo = Convert.ToString(dr["PDF_ReportNo"]),
+                                    PDF_PreviousComment = Convert.ToString(dr["PDF_PreviousComment"]),
+                                    PDF_Status = Convert.ToString(dr["PDF_Status"]),
+                                }
+                                );
+                        }
+                    }
+
+                    if (ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF == "Yes")
+                    {
+                        // AreaOfConcernOnPDFHeading += " <tr><td colspan='7' style='border: 1px solid #000000;border-bottom-width: 0px;border-top-width: 0px;background-color: #D7DBDD;padding-top: -1em;padding-bottom: -1em;border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;'>Concern:</span></td></tr>                <tr><td width='5 % ' style='border - left - width: 0px; '><span style='font - size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Type </strong></span></td><td width='45%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Description </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedDate </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>RaisedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>ReportNo </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Status</strong></span></td></tr>   ";
+                        AreaOfConcernOnPDFHeading += " <tr><td colspan='7' style='border: 1px solid #000000;border-bottom-width: 0px;border-top-width: 0px;background-color: #D7DBDD;padding-top: -1em;padding-bottom: -1em;border-left-width: 0px;page-break-before: always;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro'; font-weight: bold;'>List Of Issues:</span></td></tr>                <tr><td width='5 % ' style='border - left - width: 0px; '><span style='font - size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Type </strong></span></td><td width='45%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Description </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>MitigatedDate </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>RaisedBy </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>ReportNo </strong></span></td><td width='10%' style='border-left-width: 0px;'><span style='font-size: 14px; color: #000; font-family: 'TNG Pro';vertical-align:top;'><strong>Status</strong></span></td></tr>   ";
+                    }
+                    else
+                    {
+                        AreaOfConcernOnPDFHeading += "";
+                    }
+
+                    if (ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF == "Yes")
+                    {
+                        foreach (InspectionvisitReportModel ac in lstAreasOfConcernOnPDF)
+                        {
+
+                            //   i = i + 1;
+                            //if (i == lstAreasOfConcernOnPDF.Count)
+                            //AreaOfConcernOnPDF += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '5%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Type) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-top-width: 0px;font-size:14px;border-left-width: 0px;' width = '45%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Description) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedDate) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_RaisedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_ReportNo) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_PreviousComment) /*+ ''*/ + " </span></td></tr>";
+
+                            AreaOfConcernOnPDF += " <tr><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '5%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Type) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;border-top-width: 0px;font-size:14px;border-left-width: 0px;' width = '45%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Description) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_MitigatedDate) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_RaisedBy) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_ReportNo) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro; border:1px solid #000000;vertical-align:top; text-align:center;font-size:14px;border-left-width: 0px;border-top-width: 0px;' width = '10%' align = 'center' ><span> " + Convert.ToString(ac.PDF_Status) /*+ ''*/ + " </span></td></tr>";
+                            //else
+                            //    AreaOfConcernOnPDF += "<tr><td style = 'font-family:TNG Pro; border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;font-size:14px;' width = '5%' align = 'center' ><span> " + Convert.ToString(v.Description) /*+ ''*/ + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Item_Code + " </span></td><td style = 'font-family:TNG Pro;border-left-width: 0px;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;white-space: pre-line;' width = '35%' ><span> " + v.ItemCode_Description + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:left;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Unit + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Po_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Offered_Quantity + " </span></td><td style = 'font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top; text-align:center;border-left-width: 0px;font-size:14px;' width = '10%' ><span> " + v.Accepted_Quantity + " </span></td></tr>";
+
+                        }
+                    }
+                    else
+                    {
+                        AreaOfConcernOnPDF += "";
+                    }
+
+                    //foreach (EquipmentDetailsModel v in EquipmentDetails)
+                    //{
+                    //    M = M + 1;
+                    //    //   EquipmentDetailscontent += "<tr><td> " + M + " </td><td>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td>" + v.Range + " </td><td>" + v.Id + "</td><td>" + v.CalibrationValid_Till_date + "</td><td>" + v.Certification_No_Date + "</td></tr>";
+                    //    EquipmentDetailscontent += "<tr><td align='center'> " + M + ')' + " </td><td>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td>" + v.Range + " </td><td>" + v.Id + "</td><td>" + v.CalibrationValid_Till_date + "</td><td>" + v.Certification_No_Date + "</td><td>" + v.SNABLseenote1 + "</td><td>" + v.SNonNABLseenote2 + "</td></tr>";
+
+                    //}
+                    foreach (EquipmentDetailsModel v in EquipmentDetails)
+                    {
+                        M = M + 1;
+                        //   EquipmentDetailscontent += "<tr><td> " + M + " </td><td>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td>" + v.Range + " </td><td>" + v.Id + "</td><td>" + v.CalibrationValid_Till_date + "</td><td>" + v.Certification_No_Date + "</td></tr>";
+                        EquipmentDetailscontent += "<tr><td width='5%' align='center' style='font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;vertical-align:top;text-align:center;font-size:14px;'> " + M + " </td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + Convert.ToString(v.Name_Of_Equipments) + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.Range + " </td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.Id + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.CalibrationValid_Till_date + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-bottom-width: 0px;border-left-width: 0px;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;'>" + v.Certification_No_Date + "</td><td style='font-family:TNG Pro;vertical-align:top;border:1px solid #000000;border-left-width: 0px;border-bottom-width: 0px;text-align:center;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;text-align:center;'>" + v.SNABLseenote1 + "</td><td style='font-family:TNG Pro;border:1px solid #000000;vertical-align:top;border-left-width: 0px;border-bottom-width: 0px;text-align:center;font-size:14px;'><span style='font-size:14px;white-space: pre-line;vertical-align:top;text-align:center;'>" + v.SNonNABLseenote2 + "</td></tr>";
+
+                    }
+
+                    foreach (InspectionvisitReportModel v in lstAreasOfConcern)
+                    {
+                        A = A + 1;
+                        //AreasOfConcernContent += "<tr><td style='font-family:TNG Pro;border:1px solid #fa3746;border-bottom-width: 0px;border-top-width: 0px;color: #fa3746;font-family: italic;font-size:14px;' width='90%' colspan='8'><span style='font-size: 14px;color: #fa3746;font-style: italic;font-family:TNG Pro;'>" + A + ". " + Convert.ToString(v.Areas_Of_Concerns) + "</span></td></tr>";
+                        AreasOfConcernContent += "<tr><td style='font-family:TNG Pro;border:1px solid #000000;border-bottom-width: 0px;border-top-width: 0px;font-family: italic;font-size:14px;' width='90%' colspan='8'><span style='font-size: 14px;color: #fa3746;font-style: italic;font-family:TNG Pro;'>" + A + ". " + Convert.ToString(v.Areas_Of_Concerns) + "</span></td></tr>";
+                    }
+                    foreach (InspectionvisitReportModel v in lstPendingActivity)
+                    {
+                        PA = PA + 1;
+                        PendingActivityContent += "<tr><td style='font-family:TNG Pro;border:1px solid #fa3746;border-bottom-width: 0px;border-top-width: 0px;color: #fa3746;font-size:14px;' width='90%' colspan='8'><span style='font-size:14px;'>" + PA + ". " + Convert.ToString(v.Pending_Activites) + "</span></td></tr>";
+                    }
+
+
+                    //body = body.Replace("[PendingActivites]", PendingActivityContent);
+                    //body = body.Replace("[AreasOfConcerns]", AreasOfConcernContent);
+
+                    if (AreasOfConcernContent == "" || AreasOfConcernContent == null)
+                    {
+                        // body = body.Replace("[AreasOfConcerns]", "<tr><td colspan='8' style = 'font-family:TNG Pro;border:1px solid ;white-space: pre-line;vertical-align:top;text-align:left;border-top-width: 0px;border-bottom-width: 0px;color: #fa3746;font-size:14px;' > " + "None" + " </td>");
+                        body = body.Replace("[AreasOfConcerns]", "<tr><td colspan='8' style = 'font-family:TNG Pro;border:1px solid ;white-space: pre-line;vertical-align:top;text-align:left;border-top-width: 0px;border-bottom-width: 0px;font-size:14px;' > " + "None" + " </td>");
+                    }
+                    else
+                    {
+                        body = body.Replace("[AreasOfConcerns]", AreasOfConcernContent);
+                    }
+                    if (PendingActivityContent == "" || PendingActivityContent == null)
+                    {
+                        body = body.Replace("[PendingActivites]", "<tr><td colspan='8' style = 'border:1px solid ;white-space: pre-line;vertical-align:top;text-align:left;border-top-width: 0px;border-bottom-width: 0px;font-size:14px;' > " + "None" + " </td>");
+                    }
+                    else
+                    {
+                        body = body.Replace("[PendingActivites]", PendingActivityContent);
+                    }
+
+                    body = body.Replace("[ItemDescriptionContent]", ItemDescriptioncontent);
+                    body = body.Replace("[ItemDescriptioncontentTotal]", ItemDescriptioncontentTotal);
+
+
+                    body = body.Replace("[AreaOfConcernOnPDF]", AreaOfConcernOnPDF);
+                    body = body.Replace("[AreaOfConcernOnPDFHeading]", AreaOfConcernOnPDFHeading);
+
+                    body = body.Replace("[ReferenceDocumentsContent]", ReferenceDocumentscontent);
+                    body = body.Replace("[InspectionDocumentsContent]", InspectionDocumentsContent);
+                    body = body.Replace("[DocumentreviewContent]", DocumentreviewContent);
+                    body = body.Replace("[EquipmentDetailscontent]", EquipmentDetailscontent);
+                    body = body.Replace("[InspectiobRecord_Remark]", ObjModelVisitReport.InspectiobRecord_Remark);//24
+                    body = body.Replace("[OtherSpecifyRecords]", ObjModelVisitReport.OtherSpecifyRecords);
+
+
+
+                    int ExpenseCheckBox = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["ExpenseCheckBox"]);
+                    ObjModelVisitReport.ExpenseCheckBox = Convert.ToBoolean(ExpenseCheckBox);
+
+                    if (ObjModelVisitReport.ExpenseCheckBox == true)
+                    {
+                        string strE = "<tr><td align='left' style='font-family:TNG Pro;background-color: #efefef;border:1px solid #000000;border-top-width: 0px;font-size:14px;'><span><strong>Travel Expenses in INR :</strong></span> " + ObjModelVisitReport.Expenses + " </td></tr>";
+                        body = body.Replace("[Expenses]", strE);
+                    }
+                    else
+                    {
+                        body = body.Replace("[Expenses]", "");
+                    }
+
+                    int TiimeCheckBox = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["TiimeCheckBox"]);
+                    ObjModelVisitReport.TiimeCheckBox = Convert.ToBoolean(TiimeCheckBox);
+
+                    //if (ObjModelVisitReport.TiimeCheckBox == true)
+                    //{
+                    //    string strT = "<tr><td align='left' style='background-color: #efefef;border:1px solid #000000;border-top-width: 0px;font-size:14px;'><span><strong>In Time: </span></strong> " + ObjModelVisitReport.Intime + "   <span><strong>Out Time :</span></strong> " + ObjModelVisitReport.Outtime + " </td></tr>";
+                    //    body = body.Replace("[TiimeCheckBox]", strT);
+                    //}
+                    //else
+                    //{
+                    //    body = body.Replace("[TiimeCheckBox]", "");
+                    //}
+                    string strT = "";
+                    if (ObjModelVisitReport.TiimeCheckBox == true)
+                    {
+                        VT = VT + 1;
+                        foreach (InspectionvisitReportModel vt in lstVisitReportTime)
+                        {
+                            strT += "<tr><td align='left' style='font-family:TNG Pro;background-color: #efefef;border:1px solid #000000;border-top-width: 0px;font-size:14px;'><span><strong>Date: </span></strong> " + vt.DateSe + " <span><strong>In Time: </span></strong> " + vt.Intime + "   <span><strong>Out Time :</span></strong> " + vt.Outtime + " </td></tr>";
+                        }
+
+                        // body = body.Replace("[TiimeCheckBox]", strT);
+                    }
+                    //else
+                    //{
+                    //    body = body.Replace("[TiimeCheckBox]", "");
+                    //}
+
+                    if (strT == "" || strT == null)
+                    {
+                        body = body.Replace("[TiimeCheckBox]", "");
+                    }
+                    else
+                    {
+                        body = body.Replace("[TiimeCheckBox]", strT);
+                    }
+
+
+
+                    body = body.Replace("[Stamp]", "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Stamp.png' style='width:100px;height:50px; ' align='center'>");
+                    // body = body.Replace("[Signature]", ConfigurationManager.AppSettings["Web"].ToString() + "/signature.jpg");
+                    body = body.Replace("[Signature]", ConfigurationManager.AppSettings["Web"].ToString() + ObjModelVisitReport.Signatures);
+                    //string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/sign/" + ObjModelVisitReport.Signatures + "' style='width:225px;height:125px; ' align='center'>";
+                    string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/sign/" + ObjModelVisitReport.Signatures + "' style='width:225px;height:125px; ' align='center'>";
+
+
+
+                    //string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "' style='width:100px;height:50px; ' align='center'>";
+                    //  string I = "<img src = '" + ConfigurationManager.AppSettings["Web"].ToString() + "/Sign/" + ObjModelVisitReport.Signatures + "' style='width:100px;height:50px; ' align='center'>";
+
+                    if (Userole == "61" || Userole == "62")
+                    {
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                        {
+                            if (ObjModelVisitReport.Signatures != null)
+                            {
+                                //  body = body.Replace("[Signature1]", ConfigurationManager.AppSettings["Web"].ToString()+ "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "");
+                                body = body.Replace("[Signature1]", I);//I);
+
+                            }
+                            else
+                            {
+                                body = body.Replace("[Signature1]", "");
+                            }
+                        }
+                        else
+                        {
+                            body = body.Replace("[Signature1]", "");
+                        }
+
+                    }
+
+                    else
+                    {
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0) // added by vaibhav on 05032025 for comfirmation
+                        {
+                            body = body.Replace("[Signature1]", "");//I);
+                        }
+                        else
+                        {
+                            body = body.Replace("[Signature1]", "");
+                        }
+                    }
+
+
+
+                    //if (ObjModelVisitReport.Signatures != null)
+                    //{
+                    //    //  body = body.Replace("[Signature1]", ConfigurationManager.AppSettings["Web"].ToString()+ "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "");
+                    //    body = body.Replace("[Signature1]", I);
+
+                    //}
+                    //else
+                    //{
+
+                    //}
+                    body = body.Replace("[Checkbox1]", check1);
+                    body = body.Replace("[Checkbox2]", check2);
+                    body = body.Replace("[Checkbox3]", check3);
+                    body = body.Replace("[Checkbox4]", check4);
+                    body = body.Replace("[Checkbox5]", check5);
+                    body = body.Replace("[Checkbox6]", check6);
+                    body = body.Replace("[Checkbox7]", check7);
+                    body = body.Replace("[Checkbox8]", check8);
+                    body = body.Replace("[Checkbox9]", check9);
+                    body = body.Replace("[Checkbox10]", check10);
+                    body = body.Replace("[Checkbox11]", check11);
+                    body = body.Replace("[Checkbox12]", check12);
+                    body = body.Replace("[Checkbox13]", check13);
+                    //strs.Append(body);//24
+                    PdfPageSize pageSize = PdfPageSize.A4;
+                    PdfPageOrientation pdfOrientation = PdfPageOrientation.Portrait;
+                    HtmlToPdf converter = new HtmlToPdf();
+
+
+
+
+                    // set the page timeout (in seconds)
+                    //converter.Options.MaxPageLoadTime = 2400;  //=========================5-Aug-2019
+                    //converter.Options.PdfPageSize = pageSize;
+                    //converter.Options.PdfPageOrientation = pdfOrientation;
+                    //converter.Options.WebPageFixedSize = false;
+
+
+
+                    #region Heder code
+                    string _Header = string.Empty;
+                    string _footer = string.Empty;
+
+                    // for Report header by abel
+                    StreamReader _readHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                    _Header = _readHeader_File.ReadToEnd();
+                    _Header = _Header.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                    _Header = _Header.Replace("[RevisionNo]", countNo);
+                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+
+                    //_Header = _Header.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+
+                    if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                    {
+                        _Header = _Header.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+
+                    }
+                    else
+                    {
+                        _Header = _Header.Replace("[Logo]", "");
+
+                    }
+                    _Header = _Header.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                    #endregion
+
+
+                    #region Generate no
+                    if (RM.Report == null)
+                    {
+
+                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                        {
+                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                        }
+                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                        _Header = _Header.Replace("[ReportNo]", RM.ReportNo);
+
+                    }
+                    else
+                    {
+                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                        {
+                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+                            RM.ReportNo = SrNo;
+                        }
+
+                        //_Header = _Header.Replace("[ReportNo]", SrNo);
+                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                        {
+                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                            _Header = _Header.Replace("[ReportNo]", strReportNo);
+                        }
+                        else
+                        {
+                            _Header = _Header.Replace("[ReportNo]", SrNo);
+
+                        }
+                    }
+                    #endregion
+
+                    #region Footer Code
+
+                    StreamReader _readFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                    _footer = _readFooter_File.ReadToEnd();
+
+
+
+                    if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                    {
+                        _footer = _footer.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+
+                    }
+                    else
+                    {
+                        _footer = _footer.Replace("[LogoFooter]", "");
+
+                    }
+
+
+                    // header settings
+
+                    converter.Options.MaxPageLoadTime = 40; // Timeout in seconds
+                    converter.Options.PdfPageSize = pageSize;
+                    converter.Options.PdfPageOrientation = pdfOrientation;
+                    converter.Options.WebPageFixedSize = false;
+
+                    converter.Options.DisplayHeader = true || true || true;
+                    converter.Header.DisplayOnFirstPage = true;
+                    converter.Header.DisplayOnOddPages = true;
+                    converter.Header.DisplayOnEvenPages = true;
+                    //converter.Header.Height = 75;
+                    converter.Header.Height = 65;
+
+                    PdfHtmlSection headerHtml = new PdfHtmlSection(_Header, string.Empty);
+                    headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                    converter.Header.Add(headerHtml);
+
+                    // footer settings
+                    converter.Options.DisplayFooter = true || true || true;
+                    converter.Footer.DisplayOnFirstPage = true;
+                    converter.Footer.DisplayOnOddPages = true;
+                    converter.Footer.DisplayOnEvenPages = true;
+
+                    //converter.Footer.Height = 150;
+                    converter.Footer.Height = 105;
+
+                    PdfHtmlSection footerHtml = new PdfHtmlSection(_footer, string.Empty);
+                    footerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                    converter.Footer.Add(footerHtml);
+
+                    //end abel code
+
+
+                    // page numbers can be added using a PdfTextSection object
+                    //PdfTextSection text1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                    //PdfTextSection text1 = new PdfTextSection(0, 135, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+
+                    //text1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                    //converter.Footer.Add(text1);
+                    #endregion
+
+                    converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
+                    converter.Options.AutoFitHeight = HtmlToPdfPageFitMode.NoAdjustment;
+
+                    #region test Total Page Count
+                    //string path1 = Server.MapPath("~/IVRReport");
+
+                    //string[] datafile1 = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+                    //dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                    //if (dtSrNo.Tables[0].Rows.Count > 0)
+                    //{
+                    //    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                    //}
+                    //string finalReportName1 = "IVR-" + ObjModelVisitReport.SubJob_No.Replace('/', '_') + "-" + SrNo + "-Rev." + countNo.ToString() + ".pdf";
+                    //PdfSharp.Pdf.PdfDocument FinalDoc1 = new PdfSharp.Pdf.PdfDocument();
+
+                    //if (System.IO.File.Exists(path1 + "\\" + finalReportName1))
+                    //{
+                    //    // If file found, delete it    
+                    //    System.IO.File.Delete(path1 + "\\" + finalReportName1);
+
+                    //}
+                    //// create a new pdf document
+                    //foreach (string pdfFile in datafile1)
+                    //{
+                    //    if (pdfFile.Contains("Image_") || pdfFile.Contains("Data_"))
+                    //    {
+                    //        PdfSharp.Pdf.PdfDocument inputPDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
+
+                    //        FinalDoc1.Version = inputPDFDocument.Version;
+
+                    //        foreach (PdfSharp.Pdf.PdfPage page in inputPDFDocument.Pages)
+                    //        {
+                    //            FinalDoc1.AddPage(page);
+                    //        }
+
+                    //    }
+                    //}
+
+
+                    // Create variable that store page count  
+
+                    SelectPdf.PdfDocument doc1 = converter.ConvertHtmlString(body);
+                    doc1.Security.CanCopyContent = false;
+
+                    //int P;
+                    //string ImagePageTotalCount1 = "";
+                    //if (imagecount == 0)
+                    //{
+                    //    P = doc1.Pages.Count;
+                    //    ImagePageTotalCount1 = "0";
+                    //}
+                    //else
+                    //{
+                    //    P = doc1.Pages.Count + ImageC;
+                    //    ImagePageTotalCount1 = Convert.ToString(ImageC);
+                    //}
+                    //string noPages1 = Convert.ToString(P);
+
+
+                    #region get Image page no & Total Page no
+
+                    //string ImagePage1 = "";
+                    //string TotalPage1 = "";
+                    ////string ImagePageTotalCount1 = Convert.ToString(ImageC);
+                    //if (ImagePageTotalCount1 == "0")
+                    //{
+
+                    //    ImagePage1 = "-";
+                    //    TotalPage1 = noPages1;
+                    //    //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
+                    //    body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
+
+                    //}
+                    //else if (ImagePageTotalCount1 == "1")
+                    //{
+                    //    int ImagePageNo = doc1.Pages.Count + 1;
+                    //    ImagePage1 = Convert.ToString(ImagePageNo);
+                    //    TotalPage1 = noPages1;
+                    //    //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
+                    //    body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
+
+                    //}
+                    //else
+                    //{
+                    //    int ImagePageNo = doc1.Pages.Count + 1; //Convert.ToInt32(noPages1) - Convert.ToInt32(ImagePageTotalCount1);
+                    //                                            //ImagePage1 = Convert.ToString(ImagePageNo);
+                    //    ImagePage1 = Convert.ToString(ImagePageNo + " to " + noPages1);
+                    //    TotalPage1 = noPages1;
+                    //    //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
+                    //    body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
+                    //}
+
+                    #endregion
+
+
+                    #region New Page Count
+
+
+                    int P;
+                    int __a;
+                    int __b;
+                    int __c;
+                    int count_;
+
+                    P = doc1.Pages.Count;
+
+                    if (ImageReportDashBoard.Rows.Count > 0)
+                    {
+                        count_ = ImageReportDashBoard.Rows.Count;
+
+                        // Each block of 6 images → adds 1 page
+                        int extraPages = (int)Math.Ceiling(count_ / 6.0);
+
+                        // Cap at maximum of 3 extra pages
+                        if (extraPages > 3)
+                            extraPages = 3;
+
+                        __b = P + extraPages;
+
+                        //body = body.Replace("[TempInspectionPhotosNo]", "_ To _" );
+                        body = body.Replace("[TempInspectionPhotosNo]", P + 1 + " To " + __b.ToString());
+                    }
+                    else
+                    {
+                        body = body.Replace("[TempInspectionPhotosNo]", "-");
+                    }
+
+
+
+                    #endregion
+
+
+                    strs.Append(body);
+                    #endregion
+
+
+
+                    SelectPdf.PdfDocument doc = converter.ConvertHtmlString(body);
+
+                   
+
+                    if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 1)
+                    {
+                        string imgFile1 = Server.MapPath("~/WaterMark.png");
+                        PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
+                        PdfImageElement img1 = new PdfImageElement(150, 150, imgFile1);
+                        img1.Transparency = 15;
+                        template1.Add(img1);
+                    }
+
+
+                    doc.Security.CanCopyContent = false;
+
+
+                    //doc.CompressionLevel = (PdfCompressionLevel)Enum.Parse(
+                    //typeof(PdfCompressionLevel),"",true);
+
+                    string ReportName = RM.Report;
+                    paths = Server.MapPath("~/Content/");
+
+                    if (System.IO.File.Exists(paths + ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf"))
+                    {
+                        // If file found, delete it    
+                        System.IO.File.Delete(paths + ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf");
+
+                    }
+
+                    if (ReportName == null)
+                    {
+                        ReportName = ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf";
+                        doc.Save(paths + '\\' + ReportName);
+                        doc.Close();
+                    }
+                    else
+                    {
+                        ReportName = ObjModelVisitReport.Call_No + "/Data_" + countNo + ".pdf";
+                        doc.Save(paths + '\\' + ReportName);
+                        doc.Close();
+                    }
+
+
+                    #region Send Parameter to controller Vaibhav
+                    var controller = new TestImageController();
+                    controller.ControllerContext = this.ControllerContext; // attach context so Server.MapPath works
+
+                    string ReportNameForImage = RM.ReportNo.Replace('/', '_');
+
+                    string CustomerSpecificNumber = "";
+
+
+                    if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                    {
+                        CustomerSpecificNumber = "Number: " + ObjModelVisitReport.CustomerSpecificReportNumber;
+                        ReportNameForImage = "( " + SrNo + " )";
+                    }
+                    else
+                    {
+                        CustomerSpecificNumber = "";
+                        ReportNameForImage = SrNo;
+
+                    }
+
+
+
+                    controller.GenerateReport(PK_CALL_ID, ReportNameForImage, ObjModelVisitReport.Call_No, CustomerSpecificNumber,ObjModelVisitReport.IsComfirmation);
+                    #endregion
+
+                    string path = Server.MapPath("~/IVRReport");
+
+                    string[] datafile = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+                    dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                    if (dtSrNo.Tables[0].Rows.Count > 0)
+                    {
+                        SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                    }
+                    //string finalReportName = "IVR-" + ObjModelVisitReport.SubJob_No + " - " + SrNo + "-Rev." + countNo.ToString() + ObjModelVisitReport.Call_No.ToString() + ".pdf";
+                    // string finalReportName = "IVR-" + ObjModelVisitReport.SubJob_No.Replace('/', '_') + "-" + SrNo + "-Rev." + countNo.ToString() + ".pdf";
+                    string finalReportName = RM.ReportNo.Replace('/', '_') + ".pdf"; //23 Feb 2022
+                                                                                     //string finalReportName = RM.ReportNo + ".pdf";
+
+                    PdfSharp.Pdf.PdfDocument FinalDoc = new PdfSharp.Pdf.PdfDocument();
+
+                    if (System.IO.File.Exists(path + "\\" + finalReportName))
+                    {
+                        // If file found, delete it    
+                        System.IO.File.Delete(path + "\\" + finalReportName);
+
+                    }
+
+
+
+
+
+                    // create a new pdf document
+                    foreach (string pdfFile in datafile)
+                    {
+                        if (System.IO.File.Exists(pdfFile) && new System.IO.FileInfo(pdfFile).Length > 20)
+                        {
+                            if (pdfFile.Contains("Image_") || pdfFile.Contains("Data_"))
+                            {
+                                PdfSharp.Pdf.PdfDocument inputPDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
+
+                                FinalDoc.Version = inputPDFDocument.Version;
+
+                                foreach (PdfSharp.Pdf.PdfPage page in inputPDFDocument.Pages)
+                                {
+                                    FinalDoc.AddPage(page);
+                                }
+
+                            }
+                        }
+                    }
+
+                    XFont font = new XFont("Verdana", 9);
+                    XBrush brush = XBrushes.Black;
+                    // Create variable that store page count  
+                    string noPages = FinalDoc.Pages.Count.ToString();
+
+
+
+
+                    for (int c = 0; c < FinalDoc.Pages.Count; ++c)
+                    {
+                        PdfSharp.Pdf.PdfPage page = FinalDoc.Pages[c];
+                        // Make a layout rectangle.  
+                        //XRect layoutRectangle = new XRect(240 /*X*/ , page.Height - font.Height - 10 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
+                        //XRect layoutRectangle = new XRect(232 /*X*/ , page.Height - font.Height - 15 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
+                        XRect layoutRectangle = new XRect(33 /*X*/ , page.Height - font.Height - 7 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
+                        using (XGraphics gfx = XGraphics.FromPdfPage(page))
+                        {
+                            //gfx.DrawString("Page " + (c + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.Center);
+                            gfx.DrawString("Page " + (c + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.BottomLeft);
+                        }
+                    }
+
+                    PdfSharp.Pdf.Security.PdfSecuritySettings securitySettings = FinalDoc.SecuritySettings;
+
+                    // Set the owner password (password required to change permissions)
+                    securitySettings.OwnerPassword = "!$!)!(*%"; // Required for setting permissions
+
+                    // Set document permissions to disable editing
+                    securitySettings.PermitModifyDocument = false;   // Disallow editing the document
+                    securitySettings.PermitFormsFill = true;        // Disallow filling forms
+                    securitySettings.PermitAnnotations = true;      // Disallow adding annotations
+                    securitySettings.PermitAssembleDocument = false; // Disallow document assembly
+                    securitySettings.PermitExtractContent = true;   // Disallow content extraction
+                    securitySettings.PermitFullQualityPrint = false; // Disallow full quality printing (optional)
+                    securitySettings.PermitPrint = true;
+                    FinalDoc.Save(path + "\\" + finalReportName);
+                    FinalDoc.Close();
+
+
+                    #endregion
+
+                    if (RM.PK_RM_ID != 0)
+                    {
+
+                        RM.Type = "IVR";
+                        RM.Status = "1";
+                        RM.ImageReport = ReportNames;
+                        RM.Report = finalReportName;
+                        RM.ReportName = ReportName;
+                        RM.PK_CALL_ID = PK_CALL_ID;
+                        RM.SubJob_No = ObjModelVisitReport.SubJob_No;
+                        RM.PK_SubJob_Id = ObjModelVisitReport.PK_SubJob_Id;
+                        RM.ProjectName = ObjModelVisitReport.End_user_Name;
+                        RM.Po_No = ObjModelVisitReport.Po_No;
+                        RM.Report_No = ObjModelVisitReport.Report_No;
+                        Result = objDalVisitReport.InsertUpdateReport(RM);
+                        if (Result != "" && Result != null)
+                        {
+                            TempData["InsertCompany"] = Result;
+                        }
+                    }
+                    else
+                    {
+                        RM.Type = "IVR";
+                        RM.Status = "1";
+                        RM.ImageReport = ReportNames;
+                        RM.Report = finalReportName;
+                        RM.ReportName = ReportName;
+                        RM.PK_CALL_ID = PK_CALL_ID;
+                        RM.SubJob_No = ObjModelVisitReport.SubJob_No;
+                        RM.PK_SubJob_Id = ObjModelVisitReport.PK_SubJob_Id;
+                        RM.ProjectName = ObjModelVisitReport.End_user_Name;
+                        RM.Po_No = ObjModelVisitReport.Po_No;
+                        RM.Report_No = ObjModelVisitReport.Report_No;
+
+                        Result = objDalVisitReport.InsertUpdateReport(RM);
+
+                        if (Result != "" && Result != null)
+                        {
+                            TempData["InsertCompany"] = Result;
+                        }
+                    }
+
+
+
+
+
+                    #region
+                    CostSheetDashBoard = objDalVisitReport.GetReportByCall_Id(PK_CALL_ID);
+                    if (CostSheetDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in CostSheetDashBoard.Rows)
+                        {
+                            ReportDashboard.Add(
+                                new ReportModel
+                                {
+                                    ReportName = Convert.ToString(dr["ReportName"]),
+                                    Report = Convert.ToString(dr["Report"]),
+                                    CraetedDate = Convert.ToString(dr["CraetedDate"]),
+                                    PK_RM_ID = Convert.ToInt32(dr["PK_RM_ID"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
+                                }
+                                );
+                        }
+                    }
+                    ViewData["CostSheet"] = ReportDashboard;
+                    #endregion
+
+
+
+                    string newpath = Server.MapPath("~/IVRReport/");
+
+                    byte[] fileBytes = System.IO.File.ReadAllBytes(newpath + @"\" + finalReportName);
+
+
+                    if (System.IO.Directory.Exists(paths + ObjModelVisitReport.Call_No))
+                    {
+                        System.IO.Directory.Delete(paths + ObjModelVisitReport.Call_No, true);
+                    }
+                    if (Userole == "61" || Userole == "62")
+                    {
+                        return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                        {
+                            if (Userole == "61" || Userole == "62")
+                            {
+
+                            }
+                            #region Digital Signature
+                            else
+                            {
+                                string PPPP = Server.MapPath("~/IVRReport/" + finalReportName);// newpath + finalReportName;
+                                string Path = PPPP; string SignLoc = "TUV India representative:"; string signannotation = ObjModelVisitReport.Name; string PReportName = finalReportName;
+                                return RedirectToAction(nameof(VisitReportPrintWithDigitalSign), new { Path = Path, SignLoc = SignLoc, signannotation = signannotation, PReportName = PReportName });
+                                // return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
+                            }
+                            #endregion
+                            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
+
+                        }
+                        else
+                        {
+                            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "draft.pdf");
+
+
+                        }
+                    }
+
+                    //return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, finalReportName);
+
+                    return RedirectToAction("VisitReportForm", "VisitReport", new { PK_Call_ID = PK_CALL_ID });
+
+                    return RedirectToAction("IvrReports", RMData);
+
+                }
+
+                else
+                {
+                    return RedirectToAction("IvrReports", RMData);
+                }
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+                return RedirectToAction("ErrorPage", "InspectionReleaseNote", new { @Error = Error });
+            }
+
+        }
+
+        public ActionResult UpdateReportsOld(int? PK_CALL_ID, string flag)
+        {
+            RMData.PK_CALL_ID = Convert.ToInt32(PK_CALL_ID);
+            DataTable ItemDescriptionDashBoard = new DataTable();
+            DataTable RefranceDocumentsDashBoard = new DataTable();
+            DataTable InspectionActivitesDashBoard = new DataTable();
+            DataTable DocumentsReviewBoard = new DataTable();
+            DataTable EquipmentDetailsBoard = new DataTable();
+            DataTable DTVisitTime = new DataTable();
+            DataSet DSJobMasterByQtId = new DataSet();
+            DataTable ReportDashBoard = new DataTable();
+            DataSet UpdateReport = new DataSet();
+            DataTable CostSheetDashBoard = new DataTable();
+            int count = 0;
+            DataTable ImageReportDashBoard = new DataTable();
+            List<ReportImageModel> ImageDashBoard = new List<ReportImageModel>();
+            List<ItemDescriptionModel> lstCompanyDashBoard = new List<ItemDescriptionModel>();
+            List<ReferenceDocumentsModel> RefranceDocuments = new List<ReferenceDocumentsModel>();
+            List<InspectionActivitiesModel> InspectionDocuments = new List<InspectionActivitiesModel>();
+            List<DocumentRevieweModel> DocumentReview = new List<DocumentRevieweModel>();
+            List<EquipmentDetailsModel> EquipmentDetails = new List<EquipmentDetailsModel>();
+            List<ReportModel> ReportDashboard = new List<ReportModel>();
+
+            List<InspectionvisitReportModel> lstAreasOfConcern = new List<InspectionvisitReportModel>();
+            List<InspectionvisitReportModel> lstPendingActivity = new List<InspectionvisitReportModel>();
+
+            List<InspectionvisitReportModel> lstVisitReportTime = new List<InspectionvisitReportModel>();
+
+
+            DataTable dtAreasOfConcern = new DataTable();
+            DataTable dtAreasOfConcernOnPDF = new DataTable();
+            DataTable dtPendingActivity = new DataTable();
+
+            DataSet dtSrNo = new DataSet();
+            string SrNo = "";
+            string SubJobDate = string.Empty;
+
+            ReportModel RM = new ReportModel();
+            string Result = "";
+            string Result1 = "";
+            try
+            {
+
+
+                if (PK_CALL_ID != 0 || PK_CALL_ID != null)
+                {
+
+                    int i = 0;
+                    int J = 0;
+                    int K = 0;
+                    int L = 0;
+                    int M = 0;
+                    int N = 0;
+                    int A = 0;
+                    int PA = 0;
+                    int VT = 0;
+
+
+
+                    Result1 = objDalVisitReport.UpdateDownloadDate(PK_CALL_ID);
+
+
+                    #region 
+                    DSJobMasterByQtId = objDalVisitReport.EditInspectionVisitReportByPKCallID(PK_CALL_ID);
+
+                    //DSJobMasterByQtId = objDalVisitReport.PrintVisitReport(PK_CALL_ID);
+
+                    #region ARC first Visit Flag
+                    string chkIfARC = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["chkARC"]);
+                    string Count = Convert.ToString(DSJobMasterByQtId.Tables[1].Rows[0]["IVRCount"]);
+
+                    if (chkIfARC == "1" /*& Count=="1"*/ )
+                    {
+
+                        Result = objDalVisitReport.UpdateARCFlagFirstClick(PK_CALL_ID);
+                    }
+
+
+
+                    #endregion
+
+
+                    if (DSJobMasterByQtId.Tables[0].Rows.Count > 0)
+                    {
+                        ObjModelVisitReport.ItemDescriptionDynamic = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ItemDescriptionDynamic"]);
+                        ObjModelVisitReport.SAPNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SAP_No"]);
+                        ObjModelVisitReport.Branch = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Branch"]);
+                        ObjModelVisitReport.Sap_And_Controle_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sap_And_Controle_No"]);
+                        ObjModelVisitReport.PK_IVR_ID = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_IVR_ID"]);
+                        ObjModelVisitReport.Project_Name_Location = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Project_Name_Location"]);
+                        ObjModelVisitReport.Address_Of_Inspection = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Address_Of_Inspection"]);
+                        ObjModelVisitReport.End_user_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["End_user_Name"]);
+                        ObjModelVisitReport.Vendor_Name_Location = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Vendor_Name_Location"]);
+                        ObjModelVisitReport.PK_Call_ID = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_Call_ID"]);
+                        ObjModelVisitReport.Notification_Name_No_Date = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Notification_Name_No_Date"]);
+
+                        ObjModelVisitReport.Date_Of_Inspection = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Date_Of_Inspection"]);
+                        ObjModelVisitReport.Client_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Client_Name"]);
+                        ObjModelVisitReport.DEC_PMC_EPC_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["DEC_PMC_EPC_Name"]);
+                        ObjModelVisitReport.DEC_PMC_EPC_Assignment_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["DEC_PMC_EPC_Assignment_No"]);
+                        ObjModelVisitReport.Po_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Po_No"]);
+                        //ObjModelVisitReport.Sub_Vendor_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Sub_Vendor_Name"]);
+                        //ObjModelVisitReport.Po_No_SubVendor = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Po_No_SubVendor"]);
+                        //ObjModelVisitReport.SubJob_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubJob_No"]);
+
+                        ObjModelVisitReport.Po_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Po_Number"]);
+                        ObjModelVisitReport.Sub_Vendor_Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubVendorName"]);
+                        ObjModelVisitReport.Po_No_SubVendor = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubVendorPoNo"]);
+                        ObjModelVisitReport.SubJob_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubJob_No"]);
+                        ObjModelVisitReport.Date_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Date_of_PO"]);
+                        ObjModelVisitReport.SubSubVendorDate_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubSubVendorPODate"]);
+
+                        ObjModelVisitReport.SubSubSubVendorName = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorName"]);
+                        ObjModelVisitReport.SubSubSubPoNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorPoNo"]);
+                        ObjModelVisitReport.SubSubSubPoDate = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubSubVendorPoDate"]);
+                        ObjModelVisitReport.SubType = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["JobType"]);
+
+
+                        DataSet DsSubJobDate = new DataSet();
+                        DsSubJobDate = objDalVisitReport.getsubJobdate(ObjModelVisitReport.SubJob_No);
+
+
+                        if (DsSubJobDate.Tables[0].Rows.Count > 0)
+                        {
+                            SubJobDate = DsSubJobDate.Tables[0].Rows[0]["SubJobDate"].ToString();
+                        }
+
+
+                        int kick = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Kick_Off_Pre_Inspection"]);
+                        ObjModelVisitReport.Kick_Off_Pre_Inspection = Convert.ToBoolean(kick);
+
+                        int Mi = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Material_identification"]);
+                        ObjModelVisitReport.Material_identification = Convert.ToBoolean(Mi);
+
+                        int Interim_Stages = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Interim_Stages"]);
+                        ObjModelVisitReport.Interim_Stages = Convert.ToBoolean(Interim_Stages);
+
+                        int Document_review = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Document_review"]);
+                        ObjModelVisitReport.Document_review = Convert.ToBoolean(Document_review);
+
+                        int Final_Inspection = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Final_Inspection"]);
+                        ObjModelVisitReport.Final_Inspection = Convert.ToBoolean(Final_Inspection);
+
+                        int Re_inspection = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Re_inspection"]);
+                        ObjModelVisitReport.Re_inspection = Convert.ToBoolean(Re_inspection);
+
+                        int MasterListOfcalibratedInstruments = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["MasterListOfcalibratedInstruments"]);
+                        ObjModelVisitReport.MasterListOfcalibratedInstruments = Convert.ToBoolean(MasterListOfcalibratedInstruments);
+
+
+                        ObjModelVisitReport.CanIRNbeissued = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["CanIRNbeissued"]);
+                        ObjModelVisitReport.IssuedPOItemNumbers = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IssuedPOItemNumbers"]);
+                        ObjModelVisitReport.ReasonName = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReasonName"]);
+
+                        //if (ObjModelVisitReport.CanIRNbeissued == "Yes")
+                        //{
+                        //    ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for all items " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + ".";
+                        //}
+                        //else if (ObjModelVisitReport.CanIRNbeissued == "Partially")
+                        //{
+                        //    ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for PO item Numbers " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + " for remaining " + ObjModelVisitReport.ReasonName.ToString() + ".";
+                        //}
+                        //else if (ObjModelVisitReport.CanIRNbeissued == "No")
+                        //{
+                        //    ObjModelVisitReport.CanIRNbeissued = "IRN can not be issued for all PO items because " + ObjModelVisitReport.ReasonName.ToString() + ".";
+                        //}
+                        //else
+                        //{
+                        //    ObjModelVisitReport.CanIRNbeissued = "";
+                        //}
+                        if (ObjModelVisitReport.CanIRNbeissued == "Yes")
+                        {
+                            // ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for all items " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + ".";
+                            ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for all inspected items " + "(" + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + ") .";
+                        }
+                        else if (ObjModelVisitReport.CanIRNbeissued == "Partially")
+                        {
+                            ObjModelVisitReport.CanIRNbeissued = "IRN can be issued for PO item Numbers " + ObjModelVisitReport.IssuedPOItemNumbers.ToString() + " for remaining " + ObjModelVisitReport.ReasonName.ToString() + ".";
+                        }
+                        else if (ObjModelVisitReport.CanIRNbeissued == "No")
+                        {
+                            ObjModelVisitReport.CanIRNbeissued = "IRN can not be issued for all PO items because " + ObjModelVisitReport.ReasonName.ToString() + ".";
+                        }
+                        else
+                        {
+                            ObjModelVisitReport.CanIRNbeissued = "";
+                        }
+
+
+
+                        ObjModelVisitReport.Conclusion = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Conclusion"]);
+                        ObjModelVisitReport.Pending_Activites = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Pending_Activites"]);
+                        ObjModelVisitReport.Identification_Of_Inspected = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Identification_Of_Inspected"]);
+                        ObjModelVisitReport.Areas_Of_Concerns = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Areas_Of_Concerns"]);
+                        ObjModelVisitReport.Non_Conformities_raised = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Non_Conformities_raised"]);
+                        ObjModelVisitReport.Signatures = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Signatures"]);
+                        ObjModelVisitReport.Type = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Type"]);
+                        //ObjModelVisitReport.Report_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Report_No"]);
+                        ObjModelVisitReport.Report_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReportNo"]);
+                        ObjModelVisitReport.Call_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Call_No"]);
+                        //ObjModelVisitReport.Signatures = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Signature"]);
+                        ObjModelVisitReport.Name = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["FirstName"]) + " " + Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["LastName"]);
+                        ObjModelVisitReport.ReportCreatedDate = Convert.ToDateTime(DSJobMasterByQtId.Tables[0].Rows[0]["CreatedDate"]).ToString("dd/MM/yyyy");
+
+                        int Inspection_records = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Inspection_records"]);
+                        ObjModelVisitReport.Inspection_records = Convert.ToBoolean(Inspection_records);
+
+                        int Inspection_Photo = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Inspection_Photo"]);
+                        ObjModelVisitReport.Inspection_Photo = Convert.ToBoolean(Inspection_Photo);
+
+                        int Other_Specify = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["Other_Specify"]);
+                        ObjModelVisitReport.Other_Specify = Convert.ToBoolean(Other_Specify);
+                        ObjModelVisitReport.InspectiobRecord_Remark = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["InspectiobRecord_Remark"]);
+                        ObjModelVisitReport.OtherSpecifyRecords = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["OtherSpecifyRecords"]);
+
+
+                        ObjModelVisitReport.SubJob_No = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubJob_No"]);
+                        ObjModelVisitReport.PK_SubJob_Id = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_SubJob_Id"]);
+
+
+                        ObjModelVisitReport.Type = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Type"]);
+
+
+                        ObjModelVisitReport.TempInspectionPhotosNo = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["TempInspectionPhotosNo"]);
+                        ObjModelVisitReport.TempMaster_List_Of_calibrated_Instruments = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["TempMaster_List_Of_calibrated_Instruments"]);
+                        int DTUVIndiaClientEndUser = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["DTUVIndiaClientEndUser"]);
+                        ObjModelVisitReport.DTUVIndiaClientEndUser = Convert.ToBoolean(DTUVIndiaClientEndUser);
+                        int DTUVIndiaExecuting_Originating_Branch = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["DTUVIndiaExecuting_Originating_Branch"]);
+                        ObjModelVisitReport.DTUVIndiaExecuting_Originating_Branch = Convert.ToBoolean(DTUVIndiaExecuting_Originating_Branch);
+                        int DVendor_Sub_Vendor = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["DVendor_Sub_Vendor"]);
+                        ObjModelVisitReport.DVendor_Sub_Vendor = Convert.ToBoolean(DVendor_Sub_Vendor);
+                        ObjModelVisitReport.ReviseReason = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReviseReason"]);
+                        ObjModelVisitReport.ReviseReportNoForPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReviseReportNoForPDF"]);
+                        ObjModelVisitReport.ReportNoForPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ReportNoForPDF"]);
+                        // ObjModelVisitReport.Date_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Date_of_PO"]);
+                        //ObjModelVisitReport.SubSubVendorDate_of_PO = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["SubvendorPODate1"]);
+                        ObjModelVisitReport.Expenses = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Expenses"]);
+                        ObjModelVisitReport.DownloadPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Report"]);
+                        ObjModelVisitReport.Intime = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Intime"]);
+                        ObjModelVisitReport.Outtime = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Outtime"]);
+                        ObjModelVisitReport.CustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["CustomerSpecificReportNumber"]);
+                        ObjModelVisitReport.IsCustomerSpecificReportNumber = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IsCustomerSpecificReportNumber"]);
+                        ObjModelVisitReport.PDF_IfConcernsDisplayOfPDF = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["IfConcernsDisplayOfPDF"]);
+                        ObjModelVisitReport.ShowCount = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["ShowCount"]);
+                        ObjModelVisitReport.DisplayTotalQuantity = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["DisplayTotalQuantity"]);
+
+
+                        ObjModelVisitReport.PO_QuantityTotal1 = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["PO_QuantityTotal"]);
+                        ObjModelVisitReport.Offered_QuantityTotal1 = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Offered_QuantityTotal"]);
+                        ObjModelVisitReport.Accepted_QuantityTotal1 = Convert.ToString(DSJobMasterByQtId.Tables[0].Rows[0]["Accepted_QuantityTotal"]);
+                        ObjModelVisitReport.IsComfirmation = Convert.ToBoolean(DSJobMasterByQtId.Tables[0].Rows[0]["IsComfirmation"]);
+                        ObjModelVisitReport.abcid = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_RM_ID"]); //22082025
+                        RMData.abcid = Convert.ToInt32(DSJobMasterByQtId.Tables[0].Rows[0]["PK_RM_ID"]); //22082025
+
+                    }
+                    else
+                    {
+
+                        InspectionvisitReportModel Abc = new InspectionvisitReportModel();
+                        Abc.PK_Call_ID = PK_CALL_ID;
+                        return RedirectToAction("VisitReportForm", Abc);
+                    }
+                    #endregion
+
+
+                    #region  item Description
+
+                    ItemDescriptionDashBoard = objDalVisitReport.GetitemDescription(PK_CALL_ID);
+                    if (ItemDescriptionDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in ItemDescriptionDashBoard.Rows)
+                        {
+                            lstCompanyDashBoard.Add(
+                                new ItemDescriptionModel
+                                {
+                                    PK_ItemD_Id = Convert.ToInt32(dr["PK_ItemD_Id"]),
+                                    Po_Item_No = Convert.ToString(dr["Po_Item_No"]),
+                                    ItemCode_Description = Convert.ToString(dr["ItemCode_Description"]),
+                                    Po_Quantity = Convert.ToString(dr["Po_Quantity"]),
+                                    Offered_Quantity = Convert.ToString(dr["Offered_Quantity"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
+                                    Item_Code = Convert.ToString(dr["Item_Code"]),
+                                    Accepted_Quantity = Convert.ToString(dr["Accepted_Quantity"]),
+                                    Cumulative_Accepted_Qty = Convert.ToString(dr["Cumulative_Accepted_Qty"]),
+                                    Unit = Convert.ToString(dr["Unit"]),
+                                    HeatNumber = Convert.ToString(dr["HeatNumber"]),
+                                    TotalQuantity = Convert.ToString(dr["TotalQuantity"]),
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+
+                    #region Reference Documents
+
+                    RefranceDocumentsDashBoard = objDalVisitReport.GetReferenceDocuments(PK_CALL_ID);
+                    if (RefranceDocumentsDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in RefranceDocumentsDashBoard.Rows)
+                        {
+                            RefranceDocuments.Add(
+                                new ReferenceDocumentsModel
+                                {
+                                    Document_No = Convert.ToString(dr["Document_No"]),
+                                    Document_Name = Convert.ToString(dr["Document_Name"]),
+                                    Approval_Status = Convert.ToString(dr["Approval_Status"]),
+                                    PK_RD_ID = Convert.ToInt32(dr["PK_RD_ID"]),
+                                    PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
+                                    VendorDocumentNumber = Convert.ToString(dr["VendorDocumentNumber"])
+                                }
+                                );
+                        }
+                    }
+                    #endregion
+
+
+                    #region Inspection Activities
+                    InspectionActivitesDashBoard = objDalVisitReport.GetInspectionActivities(PK_CALL_ID);
+                    if (InspectionActivitesDashBoard.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in InspectionActivitesDashBoard.Rows)
+                        {
+                            InspectionDocuments.Add(
+                                new InspectionActivitiesModel
+                                {
+                                    Stages_Witnessed = Convert.ToString(dr["Stages_Witnessed"]),
+                                    PK_IA_ID = Convert.ToInt32(dr["PK_IA_ID"]),
                                     PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"])
 
                                 }
@@ -12194,7 +14428,7 @@ namespace TuvVision.Controllers
 
                     ///First File start
                     PdfPageSize pageSizes = PdfPageSize.A4;
-                     PdfPageOrientation pdfOrientations = PdfPageOrientation.Portrait;
+                    PdfPageOrientation pdfOrientations = PdfPageOrientation.Portrait;
 
                     HtmlToPdf converters = new HtmlToPdf();
 
@@ -12203,7 +14437,1482 @@ namespace TuvVision.Controllers
 
                     #region Comment 11 June
 
+                    converters.Options.DisplayFooter = true || true || true;
 
+                    if (Directory.Exists(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No)))
+                    {
+                        string[] files = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+                        foreach (string file in files)
+                        {
+                            System.IO.File.Delete(file);
+
+                        }
+
+                        Directory.Delete(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+                    }
+
+                    Directory.CreateDirectory(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+
+                    #region Vaibhav If Images count less than 6
+
+                    if (imagecount <= 6)
+                    {
+                        for (int ic = 0; ic < rows; ic++)
+                        {
+                            if (imageposted > 0)
+                            {
+                                if ((imageposted % 6) == 0)
+                                {
+                                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                                    {
+                                        bodys = reader.ReadToEnd();
+                                    }
+
+                                    bodys = bodys.Replace("[Image]", ImageContent);
+                                    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                                    #region Initial setting vaibhav
+                                    //strs.Append(body);
+                                    PdfPageSize vpageSize = PdfPageSize.A4;
+                                    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                                    HtmlToPdf Vconverter = new HtmlToPdf();
+
+                                    // set the page timeout (in seconds)
+                                    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                                    Vconverter.Options.PdfPageSize = vpageSize;
+                                    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                                    #endregion
+
+
+                                    #region Header and Footer Vaibhav
+                                    #region Heder code
+                                    string _VHeader = string.Empty;
+                                    string _Vfooter = string.Empty;
+
+                                    // for Report header by abel
+                                    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                                    _VHeader = _VreadHeader_File.ReadToEnd();
+                                    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                                    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                                    //_VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
+                                    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                                    _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+                                    #endregion
+
+
+                                    #region Generate no
+                                    if (RM.Report == null)
+                                    {
+
+                                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                        }
+                                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                                    }
+                                    else
+                                    {
+                                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                        }
+
+                                        //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                        {
+                                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                            _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                        }
+                                        else
+                                        {
+                                            _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                        }
+                                    }
+                                    #endregion
+
+                                    #region Footer Code
+
+                                    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                                    _Vfooter = _VreadFooter_File.ReadToEnd();
+                                    _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                                    // header settings
+                                    Vconverter.Options.DisplayHeader = true || true || true;
+                                    Vconverter.Header.DisplayOnFirstPage = true;
+                                    Vconverter.Header.DisplayOnOddPages = true;
+                                    Vconverter.Header.DisplayOnEvenPages = true;
+                                    Vconverter.Header.Height = 75;
+
+                                    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                                    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter.Header.Add(VheaderHtml);
+
+                                    // footer settings
+                                    Vconverter.Options.DisplayFooter = true || true || true;
+                                    Vconverter.Footer.DisplayOnFirstPage = true;
+                                    Vconverter.Footer.DisplayOnOddPages = true;
+                                    Vconverter.Footer.DisplayOnEvenPages = true;
+
+                                    //Vconverter.Footer.Height = 150;
+                                    Vconverter.Footer.Height = 105;
+                                    //converter.Footer.Height = 120;
+
+                                    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                                    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter.Footer.Add(VfooterHtml);
+
+                                    //end abel code
+
+
+                                    //// page numbers can be added using a PdfTextSection object
+                                    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                                    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                                    //Vconverter.Footer.Add(Vtext1);
+                                    #endregion
+                                    #endregion
+
+                                    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+
+
+                                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                                    docs.Save(paths + '\\' + ReportNames);
+                                    docs.Close();
+                                    bodys = string.Empty;
+                                    ImageContent = string.Empty;
+                                    iteration = iteration + 1;
+                                    ViewBag.Reminder = "1";
+                                }
+                            }
+
+                            ImageContent += "<tr><td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img]["Heading"].ToString() + "</td>";
+                            ImageContent += "<td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img + 1]["Heading"].ToString() + "</td></tr>";
+
+                            ImageContent += "<tr><td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[img]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td>";
+                            ImageContent += "<td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[img + 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+
+                            img = img + 2;
+                            imageposted = imageposted + 2;
+                        }
+
+
+
+                        #region Reminder = 1
+
+                        if (reminder == 1)
+                        {
+                            //if (ImageContent != string.Empty)
+                            //{
+                            //    ImageContent += "<tr><td style='padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                            //    ImageContent += "<tr><td style='padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+                            //}
+                            //else
+                            //{
+                            //    ImageContent = "<tr><td style='padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                            //    ImageContent += "<tr><td style='padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+                            //}
+
+                            if (ImageContent != string.Empty)
+                            {
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+                            }
+                            else
+                            {
+                                ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:200px; ' align='center' alt=''></td></tr>";
+                            }
+
+
+                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                            {
+                                bodys = reader.ReadToEnd();
+                            }
+                            bodys = bodys.Replace("[Image]", ImageContent);
+                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+
+
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                            #endregion
+
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                // _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                {
+                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                }
+                                else
+                                {
+                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                }
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+
+                            //end abel code
+
+
+                            //// page numbers can be added using a PdfTextSection object
+                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                            //Vconverter.Footer.Add(Vtext1);
+                            #endregion
+                            #endregion
+
+
+
+                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                            docs.Save(paths + '\\' + ReportNames);
+                            docs.Close();
+                            bodys = string.Empty;
+                            ImageContent = string.Empty;
+                            ViewBag.Reminder = "1";
+                        }
+
+                        #region 4 Image If not reminder =0
+                        if (imageposted <= imagecount)
+                        {
+                            if (reminder == 0)
+                            {
+                                ViewBag.Reminder = "2";
+                                using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                                {
+                                    bodys = reader.ReadToEnd();
+                                }
+                                bodys = bodys.Replace("[Image]", ImageContent);
+
+                                bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+
+
+                                #region Initial setting vaibhav
+                                //strs.Append(body);
+                                PdfPageSize vpageSize = PdfPageSize.A4;
+                                PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                                HtmlToPdf Vconverter = new HtmlToPdf();
+
+                                // set the page timeout (in seconds)
+                                Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                                Vconverter.Options.PdfPageSize = vpageSize;
+                                Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                                #endregion
+
+
+                                #region Header and Footer Vaibhav
+                                #region Heder code
+                                string _VHeader = string.Empty;
+                                string _Vfooter = string.Empty;
+
+                                // for Report header by abel
+                                StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                                _VHeader = _VreadHeader_File.ReadToEnd();
+                                _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                                _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                                /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                                _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                                _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                                #endregion
+
+
+                                #region Generate no
+                                if (RM.Report == null)
+                                {
+
+                                    dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                    if (dtSrNo.Tables[0].Rows.Count > 0)
+                                    {
+                                        SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                    }
+                                    RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
+                                    _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                                }
+                                else
+                                {
+                                    //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                    dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                    if (dtSrNo.Tables[0].Rows.Count > 0)
+                                    {
+                                        SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                    }
+
+                                    //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                    if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                    {
+                                        string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                        _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                    }
+                                    else
+                                    {
+                                        _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                    }
+                                }
+                                #endregion
+
+                                #region Footer Code
+
+                                StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                                _Vfooter = _VreadFooter_File.ReadToEnd();
+                                _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                                // header settings
+                                Vconverter.Options.DisplayHeader = true || true || true;
+                                Vconverter.Header.DisplayOnFirstPage = true;
+                                Vconverter.Header.DisplayOnOddPages = true;
+                                Vconverter.Header.DisplayOnEvenPages = true;
+                                Vconverter.Header.Height = 75;
+
+                                PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                                VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                Vconverter.Header.Add(VheaderHtml);
+
+                                // footer settings
+                                Vconverter.Options.DisplayFooter = true || true || true;
+                                Vconverter.Footer.DisplayOnFirstPage = true;
+                                Vconverter.Footer.DisplayOnOddPages = true;
+                                Vconverter.Footer.DisplayOnEvenPages = true;
+
+                                //Vconverter.Footer.Height = 150;
+                                Vconverter.Footer.Height = 105;
+                                //converter.Footer.Height = 120;
+
+                                PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                                VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                Vconverter.Footer.Add(VfooterHtml);
+
+                                //end abel code
+
+
+                                //// page numbers can be added using a PdfTextSection object
+                                //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                                //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                                //Vconverter.Footer.Add(Vtext1);
+                                #endregion
+                                #endregion
+
+                                Vconverter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
+                                Vconverter.Options.AutoFitHeight = HtmlToPdfPageFitMode.NoAdjustment;
+
+
+
+                                // SelectPdf.PdfDocument docs = converters.ConvertHtmlString(bodys);
+                                SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+
+                                ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+                                paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                                docs.Save(paths + '\\' + ReportNames);
+                                docs.Close();
+                                bodys = string.Empty;
+                                ImageContent = string.Empty;
+                                iteration = iteration + 1;
+                            }
+                        }
+
+                        #endregion
+
+
+                        #region 20 Feb 2021 Resolve blank page if Image count 6 
+                        #region 6 Images
+                        //if (((imageposted % 6) == 0) && imageposted > 0)
+                        //{
+                        //    ViewBag.Reminder = "2";
+                        //    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                        //    {
+                        //        bodys = reader.ReadToEnd();
+                        //    }
+                        //    bodys = bodys.Replace("[Image]", ImageContent);
+                        //    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+
+
+                        //    #region Initial setting vaibhav
+                        //    //strs.Append(body);
+                        //    PdfPageSize vpageSize = PdfPageSize.A4;
+                        //    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                        //    HtmlToPdf Vconverter = new HtmlToPdf();
+
+                        //    // set the page timeout (in seconds)
+                        //    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                        //    Vconverter.Options.PdfPageSize = vpageSize;
+                        //    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                        //    #endregion
+
+
+                        //    #region Header and Footer Vaibhav
+                        //    #region Heder code
+                        //    string _VHeader = string.Empty;
+                        //    string _Vfooter = string.Empty;
+
+                        //    // for Report header by abel
+                        //    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                        //    _VHeader = _VreadHeader_File.ReadToEnd();
+                        //    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                        //    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                        //    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                        //    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
+
+
+                        //    #endregion
+
+
+                        //    #region Generate no
+                        //    if (RM.Report == null)
+                        //    {
+
+                        //        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                        //        if (dtSrNo.Tables[0].Rows.Count > 0)
+                        //        {
+                        //            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                        //        }
+                        //        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                        //        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                        //    }
+                        //    else
+                        //    {
+                        //        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                        //        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                        //        if (dtSrNo.Tables[0].Rows.Count > 0)
+                        //        {
+                        //            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                        //        }
+
+                        //        _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                        //    }
+                        //    #endregion
+
+                        //    #region Footer Code
+
+                        //    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                        //    _Vfooter = _VreadFooter_File.ReadToEnd();
+
+                        //    // header settings
+                        //    Vconverter.Options.DisplayHeader = true || true || true;
+                        //    Vconverter.Header.DisplayOnFirstPage = true;
+                        //    Vconverter.Header.DisplayOnOddPages = true;
+                        //    Vconverter.Header.DisplayOnEvenPages = true;
+                        //    Vconverter.Header.Height = 75;
+
+                        //    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                        //    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                        //    Vconverter.Header.Add(VheaderHtml);
+
+                        //    // footer settings
+                        //    Vconverter.Options.DisplayFooter = true || true || true;
+                        //    Vconverter.Footer.DisplayOnFirstPage = true;
+                        //    Vconverter.Footer.DisplayOnOddPages = true;
+                        //    Vconverter.Footer.DisplayOnEvenPages = true;
+
+                        //    //Vconverter.Footer.Height = 150;
+                        //    Vconverter.Footer.Height = 105;
+                        //    //converter.Footer.Height = 120;
+
+                        //    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                        //    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                        //    Vconverter.Footer.Add(VfooterHtml);
+
+                        //    //end abel code
+
+
+                        //    // page numbers can be added using a PdfTextSection object
+                        //    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                        //    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                        //    //Vconverter.Footer.Add(Vtext1);
+                        //    #endregion
+                        //    #endregion
+
+
+
+
+
+                        //    // SelectPdf.PdfDocument docs = converters.ConvertHtmlString(bodys);
+                        //    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+
+                        //    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+                        //    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                        //    docs.Save(paths + '\\' + ReportNames);
+                        //    docs.Close();
+                        //    bodys = string.Empty;
+                        //    ImageContent = string.Empty;
+                        //    iteration = iteration + 1;
+                        //}
+                        #endregion
+                        #endregion
+
+
+
+
+                    }
+                    #endregion
+
+
+
+
+
+
+                    #endregion
+
+
+                    #region Vaibhav If Images count more than 6
+                    else
+                    {
+                        for (int ic = 0; ic < rows; ic++)
+                        {
+                            if (imageposted > 0)
+                            {
+                                if ((imageposted % 6) == 0)
+                                {
+                                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                                    {
+                                        bodys = reader.ReadToEnd();
+                                    }
+
+                                    bodys = bodys.Replace("[Image]", ImageContent);
+
+                                    bodys = bodys.Replace("[Logos]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
+
+                                    #region Initial setting vaibhav
+                                    //strs.Append(body);
+                                    PdfPageSize vpageSize = PdfPageSize.A4;
+                                    PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                                    HtmlToPdf Vconverter = new HtmlToPdf();
+
+                                    // set the page timeout (in seconds)
+                                    Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                                    Vconverter.Options.PdfPageSize = vpageSize;
+                                    Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                                    #endregion
+
+
+                                    #region Header and Footer Vaibhav
+                                    #region Heder code
+                                    string _VHeader = string.Empty;
+                                    string _Vfooter = string.Empty;
+
+                                    // for Report header by abel
+                                    StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                                    _VHeader = _VreadHeader_File.ReadToEnd();
+                                    _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                                    _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                                    _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                                    _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                                    #endregion
+
+
+                                    #region Generate no
+                                    if (RM.Report == null)
+                                    {
+
+                                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                        }
+                                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                        _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                                    }
+                                    else
+                                    {
+                                        //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                        }
+
+                                        //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                        {
+                                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                            _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                        }
+                                        else
+                                        {
+                                            _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                        }
+                                    }
+                                    #endregion
+
+                                    #region Footer Code
+
+                                    StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                                    _Vfooter = _VreadFooter_File.ReadToEnd();
+                                    _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                                    // header settings
+                                    Vconverter.Options.DisplayHeader = true || true || true;
+                                    Vconverter.Header.DisplayOnFirstPage = true;
+                                    Vconverter.Header.DisplayOnOddPages = true;
+                                    Vconverter.Header.DisplayOnEvenPages = true;
+                                    Vconverter.Header.Height = 75;
+
+                                    PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                                    VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter.Header.Add(VheaderHtml);
+
+                                    // footer settings
+                                    Vconverter.Options.DisplayFooter = true || true || true;
+                                    Vconverter.Footer.DisplayOnFirstPage = true;
+                                    Vconverter.Footer.DisplayOnOddPages = true;
+                                    Vconverter.Footer.DisplayOnEvenPages = true;
+
+                                    //Vconverter.Footer.Height = 150;
+                                    Vconverter.Footer.Height = 105;
+                                    //converter.Footer.Height = 120;
+
+                                    PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                                    VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter.Footer.Add(VfooterHtml);
+
+                                    //end abel code
+
+
+                                    // page numbers can be added using a PdfTextSection object
+                                    //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                                    //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                                    //Vconverter.Footer.Add(Vtext1);
+                                    #endregion
+                                    #endregion
+
+
+
+
+                                    SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+
+
+                                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                                    docs.Save(paths + '\\' + ReportNames);
+                                    docs.Close();
+                                    bodys = string.Empty;
+                                    ImageContent = string.Empty;
+                                    iteration = iteration + 1;
+                                }
+                            }
+
+                            ImageContent += "<tr><td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img]["Heading"].ToString() + "</td>";
+                            ImageContent += "<td style='padding: 10px; width: 50 %;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'>" + ImageReportDashBoard.Rows[img + 1]["Heading"].ToString() + "</td></tr>";
+
+                            ImageContent += "<tr><td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[img]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td>";
+                            ImageContent += "<td style='padding:10px;border:1px solid #000000;border-top-width: 0px;border-left-width: 0px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[img + 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+
+                            img = img + 2;
+                            imageposted = imageposted + 2;
+                        }
+
+
+
+
+
+
+
+
+
+                        ViewBag.Reminder = "2";
+                        /*
+                        #region  reminder
+
+
+                        if (reminder == 1)
+                        {                       
+                            if (ImageContent != string.Empty)
+                            {
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                            }
+                            else
+                            {
+                                ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/CompressFiles/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                            }
+
+                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                            {
+                                bodys = reader.ReadToEnd();
+                            }
+                            bodys = bodys.Replace("[Image]", ImageContent);
+                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+
+
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);                        
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.png");
+
+                            #endregion
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+
+                            //end abel code
+
+
+                            // page numbers can be added using a PdfTextSection object
+                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                            //Vconverter.Footer.Add(Vtext1);
+                            #endregion
+                            #endregion
+
+
+
+                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                            docs.Save(paths + '\\' + ReportNames);
+                            docs.Close();
+                            bodys = string.Empty;
+                            ImageContent = string.Empty;
+                            ViewBag.Reminder = "1";
+                        }
+
+
+                        #endregion
+                        */
+
+
+                        #region  reminder
+                        if (reminder == 1)
+                        {
+
+                            if (ImageContent != string.Empty)
+                            {
+                                if ((imageposted % 6) == 0)
+                                {
+                                    using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                                    {
+                                        bodys = reader.ReadToEnd();
+                                    }
+                                    bodys = bodys.Replace("[Image]", ImageContent);
+                                    bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                                    #region Initial setting vaibhav
+                                    //strs.Append(body);
+                                    PdfPageSize vpageSize1 = PdfPageSize.A4;
+                                    PdfPageOrientation vpdfOrientation1 = PdfPageOrientation.Portrait;
+                                    HtmlToPdf Vconverter1 = new HtmlToPdf();
+
+                                    // set the page timeout (in seconds)
+                                    Vconverter1.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                                    Vconverter1.Options.PdfPageSize = vpageSize1;
+                                    Vconverter1.Options.PdfPageOrientation = vpdfOrientation1;
+                                    #endregion
+
+                                    #region Heder code
+                                    string _VHeader1 = string.Empty;
+                                    string _Vfooter1 = string.Empty;
+
+                                    // for Report header by abel
+                                    StreamReader _VreadHeader_File1 = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+
+                                    _VHeader1 = _VreadHeader_File1.ReadToEnd();
+                                    _VHeader1 = _VHeader1.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                                    _VHeader1 = _VHeader1.Replace("[RevisionNo]", countNo);
+                                    /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                                    _VHeader1 = _VHeader1.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                                    _VHeader1 = _VHeader1.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                                    #endregion
+
+
+                                    #region Generate no
+                                    if (RM.Report == null)
+                                    {
+
+                                        dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                        }
+                                        RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
+                                        _VHeader1 = _VHeader1.Replace("[ReportNo]", RM.ReportNo);
+
+                                    }
+                                    else
+                                    {
+
+                                        dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                        if (dtSrNo.Tables[0].Rows.Count > 0)
+                                        {
+                                            SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                        }
+                                        // _VHeader1 = _VHeader1.Replace("[ReportNo]", SrNo);
+                                        if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                        {
+                                            string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                            _VHeader1 = _VHeader1.Replace("[ReportNo]", strReportNo);
+                                        }
+                                        else
+                                        {
+                                            _VHeader1 = _VHeader1.Replace("[ReportNo]", SrNo);
+
+                                        }
+                                    }
+                                    #endregion
+
+                                    #region Footer Code
+
+                                    StreamReader _VreadFooter_File1 = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                                    _Vfooter1 = _VreadFooter_File1.ReadToEnd();
+                                    _Vfooter1 = _Vfooter1.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                                    // header settings
+                                    Vconverter1.Options.DisplayHeader = true || true || true;
+                                    Vconverter1.Header.DisplayOnFirstPage = true;
+                                    Vconverter1.Header.DisplayOnOddPages = true;
+                                    Vconverter1.Header.DisplayOnEvenPages = true;
+                                    Vconverter1.Header.Height = 75;
+
+                                    PdfHtmlSection VheaderHtml1 = new PdfHtmlSection(_VHeader1, string.Empty);
+                                    VheaderHtml1.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter1.Header.Add(VheaderHtml1);
+
+                                    // footer settings
+                                    Vconverter1.Options.DisplayFooter = true || true || true;
+                                    Vconverter1.Footer.DisplayOnFirstPage = true;
+                                    Vconverter1.Footer.DisplayOnOddPages = true;
+                                    Vconverter1.Footer.DisplayOnEvenPages = true;
+                                    Vconverter1.Footer.Height = 105;
+
+
+                                    PdfHtmlSection VfooterHtml1 = new PdfHtmlSection(_Vfooter1, string.Empty);
+                                    VfooterHtml1.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                                    Vconverter1.Footer.Add(VfooterHtml1);
+
+
+                                    #endregion
+
+                                    SelectPdf.PdfDocument docs1 = Vconverter1.ConvertHtmlString(bodys);
+                                    ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+                                    paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                                    docs1.Save(paths + '\\' + ReportNames);
+                                    docs1.Close();
+
+                                    bodys = string.Empty;
+                                    ImageContent = string.Empty;
+                                    iteration = iteration + 1;
+
+                                    ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                    ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                                }
+                                else
+                                {
+                                    ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                    ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                                }
+                            }
+                            else
+                            {
+                                ImageContent = "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding: 10px; width: 50 %;' align='center'>" + ImageReportDashBoard.Rows[imagecount - 1]["Heading"].ToString() + "</td></tr>";
+                                ImageContent += "<tr><td style='border:1px solid #000000;border-left-width: 0px;border-top-width: 0px;padding:10px;' align='center'><img src='" + ConfigurationManager.AppSettings["Web"].ToString() + "/" + Imagepath + "/" + ImageReportDashBoard.Rows[imagecount - 1]["Image"].ToString() + "' style='width:400px;height:250px; ' align='center' alt=''></td></tr>";
+                            }
+
+
+                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                            {
+                                bodys = reader.ReadToEnd();
+                            }
+                            bodys = bodys.Replace("[Image]", ImageContent);
+                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+
+
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                            #endregion
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "- Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                // _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                {
+                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                }
+                                else
+                                {
+                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                }
+
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+                            #endregion
+                            #endregion
+
+
+
+                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+
+                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                            docs.Save(paths + '\\' + ReportNames);
+                            docs.Close();
+                            bodys = string.Empty;
+                            ImageContent = string.Empty;
+                            ViewBag.Reminder = "1";
+                        }
+                        #endregion
+
+
+                        #region If ImageContent not null
+
+                        if (ViewBag.Reminder != "1")
+                        {
+                            ViewBag.Reminder = "2";
+                            using (reader = new StreamReader(Server.MapPath("~/inspection-visit-report-images.html")))
+                            {
+                                bodys = reader.ReadToEnd();
+                            }
+                            bodys = bodys.Replace("[Image]", ImageContent);
+                            bodys = bodys.Replace("[Logos]", "http://localhost:54895/AllJsAndCss/images/logo.png");
+
+
+
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+
+
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                            #endregion
+
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                //_VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                {
+                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                }
+                                else
+                                {
+                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                }
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+
+                            //end abel code
+
+
+                            //// page numbers can be added using a PdfTextSection object
+                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                            //Vconverter.Footer.Add(Vtext1);
+                            #endregion
+                            #endregion
+
+
+                            SelectPdf.PdfDocument docs = Vconverter.ConvertHtmlString(bodys);
+
+                            ReportNames = ObjModelVisitReport.Call_No + "_Img_" + iteration + ".pdf";
+                            paths = Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No);
+                            docs.Save(paths + '\\' + ReportNames);
+                            docs.Close();
+                            bodys = string.Empty;
+                            ImageContent = string.Empty;
+                            iteration = iteration + 1;
+                        }
+                        #endregion
+
+                    }
+                    #endregion
+
+
+
+                    string[] pdfs = Directory.GetFiles(Server.MapPath("~/Content/" + ObjModelVisitReport.Call_No));
+
+
+                    PdfSharp.Pdf.PdfDocument ImageDoc = new PdfSharp.Pdf.PdfDocument();
+
+
+
+
+                    foreach (string pdfFile in pdfs)
+                    {
+                        if (pdfFile.Contains("Img_"))
+                        {
+                            #region Initial setting vaibhav
+                            //strs.Append(body);
+                            PdfPageSize vpageSize = PdfPageSize.A4;
+                            PdfPageOrientation vpdfOrientation = PdfPageOrientation.Portrait;
+                            HtmlToPdf Vconverter = new HtmlToPdf();
+
+                            // set the page timeout (in seconds)
+                            Vconverter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                            Vconverter.Options.PdfPageSize = vpageSize;
+                            Vconverter.Options.PdfPageOrientation = vpdfOrientation;
+                            #endregion
+                            #region Header footer Vaibhav Test 28-07-2020
+                            #region Header and Footer Vaibhav
+                            #region Heder code
+                            string _VHeader = string.Empty;
+                            string _Vfooter = string.Empty;
+
+                            // for Report header by abel
+                            StreamReader _VreadHeader_File = new StreamReader(Server.MapPath("~/IV_Report_Header.html"));
+                            _VHeader = _VreadHeader_File.ReadToEnd();
+                            _VHeader = _VHeader.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
+                            _VHeader = _VHeader.Replace("[RevisionNo]", countNo);
+                            /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
+                            _VHeader = _VHeader.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                            _VHeader = _VHeader.Replace("[CustomerSpeReportNo]", ObjModelVisitReport.CustomerSpecificReportNumber);
+
+                            #endregion
+
+
+                            #region Generate no
+                            if (RM.Report == null)
+                            {
+
+                                dtSrNo = objDalVisitReport.GetSrNo(ObjModelVisitReport.SubJob_No);
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["SrNo"]);
+
+                                }
+                                RM.ReportNo = "IVR-" + ObjModelVisitReport.SubJob_No + "-" + SrNo + "-Rev." + countNo;
+                                _VHeader = _VHeader.Replace("[ReportNo]", RM.ReportNo);
+
+                            }
+                            else
+                            {
+                                //dtSrNo = objDalVisitReport.GetReportNo(RM.Report);
+                                dtSrNo = objDalVisitReport.GetReportNo(Convert.ToString(RM.PK_RM_ID));
+                                if (dtSrNo.Tables[0].Rows.Count > 0)
+                                {
+                                    SrNo = Convert.ToString(dtSrNo.Tables[0].Rows[0]["ReportNo"]);
+
+                                }
+
+                                // _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+                                if (ObjModelVisitReport.IsCustomerSpecificReportNumber == "Yes")
+                                {
+                                    string strReportNo = "<span> Number: " + ObjModelVisitReport.CustomerSpecificReportNumber + "<Br />" + "( " + SrNo + " )";
+                                    _VHeader = _VHeader.Replace("[ReportNo]", strReportNo);
+                                }
+                                else
+                                {
+                                    _VHeader = _VHeader.Replace("[ReportNo]", SrNo);
+
+                                }
+                            }
+                            #endregion
+
+                            #region Footer Code
+
+                            StreamReader _VreadFooter_File = new StreamReader(Server.MapPath("~/IV_Report_Footer.html"));
+                            _Vfooter = _VreadFooter_File.ReadToEnd();
+                            _Vfooter = _Vfooter.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");//1
+                            // header settings
+                            Vconverter.Options.DisplayHeader = true || true || true;
+                            Vconverter.Header.DisplayOnFirstPage = true;
+                            Vconverter.Header.DisplayOnOddPages = true;
+                            Vconverter.Header.DisplayOnEvenPages = true;
+                            Vconverter.Header.Height = 75;
+
+                            PdfHtmlSection VheaderHtml = new PdfHtmlSection(_VHeader, string.Empty);
+                            VheaderHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Header.Add(VheaderHtml);
+
+                            // footer settings
+                            Vconverter.Options.DisplayFooter = true || true || true;
+                            Vconverter.Footer.DisplayOnFirstPage = true;
+                            Vconverter.Footer.DisplayOnOddPages = true;
+                            Vconverter.Footer.DisplayOnEvenPages = true;
+
+                            //Vconverter.Footer.Height = 150;
+                            Vconverter.Footer.Height = 105;
+                            //converter.Footer.Height = 120;
+
+                            PdfHtmlSection VfooterHtml = new PdfHtmlSection(_Vfooter, string.Empty);
+                            VfooterHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                            Vconverter.Footer.Add(VfooterHtml);
+
+                            //end abel code
+
+
+                            // page numbers can be added using a PdfTextSection object
+                            //PdfTextSection Vtext1 = new PdfTextSection(0, 145, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 8));
+                            //Vtext1.HorizontalAlign = PdfTextHorizontalAlign.Right;
+                            //Vconverter.Footer.Add(Vtext1);
+                            SelectPdf.PdfDocument docs = converters.ConvertHtmlString(bodys);
+                            #endregion
+                            #endregion
+                            #endregion
+                            PdfSharp.Pdf.PdfDocument ImagePDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
+                            ImageDoc.Version = ImagePDFDocument.Version;
+
+                            foreach (PdfSharp.Pdf.PdfPage page in ImagePDFDocument.Pages)
+                            {
+                                ImageDoc.AddPage(page);
+                            }
+                        }
+                    }
+                    int ImageC = ImageDoc.PageCount;
+                    if (System.IO.File.Exists(paths + "/Image_" + countNo + ".pdf"))
+                    {
+                        // If file found, delete it    
+                        System.IO.File.Delete(paths + "/Image_" + countNo + ".pdf");
+
+                    }
+
+
+                    //PdfDocument docs = converters.ConvertHtmlString(bodys);
+
+
+                    /****Final Report Saving ****/
+                    if (ImageReportDashBoard.Rows.Count > 0)
+                    {
+                        if (RM.ImageReport == null || RM.ImageReport == "")
+                        {
+                            paths = Server.MapPath("~/Content/");
+
+                            ImageDoc.Save(paths + ObjModelVisitReport.Call_No + "/Image_" + countNo + ".pdf");
+                            ImageDoc.Close();
+
+                        }
+                        else
+                        {
+                            ReportNames = RM.ImageReport;
+                            paths = Server.MapPath("~/Content/");
+
+                            ImageDoc.Save(paths + ReportNames);
+                            ImageDoc.Close();
+                        }
+                    }
 
 
 
@@ -12939,11 +16648,16 @@ namespace TuvVision.Controllers
                     PdfPageOrientation pdfOrientation = PdfPageOrientation.Portrait;
                     HtmlToPdf converter = new HtmlToPdf();
 
+
+
+
                     // set the page timeout (in seconds)
                     //converter.Options.MaxPageLoadTime = 2400;  //=========================5-Aug-2019
                     //converter.Options.PdfPageSize = pageSize;
                     //converter.Options.PdfPageOrientation = pdfOrientation;
                     //converter.Options.WebPageFixedSize = false;
+
+
 
                     #region Heder code
                     string _Header = string.Empty;
@@ -13097,7 +16811,7 @@ namespace TuvVision.Controllers
                     //// create a new pdf document
                     //foreach (string pdfFile in datafile1)
                     //{
-                    //    if (pdfFile.Contains("Image_") || pdfFile.Contains("Datka_"))
+                    //    if (pdfFile.Contains("Image_") || pdfFile.Contains("Data_"))
                     //    {
                     //        PdfSharp.Pdf.PdfDocument inputPDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
 
@@ -13117,53 +16831,53 @@ namespace TuvVision.Controllers
                     SelectPdf.PdfDocument doc1 = converter.ConvertHtmlString(body);
                     doc1.Security.CanCopyContent = false;
 
-                    //int P;
-                    //string ImagePageTotalCount1 = "";
-                    //if (imagecount == 0)
-                    //{
-                    //    P = doc1.Pages.Count;
-                    //    ImagePageTotalCount1 = "0";
-                    //}
-                    //else
-                    //{
-                    //    P = doc1.Pages.Count + ImageC;
-                    //    ImagePageTotalCount1 = Convert.ToString(ImageC);
-                    //}
-                    //string noPages1 = Convert.ToString(P);
+                    int P;
+                    string ImagePageTotalCount1 = "";
+                    if (imagecount == 0)
+                    {
+                        P = doc1.Pages.Count;
+                        ImagePageTotalCount1 = "0";
+                    }
+                    else
+                    {
+                        P = doc1.Pages.Count + ImageC;
+                        ImagePageTotalCount1 = Convert.ToString(ImageC);
+                    }
+                    string noPages1 = Convert.ToString(P);
 
 
                     #region get Image page no & Total Page no
 
-                    //string ImagePage1 = "";
-                    //string TotalPage1 = "";
-                    ////string ImagePageTotalCount1 = Convert.ToString(ImageC);
-                    //if (ImagePageTotalCount1 == "0")
-                    //{
+                    string ImagePage1 = "";
+                    string TotalPage1 = "";
+                    //string ImagePageTotalCount1 = Convert.ToString(ImageC);
+                    if (ImagePageTotalCount1 == "0")
+                    {
 
-                    //    ImagePage1 = "-";
-                    //    TotalPage1 = noPages1;
-                    //    //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
-                    //    body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
+                        ImagePage1 = "-";
+                        TotalPage1 = noPages1;
+                        //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
+                        body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
 
-                    //}
-                    //else if (ImagePageTotalCount1 == "1")
-                    //{
-                    //    int ImagePageNo = doc1.Pages.Count + 1;
-                    //    ImagePage1 = Convert.ToString(ImagePageNo);
-                    //    TotalPage1 = noPages1;
-                    //    //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
-                    //    body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
+                    }
+                    else if (ImagePageTotalCount1 == "1")
+                    {
+                        int ImagePageNo = doc1.Pages.Count + 1;
+                        ImagePage1 = Convert.ToString(ImagePageNo);
+                        TotalPage1 = noPages1;
+                        //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
+                        body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
 
-                    //}
-                    //else
-                    //{
-                    //    int ImagePageNo = doc1.Pages.Count + 1; //Convert.ToInt32(noPages1) - Convert.ToInt32(ImagePageTotalCount1);
-                    //                                            //ImagePage1 = Convert.ToString(ImagePageNo);
-                    //    ImagePage1 = Convert.ToString(ImagePageNo + " to " + noPages1);
-                    //    TotalPage1 = noPages1;
-                    //    //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
-                    //    body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
-                    //}
+                    }
+                    else
+                    {
+                        int ImagePageNo = doc1.Pages.Count + 1; //Convert.ToInt32(noPages1) - Convert.ToInt32(ImagePageTotalCount1);
+                                                                //ImagePage1 = Convert.ToString(ImagePageNo);
+                        ImagePage1 = Convert.ToString(ImagePageNo + " to " + noPages1);
+                        TotalPage1 = noPages1;
+                        //body = body.Replace("[InspectiobRecord_Remark]", TotalPage1);
+                        body = body.Replace("[TempInspectionPhotosNo]", ImagePage1);
+                    }
 
                     #endregion
 
@@ -13213,14 +16927,6 @@ namespace TuvVision.Controllers
                         doc.Save(paths + '\\' + ReportName);
                         doc.Close();
                     }
-
-
-                    #region Send Parameter to controller Vaibhav
-                    var controller = new TestImageController();
-                    controller.ControllerContext = this.ControllerContext; // attach context so Server.MapPath works
-
-                    controller.GenerateReport(PK_CALL_ID, RM.Report, ObjModelVisitReport.Call_No);
-                    #endregion
 
                     string path = Server.MapPath("~/IVRReport");
 
@@ -13432,7 +17138,6 @@ namespace TuvVision.Controllers
             }
 
         }
-
 
         #region Digital Signatue
 
@@ -18644,7 +22349,7 @@ namespace TuvVision.Controllers
                 if (ObjModelVisitReport.Signatures != null)
                 {
                     //  body = body.Replace("[Signature1]", ConfigurationManager.AppSettings["Web"].ToString()+ "/Content/Uploads/Images/" + ObjModelVisitReport.Signatures + "");
-                    body = body.Replace("[Signature1]", I);
+                    body = body.Replace("[Signature1]", "");//I);
 
                 }
                 else
@@ -19588,36 +23293,41 @@ namespace TuvVision.Controllers
             string Result = "";
             Conclusion.PK_Call_ID = Conclusion.PK_Call_ID;
 
-            foreach (var item in DArray)
+            if (DArray != null)
             {
-                Conclusion.PK_Call_ID = Conclusion.PK_Call_ID;
-                Conclusion.Areas_Of_Concerns = item.Areas_Of_Concerns;
-                Conclusion.PkId = item.PkId;
-                Conclusion.Category = item.Category;
-
-                if (Conclusion.Areas_Of_Concerns == null)
+                foreach (var item in DArray)
                 {
+                    Conclusion.PK_Call_ID = Conclusion.PK_Call_ID;
+                    Conclusion.Areas_Of_Concerns = item.Areas_Of_Concerns;
+                    Conclusion.PkId = item.PkId;
+                    Conclusion.Category = item.Category;
 
-                }
-                else
-                {
-                    Result = objDalVisitReport.InsertAreasOfConcern(Conclusion);
+                    if (Conclusion.Areas_Of_Concerns == null)
+                    {
+
+                    }
+                    else
+                    {
+                        Result = objDalVisitReport.InsertAreasOfConcern(Conclusion);
+                    }
                 }
             }
-
-            foreach (var item1 in DPArray)
+            if (DPArray != null)
             {
-                Conclusion.PK_Call_ID = Conclusion.PK_Call_ID;
-                Conclusion.Pending_Activites = item1.Pending_Activites;
-                Conclusion.PkId = item1.PkId;
-                //Conclusion.Category = item.Category;
-                if (Conclusion.Pending_Activites == null)
+                foreach (var item1 in DPArray)
                 {
+                    Conclusion.PK_Call_ID = Conclusion.PK_Call_ID;
+                    Conclusion.Pending_Activites = item1.Pending_Activites;
+                    Conclusion.PkId = item1.PkId;
+                    //Conclusion.Category = item.Category;
+                    if (Conclusion.Pending_Activites == null)
+                    {
 
-                }
-                else
-                {
-                    Result = objDalVisitReport.InsertPendingActivities(Conclusion);
+                    }
+                    else
+                    {
+                        Result = objDalVisitReport.InsertPendingActivities(Conclusion);
+                    }
                 }
             }
             //if (Result != "")
@@ -21673,7 +25383,10 @@ namespace TuvVision.Controllers
         public JsonResult CheckConcernOpen(int pk_call_id)
         {
             DataTable data = objDalVisitReport.areaofconcerncheck(pk_call_id);
-            var Test = Convert.ToString(data.Rows[0][0]);
+            var Test = string.Empty;
+            if (data.Rows.Count > 0)
+                Test = Convert.ToString(data.Rows[0][0]);
+            
             //return Json(Test, JsonRequestBehavior.AllowGet);
             return Json(new { data = Test, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
         }
@@ -21686,61 +25399,8 @@ namespace TuvVision.Controllers
             return Json(new { data = Test, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
         }
 
-        //public ActionResult MonitoringRecord(string PK_CALL_ID, string PK_RM_ID)
-        //{
 
-        //    DataSet dt = new DataSet();
-        //    VisitMonitoringRecord VisitMonitoringRecord = new VisitMonitoringRecord();
-        //    List<VisitMonitoringRecord> GetSection = new List<VisitMonitoringRecord>();
-        //    List<VisitMonitoringRecord> Getdata = new List<VisitMonitoringRecord>();
-        //    dt = objDalVisitReport.GetSection(PK_CALL_ID);
-
-        //    if (dt.Tables[2].Rows.Count > 0)
-        //    {
-        //        foreach (DataRow dr in dt.Tables[2].Rows)
-        //        {
-        //            Getdata.Add(
-        //                    new VisitMonitoringRecord
-        //                    {
-        //                        Pk_id = Convert.ToInt32(dr["Pk_id"]),
-
-        //                        Section = Convert.ToString(dr["Section"]),
-        //                        Date = Convert.ToString(dr["Date"]),
-        //                        Comment = Convert.ToString(dr["Comments"]),
-        //                        Person = Convert.ToString(dr["MonitoredBy"]),
-        //                        Status = Convert.ToString(dr["Observation"]),
-        //                    }
-        //                    );
-        //        }
-        //    }
-        //    ViewData["GetSection_"] = Getdata;
-
-        //    else if (dt.Tables[0].Rows.Count > 0)
-        //    {
-
-        //        foreach (DataRow dr in dt.Tables[0].Rows)
-        //        {
-        //            GetSection.Add(
-        //                    new VisitMonitoringRecord
-        //                    {
-        //                        Pk_id = Convert.ToInt32(dr["Pk_id"]),
-
-        //                        Section = Convert.ToString(dr["Section"]),
-        //                    }
-        //                    );
-        //        }
-
-        //    }
-        //    ViewData["GetSection"] = GetSection;
-
-        //    VisitMonitoringRecord.Signature = dt.Tables[1].Rows[0]["Signature"].ToString();
-        //    VisitMonitoringRecord.IVRRefNo = dt.Tables[1].Rows[0]["Date_Of_Inspection"].ToString();
-        //    VisitMonitoringRecord.VendorName = dt.Tables[1].Rows[0]["Vendor_Name_Location"].ToString();
-        //    VisitMonitoringRecord.Person = dt.Tables[1].Rows[0]["InspectorName"].ToString();
-        //    VisitMonitoringRecord.pk_call_id = PK_CALL_ID;
-        //    return View(VisitMonitoringRecord);
-        //}
-        public ActionResult MonitoringRecord(string PK_CALL_ID, int PK_RM_ID,int PK_IVR_ID)
+        public ActionResult MonitoringRecord(string PK_CALL_ID, int PK_RM_ID, int PK_IVR_ID)
         {
             DataSet dt = objDalVisitReport.GetSection(PK_CALL_ID, PK_RM_ID);
             var model = new VisitMonitoringRecord();
@@ -21752,6 +25412,7 @@ namespace TuvVision.Controllers
                 {
                     model.Additionalcomment = Convert.ToString(dr["Additionalcomment"]);
                     model.IsComfirmation = Convert.ToBoolean(dr["isComfirmation"]);
+                    model.IsComfirmation_Date = Convert.ToString(dr["isComfirmation_date"]);
                     model.BolierOwner = Convert.ToBoolean(dr["Boiler_Owner"]);
                     model.BoilerManufacturer = Convert.ToBoolean(dr["Boiler_Manufacturer"]);
                     model.BoilerComponentManufacturer = Convert.ToBoolean(dr["Boiler_Component_Manufacturer"]);
@@ -21785,192 +25446,41 @@ namespace TuvVision.Controllers
                 var dr = dt.Tables[1].Rows[0];
                 model.Signature = Convert.ToString(dr["Signature"]);
                 model.DateofInspection = Convert.ToString(dr["Date_Of_Inspection"]);
+                //model.VendorName = Convert.ToString(dr["Vendor_Name_Location"]);
                 model.VendorName = Convert.ToString(dr["Vendor_Name_Location_"]);
                 model.VendorName_location = Convert.ToString(dr["Vendor_Name_Location"]);
                 model.Person = Convert.ToString(dr["InspectorName"]);
                 model.pk_call_id = PK_CALL_ID;
-                model.inspectingAuthority = "TUV INDIA PVT LIMITED";
-                model.Pk_id =Convert.ToInt32(PK_RM_ID);
+                model.inspectingAuthority = "TUV INDIA PRIVATE LIMITED";
+                model.Pk_id = Convert.ToInt32(PK_RM_ID);
                 model.PK_IVR_ID = PK_IVR_ID;
+                model.Validity = Convert.ToString(dr["ValidityDate"]);
                 model.ShopApproved = Convert.ToBoolean(dr["ShopApproved"]);
                 model.ShopApproved_Number = Convert.ToString(dr["ShopApproved_Number"]);
-                model.Validity = Convert.ToString(dr["ValidityDate"]);
+                if (model.ShopApproved == true)
+                {
+                    model.BolierOwner = Convert.ToBoolean(dr["Boiler_Owner"]);
+                    model.BoilerManufacturer = Convert.ToBoolean(dr["Boiler_Manufacturer"]);
+                    model.BoilerComponentManufacturer = Convert.ToBoolean(dr["Boiler_Component_Manufacturer"]);
+                }
             }
+          
+
             return View(model);
         }
         [HttpPost]
-        public JsonResult SaveMonitoringAjax(List<VisitMonitoringRecord> data,string pk_call_id,string Additionalcomment,bool IsComfirmation,int PK_IVR_ID, int PK_RM_ID, bool ShopApproved, string ShopApproved_Number, string ValidityDate,string VendorName, bool BoilerComponentManufacturer, bool BolierOwner, bool BoilerManufacturer)
+        public JsonResult SaveMonitoringAjax(List<VisitMonitoringRecord> data, string pk_call_id, string Additionalcomment, bool IsComfirmation, int PK_IVR_ID, int PK_RM_ID, bool ShopApproved, string ShopApproved_Number, string ValidityDate, string VendorName, bool BoilerComponentManufacturer, bool BolierOwner, bool BoilerManufacturer)
         {
 
             DataTable dt = new DataTable();
-            //foreach (var record in data)
-            //{
-               dt= objDalVisitReport.BulkInsertToStaging(data, pk_call_id, Additionalcomment,IsComfirmation,PK_IVR_ID, PK_RM_ID,ShopApproved,ShopApproved_Number,ValidityDate,VendorName,BoilerComponentManufacturer,BolierOwner,BoilerManufacturer);
-            //}
+            foreach (var record in data)
+            {
+                //dt = objDalVisitReport.InsertRecord(record, pk_call_id, Additionalcomment, IsComfirmation);
+                dt = objDalVisitReport.BulkInsertToStaging(data, pk_call_id, Additionalcomment, IsComfirmation, PK_IVR_ID, PK_RM_ID, ShopApproved, ShopApproved_Number, ValidityDate, VendorName, BoilerComponentManufacturer, BolierOwner, BoilerManufacturer);
+            }
             return Json(new { success = true, message = "Records saved successfully!" });
         }
 
-        //public ActionResult GeneratePDF(string PK_CALL_ID)
-        //{
-        //    DataSet dt = objDalVisitReport.GetSection(PK_CALL_ID);
-        //    var model = new VisitMonitoringRecord();
-
-
-        //    //else if (dt.Tables[0].Rows.Count > 0) // ❗ No saved data, load sections
-        //    //{
-        //    //    foreach (DataRow dr in dt.Tables[0].Rows)
-        //    //    {
-        //    //        monitoringData.Add(new VisitMonitoringRecord
-        //    //        {
-        //    //            Pk_id = Convert.ToInt32(dr["Pk_id"]),
-        //    //            Section = Convert.ToString(dr["Section"])
-        //    //        });
-        //    //    }
-        //    //}
-
-        //    //ViewData["MonitoringData"] = monitoringData;
-
-        //    if (dt.Tables.Count > 1 && dt.Tables[1].Rows.Count > 0)
-        //    {
-        //        var dr = dt.Tables[1].Rows[0];
-        //        model.Signature = Convert.ToString(dr["Signature"]);
-        //        model.DateofInspection = Convert.ToString(dr["Date_Of_Inspection"]);
-        //        model.VendorName = Convert.ToString(dr["Vendor_Name_Location"]);
-        //        model.Person = Convert.ToString(dr["InspectorName"]);
-        //        model.pk_call_id = PK_CALL_ID;
-        //    }
-
-        //    SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";
-        //    System.Text.StringBuilder strs = new System.Text.StringBuilder();
-        //    string body = string.Empty;
-
-        //    string minDateString = null;
-        //    string maxDateString = null;
-        //    string StrOpenConcern = string.Empty;
-        //    using (StreamReader reader = new StreamReader(Server.MapPath("~/QuotationHtml/VisitMonitoringRecor.html")))
-        //    {
-        //        body = reader.ReadToEnd();
-        //    }
-        //    if (dt.Tables.Count > 2 && dt.Tables[2].Rows.Count > 0)
-        //    {
-        //        foreach (DataRow dr in dt.Tables[2].Rows)
-        //        {
-        //            //Pk_id = Convert.ToInt32(dr["Pk_id"]),
-        //            var Section = Convert.ToString(dr["Section"]);
-        //            var Date = Convert.ToString(dr["Date"]);
-        //            var Comment = Convert.ToString(dr["Comments"]);
-        //            var Person = Convert.ToString(dr["MonitoredBy"]);
-        //            var Status = Convert.ToString(dr["Observation"]);
-
-        //            //StrOpenConcern = StrOpenConcern +
-        //            //    "<tr><td style='text-align:center;font-size:15px;color:black;font-family:\"TNG Pro\";line-height:2'>"
-        //            //    + Section + "</td><td style='text-align:left; padding-left:1%;font-size:15px;color:black;font-family:\"TNG Pro\";'>" 
-        //            //    + Date + "</td><td style='text-align:left; padding-left:1%;font-size:15px;color:black;font-family:\"TNG Pro\";'>" 
-        //            //    + Status + "</td><td style='text-align:left; padding-left:1%;font-size:15px;color:black;font-family:\"TNG Pro\";word-break:break-word;overflow-wrap:break-word;white-space:normal;'>" 
-        //            //    + Comment + "</td><td style='text-align:center;font-size:15px;color:black;font-family:\"TNG Pro\";'>" 
-        //            //    + Person + "</td></tr>";
-        //            StrOpenConcern = StrOpenConcern +
-        //            "<tr><td style='text-align:center;font-size:15px;color:black;font-family:\"TNG Pro\";line-height:2'>" + Section +
-        //            "</td><td style='text-align:left; padding-left:1%;font-size:15px;color:black;font-family:\"TNG Pro\";'>" + Date +
-        //            "</td><td style='text-align:left; padding-left:1%;font-size:15px;color:black;font-family:\"TNG Pro\";'>" + Status +
-        //            "</td><td style='text-align:left; padding-left:1%;font-size:15px;color:black;font-family:\"TNG Pro\";word-break:break-word;overflow-wrap:break-word;white-space:normal;'>" + Comment +
-        //            "</td><td style='text-align:center;font-size:15px;color:black;font-family:\"TNG Pro\";'>" + Person +
-        //            "</td>";
-
-        //            if (!string.IsNullOrWhiteSpace(Status) && !string.IsNullOrWhiteSpace(Comment))
-        //            {
-        //                StrOpenConcern += "<td><img src='/Content/SIGN/" + model.Signature + "' alt='Signature' style='max-height:35px;' /></td>";
-        //            }
-        //            else
-        //            {
-        //                StrOpenConcern += "<td style='text-align:center;font-size:15px;color:black;font-family:\"TNG Pro\";'></td>";
-        //            }
-
-        //            StrOpenConcern += "</tr>";
-
-        //        }
-        //    }           
-        //    body = body.Replace("[ExpData]", StrOpenConcern);
-        //    string _Header = string.Empty;
-        //    string _footer = string.Empty;
-
-        //    StreamReader _readFooter_File = new StreamReader(Server.MapPath("~/QuotationHtml/VisitMonitoring-footer (1).html"));
-        //    _footer = _readFooter_File.ReadToEnd();
-
-
-
-        //    StreamReader _readHeader_File = new StreamReader(Server.MapPath("~/QuotationHtml/VisitMonitoring-header.html"));
-        //    _Header = _readHeader_File.ReadToEnd();
-
-
-        //    string DateofInspection = dt.Tables[1].Rows[0]["Date_Of_Inspection"].ToString();
-        //    _Header = _Header.Replace("[DateofInspection]", DateofInspection);
-
-
-        //    //2103024
-        //    string InspectorName = dt.Tables[1].Rows[0]["InspectorName"].ToString();
-        //    _Header = _Header.Replace("[Person]", InspectorName);
-
-        //    string Vendor_Name_Location = dt.Tables[1].Rows[0]["Vendor_Name_Location"].ToString();
-        //    _Header = _Header.Replace("[Person]", Vendor_Name_Location);
-
-
-
-
-        //    PdfPageSize pageSize = PdfPageSize.A4;
-        //    PdfPageOrientation pdfOrientation = PdfPageOrientation.Portrait;
-        //    HtmlToPdf converter = new HtmlToPdf();
-        //    converter.Options.MaxPageLoadTime = 360;
-        //    converter.Options.PdfPageSize = pageSize;
-        //    converter.Options.PdfPageOrientation = pdfOrientation;
-        //    converter.Options.SecurityOptions.CanAssembleDocument = true;
-        //    converter.Options.SecurityOptions.CanCopyContent = true;
-        //    converter.Options.SecurityOptions.CanEditAnnotations = true;
-        //    converter.Options.SecurityOptions.CanEditContent = true;
-        //    converter.Options.SecurityOptions.CanFillFormFields = true;
-        //    converter.Options.SecurityOptions.CanPrint = true;
-
-
-
-        //    // header settings
-        //    converter.Options.DisplayHeader = true ||
-        //        true || true;
-        //    converter.Header.DisplayOnFirstPage = true;
-        //    converter.Header.DisplayOnOddPages = true;
-        //    converter.Header.DisplayOnEvenPages = true;
-        //    converter.Header.Height = 165;
-
-        //    PdfHtmlSection headerHtml = new PdfHtmlSection(_Header, string.Empty);
-        //    headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-
-        //    converter.Header.Add(headerHtml);
-
-        //    // footer settings
-        //    converter.Options.DisplayFooter = true || true || true;
-        //    converter.Footer.DisplayOnFirstPage = true;
-        //    converter.Footer.DisplayOnOddPages = true;
-        //    converter.Footer.DisplayOnEvenPages = true;
-        //    converter.Footer.Height = 60;
-
-        //    PdfHtmlSection footerHtml = new PdfHtmlSection(_footer, string.Empty);
-        //    footerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //    converter.Footer.Add(footerHtml);
-        //    PdfTextSection text1 = new PdfTextSection(40, 15, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("TNG Pro", 8));
-        //    converter.Footer.Add(text1);
-        //    SelectPdf.PdfDocument doc_ = converter.ConvertHtmlString(body);
-        //    int PageCount = doc_.Pages.Count;
-
-        //    string path = Server.MapPath("~/QuotationHtml");
-        //    SelectPdf.PdfDocument doc = converter.ConvertHtmlString(body);
-        //    doc.Save(path + '\\' + "test" + ".pdf");
-        //    doc.Close();
-
-        //    byte[] fileBytes = System.IO.File.ReadAllBytes(path + '\\' + "test" + ".pdf");
-
-
-        //    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "test" + ".pdf");
-
-        //}
         public ActionResult GeneratePDF(string PK_CALL_ID, int PK_RM_ID)
         {
             DataSet ds = objDalVisitReport.GetSection(PK_CALL_ID, PK_RM_ID);
@@ -22011,20 +25521,14 @@ namespace TuvVision.Controllers
                     string person = dr["MonitoredBy"].ToString();
 
                     tableRows.Append("<tr>");
-                    tableRows.Append($"<td style='text-align:left;font-size:11px;width:170px;'><b>{section}</b></td>");
+                    tableRows.Append($"<td style='text-align:left;font-size:11px;width:170px;font-family:Arial;vertical-align:top;'><b>{section}</b></td>");
                     string formattedDate = date.Replace(",", "<br/>");
-                    tableRows.Append($"<td style='text-align:left;font-size:11px;'>{formattedDate}</td>");
-                    //tableRows.Append($"<td style='text-align:left;font-size:11px;'>{date}</td>");
-                    tableRows.Append($"<td style='text-align:left;font-size:11px;'>{status}</td>");
-                    tableRows.Append($"<td style='text-align:left;font-size:11px;'>{comment}</td>");
-                    //tableRows.Append($"<td>{person}</td>");
-
-
-                    //if (!string.IsNullOrWhiteSpace(status) && !string.IsNullOrWhiteSpace(comment))
-                    //{
+                    tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;vertical-align:top;'>{formattedDate}</td>");
+                    tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;vertical-align:top;'>{status}</td>");
+                    tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;vertical-align:top;'>{comment}</td>");
                     if (Convert.ToInt32(model.IsComfirmation) != 1)
                     {
-                        tableRows.Append("<td style='width:135px;'></td>");
+                        tableRows.Append("<td style='width:125px;'></td>");
                         tableRows.Append("<td></td>");
                     }
                     else
@@ -22032,123 +25536,55 @@ namespace TuvVision.Controllers
                         if (!string.IsNullOrWhiteSpace(status) && !string.IsNullOrWhiteSpace(comment))
                         {
                             string imgSrc = $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/Content/SIGN/" + model.Signature)}";
-                            tableRows.Append($"<td style='text-align:left;font-size:11px;width:125px;'>{person}</td>");
-                            //tableRows.Append($"<td><img src='{imgSrc}' style='max-height:35px;' /><br/>{model.DiaryNo}</td>");
+                            tableRows.Append($"<td style='text-align:left;font-size:11px;width:125px;font-family:Arial;vertical-align:top;'>{person}</td>");
                             tableRows.Append($"<td style='text-align:center; vertical-align:middle;'><div style='display:inline-block;'><img src='{imgSrc}' style='max-height:35px; display:block; margin:0 auto;' /><br/>{model.DiaryNo}</div></td>");
-
                         }
                         else
                         {
                             tableRows.Append("<td style='width:125px;'></td>");
                             tableRows.Append("<td></td>");
                         }
-
                     }
-                    //}
-                    //else
-                    //{
-                    //    tableRows.Append("<td></td>");
-                    //    tableRows.Append("<td></td>");
-                    //}
                     tableRows.Append("</tr>");
                 }
-            }
-
-            // Replace placeholder in body HTML
+            }            
             bodyHtml = bodyHtml.Replace("[ExpData]", tableRows.ToString());
-            bodyHtml = bodyHtml.Replace("[Additionalcomment]", model.Additionalcomment);
-
-            // Set SelectPdf license key if needed
+            bodyHtml = bodyHtml.Replace("[Additionalcomment]", model.Additionalcomment);            
             SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA=="; // Your license key
 
             HtmlToPdf converter = new HtmlToPdf
             {
                 Options =
-        {
+            {
             PdfPageSize = PdfPageSize.A4,
             PdfPageOrientation = PdfPageOrientation.Landscape,
-            //MarginTop = 70,
-            //MarginBottom = 60,
             DisplayHeader = true,
-            DisplayFooter = true,
-           MarginLeft = 25,  // Changed from 30
-        MarginRight = 25  // Changed from 20
-            //MarginTop=70
-        }
+            DisplayFooter = true            
+           }
             };
-
-            // Header section
-            //converter.Header.Height = 100;
-
-
-            //PdfHtmlSection headerSection = new PdfHtmlSection(headerHtml, string.Empty)
-            //{
-            //    AutoFitHeight = HtmlToPdfPageFitMode.AutoFit,
-            //};
-            //converter.Header.Add(headerSection);
-
-            //// Footer section
-            //converter.Footer.Height = 40;
-            //PdfHtmlSection footerSection = new PdfHtmlSection(footerHtml, string.Empty)
-            //{
-            //    AutoFitHeight = HtmlToPdfPageFitMode.AutoFit
-            //};
-            //converter.Footer.Add(footerSection);
-            //converter.Footer.Add(new PdfTextSection(
-            //    60, 15,
-            //    "Page:",
-            //    new System.Drawing.Font("Arial", 8, System.Drawing.FontStyle.Bold)
-            //));            
-            //converter.Footer.Add(new PdfTextSection(
-            //    80, 15, // Adjust X position as needed so it appears right after the first one
-            //    "{page_number} of {total_pages} (" + PK_RM_ID + ")",
-            //    new System.Drawing.Font("Arial", 8, System.Drawing.FontStyle.Regular)
-            //));
             converter.Header.Height = 100;
             PdfHtmlSection headerSection = new PdfHtmlSection(headerHtml, string.Empty)
             {
                 AutoFitHeight = HtmlToPdfPageFitMode.AutoFit,
             };
-            converter.Header.Add(headerSection);
-
-            // Footer section
+            converter.Header.Add(headerSection);            
             converter.Footer.Height = 40;
-
-            // ✅ Wrap the footer HTML in a padded div (via code)
-            string wrappedFooterHtml = $"<div style='padding-left:0px; padding-right:0px;'>{footerHtml}</div>";
-
-            PdfHtmlSection footerSection = new PdfHtmlSection(wrappedFooterHtml, string.Empty)
+            PdfHtmlSection footerSection = new PdfHtmlSection(footerHtml, string.Empty)
             {
                 AutoFitHeight = HtmlToPdfPageFitMode.AutoFit
             };
             converter.Footer.Add(footerSection);
-
-            // ✅ Align the footer text with the left margin (30px)
             converter.Footer.Add(new PdfTextSection(
-                30, 15, // x = 30 matches left margin
-                "Page:",
+                60, 15,
+                "Page: ",
                 new System.Drawing.Font("Arial", 8, System.Drawing.FontStyle.Bold)
             ));
-
             converter.Footer.Add(new PdfTextSection(
-                60, 15, // Slightly to the right of "Page:"
+                80, 15,
                 "{page_number} of {total_pages} (" + PK_RM_ID + ")",
                 new System.Drawing.Font("Arial", 8, System.Drawing.FontStyle.Regular)
             ));
-
-            //converter.Footer.Add(
-            //    new PdfTextSection(
-            //        60,
-            //        15,
-            //        "Page: {page_number} of {total_pages} ( " + PK_RM_ID + " )",
-            //        new System.Drawing.Font("Arial", 8)
-            //    )
-            //);
-
-            // Convert to PDF
-            SelectPdf.PdfDocument doc = converter.ConvertHtmlString(bodyHtml);
-
-            // Add watermark if it's a draft
+            SelectPdf.PdfDocument doc = converter.ConvertHtmlString(bodyHtml);            
             if (!model.IsComfirmation)
             {
 
@@ -22157,20 +25593,12 @@ namespace TuvVision.Controllers
                 {
                     float pageWidth = page.ClientRectangle.Width;
                     float pageHeight = page.ClientRectangle.Height;
-
-                    // Dynamically scale image to fit within the page without overflowing
-                    float maxWidth = pageWidth * 0.5f;  // 60% of page width
-                    float maxHeight = pageHeight * 0.5f; // 60% of page height
-
-                    // Set desired size for watermark image (adjust based on your image proportions)
+                    float maxWidth = pageWidth * 0.5f; 
+                    float maxHeight = pageHeight * 0.5f;
                     float imageWidth = maxWidth;
                     float imageHeight = maxHeight;
-
-                    // Center coordinates
                     float x = (pageWidth - imageWidth) / 2;
-                    float y = (pageHeight - imageHeight) / 2;
-
-                    // Create the watermark template
+                    float y = (pageHeight - imageHeight) / 2;                    
                     PdfTemplate template = doc.AddTemplate(page.ClientRectangle);
 
                     PdfImageElement img = new PdfImageElement(x, y, imageWidth, imageHeight, watermarkImg)
@@ -22184,13 +25612,62 @@ namespace TuvVision.Controllers
 
             byte[] pdfBytes = doc.Save();
             doc.Close();
-
-            // Return final file
-            string fileName = model.IsComfirmation ? "VisitMonitoringRecord.pdf" : "Draft.pdf";
+            var filename = "CP_MonitoringRecord_" + PK_RM_ID + ".pdf";
+            string fileName = model.IsComfirmation ? filename : "Draft.pdf";
             return File(pdfBytes, "application/pdf", fileName);
         }
 
 
+
+        //public ActionResult PersonalDiary(string PK_CALL_ID)
+        //{
+        //    DataSet dt = objDalVisitReport.GetPersonDiaryData(PK_CALL_ID);
+        //    var model = new VisitMonitoringRecord();
+        //    var GetPersonsDiary = new List<VisitMonitoringRecord>();
+
+        //    if (dt.Tables.Count > 1 && dt.Tables[1].Rows.Count > 0)
+        //    {
+        //        foreach (DataRow dr in dt.Tables[1].Rows)
+        //        {
+        //            //model.Additionalcomment = Convert.ToString(dr["Additionalcomment"]);
+        //            model.BolierOwner = Convert.ToBoolean(dr["Boiler_Owner"]);
+        //            model.BoilerManufacturer = Convert.ToBoolean(dr["Boiler_Manufacturer"]);
+        //            model.BoilerComponentManufacturer = Convert.ToBoolean(dr["Boiler_Component_Manufacturer"]);
+        //            model.IsComfirmation = Convert.ToBoolean(dr["isComfirmation"]);
+        //            GetPersonsDiary.Add(new VisitMonitoringRecord
+        //            {
+        //                //Pk_id = Convert.ToInt32(dr["Pk_id"]),
+        //                Inspection_Authority_ReferenceNo = Convert.ToString(dr["Inspection_Authority_ReferenceNo"]),
+        //                Date = Convert.ToString(dr["Date"]),
+        //                Boliers_Maker_No = Convert.ToString(dr["Boliers_Maker_No"]),
+        //                Form_no_Certificate_No = Convert.ToString(dr["Form_no_Certificate_No"]),
+        //                Quality_offered_Final_Inspection = Convert.ToString(dr["Quality_offered_Final_Inspection"]),
+        //                Size = Convert.ToString(dr["Size"]),
+        //                No_For_lot_invoicing = Convert.ToString(dr["No_For_lot_invoicing"]),
+
+        //            });
+        //        }
+        //    }
+
+
+        //    ViewData["PersonsDiary"] = GetPersonsDiary;
+
+        //    if (dt.Tables.Count > 1 && dt.Tables[0].Rows.Count > 0)
+        //    {
+        //        var dr = dt.Tables[0].Rows[0];
+        //        model.Signature = Convert.ToString(dr["Signature"]);
+        //        model.DateofInspection = Convert.ToString(dr["Date_Of_Inspection"]);
+        //        model.VendorName = Convert.ToString(dr["Vendor_Name_Location"]);
+        //        model.Person = Convert.ToString(dr["InspectorName"]);
+        //        model.pk_call_id = PK_CALL_ID;
+        //        model.inspectingAuthority = "TUV INDIA PRIVATE LIMITED";
+        //        model.IVRRefNo = Convert.ToString(dr["ReportNo"]);
+        //        model.DiaryNo = Convert.ToString(dr["CBBAuthorisationNumber"]);
+        //        model.Pk_id = Convert.ToInt32(dr["PK_RM_ID"]);
+
+        //    }
+        //    return View(model);
+        //}
         public ActionResult PersonalDiary(string PK_CALL_ID, int PK_IVR_ID, int PK_RM_ID)
         {
             DataSet dt = objDalVisitReport.GetPersonDiaryData(PK_CALL_ID, PK_RM_ID);
@@ -22252,14 +25729,25 @@ namespace TuvVision.Controllers
         }
 
 
+        //[HttpPost]
+        //public JsonResult SaveDiaryData(List<VisitMonitoringRecord> data, string pk_call_id, bool BoilerComponentManufacturer, bool BolierOwner, bool BoilerManufacturer, bool IsComfirmation)
+        //{
+
+        //    DataTable dt = new DataTable();
+        //    foreach (var record in data)
+        //    {
+        //        dt = objDalVisitReport.InsertDiaryRecord(record, pk_call_id, BoilerComponentManufacturer, BolierOwner, BoilerManufacturer, IsComfirmation);
+        //    }
+        //    return Json(new { success = true, message = "Records saved successfully!" });
+        //}
         [HttpPost]
-        public JsonResult SaveDiaryData(List<VisitMonitoringRecord> data, string pk_call_id,bool BoilerComponentManufacturer,bool BolierOwner,bool BoilerManufacturer,bool IsComfirmation,int PK_IVR_ID, int PK_RM_ID,bool ShopApproved,string ShopApproved_Number,string ValidityDate)
+        public JsonResult SaveDiaryData(List<VisitMonitoringRecord> data, string pk_call_id, bool BoilerComponentManufacturer, bool BolierOwner, bool BoilerManufacturer, bool IsComfirmation, int PK_IVR_ID, int PK_RM_ID,bool ShopApproved, string ShopApproved_Number, string ValidityDate)
         {
 
             DataTable dt = new DataTable();
             //foreach (var record in data)
             //{
-                dt = objDalVisitReport.BulkInsertToDiary(data, pk_call_id,BoilerComponentManufacturer, BolierOwner, BoilerManufacturer, IsComfirmation,PK_IVR_ID,PK_RM_ID, ShopApproved, ShopApproved_Number,ValidityDate);
+            dt = objDalVisitReport.BulkInsertToDiary(data, pk_call_id, BoilerComponentManufacturer, BolierOwner, BoilerManufacturer, IsComfirmation, PK_IVR_ID, PK_RM_ID, ShopApproved, ShopApproved_Number, ValidityDate);
             //}
             return Json(new { success = true, message = "Records saved successfully!" });
         }
@@ -22297,7 +25785,7 @@ namespace TuvVision.Controllers
                 DateTime ToDt = DateTime.ParseExact(ToDate, "dd/MM/yyyy", theCultureInfo);
                 DataTable DTDashBoard = new DataTable();
                 List<VisitMonitoringRecord> lstdata_ = new List<VisitMonitoringRecord>();
-                lstdata_ = objDalVisitReport.GetMonitoringDataDatewise(FromDate,ToDate);
+                lstdata_ = objDalVisitReport.GetMonitoringDataDatewise(FromDate, ToDate);
                 ViewData["CallsRegister"] = lstdata_;
                 visitdata.lstData = lstdata_;
             }
@@ -22329,7 +25817,7 @@ namespace TuvVision.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetPersonalDiaryData(string FromDate,string ToDate)
+        public ActionResult GetPersonalDiaryData(string FromDate, string ToDate)
         {
             VisitMonitoringRecord Personaldiary = new VisitMonitoringRecord();
             try
@@ -22339,8 +25827,8 @@ namespace TuvVision.Controllers
                 Session["FromDate"] = FromDate;
                 Session["ToDate"] = ToDate;
                 IFormatProvider theCultureInfo = new System.Globalization.CultureInfo("en-GB", true);
-                DateTime FromDt = DateTime.ParseExact(FromDate, "dd/MM/yyyy", theCultureInfo);
-                DateTime ToDt = DateTime.ParseExact(ToDate, "dd/MM/yyyy", theCultureInfo);
+                //DateTime FromDt = DateTime.ParseExact(FromDate, "dd/MM/yyyy", theCultureInfo);
+                //DateTime ToDt = DateTime.ParseExact(ToDate, "dd/MM/yyyy", theCultureInfo);
                 DataTable DTDashBoard = new DataTable();
                 List<VisitMonitoringRecord> lstPersonaldiary = new List<VisitMonitoringRecord>();
                 lstPersonaldiary = objDalVisitReport.GetPersonalDiaryDataDatewise(FromDate,ToDate);
@@ -22356,125 +25844,8 @@ namespace TuvVision.Controllers
 
 
 
-        //public ActionResult ExportBoilerInspectionExcel(string fromDate, string toDate)
-        //{
-        //    DataSet ds = objDalVisitReport.GetPersonalDiaryData_Excel(fromDate, toDate);
-
-        //    DataTable dtOwner = ds.Tables[0];          // Boiler Owner
-        //    DataTable dtManufacturer = ds.Tables[1];   // Boiler Manufacturer
-        //    DataTable dtComponent = ds.Tables[2];      // Boiler Component Manufacturer
-        //    using (var package = new ExcelPackage())
-        //    {
-        //        var ws = package.Workbook.Worksheets.Add("Annexure II");
-        //        //ws.Cells["A1:I1"].Merge = true;
-        //        ws.Cells["A1"].Value = ds.Tables[0].Rows[0]["InspectorName"].ToString();
-        //        ws.Cells["A1"].Style.Font.Bold = true;
-        //        ws.Cells["A1"].Style.Font.Size = 12;
-        //        ws.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 25;
-
-        //        ws.Cells["A2"].Value =DateTime.Now.ToString();
-        //        ws.Cells["A2"].Style.Font.Bold = true;
-        //        ws.Cells["A2"].Style.Font.Size = 12;
-        //        ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Cells["A2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        //        ws.Row(1).Height = 25;
-
-        //        int headerRow = 5;
-        //        string[] headers = new string[]
-        //        {
-        //    "SL NO",
-        //    "NAME AND ADDRESS OF THE ENTITY",
-        //    "BOILER REGISTRATION NO. / BOILER MAKER NUMBER / BOILER COMPONENT NAME",
-        //    "NAME OF THE COMPETENT PERSON (CBB AUTHORIZATION NO.)",
-        //    "DATE OF INSPECTION",
-        //    "FORM NO / CERTIFICATE NO",
-        //    "Size",
-        //    "Quantity offered in final Inspection",
-        //    "No of lot for invoicing in final Inspection"
-        //        };
-        //        for (int i = 0; i < headers.Length; i++)
-        //        {
-        //            var cell = ws.Cells[headerRow, i + 1];
-        //            cell.Value = headers[i];
-        //            cell.Style.Font.Bold = true;
-        //            cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-        //            cell.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-        //            cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
-        //            cell.Style.WrapText = true;
-        //        }
-        //        ws.Row(headerRow).Height = 40;
-        //        int currentRow = headerRow + 1;
-        //        int slNo = 1;
-
-        //        currentRow = WriteSectionHeader(ws, currentRow, "A", "BOILER OWNER");
-        //        currentRow = WriteDataRows(ws, dtOwner, currentRow, ref slNo);
-
-        //        currentRow = WriteSectionHeader(ws, currentRow, "B", "BOILER MANUFACTURER");
-        //        currentRow = WriteDataRows(ws, dtManufacturer, currentRow, ref slNo);
-
-        //        currentRow = WriteSectionHeader(ws, currentRow, "C", "BOILER COMPONENT MANUFACTURER");
-        //        currentRow = WriteDataRows(ws, dtComponent, currentRow, ref slNo);
-
-        //        for (int col = 1; col <= 9; col++)
-        //            //ws.Column(col).AutoFit();
-        //            ws.Column(1).Width = 30;
-        //        ws.Column(2).Width = 30; 
-        //        ws.Column(3).Width = 40;
-        //        ws.Column(4).Width = 30;
-        //        ws.Column(5).Width = 30;
-        //        ws.Column(6).Width = 20;
-        //        ws.Column(8).Width = 30;
-        //        ws.Column(8).Width = 20;
-        //        var fileBytes = package.GetAsByteArray();
-        //        Response.Clear();
-        //        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        //        Response.AddHeader("content-disposition", "attachment; filename=Annexure_II_Report.xlsx");
-        //        Response.BinaryWrite(fileBytes);
-        //        Response.Flush();
-        //        Response.End();
-        //        return View();
-        //    }
-        //}
-
-        //private int WriteSectionHeader(ExcelWorksheet ws, int currentRow, string code, string sectionName)
-        //{
-        //    ws.Cells[currentRow, 1, currentRow, 9].Merge = true;
-        //    ws.Cells[currentRow, 1].Value = $"{code}    {sectionName}";
-        //    ws.Cells[currentRow, 1].Style.Font.Bold = true;
-        //    ws.Cells[currentRow, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        //    ws.Cells[currentRow, 1].Style.Fill.BackgroundColor.SetColor(Color.Yellow);
-        //    ws.Cells[currentRow, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-        //    return currentRow + 1;
-        //}
-        //private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref int slNo)
-        //{
-        //    foreach (DataRow row in dt.Rows)
-        //    {
-        //        ws.Cells[currentRow, 1].Value = slNo++;
-        //        ws.Cells[currentRow, 2].Value = row["Inspection_Authority_ReferenceNo"]?.ToString();
-        //        ws.Cells[currentRow, 3].Value = row["Boliers_Maker_No"]?.ToString();
-        //        ws.Cells[currentRow, 4].Value = row["Form_no_Certificate_No"]?.ToString();
-        //        ws.Cells[currentRow, 5].Value = row["Date_Of_Inspection"]?.ToString();
-        //        ws.Cells[currentRow, 6].Value = row["Quality_offered_Final_Inspection"]?.ToString();
-        //        ws.Cells[currentRow, 7].Value = row["Size"]?.ToString();
-        //        ws.Cells[currentRow, 8].Value = row["InspectorName"]?.ToString();
-        //        ws.Cells[currentRow, 9].Value = row["No_For_lot_invoicing"]?.ToString();
-        //        for (int c = 1; c <= 9; c++)
-        //        {
-        //            var cell = ws.Cells[currentRow, c];
-        //            cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
-        //            cell.Style.WrapText = true;
-        //            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
-        //        }
-        //        currentRow++;
-        //    }
-        //    return currentRow;
-        //}
-
-
         public ActionResult ExportBoilerInspectionExcel(string fromDate, string toDate)
-            {
+        {
             DataSet ds = objDalVisitReport.GetPersonalDiaryData_Excel(fromDate, toDate);
 
             DataTable dtOwner = ds.Tables[0];          // Boiler Owner
@@ -22508,12 +25879,11 @@ namespace TuvVision.Controllers
                 //ws.Cells["A2"].Value = DateTime.Now.ToString();
                 //ws.Cells["A2"].Style.Font.Bold = true;
                 //ws.Cells["A2"].Style.Font.Size = 12;
-                //ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                //ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left ;
                 //ws.Cells["A2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                 //ws.Row(1).Height = 27;
 
-                
-
+                //int headerRow = 5;
                 ws.Cells["A1:I1"].Merge = true;
                 ws.Cells["A1"].Value = "Work instruction for inspection , testing  and certification  of equipment and components As per Regulation 4J (6) IBR - 1950";
                 ws.Cells["A1"].Style.Font.Bold = true;
@@ -22530,22 +25900,12 @@ namespace TuvVision.Controllers
                 ws.Row(1).Height = 27;
 
                 //ws.Cells["A2:I2"].Merge = true;
-                ws.Cells["A3"].Value = "WI/INSP/51/IBR-ANNEX II Rev 00";
+                ws.Cells["A3"].Value = "WI/INSP/51/IBR-ANNEX II Rev 00" + "  " + "Revision date:" + "  " + "Effective Date: 23 - 11 - 2022";
                 ws.Cells["A3"].Style.Font.Bold = true;
+                ws.Cells["A3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 ws.Cells["A3"].Style.Font.Size = 14;
-                ws.Cells["A3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Row(1).Height = 27;
 
-                ws.Cells["B3"].Value = "Revision date:";
-                ws.Cells["B3"].Style.Font.Bold = true;
-                ws.Cells["B3"].Style.Font.Size = 14;
-                ws.Cells["B3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                ws.Row(1).Height = 27;
-
-                ws.Cells["C3"].Value = "Effective Date: 23 - 11 - 2022";
-                ws.Cells["C3"].Style.Font.Bold = true;
-                ws.Cells["C3"].Style.Font.Size = 14;
-                ws.Cells["C3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                ws.Cells["A3"].Style.Font.Name = "Arial";
                 ws.Row(1).Height = 27;
 
 
@@ -22559,14 +25919,16 @@ namespace TuvVision.Controllers
                 var rt1 = cell__.RichText.Add("NAME OF INSPECTING AUTHORITY: ");
                 rt1.Bold = false;
                 rt1.Size = 13;
+                rt1.FontName = "Arial";
 
                 // Second part: bold
-                var rt2 = cell__.RichText.Add("TUV India Private Limited (Authorisation No. 195, Valid upto 19/03/2029)");
+                var rt2 = cell__.RichText.Add("TUV India Private Limited (Certificate No. 195, Valid upto 19/03/2029)");
                 rt2.Bold = true;
                 rt2.Size = 13;
+                rt2.FontName = "Arial";
 
                 cell__.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                ws.Row(4).Height = 27;
+                ws.Row(4).Height = 27; // row index is 4 here, not 1
 
 
 
@@ -22578,25 +25940,41 @@ namespace TuvVision.Controllers
                 cell_.RichText.Clear();
 
                 // First part: not bold
-                var rt4 = cell_.RichText.Add("MONTH OF REPORT: ");
+                var rt4 = cell_.RichText.Add("MONTH OF REPORT: ");//("1. NAME OF INSPECTING AUTHORITY: ");
                 rt4.Bold = false;
                 rt4.Size = 13;
+                rt4.FontName = "Arial";
 
-                var rt3 = cell_.RichText.Add(DateTime.Now.ToString("dd MMMM yyyy"));//
+                // Second part: bold
+                //var rt3 = cell_.RichText.Add(DateTime.Now.ToString("dd MMMM yyyy"));//
+                //rt3.Bold = true;
+                //rt3.Size = 13;
+                //rt3.FontName = "Arial";
+                var rt3 = cell_.RichText.Add(fromDate + " " + toDate);
                 rt3.Bold = true;
                 rt3.Size = 13;
+                rt3.FontName = "Arial";
 
                 cell_.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                ws.Row(4).Height = 27; // row index is 4 here, not 1
+                ws.Row(4).Height = 27;
 
-                int headerRow = 6;
+                ws.Cells["A6:I6"].Merge = true;
+                ws.Cells["A6"].Value = inspectorName;//ds.Tables[0].Rows[0]["InspectorName"].ToString();
+                ws.Cells["A6"].Style.Font.Bold = true;
+                ws.Cells["A6"].Style.Font.Size = 12;
+                ws.Cells["A6"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                ws.Row(1).Height = 27;
+
+
+                int headerRow = 7;
                 string[] headers = new string[]
+               
                 {
-            "Sl No.",
+            "Sr No.",
             "Name And Address of the Entity",
             "Boiler Registration No. / Boiler Maker Number / Boiler Component Name",
             "Activities Events",
-            "Name oF the Competent Person (CBB AUTHORIZATION NO.)",
+            "Name oF the Competent Person (CBB Certification NO.)",
             "Date oF Inspection",
             "Form No",
             "Certificate No",
@@ -22604,13 +25982,13 @@ namespace TuvVision.Controllers
             "Quantity offered in final Inspection",
             "No of lot for invoicing in final Inspection",
                 "Inspection Authority Reference No.(if any)",
-                "Order",
-                "Mandays",
-                "Consumed"
+                "Manday Rate",
+                "Manday",
+                "Total"
                 };
                 for (int i = 0; i < headers.Length; i++)
                 {
-
+               
                     var cell = ws.Cells[headerRow, i + 1];
                     cell.Value = headers[i];
                     cell.Style.Font.Bold = true;
@@ -22626,22 +26004,23 @@ namespace TuvVision.Controllers
                 int currentRow = headerRow + 1;
                 int slNo = 1;
 
-                currentRow = WriteSectionHeader(ws, currentRow, "A", "BOILER OWNER");
+                currentRow = WriteSectionHeader(ws, currentRow, "A)", "BOILER OWNER");
                 currentRow = WriteDataRows(ws, dtOwner, currentRow, ref slNo);
 
-                currentRow = WriteSectionHeader(ws, currentRow, "B", "BOILER MANUFACTURER");
+                currentRow = WriteSectionHeader(ws, currentRow, "B)", "BOILER MANUFACTURER");
                 currentRow = WriteDataRows(ws, dtManufacturer, currentRow, ref slNo);
 
-                currentRow = WriteSectionHeader(ws, currentRow, "C", "BOILER COMPONENT MANUFACTURER");
+                currentRow = WriteSectionHeader(ws, currentRow, "C)", "BOILER COMPONENT MANUFACTURER");
                 currentRow = WriteDataRows(ws, dtComponent, currentRow, ref slNo);
 
                 for (int col = 1; col <= 15; col++)
                     //ws.Column(col).AutoFit();
-                    ws.Column(1).Width = 30;
-                ws.Column(2).Width = 30;
-                ws.Column(3).Width = 45;
-                ws.Column(4).Width = 30;
-                ws.Column(5).Width = 45;
+                    ws.Column(col).AutoFit();
+                ws.Column(1).Width = 10; // For "NAME AND ADDRESS OF THE ENTITY"
+                ws.Column(2).Width = 30; // For "NAME AND ADDRESS OF THE ENTITY"
+                ws.Column(3).Width = 40;
+                ws.Column(4).Width = 40;
+                ws.Column(5).Width = 30;
                 ws.Column(6).Width = 20;
                 ws.Column(8).Width = 30;
                 ws.Column(9).Width = 30;
@@ -22649,9 +26028,8 @@ namespace TuvVision.Controllers
                 ws.Column(11).Width = 30;
                 ws.Column(12).Width = 30;
                 ws.Column(13).Width = 30;
-                ws.Column(14).Width = 30;
-                ws.Column(15).Width = 30;
-
+                ws.Column(14).Width = 20;
+                ws.Column(15).Width = 20;
                 var fileBytes = package.GetAsByteArray();
                 Response.Clear();
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -22668,271 +26046,81 @@ namespace TuvVision.Controllers
             ws.Cells[currentRow, 1, currentRow, 15].Merge = true;
             ws.Cells[currentRow, 1].Value = $"{code}    {sectionName}";
             ws.Cells[currentRow, 1].Style.Font.Bold = true;
-
+            ws.Cells[currentRow, 1, currentRow, 15].Style.Border.BorderAround(ExcelBorderStyle.Thin);
             ws.Cells[currentRow, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
             ws.Cells[currentRow, 1].Style.Fill.BackgroundColor.SetColor(Color.White);
             ws.Cells[currentRow, 1].Style.Font.Name = "Arial";
             //ws.Row(currentRow).Height = 60; // or any value you want;
             ws.Cells[currentRow, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-
-            ws.Cells[currentRow, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
-
             return currentRow + 1;
         }
-        //private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref int slNo)
-        //{
-        //    dt.DefaultView.Sort = "PK_Call_ID, PK_RM_ID";
-        //    dt = dt.DefaultView.ToTable();
-
-        //    string lastCallId = null;
-        //    string lastRmId = null;
-        //    int groupStartRow = currentRow;
-
-        //    foreach (DataRow row in dt.Rows)
-        //    {
-        //        string currentCallId = row["PK_Call_ID"]?.ToString();
-        //        string currentRmId = row["PK_RM_ID"]?.ToString();
-
-        //        bool isNewGroup = currentCallId != lastCallId || currentRmId != lastRmId;
-
-        //        // When group changes, increment serial and mark new start
-        //        if (isNewGroup)
-        //        {
-        //            groupStartRow = currentRow;
-        //            slNo++;
-        //        }
-
-        //        // Only fill serial in first column (can be merged later)
-        //        ws.Cells[currentRow, 1].Value = slNo;
-
-        //        // Fill rest of the columns
-        //        //ws.Cells[currentRow, 2].Value = row["Vendor_Name_Location"]?.ToString();
-        //        //ws.Cells[currentRow, 3].Value = row["Boliers_Maker_No"]?.ToString();
-        //        //ws.Cells[currentRow, 4].Value = row["Boliers_Maker_No"]?.ToString();
-        //        //ws.Cells[currentRow, 5].Value = row["Form_no_Certificate_No"]?.ToString();
-        //        //ws.Cells[currentRow, 6].Value = row["CertificateNo"]?.ToString();
-        //        //ws.Cells[currentRow, 7].Value = row["Date_Of_Inspection"]?.ToString();
-        //        //ws.Cells[currentRow, 8].Value = row["Quality_offered_Final_Inspection"]?.ToString();
-        //        //ws.Cells[currentRow, 9].Value = row["Size"]?.ToString();
-        //        //ws.Cells[currentRow, 10].Value = row["InspectorName"]?.ToString();
-        //        //ws.Cells[currentRow, 11].Value = row["No_For_lot_invoicing"]?.ToString();
-        //        //ws.Cells[currentRow, 12].Value = row["Inspection_Authority_ReferenceNo"]?.ToString();
-
-        //        ws.Cells[currentRow, 2].Value = row["Vendor_Name_Location"]?.ToString();
-        //        ws.Cells[currentRow, 3].Value = row["Boliers_Maker_No"]?.ToString();
-        //        //string content = row["Activities_Events"]?.ToString();
-
-        //        //if (string.IsNullOrWhiteSpace(content))
-        //        //{
-        //        //    ws.Cells[currentRow, 4].Value = "No content";
-        //        //}
-        //        //else
-        //        //{
-        //        //    string plainText = Regex.Replace(content, "<.*?>", String.Empty);
-        //        //    plainText = WebUtility.HtmlDecode(plainText);
-
-        //        //    // Check for base64 image
-        //        //    var base64Match = Regex.Match(content, @"data:image\/[a-zA-Z]+;base64,([^\\""]+)");
-        //        //    if (base64Match.Success)
-        //        //    {
-        //        //        try
-        //        //        {
-        //        //            string base64Data = base64Match.Groups[1].Value;
-        //        //            byte[] imageBytes = Convert.FromBase64String(base64Data);
-        //        //            using (var stream = new MemoryStream(imageBytes))
-        //        //            using (var image = Image.FromStream(stream))
-        //        //            {
-        //        //                var pic = ws.Drawings.AddPicture($"img_{currentRow}", image);
-        //        //                pic.SetPosition(currentRow - 1, 0, 3, 0); // Row-1 because 0-indexed
-        //        //                pic.SetSize(40, 26); // Your required size
-        //        //            }
-
-        //        //            // Add text below the image
-        //        //            ws.Cells[currentRow, 4].Value = plainText.Trim();
-        //        //            ws.Cells[currentRow, 4].Style.WrapText = true;
-        //        //            ws.Row(currentRow).Height = 45; // Adjust to fit both image + text
-        //        //        }
-        //        //        catch
-        //        //        {
-        //        //            ws.Cells[currentRow, 4].Value = plainText.Trim(); // fallback
-        //        //        }
-        //        //    }
-        //        //    else if (Regex.IsMatch(content, @"https?://.*\.(jpg|jpeg|png|gif)", RegexOptions.IgnoreCase))
-        //        //    {
-        //        //        try
-        //        //        {
-        //        //            string imageUrl = Regex.Match(content, @"https?://[^\s""']+\.(jpg|jpeg|png|gif)", RegexOptions.IgnoreCase).Value;
-        //        //            using (var client = new WebClient())
-        //        //            {
-        //        //                byte[] imageBytes = client.DownloadData(imageUrl);
-        //        //                using (var stream = new MemoryStream(imageBytes))
-        //        //                using (var image = Image.FromStream(stream))
-        //        //                {
-        //        //                    var pic = ws.Drawings.AddPicture($"img_{currentRow}", image);
-        //        //                    pic.SetPosition(currentRow - 1, 0, 3, 0);
-        //        //                    pic.SetSize(40, 26);
-        //        //                }
-
-        //        //                ws.Cells[currentRow, 4].Value = plainText.Trim();
-        //        //                ws.Cells[currentRow, 4].Style.WrapText = true;
-        //        //                ws.Row(currentRow).Height = 45;
-        //        //            }
-        //        //        }
-        //        //        catch
-        //        //        {
-        //        //            ws.Cells[currentRow, 4].Value = plainText.Trim();
-        //        //        }
-        //        //    }
-        //        //    else
-        //        //    {
-        //        //        // No image, just text
-        //        //        ws.Cells[currentRow, 4].Value = plainText.Trim();
-        //        //        ws.Cells[currentRow, 4].Style.WrapText = true;
-        //        //    }
-        //        //}
-
-        //        // Assuming inside your data loop:
-
-        //        // Assuming you have: string content = dr["Activities_Events"]?.ToString();
-
-        //        // Data from backend
-        //        string content = row["Activities_Events"]?.ToString() ?? "";
-        //        string processedText = content;
-
-        //        // Pattern for paths like ~/images/... or ~/Picture...
-        //        var pathMatches = Regex.Matches(content, @"~/(?:images/)?[^\s]+?\.(jpg|jpeg|png|gif)", RegexOptions.IgnoreCase);
-
-        //        int imageIndex = 0;
-        //        foreach (Match match in pathMatches)
-        //        {
-        //            string imagePath = match.Value;
-        //            string imageFullPath = Path.Combine(Server.MapPath("~/"), imagePath.TrimStart('~', '/'));
-
-        //            if (System.IO.File.Exists(imageFullPath))
-        //            {
-        //                // Replace image path in text with label
-        //                processedText = processedText.Replace(imagePath, "[show real image from path]");
-
-        //                try
-        //                {
-        //                    using (var image = Image.FromFile(imageFullPath))
-        //                    {
-        //                        var picture = ws.Drawings.AddPicture($"img_{currentRow}_{imageIndex}", image);
-        //                        picture.SetPosition(currentRow - 1, 0, 3, 0); // 3 = column D
-        //                        picture.SetSize(40, 26);
-        //                        imageIndex++;
-        //                    }
-        //                }
-        //                catch
-        //                {
-        //                    // Skip on error
-        //                }
-        //            }
-        //            else
-        //            {
-        //                // If image not found, still replace path with placeholder
-        //                ws.Cells[currentRow, 4].Value = row["Activities_Events"]?.ToString();
-        //            }
-        //        }
-
-        //        ws.Cells[currentRow, 4].Value = processedText.Trim();
-        //        ws.Cells[currentRow, 4].Style.WrapText = true;
-                
-
-
-
-        //        //ws.Cells[currentRow, 4].Value = row["Activities_Events"]?.ToString();
-        //        ws.Cells[currentRow, 5].Value = row["InspectorName"]?.ToString();
-        //        ws.Cells[currentRow, 6].Value = row["Date_Of_Inspection"]?.ToString();
-        //        ws.Cells[currentRow, 7].Value = row["Form_no_Certificate_No"]?.ToString();
-        //        ws.Cells[currentRow, 8].Value = row["CertificateNo"]?.ToString();
-        //        ws.Cells[currentRow, 9].Value = row["Size"]?.ToString();
-        //        ws.Cells[currentRow, 10].Value = row["Quality_offered_Final_Inspection"]?.ToString();
-        //        ws.Cells[currentRow, 11].Value = row["No_For_lot_invoicing"]?.ToString();
-        //        ws.Cells[currentRow, 12].Value = row["Inspection_Authority_ReferenceNo"]?.ToString();
-
-        //        // Apply cell styles
-        //        for (int c = 1; c <= 12; c++)
-        //        {
-        //            var cell = ws.Cells[currentRow, c];
-        //            cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
-        //            cell.Style.WrapText = true;
-        //            cell.Style.Font.Name = "Arial";
-        //            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
-        //        }
-
-        //        // Check if next row is new group to merge serial number cell
-        //        string nextCallId = null;
-        //        string nextRmId = null;
-        //        if (dt.Rows.IndexOf(row) + 1 < dt.Rows.Count)
-        //        {
-        //            nextCallId = dt.Rows[dt.Rows.IndexOf(row) + 1]["PK_Call_ID"]?.ToString();
-        //            nextRmId = dt.Rows[dt.Rows.IndexOf(row) + 1]["PK_RM_ID"]?.ToString();
-        //        }
-
-        //        bool isEndOfGroup = nextCallId != currentCallId || nextRmId != currentRmId;
-
-        //        if (isEndOfGroup && currentRow > groupStartRow)
-        //        {
-        //            // Merge serial number cell for this group
-        //            ws.Cells[groupStartRow, 1, currentRow, 1].Merge = true;
-        //            ws.Cells[groupStartRow, 1, currentRow, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
-        //        }
-
-        //        // Update trackers
-        //        lastCallId = currentCallId;
-        //        lastRmId = currentRmId;
-        //        currentRow++;
-        //    }
-        //    return currentRow;
-        //}
-
-private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref int slNo)
-    {
-        dt.DefaultView.Sort = "PK_Call_ID, PK_RM_ID";
-        dt = dt.DefaultView.ToTable();
-
-        string lastCallId = null;
-        string lastRmId = null;
-        int groupStartRow = currentRow;
-
-        // Regex to find <img> tags and capture src attribute
-        var imgPattern = @"<img[^>]+src=[""']([^""']+)[""'][^>]*>";
-
-        foreach (DataRow row in dt.Rows)
+        private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref int slNo)
         {
-            string currentCallId = row["PK_Call_ID"]?.ToString();
-            string currentRmId = row["PK_RM_ID"]?.ToString();
-            string OrderRate= row["orderrate"]?.ToString();
-             string Mandays = row["EstimatedHours"]?.ToString();
-             string Consumed = row["ConsumedRate"]?.ToString();
+            //foreach (DataRow row in dt.Rows)
+            //{
+            //    ws.Cells[currentRow, 1].Value = slNo++;
+            //    ws.Cells[currentRow, 2].Value = row["Vendor_Name_Location"]?.ToString();
+            //    ws.Cells[currentRow, 3].Value = row["Boliers_Maker_No"]?.ToString();
+            //    ws.Cells[currentRow, 4].Value = row["InspectorName"]?.ToString();
+            //    ws.Cells[currentRow, 5].Value = row["Date_Of_Inspection"]?.ToString();
+            //    ws.Cells[currentRow, 6].Value = row["Form_no_Certificate_No"]?.ToString();
+            //    ws.Cells[currentRow, 7].Value = row["Size"]?.ToString();
+            //    ws.Cells[currentRow, 8].Value = row["Quality_offered_Final_Inspection"]?.ToString();
+            //    //ws.Cells[currentRow, 8].Value = row["InspectorName"]?.ToString();
+            //    ws.Cells[currentRow, 9].Value = row["No_For_lot_invoicing"]?.ToString();
+            //    ws.Cells[currentRow, 10].Value = row["Inspection_Authority_ReferenceNo"]?.ToString();
+            //    for (int c = 1; c <= 10; c++)
+            //    {
+            //        var cell = ws.Cells[currentRow, c];
+            //        cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+            //        cell.Style.WrapText = true;
+            //        cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+            //    }
+            //    currentRow++;
+            //}
+            //return currentRow;
+            dt.DefaultView.Sort = "PK_Call_ID, PK_RM_ID";
+            dt = dt.DefaultView.ToTable();
+
+            string lastCallId = null;
+            string lastRmId = null;
+            int groupStartRow = currentRow;
+
+            foreach (DataRow row in dt.Rows)
+            {
+                string currentCallId = row["PK_Call_ID"]?.ToString();
+                string currentRmId = row["PK_RM_ID"]?.ToString();
+                string OrderRate = row["orderrate"]?.ToString();
+                string Mandays = row["EstimatedHours"]?.ToString();
+                string Consumed = row["ConsumedRate"]?.ToString();
                 bool isNewGroup = currentCallId != lastCallId || currentRmId != lastRmId;
 
-            if (isNewGroup)
-            {
-                groupStartRow = currentRow;
-                slNo++;
-            }
+                // When group changes, increment serial and mark new start
+                if (isNewGroup)
+                {
+                    groupStartRow = currentRow;
+                    slNo++;
+                }
 
-            ws.Cells[currentRow, 1].Value = slNo;
-            ws.Cells[currentRow, 2].Value = row["Vendor_Name_Location"]?.ToString();
-            ws.Cells[currentRow, 3].Value = row["Boliers_Maker_No"]?.ToString();
+                // Only fill serial in first column (can be merged later)
+                ws.Cells[currentRow, 1].Value = slNo;
 
-            string rawActivities = row["Activities_Events"]?.ToString() ?? "";
-            ws.Cells[currentRow, 4].Value = row["Activities_Events"]?.ToString();
-            ws.Cells[currentRow, 5].Value = row["InspectorName"]?.ToString();
-            ws.Cells[currentRow, 6].Value = row["Date_Of_Inspection"]?.ToString();
-            ws.Cells[currentRow, 7].Value = row["Form_no_Certificate_No"]?.ToString();
-            ws.Cells[currentRow, 8].Value = row["CertificateNo"]?.ToString();
-            ws.Cells[currentRow, 9].Value = row["Size"]?.ToString();
-            ws.Cells[currentRow, 10].Value = row["Quality_offered_Final_Inspection"]?.ToString();
-            ws.Cells[currentRow, 11].Value = row["No_For_lot_invoicing"]?.ToString();
-            ws.Cells[currentRow, 12].Value = row["Inspection_Authority_ReferenceNo"]?.ToString();
-            ws.Cells[currentRow, 13].Value = OrderRate.ToString();/* row["orderrate"]?.ToString();*/
-            ws.Cells[currentRow, 14].Value = Mandays.ToString();/* row["EstimatedHours"]?.ToString();*/
-            ws.Cells[currentRow, 15].Value = Consumed.ToString();/* row["ConsumedRate"]?.ToString();*/
-
-
+                // Fill rest of the columns
+                ws.Cells[currentRow, 2].Value = row["Vendor_Name_Location"]?.ToString();
+                ws.Cells[currentRow, 3].Value = row["Boliers_Maker_No"]?.ToString();
+                ws.Cells[currentRow, 4].Value = row["Activities_Events"]?.ToString();
+                ws.Cells[currentRow, 5].Value = row["InspectorName"]?.ToString();
+                ws.Cells[currentRow, 6].Value = row["Date_Of_Inspection"]?.ToString();
+                ws.Cells[currentRow, 7].Value = row["Form_no_Certificate_No"]?.ToString();
+                ws.Cells[currentRow, 8].Value = row["CertificateNo"]?.ToString();
+                ws.Cells[currentRow, 9].Value = row["Size"]?.ToString();
+                ws.Cells[currentRow, 10].Value = row["Quality_offered_Final_Inspection"]?.ToString();
+                ws.Cells[currentRow, 11].Value = row["No_For_lot_invoicing"]?.ToString();
+                ws.Cells[currentRow, 12].Value = row["Inspection_Authority_ReferenceNo"]?.ToString();
+                ws.Cells[currentRow, 13].Value = OrderRate.ToString();/* row["orderrate"]?.ToString();*/
+                ws.Cells[currentRow, 14].Value = Mandays.ToString();/* row["EstimatedHours"]?.ToString();*/
+                ws.Cells[currentRow, 15].Value = Consumed.ToString();/* row["ConsumedRate"]?.ToString();*/
+                // Apply cell styles
                 if (isNewGroup)
                 {
                     ws.Cells[currentRow, 13].Value = OrderRate;
@@ -22947,61 +26135,41 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                     ws.Cells[currentRow, 15].Value = "";
                 }
 
-                // Style all columns for current row
                 for (int c = 1; c <= 15; c++)
-            {
-                var cell = ws.Cells[currentRow, c];
-                cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                cell.Style.WrapText = true;
-                cell.Style.Font.Name = "Arial";
-                cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                {
+                    var cell = ws.Cells[currentRow, c];
+                    cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    cell.Style.WrapText = true;
+                    cell.Style.Font.Name = "Arial";
+                    cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                }
+
+                // Check if next row is new group to merge serial number cell
+                string nextCallId = null;
+                string nextRmId = null;
+                if (dt.Rows.IndexOf(row) + 1 < dt.Rows.Count)
+                {
+                    nextCallId = dt.Rows[dt.Rows.IndexOf(row) + 1]["PK_Call_ID"]?.ToString();
+                    nextRmId = dt.Rows[dt.Rows.IndexOf(row) + 1]["PK_RM_ID"]?.ToString();
+                }
+
+                bool isEndOfGroup = nextCallId != currentCallId || nextRmId != currentRmId;
+
+                if (isEndOfGroup && currentRow > groupStartRow)
+                {
+                    // Merge serial number cell for this group
+                    ws.Cells[groupStartRow, 1, currentRow, 1].Merge = true;
+                    ws.Cells[groupStartRow, 1, currentRow, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                }
+
+                // Update trackers
+                lastCallId = currentCallId;
+                lastRmId = currentRmId;
+                currentRow++;
             }
-
-            // Check if next row is a new group to merge serial number cells
-            string nextCallId = null;
-            string nextRmId = null;
-            int currentRowIndex = dt.Rows.IndexOf(row);
-
-            if (currentRowIndex + 1 < dt.Rows.Count)
-            {
-                nextCallId = dt.Rows[currentRowIndex + 1]["PK_Call_ID"]?.ToString();
-                nextRmId = dt.Rows[currentRowIndex + 1]["PK_RM_ID"]?.ToString();
-            }
-
-            bool isEndOfGroup = nextCallId != currentCallId || nextRmId != currentRmId;
-
-            if (isEndOfGroup && currentRow > groupStartRow)
-            {
-                ws.Cells[groupStartRow, 1, currentRow, 1].Merge = true;
-                ws.Cells[groupStartRow, 1, currentRow, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
-            }
-
-            lastCallId = currentCallId;
-            lastRmId = currentRmId;
-            currentRow++;
+            return currentRow;
         }
 
-        return currentRow;
-    }
-        private string ReplaceImagesWithStamps(string rawHtml)
-        {
-            if (string.IsNullOrEmpty(rawHtml))
-                return "";
-
-            var imgPattern = @"<img[^>]+src=[""']([^""']+)[""'][^>]*>";
-            string replaced = Regex.Replace(rawHtml, imgPattern, m =>
-            {
-                string src = m.Groups[1].Value.ToLower();
-                if (src.Contains("picture1.jpg"))
-                    return "[HARD STAMP]";
-                else if (src.Contains("picture2.jpg"))
-                    return "[OVAL STAMP]";
-                else
-                    return ""; // Remove any other images
-            }, RegexOptions.IgnoreCase);
-
-            return replaced;
-        }
         public ActionResult MISVisitMonitoringdata()
         {
             VisitMonitoringRecord visitdata = new VisitMonitoringRecord();
@@ -23068,7 +26236,7 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
         }
 
         [HttpPost]
-        public ActionResult MISGetPersonalDiaryData(string FromDate, string ToDate,string VendorName,string LeadGivenBy)
+        public ActionResult MISGetPersonalDiaryData(string FromDate, string ToDate, string VendorName, string LeadGivenBy)
         {
             VisitMonitoringRecord Personaldiary = new VisitMonitoringRecord();
             try
@@ -23088,41 +26256,14 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                         Inspector = dt.Rows[0]["Name"].ToString();
                     }
                 }
-
                 IFormatProvider theCultureInfo = new System.Globalization.CultureInfo("en-GB", true);
                 //DateTime FromDt = DateTime.ParseExact(FromDate, "dd/MM/yyyy", theCultureInfo);
                 //DateTime ToDt = DateTime.ParseExact(ToDate, "dd/MM/yyyy", theCultureInfo);
-                
-
-                //DataSet DTDashBoard = new DataSet();
-
-                //List<VisitMonitoringRecord> lstInspectorname = new List<VisitMonitoringRecord>();
-                //DTDashBoard = objDalVisitReport.GetInspectorName();
-                //if (DTDashBoard.Tables[1].Rows.Count > 0)
-                //{
-                //    lstInspectorname = (from n in DTDashBoard.Tables[0].AsEnumerable()
-                //                        select new NameCode()
-                //                        {
-                //                            Name = n.Field<string>(DTDashBoard.Tables[0].Columns["BranchName"].ToString()),
-                //                            Code = n.Field<Int32>(DTDashBoard.Tables[0].Columns["PK_ID"].ToString())
-
-                //                        }).ToList();
-                //}
-                //IEnumerable<SelectListItem> BranchNameItems;
-                //BranchNameItems = new SelectList(lstInspectorname, "Code", "Name");
-                //ViewBag.BranchNameItems = BranchNameItems;
-                //ViewData["BranchNameItems"] = BranchNameItems;
-
-
-
-
+                DataTable DTDashBoard = new DataTable();
                 List<VisitMonitoringRecord> lstPersonaldiary = new List<VisitMonitoringRecord>();
-                lstPersonaldiary = objDalVisitReport.MISGetPersonalDiaryDataDatewise(FromDate, ToDate, VendorName, Inspector);
+                lstPersonaldiary = objDalVisitReport.MISGetPersonalDiaryDataDatewise(FromDate,ToDate,VendorName, Inspector);
                 ViewData["CallsRegister"] = lstPersonaldiary;
-                Personaldiary.LeadGivenBy = LeadGivenBy;
                 Personaldiary.lstData = lstPersonaldiary;
-
-                
             }
             catch (Exception ex)
             {
@@ -23131,401 +26272,23 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
             return View(Personaldiary);
         }
 
-
-
-        //public ActionResult ExportBoilerInspectionExcel_MIS(string fromDate, string toDate, string VendorName)
-        //{
-
-           
-
-        //    DataSet ds = objDalVisitReport.MISGetPersonalDiaryData_Excel(fromDate, toDate, VendorName);
-        
-        //    DataTable dtOwner = ds.Tables[0];          // Boiler Owner
-        //    DataTable dtManufacturer = ds.Tables[1];   // Boiler Manufacturer
-        //    DataTable dtComponent = ds.Tables[2];      // Boiler Component Manufacturer
-
-        //    using (var package = new ExcelPackage())
-        //    {
-        //        var ws = package.Workbook.Worksheets.Add("Annexure II");
-
-        //        ws.Cells["A1:I1"].Merge = true;
-        //        ws.Cells["A1"].Value = "Work instruction for inspection , testing  and certification  of equipment and components under IBR 1950 purview";
-        //        ws.Cells["A1"].Style.Font.Bold = true;
-        //        ws.Cells["A1"].Style.Font.Size = 13;
-        //        ws.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 27;
-
-
-        //        ws.Cells["A2:I2"].Merge = true;
-        //        ws.Cells["A2"].Value = "ANNEXURE II FORMAT FOR DAILY CUMULATIVE REPORT FOR INSPECTION AND CERTIFICATION OF BOILERS/BOILER COMPONENS BY INSPECTING AUTHORITY								";
-        //        ws.Cells["A2"].Style.Font.Bold = true;
-        //        ws.Cells["A2"].Style.Font.Size = 14;
-        //        ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 27;
-
-        //        //ws.Cells["A2:I2"].Merge = true;
-        //        ws.Cells["A3"].Value = "WI/INSP/51/IBR-ANNEX II Rev 00";
-        //        ws.Cells["A3"].Style.Font.Bold = true;
-        //        ws.Cells["A3"].Style.Font.Size = 14;
-        //        ws.Cells["A3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 27;
-
-        //        ws.Cells["B3"].Value = "Revision date:";
-        //        ws.Cells["B3"].Style.Font.Bold = true;
-        //        ws.Cells["B3"].Style.Font.Size = 14;
-        //        ws.Cells["B3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(1).Height = 27;
-
-        //        ws.Cells["C3"].Value = "Effective Date: 23 - 11 - 2022";
-        //        ws.Cells["C3"].Style.Font.Bold = true;
-        //        ws.Cells["C3"].Style.Font.Size = 14;
-        //        ws.Cells["C3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(1).Height = 27;
-
-
-        //        ws.Cells["A4:I4"].Merge = true;
-
-        //        var cell__ = ws.Cells["A4"];
-        //        cell__.IsRichText = true;
-        //        cell__.RichText.Clear();
-
-        //        // First part: not bold
-        //        var rt1 = cell__.RichText.Add("1. NAME OF INSPECTING AUTHORITY: ");
-        //        rt1.Bold = false;
-        //        rt1.Size = 13;
-
-        //        // Second part: bold
-        //        var rt2 = cell__.RichText.Add("M/S. TUV INDIA PVT LTD");
-        //        rt2.Bold = true;
-        //        rt2.Size = 13;
-
-        //        cell__.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(4).Height = 27; // row index is 4 here, not 1
-
-
-
-
-
-        //        ws.Cells["A5:I5"].Merge = true;
-        //        var cell_ = ws.Cells["A5"];
-        //        cell_.IsRichText = true;
-        //        cell_.RichText.Clear();
-
-        //        // First part: not bold
-        //        var rt4 = cell_.RichText.Add("12.MONTH OF REPORT: ");//("1. NAME OF INSPECTING AUTHORITY: ");
-        //        rt4.Bold = false;
-        //        rt4.Size = 13;
-
-        //        // Second part: bold
-        //        var rt3 = cell_.RichText.Add(DateTime.Now.ToString("dd MMMM yyyy"));//
-        //        rt3.Bold = true;
-        //        rt3.Size = 13;
-
-        //        cell_.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(4).Height = 27; // row index is 4 here, not 1
-
-        //        int headerRow = 6;
-        //        string[] headers = new string[]
-        //        {
-        //    "SL NO",
-        //    "NAME AND ADDRESS OF THE ENTITY",
-        //    "BOILER REGISTRATION NO. / BOILER MAKER NUMBER / BOILER COMPONENT NAME",
-        //    "NAME OF THE COMPETENT PERSON (CBB AUTHORIZATION NO.)",
-        //    "DATE OF INSPECTION",
-        //    "FORM NO / CERTIFICATE NO",
-        //    "Size",
-        //    "Quantity offered in final Inspection",
-        //    "No of lot for invoicing in final Inspection"
-        //        };
-
-        //        for (int i = 0; i < headers.Length; i++)
-        //        {
-        //            var cell = ws.Cells[headerRow, i + 1];
-        //            cell.Value = headers[i];
-        //            cell.Style.Font.Bold = true;
-        //            cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-        //            cell.Style.Fill.BackgroundColor.SetColor(Color.White);
-        //            cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
-        //            cell.Style.WrapText = true;
-        //            cell.Style.Font.Name = "Arial";
-        //            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //            ws.Row(headerRow).CustomHeight = false; // This enables autofitting
-
-        //        }
-        //        ws.Row(headerRow).Height = 50;
-
-        //        int currentRow = headerRow + 1;
-        //        int slNo = 1;
-
-
-        //        currentRow = WriteSectionHeader_MIS (ws, currentRow, "A", "BOILER OWNER");
-        //        slNo = 0;
-        //        currentRow = WriteDataRows_MIS(ws, dtOwner, currentRow, ref slNo);
-
-        //        currentRow = WriteSectionHeader_MIS(ws, currentRow, "B", "BOILER MANUFACTURER");
-        //        slNo = 0;
-        //        currentRow = WriteDataRows_MIS(ws, dtManufacturer, currentRow, ref slNo);
-
-        //        currentRow = WriteSectionHeader_MIS(ws, currentRow, "C", "BOILER COMPONENT MANUFACTURER");
-        //        slNo = 0;
-        //        currentRow = WriteDataRows_MIS(ws, dtComponent, currentRow, ref slNo);
-
-
-        //        for (int col = 1; col <= 9; col++)
-
-
-        //            ws.Column(col).AutoFit();
-        //        ws.Column(2).Width = 30; // For "NAME AND ADDRESS OF THE ENTITY"
-        //        ws.Column(3).Width = 40;
-        //        ws.Column(4).Width = 30;
-        //        ws.Column(5).Width = 30;
-        //        ws.Column(6).Width = 20;
-        //        ws.Column(8).Width = 30;
-        //        ws.Column(8).Width = 30;
-
-        //        var fileBytes = package.GetAsByteArray();
-
-        //        Response.Clear();
-        //        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        //        Response.AddHeader("content-disposition", "attachment; filename=Annexure_II_Report.xlsx");
-        //        Response.BinaryWrite(fileBytes);
-        //        Response.Flush();
-        //        Response.End();
-
-        //        return View();
-        //    }
-        //}
-        //private int WriteSectionHeader_MIS(ExcelWorksheet ws, int currentRow, string code, string sectionName)
-        //{
-        //    ws.Cells[currentRow, 1, currentRow, 9].Merge = true;
-        //    ws.Cells[currentRow, 1].Value = $"{code}    {sectionName}";
-        //    ws.Cells[currentRow, 1].Style.Font.Bold = true;
-            
-        //    ws.Cells[currentRow, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        //    ws.Cells[currentRow, 1].Style.Fill.BackgroundColor.SetColor(Color.Yellow);
-        //    ws.Cells[currentRow, 1].Style.Font.Name = "Arial";
-        //    //ws.Row(currentRow).Height = 60; // or any value you want;
-        //    ws.Cells[currentRow, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-
-        //    return currentRow + 1;
-        //}
-        //private int WriteDataRows_MIS(ExcelWorksheet ws, DataTable dt, int currentRow, ref int slNo)
-        //{
-        //    dt.DefaultView.Sort = "PK_Call_ID, PK_RM_ID";
-        //    dt = dt.DefaultView.ToTable();
-
-        //    string lastCallId = null;
-        //    string lastRmId = null;
-        //    int groupStartRow = currentRow;
-
-        //    foreach (DataRow row in dt.Rows)
-        //    {
-        //        string currentCallId = row["PK_Call_ID"]?.ToString();
-        //        string currentRmId = row["PK_RM_ID"]?.ToString();
-
-        //        bool isNewGroup = currentCallId != lastCallId || currentRmId != lastRmId;
-
-        //        // When group changes, increment serial and mark new start
-        //        if (isNewGroup)
-        //        {
-        //            groupStartRow = currentRow;
-        //            slNo++;
-        //        }
-
-        //        // Only fill serial in first column (can be merged later)
-        //        ws.Cells[currentRow, 1].Value = slNo;
-
-        //        // Fill rest of the columns
-        //        ws.Cells[currentRow, 2].Value = row["Inspection_Authority_ReferenceNo"]?.ToString();
-        //        ws.Cells[currentRow, 3].Value = row["Boliers_Maker_No"]?.ToString();
-        //        ws.Cells[currentRow, 4].Value = row["Form_no_Certificate_No"]?.ToString();
-        //        ws.Cells[currentRow, 5].Value = row["Date_Of_Inspection"]?.ToString();
-        //        ws.Cells[currentRow, 6].Value = row["Quality_offered_Final_Inspection"]?.ToString();
-        //        ws.Cells[currentRow, 7].Value = row["Size"]?.ToString();
-        //        ws.Cells[currentRow, 8].Value = row["InspectorName"]?.ToString();
-        //        ws.Cells[currentRow, 9].Value = row["No_For_lot_invoicing"]?.ToString();
-
-        //        // Apply cell styles
-        //        for (int c = 1; c <= 9; c++)
-        //        {
-        //            var cell = ws.Cells[currentRow, c];
-        //            cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
-        //            cell.Style.WrapText = true;
-        //            cell.Style.Font.Name = "Arial";
-        //            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
-        //        }
-
-        //        // Check if next row is new group to merge serial number cell
-        //        string nextCallId = null;
-        //        string nextRmId = null;
-        //        if (dt.Rows.IndexOf(row) + 1 < dt.Rows.Count)
-        //        {
-        //            nextCallId = dt.Rows[dt.Rows.IndexOf(row) + 1]["PK_Call_ID"]?.ToString();
-        //            nextRmId = dt.Rows[dt.Rows.IndexOf(row) + 1]["PK_RM_ID"]?.ToString();
-        //        }
-
-        //        bool isEndOfGroup = nextCallId != currentCallId || nextRmId != currentRmId;
-
-        //        if (isEndOfGroup && currentRow > groupStartRow)
-        //        {
-        //            // Merge serial number cell for this group
-        //            ws.Cells[groupStartRow, 1, currentRow, 1].Merge = true;
-        //            ws.Cells[groupStartRow, 1, currentRow, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
-        //        }
-
-        //        // Update trackers
-        //        lastCallId = currentCallId;
-        //        lastRmId = currentRmId;
-        //        currentRow++;
-        //    }
-        //    return currentRow;
-        //}
-        public ActionResult MonitoringRecord_Reload(string PK_CALL_ID, int PK_RM_ID, int PK_IVR_ID)
-        {
-            DataSet dt = objDalVisitReport.GetSection_data(PK_CALL_ID, PK_RM_ID);
-            var model = new VisitMonitoringRecord();
-            var monitoringData = new List<VisitMonitoringRecord>();
-
-            if (dt.Tables.Count > 2 && dt.Tables[2].Rows.Count > 0)
-            {
-                foreach (DataRow dr in dt.Tables[2].Rows)
-                {
-                    model.Additionalcomment = Convert.ToString(dr["Additionalcomment"]);
-                    model.IsComfirmation = Convert.ToBoolean(dr["isComfirmation"]);
-                    monitoringData.Add(new VisitMonitoringRecord
-                    {
-                        //Pk_id = Convert.ToInt32(dr["Pk_id"]),
-                        Section = Convert.ToString(dr["Section"]),
-                        Date = Convert.ToString(dr["Date"]),
-                        Comment = Convert.ToString(dr["Comments"]),
-                        Person = Convert.ToString(dr["MonitoredBy"]),
-                        Status = Convert.ToString(dr["Observation"]),
-                    });
-                }
-            }
-            else if (dt.Tables[0].Rows.Count > 0) // ❗ No saved data, load sections
-            {
-                foreach (DataRow dr in dt.Tables[0].Rows)
-                {
-                    monitoringData.Add(new VisitMonitoringRecord
-                    {
-                        Pk_id = Convert.ToInt32(dr["Pk_id"]),
-                        Section = Convert.ToString(dr["Section"])
-                    });
-                }
-            }
-
-            ViewData["MonitoringData"] = monitoringData;
-
-            if (dt.Tables.Count > 1 && dt.Tables[1].Rows.Count > 0)
-            {
-                var dr = dt.Tables[1].Rows[0];
-                model.Signature = Convert.ToString(dr["Signature"]);
-                model.DateofInspection = Convert.ToString(dr["Date_Of_Inspection"]);
-                model.VendorName = Convert.ToString(dr["Vendor_Name_Location"]);
-                model.Person = Convert.ToString(dr["InspectorName"]);
-                model.pk_call_id = PK_CALL_ID;
-                model.inspectingAuthority = "TUV INDIA PVT LIMITED";
-                model.Pk_id = Convert.ToInt32(PK_RM_ID);
-                model.PK_IVR_ID = PK_IVR_ID;
-            }
-            return View(model);
-        }
-
-
-        public ActionResult GetPersondiaryData(string PK_CALL_ID, int PK_IVR_ID, int PK_RM_ID)
-        {
-            DataSet dt = objDalVisitReport.GetPersonDiaryData(PK_CALL_ID, PK_RM_ID);
-            var model = new VisitMonitoringRecord();
-            var GetPersonsDiary = new List<VisitMonitoringRecord>();
-
-            if (dt.Tables.Count > 1 && dt.Tables[1].Rows.Count > 0)
-            {
-                foreach (DataRow dr in dt.Tables[1].Rows)
-                {
-                    //model.Additionalcomment = Convert.ToString(dr["Additionalcomment"]);
-                    model.BolierOwner = Convert.ToBoolean(dr["Boiler_Owner"]);
-                    model.BoilerManufacturer = Convert.ToBoolean(dr["Boiler_Manufacturer"]);
-                    model.BoilerComponentManufacturer = Convert.ToBoolean(dr["Boiler_Component_Manufacturer"]);
-                    model.IsComfirmation = Convert.ToBoolean(dr["isComfirmation"]);
-                    GetPersonsDiary.Add(new VisitMonitoringRecord
-                    {
-                        //Pk_id = Convert.ToInt32(dr["Pk_id"]),
-                        Inspection_Authority_ReferenceNo = Convert.ToString(dr["Inspection_Authority_ReferenceNo"]),
-                        Date = Convert.ToString(dr["Date"]),
-                        Boliers_Maker_No = Convert.ToString(dr["Boliers_Maker_No"]),
-                        Form_no_Certificate_No = Convert.ToString(dr["Form_no_Certificate_No"]),
-                        Quality_offered_Final_Inspection = Convert.ToString(dr["Quality_offered_Final_Inspection"]),
-                        Size = Convert.ToString(dr["Size"]),
-                        No_For_lot_invoicing = Convert.ToString(dr["No_For_lot_invoicing"]),
-
-                    });
-                }
-            }
-
-
-            ViewData["PersonsDiary"] = GetPersonsDiary;
-
-            if (dt.Tables.Count > 1 && dt.Tables[0].Rows.Count > 0)
-            {
-                var dr = dt.Tables[0].Rows[0];
-                model.Pk_id = Convert.ToInt32(dr["PK_RM_ID"]);
-
-                model.Signature = Convert.ToString(dr["Signature"]);
-                model.DateofInspection = Convert.ToString(dr["Date_Of_Inspection"]);
-                model.VendorName = Convert.ToString(dr["Vendor_Name_Location"]);
-                model.Person = Convert.ToString(dr["InspectorName"]);
-                model.pk_call_id = PK_CALL_ID;
-                model.inspectingAuthority = "TUV INDIA PVT LIMITED";
-                model.IVRRefNo = Convert.ToString(dr["ReportNo"]);
-                model.DiaryNo = Convert.ToString(dr["CBBAuthorisationNumber"]);
-            }
-            return View(model);
-        }
-
-
-
-
-
         public ActionResult GeneratePDF_PersonDiary(string PK_CALL_ID, int PK_RM_ID)
-        {
-            // Get data
+        {            
             DataSet ds = objDalVisitReport.GetPersonDiary_data1(PK_CALL_ID, PK_RM_ID);
             var model = new VisitMonitoringRecord();
-
-            // Extract header info
-            //if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
-            //{
-            //    var row = ds.Tables[1].Rows[0];
-            //    model.Signature = Convert.ToString(row["Signature"]);
-            //    model.DateofInspection = Convert.ToString(row["Date_Of_Inspection"]);
-            //    model.VendorName = Convert.ToString(row["Vendor_Name_Location"]);
-            //    model.Person = Convert.ToString(row["InspectorName"]);
-            //    model.pk_call_id = PK_CALL_ID;
-            //}
-
-            // Load HTML template
             string bodyHtml = System.IO.File.ReadAllText(Server.MapPath("~/QuotationHtml/PersonDiary.html"));
             string headerHtml = System.IO.File.ReadAllText(Server.MapPath("~/QuotationHtml/PersonDiary-Header.html"));
             string footerHtml = System.IO.File.ReadAllText(Server.MapPath("~/QuotationHtml/PersonDiary-Footer.html"));
-
-            // Replace header placeholders
-            //headerHtml = headerHtml.Replace("[DateofInspection]", model.DateofInspection ?? "");
-            //headerHtml = headerHtml.Replace("[Person]", model.Person ?? "");
-
-
-            // Build table rows
             StringBuilder tableRows = new StringBuilder();
 
             if (ds.Tables[0].Rows.Count > 0)
-            {
-                //model.Additionalcomment = ds.Tables[2].Rows[0]["Additionalcomment"].ToString();
+            {                
                 model.IsComfirmation = Convert.ToBoolean(ds.Tables[0].Rows[0]["isComfirmation"]);
 
                 foreach (DataRow dr in ds.Tables[0].Rows)
                 {
                     model.DateofInspection = Convert.ToString(dr["Date_Of_Inspection"]);
-                    model.VendorName = Convert.ToString(dr["Vendor_Name_Location"]);
+                    model.VendorName = Convert.ToString(dr["Vendor"]);
                     model.BolierOwner = Convert.ToBoolean(dr["Boiler_Owner"]);
                     model.BoilerComponentManufacturer = Convert.ToBoolean(dr["Boiler_Component_Manufacturer"]);
                     model.BoilerManufacturer = Convert.ToBoolean(dr["Boiler_Manufacturer"]);
@@ -23539,21 +26302,18 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                     string signature = dr["Signature"].ToString();
                     string CBBAuthorisationNumber = dr["CBBAuthorisationNumber"].ToString();
                     tableRows.Append("<tr>");
-                    //tableRows.Append($"<td style='text-align:left;font-size:15px;'>{section}</td>");
                     string formattedDate = Date_Of_Inspection.Replace(",", "<br/>");
-                    tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;vertical-align:top;'>{formattedDate}</td>");
-                    //tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial; word-break:break-word;'>{Date_Of_Inspection}</td>");
+                    tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;vertical-align:top;'>{formattedDate}</td>");                    
                     tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial; word-break:break-word;vertical-align:top;'>{Inspection_Authority_ReferenceNo}</td>");
                     tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial; word-break:break-word;vertical-align:top;'>{Boliers_Maker_No}</td>");
+                    //tableRows.Append($"<td style='text-align:left;font-size:11px; word-break:break-word;vertical-align:top;'>{Activities_Events}</td>");
                     string content = dr["Activities_Events"]?.ToString();
                     string cellContent = $@"
-    <div style='max-width:200px; word-wrap:break-word; font-size:11px; font-family:Arial; text-align:left;'>
-        <img src='{content}' alt='' onerror='this.style.display=""none""' style='max-width:100px; max-height:100px; display:block;' />
-        <span>{content}</span>
-    </div>";
-
+                    <div style='max-width:200px; word-wrap:break-word; font-size:11px; font-family:Arial; text-align:left;'>
+                        <img src='{content}' alt='' onerror='this.style.display=""none""' style='max-width:100px; max-height:100px; display:block;' />
+                        <span>{content}</span>
+                    </div>";
                     tableRows.Append($"<td>{cellContent}</td>");
-                    //tableRows.Append($"<td style='text-align:left;font-size:11px; word-break:break-word;vertical-align:top;'>{Activities_Events}</td>");
                     tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial; word-break:break-word;vertical-align:top;'>{Form_no_Certificate_No}</td>");
                     tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial; word-break:break-word;vertical-align:top;'>{CertificateNo}</td>");
                     if (model.IsComfirmation == true)
@@ -23561,32 +26321,19 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                         string imgSrc = $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/Content/SIGN/" + signature)}";
 
                         tableRows.Append($"<td><img src='{imgSrc}' style='max-height:35px;' /><br/>{CBBAuthorisationNumber}</td>");
-
-                        //tableRows.Append($"<td style='text-align:left;font-size:15px; word-break:break-word;'>{Signature}</td>");
                     }
                     else
                     {
                         tableRows.Append("<td></td>");
                     }
-                    //if (!string.IsNullOrWhiteSpace(status) && !string.IsNullOrWhiteSpace(comment))
-                    //{
-                    //    string imgSrc = $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/Content/SIGN/" + model.Signature)}";
-                    //    tableRows.Append($"<td><img src='{imgSrc}' style='max-height:35px;' /></td>");
-                    //}
-                    //else
-                    //{
-                    //    tableRows.Append("<td></td>");
-                    //}
                     tableRows.Append("</tr>");
                 }
-            }
-
-            // Replace placeholder in body HTML
+            }            
             bodyHtml = bodyHtml.Replace("[ExpData]", tableRows.ToString());
 
 
             bool checked1 = false;
-            bool checked2 =false;
+            bool checked2 = false;
             bool checked3 = false;
 
             if (model.BolierOwner == true)
@@ -23596,31 +26343,21 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
             else if (model.BoilerComponentManufacturer == true)
                 checked3 = true;
 
-            //bodyHtml = bodyHtml.Replace("[Additionalcomment]", model.Additionalcomment);
             headerHtml = headerHtml.Replace("[Manufacturer]", model.VendorName ?? "");
             headerHtml = headerHtml.Replace("[Checked1]", checked1 ? "checked" : "");
             headerHtml = headerHtml.Replace("[Checked2]", checked2 ? "checked" : "");
             headerHtml = headerHtml.Replace("[Checked3]", checked3 ? "checked" : "");
-
-            // Set SelectPdf license key if needed
-            SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA=="; // Use your actual license key
-
-            // Initialize converter
+            SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";            
             HtmlToPdf converter = new HtmlToPdf
             {
                 Options =
         {
             PdfPageSize = PdfPageSize.A4,
-            PdfPageOrientation = PdfPageOrientation.Landscape,
-            //MarginTop = 70,
-            //MarginBottom = 60,
+            PdfPageOrientation = PdfPageOrientation.Landscape,           
             DisplayHeader = true,
-            DisplayFooter = true
-            //MarginTop=70
+            DisplayFooter = true            
         }
             };
-
-            // Header section
             converter.Header.Height = 100;
 
 
@@ -23629,8 +26366,6 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                 AutoFitHeight = HtmlToPdfPageFitMode.AutoFit,
             };
             converter.Header.Add(headerSection);
-
-            // Footer section
             converter.Footer.Height = 40;
             PdfHtmlSection footerSection = new PdfHtmlSection(footerHtml, string.Empty)
             {
@@ -23639,50 +26374,28 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
             converter.Footer.Add(footerSection);
             converter.Footer.Add(new PdfTextSection(
                 60, 15,
-                "Page:",
+                "Page: ",
                 new System.Drawing.Font("Arial", 8, System.Drawing.FontStyle.Bold)
             ));
             converter.Footer.Add(new PdfTextSection(
-                80, 15, // Adjust X position as needed so it appears right after the first one
+                80, 15, 
                 "{page_number} of {total_pages} (" + PK_RM_ID + ")",
                 new System.Drawing.Font("Arial", 8, System.Drawing.FontStyle.Regular)
             ));
-
-            //converter.Footer.Add(
-            //    new PdfTextSection(
-            //        60,
-            //        15,
-            //        "Page: {page_number} of {total_pages} ( " + PK_RM_ID + " )",
-            //        new System.Drawing.Font("Arial", 8)
-            //    )
-            //);
-
-            // Convert to PDF
-            SelectPdf.PdfDocument doc = converter.ConvertHtmlString(bodyHtml);
-
-            // Add watermark if it's a draft
+            SelectPdf.PdfDocument doc = converter.ConvertHtmlString(bodyHtml);            
             if (!model.IsComfirmation)
             {
-
                 string watermarkImg = Server.MapPath("~/WaterMark.png");
                 foreach (SelectPdf.PdfPage page in doc.Pages)
                 {
                     float pageWidth = page.ClientRectangle.Width;
-                    float pageHeight = page.ClientRectangle.Height;
-
-                    // Dynamically scale image to fit within the page without overflowing
-                    float maxWidth = pageWidth * 0.5f;  // 60% of page width
-                    float maxHeight = pageHeight * 0.5f; // 60% of page height
-
-                    // Set desired size for watermark image (adjust based on your image proportions)
+                    float pageHeight = page.ClientRectangle.Height;                    
+                    float maxWidth = pageWidth * 0.5f;  
+                    float maxHeight = pageHeight * 0.5f;
                     float imageWidth = maxWidth;
                     float imageHeight = maxHeight;
-
-                    // Center coordinates
                     float x = (pageWidth - imageWidth) / 2;
                     float y = (pageHeight - imageHeight) / 2;
-
-                    // Create the watermark template
                     PdfTemplate template = doc.AddTemplate(page.ClientRectangle);
 
                     PdfImageElement img = new PdfImageElement(x, y, imageWidth, imageHeight, watermarkImg)
@@ -23696,592 +26409,18 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
 
             byte[] pdfBytes = doc.Save();
             doc.Close();
-
-            // Return file
             if (Convert.ToInt32(model.IsComfirmation) != 1)
             {
                 return File(pdfBytes, "application/pdf", "Draft.pdf");
             }
             else
             {
-                var filename = "CP_PersonsDiary_" + PK_RM_ID + ".pdf";
+                var filename = "CP_PersonsDiary" + PK_RM_ID + ".pdf";
                 return File(pdfBytes, "application/pdf", filename);
             }
         }
 
-
-
-
-
-        //public ActionResult GeneratePDF_PersonDiary_MIS()
-        //{            
-        //    DataSet ds = objDalVisitReport.GetPersonDiary_data_MIS_PDF();
-        //    var model = new VisitMonitoringRecord();
-        //    string bodyHtml = System.IO.File.ReadAllText(Server.MapPath("~/QuotationHtml/PersonDiary.html"));
-        //    string headerHtml = System.IO.File.ReadAllText(Server.MapPath("~/QuotationHtml/PersonDiary-Header.html"));
-        //    string footerHtml = System.IO.File.ReadAllText(Server.MapPath("~/QuotationHtml/PersonDiary-Footer.html"));
-        //    StringBuilder tableRows = new StringBuilder();
-
-        //    // Boiler Owner
-        //    int slNo = 1;
-        //    var ownerRows = ds.Tables[0];
-        //    if (ownerRows.Rows.Count > 0)
-        //    {
-        //        tableRows.Append("<tr><td colspan='5' style='font-weight:bold; font-size:16px; background-color:#f2f2f2;'>A. BOILER OWNER</td></tr>");
-        //        foreach (DataRow dr in ownerRows.Rows)
-        //        {
-        //            tableRows.Append("<tr>");
-        //            tableRows.Append($"<td>{slNo++}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Date_Of_Inspection"]}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Inspection_Authority_ReferenceNo"]}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Boliers_Maker_No"]}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Form_no_Certificate_No"]}</td>");
-        //            tableRows.Append("</tr>");
-        //        }
-        //    }
-
-        //    // Boiler Component Manufacturer
-        //    slNo = 1;
-        //    var compRows = ds.Tables[1];
-        //    if (compRows.Rows.Count > 0)
-        //    {
-        //        tableRows.Append("<tr><td colspan='5' style='font-weight:bold; font-size:16px; background-color:#f2f2f2;'>B. BOILER COMPONENT MANUFACTURER</td></tr>");
-        //        foreach (DataRow dr in compRows.Rows)
-        //        {
-        //            tableRows.Append("<tr>");
-        //            tableRows.Append($"<td>{slNo++}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Date_Of_Inspection"]}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Inspection_Authority_ReferenceNo"]}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Boliers_Maker_No"]}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Form_no_Certificate_No"]}</td>");
-        //            tableRows.Append("</tr>");
-        //        }
-        //    }
-
-        //    // Boiler Manufacturer
-        //    slNo = 1;
-        //    var manuRows = ds.Tables[2];
-        //    if (manuRows.Rows.Count > 0)
-        //    {
-        //        tableRows.Append("<tr><td colspan='5' style='font-weight:bold; font-size:16px; background-color:#f2f2f2;'>C. BOILER MANUFACTURER</td></tr>");
-        //        foreach (DataRow dr in manuRows.Rows)
-        //        {
-        //            tableRows.Append("<tr>");
-        //            tableRows.Append($"<td>{slNo++}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Date_Of_Inspection"]}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Inspection_Authority_ReferenceNo"]}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Boliers_Maker_No"]}</td>");
-        //            tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Form_no_Certificate_No"]}</td>");
-        //            tableRows.Append("</tr>");
-        //        }
-        //    }
-
-        //    bodyHtml = bodyHtml.Replace("[ExpData]", tableRows.ToString());
-
-        //    //bool checked1 = false;
-        //    //bool checked2 = false;
-        //    //bool checked3 = false;
-        //    //if (model.BolierOwner == true)
-        //    //    checked1 = true;
-        //    //else if (model.BoilerManufacturer == true)
-        //    //    checked2 = true;
-        //    //else if (model.BoilerComponentManufacturer == true)
-        //    //    checked3 = true;            
-        //    //headerHtml = headerHtml.Replace("[Manufacturer]", model.VendorName ?? "");
-        //    //headerHtml = headerHtml.Replace("[Checked1]", checked1 ? "checked" : "");
-        //    //headerHtml = headerHtml.Replace("[Checked2]", checked2 ? "checked" : "");
-        //    //headerHtml = headerHtml.Replace("[Checked3]", checked3 ? "checked" : "");
-        //    SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";       
-        //    HtmlToPdf converter = new HtmlToPdf();
-        //    converter.Options.PdfPageSize = PdfPageSize.A4;
-        //    converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
-        //    converter.Options.MarginTop = 70;
-        //    converter.Options.MarginBottom = 60;
-        //    converter.Options.DisplayHeader = true;
-        //    converter.Header.Height = 100;
-        //    PdfHtmlSection headerSection = new PdfHtmlSection(headerHtml, string.Empty);
-        //    headerSection.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //    converter.Header.Add(headerSection);
-
-        //    converter.Options.DisplayFooter = true;
-        //    converter.Footer.Height = 60;
-        //    PdfHtmlSection footerSection = new PdfHtmlSection(footerHtml, string.Empty);
-        //    footerSection.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //    converter.Footer.Add(footerSection);
-        //    converter.Footer.Add(new PdfTextSection(40, 15, "Page: {page_number} of {total_pages}", new System.Drawing.Font("Arial", 8)));
-
-
-        //    SelectPdf.PdfDocument doc = converter.ConvertHtmlString(bodyHtml);
-        //    string imgFile = Server.MapPath("~/DraftWatermar.png");
-        //    if (Convert.ToInt32(model.IsComfirmation) != 1)
-        //    {
-        //        string imgFile1 = Server.MapPath("~/WaterMark.png");
-        //        SelectPdf.PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
-        //        PdfImageElement img1 = new PdfImageElement(150, 150, imgFile1);
-        //        img1.Transparency = 15;
-        //        template1.Add(img1);
-        //    }
-        //    byte[] pdfBytes = doc.Save();
-        //    doc.Close();
-
-
-        //    if (Convert.ToInt32(model.IsComfirmation) != 1)
-        //    {
-        //        return File(pdfBytes, "application/pdf", "Draft.pdf");
-        //    }
-        //    else
-        //    {
-        //        return File(pdfBytes, "application/pdf", "VisitMonitoringRecord.pdf");
-        //    }
-        //}
-
-        //public ActionResult GeneratePDF_PersonDiary_MIS(string fromDate, string toDate, string VendorName)
-        //{
-        //    DataSet ds = objDalVisitReport.GetPersonDiary_data_MIS_PDF(fromDate,toDate,VendorName);
-        //    var model = new VisitMonitoringRecord();
-        //    string bodyHtml = System.IO.File.ReadAllText(Server.MapPath("~/QuotationHtml/PersonDiary_MIS.html"));
-        //    string headerHtml = System.IO.File.ReadAllText(Server.MapPath("~/QuotationHtml/PersonDiary-Header_MIS.html"));
-        //    string footerHtml = System.IO.File.ReadAllText(Server.MapPath("~/QuotationHtml/PersonDiary-footer_MIS.html"));
-        //    StringBuilder tableRows = new StringBuilder();
-
-        //    AppendGroupedRows(ds.Tables[0], "A. BOILER OWNER", tableRows);
-        //    AppendGroupedRows(ds.Tables[1], "B. BOILER MANUFACTURER ", tableRows);
-        //    AppendGroupedRows(ds.Tables[2], "C. BOILER COMPONENT MANUFACTURER", tableRows);
-
-        //    bodyHtml = bodyHtml.Replace("[ExpData]", tableRows.ToString());
-
-        //    // ... rest of your PDF generation code ...
-
-        //    SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";
-        //    HtmlToPdf converter = new HtmlToPdf();
-        //    converter.Options.PdfPageSize = PdfPageSize.A4;
-        //    converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
-        //    converter.Options.MarginTop = 70;
-        //    converter.Options.MarginBottom = 60;
-        //    converter.Options.DisplayHeader = true;
-        //    converter.Header.Height = 100;
-        //    PdfHtmlSection headerSection = new PdfHtmlSection(headerHtml, string.Empty);
-        //    headerSection.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //    converter.Header.Add(headerSection);
-
-        //    converter.Options.DisplayFooter = true;
-        //    converter.Footer.Height = 60;
-        //    PdfHtmlSection footerSection = new PdfHtmlSection(footerHtml, string.Empty);
-        //    footerSection.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //    converter.Footer.Add(footerSection);
-        //    converter.Footer.Add(new PdfTextSection(40, 15, "Page: {page_number} of {total_pages}", new System.Drawing.Font("Arial", 8)));
-
-        //    SelectPdf.PdfDocument doc = converter.ConvertHtmlString(bodyHtml);
-
-        //    //if (Convert.ToInt32(model.IsComfirmation) != 1)
-        //    //{
-        //    //    string imgFile1 = Server.MapPath("~/WaterMark.png");
-        //    //    SelectPdf.PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
-        //    //    PdfImageElement img1 = new PdfImageElement(150, 150, imgFile1);
-        //    //    img1.Transparency = 15;
-        //    //    template1.Add(img1);
-        //    //}
-        //    byte[] pdfBytes = doc.Save();
-        //    doc.Close();
-
-        //    //if (Convert.ToInt32(model.IsComfirmation) != 1)
-        //    //{
-        //    //    return File(pdfBytes, "application/pdf", "Draft.pdf");
-        //    //}
-        //    //else
-        //    //{
-        //        return File(pdfBytes, "application/pdf", "COMPETENT_PERSONS_DIARY.pdf");
-        //    //}
-        //}
-
-
-        //private void AppendGroupedRows(DataTable table, string sectionTitle, StringBuilder tableRows)
-        //{
-        //    if (table.Rows.Count == 0) return;
-
-        //    tableRows.Append($"<tr><td colspan='5' style='font-weight:bold; font-size:16px; background-color:#f2f2f2;'>{sectionTitle}</td></tr>");
-
-        //    int slNo = 1;
-        //    string lastCallId = null;
-        //    string lastRmId = null;
-
-        //    table.DefaultView.Sort = "PK_Call_ID, PK_RM_ID";
-        //    var sortedTable = table.DefaultView.ToTable();
-
-        //    foreach (DataRow dr in sortedTable.Rows)
-        //    {
-        //        string currentCallId = dr["PK_Call_ID"]?.ToString();
-        //        string currentRmId = dr["PK_RM_ID"]?.ToString();
-
-        //        bool isNewGroup = currentCallId != lastCallId || currentRmId != lastRmId;
-
-        //        tableRows.Append("<tr>");
-
-        //        if (isNewGroup)
-        //        {
-        //            tableRows.Append($"<td>{slNo++}</td>");
-        //            lastCallId = currentCallId;
-        //            lastRmId = currentRmId;
-        //        }
-        //        else
-        //        {
-        //            tableRows.Append("<td></td>");
-        //        }
-
-        //        tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Date_Of_Inspection"]}</td>");
-        //        tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Inspection_Authority_ReferenceNo"]}</td>");
-        //        tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Boliers_Maker_No"]}</td>");
-        //        tableRows.Append($"<td style='text-align:left;font-size:15px;'>{dr["Form_no_Certificate_No"]}</td>");
-        //        tableRows.Append("</tr>");
-        //    }
-        //}
-
-
-
-        //public ActionResult ExportBoilerInspectionExcel_MIS(string fromDate, string toDate, string VendorName)
-        //{
-
-
-
-        //    DataSet ds = objDalVisitReport.MISGetPersonalDiaryData_Excel(fromDate, toDate, VendorName);
-
-        //    DataTable dtOwner = ds.Tables[0];          // Boiler Owner
-        //    DataTable dtManufacturer = ds.Tables[1];   // Boiler Manufacturer
-        //    DataTable dtComponent = ds.Tables[2];      // Boiler Component Manufacturer
-
-        //    using (var package = new ExcelPackage())
-        //    {
-        //        var ws = package.Workbook.Worksheets.Add("Annexure II");
-
-        //        ws.Cells["A1:I1"].Merge = true;
-        //        ws.Cells["A1"].Value = "Work instruction for inspection , testing  and certification  of equipment and components under IBR 1950 purview";
-        //        ws.Cells["A1"].Style.Font.Bold = true;
-        //        ws.Cells["A1"].Style.Font.Size = 13;
-        //        ws.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 27;
-
-
-        //        ws.Cells["A2:I2"].Merge = true;
-        //        ws.Cells["A2"].Value = "ANNEXURE II FORMAT FOR DAILY CUMULATIVE REPORT FOR INSPECTION AND CERTIFICATION OF BOILERS/BOILER COMPONENS BY INSPECTING AUTHORITY								";
-        //        ws.Cells["A2"].Style.Font.Bold = true;
-        //        ws.Cells["A2"].Style.Font.Size = 14;
-        //        ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 27;
-
-        //        //ws.Cells["A2:I2"].Merge = true;
-        //        ws.Cells["A3"].Value = "WI/INSP/51/IBR-ANNEX II Rev 00";
-        //        ws.Cells["A3"].Style.Font.Bold = true;
-        //        ws.Cells["A3"].Style.Font.Size = 14;
-        //        ws.Cells["A3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 27;
-
-        //        ws.Cells["B3"].Value = "Revision date:";
-        //        ws.Cells["B3"].Style.Font.Bold = true;
-        //        ws.Cells["B3"].Style.Font.Size = 14;
-        //        ws.Cells["B3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(1).Height = 27;
-
-        //        ws.Cells["C3"].Value = "Effective Date: 23 - 11 - 2022";
-        //        ws.Cells["C3"].Style.Font.Bold = true;
-        //        ws.Cells["C3"].Style.Font.Size = 14;
-        //        ws.Cells["C3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(1).Height = 27;
-
-
-        //        ws.Cells["A4:I4"].Merge = true;
-
-        //        var cell__ = ws.Cells["A4"];
-        //        cell__.IsRichText = true;
-        //        cell__.RichText.Clear();
-
-        //        // First part: not bold
-        //        var rt1 = cell__.RichText.Add("1. NAME OF INSPECTING AUTHORITY: ");
-        //        rt1.Bold = false;
-        //        rt1.Size = 13;
-
-        //        // Second part: bold
-        //        var rt2 = cell__.RichText.Add("M/S. TUV INDIA PVT LTD");
-        //        rt2.Bold = true;
-        //        rt2.Size = 13;
-
-        //        cell__.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(4).Height = 27; // row index is 4 here, not 1
-
-
-
-
-
-        //        ws.Cells["A5:I5"].Merge = true;
-        //        var cell_ = ws.Cells["A5"];
-        //        cell_.IsRichText = true;
-        //        cell_.RichText.Clear();
-
-        //        // First part: not bold
-        //        var rt4 = cell_.RichText.Add("2.MONTH OF REPORT: ");//("1. NAME OF INSPECTING AUTHORITY: ");
-        //        rt4.Bold = false;
-        //        rt4.Size = 13;
-
-        //        // Second part: bold
-        //        var rt3 = cell_.RichText.Add(DateTime.Now.ToString("dd MMMM yyyy"));//
-        //        rt3.Bold = true;
-        //        rt3.Size = 13;
-
-        //        cell_.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(4).Height = 27; // row index is 4 here, not 1
-
-        //        int headerRow = 6;
-        //        string[] headers = new string[]
-        //        {
-        //    "SL NO",
-        //    "NAME AND ADDRESS OF THE ENTITY",
-        //    "BOILER REGISTRATION NO. / BOILER MAKER NUMBER / BOILER COMPONENT NAME",
-        //    "NAME OF THE COMPETENT PERSON (CBB AUTHORIZATION NO.)",
-        //    "DATE OF INSPECTION",
-        //    "FORM NO / CERTIFICATE NO",
-        //    "Size",
-        //    "Quantity offered in final Inspection",
-        //    "No of lot for invoicing in final Inspection"
-        //        };
-
-        //        for (int i = 0; i < headers.Length; i++)
-        //        {
-        //            var cell = ws.Cells[headerRow, i + 1];
-        //            cell.Value = headers[i];
-        //            cell.Style.Font.Bold = true;
-        //            cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-        //            cell.Style.Fill.BackgroundColor.SetColor(Color.White);
-        //            cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
-        //            cell.Style.WrapText = true;
-        //            cell.Style.Font.Name = "Arial";
-        //            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //            ws.Row(headerRow).CustomHeight = false; // This enables autofitting
-
-        //        }
-        //        ws.Row(headerRow).Height = 50;
-
-        //        int currentRow = headerRow + 1;
-        //        int slNo = 1;
-
-
-        //        currentRow = WriteSectionHeader_MIS(ws, currentRow, "A", "BOILER OWNER");
-        //        slNo = 0;
-        //        currentRow = WriteDataRows_MIS(ws, dtOwner, currentRow, ref slNo);
-
-        //        currentRow = WriteSectionHeader_MIS(ws, currentRow, "B", "BOILER MANUFACTURER");
-        //        slNo = 0;
-        //        currentRow = WriteDataRows_MIS(ws, dtManufacturer, currentRow, ref slNo);
-
-        //        currentRow = WriteSectionHeader_MIS(ws, currentRow, "C", "BOILER COMPONENT MANUFACTURER");
-        //        slNo = 0;
-        //        currentRow = WriteDataRows_MIS(ws, dtComponent, currentRow, ref slNo);
-
-
-        //        for (int col = 1; col <= 9; col++)
-
-
-        //            ws.Column(col).AutoFit();
-        //        ws.Column(2).Width = 30; // For "NAME AND ADDRESS OF THE ENTITY"
-        //        ws.Column(3).Width = 40;
-        //        ws.Column(4).Width = 30;
-        //        ws.Column(5).Width = 30;
-        //        ws.Column(6).Width = 20;
-        //        ws.Column(8).Width = 30;
-        //        ws.Column(9).Width = 30;
-
-        //        var fileBytes = package.GetAsByteArray();
-
-        //        Response.Clear();
-        //        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        //        Response.AddHeader("content-disposition", "attachment; filename=Annexure_II_Report.xlsx");
-        //        Response.BinaryWrite(fileBytes);
-        //        Response.Flush();
-        //        Response.End();
-
-        //        return View();
-        //    }
-        //}
-        //public ActionResult ExportBoilerInspectionExcel_MIS(string fromDate, string toDate, string VendorName,string Inspector)
-        //{
-        //    var InspectorName_ = "";
-        //    if (Inspector != "")
-        //    {
-        //        DataTable dt = new DataTable();
-        //        dt = objDalVisitReport.GetInspectorName(Inspector);
-        //        if (dt.Rows.Count > 0)
-        //        {
-        //            ViewBag.LeadGivenByName = dt.Rows[0]["Name"].ToString();
-        //            InspectorName_ = dt.Rows[0]["Name"].ToString();
-        //        }
-        //    }
-        //    DataSet ds = objDalVisitReport.MISGetPersonalDiaryData_Excel(fromDate, toDate, VendorName, InspectorName_);
-
-        //    DataTable dtOwner = ds.Tables[0];          // Boiler Owner
-        //    DataTable dtManufacturer = ds.Tables[1];   // Boiler Manufacturer
-        //    DataTable dtComponent = ds.Tables[2];      // Boiler Component Manufacturer
-
-        //    using (var package = new ExcelPackage())
-        //    {
-        //        var ws = package.Workbook.Worksheets.Add("Annexure II");
-
-        //        ws.Cells["A1:I1"].Merge = true;
-        //        ws.Cells["A1"].Value = "Work instruction for inspection , testing  and certification  of equipment and components As per Regulation 4J (6) IBR - 1950";
-        //        ws.Cells["A1"].Style.Font.Bold = true;
-        //        ws.Cells["A1"].Style.Font.Size = 13;
-        //        ws.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 27;
-
-
-        //        ws.Cells["A2:I2"].Merge = true;
-        //        ws.Cells["A2"].Value = "ANNEXURE II FORMAT FOR DAILY CUMULATIVE REPORT FOR INSPECTION AND CERTIFICATION OF BOILERS/BOILER COMPONENS BY INSPECTING AUTHORITY								";
-        //        ws.Cells["A2"].Style.Font.Bold = true;
-        //        ws.Cells["A2"].Style.Font.Size = 14;
-        //        ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 27;
-
-        //        //ws.Cells["A2:I2"].Merge = true;
-        //        ws.Cells["A3"].Value = "WI/INSP/51/IBR-ANNEX II Rev 00";
-        //        ws.Cells["A3"].Style.Font.Bold = true;
-        //        ws.Cells["A3"].Style.Font.Size = 14;
-        //        ws.Cells["A3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //        ws.Row(1).Height = 27;
-
-        //        ws.Cells["B3"].Value = "Revision date:";
-        //        ws.Cells["B3"].Style.Font.Bold = true;
-        //        ws.Cells["B3"].Style.Font.Size = 14;
-        //        ws.Cells["B3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(1).Height = 27;
-
-        //        ws.Cells["C3"].Value = "Effective Date: 23 - 11 - 2022";
-        //        ws.Cells["C3"].Style.Font.Bold = true;
-        //        ws.Cells["C3"].Style.Font.Size = 14;
-        //        ws.Cells["C3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(1).Height = 27;
-
-
-        //        ws.Cells["A4:I4"].Merge = true;
-
-        //        var cell__ = ws.Cells["A4"];
-        //        cell__.IsRichText = true;
-        //        cell__.RichText.Clear();
-
-        //        // First part: not bold
-        //        var rt1 = cell__.RichText.Add("NAME OF INSPECTING AUTHORITY: ");
-        //        rt1.Bold = false;
-        //        rt1.Size = 13;
-
-        //        // Second part: bold
-        //        var rt2 = cell__.RichText.Add("TUV India Private Limited (Authorisation No. 195, Valid upto 19/03/2029)");
-        //        rt2.Bold = true;
-        //        rt2.Size = 13;
-
-        //        cell__.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(4).Height = 27; // row index is 4 here, not 1
-
-
-
-
-
-        //        ws.Cells["A5:I5"].Merge = true;
-        //        var cell_ = ws.Cells["A5"];
-        //        cell_.IsRichText = true;
-        //        cell_.RichText.Clear();
-
-        //        // First part: not bold
-        //        var rt4 = cell_.RichText.Add("MONTH OF REPORT: ");//("1. NAME OF INSPECTING AUTHORITY: ");
-        //        rt4.Bold = false;
-        //        rt4.Size = 13;
-
-        //        // Second part: bold
-        //        var rt3 = cell_.RichText.Add(DateTime.Now.ToString("dd MMMM yyyy"));//
-        //        rt3.Bold = true;
-        //        rt3.Size = 13;
-
-        //        cell_.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-        //        ws.Row(4).Height = 27; // row index is 4 here, not 1
-
-        //        int headerRow = 6;
-        //        string[] headers = new string[]
-        //        {
-        //    "Sr N0",
-        //     "Name And Address of the Entity",
-        //    "Boiler Registration No. / Boiler Maker Number / Boiler Component Name",
-        //    "Activities / Events",
-        //    "Name of the Competent Person (CBB Authorisation No.)",
-        //    "Date of Inspection",
-        //    "Form No.",
-        //    "Certificate No.",
-        //    "Size",
-        //    "Quantity offered in final Inspection",
-        //    "No of lot for invoicing in final Inspection",
-        //     "IVR Ref No.",
-        //      "Mandays Rate.",
-        //       "Mandays.",
-        //       "Total"
-        //        };
-
-        //        for (int i = 0; i < headers.Length; i++)
-        //        {
-        //            var cell = ws.Cells[headerRow, i + 1];
-        //            cell.Value = headers[i];
-        //            cell.Style.Font.Bold = true;
-        //            cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-        //            cell.Style.Fill.BackgroundColor.SetColor(Color.White);
-        //            cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
-        //            cell.Style.WrapText = true;
-        //            cell.Style.Font.Name = "Arial";
-        //            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        //            ws.Row(headerRow).CustomHeight = false; // This enables autofitting
-
-        //        }
-        //        ws.Row(headerRow).Height = 50;
-
-        //        int currentRow = headerRow + 1;
-        //        int slNo = 1;
-
-
-        //        currentRow = WriteSectionHeader_MIS(ws, currentRow, "A)","BOILER OWNER");
-        //        slNo = 0;
-        //        currentRow = WriteDataRows_MIS(ws, dtOwner, currentRow, ref slNo);
-
-        //        currentRow = WriteSectionHeader_MIS(ws, currentRow, "B)","BOILER MANUFACTURER");
-        //        slNo = 0;
-        //        currentRow = WriteDataRows_MIS(ws, dtManufacturer, currentRow, ref slNo);
-
-        //        currentRow = WriteSectionHeader_MIS(ws, currentRow, "C)","BOILER COMPONENT MANUFACTURER");
-        //        slNo = 0;
-        //        currentRow = WriteDataRows_MIS(ws, dtComponent, currentRow, ref slNo);
-
-
-        //        for (int col = 1; col <= 15; col++)
-
-
-        //            ws.Column(col).AutoFit();
-        //        ws.Column(2).Width = 30; // For "NAME AND ADDRESS OF THE ENTITY"
-        //        ws.Column(3).Width = 40;
-        //        ws.Column(4).Width = 30;
-        //        ws.Column(5).Width = 30;
-        //        ws.Column(6).Width = 20;
-        //        ws.Column(8).Width = 30;
-        //        ws.Column(9).Width = 30;
-        //        ws.Column(10).Width = 30;
-        //        ws.Column(11).Width = 30;
-        //        ws.Column(12).Width = 30;
-        //        ws.Column(13).Width = 30;
-        //        ws.Column(14).Width = 20;
-        //        ws.Column(15).Width = 20;
-        //        var fileBytes = package.GetAsByteArray();
-
-        //        Response.Clear();
-        //        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        //        Response.AddHeader("content-disposition", "attachment; filename=Annexure_II_Report.xlsx");
-        //        Response.BinaryWrite(fileBytes);
-        //        Response.Flush();
-        //        Response.End();
-
-        //        return View();
-        //    }
-        //}
-        public ActionResult ExportBoilerInspectionExcel_MIS(string fromDate, string toDate, string VendorName, string Inspector)
+        public ActionResult ExportBoilerInspectionExcel_MIS(string fromDate, string toDate, string VendorName,string Inspector)
         {
 
             var InspectorName_ = "";
@@ -24306,33 +26445,30 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
             {
                 var ws = package.Workbook.Worksheets.Add("Annexure II");
 
-                ws.Cells["A1:I1"].Merge = true;
-                ws.Cells["A1"].Value = "Work instruction for inspection , testing  and certification  of equipment and components As per Regulation 4J (6) IBR - 1950";
-                ws.Cells["A1"].Style.Font.Bold = true;
-                ws.Cells["A1"].Style.Font.Size = 13;
-                ws.Cells["A1"].Style.Font.Name = "Arial";
-                ws.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Row(1).Height = 27;
+                //ws.Cells["A1:I1"].Merge = true;
+                //ws.Cells["A1"].Value = "Work instruction for inspection , testing  and certification  of equipment and components As per Regulation 4J (6) IBR - 1950";
+                //ws.Cells["A1"].Style.Font.Bold = true;
+                //ws.Cells["A1"].Style.Font.Size = 13;
+                //ws.Cells["A1"].Style.Font.Name = "Arial";
+                //ws.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                //ws.Row(1).Height = 27;
 
-
-                ws.Cells["A2:I2"].Merge = true;
-                ws.Cells["A2"].Value = "ANNEXURE II FORMAT FOR DAILY CUMULATIVE REPORT FOR INSPECTION AND CERTIFICATION OF BOILERS/BOILER COMPONENS BY INSPECTING AUTHORITY								";
-                ws.Cells["A2"].Style.Font.Bold = true;
-                ws.Cells["A2"].Style.Font.Size = 14;
-                ws.Cells["A2"].Style.Font.Name = "Arial";
-                ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Row(1).Height = 27;
 
                 //ws.Cells["A2:I2"].Merge = true;
-                
-                ws.Cells["A3"].Value = "WI/INSP/51/IBR-ANNEX II Rev 00"+"  "+ "Revision date:"+"  "+ "Effective Date: 23 - 11 - 2022";
-                ws.Cells["A3"].Style.Font.Bold = true;
-                ws.Cells["A3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                ws.Cells["A3"].Style.Font.Size = 14;
-                
-                ws.Cells["A3"].Style.Font.Name = "Arial";
+                //ws.Cells["A2"].Value = "ANNEXURE II FORMAT FOR DAILY CUMULATIVE REPORT FOR INSPECTION AND CERTIFICATION OF BOILERS/BOILER COMPONENS BY INSPECTING AUTHORITY								";
+                //ws.Cells["A2"].Style.Font.Bold = true;
+                //ws.Cells["A2"].Style.Font.Size = 14;
+                //ws.Cells["A2"].Style.Font.Name = "Arial";
+                //ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                //ws.Row(1).Height = 27;
+
+                ////ws.Cells["A2:I2"].Merge = true;
+                //ws.Cells["A3"].Value = "WI/INSP/51/IBR-ANNEX II Rev 00";
+                //ws.Cells["A3"].Style.Font.Bold = true;
+                //ws.Cells["A3"].Style.Font.Size = 14;
+                //ws.Cells["A3"].Style.Font.Name = "Arial";
                 //ws.Cells["A3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Row(1).Height = 27;
+                //ws.Row(1).Height = 27;
 
                 //ws.Cells["B3"].Value = "Revision date:";
                 //ws.Cells["B3"].Style.Font.Bold = true;
@@ -24349,20 +26485,80 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                 //ws.Row(1).Height = 27;
 
 
+                //ws.Cells["A4:I4"].Merge = true;
+
+                //var cell__ = ws.Cells["A4"];
+                //cell__.IsRichText = true;
+                //cell__.RichText.Clear();
+
+                //// First part: not bold
+                //var rt1 = cell__.RichText.Add("NAME OF INSPECTING AUTHORITY: ");
+                //rt1.Bold = false;
+                //rt1.Size = 13;
+
+                //// Second part: bold
+                //var rt2 = cell__.RichText.Add("TUV India Private Limited (Authorisation No. 195, Valid upto 19/03/2029)");
+                //rt2.Bold = true;
+                //rt2.Size = 13;
+
+                //cell__.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                //ws.Row(4).Height = 27; // row index is 4 here, not 1
+
+
+
+
+
+                //ws.Cells["A5:I5"].Merge = true;
+                //var cell_ = ws.Cells["A5"];
+                //cell_.IsRichText = true;
+                //cell_.RichText.Clear();
+
+                //// First part: not bold
+                //var rt4 = cell_.RichText.Add("MONTH OF REPORT: ");//("1. NAME OF INSPECTING AUTHORITY: ");
+                //rt4.Bold = false;
+                //rt4.Size = 13;
+
+                //// Second part: bold
+                //var rt3 = cell_.RichText.Add(DateTime.Now.ToString("dd MMMM yyyy"));//
+                //rt3.Bold = true;
+                //rt3.Size = 13;
+
+                //cell_.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                //ws.Row(4).Height = 27; // row index is 4 here, not 1
+                ws.Cells["A1:I1"].Merge = true;
+                ws.Cells["A1"].Value = "Work instruction for inspection , testing  and certification  of equipment and components As per Regulation 4J (6) IBR - 1950";
+                ws.Cells["A1"].Style.Font.Bold = true;
+                ws.Cells["A1"].Style.Font.Size = 13;
+                ws.Cells["A1"].Style.Font.Name = "Arial";
+                ws.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                ws.Row(1).Height = 27;
+
+                ws.Cells["A2:I2"].Merge = true;
+                ws.Cells["A2"].Value = "ANNEXURE II FORMAT FOR DAILY CUMULATIVE REPORT FOR INSPECTION AND CERTIFICATION OF BOILERS/BOILER COMPONENS BY INSPECTING AUTHORITY								";
+                ws.Cells["A2"].Style.Font.Bold = true;
+                ws.Cells["A2"].Style.Font.Size = 14;
+                ws.Cells["A2"].Style.Font.Name = "Arial";
+                ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                ws.Row(1).Height = 27;                
+
+                ws.Cells["A3"].Value = "WI/INSP/51/IBR-ANNEX II Rev 00" + "  " + "Revision date:" + "  " + "Effective Date: 23 - 11 - 2022";
+                ws.Cells["A3"].Style.Font.Bold = true;
+                ws.Cells["A3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                ws.Cells["A3"].Style.Font.Size = 14;
+
+                ws.Cells["A3"].Style.Font.Name = "Arial";                
+                ws.Row(1).Height = 27;
                 ws.Cells["A4:I4"].Merge = true;
 
                 var cell__ = ws.Cells["A4"];
                 cell__.IsRichText = true;
                 cell__.RichText.Clear();
 
-
-                // First part: not bold
                 var rt1 = cell__.RichText.Add("NAME OF INSPECTING AUTHORITY: ");
                 rt1.Bold = false;
                 rt1.FontName = "Arial";
                 rt1.Size = 13;
-
-                // Second part: bold
+                   
                 var rt2 = cell__.RichText.Add("TUV India Private Limited (Certificate No. 195, Valid upto 19/03/2029)");
                 rt2.Bold = true;
                 rt2.FontName = "Arial";
@@ -24381,28 +26577,11 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                 cell_.RichText.Clear();
 
                 // First part: not bold
-                var rt4 = cell_.RichText.Add("MONTH OF REPORT: ");//("1. NAME OF INSPECTING AUTHORITY: ");
+                var rt4 = cell_.RichText.Add("MONTH OF REPORT: ");
                 rt4.Bold = false;
                 rt4.Size = 13;
                 rt4.FontName = "Arial";
-                //DateTime minOwner = Convert.ToDateTime(dtOwner.Compute("MIN(min_)", string.Empty));
-                //DateTime maxOwner = Convert.ToDateTime(dtOwner.Compute("MAX(max_)", string.Empty));
-
-                //DateTime minManufacturer = Convert.ToDateTime(dtManufacturer.Compute("MIN(min_)", string.Empty));
-                //DateTime maxManufacturer = Convert.ToDateTime(dtManufacturer.Compute("MAX(max_)", string.Empty));
-
-                //DateTime minComponent = Convert.ToDateTime(dtComponent.Compute("MIN(min_)", string.Empty));
-                //DateTime maxComponent = Convert.ToDateTime(dtComponent.Compute("MAX(max_)", string.Empty));
-
-                //// Calculate overall min and max
-                //DateTime overallMin = new[] { minOwner, minManufacturer, minComponent }.Min();
-                //DateTime overallMax = new[] { maxOwner, maxManufacturer, maxComponent }.Max();
-
-                //// Output results in dd-MM-yyyy format
-                //Console.WriteLine("Overall Min Date: " + overallMin.ToString("dd-MM-yyyy"));
-                //Console.WriteLine("Overall Max Date: " + overallMax.ToString("dd-MM-yyyy"));
-                // Second part: bold
-                var rt3 = cell_.RichText.Add(fromDate+" "+ toDate);//
+                var rt3 = cell_.RichText.Add(fromDate + " " + toDate);
                 rt3.Bold = true;
                 rt3.Size = 13;
                 rt3.FontName = "Arial";
@@ -24417,7 +26596,7 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
              "Name And Address of the Entity",
             "Boiler Registration No. / Boiler Maker Number / Boiler Component Name",
             "Activities / Events",
-            "Name of the Competent Person (CBB Authorisation No.)",
+            "Name of the Competent Person (CBB Certification No.)",
             "Date of Inspection",
             "Form No.",
             "Certificate No.",
@@ -24521,12 +26700,10 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
             {
                 string currentCallId = row["PK_Call_ID"]?.ToString();
                 string currentRmId = row["PK_RM_ID"]?.ToString();
-
                 var OrderRate = row["orderrate"]?.ToString();
-                var  Mandays =row["EstimatedHours"]?.ToString();
-                var Consumed = row["ConsumedRate"]?.ToString(); 
-
-                   bool isNewGroup = currentCallId != lastCallId || currentRmId != lastRmId;
+                var Mandays = row["EstimatedHours"]?.ToString();
+                var Consumed = row["ConsumedRate"]?.ToString();
+                bool isNewGroup = currentCallId != lastCallId || currentRmId != lastRmId;
 
                 // When group changes, increment serial and mark new start
                 if (isNewGroup)
@@ -24551,9 +26728,11 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                 ws.Cells[currentRow, 10].Value = row["Quality_offered_Final_Inspection"]?.ToString();
                 ws.Cells[currentRow, 11].Value = row["No_For_lot_invoicing"]?.ToString();
                 ws.Cells[currentRow, 12].Value = row["ReportNo"]?.ToString();
-                ws.Cells[currentRow, 13].Value =OrderRate.ToString(); /*row["orderrate"]?.ToString();*/
+
+                ws.Cells[currentRow, 13].Value = OrderRate.ToString(); /*row["orderrate"]?.ToString();*/
                 ws.Cells[currentRow, 14].Value = Mandays.ToString(); /*row["EstimatedHours"]?.ToString();*/
                 ws.Cells[currentRow, 15].Value = Consumed.ToString(); /*row["ConsumedRate"]?.ToString();*/
+
 
                 if (isNewGroup)
                 {
@@ -24568,6 +26747,8 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                     ws.Cells[currentRow, 14].Value = "";
                     ws.Cells[currentRow, 15].Value = "";
                 }
+
+                // Apply cell styles
                 for (int c = 1; c <= 15; c++)
                 {
                     var cell = ws.Cells[currentRow, c];
@@ -24606,6 +26787,7 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
 
         public ActionResult GeneratePDF_PersonDiary_MIS(string fromDate, string toDate, string VendorName, string Inspector)
         {
+
             var InspectorName_ = "";
             if (Inspector != "")
             {
@@ -24617,6 +26799,8 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
                     InspectorName_ = dt.Rows[0]["Name"].ToString();
                 }
             }
+
+
             DataSet ds = objDalVisitReport.GetPersonDiary_data_MIS_PDF(fromDate, toDate, VendorName, InspectorName_);
             var model = new VisitMonitoringRecord();
 
@@ -24745,10 +26929,10 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
 
             converter3.Options.DisplayFooter = true;
             converter3.Footer.Height = 40;
-            
+
             PdfHtmlSection footerSection = new PdfHtmlSection(footerHtml, string.Empty);
             converter3.Footer.Add(footerSection);
-            
+
             converter3.Footer.Add(new PdfTextSection(40, 15, "Page: {page_number} of {total_pages}", new System.Drawing.Font("Arial", 8)));
 
             SelectPdf.PdfDocument misPage = converter3.ConvertHtmlString(bodyHtml);
@@ -24768,6 +26952,77 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
 
 
 
+        //private void AppendGroupedRows(DataTable table, string sectionTitle, StringBuilder tableRows)
+        //{
+        //    if (table.Rows.Count == 0) return;
+
+        //    tableRows.Append("<tr><td colspan='8' style='font-weight:bold; font-size:13px; background-color:#f2f2f2;font-family:Arial;'>" + sectionTitle + "</td></tr>");
+
+        //    int slNo = 1;
+        //    string lastCallId = null;
+        //    string lastRmId = null;
+
+        //    table.DefaultView.Sort = "PK_Call_ID, PK_RM_ID";
+        //    var sortedTable = table.DefaultView.ToTable();
+
+        //    // Group rows
+        //    var groups = sortedTable.AsEnumerable()
+        //        .GroupBy(r => new { CallId = r["PK_Call_ID"].ToString(), RmId = r["PK_RM_ID"].ToString() });
+
+        //    foreach (var group in groups)
+        //    {
+        //        string callId = group.Key.CallId;
+        //        string rmId = group.Key.RmId;
+
+        //        bool hasConfirmation = group.Any(r => Convert.ToBoolean(r["isComfirmation"]));
+        //        string signature = group.FirstOrDefault(r => Convert.ToBoolean(r["isComfirmation"]))?["Signature"]?.ToString();
+        //        string CBBAuthorisationNumber = group.FirstOrDefault(r => Convert.ToBoolean(r["isComfirmation"]))?["CBBAuthorisationNumber"]?.ToString();
+        //        //string formattedDate = group.FirstOrDefault(r => Convert.ToString(r["Date_Of_Inspection"]));//Date_Of_Inspection.Replace(",", "<br/>");
+
+        //        string imgSrc = !string.IsNullOrEmpty(signature)
+        //            ? $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/Content/SIGN/" + signature)}"
+        //            : string.Empty;
+        //        bool firstRow = true;
+
+        //        foreach (DataRow dr in group)
+        //        {
+        //            tableRows.Append("<tr>");
+
+        //            if (firstRow)
+        //                tableRows.Append($"<td>{slNo++}</td>");
+        //            else
+        //                tableRows.Append("<td></td>");
+
+        //            tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;'>{dr["Date_Of_Inspection"]}</td>");
+        //            tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;'>{dr["Inspection_Authority_ReferenceNo"]}</td>");
+        //            tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;'>{dr["Boliers_Maker_No"]}</td>");
+        //            //tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;'>{dr["Activities_Events"]}</td>");
+        //            string content = dr["Activities_Events"]?.ToString();
+        //            string cellContent = $@"
+        //                <div style='max-width:200px; word-wrap:break-word; font-size:11px; font-family:Arial; text-align:left;'>
+        //                    <img src='{content}' alt='' onerror='this.style.display=""none""' style='max-width:100px; max-height:100px; display:block; margin-bottom:5px;' />
+        //                    <span>{content}</span>
+        //                </div>";
+
+        //            tableRows.Append($"<td>{cellContent}</td>");
+        //            tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;'>{dr["Form_no_Certificate_No"]}</td>");
+        //            tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;'>{dr["CertificateNo"]}</td>");
+
+        //            if (firstRow && hasConfirmation)
+        //            {
+        //                tableRows.Append($"<td><img src='{imgSrc}' style='max-height:35px;font-family:Arial;' /><br/>{CBBAuthorisationNumber}</td>");
+        //            }
+        //            else
+        //            {
+        //                tableRows.Append("<td></td>");
+        //            }
+
+        //            tableRows.Append("</tr>");
+
+        //            firstRow = false;
+        //        }
+        //    }
+        //  }
         private void AppendGroupedRows(DataTable table, string sectionTitle, StringBuilder tableRows)
         {
             if (table.Rows.Count == 0) return;
@@ -24811,34 +27066,26 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
 
                     tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;vertical-align:top;'>{dr["Date_Of_Inspection"]}</td>");
                     string vendor = dr["Vendor"].ToString();
-
-                    // Replace every opening bracket "(" with "<br/>("
-                    string formattedVendor = vendor.Replace("(", "<br/>(");
-
-                    // Optional: remove first <br/> if it starts the string
+                    string formattedVendor = vendor.Replace("(", "<br/>(");                   
                     if (formattedVendor.StartsWith("<br/>"))
                     {
                         formattedVendor = formattedVendor.Substring(5);
                     }
-
-                    tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap:break-word;vertical-align:top;'>{formattedVendor}</td>");
+                    tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap:break-word;uvertical-align:top;'>{formattedVendor}</td>");
                     //tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;vertical-align:top;'>{dr["Vendor"]}</td>");
                     tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;vertical-align:top;'>{dr["Inspection_Authority_ReferenceNo"]}</td>");
                     tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;vertical-align:top;'>{dr["Boliers_Maker_No"]}</td>");
                     string content = dr["Activities_Events"]?.ToString();
 
                     string cellContent = $@"
-    <div style='max-width:200px; word-wrap:break-word; font-size:11px; font-family:Arial; text-align:left;'>
-        <img src='{content}' alt='' onerror='this.style.display=""none""' style='max-width:100px; max-height:100px; display:block; margin-bottom:5px;' />
-        <span>{content}</span>
-    </div>";
-
+                                        <div style='max-width:200px; word-wrap:break-word; font-size:11px; font-family:Arial; text-align:left;vertical-align:top;'>
+                                            <img src='{content}' alt='' onerror='this.style.display=""none""' style='max-width:100px; max-height:100px; display:block; margin-bottom:5px;' />
+                                            <span>{content}</span>
+                                        </div>";
                     tableRows.Append($"<td>{cellContent}</td>");
-
                     //tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;'>{dr["Activities_Events"]}</td>");
                     tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;vertical-align:top;'>{dr["Form_no_Certificate_No"]}</td>");
                     tableRows.Append($"<td style='text-align:left;font-size:11px;font-family:Arial;word-wrap: break-word;vertical-align:top;'>{dr["CertificateNo"]}</td>");
-
                     if (firstRow && hasConfirmation)
                     {
                         tableRows.Append($"<td><img src='{imgSrc}' style='max-height:35px;font-family:Arial;' /><br/>{CBBAuthorisationNumber}</td>");
@@ -24855,7 +27102,54 @@ private int WriteDataRows(ExcelWorksheet ws, DataTable dt, int currentRow, ref i
             }
         }
 
+        [HttpPost]
+        public JsonResult DeleteDocument(int id)
+        {
+            try
+            {
+                // Call your DB logic here
+                int status = objDalVisitReport.DeleteDocumentById(id);
 
+                if (status == 1)
+                {
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Record not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        public ActionResult DeleteIInspectionActivityByPK_IA_ID(InspectionActivitiesModel IVR)
+        {
+            DataSet ItemDescriptionData = new DataSet();
+            int Result = 0;
+
+            try
+            {
+                Result = objDalVisitReport.DeleteIInspectionActivityByPK_IA_ID(IVR.PK_IA_ID);
+
+                if (Result != 0)
+                {
+                    TempData["DeleteBranch"] = Result;
+                    InspectionActivitiesModel IVRNews = new InspectionActivitiesModel();
+                    IVRNews.PK_IVR_ID = IVR.PK_IVR_ID;
+                    return RedirectToAction("InspectionActivites", new InspectionActivitiesModel() { PK_CALL_ID = IVR.PK_CALL_ID, PK_RM_ID = IVR.PK_RM_ID, abcid = IVR.PK_RM_ID });
+                    //return RedirectToAction("InspectionActivites", IVRNews);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return RedirectToAction("InspectionActivites", new { PK_CALL_ID = IVR.PK_CALL_ID });
+            //return RedirectToAction("InspectionActivites", IVRNew);
+        }
 
     }
 }

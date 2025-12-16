@@ -38,39 +38,49 @@
 @helper CustomRenderingOfReport1(TuvVision.Models.VisitMonitoringRecord Report)
         {
    
-    <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF", "VisitReport", new { PK_CALL_ID = Report.Downloadfile ,PK_RM_ID=Report.Pk_id})">
-        Export to PDF
+    <a class="btn btn-primary" target="_blank" style="margin-top:11px;" href="@Url.Action("GeneratePDF", "VisitReport", new { PK_CALL_ID = Report.Downloadfile,@PK_RM_ID =Report.Pk_id,@PK_IVR_ID=Model.PK_IVR_ID })">
+        <i class="fa fa-download"></i> 
     </a>
 }
 @helper Edit(TuvVision.Models.VisitMonitoringRecord Report)
 {
+if (Report.Edit == 1)
+{
 
-        <a href="@Url.Action("VisitReportForm", "VisitReport", new {@PK_CALL_ID = Convert.ToInt32(Report.Downloadfile),@PK_RM_ID =Report.Pk_id })" title="Edit"><i class="fa fa-pencil"></i></a>
-
+        <a href="@Url.Action("MonitoringRecord", "VisitReport", new { @PK_CALL_ID = Convert.ToInt32(Report.Downloadfile), @PK_RM_ID = Report.Pk_id ,PK_IVR_ID=Report.PK_IVR_ID})" title="Edit"><i class="fa fa-pencil"></i></a>
+    }
 }
 
 @using (Html.BeginForm("GetMonitoringVisitData", "VisitReport", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form1" }))
+
 {
+
     <div class="main-content3 xs-max-height">
+
         <!--Start of header-->
         <div class="container-fluid">
             <div class="row assignfixedwidth rp-15">
                 <form method="post">
                     <div class="col-xs-12">
-                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Monitoring Record</h3>
+                        <h3 class="dynamic-page-title dynamic-page-title-2  text-left">Mfr. Monitoring Record (IBR)</h3>
                     </div>
                 </form>
+
                 <div class="col-xs-12">
                     <hr class="custom-hr">
                 </div>
             </div>
+
             <div class="row">
+
                 <div class="col-xs-3">
                     <div class="form-group" style="width:280px;padding-left:25px;">
                         <label>From Date:</label>
                         @Html.TextBoxFor(model => model.FromDate, "{0:dd/MM/yyyy}", htmlAttributes: new { placeholder = "dd/mm/yyyy", @class = "form-control form-control-custom FromD", autocomplete = "off" })
                     </div>
                 </div>
+
+
                 <div class="col-xs-3">
                     <div class="form-group" style="width:280px;padding-right:25px;">
                         <label>To Date:</label>
@@ -169,6 +179,8 @@
            [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
                new MvcGrid(element);
            });
+
+
             $('.mvc-grid-value').each(function (i)
             {
                     $(this).quicksearch("#gridMapping tr:not(:has(th))",
@@ -179,6 +191,8 @@
                         }
                     });
             });
+
+
 </script>
 
 
