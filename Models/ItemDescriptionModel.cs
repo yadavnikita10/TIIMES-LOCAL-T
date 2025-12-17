@@ -30,6 +30,7 @@ namespace TuvVision.Models
         public string HeatNumber { get; set; }
         public string TotalQuantity { get; set; }
         public string HeatNoShow { get; set; }
+        public List<ItemDescriptionModel> lstConcerns { get; set; }
 
     }
 }

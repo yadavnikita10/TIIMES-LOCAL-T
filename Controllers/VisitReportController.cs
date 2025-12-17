@@ -3329,27 +3329,19 @@ namespace TuvVision.Controllers
             {
                 if (IVR.PK_ItemD_Id == 0)
                 {
-
-
                     #region Rahul Code By 03-May-2019
                     HttpPostedFileBase files = FileUpload;
-
                     if (/*files.ContentLength > 0*/  files != null && !string.IsNullOrEmpty(files.FileName) && files.FileName.Contains(".xlsx"))
                     {
-
                         //if(files.FileName == "ExcellData.xlsx")
                         //{
-
-
                         try
                         {
-
                             string fileName = files.FileName;
                             string fileContentType = files.ContentType;
                             byte[] fileBytes = new byte[files.ContentLength];
                             var data1 = files.InputStream.Read(fileBytes, 0, Convert.ToInt32(files.ContentLength));
                             var package = new ExcelPackage(files.InputStream);  //===========Go to Manage Nuget in Install ExcellPackge 
-
                             var currentSheet = package.Workbook.Worksheets;
                             var workSheet = currentSheet.First();
                             int noOfCol = workSheet.Dimension.End.Column;
@@ -3357,11 +3349,9 @@ namespace TuvVision.Controllers
                             int rowIterator = 1;
                             if ("Sr.No" == Convert.ToString(workSheet.Cells[rowIterator, 1].Value) && "Image Name" == Convert.ToString(workSheet.Cells[rowIterator, 2].Value) && "Product Image" == Convert.ToString(workSheet.Cells[rowIterator, 3].Value))
                             {
-
                             }
                             else
                             {
-
                             }
                             for (rowIterator = 2; rowIterator <= noOfRow; rowIterator++)
                             {
@@ -3428,15 +3418,29 @@ namespace TuvVision.Controllers
                     #endregion
                     else
                     {
-                        IVR.Status = "1";
-                        IVR.Type = "IVR";
-                        Result = objDalVisitReport.InsertUpdateItemDescription(IVR);
-                        if (Result != "" && Result != null)
-                        {
-                            TempData["InsertCompany"] = Result;
+                        //IVR.Status = "1";
+                        //IVR.Type = "IVR";
+                        //Result = objDalVisitReport.InsertUpdateItemDescription(IVR);
+                        //if (Result != "" && Result != null)
+                        //{
+                        //    TempData["InsertCompany"] = Result;
 
+                        //}
+                        if (IVR.lstConcerns != null && IVR.lstConcerns.Count > 0)
+                        {
+                            foreach (var item_ in IVR.lstConcerns)
+                            {
+
+
+                                item_.PK_CALL_ID = IVR.PK_CALL_ID;
+                                item_.Status = "1";
+                                item_.Type = "IVR";
+
+                                objDalVisitReport.InsertUpdateItemDescription(item_);
+                            }
                         }
                     }
+
 
 
                 }

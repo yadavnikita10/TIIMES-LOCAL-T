@@ -1,33 +1,28 @@
 ﻿@model TuvVision.Models.ItemDescriptionModel
 
-
 @{
     ViewBag.Title = "ItemDescription";
     Layout = "~/Views/Shared/_TuvVision.cshtml";
+    int PK_RM_ID = Convert.ToInt32(Session["PK_RM_ID"]);
 }
 
-@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
-<script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
-<script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
-
-
-@{
-    int PK_RM_ID =Convert.ToInt32(Session["PK_RM_ID"]);
-    //Session["PK_RM_ID"] = Model.abcid;
-}
-
-@{
-    var items = ViewData["CostSheet"] as List<TuvVision.Models.ItemDescriptionModel>;
-}
 
 <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script src="~/AllJsAndCss/js/datatable-custom.js"></script>
+<style>
+ .autoExpandX {
+    min-width: 200px;
+    width: 170px;
+    transition: width 0.2s ease;
+}
 
+</style>
 <div class="main-content3 xs-max-height grey-bg-f3">
     <div class="grey-bg-f3">
         <!--Start of header-->
         <div class="container-fluid">
-            <div class="col-xs-12 col-sm-offset-1 col-sm-10">  @*row assignfixedwidth rp-5*@
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                @*row assignfixedwidth rp-5*@
 
                 <div class="col-xs-12 form-col">
                     <div class="row">
@@ -36,17 +31,18 @@
                         <h5 class="dynamic-page-title dynamic-page-title-2 " style="padding-left: 11px;">Inspection Visit Report Number : @Session["VisitReportNo"]</h5>
                         @*<a href="@Url.Action("CallsListByInspector","CallsMaster")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
 
-                        <div class="col-xs-12">  @*text-right*@
-                        
+                        <div class="col-xs-12">
+                            @*text-right*@
+
 
                             @if (Model.PK_CALL_ID != 0)
                             {
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'"> General</button>
                                 @*<button class="btn btn-info dynamic-function-btn ItemDescription" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_Call_ID} )'">Item Description</button>*@
 
-                                <button  class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Item Description</button>
+                                <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Item Description</button>
 
-                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Reference Documents</button>
+                                <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Reference Documents</button>
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Stages Witnessed</button>
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Document Reviewed</button>
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Details Of Measuring Instrument</button>
@@ -55,12 +51,12 @@
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID, @PK_RM_ID =PK_RM_ID} )'">Image</button>
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID, @PK_RM_ID = PK_RM_ID} )'">Report</button>
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID =PK_RM_ID} )'">List Of Issues</button>
-                                
+
                             }
 
 
 
-                          </div>
+                        </div>
 
 
                         <div class="col-xs-12">
@@ -69,257 +65,179 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-offset-1 col-sm-10">
                                         <div class="form-box">
-                                            <form method="post">
-
+                                            <form method="post" enctype="multipart/form-data">
                                                 @Html.HiddenFor(m => m.PK_CALL_ID)
                                                 @Html.HiddenFor(m => m.abcid)
 
-                                                <div id="itemsContainer">
-
-                                                    @for (int i = 0; i < items.Count; i++)
-                                                    {
-                                                        <div class="item-box white-bg section-box-shadow" style="margin-bottom:20px; padding:15px;">
-
-                                                            <input type="hidden" name="Items[@i].PK_ItemD_Id" value="@items[i].PK_ItemD_Id" />
-                                                            <input type="hidden" name="Items[@i].PK_CALL_ID" value="@items[i].PK_CALL_ID" />
-
-                                                            <div class="row">
-                                                                <div class="col-sm-2">
-                                                                    <label>PO Item No</label>
-                                                                    <input class="form-control"
-                                                                           name="Items[@i].Po_Item_No"
-                                                                           value="@items[i].Po_Item_No" />
-                                                                </div>
-
-                                                                <div class="col-sm-4">
-                                                                    <label>Item Code</label>
-                                                                    <input class="form-control"
-                                                                           name="Items[@i].Item_Code"
-                                                                           value="@items[i].Item_Code" />
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <div class="col-sm-12">
-                                                                    <label>Item Description</label>
-                                                                    <textarea class="form-control"
-                                                                              name="Items[@i].ItemCode_Description">
-                                                                        @items[i].ItemCode_Description
-                                                                        </textarea>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row">
-                                                                    <div class="col-sm-4">
-                                                                        <label>UOM</label>
-                                                                        @Html.DropDownList(
-                            $"Items[{i}].Unit",
-                            new SelectList(ViewBag.UOM, "Code", "Name", items[i].Unit),
-                            "---Select UOM---",
-                            new { @class = "form-control" })
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row">
-                                                                    <div class="col-sm-4">
-                                                                        <label>PO Quantity</label>
-                                                                        <input class="form-control"
-                                                                               name="Items[@i].Po_Quantity"
-                                                                               value="@items[i].Po_Quantity" />
-                                                                    </div>
-
-                                                                    <div class="col-sm-4">
-                                                                        <label>Offered Quantity</label>
-                                                                        <input class="form-control"
-                                                                               name="Items[@i].Offered_Quantity"
-                                                                               value="@items[i].Offered_Quantity" />
-                                                                    </div>
-
-                                                                    <div class="col-sm-4">
-                                                                        <label>Accepted Quantity</label>
-                                                                        <input class="form-control"
-                                                                               name="Items[@i].Accepted_Quantity"
-                                                                               value="@items[i].Accepted_Quantity" />
-                                                                    </div>
-                                                                </div>
-
-                                                                @if (items[i].HeatNoShow == "Yes")
-                {
-                                                                    <div class="row">
-                                                                        <div class="col-sm-4">
-                                                                            <label>Heat Number</label>
-                                                                            <input class="form-control"
-                                                                                   name="Items[@i].HeatNumber"
-                                                                                   value="@items[i].HeatNumber" />
-                                                                        </div>
-                                                                    </div>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-striped" id="itemTable">
+                                                        <thead style="background-color: #100ED2;color: white;">
+                                                            <tr>
+                                                                <th>PO Item No</th>
+                                                                <th>Item Code</th>
+                                                                <th>Description</th>
+                                                                <th>UOM</th>
+                                                                <th>PO Qty</th>
+                                                                <th>Offered Qty</th>
+                                                                <th>Accepted Qty</th>
+                                                                @if (Model.HeatNoShow == "Yes")
+                                                                {
+                                                                    <th>Heat No</th>
                                                                 }
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="itemContainer">
+                                                            @{
+                                                                int i = 0;
+                                                            }
 
-                                                                <div class="text-right">
-                                                                    <button type="button" class="btn btn-danger remove-item">
-                                                                        Delete
-                                                                    </button>
-                                                                </div>
+                                                            @if (ViewBag.lstConcerns != null && ViewBag.lstConcerns.Count > 0)
+                                                            {
+                                                                foreach (var item in (IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewBag.lstConcerns)
+                                                                {
+                                                                    <tr class="item-row">
+                                                                        <td>
+                                                                            <input type="text" name="lstConcerns[@i].Po_Item_No"
+                                                                                   value="@item.Po_Item_No" class="form-control" />
+                                                                        </td>
 
-                                                            </div>
-                                                    }
+                                                                        <td>
+                                                                            <input type="text" name="lstConcerns[@i].Item_Code"
+                                                                                   value="@item.Item_Code" class="form-control" />
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <textarea name="lstConcerns[@i].ItemCode_Description"
+                                                                                      class="form-control autoExpandX">
+                                                                                @item.ItemCode_Description
+                                                                                </textarea>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <select name="lstConcerns[@i].Unit" class="form-control">
+                                                                                    <option value="">--Select--</option>
+                                                                                    @foreach (var uom in ViewBag.UOM)
+                                                                                    {
+                                                                                        <option value="@uom.Code"
+                                                                                                @(uom.Code == item.Unit ? "selected" : "")>
+                                                                                            @uom.Name
+                                                                                        </option>
+                                                                                    }
+                                                                                </select>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <input type="text" name="lstConcerns[@i].Po_Quantity"
+                                                                                       value="@item.Po_Quantity" class="form-control" />
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <input type="text" name="lstConcerns[@i].Offered_Quantity"
+                                                                                       value="@item.Offered_Quantity" class="form-control" />
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <input type="text" name="lstConcerns[@i].Accepted_Quantity"
+                                                                                       value="@item.Accepted_Quantity" class="form-control" />
+                                                                            </td>
+
+                                                                            @if (Model.HeatNoShow == "Yes")
+                                                                            {
+                                                                                <td>
+                                                                                    <input type="text" name="lstConcerns[@i].HeatNumber"
+                                                                                           value="@item.HeatNumber" class="form-control" />
+                                                                                </td>
+                                                                            }
+
+                                                                            <td class="text-center">
+                                                                                <button type="button" class="btn btn-danger removeRow">X</button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    i++;
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr class="item-row">
+                                                                    <td><input type="text" name="lstConcerns[0].Po_Item_No" class="form-control" /></td>
+                                                                    <td><input type="text" name="lstConcerns[0].Item_Code" class="form-control" /></td>
+                                                                    <td><textarea name="lstConcerns[0].ItemCode_Description" class="form-control autoExpandX"></textarea></td>
+                                                                    <td>
+                                                                        <select name="lstConcerns[0].Unit" class="form-control">
+                                                                            <option value="">--Select--</option>
+                                                                            @foreach (var uom in ViewBag.UOM)
+                                                                            {
+                                                                                <option value="@uom.Code">@uom.Name</option>
+                                                                            }
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input type="text" name="lstConcerns[0].Po_Quantity" class="form-control" /></td>
+                                                                    <td><input type="text" name="lstConcerns[0].Offered_Quantity" class="form-control" /></td>
+                                                                    <td><input type="text" name="lstConcerns[0].Accepted_Quantity" class="form-control" /></td>
+
+                                                                    @if (Model.HeatNoShow == "Yes")
+                                                                    {
+                                                                        <td><input type="text" name="lstConcerns[0].HeatNumber" class="form-control" /></td>
+                                                                    }
+
+                                                                    <td class="text-center">
+                                                                        <button type="button" class="btn btn-danger removeRow">X</button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
                                                 </div>
 
-                                                <button type="button" id="addItem" class="btn btn-primary">
-                                                    Add Item
-                                                </button>
-
-                                                <br /><br />
-
-                                                <button type="submit" class="btn btn-default insert-form-btn">
-                                                    Save
-                                                </button>
-
+                                                <div class="text-right">
+                                                    <button type="button" class="btn btn-success" id="addRow">Add Row</button>
+                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                </div>
                                             </form>
 
                                         </div>
                                     </div>
                                 </div>
-                                <!--Contact Details By Manoj -->
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="col-xs-12">
-                                            <table id="library-dt"  cellspacing="0" width="100%">
-                                                <thead>
-                                                    <tr>
-                                                        <td class="remove-search" width="5%" style="padding-left:0px;">Po Item No</td>
-                                                        <td class="remove-search" width="10%">Item Code</td>
-                                                        <td class="remove-search" width="40%">Item Description</td>
-                                                        <td class="remove-search" width="10%">UOM</td>
-                                                        <td class="remove-search" width="10%">PO Quantity</td>
-                                                        <td class="remove-search" width="10%">Offered Quantity</td>
-                                                        <td class="remove-search" width="10%">Accepted Quantity</td>
-                                                        <td class="remove-search" width="5%">Action</td>
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody>
-
-                                                    @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.ItemDescriptionModel>)
-                                                    {
-                                                        <tr>
-                                                            <td width="5%">@item.Po_Item_No</td>
-                                                            <td width="10%">@item.Item_Code</td>
-                                                            <td style='white-space: pre-line;' width="40%">@item.ItemCode_Description</td>
-                                                            <td width="10%">@item.Unit</td>
-                                                            <td width="10%">@item.Po_Quantity</td>
-                                                            <td width="10%">@item.Offered_Quantity</td>
-                                                            <td width="10%">@item.Accepted_Quantity</td>
-                                                            @*<td width="10%">@item.HeatNumber</td>
-                                                            <td width="10%">@item.TotalQuantity</td>*@
-
-                                                            <td class="less-width" width="5%">
-                                                                <a href="@Url.Action("ItemDescription", "Visitreport", new {@PK_ItemD_Id = item.PK_ItemD_Id })" title="Edit"><span class="fa fa-pencil"></span>&nbsp;</a>
-                                                                <a href="@Url.Action("DeleteItemDescriptionData", "Visitreport", new {@PK_ItemD_Id = item.PK_ItemD_Id, @PK_CALL_ID = item.PK_CALL_ID })" onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
-                                                                @{
-                                                                    if ((Convert.ToString(TempData["InsertCompany"])) != "" && Convert.ToString(TempData["InsertCompany"]) != null)
-                                                                    {
-                                                                        TempData["InsertCompany"] = null;
-                                                                    }
-                                                                    if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
-                                                                    {
-                                                                        TempData["UpdateCompany"] = null;
-
-                                                                    }
-                                                                }
-                                                            </td>
-
-                                                        </tr>
-                                                                    }
-
-                                                </tbody>
-
-                                            </table>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                
-
-                                    </div><!-- /.box-shadow -->
-                                </div>
                             </div>
+                        </div><!-- /.box-shadow -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
 
-   <script>
-    var CustomTextFilter = (function (base) {
-        MvcGridExtends(CustomTextFilter, base);
-
-        function CustomTextFilter(column) {
-            base.call(this, column);
-
-            this.methods = ['contains'];
-            column.grid.lang.custom = { contains: 'Contains' };
-        }
-
-        // Other extension points can be found at MvcGridFilter declaration
-
-        return CustomTextFilter;
-    })(MvcGridFilter);
-
-    new MvcGrid(document.querySelector('.mvc-grid'), {
-        filters: {
-            'custom': CustomTextFilter
-        }
-    });
-</script>     
-
-
-
-
-<script>
-    var isConfirmationIVR = @Session["IsConfirmationIVR"] ?? 0;
-    // JavaScript to disable pointer events if isConfirmationIVR is 1
-
-    if (isConfirmationIVR == 1) {
-        document.getElementById("IVRPointerEvents").style.pointerEvents = "none";
-    }
-</script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        var rowIndex = $("#itemContainer .item-row").length;
+        var heatNoShow = '@Model.HeatNoShow';
 
-        $("#addItem").click(function () {
-            var index = $(".item-box").length;
-            var clone = $(".item-box:first").clone();
+        $("#addRow").click(function () {
+            var newRow = $(".item-row:first").clone(true);
 
-            clone.find("input, textarea, select").each(function () {
+            newRow.find("input, textarea, select").each(function () {
                 var name = $(this).attr("name");
                 if (name) {
-                    var newName = name.replace(/\[\d+\]/, "[" + index + "]");
-                    $(this).attr("name", newName).val("");
+                    var newName = name.replace(/\[\d+\]/, '[' + rowIndex + ']');
+                    $(this).attr("name", newName).val('');
                 }
             });
 
-            $("#itemsContainer").append(clone);
+            if (heatNoShow !== "Yes") {
+                newRow.find('div:has(label:contains("Heat number"))').remove();
+            }
+
+            $("#itemContainer").append(newRow);
+            rowIndex++;
         });
 
-        $(document).on("click", ".remove-item", function () {
-            if ($(".item-box").length > 1) {
-                $(this).closest(".item-box").remove();
-                reIndex();
+        $(document).on("click", ".removeRow", function () {
+            if ($("#itemContainer .item-row").length > 1) {
+                $(this).closest(".item-row").remove();
             }
         });
-
-        function reIndex() {
-            $(".item-box").each(function (i) {
-                $(this).find("input, textarea, select").each(function () {
-                    var name = $(this).attr("name");
-                    if (name) {
-                        $(this).attr("name", name.replace(/\[\d+\]/, "[" + i + "]"));
-                    }
-                });
-            });
-        }
     });
 </script>
