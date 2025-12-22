@@ -197,6 +197,7 @@ namespace TuvVision.Controllers
                            JobNo = Convert.ToString(dr["JobNo"]),
                            PortfolioType = Convert.ToString(dr["PortfolioType"]),//added by nikita 29082023
                            ModifiedBy = Convert.ToString(dr["ModifiedBy"]),//added by nikita 29082023
+                           Remark = Convert.ToString(dr["Remark"]),//added by nikita 29082023
 
                            Type = Convert.ToString(dr["OBSType"])//added by nikita 29082023
                        }

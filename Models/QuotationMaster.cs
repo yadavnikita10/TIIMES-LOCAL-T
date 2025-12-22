@@ -95,7 +95,6 @@ namespace TuvVision.Models
         public string Name { get; set; }
         public Nullable<DateTime> FromDate { get; set; }
         public Nullable<DateTime> ToDate { get; set; }
-
         public string CMP_ID_ { get; set; }
         public string EstimatedAmount { get; set; }
         public int PKJobId { get; set; }

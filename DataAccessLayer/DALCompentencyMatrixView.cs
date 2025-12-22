@@ -330,5 +330,42 @@ namespace TuvVision.DataAccessLayer
             return ds;
         }
 
+        public bool UpdateComptencyApproval(List<string> userIds)
+        {
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                    con.Open();
+
+                foreach (string userId in userIds)
+                {
+                    using (SqlCommand cmd = new SqlCommand("SP_CompentencyMetrixView", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandTimeout = 100000;
+
+                        cmd.Parameters.AddWithValue("@sp_Type", "9");
+                        cmd.Parameters.AddWithValue("@CandidateName", userId);
+                        cmd.Parameters.AddWithValue("@ModifiedBy",
+                            Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // log ex.Message
+                return false;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+
     }
 }

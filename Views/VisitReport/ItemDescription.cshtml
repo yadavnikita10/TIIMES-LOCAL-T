@@ -1,5 +1,6 @@
 ﻿@model TuvVision.Models.ItemDescriptionModel
 
+
 @{
     ViewBag.Title = "ItemDescription";
     Layout = "~/Views/Shared/_TuvVision.cshtml";
@@ -68,6 +69,9 @@
                                             <form method="post" enctype="multipart/form-data">
                                                 @Html.HiddenFor(m => m.PK_CALL_ID)
                                                 @Html.HiddenFor(m => m.abcid)
+                                                @Html.HiddenFor(m => m.PK_CALL_ID, new { id = "PK_CALL_ID" })
+
+                                                <button type="button" id="btnClearNew" class="btn btn-default insert-form-btn" style="margin-top:0px;background-color:#e63646" onclick="return confirm('Do you want to clear Content?')"><i class="fa "></i> Clear Content</button>
 
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered table-striped" id="itemTable">
@@ -75,11 +79,11 @@
                                                             <tr>
                                                                 <th>PO Item No</th>
                                                                 <th>Item Code</th>
-                                                                <th>Description</th>
-                                                                <th>UOM</th>
+                                                                <th style="width: 250px;">Description</th> <!-- increase width -->
+                                                                <th style="width: 115px;">UOM</th>   
                                                                 <th>PO Qty</th>
                                                                 <th>Offered Qty</th>
-                                                                <th>Accepted Qty</th>
+                                                                <th style="width: 70px;">Accepted Qty</th>
                                                                 @if (Model.HeatNoShow == "Yes")
                                                                 {
                                                                     <th>Heat No</th>
@@ -92,77 +96,81 @@
                                                                 int i = 0;
                                                             }
 
-                                                            @if (ViewBag.lstConcerns != null && ViewBag.lstConcerns.Count > 0)
-                                                            {
-                                                                foreach (var item in (IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewBag.lstConcerns)
-                                                                {
-                                                                    <tr class="item-row">
-                                                                        <td>
-                                                                            <input type="text" name="lstConcerns[@i].Po_Item_No"
-                                                                                   value="@item.Po_Item_No" class="form-control" />
-                                                                        </td>
+                                                           @if (ViewData["CostSheet"] != null && ((IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewData["CostSheet"]).Any())
+                                                           {
+                                                              
+                                                               foreach (var item in (IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewData["CostSheet"])
+                                                               {
+                                                                <tr class="item-row">
+                                                                    <td>
+                                                                        <input type="text" name="lstConcerns[@i].Po_Item_No"
+                                                                               value="@item.Po_Item_No" class="form-control" />
+                                                                    </td>
 
-                                                                        <td>
-                                                                            <input type="text" name="lstConcerns[@i].Item_Code"
-                                                                                   value="@item.Item_Code" class="form-control" />
-                                                                        </td>
+                                                                    <td>
+                                                                        <input type="text" name="lstConcerns[@i].Item_Code"
+                                                                               value="@item.Item_Code" class="form-control" />
+                                                                    </td>
 
-                                                                        <td>
-                                                                            <textarea name="lstConcerns[@i].ItemCode_Description"
-                                                                                      class="form-control autoExpandX">
-                                                                                @item.ItemCode_Description
-                                                                                </textarea>
-                                                                            </td>
+                                                                    <td>
+                                                                        <textarea name="lstConcerns[@i].ItemCode_Description"
+                                                                                  class="form-control autoExpandX" style="width: 273px;height: 174px;">
+                                                                            @item.ItemCode_Description
+                                                                        </textarea>
 
-                                                                            <td>
-                                                                                <select name="lstConcerns[@i].Unit" class="form-control">
-                                                                                    <option value="">--Select--</option>
-                                                                                    @foreach (var uom in ViewBag.UOM)
-                                                                                    {
-                                                                                        <option value="@uom.Code"
-                                                                                                @(uom.Code == item.Unit ? "selected" : "")>
-                                                                                            @uom.Name
-                                                                                        </option>
-                                                                                    }
-                                                                                </select>
-                                                                            </td>
+                                                                    </td>
 
-                                                                            <td>
-                                                                                <input type="text" name="lstConcerns[@i].Po_Quantity"
-                                                                                       value="@item.Po_Quantity" class="form-control" />
-                                                                            </td>
-
-                                                                            <td>
-                                                                                <input type="text" name="lstConcerns[@i].Offered_Quantity"
-                                                                                       value="@item.Offered_Quantity" class="form-control" />
-                                                                            </td>
-
-                                                                            <td>
-                                                                                <input type="text" name="lstConcerns[@i].Accepted_Quantity"
-                                                                                       value="@item.Accepted_Quantity" class="form-control" />
-                                                                            </td>
-
-                                                                            @if (Model.HeatNoShow == "Yes")
+                                                                    <td>
+                                                                        <select name="lstConcerns[@i].Unit" class="form-control">
+                                                                            <option value="">--Select--</option>
+                                                                            @foreach (var uom in ViewBag.UOM)
                                                                             {
-                                                                                <td>
-                                                                                    <input type="text" name="lstConcerns[@i].HeatNumber"
-                                                                                           value="@item.HeatNumber" class="form-control" />
-                                                                                </td>
+                                                                                // Compare the Name for selection
+                                                                                var selected = (item.Unit != null && item.Unit.Equals(uom.Name, StringComparison.OrdinalIgnoreCase))
+                                                                                               ? "selected"
+                                                                                               : "";
+                                                                                <option value="@uom.Code" @selected>@uom.Name</option>
                                                                             }
+                                                                        </select>
+                                                                    </td>
 
-                                                                            <td class="text-center">
-                                                                                <button type="button" class="btn btn-danger removeRow">X</button>
-                                                                            </td>
-                                                                        </tr>
-                                                                    i++;
-                                                                }
-                                                            }
-                                                            else
-                                                            {
+                                                                    <td>
+                                                                        <input type="text" name="lstConcerns[@i].Po_Quantity"
+                                                                               value="@item.Po_Quantity" class="form-control" />
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="text" name="lstConcerns[@i].Offered_Quantity"
+                                                                               value="@item.Offered_Quantity" class="form-control" />
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <input type="text" name="lstConcerns[@i].Accepted_Quantity"
+                                                                               value="@item.Accepted_Quantity" class="form-control" />
+                                                                    </td>
+
+                                                                    @if (Model.HeatNoShow == "Yes")
+                                                                    {
+                                                                        <td>
+                                                                            <input type="text" name="lstConcerns[@i].HeatNumber"
+                                                                                   value="@item.HeatNumber" class="form-control" />
+                                                                        </td>
+                                                                    }
+
+                                                                    <td class="text-center">
+                                                                        <button type="button" class="btn btn-danger removeRow">X</button>
+                                                                    </td>
+                                                                </tr>
+                                                                   i++;
+                                                               }
+                                                           }
+
+                                                           else
+                                                           {
                                                                 <tr class="item-row">
                                                                     <td><input type="text" name="lstConcerns[0].Po_Item_No" class="form-control" /></td>
                                                                     <td><input type="text" name="lstConcerns[0].Item_Code" class="form-control" /></td>
-                                                                    <td><textarea name="lstConcerns[0].ItemCode_Description" class="form-control autoExpandX"></textarea></td>
+                                                                    <td><textarea name="lstConcerns[0].ItemCode_Description" class="form-control autoExpandX" style="width: 273px;height: 174px;"></textarea></td>
                                                                     <td>
                                                                         <select name="lstConcerns[0].Unit" class="form-control">
                                                                             <option value="">--Select--</option>
@@ -191,8 +199,20 @@
                                                 </div>
 
                                                 <div class="text-right">
-                                                    <button type="button" class="btn btn-success" id="addRow">Add Row</button>
-                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                    <button type="button" class="btn btn-success" id="addRow" style="float:left;">Add Row</button>
+                                                    <br />
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <span style="color:#E12F24;">
+                                                        <strong> &nbsp;&nbsp;&nbsp;&nbsp;Note : </strong>
+                                                    </span>
+                                                    If concerns are raised, verify data inserted in accepted quantity.
+
+
+                                                    <div class="col-xs-12 text-center" id="IVRPointerEvents">
+                                                        <button type="submit" class="btn btn-default insert-form-btn">Save</button>
+                                                    </div>
                                                 </div>
                                             </form>
 
@@ -240,4 +260,55 @@
             }
         });
     });
+
+
+    $('#btnClearNew').on('click', function () {
+        debugger
+        var x = confirm("Are you sure you want to delete record?");
+        if (x) {
+            //var ClearNew =
+            //  {
+            //      PK_Call_ID: $('#PK_Call_ID').val(),
+            //  }
+            var PK_Call_ID = $('#PK_CALL_ID').val();
+            console.log($('#PK_CALL_ID').val());
+            $.ajax({
+
+              type: 'POST',
+            url: '@Url.Action("ClearItemDescription", "VisitReport")',
+            data: JSON.stringify({ PK_Call_ID: PK_Call_ID }), // must match parameter name
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+                success: function (response) {
+                    debugger
+
+                    if (response.success == 1) {
+                        alert("Data Clear Successfuly");
+                        location.reload();
+                    }
+                    else {
+                        alert("Something went wrong please try again.");
+                    }
+
+
+                }
+            })
+        }
+        else
+        {
+
+        }
+
+
+    });
+</script>
+
+
+<script>
+    var isConfirmationIVR = @Session["IsConfirmationIVR"] ?? 0;
+    // JavaScript to disable pointer events if isConfirmationIVR is 1
+
+    if (isConfirmationIVR == 1) {
+        document.getElementById("IVRPointerEvents").style.pointerEvents = "none";
+    }
 </script>

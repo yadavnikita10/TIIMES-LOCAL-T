@@ -6,31 +6,31 @@
     int date;
     string formFilled = string.Empty;
 }
-
-
-<div class="main-content3 xs-max-height">
-
-    <!--Start of header-->
+<div class="main-content3 xs-max-height">    
     <div class="container-fluid">
         <div class="row assignfixedwidth rp-15">
-
             <div class="col-xs-12">
                 <h3 class="dynamic-page-title dynamic-page-title-2  text-left">F-MR-16 R06 : Competency Matrix </h3>
                 <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="location.href='@Url.Action("ExportIndex","CompentencyMetrixView")'">
                     Export To Excel
-                </button>
+                </button>                
             </div><!-- /.col -->
-
+            <div class="col-xs-12" style="margin-left: -1090px;">
+                    <button type="button" id="a" value="ExportToExcel" class="btn btn-info dynamic-function-btn dynamic-function-btn-2" onclick="btnApprove()">
+                        Approve
+                    </button>
+            </div>
             <div class="col-xs-12">
                 <hr class="custom-hr">
-            </div><!-- /.col -->
-            <!--Table was here-->
-
+            </div>
         </div>
         <div class="col-xs-12">
             <table id="example" class="display" cellspacing="0"  width="100%" style="paging:false" >
                 <thead>
-                    <tr>                        
+                    <tr>           
+                        <th>
+                            <input type="checkbox" id="selectAll" />
+                        </th>
                         <th>PK_UserId</th>
                         <th>Candidate Name</th>
                         <th>Form Filled</th>
@@ -48,24 +48,15 @@
                         <th>Verified By</th>
                         <th>Approved By</th>
                         <th>Approval Status</th>
-
                         @foreach (var item in ViewData["Name"] as IEnumerable<TuvVision.Models.CompentencyMetrixView>)
                         {                          
-
                             <th>
                                 @item.CompentencyMetrixMasterName
                             </th>
-
                         }
-                        <th>&nbsp;</th>
-                        
-
                     </tr>
                 </thead>
-
                 <tbody>
-                  
-                    
                     @foreach (var b in Model)
                     {
                         if (b.strFormFilled == "0")
@@ -76,9 +67,10 @@
                         {
                             formFilled = "YES";
                         }
-
                         <tr>
-                           
+                            <td>
+                                <input type="checkbox" class="rowCheckbox" value="@b.PK_userId" />
+                            </td>
                             <td>@b.PK_userId</td>
                             <td>@b.CandidateName</td>
                             <td>@formFilled</td>
@@ -86,60 +78,30 @@
                             <td>@b.StampNumber</td>
                             <td>@b.Location</td>
                             <td>@b.EducationalQualification  </td>                            
-                            <td>@b.Designation               </td>
-                            <td>@b.EmailId                   </td>
-                            <td>@b.CellPhoneNumber           </td>
-                            <td>@b.JoiningDate1            </td>
-                            <td>@b.TotalExperienceInYears    </td>
-                            <td>@b.TotalTUVExperience </td>
+                            <td>@b.Designation</td>
+                            <td>@b.EmailId</td>
+                            <td>@b.CellPhoneNumber</td>
+                            <td>@b.JoiningDate1</td>
+                            <td>@b.TotalExperienceInYears</td>
+                            <td>@b.TotalTUVExperience</td>
                             <td>@b.OverAllExp</td>
                             <td>@b.CreatedBy</td>
                             <td>@b.ApprovedBy</td>
                             <td>@b.ApprovalStatus</td>
-
                             @{
                                 string[] ps;
-                                ps = b.AutharizeLevel.Split('#');//2,3
-
-
+                                ps = b.AutharizeLevel.Split('#');
                                 foreach (string stock in ps)
                                 {
                                     <td>@stock </td>
                                 }
                             }
-
-                            @if(b.ApprovalStatus.ToUpper().Contains("PENDING"))
-                            {
-                                if (((Session["RoleID"].ToString() == "1") || (Session["RoleID"].ToString() == "34")) && Session["UserBranchID"].ToString().Contains(b.BranchID) && b.PK_userId != Session["UserID"].ToString())
-                                {
-                                    <td>
-                                        <button type="submit" class="btn btn-default insert-form-btn">Approve</button>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td>&nbsp;</td>
-
-                                }
-                            }
-                            else
-                            {
-                                <td>&nbsp;</td>
-
-                            }
-
-
-
-
                         </tr>
                     }
                 </tbody>
-
             </table>
-
         </div>
     </div>
-
 </div>
 
 
@@ -147,3 +109,49 @@
 
 
 <script src="~/AllJsAndCss/js/datatable-custom2.js"></script>
+
+
+<script>
+    $('#selectAll').on('change', function () {
+        $('.rowCheckbox').prop('checked', this.checked);
+    });
+    $(document).on('change', '.rowCheckbox', function () {
+        if (!this.checked) {
+            $('#selectAll').prop('checked', false);
+        }
+        else if ($('.rowCheckbox:checked').length == $('.rowCheckbox').length) {
+            $('#selectAll').prop('checked', true);
+        }
+    });
+   function btnApprove() {
+    debugger;
+    var selectedIds = [];
+    $('.rowCheckbox:checked').each(function () {
+        selectedIds.push($(this).val());
+    });
+    if (selectedIds.length == 0) {
+        alert('Please select at least one record.');
+        return;
+    }
+    var Data1 = JSON.stringify(selectedIds);
+    console.log(selectedIds);
+
+    $.ajax({
+        url: "@Url.Action("ApproveUsers", "CompentencyMetrixView")", 
+        type: 'POST',
+        dataType: 'json',
+        traditional: true,
+        data: { Data1: Data1 },
+        success: function (result) {
+            if (result == "Success") {
+                alert('Approved successfully');
+                location.reload();
+            }
+        },
+        error: function (err) {
+            alert('Error while approving');
+        }
+    });
+}
+</script>
+

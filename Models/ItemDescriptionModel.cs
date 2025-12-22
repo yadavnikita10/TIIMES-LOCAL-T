@@ -31,6 +31,6 @@ namespace TuvVision.Models
         public string TotalQuantity { get; set; }
         public string HeatNoShow { get; set; }
         public List<ItemDescriptionModel> lstConcerns { get; set; }
-
+        public List<NameCode> UOMList { get; set; } // add this
     }
 }

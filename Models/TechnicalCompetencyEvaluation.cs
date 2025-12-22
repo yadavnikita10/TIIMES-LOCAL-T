@@ -19,6 +19,7 @@ namespace TuvVision.Models
         [Required(ErrorMessage = "Please Select")]
         public string FK_RangeInspectionName { get; set; }
         public string EmployeeCode { get; set; }//added by nikita on 11092023
+        public string PermissionGrantedTo { get; set; }
 
         public string[] AFK_RangeInspectionName { get; set; }
         [DataType(DataType.Text)]

@@ -292,7 +292,7 @@ namespace TuvVision.Controllers
                     //  a = dsGetDataById.Tables[0].Rows[0]["BasicAuthorization"].ToString();
                     model.InspectorName = Id;//dsGetDataById.Tables[0].Rows[0]["InspectorName"].ToString();
                     model.PCH = dsGetDataById.Tables[0].Rows[0]["PCH"].ToString();
-
+                    model.PermissionGrantedTo = dsGetDataById.Tables[0].Rows[0]["PermissionGranted_To"].ToString();
                     if (dsGetDataById.Tables[0].Rows[0]["IsVerified"].ToString() == "1")
                     {
                         model.isVerified = true;
@@ -360,6 +360,7 @@ namespace TuvVision.Controllers
                             //model.EfectiveDate = dsGetDataById.Tables[0].Rows[0]["EfectiveDate"].ToString(),
                             //model.RevisionDate = dsGetDataById.Tables[0].Rows[0]["RevisionDate"].ToString(),
                             //model.ReportNo = dsGetDataById.Tables[0].Rows[0]["ReportNo"].ToString()
+
 
                             LIAFScopeNumber = Convert.ToString(dr["IAFScopeNumber"]),
                             LFK_RangeInspectionName = Convert.ToString(dr["RangeInspectionName"]),
@@ -440,25 +441,21 @@ namespace TuvVision.Controllers
         [HttpPost]
         public ActionResult TechnicalCompetencyEvaluation(TechnicalCompetencyEvaluation S, FormCollection fc, int[] ID_, int? PK_TechnicalCompetencyEvaluation)
         {
-
+            string actionType = fc["actionType"];
             string Result = string.Empty;
-
+            if (actionType == "Amendment")
+            {
+                
+            }
             List<FileDetails> lstFileDtls = new List<FileDetails>();
             lstFileDtls = Session["listJobMasterUploadedFile"] as List<FileDetails>;
             bool formfilled = false;
-
             try
             {
-
                 if (PK_TechnicalCompetencyEvaluation > 0)
                 {
-                    //Update
                     foreach (var item in S.RangeOfInspectionList)
                     {
-                        //string ProList = fc["ProductLists"];
-                        //string a = item.LBasicAuthorizationName;
-                        //string ProList = string.Join(",", item.LBasicAuthorizationName);
-                        //S.BasicAuthorization = ProList;
                         if(item.ListBasicAuthorizationName!=null)
                         {
                             objMTCE.BasicAuthorization = String.Join(",", item.ListBasicAuthorizationName.ToArray());
@@ -467,13 +464,6 @@ namespace TuvVision.Controllers
                         {
                             objMTCE.BasicAuthorization = null;
                         }
-
-
-                        //if ((item.LAutharizationLevel == "3" && item.skillID == "C"))
-                        //{
-                        //    formfilled = true;
-
-                        //}
                         if ((item.LAutharizationLevel != null && item.skillID != null))
                         {
                             formfilled = true;
@@ -482,8 +472,6 @@ namespace TuvVision.Controllers
                         objMTCE.PK_TechnicalCompetencyEvaluation = Convert.ToInt16(item.PK_TechnicalCompetencyEvaluation);
                         objMTCE.FK_RangeInspectionId = item.LFK_RangeInspectionId;
                         objMTCE.AutharizationLevel = item.LAutharizationLevel;
-                        // objMTCE.BasicAuthorization = item.LBasicAuthorizationName;
-                        // objMTCE.BasicAuthorization = ProList;
                         objMTCE.BasicAuthorization = item.skillID;
                         objMTCE.InspectorName = S.InspectorName;
                         Result = objTCE.Insert(objMTCE);
@@ -493,18 +481,9 @@ namespace TuvVision.Controllers
                             Session["listJobMasterUploadedFile"] = null;
                         }
                     }
-
-
-
-
                 }
                 else
                 {
-
-                    //foreach (var i in S.FK_RangeInspectionName)
-                    //{
-
-                    //}
                     foreach (var item in S.RangeOfInspectionList)
                     {
                         if (item.ListBasicAuthorizationName != null)
@@ -515,44 +494,28 @@ namespace TuvVision.Controllers
                         {
                             objMTCE.BasicAuthorization = null;
                         }
-                        //if ((item.LAutharizationLevel == "3" && item.skillID == "C"))
-                        //{
-                        //    formfilled = true;
-
-                        //}
                         if ((item.LAutharizationLevel != null && item.skillID != null))
                         {
                             formfilled = true;
 
                         }
-                        //string ProList = string.Join(",", item.LBasicAuthorizationName);
-                        //S.BasicAuthorization = ProList;
-
                         objMTCE.FK_RangeInspectionId = item.LFK_RangeInspectionId;
                         objMTCE.AutharizationLevel = item.LAutharizationLevel;
                         objMTCE.BasicAuthorization = item.skillID;
-                        // objMTCE.BasicAuthorization = item.LBasicAuthorizationName;
-                        // objMTCE.BasicAuthorization = ProList;
                         objMTCE.BasicAuthorization = item.skillID;
                         objMTCE.InspectorName = S.InspectorName;
                         objMTCE.isVerified = S.isVerified;
-                        objMTCE.isFormFilled = formfilled ? true : S.isFormFilled;
-                        //objMTCE.isFormFilled = S.isFormFilled;
+                        objMTCE.isFormFilled = formfilled ? true : S.isFormFilled;                        
                         objMTCE.Remarks = item.Remarks;
                         Result = objTCE.Insert(objMTCE);
-
                     }
-
                     if (lstFileDtls != null && lstFileDtls.Count > 0)
                     {
                         Result = objTCE.InsertFileAttachment(lstFileDtls, objMTCE.InspectorName);
                         Session["listJobMasterUploadedFile"] = null;
                     }
-
-
                     if (Convert.ToInt16(Result) > 0)
                     {
-                        //ModelState.Clear(); 05/09/2022
                         TempData["message"] = "Record Added Successfully";
                     }
                     else
@@ -560,8 +523,6 @@ namespace TuvVision.Controllers
                         TempData["message"] = "Error";
                     }
                 }
-
-
             }
             catch (Exception ex)
             {

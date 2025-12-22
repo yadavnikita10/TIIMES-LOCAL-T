@@ -5604,6 +5604,17 @@ namespace TuvVision.Controllers
                 return Json(new { success = false, message = "No file uploaded or file is empty." });
             }
         }
+
+        [HttpPost]
+        public JsonResult ApproveUsers(string Data1)
+        {
+            List<string> userIds = JsonConvert.DeserializeObject<List<string>>(Data1);
+
+            bool result = objCMV.UpdateComptencyApproval(userIds);
+
+            return Json(result ? "Success" : "Error", JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
 

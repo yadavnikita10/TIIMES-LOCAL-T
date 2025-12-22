@@ -3225,7 +3225,7 @@ namespace TuvVision.Controllers
                                   }).ToList();
             }
             ViewBag.UOM = lstProjectType;
-
+            IVR.UOMList = lstProjectType;
             #endregion  
             if (IVR.PK_ItemD_Id != 0)
             {
@@ -3428,6 +3428,8 @@ namespace TuvVision.Controllers
                         //}
                         if (IVR.lstConcerns != null && IVR.lstConcerns.Count > 0)
                         {
+
+                            objDalVisitReport.DeleteExistingRecordItemDescription(IVR.PK_CALL_ID);
                             foreach (var item_ in IVR.lstConcerns)
                             {
 
@@ -4332,9 +4334,24 @@ namespace TuvVision.Controllers
             {
                 if (IVR.PK_DOE_Id == 0)
                 {
-                    IVR.Type = "IVR";
-                    IVR.Status = "1";
-                    Result = objDalVisitReport.InsertUpdateEquipmentDetails(IVR);
+                    if (IVR.lstEquipmentDetails != null && IVR.lstEquipmentDetails.Count > 0)
+                    {
+
+                        objDalVisitReport.DeleteExistingRecordEquipmentDetails(IVR.PK_CALL_ID);
+                        foreach (var item_ in IVR.lstEquipmentDetails)
+                        {
+
+
+                            item_.PK_CALL_ID = IVR.PK_CALL_ID;
+                            item_.Status = "1";
+                            item_.Type = "IVR";
+
+                            Result = objDalVisitReport.InsertUpdateEquipmentDetails(item_);
+                        }
+                    }
+                    //IVR.Type = "IVR";
+                    //IVR.Status = "1";
+                    //Result = objDalVisitReport.InsertUpdateEquipmentDetails(IVR);
                     if (Result != "" && Result != null)
                     {
                         TempData["InsertCompany"] = Result;
@@ -23783,6 +23800,27 @@ namespace TuvVision.Controllers
             string Result = "";
 
             Result = objDalVisitReport.Clear(ClearNew);
+            if (Result != "")
+            {
+                return Json(new { success = 1, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { success = 2, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
+            }
+            //return Json(CopyNew, JsonRequestBehavior.AllowGet);
+            //return Json(new { success = 4, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+
+        #region Clear Item Description
+        [HttpPost]
+        public JsonResult ClearItemDescription(int PK_Call_ID)
+        {
+            string Result = "";
+
+            Result = objDalVisitReport.ClearItemDescription(PK_Call_ID);
             if (Result != "")
             {
                 return Json(new { success = 1, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);

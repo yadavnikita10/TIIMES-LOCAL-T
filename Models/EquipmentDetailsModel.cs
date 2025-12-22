@@ -29,6 +29,7 @@ namespace TuvVision.Models
         public string SNABLseenote1 { get; set; }
 
         public string SNonNABLseenote2 { get; set; }
+        public List<EquipmentDetailsModel> lstEquipmentDetails { get; set; }
 
     }
 }
