@@ -59,121 +59,137 @@
                                     <h3 class="form-page-title">Item Description</h3>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-
                                             <form method="post" enctype="multipart/form-data">
                                                 @Html.HiddenFor(m => m.abcid)
                                                 @Html.HiddenFor(m => m.PK_IVR_ID)
+                                                <button type="button" id="btnClearNew" class="btn btn-default insert-form-btn" style="margin-top:0px;background-color:#e63646" onclick="return confirm('Do you want to clear Content?')"><i class="fa "></i> Clear Content</button>
 
-                                                <div class="row">
-                                                    <br />
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-striped" id="itemTable">
+                                                        <thead style="background-color: #100ED2;color: white;">
+                                                            <tr>
+                                                                <th>PO Item No</th>
+                                                                <th>Item Code</th>
+                                                                <th style="width: 250px;"> Item Code Description</th> <!-- increase width -->
+                                                                <th style="width: 115px;">UOM</th>
+                                                                <th>PO Qty</th>
+                                                                <th>Offered Qty</th>
+                                                                <th style="width: 70px;">Accepted Qty</th>
+                                                                <th style="width: 70px;">Cumulative Quantity</th>
+                                                               
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="itemContainer">
+                                                            @{
+                                                                int i = 0;
+                                                            }
 
-                                                    <div class="row">
-                                                        <div class="col-xs-12 col-sm-2">
+                                                            @if (ViewData["CostSheet"] != null && ((IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewData["CostSheet"]).Any())
+                                                            {
 
-                                                            <div class="form-group">
-                                                                <label>PO Item No:</label>
+                                                                foreach (var item in (IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewData["CostSheet"])
+                                                                {
+                                                                    <tr class="item-row">
+                                                                        <td>
+                                                                            <input type="text" name="lstConcerns[@i].Po_Item_No"
+                                                                                   value="@item.Po_Item_No" class="form-control" />
+                                                                        </td>
 
-                                                                @Html.TextBoxFor(model => model.Po_Item_No, new { @placeholder = "PO Item No", @class = "form-control", @OnKeyPress = "return isNumber(event)" })
-                                                                @Html.ValidationMessageFor(model => model.Po_Item_No, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-4">
-                                                            <div class="form-group">
-                                                                <label>Item Code:</label>
+                                                                        <td>
+                                                                            <input type="text" name="lstConcerns[@i].Item_Code"
+                                                                                   value="@item.Item_Code" class="form-control" />
+                                                                        </td>
 
-                                                                @Html.TextBoxFor(model => model.Item_Code, new { @placeholder = "Item Code", @class = "form-control" })
-                                                                @Html.ValidationMessageFor(model => model.Item_Code, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
+                                                                        <td>
+                                                                            <textarea name="lstConcerns[@i].ItemCode_Description"
+                                                                                      class="form-control autoExpandX" style="width: 273px;height: 174px;">
+                                                                                @item.ItemCode_Description
+                                                                            </textarea>
 
-                                                        <div class="col-xs-12 col-sm-12">
-                                                            <div class="form-group">
-                                                                <label>Item Code Description:</label>
+                                                                        </td>
 
-                                                                @Html.TextAreaFor(model => model.ItemCode_Description, 10, 40, new
-                           {
-                               @placeholder = "Item Code Description",
-                               @class = "form-control"@*,@row="3"*@ })
-                                                                @Html.ValidationMessageFor(model => model.ItemCode_Description, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
+                                                                        <td>
+                                                                            <select name="lstConcerns[@i].Unit" class="form-control">
+                                                                                <option value="">--Select--</option>
+                                                                                @foreach (var uom in ViewBag.UOM)
+                                                                                {
+                                                                                    // Compare the Name for selection
+                                                                                    var selected = (item.Unit != null && item.Unit.Equals(uom.Name, StringComparison.OrdinalIgnoreCase))
+                                                                                                   ? "selected"
+                                                                                                   : "";
+                                                                                    <option value="@uom.Code" @selected>@uom.Name</option>
+                                                                                }
+                                                                            </select>
+                                                                        </td>
 
-                                                    </div>
+                                                                        <td>
+                                                                            <input type="text" name="lstConcerns[@i].Po_Quantity"
+                                                                                   value="@item.Po_Quantity" class="form-control" />
+                                                                        </td>
 
-                                                    <div class="row">
-                                                        <div class="col-xs-12 col-sm-3">
-                                                            <div class="form-group">
-                                                                <label>UOM:<span style="color:#ff0000;">*</span></label>
-                                                                @{
-                                                    if (Model != null)
-                                                    {
-                                                        if (ViewBag.UOM != null)
-                                                        {
-                                                                            @Html.DropDownListFor(model => model.Unit, new SelectList(@ViewBag.UOM, "Code", "Name"), "---Select UOM---", new { @id = "ddlProjectType", @class = "form-control" })
-                                                        }
+                                                                        <td>
+                                                                            <input type="text" name="lstConcerns[@i].Offered_Quantity"
+                                                                                   value="@item.Offered_Quantity" class="form-control" />
+                                                                        </td>
 
-                                                    }
-                                                    else
-                                                    {
-                                                                        @Html.DropDownListFor(model => model.Unit, new SelectList(@ViewBag.UOM, "Code", "Name"), "---Select UOM---", new { @id = "ddlProjectType", @class = "form-control" })
-                                                    }
-                                                                    @Html.ValidationMessageFor(m => m.Unit, "", new { @class = "text-danger validation-msg" })
+                                                                        <td>
+                                                                            <input type="text" name="lstConcerns[@i].Accepted_Quantity"
+                                                                                   value="@item.Accepted_Quantity" class="form-control" />
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text" name="lstConcerns[@i].Cumulative_Accepted_Qty"
+                                                                                   value="@item.Cumulative_Accepted_Qty" class="form-control" />
+                                                                        </td>
+                                                                       
+
+                                                                        <td class="text-center">
+                                                                            <button type="button" class="btn btn-danger removeRow">X</button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    i++;
                                                                 }
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
+                                                            }
 
-
-                                                        <div class="col-xs-12 col-sm-3">
-                                                            <div class="form-group">
-                                                                <label>PO Quantity:</label>
-
-                                                                @Html.TextBoxFor(model => model.Po_Quantity, new { @placeholder = "Po Quantity", @class = "form-control" })
-                                                                @Html.ValidationMessageFor(model => model.Po_Quantity, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-xs-12 col-sm-3">
-                                                            <div class="form-group">
-                                                                <label>Offered Quantity:</label>
-
-                                                                @Html.TextBoxFor(model => model.Offered_Quantity, new { @placeholder = "Offered Quantity", @class = "form-control" })
-                                                                @Html.ValidationMessageFor(model => model.Offered_Quantity, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-xs-12 col-sm-3">
-                                                            <div class="form-group">
-                                                                <label>Accepted Quantity:</label>
-
-                                                                @Html.TextBoxFor(model => model.Accepted_Quantity, new { @placeholder = "Accepted Quantity", @class = "form-control" })
-                                                                @Html.ValidationMessageFor(model => model.Accepted_Quantity, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-3">
-                                                            <div class="form-group">
-                                                                <label>Cumulative Quantity:</label>
-
-                                                                @Html.TextBoxFor(model => model.Cumulative_Accepted_Qty, new { @placeholder = "Cumulative Quantity ", @class = "form-control" })
-                                                                @Html.ValidationMessageFor(model => model.Cumulative_Accepted_Qty, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-
-
-
+                                                            else
+                                                            {
+                                                                <tr class="item-row">
+                                                                    <td><input type="text" name="lstConcerns[0].Po_Item_No" class="form-control" /></td>
+                                                                    <td><input type="text" name="lstConcerns[0].Item_Code" class="form-control" /></td>
+                                                                    <td><textarea name="lstConcerns[0].ItemCode_Description" class="form-control autoExpandX" style="width: 273px;height: 174px;"></textarea></td>
+                                                                    <td>
+                                                                        <select name="lstConcerns[0].Unit" class="form-control">
+                                                                            <option value="">--Select--</option>
+                                                                            @foreach (var uom in ViewBag.UOM)
+                                                                            {
+                                                                                <option value="@uom.Code">@uom.Name</option>
+                                                                            }
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input type="text" name="lstConcerns[0].Po_Quantity" class="form-control" /></td>
+                                                                    <td><input type="text" name="lstConcerns[0].Offered_Quantity" class="form-control" /></td>
+                                                                    <td><input type="text" name="lstConcerns[0].Accepted_Quantity" class="form-control" /></td>
+                                                                    <td><input type="text" name="lstConcerns[0].Cumulative_Accepted_Qty" class="form-control" /></td>
+                                                                    <td class="text-center">
+                                                                        <button type="button" class="btn btn-danger removeRow">X</button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
                                                 </div>
 
+                                                <div class="text-right">
+                                                    <button type="button" class="btn btn-success" id="addRow" style="float:left;">Add Row</button>
+                                                    <br />
+                                                </div>
+                                                <br />
 
+                                                   
+                                                   
+
+                                                   
                                                 <div class="col-xs-12 text-center" id="IRNPointerEvents">
-                                                    @*<a class="btn btn-default insert-form-btn" href="~/Excel/ExcellData1.xlsx" role="button" download="ExcellData.xlsx">
-                                        <i class="fa fa-download"></i> Excel Format
-                                    </a>*@
                                                     <button type="submit" class="btn btn-default insert-form-btn">Save</button>
 
                                                 </div>
@@ -182,170 +198,18 @@
 
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12">
-                                            <div class="col-xs-12">
-                                                <table id="example" class="display custom-table" cellspacing="0" width="100%">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="remove-search" width="5%">PO Item No</th>
-                                                            <th class="remove-search" width="10%">Item Code</th>
-                                                            <th class="remove-search" width="40%">Item Code Description</th>
-                                                            <th class="remove-search" width="10%">PO Unit(UOM)</th>
-                                                            <th class="remove-search" width="10%">PO Quantity</th>
-                                                            <th class="remove-search" width="10%">Offered Quantity</th>
-                                                            <th class="remove-search" width="5%">Accepted Quantity</th>
-                                                            <th class="remove-search" width="5%">Cumulative Quantity</th>
-                                                            <th class="remove-search" width="5%">Action</th>
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody>
-
-                                                        @{
-                                                int i = 0;
-                                                        }
-                                                        @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.ItemDescriptionModel>)
-                                            {
-                                                            <tr>
-
-
-                                                                <td style='white-space: pre-line;' width="5%">@item.Po_Item_No</td>
-                                                                <td style='white-space: pre-line;' width="10%">@item.Item_Code</td>
-                                                                <td style='white-space: pre-line;' width="40%">@item.ItemCode_Description</td>
-                                                                <td style='white-space: pre-line;' width="10%">@item.Unit</td>
-                                                                <td style='white-space: pre-line;' width="10%">@item.Po_Quantity</td>
-                                                                <td style='white-space: pre-line;' width="10%">@item.Offered_Quantity</td>
-                                                                <td style='white-space: pre-line;' width="5%">@item.Accepted_Quantity</td>
-                                                                <td style='white-space: pre-line;' width="5%">@item.Cumulative_Accepted_Qty</td>
-
-                                                                <td class="less-width" width="5%">
-                                                                    <a href="@Url.Action("ItemDescription", "InspectionReleaseNote", new {@PK_ItemD_Id = item.PK_ItemD_Id, @PK_RM_ID = Model.abcid, @PK_IVR_ID = Model.PK_IVR_ID })" title="Edit"><span class="fa fa-pencil"></span>&nbsp;</a>
-                                                                    <a href="@Url.Action("DeleteItemDescriptionData", "InspectionReleaseNote", new {@PK_ItemD_Id = item.PK_ItemD_Id, @PK_RM_ID = Model.abcid, @PK_IVR_ID = Model.PK_IVR_ID })" onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
-                                                                    @{
-                                                            if ((Convert.ToString(TempData["InsertCompany"])) != "" && Convert.ToString(TempData["InsertCompany"]) != null)
-                                                            {
-                                                                TempData["InsertCompany"] = null;
-                                                                            @*<script type="text/javascript" language="javascript">
-                                                                alert("Item Description Added Successfully!!!!");
-                                                            </script>*@
-                                                            }
-                                                            if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
-                                                            {
-                                                                TempData["UpdateCompany"] = null;
-                                                                            @*<script type="text/javascript" language="javascript">
-                                                                alert("Item Description Updated Successfully");
-                                                            </script>*@
-                                                            }
-                                                                    }
-                                                                </td>
-
-                                                            </tr>
-                                                            }
-
-                                                    </tbody>
-
-                                                </table>
-                                            </div><!-- /.data table col -->
-                                        </div>
-                                    </div>
-                                    <!--Contact Details By Manoj -->
-
-
-                                </div><!-- /.box-shadow -->
-                            </div><!-- /.col -->
+                                                                       
+                                </div>
+                            </div>
                         </div>
             </div>
         </div>
     </div>
-<!--Contact Details By Manoj -->
-</div><!-- /.box-shadow -->
+</div>
 
     </div>
     </div>
-@*<div class="main-content3 xs-max-height">
 
-    <!--Start of header-->
-    <div class="container-fluid">
-        @*<div class="row assignfixedwidth rp-15">
-
-                <h3 class="form-page-title">Item Description</h3>
-                <div class="col-xs-12">
-                    <hr class="custom-hr">
-                </div>
-            </div>
-
-        <div class="col-xs-12">
-            <table id="example" class="display custom-table" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th class="remove-search">PO Item No</th>
-                        <th>Item Code</th>
-                        <th>Item Code Description</th>
-                        <th>PO Unit(UOM)</th>
-                        <th>PO Quantity</th>
-                        <th>Offered Quantity</th>
-                        <th>Accepted Quantity</th>
-                        <th>Cumulative Quantity</th>
-                        <th class="remove-search">Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    @{
-                        int i = 0;
-                    }
-                    @foreach (var item in ViewData["CostSheet"] as IEnumerable<TuvVision.Models.ItemDescriptionModel>)
-                    {
-                        <tr>
-
-
-                            <td>@item.Po_Item_No</td>
-                            <td>@item.Item_Code</td>
-                            <td>@item.ItemCode_Description</td>
-                            <td>@item.Unit</td>
-                            <td>@item.Po_Quantity</td>
-                            <td>@item.Offered_Quantity</td>
-                            <td>@item.Accepted_Quantity</td>
-                            <td>@item.Cumulative_Accepted_Qty</td>
-
-                            <td class="less-width">
-                                <a href="@Url.Action("ItemDescription", "InspectionReleaseNote", new {@PK_ItemD_Id = item.PK_ItemD_Id })" title="Edit"><span class="fa fa-pencil"></span>&nbsp;</a>
-                                <a href="@Url.Action("DeleteItemDescriptionData", "InspectionReleaseNote", new {@PK_ItemD_Id = item.PK_ItemD_Id })" onclick="return confirm('Are you sure you want to Delete this Record?')" title="Delete"><span class="fa fa-trash-o"></span>&nbsp;</a>
-                                @{
-                                    if ((Convert.ToString(TempData["InsertCompany"])) != "" && Convert.ToString(TempData["InsertCompany"]) != null)
-                                    {
-                                        TempData["InsertCompany"] = null;
-                                        <script type="text/javascript" language="javascript">
-                                            alert("Item Description Added Successfully!!!!");
-                                        </script>
-                                    }
-                                    if ((Convert.ToString(TempData["UpdateCompany"])) != "" && Convert.ToString(TempData["UpdateCompany"]) != null)
-                                    {
-                                        TempData["UpdateCompany"] = null;
-                                        <script type="text/javascript" language="javascript">
-                                            alert("Item Description Updated Successfully");
-                                        </script>
-                                    }
-                                }
-                            </td>
-
-                        </tr>
-                                    }
-
-                </tbody>
-
-            </table>
-        </div><!-- /.data table col -->
-
-
-    </div><!-- /.container-fluid -->
-    <!--End of header-->
-
-</div>*@
-
-<!--End of Ashwini Code-->
                                         }
 
     <script>
@@ -362,6 +226,78 @@
     </script>
 
 
+<script>
+    $(document).ready(function () {
+        var rowIndex = $("#itemContainer .item-row").length;
+        var heatNoShow = '@Model.HeatNoShow';
+
+        $("#addRow").click(function () {
+            var newRow = $(".item-row:first").clone(true);
+
+            newRow.find("input, textarea, select").each(function () {
+                var name = $(this).attr("name");
+                if (name) {
+                    var newName = name.replace(/\[\d+\]/, '[' + rowIndex + ']');
+                    $(this).attr("name", newName).val('');
+                }
+            });
+
+            if (heatNoShow !== "Yes") {
+                newRow.find('div:has(label:contains("Heat number"))').remove();
+            }
+
+            $("#itemContainer").append(newRow);
+            rowIndex++;
+        });
+
+        $(document).on("click", ".removeRow", function () {
+            if ($("#itemContainer .item-row").length > 1) {
+                $(this).closest(".item-row").remove();
+            }
+        });
+    });
+
+
+    $('#btnClearNew').on('click', function () {
+        debugger
+        var x = confirm("Are you sure you want to delete record?");
+        if (x) {
+            //var ClearNew =
+            //  {
+            //      PK_Call_ID: $('#PK_Call_ID').val(),
+            //  }
+            var PK_Call_ID = $('#PK_IVR_ID').val();
+            console.log($('#PK_IVR_ID').val());
+            $.ajax({
+
+              type: 'POST',
+            url: '@Url.Action("ClearItemDescription", "InspectionReleaseNote")',
+            data: JSON.stringify({ PK_Call_ID: PK_Call_ID }), // must match parameter name
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+                success: function (response) {
+                    debugger
+
+                    if (response.success == 1) {
+                        alert("Data Clear Successfuly");
+                        location.reload();
+                    }
+                    else {
+                        alert("Something went wrong please try again.");
+                    }
+
+
+                }
+            })
+        }
+        else
+        {
+
+        }
+
+
+    });
+</script>
 
 <script>
     var isConfirmationIRN = @Session["IsConfirmationIRN"] ?? 0;

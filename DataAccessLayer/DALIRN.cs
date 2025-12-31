@@ -666,6 +666,32 @@ namespace TuvVision.DataAccessLayer
             return Result;
         }
 
+
+
+
+        public DataTable DeleteExistingRecordItemDescription(int? PK_Call_ID)//Get All DropDownlist 
+        {
+            DataTable DSGetddlList = new DataTable();
+            try
+            {
+                SqlCommand CMDGetDdlLst = new SqlCommand("SP_ItemDescription", con);
+                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", 10);
+                CMDGetDdlLst.Parameters.AddWithValue("@PK_Call_ID", PK_Call_ID);
+                SqlDataAdapter SDAGetDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                SDAGetDdlLst.Fill(DSGetddlList);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DSGetddlList.Dispose();
+            }
+            return DSGetddlList;
+        }
+
         public int DeleteItemDescription(int? PK_ItemD_Id)
         {
             int Result = 0;
@@ -3562,6 +3588,39 @@ namespace TuvVision.DataAccessLayer
             }
             return DTEditContact;
         }
+
+        #region Clear Function
+        public string ClearItemDescription(int pk_call_id)
+        {
+            string Result = string.Empty;
+            int ReturnId = 0;
+            con.Open();
+            try
+            {
+
+                SqlCommand CMDInsertUpdatebranch = new SqlCommand("SP_InspectionVisitReport", con);
+                CMDInsertUpdatebranch.CommandType = CommandType.StoredProcedure;
+                CMDInsertUpdatebranch.Parameters.AddWithValue("@SP_Type", 96);
+                CMDInsertUpdatebranch.Parameters.AddWithValue("@PK_Call_ID", pk_call_id);
+                Result = CMDInsertUpdatebranch.ExecuteNonQuery().ToString();
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+            }
+            return Result;
+        }
+        #endregion
+
     }
 }
 

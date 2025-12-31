@@ -3041,14 +3041,31 @@ namespace TuvVision.Controllers
 
                         #endregion
 
-                        IVR.Status = "1";
-                        IVR.Type = "IRN";
-                        Result = OBJDALIRN.InsertUpdateItemDescription(IVR);
-                        if (Result != "" && Result != null)
-                        {
-                            TempData["InsertCompany"] = Result;
 
+                        if (IVR.lstConcerns != null && IVR.lstConcerns.Count > 0)
+                        {
+
+                            OBJDALIRN.DeleteExistingRecordItemDescription(IVR.PK_CALL_ID);
+                            foreach (var item_ in IVR.lstConcerns)
+                            {
+
+
+                                
+                                item_.Status = "1";
+                                item_.Type = "IRN";
+
+                                Result= OBJDALIRN.InsertUpdateItemDescription(item_);
+                                if (Result != "" && Result != null)
+                                {
+                                    TempData["InsertCompany"] = Result;
+
+                                }
+                            }
                         }
+                        //IVR.Status = "1";
+                        //IVR.Type = "IRN";
+                        //Result = OBJDALIRN.InsertUpdateItemDescription(IVR);
+                        
                     }
                 }
                 else
@@ -9195,10 +9212,28 @@ namespace TuvVision.Controllers
 
 
 
-       
+        #region Clear Item Description
+        [HttpPost]
+        public JsonResult ClearItemDescription(int PK_Call_ID)
+        {
+            string Result = "";
+
+            Result = OBJDALIRN.ClearItemDescription(PK_Call_ID);
+            if (Result != "")
+            {
+                return Json(new { success = 1, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { success = 2, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
+            }
+            //return Json(CopyNew, JsonRequestBehavior.AllowGet);
+            //return Json(new { success = 4, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
 
     }
-
 
 
 

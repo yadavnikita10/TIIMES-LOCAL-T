@@ -339,10 +339,7 @@ namespace TuvVision.Controllers
             string Role = Session["RoleName"].ToString();
 
             string UserId = Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]);
-            DataSet ds = objEI.GetVoucherList(UserId, Role); //commented on 23112023
-                                                             // DataSet ds = objEI.GetVoucherList_Approval(UserId, Role);
-
-
+            DataSet ds = objEI.GetVoucherList(UserId, Role); 
             string json = "";
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {

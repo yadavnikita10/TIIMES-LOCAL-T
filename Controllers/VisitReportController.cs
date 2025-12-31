@@ -4305,10 +4305,12 @@ namespace TuvVision.Controllers
                                     Certification_No_Date = Convert.ToString(dr["Certification_No_Date"]),
                                     PK_DOE_Id = Convert.ToInt32(dr["PK_DOE_Id"]),
                                     PK_CALL_ID = Convert.ToInt32(dr["PK_CALL_ID"]),
-                                    //NABLseenote1 = Convert.ToBoolean(dr["NABLseenote1"]) == "True" ? "Yes" : "No",
-                                    //NonNABLseenote2 = Convert.ToBoolean(dr["NonNABLseenote2"]) == "True" ? "Yes" : "No",
-                                    SNABLseenote1 = Convert.ToString(dr["NABLseenote1"]) == "True" ? "Yes" : "-",
-                                    SNonNABLseenote2 = Convert.ToString(dr["NonNABLseenote2"]) == "True" ? "Yes" : "-",
+                                    //NABLseenote1 = Convert.ToBoolean(dr["NABLseenote1"]) == true ? "Yes" : "No",
+                                    //NonNABLseenote2 = Convert.ToBoolean(dr["NonNABLseenote2"]) == true ? "Yes" : "No",
+                                    NABLseenote1 = Convert.ToBoolean(dr["NABLseenote1"]),
+                                    NonNABLseenote2 = Convert.ToBoolean(dr["NonNABLseenote2"]),
+                                    //NABLseenote1 = Convert.ToString(dr["NABLseenote1"]) == "True" ? "Yes" : "-",
+                                    //NonNABLseenote2 = Convert.ToString(dr["NonNABLseenote2"]) == "True" ? "Yes" : "-",
 
                                 }
                                 );
@@ -4323,6 +4325,7 @@ namespace TuvVision.Controllers
             }
 
             ViewData["CostSheet"] = lstCompanyDashBoard;
+            IVR.lstEquipmentDetails = lstCompanyDashBoard;
             return View(IVR);
         }
 
@@ -27192,6 +27195,27 @@ namespace TuvVision.Controllers
             return RedirectToAction("InspectionActivites", new { PK_CALL_ID = IVR.PK_CALL_ID });
             //return RedirectToAction("InspectionActivites", IVRNew);
         }
+
+
+        #region Clear EquipmentDetails Description
+        [HttpPost]
+        public JsonResult ClearEquipmentDetail(int PK_Call_ID)
+        {
+            string Result = "";
+
+            Result = objDalVisitReport.ClearEquipmentDetails(PK_Call_ID);
+            if (Result != "")
+            {
+                return Json(new { success = 1, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { success = 2, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
+            }
+            //return Json(CopyNew, JsonRequestBehavior.AllowGet);
+            //return Json(new { success = 4, responseText = "Code mathched" }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
 
     }
 }

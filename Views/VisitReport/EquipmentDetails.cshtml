@@ -11,11 +11,6 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
 
 
-
-@*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>*@
-
 <script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
 <script src="~/AllJsAndCss/js/datatable-custom.js"></script>
@@ -23,6 +18,18 @@
     int PK_RM_ID = Convert.ToInt32(Session["PK_RM_ID"]);
     //Session["PK_RM_ID"] = Model.abcid;
 }
+
+@{
+    var lstdetails = ViewData["CostSheet"]
+        as List<TuvVision.Models.EquipmentDetailsModel>
+        ?? new List<TuvVision.Models.EquipmentDetailsModel>
+        {
+            new TuvVision.Models.EquipmentDetailsModel()
+        };
+}
+
+
+
 @{
     var items = ViewData["CostSheet"] as List<TuvVision.Models.ItemDescriptionModel>;
 }
@@ -38,51 +45,25 @@
         });
     });
 </script>
-
-@*<script>
-
-    $(function () {
-        $(".CertificationFrom").datepicker({
-            dateFormat: 'dd/MM/yy',//check change
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+50"
-        });
-    });
-</script>*@
 <style>
     .ui-widget-header {
         background: #001ED2 !important;
     }
-
     .ui-datepicker-month, .ui-datepicker-year {
         color: #333 !important;
     }
 </style>
-
-@*<div class="white-bg section-box-shadow">
-    <h3 class="dynamic-page-title dynamic-page-title-2  " style="margin-left:10px;">Details Of Measuring instrument</h3>
-    <div class="row">*@
-
-
         <div class="main-content3 xs-max-height grey-bg-f3">
     <div class="grey-bg-f3">
-        <!--Start of header-->
         <div class="container-fluid">
             <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-
                 <div class="col-xs-12 form-col">
                     <div class="row">
                         <br />
                         <h5 class="dynamic-page-title dynamic-page-title-2 " style="padding-left: 11px;">Inspection Visit Report Number : @Session["VisitReportNo"]</h5>
-
-                        @*<a href="@Url.Action("CallsListByInspector","CallsMaster")" class="btn btn-info dynamic-function-btn dynamic-function-btn-2"><i class="fa fa-long-arrow-left"></i> Go Back</a>*@
-
                         <div class="col-xs-12">
-
-
                             @if (Model.PK_CALL_ID != 0)
-            {
+                          {
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("VisitReportForm", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID =PK_RM_ID} )'">General</button>
                                         <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID =PK_RM_ID} )'"> Item Description</button>
                                         <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = PK_RM_ID} )'">Reference Documents </button>
@@ -90,20 +71,11 @@
                                         <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID =PK_RM_ID} )'">Document Reviewed</button>
                                         <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = PK_RM_ID} )'">Details Of Measuring Instrument</button>
                                         <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID = PK_RM_ID} )'">Conclusion</button>
-
                                         <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReportImage", "VisitReport",new { @PK_Call_ID = Model.PK_CALL_ID,@PK_RM_ID =PK_RM_ID} )'">Image</button>
                                         <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID,@PK_RM_ID =PK_RM_ID} )'">Report</button>
-                                        @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID} )'">Report</button>*@
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "VisitReport",new { @PK_CALL_ID = Model.PK_CALL_ID , @PK_RM_ID =PK_RM_ID} )'">List of Issues</button>
-
                             }
-
-
-
-
                         </div>
-
-
                         <div class="col-xs-12">
                             <div class="white-bg section-box-shadow">
                                 <h3 class="form-page-title">Details Of Measuring instrument</h3>
@@ -114,127 +86,115 @@
                                             <strong>Note </strong> :
                                         </span> 1) Providing details of measuring instruments is mandatory.<br />
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) If the master list is referred during inspection, mention the  “Master list number” in the field “Detail of Equipment(s)/Instrument(s).”.<br />
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) If no measuring instruments are used during the inspection, specify “Not applicable” in the field “Detail of Equipment(s)/Instrument(s).”.<br />
-                                       
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) If no measuring instruments are used during the inspection, specify “Not applicable” in the field “Detail of Equipment(s)/Instrument(s).”.<br /> 
                                     </div>
                                 </div>
                                 <div class="col-xs-12">
                                     <hr class="custom-hr1 line">
                                 </div>
-
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-
                                         <div class="form-box">
                                             <form method="post" enctype="multipart/form-data">
-
                                                 @Html.HiddenFor(m => m.PK_CALL_ID)
+                                                <button type="button" id="btnClearNew" class="btn btn-default insert-form-btn" style="margin-top:0px;background-color:#e63646" onclick="return confirm('Do you want to clear Content?')"><i class="fa "></i> Clear Content</button>
+
+@{
+    var equipmentList = ViewData["CostSheet"] as List<TuvVision.Models.EquipmentDetailsModel>;
+    if (equipmentList == null || equipmentList.Count == 0)
+    {
+        equipmentList = new List<TuvVision.Models.EquipmentDetailsModel>
+        {
+            new TuvVision.Models.EquipmentDetailsModel()
+        };
+    }
+}
+
+
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered table-striped" id="itemTable">
-                                                        <thead style="background-color: #100ED2;color: white;">
+                                                        <thead style="background-color:#100ED2;color:white;">
                                                             <tr>
-                                                                <th>Detail of Equipment(s)/Instrument(s):</th>
+                                                                <th>Equipment</th>
                                                                 <th>Range</th>
                                                                 <th>ID</th>
-                                                                <th>Calibration Valid Till date:</th>
-                                                                <th>Certification Number with Date:</th>
+                                                                <th>Calibration Till</th>
+                                                                <th>Certification No</th>
                                                                 <th>NABL</th>
                                                                 <th>Non NABL</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody id="itemContainer">
-                                                            @{
-                                                                int i = 0;
-                                                            }
-                                                            @if (ViewData["CostSheet"] != null && ((IEnumerable<TuvVision.Models.EquipmentDetailsModel>)ViewData["CostSheet"]).Any())
+
+                                                        <tbody>
+                                                            @for (int i = 0; i < Model.lstEquipmentDetails.Count; i++)
                                                             {
+                                                                <tr>
+                                                                    <td>
+                                                                        @Html.TextAreaFor(m => m.lstEquipmentDetails[i].Name_Of_Equipments,
+                new { @class = "form-control", rows = 2 })
+                                                                    </td>
 
-                                                                foreach (var item in (IEnumerable<TuvVision.Models.EquipmentDetailsModel>)ViewData["CostSheet"])
-                                                                {
-                                                                    <tr class="item-row">
-                                                                        <td>
-                                                                            <textarea type="text" name="lstEquipmentDetails[@i].Name_Of_Equipments"
-                                                                                      value="@item.Name_Of_Equipments" class="form-control"></textarea>
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="lstEquipmentDetails[@i].Range"
-                                                                                   value="@item.Range" class="form-control" />
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text"
-                                                                                   name="lstEquipmentDetails[@i].Id"
-                                                                                   value="@item.Id"
-                                                                                   class="form-control autoExpandX" />
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="lstEquipmentDetails[@i].CalibrationValid_Till_date"
-                                                                                   value="@item.CalibrationValid_Till_date" class="form-control" />
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="lstEquipmentDetails[@i].Certification_No_Date"
-                                                                               value="@item.Certification_No_Date" class="form-control CertificationFrom" />
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="checkbox" name="lstEquipmentDetails[@i].NABLseenote1" style="height:19px;"
-                                                                                   value="@item.NABLseenote1" class="CertificationFrom" />
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="checkbox" name="lstEquipmentDetails[@i].NonNABLseenote2" style="height:19px;"
-                                                                                   value="@item.NonNABLseenote2" class="CertificationFrom" />
-                                                                        </td>
+                                                                    <td>
+                                                                        @Html.TextBoxFor(m => m.lstEquipmentDetails[i].Range,
+                new { @class = "form-control" })
+                                                                    </td>
 
+                                                                    <td>
+                                                                        @Html.TextBoxFor(m => m.lstEquipmentDetails[i].Id,
+                new { @class = "form-control" })
+                                                                    </td>
 
-                                                                        
+                                                                    <td>
+                                                                        @Html.TextBoxFor(m => m.lstEquipmentDetails[i].CalibrationValid_Till_date,
+                new { @class = "form-control" })
+                                                                    </td>
 
-                                                                        <td class="text-center">
-                                                                            <button type="button" class="btn btn-danger removeRow">X</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    i++;
-                                                                }
-                                                            }
+                                                                    <td>
+                                                                        @Html.TextBoxFor(m => m.lstEquipmentDetails[i].Certification_No_Date,
+                new { @class = "form-control" })
+                                                                    </td>
 
-                                                            else
-                                                            {
-                                                                <tr class="item-row">
-                                                                    <td><textarea type="text" name="lstEquipmentDetails[0].Name_Of_Equipments" class="form-control"></textarea></td>
-                                                                    <td><input type="text" name="lstEquipmentDetails[0].Range" class="form-control" /></td>
-                                                                    <td><textarea name="lstEquipmentDetails[0].Id" class="form-control"></textarea></td>
-                                                                    
-                                                                    <td><input type="text" name="lstEquipmentDetails[0].CalibrationValid_Till_date" class="form-control" /></td>
-                                                                    <td><input type="text" name="lstEquipmentDetails[0].Certification_No_Date" class="form-control" /></td>
-                                                                    <td><input type="checkbox" name="lstEquipmentDetails[0].NABLseenote1" class="form-control" style="height:19px;" /></td>
-
-                                                                    <td><input type="checkbox" name="lstEquipmentDetails[0].NABLseenote2" class="form-control" style="height:19px;" /></td>
-
-                                                                   
                                                                     <td class="text-center">
+                                                                        @Html.CheckBoxFor(m => m.lstEquipmentDetails[i].NABLseenote1)
+                                                                    </td>
+
+                                                                    <td class="text-center">
+                                                                        @Html.CheckBoxFor(m => m.lstEquipmentDetails[i].NonNABLseenote2)
+                                                                    </td>
+
+                                                                    <td>
                                                                         <button type="button" class="btn btn-danger removeRow">X</button>
                                                                     </td>
                                                                 </tr>
                                                             }
                                                         </tbody>
+
                                                     </table>
+
+
+                                                    @*<button type="button" class="btn btn-primary" id="addRow">Add Row</button>*@
                                                 </div>
+
+
+
+
+                                                @*<button type="button" id="addRow" class="btn btn-success">Add Row</button>*@
+
                                                 <div class="text-right">
                                                     <button type="button" class="btn btn-success" id="addRow" style="float:left;">Add Row</button>
                                                     <br />
                                                 </div>
 
-
-                                                
-                                                
                                                 <div class="col-xs-12 text-center" id="IVRPointerEvents">
                                                     <button type="submit" class="btn btn-default insert-form-btn">Save</button>
                                                 </div>
-                                            </form>
+                                            </form>     
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -254,73 +214,185 @@
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {
-
                         response($.map(data, function (item) {
                             debugger
                             return { label: item.CompanyName, value: item.CompanyName };
-
-
                         }));
                     },
                     error: function (response) {
-                        //alert(response.responseText);
                     },
                     failure: function (response) {
-                        //  alert(response.responseText);
                     }
                 });
             },
             select: function (e, i) {
-                //if (u.item.val == -1) {
-                //    return false;
-                //}
-                //$("#hfCompanyName").val(i.item.val);
             },
             minLength: 2
         });
 
     });
+    $(document).on('click', '.removeRow', function () {
+        $(this).closest('tr').remove();
+        updateRowIndices();
+    });
 
+    // Add new row dynamically
+    $('#addRow').click(function () {
+        var rowCount = $('#itemTable tbody tr').length;
+        var newRow = `<tr class="item-row">
+            <td><textarea name="lstEquipmentDetails[${rowCount}].Name_Of_Equipments" class="form-control" rows="2"></textarea></td>
+            <td><input type="text" name="lstEquipmentDetails[${rowCount}].Range" class="form-control" /></td>
+            <td><input type="text" name="lstEquipmentDetails[${rowCount}].Id" class="form-control" /></td>
+            <td><input type="text" name="lstEquipmentDetails[${rowCount}].CalibrationValid_Till_date" class="form-control" /></td>
+            <td><input type="text" name="lstEquipmentDetails[${rowCount}].Certification_No_Date" class="form-control" /></td>
+            <td class="text-center"><input type="checkbox" name="lstEquipmentDetails[${rowCount}].NABLseenote1" /></td>
+            <td class="text-center"><input type="checkbox" name="lstEquipmentDetails[${rowCount}].NonNABLseenote2" /></td>
+            <td class="text-center"><button type="button" class="btn btn-danger removeRow">X</button></td>
+        </tr>`;
+        $('#itemTable tbody').append(newRow);
+    });
 
-    $(document).ready(function () {
-        var rowIndex = $("#itemContainer .item-row").length;
-
-        $("#addRow").click(function () {
-            var newRow = $(".item-row:first").clone(true);
-
-            newRow.find("input, textarea, select").each(function () {
-                var name = $(this).attr("name");
+    // Re-index inputs after a row is removed
+    function updateRowIndices() {
+        $('#itemTable tbody tr').each(function (index, row) {
+            $(row).find('textarea, input').each(function () {
+                var name = $(this).attr('name');
                 if (name) {
-                    var newName = name.replace(/\[\d+\]/, '[' + rowIndex + ']');
-                    $(this).attr("name", newName).val('');
+                    var newName = name.replace(/\[\d+\]/, `[${index}]`);
+                    $(this).attr('name', newName);
                 }
             });
-
-          
-            $("#itemContainer").append(newRow);
-            rowIndex++;
         });
+    }
+   
 
-        $(document).on("click", ".removeRow", function () {
-            if ($("#itemContainer .item-row").length > 1) {
-                $(this).closest(".item-row").remove();
-            }
-        });
-    });
+    //$('form').submit(function() {
+    //    $('.nabl-checkbox').each(function() {
+    //        var index = $(this).data('index');
+    //        var hidden = $('.nabl-hidden[data-index="' + index + '"]');
+    //        hidden.val($(this).is(':checked')); // set true/false
+    //    });
+
+    //    $('.nonnabl-checkbox').each(function() {
+    //        var index = $(this).data('index');
+    //        var hidden = $('.nonnabl-hidden[data-index="' + index + '"]');
+    //        hidden.val($(this).is(':checked'));
+    //    });
+    //});
+
+
+    //$(document).ready(function () {
+    //    var rowIndex = $("#itemContainer .item-row").length;
+        
+    //    $(document).ready(function () {
+    //        var rowIndex = $("#itemContainer .item-row").length;
+
+    //        $("#addRow").click(function () {
+    //            var newRow = $(".item-row:first").clone();
+
+    //            newRow.find("input, textarea").each(function () {
+    //                var name = $(this).attr("name");
+    //                if (name) {
+    //                    $(this).attr("name", name.replace(/\[\d+\]/, '[' + rowIndex + ']'));
+    //                }
+
+    //                if ($(this).is(":checkbox")) {
+    //                    $(this).prop("checked", false);
+    //                } else {
+    //                    $(this).val('');
+    //                }
+    //            });
+
+    //            $("#itemContainer").append(newRow);
+    //            rowIndex++;
+    //        });
+    //    });
+    //$(document).ready(function () {
+
+    //    // Remove row
+    //    $(document).on('click', '.removeRow', function () {
+    //        $(this).closest('tr').remove();
+    //    });
+
+    //    // Add new row dynamically
+    //    $('#addRow').click(function () {
+    //        var rowCount = $('#itemTable tbody tr').length;
+    //        var newRow = `<tr class="item-row">
+    //                <td><textarea name="lstEquipmentDetails[${rowCount}].Name_Of_Equipments" class="form-control" rows="2"></textarea></td>
+    //                <td><input type="text" name="lstEquipmentDetails[${rowCount}].Range" class="form-control" /></td>
+    //                <td><input type="text" name="lstEquipmentDetails[${rowCount}].Id" class="form-control" /></td>
+    //                <td><input type="text" name="lstEquipmentDetails[${rowCount}].CalibrationValid_Till_date" class="form-control" /></td>
+    //                <td><input type="text" name="lstEquipmentDetails[${rowCount}].Certification_No_Date" class="form-control" /></td>
+    //                <td class="text-center"><input type="checkbox" name="lstEquipmentDetails[${rowCount}].NABLseenote1" /></td>
+    //                <td class="text-center"><input type="checkbox" name="lstEquipmentDetails[${rowCount}].NonNABLseenote2" /></td>
+    //                <td class="text-center"><button type="button" class="btn btn-danger removeRow">X</button></td>
+    //            </tr>`;
+    //        $('#itemTable tbody').append(newRow);
+    //    });
+    //});
+
+
+
+            
+
+    //    $(document).on("click", ".removeRow", function () {
+    //        if ($("#itemContainer .item-row").length > 1) {
+    //            $(this).closest(".item-row").remove();
+    //        }
+    //    });
+    //});
+
+
+    //document.addEventListener('change', function (e) {
+    //    if (e.target.classList.contains('row-check')) {
+    //        const row = e.target.closest('tr');
+    //        const checkboxes = row.querySelectorAll('.row-check');
+
+    //        checkboxes.forEach(cb => {
+    //            if (cb !== e.target) {
+    //                cb.checked = false;
+    //            }
+    //        });
+    //    }
+    //})
 
 </script>
                                     
-                                    <!--End of Ashwini Code-->
-@*}*@
-
+                  
  
 <script>
     var isConfirmationIVR = @Session["IsConfirmationIVR"] ?? 0;
-    // JavaScript to disable pointer events if isConfirmationIVR is 1
-
     if (isConfirmationIVR == 1) {
-        document.getElementById("IVRPointerEvents").style.pointerEvents = "none";
+        //document.getElementById("IVRPointerEvents").style.pointerEvents = "none";
     }
+    $('#btnClearNew').on('click', function () {
+        debugger
+        var x = confirm("Are you sure you want to delete record?");
+        if (x) {
+            var PK_Call_ID = $('#PK_CALL_ID').val();
+            console.log($('#PK_CALL_ID').val());
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ClearEquipmentDetail", "VisitReport")',
+                data: JSON.stringify({ PK_Call_ID: PK_Call_ID }), // must match parameter name
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (response) {
+                    debugger
+                    if (response.success == 1) {
+                        alert("Data Clear Successfuly");
+                        location.reload();
+                    }
+                    else {
+                        alert("Something went wrong please try again.");
+                    }
+                }
+            })
+        }
+        else
+        {
+        }
+    });
 </script>
   
 
