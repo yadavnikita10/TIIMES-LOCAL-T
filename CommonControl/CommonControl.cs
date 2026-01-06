@@ -637,8 +637,8 @@ public class CommonControl
                 // Add the descriptor parameter to send unique value
 
                 //Get Last Generated Report Uniq report
-                string descriptor = ReportNo;
-                formData.Add(new StringContent(descriptor), "descriptor");
+                //string descriptor = ReportNo;
+                //formData.Add(new StringContent(descriptor), "descriptor");
 
                 // Attach the generated PDF file
                 byte[] fileBytes = File.ReadAllBytes(filePath);

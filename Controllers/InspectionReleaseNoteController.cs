@@ -3042,41 +3042,44 @@ namespace TuvVision.Controllers
                         #endregion
 
 
-                        if (IVR.lstConcerns != null && IVR.lstConcerns.Count > 0)
+                        IVR.Status = "1";
+                        IVR.Type = "IRN";
+                        Result = OBJDALIRN.InsertUpdateItemDescription(IVR);
+                        if (Result != "" && Result != null)
                         {
+                            TempData["InsertCompany"] = Result;
 
-                            OBJDALIRN.DeleteExistingRecordItemDescription(IVR.PK_CALL_ID);
-                            foreach (var item_ in IVR.lstConcerns)
-                            {
-
-
-                                
-                                item_.Status = "1";
-                                item_.Type = "IRN";
-
-                                Result= OBJDALIRN.InsertUpdateItemDescription(item_);
-                                if (Result != "" && Result != null)
-                                {
-                                    TempData["InsertCompany"] = Result;
-
-                                }
-                            }
                         }
                         //IVR.Status = "1";
                         //IVR.Type = "IRN";
                         //Result = OBJDALIRN.InsertUpdateItemDescription(IVR);
-                        
+
                     }
                 }
                 else
                 {
-                    IVR.Status = "1";
-                    IVR.Type = "IRN";
-                    Result = OBJDALIRN.InsertUpdateItemDescription(IVR);
-                    if (Result != "" && Result != null)
-                    {
-                        TempData["InsertCompany"] = Result;
+                    //IVR.Status = "1";
+                    //IVR.Type = "IRN";
+                    //Result = OBJDALIRN.InsertUpdateItemDescription(IVR);
+                    //if (Result != "" && Result != null)
+                    //{
+                    //    TempData["InsertCompany"] = Result;
 
+                    //}
+                    if (IVR.lstConcerns != null && IVR.lstConcerns.Count > 0)
+                    {
+                        OBJDALIRN.DeleteExistingRecordItemDescription(IVR.PK_IVR_ID);
+                        foreach (var item_ in IVR.lstConcerns)
+                        {
+                            item_.Status = "1";
+                            item_.Type = "IRN";
+                            item_.PK_IVR_ID = IVR.PK_IVR_ID;
+                            Result = OBJDALIRN.InsertUpdateItemDescription(item_);
+                            if (Result != "" && Result != null)
+                            {
+                                TempData["InsertCompany"] = Result;
+                            }
+                        }
                     }
                 }
             }
@@ -5177,6 +5180,16 @@ namespace TuvVision.Controllers
                         {
 
                         }
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                        {
+                            _Header = _Header.Replace("[TUV_INDIA_PRIVATE_LIMITED]", "TUV INDIA PRIVATE LIMITED");
+                            _Header = _Header.Replace("[INSPECTION_RELEASE_NOTE]", "INSPECTION RELEASE NOTE / CERTIFICATE");
+                        }
+                        else
+                        {
+                            _Header = _Header.Replace("[TUV_INDIA_PRIVATE_LIMITED]", "");
+                            _Header = _Header.Replace("[INSPECTION_RELEASE_NOTE]", "");
+                        }
 
 
                         StreamReader _readFooter_File = new StreamReader(Server.MapPath("~/inspection-certificate-footer.html")); // Footer is used from IVR as it same and commented in pdf template.
@@ -5205,8 +5218,7 @@ namespace TuvVision.Controllers
 
                         PdfHtmlSection headerHtml = new PdfHtmlSection(_Header, string.Empty);
                         headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-                        converter.Header.Add(headerHtml);
-
+                         converter.Header.Add(headerHtml);
                         // footer settings
                         converter.Options.DisplayFooter = true || true || true;
                         converter.Footer.DisplayOnFirstPage = true;
@@ -5217,14 +5229,17 @@ namespace TuvVision.Controllers
                         converter.Footer.Height = 105;
                         PdfHtmlSection footerHtml = new PdfHtmlSection(_footer, string.Empty);
                         footerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-                        converter.Footer.Add(footerHtml);
 
+                        if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                        {
+                            converter.Footer.Add(footerHtml);
+                        }
+                        else
+                        {
+
+                        }
                         //end abel code
-
                         #region Footer Code
-                        //PdfTextSection text = new PdfTextSection(-40, 80, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 9));
-                        //PdfTextSection text = new PdfTextSection(510, 77, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 9));
-                        //PdfTextSection text = new PdfTextSection(33, 82, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("Arial", 9));
                         PdfTextSection text = new PdfTextSection(33, 87, "Page: {page_number} of {total_pages}  ", new System.Drawing.Font("TNG Pro", 9));
                         // text.HorizontalAlign = PdfTextHorizontalAlign.Right;
                         converter.Footer.Add(text);
@@ -5235,59 +5250,30 @@ namespace TuvVision.Controllers
 
                         RM.PK_RM_ID = Convert.ToInt32(PK_RM_ID);
 
-                        //string ReportName = string.Empty;
-                        //string Report = string.Empty;
-                        //DataTable GetFileName = new DataTable();
-                        //GetFileName = OBJDALIRN.GetIRNReportById(Convert.ToInt32(RM.PK_RM_ID));
-                        //if (GetFileName.Rows.Count > 0)
-                        //{
-                        //    ReportName = Convert.ToString(GetFileName.Rows[0]["ReportName"]);
-                        //    Report = Convert.ToString(GetFileName.Rows[0]["Report"]);
-                        //}
-                        //if (Report != null)
-                        //{
-                        //    var pathdelete = Path.Combine(Server.MapPath("~/IRNReports/"), Report);
-                        //    if (System.IO.File.Exists(pathdelete))
-                        //    {
-                        //        System.IO.File.Delete(pathdelete);
-                        //    }
-                        //}
-                        //string test = Report;
-
-
-
-
 
                         PdfDocument doc = converter.ConvertHtmlString(body);
                         //added by nikita on 23102024
-                        string imgFile = Server.MapPath("~/DraftWatermar.png");
+                        string imgFile = Server.MapPath("~/invalid.jpg");
 
                         if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 1)
                         {
-                            string imgFile1 = Server.MapPath("~/WaterMark.png");
-                            SelectPdf.PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
-                            PdfImageElement img1 = new PdfImageElement(150, 150, imgFile1);
-                            img1.Transparency = 15;
-                            template1.Add(img1);
+                            string imgPath = Server.MapPath("~/invalid.jpg");
+                            //string imgFile1 = Server.MapPath("~/invalid.jpg");
+                            foreach (SelectPdf.PdfPage page in doc.Pages)
+                            {
+                                PdfImageElement img_ = new PdfImageElement(0, 0, imgPath);
+                                float pageWidth = page.ClientRectangle.Width;
+                                float pageHeight = page.ClientRectangle.Height;
+                                img_.Width = pageWidth * 0.7f;
+                                img_.Height = pageHeight * 0.7f;
+                                img_.X = (pageWidth - img_.Width) / 2;
+                                img_.Y = (pageHeight - img_.Height) / 2;
+                                img_.Transparency = 15;
+                                page.Add(img_);
+                            }
                         }
 
                         #region watermark test
-
-
-                        ////string imgFile = Server.MapPath("/t2.jpg");
-                        ////// watermark all pages - add a template containing an image 
-                        ////// to the bottom right of the page
-                        ////// the image should repeat on all pdf pages automatically
-                        ////// the template should be rendered behind the rest of the page elements
-                        ////PdfTemplate template = doc.AddTemplate(doc.Pages[0].ClientRectangle); //// 635 * 554 
-                        ////                                                                      //PdfTemplate template = doc.AddTemplate(600,600);
-                        ////PdfImageElement img = new PdfImageElement(125, 85, imgFile);
-                        //////PdfImageElement img = new PdfImageElement(600,1000, imgFile);
-                        ////img.Transparency = 15;
-
-                        //////template.Background = true;
-                        ////template.Add(img);
-
                         #endregion
 
                         #region signature on each page 18/05/2024
@@ -5326,17 +5312,6 @@ namespace TuvVision.Controllers
                         #endregion
 
                         string path = Server.MapPath("~/IRNReports");
-
-                        /////Rohini 08/09/2024 Stop Editing
-                        ///  doc.Security.OwnerPassword = "!$!)!(*%"; // Required for setting permissions
-
-                        ////set document permissions
-                        //doc.Security.CanAssembleDocument = true;
-                        //doc.Security.CanCopyContent = true;
-                        //doc.Security.CanEditAnnotations = true;
-                        //doc.Security.CanEditContent = true;                        
-                        //doc.Security.CanFillFormFields = true;
-
                         doc.Save(path + '\\' + Report);
                         doc.Close();
                         #endregion

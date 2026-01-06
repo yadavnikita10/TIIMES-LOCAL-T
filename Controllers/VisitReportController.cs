@@ -11810,7 +11810,7 @@ namespace TuvVision.Controllers
                         if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 1)
                         {
                             string imgFile1 = Server.MapPath("~/WaterMark.png");
-                            PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
+                        SelectPdf.PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
                             PdfImageElement img1 = new PdfImageElement(150, 150, imgFile1);
                             img1.Transparency = 15;
                             template1.Add(img1);
@@ -13383,6 +13383,16 @@ namespace TuvVision.Controllers
                     _Header = _readHeader_File.ReadToEnd();
                     _Header = _Header.Replace("[SapAndControle_No]", ObjModelVisitReport.SubJob_No);
                     _Header = _Header.Replace("[RevisionNo]", countNo);
+                    if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0)
+                    {
+                        _Header = _Header.Replace("[TUV_INDIA_PRIVATE_LIMITED]", "TUV INDIA PRIVATE LIMITED");
+                        _Header = _Header.Replace("[INSPECTION_RELEASE_NOTE]", "INSPECTION VISIT REPORT");
+                    }
+                    else
+                    {
+                        _Header = _Header.Replace("[TUV_INDIA_PRIVATE_LIMITED]", "");
+                        _Header = _Header.Replace("[INSPECTION_RELEASE_NOTE]", "");
+                    }
                     /*_Header = _Header.Replace("[Logo]", "http://localhost:54895/AllJsAndCss/images/logo.png");*/ // change123 once pulished on server
 
                     //_Header = _Header.Replace("[Logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
@@ -13475,6 +13485,9 @@ namespace TuvVision.Controllers
 
                     PdfHtmlSection headerHtml = new PdfHtmlSection(_Header, string.Empty);
                     headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+
+
+
                     converter.Header.Add(headerHtml);
 
                     // footer settings
@@ -13488,7 +13501,15 @@ namespace TuvVision.Controllers
 
                     PdfHtmlSection footerHtml = new PdfHtmlSection(_footer, string.Empty);
                     footerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-                    converter.Footer.Add(footerHtml);
+
+                    if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 0) // added by vaibhav on 05032025 for comfirmation
+                    {
+                        converter.Footer.Add(footerHtml);
+                    }
+                    else
+                    {
+
+                    }
 
                     //end abel code
 
@@ -13641,16 +13662,38 @@ namespace TuvVision.Controllers
 
                     SelectPdf.PdfDocument doc = converter.ConvertHtmlString(body);
 
-                   
+
 
                     if (Convert.ToInt32(ObjModelVisitReport.IsComfirmation) != 1)
                     {
-                        string imgFile1 = Server.MapPath("~/WaterMark.png");
-                        PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
-                        PdfImageElement img1 = new PdfImageElement(150, 150, imgFile1);
-                        img1.Transparency = 15;
-                        template1.Add(img1);
+                        string imgPath = Server.MapPath("~/invalid.jpg");
+
+                        // Loop through all pages (A4)
+                        foreach (SelectPdf.PdfPage page in doc.Pages)
+                        {
+                            // Create image element
+                            PdfImageElement img_ = new PdfImageElement(0, 0, imgPath);
+
+                            // A4 page size comes from ClientRectangle
+                            float pageWidth = page.ClientRectangle.Width;
+                            float pageHeight = page.ClientRectangle.Height;
+
+                            // Set watermark size (70% of A4 page)
+                            img_.Width = pageWidth * 0.7f;
+                            img_.Height = pageHeight * 0.7f;
+
+                            // Center watermark on A4
+                            img_.X = (pageWidth - img_.Width) / 2;
+                            img_.Y = (pageHeight - img_.Height) / 2;
+
+                            // Set transparency (watermark effect)
+                            img_.Transparency = 15;
+
+                            // Add to page
+                            page.Add(img_);
+                        }
                     }
+
 
 
                     doc.Security.CanCopyContent = false;

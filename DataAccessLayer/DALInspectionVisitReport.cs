@@ -6100,6 +6100,27 @@ namespace TuvVision.DataAccessLayer
             return Result;
         }
 
-
+        public DataSet GetDataMRM()//Geting List Of Enquiry Master record Details Binding Dddl List
+        {
+            DataSet DSGetDdlList = new DataSet();
+            try
+            {
+                SqlCommand CMDGetDdlLst = new SqlCommand("SP_CompanyMaster", con);
+                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
+                CMDGetDdlLst.CommandTimeout = 900000000;
+                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", "1");
+                SqlDataAdapter SDAGetAllDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                SDAGetAllDdlLst.Fill(DSGetDdlList);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                DSGetDdlList.Dispose();
+            }
+            return DSGetDdlList;
+        }
     }
 }

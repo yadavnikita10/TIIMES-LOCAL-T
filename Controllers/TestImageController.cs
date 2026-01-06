@@ -995,8 +995,10 @@ namespace TuvVision.Controllers
                     string reportNo = ReportNo;
 
                     string relativePathFooter = "/AllJsAndCss/images/footerlogo.png";
+                    string watermarkPath = Server.MapPath("~/invalid.jpg");
+
                     string footerLogoPath = Server.MapPath(relativePathFooter);
-                    writer.PageEvent = new PdfHeaderFooter(logoPath, reportNo, footerLogoPath, CustomerSpecificNumber, IsConfirmation);
+                    writer.PageEvent = new PdfHeaderFooter(logoPath, reportNo, footerLogoPath, CustomerSpecificNumber, IsConfirmation, watermarkPath);
 
                     doc.Open();
 
@@ -1140,7 +1142,7 @@ namespace TuvVision.Controllers
 
                     string relativePathFooter = "/AllJsAndCss/images/footerlogo.png";
                     string footerLogoPath = Server.MapPath(relativePathFooter);
-                    string watermarkPath = Server.MapPath("~/WaterMark.png");
+                    string watermarkPath = Server.MapPath("~/invalid.jpg");
                     writer.PageEvent = new PdfHeaderFooterIRN(logoPath, reportNo, footerLogoPath, CustomerSpecificNumber,
                                                                 IsConfirmation,
                                                                 watermarkPath);

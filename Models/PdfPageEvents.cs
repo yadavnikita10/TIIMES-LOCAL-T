@@ -15,9 +15,11 @@ namespace TuvVision
     //{
     //}
 
-
+   
     public class PdfPageEvents : PdfPageEventHelper
     {
+
+      
         #region BAK
         //public class PdfHeaderFooter : PdfPageEventHelper
         //{
@@ -105,20 +107,25 @@ namespace TuvVision
 
     public class PdfHeaderFooter : PdfPageEventHelper
     {
+
+
         private string _logoPath;
         private string _reportNo;
         private string _footerLogoPath;
         private iTextSharp.text.Image footerLogo;
         private string _CustomerSpecificNumber;
         private bool _isConfirmation;
+        private string watermark_;
 
-        public PdfHeaderFooter(string logoPath, string reportNo, string footerLogoPath, string CustomerSpecificNumber, bool isConfirmation)
+
+        public PdfHeaderFooter(string logoPath, string reportNo, string footerLogoPath, string CustomerSpecificNumber, bool isConfirmation,string watermarkPath)
         {
             _logoPath = logoPath;
             _reportNo = reportNo;
             _footerLogoPath = footerLogoPath;
             _CustomerSpecificNumber = CustomerSpecificNumber;
             _isConfirmation = isConfirmation;
+            watermark_ = watermarkPath;
 
             //if (System.IO.File.Exists(footerLogoPath))
             //{
@@ -129,12 +136,57 @@ namespace TuvVision
 
         }
 
-
+        
         public override void OnEndPage(PdfWriter writer, Document document)
         {
             PdfContentByte cb = writer.DirectContent;
 
             // ================= HEADER =================
+
+
+            if (!_isConfirmation)
+            {
+                string watermarkPath = HttpContext.Current.Server.MapPath("~/invalid.jpg");
+                if (File.Exists(watermarkPath))
+                {
+                    PdfContentByte canvas = writer.DirectContentUnder;
+                    iTextSharp.text.Image draftImg = iTextSharp.text.Image.GetInstance(watermarkPath);
+
+                    // SET SIZE (Adjust according to need)
+                    float width = document.PageSize.Width * 0.75f;
+                    float height = document.PageSize.Height * 0.75f;
+                    draftImg.ScaleAbsolute(width, height);
+
+                    // CENTER POSITION
+                    draftImg.SetAbsolutePosition(
+                        (document.PageSize.Width - width) / 2,
+                        (document.PageSize.Height - height) / 2);
+
+                    // OPACITY (0.15 = same as SelectPDF approx)
+                    PdfGState gs = new PdfGState();
+                    gs.FillOpacity = 0.15f;     // <=== lower = lighter
+                    gs.StrokeOpacity = 0.15f;
+                    canvas.SaveState();
+                    canvas.SetGState(gs);
+
+                    canvas.AddImage(draftImg);
+                    canvas.RestoreState();
+                }
+            }
+
+
+            if (!_isConfirmation && File.Exists(watermark_))
+            {
+                iTextSharp.text.Image draftImg = iTextSharp.text.Image.GetInstance(watermark_);
+                draftImg.ScaleAbsolute(300f, 300f);
+                draftImg.SetAbsolutePosition(
+                    (document.PageSize.Width - 300) / 2,
+                    (document.PageSize.Height - 300) / 2);
+                draftImg.Transparency = new int[] { 0x0F, 0x10 };
+
+                PdfContentByte under = writer.DirectContentUnder;
+                under.AddImage(draftImg);
+            }
             PdfPTable headerTable = new PdfPTable(2);
             headerTable.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
             headerTable.SetWidths(new float[] { 20f, 80f });
@@ -205,8 +257,14 @@ namespace TuvVision
             headerTable.AddCell(textCell);
 
             // Write header
-            headerTable.WriteSelectedRows(0, -1, document.LeftMargin, document.PageSize.Height - 10, cb);
 
+            if (!_isConfirmation)
+            {
+            }
+            else
+            {
+                headerTable.WriteSelectedRows(0, -1, document.LeftMargin, document.PageSize.Height - 10, cb);
+            }
 
 
 
@@ -345,160 +403,14 @@ namespace TuvVision
             footerTable.AddCell(bottomRowContainer);
 
             // Finally write footer
-            footerTable.WriteSelectedRows(0, -1, document.LeftMargin, document.BottomMargin + 90, cb);
+            if (!_isConfirmation)
+            {
 
-            //float[] columnWidths = new float[] { 70f, 30f };
-            //float[] columnWidths = new float[] { 70f, 30f };
-            //PdfPTable footerTable = new PdfPTable(2);
-            ////footerTable.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
-            //footerTable.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
-            ////float ninetyPercentWidth = (document.PageSize.Width - document.LeftMargin - document.RightMargin) * 0.9f;
-            ////footerTable.TotalWidth = ninetyPercentWidth;
-            //footerTable.LockedWidth = true;
-            //footerTable.SetWidths(columnWidths);
-
-            //// Fonts
-            //Font footerFont = FontFactory.GetFont("TNG PRO", 5);
-            //Font boldFooterFont = FontFactory.GetFont("TNG PRO", 5,Font.BOLD);
-            //Font italicFooterFont = FontFactory.GetFont("TNG PRO", 5, Font.ITALIC);
-
-            ////Font footerFont = FontFactory.GetFont(FontFactory.HELVETICA, 5);
-            ////Font boldFooterFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 5);
-
-
-            //// Text blocks
-            //string disclaimerHeader = "This IVR shall not be considered as final acceptance of inspected item(s). The final acceptance will be given through Inspection Release Note.";
-
-            //string disclaimerContent = 
-            //    "The inspection by TUV India Pvt. Ltd., review of Test Certificates / Reports and issue of Inspection Visit Report does not relieve the Client / Supplier / Manufacturer / Stockiest from their responsibility towards the Client " +
-            //    "/ End User to supply the genuine material / item(s) and document(s) in full compliance with applicable Order, Specification, Technical, Quality, Quantity, Warranty, Guarantee requirements. Supplier / Manufacturer / " +
-            //    "stockiest is wholly legally responsible for genuineness of the material / item(s) supplied and document(s) submitted. TÜV India’s responsibility is only limited to correctness of inspection results including review of the " +
-            //    "documents, within its agreed scope against written requirements and neither TUV India nor any of its group companies, associates or employees are in any way legally responsible for genuineness of the material / " +
-            //    "item(s) and document(s). If the calibration certificate(s) for the measuring instrument(s) / equipment(s) used during inspection do not have traceability to NABL / Other certifying bodies, then the scope of review is limited " +
-            //    "only to technical content in the calibration certificate.";
-
-            //string copyrightContent = "This document is the property of TUV India Pvt. Ltd. and should not be reproduced, except in full without the consent of TUV India Pvt. Ltd.";
-
-            //string addressContent = "(REGD. & HEAD OFFICE)\n" +
-            //    "801, Raheja Plaza - I, LBS Marg, Ghatkopar (West), Mumbai – 400086, Maharashtra, India.\n" +
-            //    "Tel: + 91 22 66477000, Email: inspection@tuv-nord.com; Website: www.tuv-nord.com/in";
-
-            //string formnoContent = "Form No.:F / INSP / VR / 11 – R13 / Tiimes; Revision Date: 27.10.2023 / TIIMES";
-
-            //// ================== Disclaimer Block ==================
-            //// ================== Disclaimer Block (Row 1 - Full Width) ==================
-            //Paragraph disclaimerPara = new Paragraph();
-            //disclaimerPara.Add(new Chunk("Disclaimer: ", boldFooterFont));
-            //disclaimerPara.Add(new Chunk(disclaimerHeader + "\n", italicFooterFont));
-            //disclaimerPara.Add(new Chunk(disclaimerContent + "\n", footerFont));
-            //disclaimerPara.Add(new Chunk("Copyright: ", boldFooterFont));
-            //disclaimerPara.Add(new Chunk(copyrightContent, italicFooterFont)); // << no \n here
-            //disclaimerPara.Alignment = Element.ALIGN_JUSTIFIED;
-            //disclaimerPara.PaddingTop=20f;
-            //disclaimerPara.SetLeading(0, 1.6f);
-
-            //// Add disclaimer (till copyright) as full-width
-            //PdfPCell disclaimerCell = new PdfPCell(disclaimerPara);
-            //disclaimerCell.Border = Rectangle.NO_BORDER;
-            //disclaimerCell.Colspan = 2;
-            //disclaimerCell.Padding = 3f;
-            //disclaimerCell.PaddingBottom = 0f;
-            //footerTable.AddCell(disclaimerCell);
-
-            //// ================= TUV India + Logo row ==================
-            //// Left side (60%)
-            //Paragraph tuvInfoPara = new Paragraph();
-            //tuvInfoPara.Add(new Chunk("TUV India Pvt. Ltd. (TÜV NORD GROUP): ", boldFooterFont));
-            //tuvInfoPara.Add(new Chunk(addressContent + "\n", footerFont));
-            //tuvInfoPara.Add(new Chunk(formnoContent, footerFont));
-            ////tuvInfoPara.SetLeading(0, 1.2f);
-            //tuvInfoPara.SetLeading(0, 1.5f);
-
-            //PdfPCell tuvCell = new PdfPCell(tuvInfoPara);
-            //tuvCell.Border = Rectangle.NO_BORDER;
-            //tuvCell.HorizontalAlignment = Element.ALIGN_LEFT;
-            //tuvCell.VerticalAlignment = Element.ALIGN_TOP;
-            //tuvCell.Padding = 2f;
-            //tuvCell.PaddingTop = 0f;
-            //footerTable.AddCell(tuvCell);
-
-            //// Right side (40%) - logo
-            //PdfPCell imageCell;
-            //if (!string.IsNullOrEmpty(_footerLogoPath) && File.Exists(_footerLogoPath))
-            //{
-            //    iTextSharp.text.Image footerLogo = iTextSharp.text.Image.GetInstance(_footerLogoPath);
-            //    //footerLogo.ScaleAbsolute(100f, 20f);
-            //    footerLogo.ScaleAbsolute(100f, 17f);
-
-            //    imageCell = new PdfPCell(footerLogo);
-            //}
-            //else
-            //{
-            //    imageCell = new PdfPCell(new Phrase(""));
-            //}
-
-
-
-
-
-            //imageCell.Border = Rectangle.NO_BORDER;
-            //imageCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-            //imageCell.VerticalAlignment = Element.ALIGN_BOTTOM;
-            //imageCell.PaddingRight = 2f;
-            //imageCell.PaddingRight = -18f;
-            //footerTable.AddCell(imageCell);
-
-
-            //// Set widths for last row (60:40)
-            //footerTable.SetWidths(new float[] { 60f, 40f });
-
-
-
-
-
-
-            //// increase left margin by 20px
-            ////float xPos = document.LeftMargin + 8f;
-
-
-            //// Extra margins you want to apply
-            //float extraLeftMargin = 8f;   // move inwards from left
-            //float extraRightMargin = 12f; // move inwards from right
-            //// Adjusted total width (shrink footer table)
-            //footerTable.TotalWidth = document.PageSize.Width
-            //                         - document.LeftMargin
-            //                         - document.RightMargin
-            //                         - extraLeftMargin
-            //                         - extraRightMargin;
-
-            //footerTable.LockedWidth = true;
-
-            //// X position (start point)
-            //float xPos = document.LeftMargin + extraLeftMargin;
-
-
-
-            //footerTable.WriteSelectedRows(
-            //    0, -1,
-            //    xPos,                           // new X position
-            //    document.BottomMargin + 30,     // Y position
-            //    cb
-            //);
-
-            // ================== Draw Footer ==================
-            //footerTable.WriteSelectedRows(
-            //    0, -1,
-            //    document.LeftMargin,
-            //    //document.BottomMargin + 45,
-            //    document.BottomMargin + 30,
-            //    cb
-            //);
-            // Draw footer
-
-
-
-
-
+            }
+            else
+            {
+                footerTable.WriteSelectedRows(0, -1, document.LeftMargin, document.BottomMargin + 90, cb);
+            }
         }
 
 

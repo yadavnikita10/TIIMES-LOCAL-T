@@ -36,7 +36,7 @@ namespace TuvVision
         {
             if (!_isConfirmation)
             {
-                string watermarkPath = HttpContext.Current.Server.MapPath("~/WaterMark.png");
+                string watermarkPath = HttpContext.Current.Server.MapPath("~/invalid.jpg");
                 if (File.Exists(watermarkPath))
                 {
                     PdfContentByte canvas = writer.DirectContentUnder;

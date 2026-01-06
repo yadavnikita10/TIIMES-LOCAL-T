@@ -3223,6 +3223,10 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
                         body = body.Replace("[EndCustomer]", ObjModelQuotationMast.EndCustomer);
                     }
 
+                    //body = body.Replace("[showp]", "display:block;");
+                    //body = body.Replace("[generaltermfirstpage]", "display:block;");
+                    //body = body.Replace("[generaltermsecondpage]", "display:block;");
+
 
 
                     string byteData2 = Convert.ToBase64String(ObjModelQuotationMast.IData);
@@ -3267,6 +3271,8 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
 
                     _Header = _Header.Replace("[QuotationNumber]", ObjModelQuotationMast.QuotationNumber);
                     _Header = _Header.Replace("[Date]", Convert.ToString(ObjModelQuotationMast.CreatedDate));
+                    _Header = _Header.Replace("[TUV_INDIA_PRIVATE_LIMITED]", "TUV INDIA PRIVATE LIMITED");
+                    _Header = _Header.Replace("[TECHNO_COMMERCIAL_PROPOSAL]", "TECHNO-COMMERCIAL PROPOSAL");
 
                     StreamReader _readFooter_File = new StreamReader(Server.MapPath("~/QuotationHtml/quotation-footer.html"));
                     _footer = _readFooter_File.ReadToEnd();
@@ -4975,7 +4981,454 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
         }
 
 
+        public ActionResult GeneratePDF_(QuotationMaster QM)
+        {
+            QM.QuotationNumber = Convert.ToString(Session["QuotationNumber"]);
+            int PKQTID = Convert.ToInt32(Session["QTID"]);
+            if (PKQTID == 0)
+            {
+                QM.PK_QTID = QM.PK_QTID;
+            }   
+            else
+            {
+                QM.PK_QTID = PKQTID;
+            }
+            if (QM.QuotationNumber != "" && QM.QuotationNumber != null || QM.PK_QTID > 0 && QM.PK_QTID != null)
+            {
+                DataTable DTPrintQuotationDtls = new DataTable();
+                DTPrintQuotationDtls = objDALQuotationMast.GetPrintQuotationDtls(QM);
+                if (DTPrintQuotationDtls.Rows.Count > 0)
+                {
+                    ObjModelQuotationMast.Quotation_Description = Convert.ToString(DTPrintQuotationDtls.Rows[0]["EnquiryDescription"]);
+                    ObjModelQuotationMast.PK_QTID = Convert.ToInt32(DTPrintQuotationDtls.Rows[0]["PK_QTID"]);
+                    ObjModelQuotationMast.QuotationNumber = Convert.ToString(DTPrintQuotationDtls.Rows[0]["QuotationNumber"]);
+                    ObjModelQuotationMast.EQ_ID = Convert.ToInt32(DTPrintQuotationDtls.Rows[0]["EQ_ID"]);
+                    ObjModelQuotationMast.Associates = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Associates"]);
 
+                    ObjModelQuotationMast.QuotationCompanyName = Convert.ToString(DTPrintQuotationDtls.Rows[0]["CompanyName"]);
+                    ObjModelQuotationMast.ContactName = Convert.ToString(DTPrintQuotationDtls.Rows[0]["ContactName"]);
+                    ObjModelQuotationMast.Email = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Email"]);
+                    ObjModelQuotationMast.Mobile = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Mobile"]);
+                    ObjModelQuotationMast.Landline = Convert.ToString(DTPrintQuotationDtls.Rows[0]["HomePhone"]);
+                    ObjModelQuotationMast.BranchName = Convert.ToString(DTPrintQuotationDtls.Rows[0]["BranchName"]);
+
+                    ObjModelQuotationMast.ServType = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Name"]);
+                    ObjModelQuotationMast.ProjectName = Convert.ToString(DTPrintQuotationDtls.Rows[0]["ProjectName"]);
+                    ObjModelQuotationMast.Enquiry = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Enquiry"]);
+                    //ObjModelQuotationMast.Quotation_Description = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Quotation_Description"]);
+                    ObjModelQuotationMast.EndCustomer = Convert.ToString(DTPrintQuotationDtls.Rows[0]["EndCustomer"]);
+                    ObjModelQuotationMast.Reference = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Reference"]);
+                    ViewBag.CreatedDate = Convert.ToDateTime(DTPrintQuotationDtls.Rows[0]["ExpiryDate"]).ToString("dd/MM/yyyy");
+                    ObjModelQuotationMast.CreatedDate = Convert.ToString(DTPrintQuotationDtls.Rows[0]["ExpiryDate"]); //Today Change 3 March 2020 Manoj Sharma
+                    ObjModelQuotationMast.HeaderDetails = Convert.ToString(DTPrintQuotationDtls.Rows[0]["HeaderDetails"]);
+                    ObjModelQuotationMast.Subject = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Subject"]);
+                    ObjModelQuotationMast.Deliverable = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Deliverable"]);
+                    ObjModelQuotationMast.Commercials = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Commercials"]);
+                    ObjModelQuotationMast.FeesStructure = Convert.ToString(DTPrintQuotationDtls.Rows[0]["FeesStructure"]);
+                    ObjModelQuotationMast.PaymentTerms = Convert.ToString(DTPrintQuotationDtls.Rows[0]["PaymentTerms"]);
+
+                    ObjModelQuotationMast.KeyNotes = Convert.ToString(DTPrintQuotationDtls.Rows[0]["KeyNotes"]);
+                    ObjModelQuotationMast.AddEnclosures = Convert.ToString(DTPrintQuotationDtls.Rows[0]["AddEnclosures"]);
+                    ObjModelQuotationMast.To = Convert.ToString(DTPrintQuotationDtls.Rows[0]["T_O"]);
+                    ObjModelQuotationMast.CC = Convert.ToString(DTPrintQuotationDtls.Rows[0]["CC"]);
+                    ObjModelQuotationMast.CommunicationProtocol = Convert.ToString(DTPrintQuotationDtls.Rows[0]["CommunicationProtocol"]);
+                    ObjModelQuotationMast.Coordinators = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Coordinators"]);
+                    ObjModelQuotationMast.EscalationMatrix = Convert.ToString(DTPrintQuotationDtls.Rows[0]["EscalationMatrix"]);
+                    ObjModelQuotationMast.FaitFully = Convert.ToString(DTPrintQuotationDtls.Rows[0]["FaithFully"]);
+
+                    ObjModelQuotationMast.Validity = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Validity"]);
+                    ObjModelQuotationMast.CompanyAddress = Convert.ToString(DTPrintQuotationDtls.Rows[0]["CompanyAddress"]);
+                    ObjModelQuotationMast.FromAddress = Convert.ToString(DTPrintQuotationDtls.Rows[0]["FromAddr"]);
+                    ObjModelQuotationMast.ScopeOfWork = Convert.ToString(DTPrintQuotationDtls.Rows[0]["ScopeOfWork"]);
+                    ObjModelQuotationMast.Ref = Convert.ToString(DTPrintQuotationDtls.Rows[0]["EnquiryReferenceNo"]);
+                    ObjModelQuotationMast.ThirdPartyInspectionService = Convert.ToString(DTPrintQuotationDtls.Rows[0]["ThirdPartyInspectionService"]);
+                    ObjModelQuotationMast.ThankYouLetter = Convert.ToString(DTPrintQuotationDtls.Rows[0]["ThankYouLetter"]);
+                    ObjModelQuotationMast.FromAddress = Convert.ToString(DTPrintQuotationDtls.Rows[0]["FromAddr"]);
+                    ObjModelQuotationMast.Mobile = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Mobile"]);
+                    ObjModelQuotationMast.Designation = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Designation"]);
+                    ObjModelQuotationMast.AddEnclosures = Convert.ToString(DTPrintQuotationDtls.Rows[0]["AddEnclosures"]);
+                    ObjModelQuotationMast.Signature = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Signature"]);
+                    ObjModelQuotationMast.CreatedDate = Convert.ToString(DTPrintQuotationDtls.Rows[0]["CreatedDate"]);
+                    ObjModelQuotationMast.CostSheetApproveStatus = Convert.ToString(DTPrintQuotationDtls.Rows[0]["CostSheetApproveStatus"]);
+                    ObjModelQuotationMast.Exclusion = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Exclusion"]);
+                    ObjModelQuotationMast.IData = (byte[])(DTPrintQuotationDtls.Rows[0]["PDFImage"]);
+
+                    ObjModelQuotationMast.QuotationCreatedName = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Name"]);
+                    ObjModelQuotationMast.QuotationCreatedDesignation = Convert.ToString(DTPrintQuotationDtls.Rows[0]["QuotationCreatedDesignation"]);
+                    ObjModelQuotationMast.QuotationCreatedMobile = Convert.ToString(DTPrintQuotationDtls.Rows[0]["MobileNo"]);
+                    ObjModelQuotationMast.QuotationCreatedEmail = Convert.ToString(DTPrintQuotationDtls.Rows[0]["EmailID"]);
+                    ObjModelQuotationMast.QuotationCreatedLandline = Convert.ToString(DTPrintQuotationDtls.Rows[0]["LandLine"]);
+                    //ObjModelQuotationMast.AssociatesAddr = Convert.ToString(DTPrintQuotationDtls.Rows[0]["AssociatesAddr"]);
+                    ObjModelQuotationMast.AssociatesAddr = Convert.ToString(DTPrintQuotationDtls.Rows[0]["CompanyAddressPDF"]);
+                    ObjModelQuotationMast.AssociatesEmail = Convert.ToString(DTPrintQuotationDtls.Rows[0]["AssociatesEmail"]);
+                    ObjModelQuotationMast.AssociatesMobile = Convert.ToString(DTPrintQuotationDtls.Rows[0]["AssociatesMobile"]);
+                    ObjModelQuotationMast.SubServiceType = Convert.ToString(DTPrintQuotationDtls.Rows[0]["SubServiceType"]);
+                    ObjModelQuotationMast.EnquiryAdditionRef = Convert.ToString(DTPrintQuotationDtls.Rows[0]["EnquiryAdditionRef"]);
+                    ObjModelQuotationMast.ComplimentaryClose = Convert.ToString(DTPrintQuotationDtls.Rows[0]["ComplimentaryClose"]);
+                    ObjModelQuotationMast.ReviseNoForPDF = Convert.ToString(DTPrintQuotationDtls.Rows[0]["ReviseNoForPDF"]);
+                    ObjModelQuotationMast.SupersadesOfQForPDF = Convert.ToString(DTPrintQuotationDtls.Rows[0]["SupersadesOfQForPDF"]);
+                    ObjModelQuotationMast.ReviseReason = Convert.ToString(DTPrintQuotationDtls.Rows[0]["ReviseReason"]);
+                    ObjModelQuotationMast.PreviousQuotationReviseDate = Convert.ToString(DTPrintQuotationDtls.Rows[0]["PreviousQuotationReviseDate"]);
+                    ObjModelQuotationMast.AutoA = Convert.ToString(DTPrintQuotationDtls.Rows[0]["AutoA"]);
+                    ObjModelQuotationMast.Budgetary = Convert.ToString(DTPrintQuotationDtls.Rows[0]["Budgetary"]); //added by nikita on 20062024
+                    ObjModelQuotationMast.IsConfirmation = Convert.ToBoolean(DTPrintQuotationDtls.Rows[0]["IsConfirmation"]);//Digital signature
+                    ObjModelQuotationMast.EndCustomer = Convert.ToString(DTPrintQuotationDtls.Rows[0]["EndCustomer"]);
+
+                    if (Convert.ToString(DTPrintQuotationDtls.Rows[0]["GeneralTermsCheckbox"]) == "1")
+                    {
+                        ObjModelQuotationMast.GeneralTermsCheckbox = true;
+                    }
+                    else
+                    {
+                        ObjModelQuotationMast.GeneralTermsCheckbox = false;
+                    }
+                    ObjModelQuotationMast.GeneralTerms = Convert.ToString(DTPrintQuotationDtls.Rows[0]["GeneralTerms"]);
+
+                    if (Convert.ToInt32(ObjModelQuotationMast.EstimatedAmount) >= 1000000)
+                    {
+                        DataTable DTCLEditQuotationMast = new DataTable();
+                        DTCLEditQuotationMast = objDALQuotationMast.GetCLApprovalStatus(QM.PK_QTID);
+                        ObjModelQuotationMast.CostSheetCLStatus = DTCLEditQuotationMast.Rows[0]["CLStatus"].ToString();
+
+                    }
+
+                    #region Generate Link for pdf
+                    // string URl = "a "+ a + a" ;//"http://localhost:54895/QuotationServicesLink/QuotationServicesLink?PKServiceId= " +aa+";//+  "ObjModelQuotationMast.SubServiceType" + ";
+                    string URl = "http://localhost:54895/QuotationServicesLink/Servicess?PKServiceId=" + ObjModelQuotationMast.SubServiceType + "";
+
+                    #endregion
+
+                    #region Generate PDF
+                    SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA==";
+                    System.Text.StringBuilder strs = new System.Text.StringBuilder();
+                    string body = string.Empty;
+                    string ProjectName = "";
+                    string ReferenceDocumentscontent = "";
+
+
+                    using (StreamReader reader = new StreamReader(Server.MapPath("~/QuotationHtml/quotation-contentarea.html")))
+                    {
+                        body = reader.ReadToEnd();
+                    }
+                    if (ObjModelQuotationMast.Quotation_Description == null || ObjModelQuotationMast.Quotation_Description == "")
+                    {
+                        body = body.Replace("[ProjectName]", "");
+                    }
+                    else
+                    {
+                        body = body.Replace("[ProjectName]", ObjModelQuotationMast.Quotation_Description);
+                    }
+                    body = body.Replace("[URL]", URl);
+                    body = body.Replace("[QuotationCompanyName]", ObjModelQuotationMast.QuotationCompanyName);
+                    body = body.Replace("[Associates]", ObjModelQuotationMast.Associates);
+                    body = body.Replace("[QuotationNumber]", ObjModelQuotationMast.QuotationNumber);
+                    body = body.Replace("[CreatedDate]", Convert.ToString(ObjModelQuotationMast.CreatedDate));
+                    body = body.Replace("[ThirdPartyInspectionService]", Convert.ToString(ObjModelQuotationMast.ThirdPartyInspectionService));
+                    body = body.Replace("[ContactName]", ObjModelQuotationMast.ContactName);
+                    body = body.Replace("[Email]", ObjModelQuotationMast.Email);
+                    body = body.Replace("[Mobile]", ObjModelQuotationMast.Mobile);
+                    body = body.Replace("[Subject]", Convert.ToString(ObjModelQuotationMast.Subject));
+                    body = body.Replace("[Ref]", ObjModelQuotationMast.Ref);
+                    body = body.Replace("[ThankYouLetter]", ObjModelQuotationMast.ThankYouLetter);
+                    string s = ObjModelQuotationMast.ScopeOfWork;
+                    body = body.Replace("[ScopeOfWork]", ObjModelQuotationMast.ScopeOfWork.Replace("<p>", "").Replace("</p>", ""));
+                    body = body.Replace("[Deliverable]", ObjModelQuotationMast.Deliverable.Replace("<p>", "").Replace("</p>", ""));
+                    body = body.Replace("[CommunicationProtocol]", ObjModelQuotationMast.CommunicationProtocol.Replace("<p>", "").Replace("</p>", ""));
+                    //string pattern = @"<br\s*/>\s*(<br\s*/>\s*)+";
+                    //body = Regex.Replace(body, pattern, "<br />");
+                    body = body.Replace("[FeesStructure]", ObjModelQuotationMast.FeesStructure.Replace("<p>", "").Replace("</p>", ""));
+                    body = body.Replace("[Validity]", ObjModelQuotationMast.Validity);
+                    body = body.Replace("[FaitFully]", ObjModelQuotationMast.FaitFully);
+                    body = body.Replace("[PaymentTerms]", ObjModelQuotationMast.PaymentTerms.Replace("<p>", "").Replace("</p>", ""));
+                    body = body.Replace("[FromAddress]", ObjModelQuotationMast.FromAddress);
+                    body = body.Replace("[stamp]", "https://tiimes.tuv-india.com/QuotationHtml/stump-sign.png");
+                    body = body.Replace("[QuCode]", "https://tiimes.tuv-india.com/QuotationHtml/qrcode.png");
+                    body = body.Replace("[Mobile]", ObjModelQuotationMast.Mobile);
+                    body = body.Replace("[Designation]", ObjModelQuotationMast.Designation);
+                    body = body.Replace("[AddEnclosures]", ObjModelQuotationMast.AddEnclosures);
+
+                    body = body.Replace("[QuotationCreatedName]", ObjModelQuotationMast.QuotationCreatedName);
+                    body = body.Replace("[QuotationCreatedDesignation]", ObjModelQuotationMast.QuotationCreatedDesignation);
+                    body = body.Replace("[QuotationCreatedMobile]", ObjModelQuotationMast.QuotationCreatedMobile);
+                    body = body.Replace("[QuotationCreatedEmail]", ObjModelQuotationMast.QuotationCreatedEmail);
+                    body = body.Replace("[QuotationCreatedLandline]", ObjModelQuotationMast.QuotationCreatedLandline);
+                    body = body.Replace("[AssociatesAddr]", ObjModelQuotationMast.AssociatesAddr);
+                    body = body.Replace("[AssociatesMobile]", ObjModelQuotationMast.AssociatesMobile);
+                    body = body.Replace("[AssociatesEmail]", ObjModelQuotationMast.AssociatesEmail);
+                    body = body.Replace("[ComplimentaryClose]", ObjModelQuotationMast.ComplimentaryClose);
+                    string strReviseNoForPDF = "<p style='margin-bottom:3px;'><span><strong> Revision Number </strong> [" + ObjModelQuotationMast.ReviseNoForPDF + "] Reason for revision - " + ObjModelQuotationMast.ReviseReason + "</strong></span></p>" + " ";
+                    string strSupersadesOfQForPDF = "<span><strong>This Document Supersedes Quotation No. :</strong>" + ObjModelQuotationMast.SupersadesOfQForPDF + " Dated : " + ObjModelQuotationMast.PreviousQuotationReviseDate + "</span>";
+
+                    if (ObjModelQuotationMast.ReviseNoForPDF == null || ObjModelQuotationMast.ReviseNoForPDF == "")
+                    {
+                        body = body.Replace("[ReviseNoForPDF]", "");
+                        body = body.Replace("[SupersadesOfQForPDF]", "");
+                    }
+                    else
+                    {
+                        body = body.Replace("[ReviseNoForPDF]", strReviseNoForPDF);
+                        body = body.Replace("[SupersadesOfQForPDF]", strSupersadesOfQForPDF);
+                    }
+
+
+
+                    body = body.Replace("[ReviseReason]", ObjModelQuotationMast.ReviseReason);
+                    string I = "<img src = 'https://tiimes.tuv-india.com/Content/Sign/" + "" + "' style='width:100px;height:50px; ' align='center'>";
+                    body = body.Replace("[Signature]", I);//Digital Signature
+
+                    body = body.Replace("[CreatedDate]", Convert.ToString(ObjModelQuotationMast.CreatedDate));
+                    body = body.Replace("[EnquiryAdditionRef]", Convert.ToString(ObjModelQuotationMast.EnquiryAdditionRef));
+                    int ExclusionCheckBox = Convert.ToInt32(DTPrintQuotationDtls.Rows[0]["ExclusionCheckBox"]);
+                    ObjModelQuotationMast.ExclusionCheckBox = Convert.ToBoolean(ExclusionCheckBox);
+
+                    if (ObjModelQuotationMast.ExclusionCheckBox == true)
+                    {
+                        string strE = "<tr><td align='left'><p style='font - size: 18px; text - align: justify; font - family:Arial; margin-bottom: 3px;'><strong><label style='font-size: 18px;'><u style='font - size: 18px;'> Exclusions:</u></label></strong></p><span style='white-space: pre-line;'>" + ObjModelQuotationMast.Exclusion + "</span>" + " </td></tr>";
+                        body = body.Replace("[Exclusion]", strE);
+                    }
+                    else
+                    {
+                        body = body.Replace("[Exclusion]", "");
+                    }
+
+                    if (ObjModelQuotationMast.GeneralTermsCheckbox == true)
+                    {
+                        body = body.Replace("[GeneralTerms]", ObjModelQuotationMast.GeneralTerms);
+                    }
+                    else
+                    {
+                        body = body.Replace("[GeneralTerms]", "");
+                    }
+                    if (ObjModelQuotationMast.EndCustomer == null || ObjModelQuotationMast.EndCustomer == "")
+                    {
+                        body = body.Replace("[EndCustomer]", "");
+                    }
+                    else
+                    {
+                        body = body.Replace("[EndCustomer]", ObjModelQuotationMast.EndCustomer);
+                    }
+
+
+                    if (ObjModelQuotationMast.IsConfirmation == false)
+                    {
+                        body = body.Replace("[showp]", "display:none;");
+                        body = body.Replace("[generaltermfirstpage]", "display:none;");
+                        body = body.Replace("[generaltermsecondpage]", "display:none;");
+                        
+                    }
+                    else
+                    {
+                        body = body.Replace("[showp]", "display:block;");
+                        body = body.Replace("[generaltermfirstpage]", "display:block;");
+                        body = body.Replace("[generaltermsecondpage]", "display:block;");
+                    }
+
+
+
+                    string byteData2 = Convert.ToBase64String(ObjModelQuotationMast.IData);
+                    string a3 = "<img src = 'data:image/jpg;base64," + byteData2 + " ' style='width:100%;height:400px;' />";
+                    body = body.Replace("[QuotationFirstPageImage1]", a3);
+
+                    strs.Append(body);
+                    PdfPageSize pageSize = PdfPageSize.A4;
+                    PdfPageOrientation pdfOrientation = PdfPageOrientation.Portrait;
+                    HtmlToPdf converter = new HtmlToPdf();
+
+
+                    #region Count Page No
+                    SelectPdf.PdfDocument doc1 = converter.ConvertHtmlString(body);
+                    // ================= REMOVE PAGE 1 & 2 IF CONFIRMATION IS FALSE =================
+                    
+                    // ==============================================================================
+
+                    int PageCount = doc1.Pages.Count;
+                    body = body.Replace("[PageCount]", ObjModelQuotationMast.AddEnclosures + ' ' + "(Refer Page " + Convert.ToString(PageCount) + " Of " + Convert.ToString(PageCount) + " )");
+                    strs.Append(body);
+                    #endregion
+
+
+
+                    // set the page timeout (in seconds)
+                    converter.Options.MaxPageLoadTime = 240;  //=========================5-Aug-2019
+                    converter.Options.PdfPageSize = pageSize;
+                    converter.Options.PdfPageOrientation = pdfOrientation;
+
+                    string _Header = string.Empty;
+                    string _footer = string.Empty;
+
+
+                    StreamReader _readHeader_File = new StreamReader(Server.MapPath("~/QuotationHtml/quotation-header.html"));
+                    _Header = _readHeader_File.ReadToEnd();
+                    //_Header = _Header.Replace("[logo]", "https://tiimes.tuv-india.com/AllJsAndCss/images/logo.png");
+                    if (ObjModelQuotationMast.IsConfirmation == true)
+                    {
+                        _Header = _Header.Replace("[logo]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/logo.svg");
+                        _Header = _Header.Replace("[TUV_INDIA_PRIVATE_LIMITED]", "TUV INDIA PRIVATE LIMITED");
+                        _Header = _Header.Replace("[TECHNO_COMMERCIAL_PROPOSAL]", "TECHNO-COMMERCIAL PROPOSAL");
+                    }
+                    else
+                    {
+                        _Header = _Header.Replace("[logo]", "");
+                        _Header = _Header.Replace("[TUV_INDIA_PRIVATE_LIMITED]", "");
+                        _Header = _Header.Replace("[TECHNO_COMMERCIAL_PROPOSAL]", "");
+                    }
+
+
+
+                    _Header = _Header.Replace("[QuotationNumber]", ObjModelQuotationMast.QuotationNumber);
+                    _Header = _Header.Replace("[Date]", Convert.ToString(ObjModelQuotationMast.CreatedDate));
+
+                    StreamReader _readFooter_File = new StreamReader(Server.MapPath("~/QuotationHtml/quotation-footer.html"));
+                    _footer = _readFooter_File.ReadToEnd();
+                    _footer = _footer.Replace("[LogoFooter]", ConfigurationManager.AppSettings["Web"].ToString() + "/AllJsAndCss/images/FTUEV-NORD-GROUP_Logo_Electric-Blue.svg");
+                    // header settings
+                    converter.Options.DisplayHeader = true ||
+                        true || true;
+                    converter.Header.DisplayOnFirstPage = true;
+                    converter.Header.DisplayOnOddPages = true;
+                    converter.Header.DisplayOnEvenPages = true;
+                    converter.Header.Height = 100;
+
+                    PdfHtmlSection headerHtml = new PdfHtmlSection(_Header, string.Empty);
+                    headerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+
+                    converter.Header.Add(headerHtml);
+                    converter.Options.DisplayFooter = true || true || true;
+                    converter.Footer.DisplayOnFirstPage = true;
+                    converter.Footer.DisplayOnOddPages = true;
+                    converter.Footer.DisplayOnEvenPages = true;                    
+                    converter.Footer.Height = 70;
+                    PdfHtmlSection footerHtml = new PdfHtmlSection(_footer, string.Empty);
+                    footerHtml.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+                    if (ObjModelQuotationMast.IsConfirmation == false)
+                    {
+                    }
+                    else
+                    {
+                        converter.Footer.Add(footerHtml);
+                    }
+                    #region Footer Code                    
+                    PdfTextSection text1 = new PdfTextSection(30, 45, "Page: {page_number} of {total_pages}                    ", new System.Drawing.Font("TNG Pro", 8));                    
+                    converter.Footer.Add(text1);
+                    #endregion
+
+                    if (ObjModelQuotationMast.CostSheetApproveStatus == "1")
+                    {
+                        converter.Options.SecurityOptions.CanAssembleDocument = false;
+                        converter.Options.SecurityOptions.CanCopyContent = false;
+                        converter.Options.SecurityOptions.CanEditAnnotations = false;
+                        converter.Options.SecurityOptions.CanEditContent = false;
+                        converter.Options.SecurityOptions.CanFillFormFields = false;
+                        converter.Options.SecurityOptions.CanPrint = false;
+                    }
+                    else
+                    {
+                        converter.Options.SecurityOptions.CanAssembleDocument = true;
+                        converter.Options.SecurityOptions.CanCopyContent = true;
+                        converter.Options.SecurityOptions.CanEditAnnotations = true;
+                        converter.Options.SecurityOptions.CanEditContent = true;
+                        converter.Options.SecurityOptions.CanFillFormFields = true;
+                        converter.Options.SecurityOptions.CanPrint = true;
+                    }
+                    body = Regex.Replace(body, @"\n", "");
+                    PdfDocument doc = converter.ConvertHtmlString(body);
+
+                    if (ObjModelQuotationMast.IsConfirmation == false)
+                    {
+                        // Page index is ZERO based
+                        // Always remove higher index first
+                        if (doc.Pages.Count >= 2)
+                        {
+                            doc.Pages.RemoveAt(1); // removes page 2
+                            doc.Pages.RemoveAt(0); // removes page 1
+                        }
+                    }
+
+                    if (ObjModelQuotationMast.CostSheetApproveStatus == "1")
+                    {
+                        doc.Security.CanAssembleDocument = false;
+                        doc.Security.CanCopyContent = false;
+                        doc.Security.CanEditAnnotations = false;
+                        doc.Security.CanEditContent = false;
+                        doc.Security.CanFillFormFields = false;
+                        doc.Security.CanPrint = false;
+                    }
+                    else
+                    {
+                        doc.Security.CanAssembleDocument = true;
+                        doc.Security.CanCopyContent = true;
+                        doc.Security.CanEditAnnotations = true;
+                        doc.Security.CanEditContent = true;
+                        doc.Security.CanFillFormFields = true;
+                        doc.Security.CanPrint = true;
+                    }
+
+
+                    string ReportName = ObjModelQuotationMast.QuotationNumber + ".pdf";
+                    string path = Server.MapPath("~/QuotationHtml");                    
+                    if (ObjModelQuotationMast.Budgetary == "1")
+                    {
+
+                        string imgFile1 = Server.MapPath("/Budetary.png");
+                        PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
+                        PdfImageElement img1 = new PdfImageElement(50, 50, imgFile1);
+                        img1.Transparency = 15;
+                        template1.Add(img1);
+                    }
+                    else
+                    {
+                        if (ObjModelQuotationMast.IsConfirmation == true)
+                        {
+                        }
+                        else
+                        {
+                            //string imgFile1 = Server.MapPath("/invalid.jpg");
+                            //PdfTemplate template1 = doc.AddTemplate(doc.Pages[0].ClientRectangle);
+                            //PdfImageElement img1 = new PdfImageElement(125, 85, imgFile1);
+                            //img1.Transparency = 15;
+                            //template1.Add(img1);
+
+                                string imgPath = Server.MapPath("~/invalid.jpg");
+                                //string imgFile1 = Server.MapPath("~/invalid.jpg");
+                                foreach (SelectPdf.PdfPage page in doc.Pages)
+                                {
+                                    PdfImageElement img_ = new PdfImageElement(0, 0, imgPath);
+                                    float pageWidth = page.ClientRectangle.Width;
+                                    float pageHeight = page.ClientRectangle.Height;
+                                    img_.Width = pageWidth * 0.7f;
+                                    img_.Height = pageHeight * 0.7f;
+                                    img_.X = (pageWidth - img_.Width) / 2;
+                                    img_.Y = (pageHeight - img_.Height) / 2;
+                                    img_.Transparency = 15;
+                                    page.Add(img_);
+                                }
+                        }
+                    }
+                    doc.Save(path + '\\' + ReportName);
+                    doc.Close();
+                    string Result = "";
+                    ObjModelQuotationMast.QuotationPDF = ReportName;
+                    Result = objDALQuotationMast.InsertUpdateReport(ObjModelQuotationMast);
+                    #endregion
+                }                
+            }
+            string newpath = Server.MapPath("~/QuotationHtml/");
+            byte[] fileBytes = System.IO.File.ReadAllBytes(newpath + @"\" + ObjModelQuotationMast.QuotationPDF);
+            #region Digital Signature
+            string PPPP = Server.MapPath("~/QuotationHtml/" + ObjModelQuotationMast.QuotationPDF);// newpath + finalReportName;
+            string Path = PPPP; string SignLoc = "For TUV India"; /*string SignLoc = "TUV India representative:";*/
+            string signannotation = ObjModelQuotationMast.FaitFully; string PReportName = ObjModelQuotationMast.QuotationPDF; string QuotationNumber = QM.QuotationNumber; int PK_QM_ID = ObjModelQuotationMast.PK_QTID;
+            if (ObjModelQuotationMast.IsConfirmation == true)
+            {
+                return RedirectToAction(nameof(QuotationReportPrintWithDigitalSign), new { Path = Path, SignLoc = SignLoc, signannotation = signannotation, PReportName = PReportName, PK_QM_ID = PK_QM_ID });
+            }
+            else
+            {
+                return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "draft.pdf");
+            }
+            #endregion
+
+        }
     }
 }
 

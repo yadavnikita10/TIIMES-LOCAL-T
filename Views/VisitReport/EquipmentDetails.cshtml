@@ -155,13 +155,21 @@
                 new { @class = "form-control" })
                                                                     </td>
 
-                                                                    <td class="text-center">
+                                                                    @*<td class="text-center">
                                                                         @Html.CheckBoxFor(m => m.lstEquipmentDetails[i].NABLseenote1)
                                                                     </td>
 
                                                                     <td class="text-center">
                                                                         @Html.CheckBoxFor(m => m.lstEquipmentDetails[i].NonNABLseenote2)
+                                                                    </td>*@
+                                                                    <td class="text-center">
+                                                                        @Html.CheckBoxFor(m => m.lstEquipmentDetails[i].NABLseenote1, new { @class = "single-check" })
                                                                     </td>
+
+                                                                    <td class="text-center">
+                                                                        @Html.CheckBoxFor(m => m.lstEquipmentDetails[i].NonNABLseenote2, new { @class = "single-check" })
+                                                                    </td>
+
 
                                                                     <td>
                                                                         <button type="button" class="btn btn-danger removeRow">X</button>
@@ -237,20 +245,68 @@
     });
 
     // Add new row dynamically
-    $('#addRow').click(function () {
-        var rowCount = $('#itemTable tbody tr').length;
-        var newRow = `<tr class="item-row">
-            <td><textarea name="lstEquipmentDetails[${rowCount}].Name_Of_Equipments" class="form-control" rows="2"></textarea></td>
-            <td><input type="text" name="lstEquipmentDetails[${rowCount}].Range" class="form-control" /></td>
-            <td><input type="text" name="lstEquipmentDetails[${rowCount}].Id" class="form-control" /></td>
-            <td><input type="text" name="lstEquipmentDetails[${rowCount}].CalibrationValid_Till_date" class="form-control" /></td>
-            <td><input type="text" name="lstEquipmentDetails[${rowCount}].Certification_No_Date" class="form-control" /></td>
-            <td class="text-center"><input type="checkbox" name="lstEquipmentDetails[${rowCount}].NABLseenote1" /></td>
-            <td class="text-center"><input type="checkbox" name="lstEquipmentDetails[${rowCount}].NonNABLseenote2" /></td>
-            <td class="text-center"><button type="button" class="btn btn-danger removeRow">X</button></td>
-        </tr>`;
-        $('#itemTable tbody').append(newRow);
+    //$('#addRow').click(function () {
+    //    var rowCount = $('#itemTable tbody tr').length;
+    //    var newRow = `<tr class="item-row">
+    //        <td><textarea name="lstEquipmentDetails[${rowCount}].Name_Of_Equipments" class="form-control" rows="2"></textarea></td>
+    //        <td><input type="text" name="lstEquipmentDetails[${rowCount}].Range" class="form-control" /></td>
+    //        <td><input type="text" name="lstEquipmentDetails[${rowCount}].Id" class="form-control" /></td>
+    //        <td><input type="text" name="lstEquipmentDetails[${rowCount}].CalibrationValid_Till_date" class="form-control" /></td>
+    //        <td><input type="text" name="lstEquipmentDetails[${rowCount}].Certification_No_Date" class="form-control" /></td>
+    //        <td class="text-center"><input type="checkbox" name="lstEquipmentDetails[${rowCount}].NABLseenote1" /></td>
+    //        <td class="text-center"><input type="checkbox" name="lstEquipmentDetails[${rowCount}].NonNABLseenote2" /></td>
+    //        <td class="text-center"><button type="button" class="btn btn-danger removeRow">X</button></td>
+    //    </tr>`;
+    //    $('#itemTable tbody').append(newRow);
+    //});
+
+
+
+    $(document).on('change', '.single-check', function() {
+        var $row = $(this).closest('tr');
+        $row.find('.single-check').not(this).prop('checked', false);
     });
+
+    $('#addRow').click(function () {
+    var rowCount = $('#itemTable tbody tr').length;
+
+    var newRow = `<tr class="item-row">
+        <td>
+            <textarea name="lstEquipmentDetails[${rowCount}].Name_Of_Equipments"
+                      class="form-control" rows="2"></textarea>
+        </td>
+
+        <td><input type="text" name="lstEquipmentDetails[${rowCount}].Range" class="form-control" /></td>
+        <td><input type="text" name="lstEquipmentDetails[${rowCount}].Id" class="form-control" /></td>
+        <td><input type="text" name="lstEquipmentDetails[${rowCount}].CalibrationValid_Till_date" class="form-control" /></td>
+        <td><input type="text" name="lstEquipmentDetails[${rowCount}].Certification_No_Date" class="form-control" /></td>
+
+        <td class="text-center">
+            <input type="hidden"
+                   name="lstEquipmentDetails[${rowCount}].NABLseenote1"
+                   value="false" />
+            <input type="checkbox"
+                   class="chk-nabl single-check" />
+        </td>
+
+        <td class="text-center">
+            <input type="hidden"
+                   name="lstEquipmentDetails[${rowCount}].NonNABLseenote2"
+                   value="false"
+                   
+                   />
+            <input type="checkbox"
+                   class="chk-non-nabl single-check" />
+        </td>
+
+        <td class="text-center">
+            <button type="button" class="btn btn-danger removeRow">X</button>
+        </td>
+    </tr>`;
+
+    $('#itemTable tbody').append(newRow);
+});
+
 
     // Re-index inputs after a row is removed
     function updateRowIndices() {
@@ -264,7 +320,7 @@
             });
         });
     }
-   
+
 
     //$('form').submit(function() {
     //    $('.nabl-checkbox').each(function() {
@@ -283,7 +339,7 @@
 
     //$(document).ready(function () {
     //    var rowIndex = $("#itemContainer .item-row").length;
-        
+
     //    $(document).ready(function () {
     //        var rowIndex = $("#itemContainer .item-row").length;
 
@@ -333,7 +389,7 @@
 
 
 
-            
+
 
     //    $(document).on("click", ".removeRow", function () {
     //        if ($("#itemContainer .item-row").length > 1) {
@@ -355,6 +411,15 @@
     //        });
     //    }
     //})
+    $(document).on('change', '.chk-nabl', function () {
+        var hidden = $(this).closest('td').find('input[type=hidden]');
+        hidden.val(this.checked);
+    });
+
+    $(document).on('change', '.chk-non-nabl', function () {
+        var hidden = $(this).closest('td').find('input[type=hidden]');
+        hidden.val(this.checked);
+    });
 
 </script>
                                     

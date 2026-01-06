@@ -329,44 +329,20 @@
                                                             4) Insert estimated figures as per type. i.e. Mandays for type Man days, Lump sum and Percentage;<br />
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             Man months for type Man month; Man hours for type Man hours.
-
                                                             <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             5) Insert brief for Lump Sum and percentage enquiries. Examples – 1.5 %, Audit visits + certification charges, 3 welder
-
                                                             qualification + Visit <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;charges
                                                             and Design appraisal charges etc.
                                                             <br />
                                                         </div>
-
                                                     </div>
                                                 </div>
-
-
                                                 <div class="row">
                                                     <div class="col-xs-12">
                                                         <hr class="custom-hr1">
                                                     </div>
                                                 </div>
-
-
                                                 <div class="col-xs-12 text-left">
-                                                    @*@if (Model.PK_QTID == 0)
-
-                                                        {*@
-                                                    @*<div class="row">
-                                                            <div class="col-xs-12 col-sm-2">
-                                                                <div class="form-group">
-                                                                    <span style="color: blue;">Copy Quotation: </span>
-                                                                </div>
-                                                            </div>
-
-
-
-
-                                                        </div>*@
-
-
-                                                    <!--  vaibhav Copy quo start-->
                                                     <div id="Div4">
 
                                                         <div class="row">
@@ -434,44 +410,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
-                                                    @*<div class="row">
-                                                            <div class="form-group">
-
-                                                                <div class="col-xs-12 col-sm-4">
-                                                                    <button type="button" id="NewSearch" class="btn btn-default insert-form-btn"><i class="fa "></i> Search</button>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>*@
-                                                    @*<div class="col-xs-12 text-right">*@
-                                                    @*<div class="row">
-                                                            <div class="form-group">
-                                                                <div class="col-xs-12 col-sm-4 text-left">
-                                                                    <div class="form-group text-left">
-                                                                        <span>Copy Quotation </span>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="col-xs-12 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <select id="ddlCustomers" class="form-control"></select>
-                                                                    </div>
-
-                                                                </div>
-
-                                                                <div class="col-xs-12 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <button type="button" id="NewCopyQuotation" class="btn btn-default insert-form-btn"><i class="fa "></i> Copy Quotation</button>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>*@
-                                                    @*</div>*@
-                                                    <!--  vaibhav Copy quo start-->
-                                                    @*}*@
-
                                                 </div>
 
 
@@ -916,7 +854,6 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-4">
-
                                                         </div>
                                                         <div class="col-xs-12 col-sm-4" id="divGST">
                                                             <div class="form-group">
@@ -924,25 +861,16 @@
                                                                 @Html.TextBoxFor(model => model.GST, new { placeholder = "Enter GST", @class = "form-control form-control-custom" })
                                                             </div>
                                                         </div>
-
                                                         <div class="col-xs-12 col-sm-4" id="divIGST">
                                                             <div class="form-group">
                                                                 <label>Taxation (International) :</label><span style="color:#FA3746;">*</span>
                                                                 @Html.TextBoxFor(model => model.IGST, new { placeholder = "Enter International GST", @class = "form-control form-control-custom" })
                                                             </div>
                                                         </div>
-
                                                     </div>
-
-
-
-
-
-                                                    <div id="DomesticCurrency" style='display:none;align:center'>
+                                                    <div id="DomesticCurrency" style="display:none;align:center">
                                                         @*<div class="form-page-title" style="width:110%;"> <label>Domestic</label> </div>*@
                                                         <div class="form-page-title" style="width:120%;height:35px;vertical-align:central;margin-left:-86px">Domestic</div>
-
-
                                                         <table id="DTestTable" cellspacing="0" cellpadding="3" border="1" style="width: 120%;font-family:'TNG Pro';font-size:13px;margin-left:-86px">
                                                             <tr style="background-color:lightgray;color:black">
                                                                 <td width="120px" style="text-align: center;vertical-align:top;">
@@ -3129,6 +3057,8 @@
                                                         <a href="@Url.Action("ViewPDF", "QuotationMaster", new { pdfFilePath = @Model.QuotationPDF})" class="btn btn-default insert-form-btn" id="showPdfButton" target="_blank">View PDF</a>
                                                     }
 
+
+                                                    <button type="button" class="btn btn-default insert-form-btn" id="btnPrint_" title="Submit" style="width:200px;">Download Quotation invalid</button>
 
                                                                     <!--Message Start-->
 
@@ -10012,7 +9942,14 @@
 
 
     });
+    $("#btnPrint_").click(function myfunction() {
 
+        var url = '@Url.Action("GeneratePDF_", "QuotationMaster")';
+
+        window.location.href = url;
+
+
+    });
 </script>
 
 @*<input type="hidden" id="hiddenUserID" value="<%= Session[" UserID"] %>" />*@
