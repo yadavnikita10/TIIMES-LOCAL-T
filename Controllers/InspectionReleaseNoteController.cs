@@ -5470,7 +5470,7 @@ namespace TuvVision.Controllers
 
                 // Set Content-Disposition header to attachment to force download
                 Response.Headers.Add("Content-Disposition", $"attachment; filename={ReportName}");
-
+                CopyQRFileToserver(ReportName);
                 // Return the signed PDF as a downloadable file
                 return File(fileBytes, "application/pdf");
 

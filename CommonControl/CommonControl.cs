@@ -601,7 +601,7 @@ public class CommonControl
     public async Task<string> SignPdfWithDigitalSignature(string filePath, string SignLoc, string signannotation, string pfxId, string pfxPwd, string apiKey, string XYAxis, string ReportNo)
     {
         //string apiUrl = "http://10.10.10.46:8084/ws/v1/signpdf"; 
-        string apiUrl = "http://10.10.10.46:8084/ws/v1/signpdflocs";
+        string apiUrl = "http://10.10.10.46:8084/ws/v1/signpdflocs"; 
 
         string timestamp = DateTime.Now.ToString("ddMMyyyyHH:mm:ss");
         string checksum = GenerateChecksum(apiKey, timestamp);  // Implement checksum logic
