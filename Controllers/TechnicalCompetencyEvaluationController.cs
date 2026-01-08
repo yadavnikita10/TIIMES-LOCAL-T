@@ -445,7 +445,14 @@ namespace TuvVision.Controllers
             string Result = string.Empty;
             if (actionType == "Amendment")
             {
-                
+
+                if (S.isVerified == true)
+                {
+                    objMTCE.isVerified = false;
+                }else
+                {
+
+                }
             }
             List<FileDetails> lstFileDtls = new List<FileDetails>();
             lstFileDtls = Session["listJobMasterUploadedFile"] as List<FileDetails>;
@@ -474,7 +481,7 @@ namespace TuvVision.Controllers
                         objMTCE.AutharizationLevel = item.LAutharizationLevel;
                         objMTCE.BasicAuthorization = item.skillID;
                         objMTCE.InspectorName = S.InspectorName;
-                        Result = objTCE.Insert(objMTCE);
+                        Result = objTCE.Insert(objMTCE,objMTCE.isVerified);
                         if (lstFileDtls != null && lstFileDtls.Count > 0)
                         {
                             Result = objTCE.InsertFileAttachment(lstFileDtls, objMTCE.InspectorName);
@@ -504,10 +511,9 @@ namespace TuvVision.Controllers
                         objMTCE.BasicAuthorization = item.skillID;
                         objMTCE.BasicAuthorization = item.skillID;
                         objMTCE.InspectorName = S.InspectorName;
-                        objMTCE.isVerified = S.isVerified;
                         objMTCE.isFormFilled = formfilled ? true : S.isFormFilled;                        
                         objMTCE.Remarks = item.Remarks;
-                        Result = objTCE.Insert(objMTCE);
+                        Result = objTCE.Insert(objMTCE, objMTCE.isVerified);
                     }
                     if (lstFileDtls != null && lstFileDtls.Count > 0)
                     {

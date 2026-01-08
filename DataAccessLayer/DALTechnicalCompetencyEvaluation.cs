@@ -68,7 +68,7 @@ namespace TuvVision.DataAccessLayer
             }
             return ds;
         }
-        public string Insert(TechnicalCompetencyEvaluation SM)
+        public string Insert(TechnicalCompetencyEvaluation SM,bool isverified)
         {
             string Result = string.Empty;
             con.Open();

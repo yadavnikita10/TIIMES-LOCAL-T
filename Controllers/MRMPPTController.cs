@@ -12,7 +12,7 @@ namespace TuvVision.Controllers
     {
         // GET: MRMPPT
 
-        //DALInspectionVisitReport objdal = new DataAccessLayer();
+        DALInspectionVisitReport objdal = new DALInspectionVisitReport();
 
         public ActionResult Index()
         {
@@ -26,24 +26,25 @@ namespace TuvVision.Controllers
         }
 
 
-        //public ActionResult GenerateMRMReport()
-        //{
-        //    DataSet ds = new DataSet();
-        //    try
-        //    {
-        //        ds = objdal.GetDataMRM();
-        //        DataTable dt = new DataTable();
-        //        dt = ds.Tables[0];
-        //        if (dt.Rows.Count > 0)
-        //        {
-        //            string fileName = "MRM_Report.pptx";
-        //            string filePath = Server.MapPath("~/Reports/" + fileName);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
+        public ActionResult GenerateMRMReport()
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                ds = objdal.GetDataMRM();
+                DataTable dt = new DataTable();
+                dt = ds.Tables[0];
+                if (dt.Rows.Count > 0)
+                {
+                    string fileName = "MRM_Report.pptx";
+                    string filePath = Server.MapPath("~/Reports/" + fileName);
+                }
+            }
+            catch (Exception ex)
+            {
 
-        //    }
-        //}
+            }
+            return View();
+        }
     }
 }

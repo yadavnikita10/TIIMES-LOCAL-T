@@ -413,20 +413,23 @@
                                                                     <div class="form-group">
                                                                         @*<button type="reset" class="btn btn-default insert-form-btn"> Reset </button>*@
                                                                         <button type="submit" class="btn btn-default insert-form-btn"    name="actionType"> Save </button>
-                                                                        @*<a href="@Url.Action("ListRangeInspectionMaster", "RangeInspectionMaster")" class="btn btn-default insert-form-btn">Add Range Of Inspection</a>*@
-                                                                        @*<button type="submit" class="btn btn-default insert-form-btn"> Print </button>*@
+                                                                        @if (Model.isVerified == true)
+                                                                        {
+
                                                                         <button type="submit"
                                                                                 class="btn btn-warning insert-form-btn"
                                                                                 name="actionType"
                                                                                 value="Amendment">
                                                                             Amendment
                                                                         </button>
-                                                                        @*<a href="@Url.Action("TechnicalCompetencyEvalReports", "TechnicalCompetencyEvaluation")" class="btn btn-info dynamic-function-btn">Print</a>*@
+                                                                        }
+                                                                        else
+                                                                        {
+
+                                                                        }
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-
                                             </form>
 
                                         </div>
@@ -473,69 +476,6 @@
         </div>
     </div>
 </div>
-
-
-@*<script type="text/javascript" language="javascript" src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
-    <script src="~/AllJsAndCss/datatable/js/jquery.dataTables.js"></script>
-    <script src="~/AllJsAndCss/js/datatable-custom.js"></script>*@
-
-
-
-
-
-@*...Calender Control...*@
-@*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script>
-    $(function () {
-        $(".EfectiveDate").datepicker({
-            dateFormat: 'dd/MM/yy',//check change
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+50"
-        });
-    });
-</script>
-<script>
-    $(function () {
-        $(".RevisionDate").datepicker({
-            dateFormat: 'dd/MM/yy',//check change
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+50"
-        });
-    });
-</script>*@
-
-
-
-
-@*<script type="text/javascript">
-
-    $(function () {
-        $('.multicls').multiselect({
-            includeSelectAllOption: true
-        });
-
-    });
-
-    $(document).ready(function () {
-        $(".changeOnload").each(function (index) {
-            debugger;
-            var id = $(this).attr("arr");
-            var list = $(this).val();
-            if (list != "" && id!="") {
-                var re = list.split(",");
-                $("#" + id).multiselect('select', re);
-                $('#' + id).multiselect('rebuild');
-                $('#' + id).trigger('change');
-            }
-
-        });
-    });
-
-</script>*@
 <script type="text/javascript">
 
     $(function () {
@@ -560,17 +500,6 @@
                 $('#' + id).multiselect('rebuild');
                 $('#' + id).trigger('change');
             }
-
-
-            //var list = $("#changeOnload").val();
-            //if (list != "") {
-            //    var re = list.split(",");
-            //    $("#ListBasicAuthorizationName").multiselect('select', re);
-            //    $('#ListBasicAuthorizationName').multiselect('rebuild');
-            //    $('#ListBasicAuthorizationName').trigger('change');
-            //}
-
-
 
         }
 
@@ -659,73 +588,6 @@
 
 
 <script type="text/javascript">
-
-    //function chkbox(this1, intk )
-    //{
-
-    //    var d = new Array();
-    //    var s = this1.value;
-
-
-    //    if ($('#SkillID' + intk).val() != '')
-    //    {
-    //        d.push($('#SkillID' + intk).val());
-    //    }
-
-
-
-    //    if (this1.checked)
-    //    {
-    //        d.push(s);
-    //    }
-    //    else
-    //    {
-
-    //        //var index = searchStringInArray(s, d.toString());
-    //        let result = d.toString().replace(s.toString() +",", "");
-    //        d.splice(0,10);
-    //        d.push(result);
-
-
-    //    }
-
-
-
-    //    //alert(d);
-    //    $('#SkillID' + intk).val(d);
-
-    //   // alert("Changed Value  " + $('#SkillID' + intk).val());
-
-    //}
-
-    //function chkbox(this1, intk) {
-    //    debugger;
-    //    var d = [];
-    //    var s = this1.value;
-
-    //    if ($('#SkillID' + intk).val() != '') {
-    //        d.push($('#SkillID' + intk).val());
-    //    }
-
-    //    if (this1.checked) {
-    //        d.push(s);
-    //    } else {
-    //        // Remove the unchecked checkbox value from the array
-    //        var index = d.indexOf(s);
-    //        if (index !== -1) {
-    //            d.splice(index, 1);
-    //        }
-    //    }
-
-    //    // Update the value in the SkillID field
-    //    $('#SkillID' + intk).val(d);
-
-    //    // alert("Changed Value  " + $('#SkillID' + intk).val());
-    //}
-
-
-    //satish yadav added new 
-
     function chkbox(this1, intk) {
         debugger;
         var d = [];
@@ -734,9 +596,7 @@
         if (currentVal != '') {
             d = currentVal.split(',');
         }
-
         var s = this1.value;
-
         if (this1.checked) {
             if (!d.includes(s)) {
                 d.push(s);
@@ -747,12 +607,8 @@
                 d.splice(index, 1);
             }
         }
-
         $('#SkillID' + intk).val(d.join(','));
     }
-
-
-
 </script>
 
 <script>
@@ -777,7 +633,6 @@
 
                         $("#tblusersmodal tbody").empty();
                         for (var i = 0; i < a.length; i++) {
-
                             tr = $('<tr/>');
                             tr.append("<td><label'>" + a[i].TrainingStartDate + "</label> </td>");
                             tr.append("<td><label'>" + a[i].TotalHours + "</label> </td>");
@@ -785,19 +640,13 @@
                             tr.append("<td><label'>" + a[i].Scope + "</label> </td>");
                             tr.append("<td><label'>" + a[i].Category + "</label> </td>");
                             $('#tblusersmodal').append(tr);
-
                         }
-
                         $('#remarksModal').modal('show');
                     }
-
                 }
-                    //check response is null or empty
                 else {
                     $("#tblusersmodal tbody").empty();
                     $('#remarksModal').modal('show');
-
-
                 }
             },
 
