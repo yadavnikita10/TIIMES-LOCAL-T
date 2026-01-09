@@ -104,7 +104,7 @@ namespace TuvVision.DataAccessLayer
                     cmd.Parameters.AddWithValue("@EfectiveDate", SM.EfectiveDate);
                     cmd.Parameters.AddWithValue("@RevisionDate", SM.RevisionDate);
                     cmd.Parameters.AddWithValue("@ReportNo", SM.ReportNo);
-                cmd.Parameters.AddWithValue("@Verified", SM.isVerified);
+                cmd.Parameters.AddWithValue("@Verified", isverified);
                 cmd.Parameters.AddWithValue("@FormFilled", SM.isFormFilled);
                 cmd.Parameters.AddWithValue("@Remarks", SM.Remarks);
                 cmd.Parameters.AddWithValue("@CreatedBy", Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]));

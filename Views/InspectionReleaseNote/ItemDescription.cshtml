@@ -19,7 +19,7 @@
         <div class="grey-bg-f3">
             <!--Start of header-->
             <div class="container-fluid">
-                <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+                <div class="col-xs-12">
 
                     <div class="col-xs-12 form-col">
                 <div class="row">
@@ -36,15 +36,11 @@
                                 <button class="btn btn-default insert-form-btn" type="button" onclick="location.href='@Url.Action("ItemDescription", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Item Description</button>
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("ReferenceDocuments", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Reference Documents</button>
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Stage Witnessed</button>
-                                @*<button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("InspectionActivites", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Inspection Activities</button>*@
                                         <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("DocumentReviewed", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Document Reviewed</button>
                                         <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("Conclusion", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Conclusion</button>
-                                        @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("EquipmentDetails", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID} )'">Details Of Equipment</button>*@
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("AllConcern", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">List Of Open Issues</button>
                                 <button class="btn btn-default news-btn" type="button" onclick="location.href='@Url.Action("EarlierIssuedQuantity", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )'">Earlier Issued Quantity</button>
-                                        @*<button class="btn btn-info dynamic-function-btn" type="button" onclick="location.href='@Url.Action("IvrReports", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID} )'">Report</button>*@
-                                        @*<a href="@Url.Action("IRNForm", "InspectionReleaseNote",new { @PK_IVR_ID = Model.PK_IVR_ID, @PK_RM_ID=Model.abcid} )" class="btn btn-default news-btn" style="float:right;"><i class="fa fa-long-arrow-left"></i>Go Back</a>*@
-                            }
+                                                                   }
                         }
 
 
@@ -56,149 +52,161 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="white-bg section-box-shadow">
-                                    <h3 class="form-page-title">Item Description</h3>
+                                    @*<h3 class="form-page-title">Item Description</h3>*@
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-                                            <form method="post" enctype="multipart/form-data">
-                                                @Html.HiddenFor(m => m.abcid)
-                                                @Html.HiddenFor(m => m.PK_IVR_ID)
-                                                <button type="button" id="btnClearNew" class="btn btn-default insert-form-btn" style="margin-top:0px;background-color:#e63646" onclick="return confirm('Do you want to clear Content?')"><i class="fa "></i> Clear Content</button>
+                                        <div class="col-xs-12">
+                                            <div class="form-box">
+                                                <form method="post" enctype="multipart/form-data">
+                                                    @Html.HiddenFor(m => m.abcid)
+                                                    @Html.HiddenFor(m => m.PK_IVR_ID)
+                                                    @*<button type="button" id="btnClearNew" class="btn btn-default insert-form-btn" style="margin-top:0px;background-color:#e63646" onclick="return confirm('Do you want to clear Content?')"><i class="fa "></i> Clear Content</button>*@
+                                                    <div class="text-right" style="margin-bottom:5px;">
+                                                        <button type="button"
+                                                                id="btnClearNew"
+                                                                class="btn btn-default insert-form-btn"
+                                                                style="background-color:#e63646;border-radius:.50rem;"
+                                                                onclick="return confirm('Do you want to clear Content?')">
+                                                            Clear Content
+                                                        </button>
+                                                    </div>
 
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-striped" id="itemTable">
-                                                        <thead style="background-color: #100ED2;color: white;">
-                                                            <tr>
-                                                                <th>PO Item No</th>
-                                                                <th>Item Code</th>
-                                                                <th style="width: 250px;"> Item Code Description</th> <!-- increase width -->
-                                                                <th style="width: 115px;">UOM</th>
-                                                                <th>PO Quantity</th>
-                                                                <th>Offered Quantity</th>
-                                                                <th style="width: 70px;">Accepted Quantity</th>
-                                                                <th style="width: 70px;">Cumulative Quantity</th>
-                                                               
-                                                                <th>Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="itemContainer">
-                                                            @{
-                                                                int i = 0;
-                                                            }
+                                                    <div class="table-responsive" style="border-radius:0.5rem; overflow:hidden;">
+                                                        <table class="table table-bordered table-striped" id="itemTable">
+                                                            <thead style="background-color: #100ED2;color: white;">
+                                                                <tr>
+                                                                    <th style="width:80px;">PO Item No</th>
+                                                                    <th style="width:150px;">Item Code</th>
+                                                                    <th style="width: 400px;"> Item Code Description</th> <!-- increase width -->
+                                                                    <th style="width: 115px;">UOM</th>
+                                                                    <th style="width:80px;">PO Quantity</th>
+                                                                    <th style="width:80px;">Offered Quantity</th>
+                                                                    <th style="width: 80px;">Accepted Quantity</th>
+                                                                    <th style="width: 80px;">Cumulative Quantity</th>
 
-                                                            @if (ViewData["CostSheet"] != null && ((IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewData["CostSheet"]).Any())
-                                                            {
+                                                                    <th style="width:60px;">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="itemContainer">
+                                                                @{
+                                                                    int i = 0;
+                                                                }
 
-                                                                foreach (var item in (IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewData["CostSheet"])
+                                                                @if (ViewData["CostSheet"] != null && ((IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewData["CostSheet"]).Any())
+                                                                {
+
+                                                                    foreach (var item in (IEnumerable<TuvVision.Models.ItemDescriptionModel>)ViewData["CostSheet"])
+                                                                    {
+                                                                        <tr class="item-row">
+                                                                            <td>
+                                                                                <input type="text" name="lstConcerns[@i].Po_Item_No"
+                                                                                       value="@item.Po_Item_No" class="form-control" />
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <input type="text" name="lstConcerns[@i].Item_Code"
+                                                                                       value="@item.Item_Code" class="form-control" />
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <textarea name="lstConcerns[@i].ItemCode_Description" class="form-control autoExpandX" rows="6">@item.ItemCode_Description</textarea>
+
+                                                                            </td>   
+
+                                                                            <td>
+                                                                                <select name="lstConcerns[@i].Unit" class="form-control">
+                                                                                    <option value="">--Select--</option>
+                                                                                    @foreach (var uom in ViewBag.UOM)
+                                                                                    {
+                                                                                        // Compare the Name for selection
+                                                                                        var selected = (item.Unit != null && item.Unit.Equals(uom.Name, StringComparison.OrdinalIgnoreCase))
+                                                                                                       ? "selected"
+                                                                                                       : "";
+                                                                                        <option value="@uom.Code" @selected>@uom.Name</option>
+                                                                                    }
+                                                                                </select>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <input type="text" name="lstConcerns[@i].Po_Quantity"
+                                                                                       value="@item.Po_Quantity" class="form-control" />
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <input type="text" name="lstConcerns[@i].Offered_Quantity"
+                                                                                       value="@item.Offered_Quantity" class="form-control" />
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <input type="text" name="lstConcerns[@i].Accepted_Quantity"
+                                                                                       value="@item.Accepted_Quantity" class="form-control" />
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="text" name="lstConcerns[@i].Cumulative_Accepted_Qty"
+                                                                                       value="@item.Cumulative_Accepted_Qty" class="form-control" />
+                                                                            </td>
+
+
+                                                                            <td class="text-center">
+                                                                                <button type="button" style="border-radius:.50rem;" class="btn btn-danger removeRow"><i class="fa fa-trash"></i></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        i++;
+                                                                    }
+                                                                }
+
+                                                                else
                                                                 {
                                                                     <tr class="item-row">
+                                                                        <td><input type="text" name="lstConcerns[0].Po_Item_No" class="form-control" /></td>
+                                                                        <td><input type="text" name="lstConcerns[0].Item_Code" class="form-control" /></td>
+                                                                        <td><textarea name="lstConcerns[0].ItemCode_Description" class="form-control autoExpandX" rows="6"></textarea></td>
                                                                         <td>
-                                                                            <input type="text" name="lstConcerns[@i].Po_Item_No"
-                                                                                   value="@item.Po_Item_No" class="form-control" />
-                                                                        </td>
-
-                                                                        <td>
-                                                                            <input type="text" name="lstConcerns[@i].Item_Code"
-                                                                                   value="@item.Item_Code" class="form-control" />
-                                                                        </td>
-
-                                                                        <td>
-                                                                            <textarea name="lstConcerns[@i].ItemCode_Description"
-                                                                                      class="form-control autoExpandX" style="width: 273px;height: 174px;">
-                                                                                @item.ItemCode_Description
-                                                                            </textarea>
-
-                                                                        </td>
-
-                                                                        <td>
-                                                                            <select name="lstConcerns[@i].Unit" class="form-control">
+                                                                            <select name="lstConcerns[0].Unit" class="form-control">
                                                                                 <option value="">--Select--</option>
                                                                                 @foreach (var uom in ViewBag.UOM)
                                                                                 {
-                                                                                    // Compare the Name for selection
-                                                                                    var selected = (item.Unit != null && item.Unit.Equals(uom.Name, StringComparison.OrdinalIgnoreCase))
-                                                                                                   ? "selected"
-                                                                                                   : "";
-                                                                                    <option value="@uom.Code" @selected>@uom.Name</option>
+                                                                                    <option value="@uom.Code">@uom.Name</option>
                                                                                 }
                                                                             </select>
                                                                         </td>
-
-                                                                        <td>
-                                                                            <input type="text" name="lstConcerns[@i].Po_Quantity"
-                                                                                   value="@item.Po_Quantity" class="form-control" />
-                                                                        </td>
-
-                                                                        <td>
-                                                                            <input type="text" name="lstConcerns[@i].Offered_Quantity"
-                                                                                   value="@item.Offered_Quantity" class="form-control" />
-                                                                        </td>
-
-                                                                        <td>
-                                                                            <input type="text" name="lstConcerns[@i].Accepted_Quantity"
-                                                                                   value="@item.Accepted_Quantity" class="form-control" />
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="lstConcerns[@i].Cumulative_Accepted_Qty"
-                                                                                   value="@item.Cumulative_Accepted_Qty" class="form-control" />
-                                                                        </td>
-                                                                       
-
+                                                                        <td><input type="text" name="lstConcerns[0].Po_Quantity" class="form-control" /></td>
+                                                                        <td><input type="text" name="lstConcerns[0].Offered_Quantity" class="form-control" /></td>
+                                                                        <td><input type="text" name="lstConcerns[0].Accepted_Quantity" class="form-control" /></td>
+                                                                        <td><input type="text" name="lstConcerns[0].Cumulative_Accepted_Qty" class="form-control" /></td>
                                                                         <td class="text-center">
-                                                                            <button type="button" class="btn btn-danger removeRow">X</button>
+                                                                            <button type="button" style="border-radius:.50rem;" class="btn btn-danger removeRow"><i class="fa fa-trash"></i></button>
                                                                         </td>
                                                                     </tr>
-                                                                    i++;
                                                                 }
-                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
 
-                                                            else
-                                                            {
-                                                                <tr class="item-row">
-                                                                    <td><input type="text" name="lstConcerns[0].Po_Item_No" class="form-control" /></td>
-                                                                    <td><input type="text" name="lstConcerns[0].Item_Code" class="form-control" /></td>
-                                                                    <td><textarea name="lstConcerns[0].ItemCode_Description" class="form-control autoExpandX" style="width: 273px;height: 174px;"></textarea></td>
-                                                                    <td>
-                                                                        <select name="lstConcerns[0].Unit" class="form-control">
-                                                                            <option value="">--Select--</option>
-                                                                            @foreach (var uom in ViewBag.UOM)
-                                                                            {
-                                                                                <option value="@uom.Code">@uom.Name</option>
-                                                                            }
-                                                                        </select>
-                                                                    </td>
-                                                                    <td><input type="text" name="lstConcerns[0].Po_Quantity" class="form-control" /></td>
-                                                                    <td><input type="text" name="lstConcerns[0].Offered_Quantity" class="form-control" /></td>
-                                                                    <td><input type="text" name="lstConcerns[0].Accepted_Quantity" class="form-control" /></td>
-                                                                    <td><input type="text" name="lstConcerns[0].Cumulative_Accepted_Qty" class="form-control" /></td>
-                                                                    <td class="text-center">
-                                                                        <button type="button" class="btn btn-danger removeRow">X</button>
-                                                                    </td>
-                                                                </tr>
-                                                            }
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                    <div class="row" style="display:flex; align-items:center; margin-top:10px;">
+                                                        <!-- Left : Add Row -->
+                                                        <div style="flex:1; text-align:left;margin-left: 15px;">
+                                                            <button type="button" style="border-radius:.50rem;"
+                                                                    class="btn btn-default insert-form-btn"
+                                                                    id="addRow">
+                                                                Add Row
+                                                            </button>
+                                                        </div>
+                                                        <!-- Center : Save -->
+                                                        <div style="flex:1; text-align:center;" id="IVRPointerEvents">
+                                                            <button type="submit" style="border-radius:.50rem;"
+                                                                    class="btn btn-default insert-form-btn">
+                                                                Save
+                                                            </button>
+                                                        </div>
+                                                        <!-- Right : Empty spacer -->
+                                                        <div style="flex:1;"></div>
 
-                                                <div class="text-right">
-                                                    <button type="button" class="btn btn-success" id="addRow" style="float:left;">Add Row</button>
-                                                    <br />
-                                                </div>
-                                                <br />
-
-                                                   
-                                                   
-
-                                                   
-                                                <div class="col-xs-12 text-center" id="IRNPointerEvents">
-                                                    <button type="submit" class="btn btn-default insert-form-btn">Save</button>
-
-                                                </div>
-                                                <br>
-                                            </form>
-
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                                                       
+
                                 </div>
                             </div>
                         </div>
@@ -209,8 +217,8 @@
 
     </div>
     </div>
-
-                                        }
+}
+                                    
 
     <script>
         function isNumber(evt) {
@@ -228,36 +236,6 @@
 
 <script>
 
-
-    $(document).ready(function () {
-        var rowIndex = $("#itemContainer .item-row").length;
-        var heatNoShow = '@Model.HeatNoShow';
-
-        $("#addRow").click(function () {
-            var newRow = $(".item-row:first").clone(true);
-
-            newRow.find("input, textarea, select").each(function () {
-                var name = $(this).attr("name");
-                if (name) {
-                    var newName = name.replace(/\[\d+\]/, '[' + rowIndex + ']');
-                    $(this).attr("name", newName).val('');
-                }
-            });
-
-            if (heatNoShow !== "Yes") {
-                newRow.find('div:has(label:contains("Heat number"))').remove();
-            }
-
-            $("#itemContainer").append(newRow);
-            rowIndex++;
-        });
-
-        $(document).on("click", ".removeRow", function () {
-            if ($("#itemContainer .item-row").length > 1) {
-                $(this).closest(".item-row").remove();
-            }
-        });
-    });
 
 
     $('#btnClearNew').on('click', function () {
@@ -308,5 +286,80 @@
     if (isConfirmationIRN == 1) {
         document.getElementById("IRNPointerEvents").style.pointerEvents = "none";
 
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        // Add row button
+        $('#addRow').on('click', function () {
+            addNewRow();
+        });
+
+        // Remove row button
+        $(document).on('click', '.removeRow', function () {
+            $(this).closest('tr').remove();
+
+            if ($('#itemContainer tr').length === 0) {
+                addNewRow();
+            } else {
+                reindexRows();
+            }
+        });
+    });
+
+    function addNewRow() {
+
+        var index = $('#itemContainer tr').length;
+        //var heatNoShow = $('#heatNoFlag').val() === "Yes";
+
+
+        var uomOptionsHtml = `
+        <option value="">--Select--</option>
+        @foreach (var uom in ViewBag.UOM)
+        {
+            <text><option value="@uom.Code">@uom.Name</option></text>
+        }
+    `;
+
+        var rowHtml = `
+        <tr class="item-row">
+            <td><input type="text" name="lstConcerns[${index}].Po_Item_No" class="form-control" /></td>
+            <td><input type="text" name="lstConcerns[${index}].Item_Code" class="form-control" /></td>
+            <td>
+                <textarea name="lstConcerns[${index}].ItemCode_Description"
+                          class="form-control autoExpandX"
+                          style="width:273px;height:174px;"></textarea>
+            </td>
+            <td>
+                <select name="lstConcerns[${index}].Unit" class="form-control">
+                    ${uomOptionsHtml}
+                </select>
+            </td>
+            <td><input type="text" name="lstConcerns[${index}].Po_Quantity" class="form-control" /></td>
+            <td><input type="text" name="lstConcerns[${index}].Offered_Quantity" class="form-control" /></td>
+            <td><input type="text" name="lstConcerns[${index}].Accepted_Quantity" class="form-control" /></td>
+                        <td><input type="text" name="lstConcerns[${index}].Cumulative_Accepted_Qty" class="form-control" /></td>
+
+        `;      
+        rowHtml += `
+            <td class="text-center">
+                <button type="button" class="btn btn-danger removeRow">X</button>
+            </td>
+        </tr>`;
+
+        $('#itemContainer').append(rowHtml);
+    }
+
+    function reindexRows() {
+        $('#itemContainer tr').each(function (rowIndex) {
+            $(this).find('input, textarea, select').each(function () {
+                var name = $(this).attr('name');
+                if (name) {
+                    $(this).attr('name', name.replace(/\[\d+\]/, '[' + rowIndex + ']'));
+                }
+            });
+        });
     }
 </script>

@@ -230,7 +230,7 @@
 @*</div>*@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+@*<script>
     $(document).ready(function () {
         var rowIndex = $("#itemContainer .item-row").length;
         var heatNoShow = '@Model.HeatNoShow';
@@ -301,8 +301,87 @@
 
 
     });
-</script>
+</script>*@
 
+<script>
+    $(document).ready(function () {
+
+        // ADD ROW
+       
+        $('#addRow').on('click', function () {
+            addNewRow();
+        });
+
+        // REMOVE ROW
+        $(document).on('click', '.removeRow', function () {
+            $(this).closest('tr').remove();
+
+            if ($('#itemContainer tr').length === 0) {
+                addNewRow(); // ensure at least one row
+            } else {
+                reindexRows();
+            }
+        });
+    });
+
+    function addNewRow() {
+
+        var index = $('#itemContainer tr').length;
+        var heatNoShow = $('#heatNoFlag').val() === "Yes";
+        var uomOptionsHtml = `
+        <option value="">--Select--</option>
+        @foreach (var uom in ViewBag.UOM)
+        {
+            <text><option value="@uom.Code">@uom.Name</option></text>
+        }
+    `;
+
+        var rowHtml = `
+        <tr class="item-row">
+            <td><input type="text" name="lstConcerns[${index}].Po_Item_No" class="form-control" /></td>
+            <td><input type="text" name="lstConcerns[${index}].Item_Code" class="form-control" /></td>
+            <td>
+                <textarea name="lstConcerns[${index}].ItemCode_Description"
+                          class="form-control autoExpandX"
+                          style="width: 273px;height: 174px;"></textarea>
+            </td>
+             <td>
+                <select name="lstConcerns[${index}].Unit" class="form-control">
+                    ${uomOptionsHtml}
+                </select>
+            </td>
+            <td><input type="text" name="lstConcerns[${index}].Po_Quantity" class="form-control" /></td>
+            <td><input type="text" name="lstConcerns[${index}].Offered_Quantity" class="form-control" /></td>
+            <td><input type="text" name="lstConcerns[${index}].Accepted_Quantity" class="form-control" /></td>
+        `;
+
+        if (heatNoShow) {
+            rowHtml += `
+            <td>
+                <input type="text" name="lstConcerns[${index}].HeatNumber" class="form-control" />
+            </td>`;
+        }
+
+        rowHtml += `
+            <td class="text-center">
+                <button type="button" class="btn btn-danger removeRow">X</button>
+            </td>
+        </tr>`;
+
+        $('#itemContainer').append(rowHtml);
+    }
+
+    function reindexRows() {
+        $('#itemContainer tr').each(function (rowIndex) {
+            $(this).find('input, textarea, select').each(function () {
+                var name = $(this).attr('name');
+                if (name) {
+                    $(this).attr('name', name.replace(/\[\d+\]/, '[' + rowIndex + ']'));
+                }
+            });
+        });
+    }
+</script>
 
 <script>
     var isConfirmationIVR = @Session["IsConfirmationIVR"] ?? 0;
