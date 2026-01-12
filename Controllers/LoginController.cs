@@ -2932,31 +2932,15 @@ namespace TuvVision.Controllers
                     tableRows.Append("<tr>");
                     tableRows.Append($"<td style='text-align:center;font-size:18px;vertical-align:top;'>{slNo}</td>");
                     tableRows.Append($"<td style='text-align:left;font-size:18px;width:170px;vertical-align:top;'>{DOJ}</td>");
-                    tableRows.Append($"<td style='text-align:left;font-size:18px;vertical-align:top;width:170px;'>{TillDate}</td>");
-                    //tableRows.Append($"<td style='text-align:left;font-size:11px;'>{date}</td>");
+                    tableRows.Append($"<td style='text-align:left;font-size:18px;vertical-align:top;width:170px;'>{TillDate}</td>");                    
                     tableRows.Append($"<td style='text-align:left;font-size:18px;vertical-align:top;'>{Organization}</td>");
                     tableRows.Append($"<td style='text-align:left;font-size:18px;vertical-align:top;'>{NatureOfWork}</td>");
-                    tableRows.Append($"<td style='text-align:left;font-size:18px;vertical-align:top;'>{Full_Part_Time}</td>");
-                    //tableRows.Append($"<td>{person}</td>");
+                    tableRows.Append($"<td style='text-align:left;font-size:18px;vertical-align:top;'>{Full_Part_Time}</td>");                    
                     slNo++;
-                    //if (!string.IsNullOrWhiteSpace(status) && !string.IsNullOrWhiteSpace(comment))
-                    //{
                 }
-                //}
-                //else
-                //{
-                //    tableRows.Append("<td></td>");
-                //    tableRows.Append("<td></td>");
-                //}
+
                 tableRows.Append("</tr>");
             }
-
-
-            // Replace placeholder in body HTML
-
-
-
-
             bodyHtml = bodyHtml.Replace("[ExpData]", tableRows.ToString());
 
             var tableRows_ = @"
@@ -2986,50 +2970,35 @@ namespace TuvVision.Controllers
             bodyHtml = bodyHtml.Replace("[Time]", model.TimeField);
             headerHtml = headerHtml.Replace("[Date]", model.Datediff);
             headerHtml = headerHtml.Replace("[Name]", model.Name);
-
-
             if (model.image == "")
             {
-
             }
             else
             {
                 string base64Image = Convert.ToBase64String(System.IO.File.ReadAllBytes(model.image));
                 string imgSrc = $"data:image/png;base64,{base64Image}";
-                //string base64Image = Convert.ToBase64String(System.IO.File.ReadAllBytes(model.image));
-                //string imgSrc = $"data:image/png;base64,{base64Image}";
                 bodyHtml = bodyHtml.Replace("[Picture]", imgSrc);
-            }
-            // Set SelectPdf license key if needed
+            }            
             SelectPdf.GlobalProperties.LicenseKey = "uZKImYuMiJmImYuIl4mZioiXiIuXgICAgA=="; // Your license key
-
             HtmlToPdf converter = new HtmlToPdf
             {
                 Options =
-        {
+           {
             PdfPageSize = PdfPageSize.A4,
-            PdfPageOrientation = PdfPageOrientation.Portrait,
-            //MarginTop = 70,
-            //MarginBottom = 60,
+            PdfPageOrientation = PdfPageOrientation.Portrait,            
             DisplayHeader = true,
             DisplayFooter = true,
-           MarginLeft = 24,  // Changed from 30
-        MarginRight = 25  // Changed from 20
-            //MarginTop=70
-        }
+            MarginLeft = 24,  
+            MarginRight = 25  
+            }
             };
-
-
             converter.Header.Height = 70;
             PdfHtmlSection headerSection = new PdfHtmlSection(headerHtml, string.Empty)
             {
                 AutoFitHeight = HtmlToPdfPageFitMode.AutoFit,
             };
             converter.Header.Add(headerSection);
-            // Footer section
             converter.Footer.Height = 50;
-
-            // ✅ Wrap the footer HTML in a padded div (via code)
             string wrappedFooterHtml = $"<div style='padding-left:0px; padding-right:0px;'>{footerHtml}</div>";
 
             PdfHtmlSection footerSection = new PdfHtmlSection(wrappedFooterHtml, string.Empty)
@@ -3037,10 +3006,8 @@ namespace TuvVision.Controllers
                 AutoFitHeight = HtmlToPdfPageFitMode.AutoFit
             };
             converter.Footer.Add(footerSection);
-
-            // ✅ Align the footer text with the left margin (30px)
             converter.Footer.Add(new PdfTextSection(
-                15, 15, // x = 30 matches left margin
+                15, 15, 
                 "Page:",
                 new System.Drawing.Font("Arial", 9, System.Drawing.FontStyle.Bold)
             ));
@@ -3051,9 +3018,7 @@ namespace TuvVision.Controllers
                 "{page_number} of {total_pages} ",
                 new System.Drawing.Font("'TNG Pro'", 9, System.Drawing.FontStyle.Regular)
             ));
-
             SelectPdf.PdfDocument doc = converter.ConvertHtmlString(bodyHtml);
-
             doc.Security.CanPrint = true;
             doc.Security.CanEditContent = false;
             doc.Security.CanCopyContent = false;

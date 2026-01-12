@@ -609,22 +609,13 @@ namespace TuvVision.Controllers
                             ObjModelVisitReport.Vendor_Name_Location = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["v1"]);
                             ObjModelVisitReport.Po_No = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["p1"]);
                             ObjModelVisitReport.Date_of_PO = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["d1"]);
-                            //Second Level
                             ObjModelVisitReport.Sub_Vendor_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["v2"]);
                             ObjModelVisitReport.Po_No_SubVendor = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["p2"]);
                             ObjModelVisitReport.SubSubVendorDate_of_PO = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["d2"]);
-                            //Third Level
                             ObjModelVisitReport.SubSubSubVendorName = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["v3"]);
                             ObjModelVisitReport.SubSubSubPoNo = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["p3"]);
                             ObjModelVisitReport.SubSubSubPoDate = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["d3"]);
                             ObjModelVisitReport.chkDoNotshareVendor = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["ChkIfShareReportVendor"]);
-
-                            //ObjModelVisitReport.Vendor_Name_Location = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Vendor_Name"]);
-                            //ObjModelVisitReport.Po_No = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["PO_Number"]);
-                            //ObjModelVisitReport.Sub_Vendor_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubVendorName"]);
-                            //ObjModelVisitReport.Po_No_SubVendor = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubVendorPoNo"]);
-                            //ObjModelVisitReport.SubSubVendorDate_of_PO = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["SubVendorPODate"]);
-
                             ObjModelVisitReport.Sap_And_Controle_No = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Job"]);
                             ObjModelVisitReport.Branch = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Executing_Branch"]);
                             ObjModelVisitReport.Date_Of_Inspection = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Actual_Visit_Date"]);
@@ -636,11 +627,9 @@ namespace TuvVision.Controllers
                             ObjModelVisitReport.Client_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Company_Name"]);
                             ObjModelVisitReport.PK_Call_ID = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["PK_Call_ID"]);
                             ObjModelVisitReport.Br_Id = Convert.ToInt32(DSEditQutationTabledata.Tables[0].Rows[0]["Br_Id"]);
-
                             ObjModelVisitReport.DEC_PMC_EPC_Name = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["DECName"]);
                             ObjModelVisitReport.DEC_PMC_EPC_Assignment_No = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["DECNumber"]);
                             ObjModelVisitReport.Notification_Name_No_Date = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["source"]);
-                           // ObjModelVisitReport.Date_of_PO = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["Date_of_Po"]);
                             ObjModelVisitReport.SubType = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["JobType"]);
 							ObjModelVisitReport.chkARC = Convert.ToBoolean(DSEditQutationTabledata.Tables[0].Rows[0]["chkARC"]);
                             ObjModelVisitReport.CallIDs = Convert.ToString(DSEditQutationTabledata.Tables[0].Rows[0]["CallIDs"]);

@@ -6105,11 +6105,14 @@ namespace TuvVision.DataAccessLayer
             DataSet DSGetDdlList = new DataSet();
             try
             {
-                SqlCommand CMDGetDdlLst = new SqlCommand("SP_CompanyMaster", con);
-                CMDGetDdlLst.CommandType = CommandType.StoredProcedure;
-                CMDGetDdlLst.CommandTimeout = 900000000;
-                CMDGetDdlLst.Parameters.AddWithValue("@SP_Type", "1");
-                SqlDataAdapter SDAGetAllDdlLst = new SqlDataAdapter(CMDGetDdlLst);
+                SqlCommand cmd = new SqlCommand("[SP_GetMRMData]", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 900000000;
+                cmd.Parameters.AddWithValue("@SP_Type", "1");
+                cmd.Parameters.AddWithValue("@FromD", DateTime.ParseExact(DateTime.ParseExact("01/12/2025", "dd/MM/yyyy", provider).ToString("MM/dd/yyyy"), "MM/dd/yyyy", theCultureInfo));
+                cmd.Parameters.AddWithValue("@ToD", DateTime.ParseExact(DateTime.ParseExact("31/12/2025", "dd/MM/yyyy", provider).ToString("MM/dd/yyyy"), "MM/dd/yyyy", theCultureInfo));
+                cmd.Parameters.AddWithValue("@UserID", Convert.ToString(System.Web.HttpContext.Current.Session["UserID"]));
+                SqlDataAdapter SDAGetAllDdlLst = new SqlDataAdapter(cmd);
                 SDAGetAllDdlLst.Fill(DSGetDdlList);
             }
             catch (Exception ex)
