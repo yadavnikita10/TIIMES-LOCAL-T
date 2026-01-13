@@ -52,6 +52,14 @@
     .is-invalid {
         border-color: red;
     }
+     #preloader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #fff url('../../Content/Loader/loader.gif') no-repeat center center;
+        z-index: 9999;
+        /*background: url('../../Content/Loader/loader.gif')no-repeat center center;*/
+    }
 </style>
 @{
     string roleName = Session["RoleName"]?.ToString();
@@ -281,7 +289,7 @@
                                                 <div class="col-xs-12">
 
                                                     <div class="col-xs-12">
-                                                        <h5 style="margin-top:10px;margin-bottom:8px; color:blue;">Upload Template:</h5>
+                                                        <h5 style="margin-top:10px;margin-bottom:8px; color:blue;" >>Upload Template:</h5>
                                                     </div>
                                                     <div class="col-xs-12 col-sm-2">
 
@@ -298,7 +306,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-12 col-sm-3">
-                                                        <button type="submit" class="btn btn-default insert-form-btn" style="margin-top:0px;"> Upload </button>
+                                                        <button type="submit" class="btn btn-default insert-form-btn" style="margin-top:0px;" onclick="showLoader()"> Upload </button>
                                                     </div>
 
                                                 </div>
@@ -1395,6 +1403,7 @@ else
                 @*</form>*@
                                                                                 }
 
+<div id="preloader" style="display:none;"></div>
 
 <script>
     $(document).ready(function() {
@@ -2622,6 +2631,24 @@ else
     }
 </script>
 <script>
+window.onload = function () {
+    const loader = document.getElementById('preloader');
+    if (loader) loader.style.display = 'none';
+};
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', function () {
+        document.getElementById('preloader').style.display = 'block';
+    });
+});
+</script>
+
+<script>
     function ValidateTimeSheet_Visit(totalStartTime, totalEndTime, totalTravelTime) {
         debugger;
 
@@ -2654,3 +2681,12 @@ else
     });
 </script>
 
+<script>
+    function showLoader() {
+    document.getElementById('preloader').style.display = 'block';
+
+    setTimeout(function () {
+        document.querySelector('form').submit();
+    }, 100); // small delay allows render
+}
+</script>
