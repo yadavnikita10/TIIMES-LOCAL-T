@@ -112,8 +112,10 @@ namespace TuvVision.Controllers
                                 EyeTest = Convert.ToString(dr["EyeTest"]),
                                 DisplayName = Convert.ToString(dr["DisplayName"]),
                                 FormFilled = Convert.ToString(dr["FormFilled"]),
-                                EmployeeRollNo = Convert.ToString(dr["EmployeeRollNo"])
-
+                                EmployeeRollNo = Convert.ToString(dr["EmployeeRollNo"]),
+                                ExpBeforeTUV = Convert.ToString(dr["ExpBeforeTUV"]),
+                                TotalyearofExprience = Convert.ToString(dr["TotalyearofExprience"]),
+                                ExperienceinTUV = Convert.ToString(dr["TotalTUVExp"]),
                             }
                             );
                     }
@@ -2902,6 +2904,10 @@ namespace TuvVision.Controllers
             grid.Columns.Add(model => model.Inter_Domestic).Titled("Inter_Domestic");
             grid.Columns.Add(model => model.LpgGasCylinder).Titled("LpgGasCylinder");
             grid.Columns.Add(model => model.OPE).Titled("OPE");
+            
+            grid.Columns.Add(model => model.ExpBeforeTUV).Titled("Exp Before TUV");
+            grid.Columns.Add(model => model.ExperienceinTUV).Titled("Experience in TUV");
+            grid.Columns.Add(model => model.TotalyearofExprience).Titled("Total Year of Experience");
 
 
 
@@ -2997,6 +3003,9 @@ namespace TuvVision.Controllers
                                 Inter_Domestic = Convert.ToString(dr["Inter_Domestic"]),
                                 LpgGasCylinder = Convert.ToString(dr["LpgGasCylinder"]),
                                 OPE = Convert.ToString(dr["OPE"]),
+                                ExpBeforeTUV = Convert.ToString(dr["ExpBeforeTUV"]),
+                                TotalyearofExprience = Convert.ToString(dr["TotalyearofExprience"]),
+                                ExperienceinTUV = Convert.ToString(dr["TotalTUVExp"]),
                             }
                             );
                     }

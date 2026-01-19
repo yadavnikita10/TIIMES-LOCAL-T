@@ -486,6 +486,7 @@ namespace TuvVision.Models
         public string PQS { get; set; }
         public string Inter_Domestic { get; set; }
         public string LpgGasCylinder { get; set; }
+        public string ExperienceinTUV { get; set; }
 
     }
     public enum UserType
