@@ -93,6 +93,10 @@ namespace TuvVision.Models
         public string SkillID { get; set; }
 
         public string PCH { get; set; }
+
+        public string Verifiedby { get; set; }
+        public string Visible { get; set; }
+
         public string Remarks { get; set; }
     }
 

@@ -14,6 +14,8 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Net;
 using System.Globalization;
+using System.Configuration;
+using System.Net.Mail;
 
 namespace TuvVision.Controllers
 {
@@ -5611,8 +5613,96 @@ namespace TuvVision.Controllers
             List<string> userIds = JsonConvert.DeserializeObject<List<string>>(Data1);
 
             bool result = objCMV.UpdateComptencyApproval(userIds);
+            if (userIds != null && userIds.Any())
+            {
+                string senderUserId =
+                Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]);
 
+                foreach (string userId in userIds)
+                {
+                    if (!string.IsNullOrWhiteSpace(userId))
+                    {
+                        SendMailToUser(userId, senderUserId, true);
+                    }
+                }
+            }
             return Json(result ? "Success" : "Error", JsonRequestBehavior.AllowGet);
+        }
+
+
+        public void SendMailToUser(string Inspector, string Createdby, bool Verified)
+        {
+            try
+            {
+                DataTable dt = objCMV.GetData_(Inspector, Createdby);
+
+                if (dt.Rows.Count == 0)
+                    return;
+
+                var InspectorName = dt.Rows[0]["Inspectorname"].ToString();
+                var inspectorEmail = dt.Rows[0]["InspectorEmail"].ToString();
+                var CreatedbyName = dt.Rows[0]["CreatedbyName"].ToString();
+                var CreatedbyEmail = dt.Rows[0]["CreatedbyEmail"].ToString();
+                var ApprovalName_1 = dt.Rows[0]["ApprovalName_1"].ToString();
+                var ApprovalName_2 = dt.Rows[0]["ApprovalName_2"].ToString();
+                var BranchQA = dt.Rows[0]["BranchQA"].ToString();
+                var PCH_Name = dt.Rows[0]["PCH_Name"].ToString();
+                var AdminQA = dt.Rows[0]["AdminQA"].ToString();
+
+                string ToEmail = inspectorEmail;
+                string CcEmail = $"{CreatedbyEmail};{ApprovalName_1};{ApprovalName_2};{BranchQA};{PCH_Name};{AdminQA}";
+                string MailFrom = ConfigurationManager.AppSettings["MailFrom"];
+
+                string bodyTxt;
+
+                
+                    bodyTxt = $@"
+            <html>
+            <body>
+                <p>Dear {InspectorName},</p>
+                <p>{CreatedbyName} has verified the technical competency form.</p>
+                <br/>
+                <p style='color:red;'>Note: This is a system-generated email. Please do not reply.</p>
+                <br/>
+                <p><b>Regards,<br/>Team TIIMES</b></p>
+            </body>
+            </html>";
+                
+               
+               
+
+                using (MailMessage msg = new MailMessage())
+                {
+                    foreach (var email in ToEmail.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                        msg.To.Add(email);
+
+                    foreach (var email in CcEmail.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                        msg.CC.Add(email);
+
+                    msg.From = new MailAddress(MailFrom, "TIIMES Notification");
+                    msg.Subject = "Technical Competency Verification Update";
+                    msg.Body = bodyTxt;
+                    msg.IsBodyHtml = true;
+
+                    using (SmtpClient client = new SmtpClient())
+                    {
+                        client.Host = ConfigurationManager.AppSettings["smtpserver"];
+                        client.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+                        client.Credentials = new NetworkCredential(
+                            ConfigurationManager.AppSettings["User"],
+                            ConfigurationManager.AppSettings["Password"]);
+                        client.EnableSsl = true;
+
+                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                        client.Send(msg);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error properly
+                string error = ex.Message;
+            }
         }
 
     }

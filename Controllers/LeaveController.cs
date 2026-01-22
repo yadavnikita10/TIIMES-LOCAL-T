@@ -1178,10 +1178,6 @@ namespace TuvVision.Controllers
 
                 List<Leave> lstLeave = new List<Leave>();
                 Session["GetExcelData"] = "Yes";
-
-
-
-
                 TempData.Keep();
 
                 ds = DALobj.GetEmployeeDataSheet();

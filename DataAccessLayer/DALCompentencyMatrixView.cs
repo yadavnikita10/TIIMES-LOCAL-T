@@ -367,5 +367,31 @@ namespace TuvVision.DataAccessLayer
         }
 
 
+        public DataTable GetData_(string InspectorName, string Createdby)
+        {
+
+            DataTable dt = new DataTable();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("SP_TechnicalCompetencyEvaluation", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@SP_Type", "18");
+                cmd.Parameters.AddWithValue("@InspectorName", InspectorName);
+                cmd.Parameters.AddWithValue("@Createdby", Createdby);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
+            finally
+            {
+                dt.Dispose();
+            }
+            return dt;
+
+        }
     }
 }

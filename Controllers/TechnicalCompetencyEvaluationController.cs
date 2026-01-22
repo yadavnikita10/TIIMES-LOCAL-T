@@ -15,6 +15,8 @@ using SelectPdf;
 using NonFactors.Mvc.Grid;
 using System.Net;
 using Newtonsoft.Json;
+using System.Net.Mail;
+using System.Configuration;
 
 namespace TuvVision.Controllers
 {
@@ -113,7 +115,6 @@ namespace TuvVision.Controllers
         //    return RedirectToAction("ListTechnicalCompetencyEvaluation", "TechnicalCompetencyEvaluation");
         //}
         #endregion
-
         public ActionResult TechnicalCompetencyEvaluation(string Id)
         {
 
@@ -158,7 +159,7 @@ namespace TuvVision.Controllers
             #region Bind Name
             List<EmpName> lstName = new List<EmpName>();
             DataSet dsGetName = new DataSet();
-            if(Id!=null)
+            if (Id != null)
             {
                 dsGetName = objTCE.GetName(Id);
                 if (dsGetName.Tables[0].Rows.Count > 0)//Dynamic Binding Title DropDwonlist
@@ -173,7 +174,7 @@ namespace TuvVision.Controllers
                                }).ToList();
                 }
             }
-           
+
             ViewBag.Name = lstName;
 
             #endregion
@@ -190,10 +191,10 @@ namespace TuvVision.Controllers
                                           //select new TechnicalCompetencyEvaluation()
                                       select new RangeOfInspectionList()
                                       {
-                                          LIAFScopeNumber =  n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["IAFScopeNumber"].ToString()),
+                                          LIAFScopeNumber = n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["IAFScopeNumber"].ToString()),
                                           LFK_RangeInspectionName = n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["RangeInspection"].ToString()),
                                           LFK_RangeInspectionId = n.Field<int>(dsGetRangeOfInspection.Tables[0].Columns["PK_RangeInspectionId"].ToString()),
-                                           LIAFScopeName =     n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["IAFScopeName"].ToString()),
+                                          LIAFScopeName = n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["IAFScopeName"].ToString()),
                                           LFieldOfInspection = n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["FieldOfInspection"].ToString()),
 
                                           MinimumEducationQualification = n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["MinimumEducationQua"].ToString()),
@@ -208,6 +209,16 @@ namespace TuvVision.Controllers
             {
 
             }
+            //Start Added by Adesh Sawant on 01-08-2025
+            ViewBag.UniqueIAFScopes = lstRangeInspection
+                                    .Select(x => $"{x.LIAFScopeNumber}-{x.LIAFScopeName}")
+                                    .Distinct()
+                                    .ToList();
+            //ViewBag.UniqueIAFScopes = lstRangeInspection
+            //                .Select(x => x.LIAFScopeNumber)
+            //                .Distinct()
+            //                .ToList();
+            //End Added by Adesh Sawant on 01-08-2025
             #endregion
 
             #region bind Authorise level
@@ -292,7 +303,9 @@ namespace TuvVision.Controllers
                     //  a = dsGetDataById.Tables[0].Rows[0]["BasicAuthorization"].ToString();
                     model.InspectorName = Id;//dsGetDataById.Tables[0].Rows[0]["InspectorName"].ToString();
                     model.PCH = dsGetDataById.Tables[0].Rows[0]["PCH"].ToString();
-                    model.PermissionGrantedTo = dsGetDataById.Tables[0].Rows[0]["PermissionGranted_To"].ToString();
+                    model.Verifiedby = dsGetDataById.Tables[0].Rows[0]["VerifiedBy"].ToString();
+                    model.Visible = dsGetDataById.Tables[0].Rows[0]["Visible"].ToString();
+
                     if (dsGetDataById.Tables[0].Rows[0]["IsVerified"].ToString() == "1")
                     {
                         model.isVerified = true;
@@ -316,7 +329,7 @@ namespace TuvVision.Controllers
                         //{
                         //    model.isFormFilled = false;
                         //}
-                        if ((AutharizationLevel != "" && BasicAuthorization !="" ))
+                        if ((AutharizationLevel != "" && BasicAuthorization != ""))
                         {
                             model.isFormFilled = true;
                             break; // Exit the loop as we found a match
@@ -361,22 +374,21 @@ namespace TuvVision.Controllers
                             //model.RevisionDate = dsGetDataById.Tables[0].Rows[0]["RevisionDate"].ToString(),
                             //model.ReportNo = dsGetDataById.Tables[0].Rows[0]["ReportNo"].ToString()
 
-
                             LIAFScopeNumber = Convert.ToString(dr["IAFScopeNumber"]),
                             LFK_RangeInspectionName = Convert.ToString(dr["RangeInspectionName"]),
                             LFK_RangeInspectionId = Convert.ToInt16(dr["FK_RangeInspectionId"]),
                             LAutharizationLevel = Convert.ToString(dr["AutharizationLevel"]),
                             LBasicAuthorizationName = Convert.ToString(dr["BasicAuthorization"]),
-                            LIAFScopeName  = Convert.ToString(dr["IAFScopeName"]),
+                            LIAFScopeName = Convert.ToString(dr["IAFScopeName"]),
                             LFieldOfInspection = Convert.ToString(dr["FieldOfInspection"]),
                             LisVerified = Convert.ToString(dr["FieldOfInspection"]),
                             PK_TechnicalCompetencyEvaluation = Convert.ToString(dr["PK_TechnicalCompetencyEvaluation"]),
 
-                            
-                             
+
+
 
                             MinimumEducationQualification = Convert.ToString(dr["MinimumEducationQua"]),
-                            MinimumRequirementForLevel3 =  Convert.ToString(dr["MinimumRequirmentForLevel3"]),
+                            MinimumRequirementForLevel3 = Convert.ToString(dr["MinimumRequirmentForLevel3"]),
                             skillID = Convert.ToString(dr["BasicAuthorization"]),
                             Remarks = Convert.ToString(dr["Remarks"]),
                             //LIAFScopeNumber 
@@ -392,7 +404,34 @@ namespace TuvVision.Controllers
                     }
 
                     ViewData["TitleName"] = lstRangeOfInspectionList;
-                    
+
+                    List<string> preselectedScopes = new List<string>();
+
+                    foreach (DataRow dr in dsGetDataById.Tables[0].Rows)
+                    {
+                        string authLevel = Convert.ToString(dr["AutharizationLevel"]);
+                        string basicAuth = Convert.ToString(dr["BasicAuthorization"]);
+                        string iafScopeNumber = Convert.ToString(dr["IAFScopeNumber"]);
+                        string iafScopeName = Convert.ToString(dr["IAFScopeName"]);
+
+                        if (!string.IsNullOrEmpty(authLevel) &&
+                            !authLevel.Equals("NA", StringComparison.OrdinalIgnoreCase) &&
+                            !string.IsNullOrEmpty(basicAuth))
+                        {
+                            if (!string.IsNullOrEmpty(iafScopeNumber) && !string.IsNullOrEmpty(iafScopeName))
+                            {
+                                string combined = iafScopeNumber + "-" + iafScopeName;
+
+                                if (!preselectedScopes.Contains(combined))
+                                {
+                                    preselectedScopes.Add(combined);
+                                }
+                            }
+                        }
+                    }
+
+                    ViewBag.SelectedScopes = preselectedScopes;
+
                     /*********************************************************/
 
                     DataTable DTGetUploadedFile = new DataTable();
@@ -417,10 +456,42 @@ namespace TuvVision.Controllers
                         model.FileDetails = lstEditFileDetails;
                     }
 
+                    List<TechnicalCompetencyEvaluation> lmd = new List<TechnicalCompetencyEvaluation>();  // creating list of model.  
+                    DataSet ds = new DataSet();
+
+                    ds = objTCE.GetData(); // fill dataset  
+
+                    foreach (DataRow dr in ds.Tables[0].Rows) // loop for adding add from dataset to list<modeldata>  
+                    {
+                        string inspectorId = Convert.ToString(dr["PK_UserId"]);
+
+                        if (inspectorId == Id)  // ✅ filter here
+                        {
+                            lmd.Add(new TechnicalCompetencyEvaluation
+                            {
+                                InspectorId = Convert.ToString(dr["PK_UserId"]),
+                                InspectorName = Convert.ToString(dr["InspectorName"]),
+                                Branch = Convert.ToString(dr["Branch_Name"]),
+                                TiimesRole = Convert.ToString(dr["RoleName"]),
+                                Mobile = Convert.ToString(dr["MobileNo"]),
+                                Email = Convert.ToString(dr["Tuv_Email_Id"]),
+                                EmployeeCategory = Convert.ToString(dr["EmployementCategory"]),
+                                ModifiedBy = Convert.ToString(dr["ModifiedBy"]),
+                                ModifiedDate = Convert.ToString(dr["ModifiedDate"]),
+                                InspectorBranch = Convert.ToString(dr["Branch_Name"]),
+                                FormFilled = Convert.ToString(dr["FormFilled"]),
+                                Verified = Convert.ToString(dr["IsVerified"]),
+                                EmployeeCode = Convert.ToString(dr["EmployeeCode"]),
+                            });
+                        }
+                    }
+
+                    model.lmd1 = lmd;
+
                     return View(model);
 
                 }
-                    //latest change
+                //latest change
                 //ViewData["TitleName"] = lstRangeOfInspectionList;
                 //return View(model);
                 else
@@ -437,6 +508,308 @@ namespace TuvVision.Controllers
             }
 
         }
+        //public ActionResult TechnicalCompetencyEvaluation(string Id)
+        //{
+
+        //    var model = new TechnicalCompetencyEvaluation();
+
+        //    #region testddl
+        //    //string str = "1001,1003,1005"; //query database and get the selected value
+
+        //    //List<string> selectedList = str.Split(',').ToList();
+
+        //    //List<SelectListItem> ddlitemlist = new List<SelectListItem>();// DDLGetInitData().Select(c => new SelectListItem { Text = c.Name, Value = c.ID.ToString(), Selected = selectedList.Contains(c.ID.ToString()) ? true : false }).ToList();
+
+        //    //ViewBag.ddlitemlist = ddlitemlist;
+        //    #endregion
+
+        //    #region Bind Basic Auth
+
+        //    DataSet dsGetAuthName = new DataSet();
+
+
+        //    dsGetAuthName = objTCE.GetBasicAuthName();
+        //    List<TechnicalCompetencyEvaluation> searchlist = new List<TechnicalCompetencyEvaluation>();
+
+        //    foreach (DataRow dr in dsGetAuthName.Tables[0].Rows)
+        //    {
+
+        //        searchlist.Add(new TechnicalCompetencyEvaluation
+        //        {
+        //            SkillID = dr["id"].ToString(),
+        //            BasicAuthText = dr["Text"].ToString(),
+        //            BasicAuthValue = dr["Value"].ToString()
+        //        });
+
+        //    }
+
+
+
+        //    ViewBag.lstSkills = searchlist;
+
+        //    #endregion
+
+        //    #region Bind Name
+        //    List<EmpName> lstName = new List<EmpName>();
+        //    DataSet dsGetName = new DataSet();
+        //    if(Id!=null)
+        //    {
+        //        dsGetName = objTCE.GetName(Id);
+        //        if (dsGetName.Tables[0].Rows.Count > 0)//Dynamic Binding Title DropDwonlist
+        //        {
+        //            lstName = (from n in dsGetName.Tables[0].AsEnumerable()
+        //                       select
+        //                       new EmpName()
+        //                       {
+        //                           Name = n.Field<string>(dsGetName.Tables[0].Columns["Name"].ToString()),
+        //                           Code = n.Field<string>(dsGetName.Tables[0].Columns["Id"].ToString())
+
+        //                       }).ToList();
+        //        }
+        //    }
+
+        //    ViewBag.Name = lstName;
+
+        //    #endregion
+
+
+        //    #region Bind RangeInspection
+        //    List<RangeOfInspectionList> lstRangeInspection = new List<RangeOfInspectionList>();
+        //    DataSet dsGetRangeOfInspection = new DataSet();
+        //    DataSet dsGetDataById = new DataSet();
+        //    dsGetRangeOfInspection = objTCE.GetRangeOfInspection();
+        //    if (dsGetRangeOfInspection.Tables[0].Rows.Count > 0)//Dynamic Binding Title DropDwonlist
+        //    {
+        //        lstRangeInspection = (from n in dsGetRangeOfInspection.Tables[0].AsEnumerable()
+        //                                  //select new TechnicalCompetencyEvaluation()
+        //                              select new RangeOfInspectionList()
+        //                              {
+        //                                  LIAFScopeNumber =  n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["IAFScopeNumber"].ToString()),
+        //                                  LFK_RangeInspectionName = n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["RangeInspection"].ToString()),
+        //                                  LFK_RangeInspectionId = n.Field<int>(dsGetRangeOfInspection.Tables[0].Columns["PK_RangeInspectionId"].ToString()),
+        //                                   LIAFScopeName =     n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["IAFScopeName"].ToString()),
+        //                                  LFieldOfInspection = n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["FieldOfInspection"].ToString()),
+
+        //                                  MinimumEducationQualification = n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["MinimumEducationQua"].ToString()),
+        //                                  MinimumRequirementForLevel3 = n.Field<string>(dsGetRangeOfInspection.Tables[0].Columns["MinimumRequirmentForLevel3"].ToString())
+
+
+        //                              }).ToList();
+        //        ViewData["TitleName"] = lstRangeInspection;
+        //    }
+
+        //    else
+        //    {
+
+        //    }
+        //    #endregion
+
+        //    #region bind Authorise level
+        //    List<RangeOfInspectionList> items = new List<RangeOfInspectionList>();
+        //    items.Add(new RangeOfInspectionList
+        //    {
+        //        LAutharizationLevel = "1 – Can work under supervision.",
+        //        LAutharizationLevelId = "1"
+        //    });
+        //    items.Add(new RangeOfInspectionList
+        //    {
+        //        LAutharizationLevel = "2 – Can work individually under guidance of seniors.",
+        //        LAutharizationLevelId = "2"
+        //    });
+        //    items.Add(new RangeOfInspectionList
+        //    {
+        //        LAutharizationLevel = "3 – Can work independently & guide others.",
+        //        LAutharizationLevelId = "3"
+        //    });
+        //    items.Add(new RangeOfInspectionList
+        //    {
+        //        LAutharizationLevel = "4 - Can train, monitor, guide & evaluate others.",
+        //        LAutharizationLevelId = "4"
+        //    });
+        //    items.Add(new RangeOfInspectionList
+        //    {
+        //        LAutharizationLevel = "NA",
+        //        LAutharizationLevelId = "NA"
+        //    });
+
+
+        //    ViewBag.AuthoriseLevel = items;
+
+        //    #endregion
+
+        //    #region bind Basis of authorization
+
+        //    #endregion
+
+
+        //    if (Id != null && Id != "")
+        //    {
+        //        model.InspectorName = Id;
+        //        List<RangeOfInspectionList> lstRangeOfInspectionList = new List<RangeOfInspectionList>();
+        //        // dsGetDataById = objTCE.GetDataById(Convert.ToInt32(Id));
+
+
+        //        dsGetDataById = objTCE.GetDataById(Convert.ToString(Id));
+        //        List<string> Selected = new List<string>();
+        //        string[] splitedProduct_Name;
+        //        //var Existingins=0;
+        //        string Existingins;
+        //        string a = null;
+
+
+
+        //        //  if (dsGetDataById.Tables[0].Rows.Count > 0)
+        //        if (dsGetDataById.Tables[0].Rows.Count > 0)
+        //        {
+        //            //  a = dsGetDataById.Tables[0].Rows[0]["BasicAuthorization"].ToString();
+        //            model.InspectorName = Id;//dsGetDataById.Tables[0].Rows[0]["InspectorName"].ToString();
+        //            model.PCH = dsGetDataById.Tables[0].Rows[0]["PCH"].ToString();
+        //            model.Verifiedby = dsGetDataById.Tables[0].Rows[0]["VerifiedBy"].ToString();
+        //            model.PermissionGrantedTo = dsGetDataById.Tables[0].Rows[0]["PermissionGranted_To"].ToString();
+        //            if (dsGetDataById.Tables[0].Rows[0]["IsVerified"].ToString() == "1")
+        //            {
+        //                model.isVerified = true;
+        //            }
+        //            else
+        //            {
+        //                model.isVerified = false;
+        //            }
+        //            //added by nikita on 17122024
+        //            foreach (DataRow row in dsGetDataById.Tables[0].Rows)
+        //            {
+        //                string AutharizationLevel = row["AutharizationLevel"].ToString();
+        //                string BasicAuthorization = row["BasicAuthorization"].ToString();
+
+        //                //if ((AutharizationLevel == "3" && BasicAuthorization == "C"))
+        //                //{
+        //                //    model.isFormFilled = true;
+        //                //    break; // Exit the loop as we found a match
+        //                //}
+        //                //else
+        //                //{
+        //                //    model.isFormFilled = false;
+        //                //}
+        //                if ((AutharizationLevel != "" && BasicAuthorization !="" ))
+        //                {
+        //                    model.isFormFilled = true;
+        //                    break; // Exit the loop as we found a match
+        //                }
+        //                else
+        //                {
+        //                    model.isFormFilled = false;
+        //                }
+        //            }
+        //            //commented on 12172024
+
+        //            //if (dsGetDataById.Tables[0].Rows[0]["FormFilled"].ToString() == "1")
+        //            //{
+        //            //    model.isFormFilled = true;
+        //            //}
+        //            //else
+        //            //{
+        //            //    model.isFormFilled = false;
+        //            //}
+
+
+
+        //            foreach (DataRow dr in dsGetDataById.Tables[0].Rows)
+        //            {
+        //                // Existingins = dsGetDataById.Tables[0].Rows[0]["BasicAuthorization"].ToString();
+        //                //splitedProduct_Name = Existingins.Split(',');
+        //                //foreach (var single in splitedProduct_Name)
+        //                //{
+        //                //    Selected.Add(single);
+        //                //}
+        //                //ViewBag.EditproductName = Selected;
+
+        //                lstRangeOfInspectionList.Add(new RangeOfInspectionList
+        //                {
+        //                    //  //model.PK_TechnicalCompetencyEvaluation = Convert.ToInt16(dsGetDataById.Tables[0].Rows[0]["PK_TechnicalCompetencyEvaluation"]),
+        //                    //model.FK_RangeInspectionId = Convert.ToInt32(dsGetDataById.Tables[0].Rows[0]["FK_RangeInspectionId"]),
+        //                    //model.InspectorName = dsGetDataById.Tables[0].Rows[0]["InspectorName"].ToString(),
+        //                    //AutharizationLevel = Convert.ToString(dr["AutharizationLevel"]),
+        //                    //model.BasicAuthorization = dsGetDataById.Tables[0].Rows[0]["BasicAuthorization"].ToString(),
+        //                    //model.InspectorBranch = dsGetDataById.Tables[0].Rows[0]["InspectorBranch"].ToString(),
+        //                    //model.EfectiveDate = dsGetDataById.Tables[0].Rows[0]["EfectiveDate"].ToString(),
+        //                    //model.RevisionDate = dsGetDataById.Tables[0].Rows[0]["RevisionDate"].ToString(),
+        //                    //model.ReportNo = dsGetDataById.Tables[0].Rows[0]["ReportNo"].ToString()
+
+
+        //                    LIAFScopeNumber = Convert.ToString(dr["IAFScopeNumber"]),
+        //                    LFK_RangeInspectionName = Convert.ToString(dr["RangeInspectionName"]),
+        //                    LFK_RangeInspectionId = Convert.ToInt16(dr["FK_RangeInspectionId"]),
+        //                    LAutharizationLevel = Convert.ToString(dr["AutharizationLevel"]),
+        //                    LBasicAuthorizationName = Convert.ToString(dr["BasicAuthorization"]),
+        //                    LIAFScopeName  = Convert.ToString(dr["IAFScopeName"]),
+        //                    LFieldOfInspection = Convert.ToString(dr["FieldOfInspection"]),
+        //                    LisVerified = Convert.ToString(dr["FieldOfInspection"]),
+        //                    PK_TechnicalCompetencyEvaluation = Convert.ToString(dr["PK_TechnicalCompetencyEvaluation"]),
+
+
+
+
+        //                    MinimumEducationQualification = Convert.ToString(dr["MinimumEducationQua"]),
+        //                    MinimumRequirementForLevel3 =  Convert.ToString(dr["MinimumRequirmentForLevel3"]),
+        //                    skillID = Convert.ToString(dr["BasicAuthorization"]),
+        //                    Remarks = Convert.ToString(dr["Remarks"]),
+        //                    //LIAFScopeNumber 
+        //                    //LFK_RangeInspectionName
+        //                    //LFK_RangeInspectionId
+        //                    // LIAFScopeName =
+        //                    //LFieldOfInspection = 
+
+
+        //                }
+
+        //                );
+        //            }
+
+        //            ViewData["TitleName"] = lstRangeOfInspectionList;
+
+        //            /*********************************************************/
+
+        //            DataTable DTGetUploadedFile = new DataTable();
+        //            List<FileDetails> lstEditFileDetails = new List<FileDetails>();
+        //            DTGetUploadedFile = objTCE.EditUploadedFile(Id);
+        //            if (DTGetUploadedFile.Rows.Count > 0)
+        //            {
+        //                foreach (DataRow dr in DTGetUploadedFile.Rows)
+        //                {
+        //                    lstEditFileDetails.Add(
+        //                       new FileDetails
+        //                       {
+
+        //                           PK_ID = Convert.ToInt32(dr["PK_ID"]),
+        //                           FileName = Convert.ToString(dr["FileName"]),
+        //                           Extension = Convert.ToString(dr["Extenstion"]),
+        //                           IDS = Convert.ToString(dr["FileID"]),
+        //                       }
+        //                     );
+        //                }
+        //                ViewData["lstEditFileDetails"] = lstEditFileDetails;
+        //                model.FileDetails = lstEditFileDetails;
+        //            }
+
+        //            return View(model);
+
+        //        }
+        //            //latest change
+        //        //ViewData["TitleName"] = lstRangeOfInspectionList;
+        //        //return View(model);
+        //        else
+        //        {
+        //            return View(model);
+        //        }
+        //    }
+
+
+
+        //    else
+        //    {
+        //        return View();
+        //    }
+
+        //}
 
         [HttpPost]
         public ActionResult TechnicalCompetencyEvaluation(TechnicalCompetencyEvaluation S, FormCollection fc, int[] ID_, int? PK_TechnicalCompetencyEvaluation)
@@ -449,10 +822,15 @@ namespace TuvVision.Controllers
                 if (S.isVerified == true)
                 {
                     objMTCE.isVerified = false;
+                    SendMailToUser(S.InspectorName, Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]), objMTCE.isVerified);
                 }else
                 {
 
                 }
+            }
+            else if (S.isVerified == true)
+            {
+                SendMailToUser(S.InspectorName, Convert.ToString(System.Web.HttpContext.Current.Session["UserIDs"]),S.isVerified);
             }
             List<FileDetails> lstFileDtls = new List<FileDetails>();
             lstFileDtls = Session["listJobMasterUploadedFile"] as List<FileDetails>;
@@ -1460,5 +1838,95 @@ namespace TuvVision.Controllers
             }
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
+
+        public void SendMailToUser(string Inspector, string Createdby, bool Verified)
+        {
+            try
+            {
+                DataTable dt = objTCE.GetData_(Inspector, Createdby);
+
+                if (dt.Rows.Count == 0)
+                    return;
+
+                var InspectorName = dt.Rows[0]["Inspectorname"].ToString();
+                var inspectorEmail = dt.Rows[0]["InspectorEmail"].ToString();
+                var CreatedbyName = dt.Rows[0]["CreatedbyName"].ToString();
+                var CreatedbyEmail = dt.Rows[0]["CreatedbyEmail"].ToString();
+                var ApprovalName_1 = dt.Rows[0]["ApprovalName_1"].ToString();
+                var ApprovalName_2 = dt.Rows[0]["ApprovalName_2"].ToString();
+                var BranchQA = dt.Rows[0]["BranchQA"].ToString();
+                var PCH_Name = dt.Rows[0]["PCH_Name"].ToString();
+                var AdminQA = dt.Rows[0]["AdminQA"].ToString();
+
+                string ToEmail = inspectorEmail;
+                string CcEmail = $"{CreatedbyEmail};{ApprovalName_1};{ApprovalName_2};{BranchQA};{PCH_Name};{AdminQA}";
+                string MailFrom = ConfigurationManager.AppSettings["MailFrom"];
+
+                string bodyTxt;
+
+                if (Verified)
+                {
+                    bodyTxt = $@"
+            <html>
+            <body>
+                <p>Dear {InspectorName},</p>
+                <p>{CreatedbyName} has made a modification, and the technical competency verification has been removed.</p>
+                <br/>
+                <p style='color:red;'>Note: This is a system-generated email. Please do not reply.</p>
+                <br/>
+                <p><b>Regards,<br/>Team TIIMES</b></p>
+            </body>
+            </html>";
+                }
+                else
+                {
+                    bodyTxt = $@"
+            <html>
+            <body>
+                <p>Dear {InspectorName},</p>
+                <p>{CreatedbyName} has verified the technical competency form.</p>
+                <br/>
+                <p style='color:red;'>Note: This is a system-generated email. Please do not reply.</p>
+                <br/>
+                <p><b>Regards,<br/>Team TIIMES</b></p>
+            </body>
+            </html>";
+                }
+
+                using (MailMessage msg = new MailMessage())
+                {
+                    foreach (var email in ToEmail.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                        msg.To.Add(email);
+
+                    foreach (var email in CcEmail.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                        msg.CC.Add(email);
+
+                    msg.From = new MailAddress(MailFrom, "TIIMES Notification");
+                    msg.Subject = "Technical Competency Verification Update";
+                    msg.Body = bodyTxt;
+                    msg.IsBodyHtml = true;
+
+                    using (SmtpClient client = new SmtpClient())
+                    {
+                        client.Host = ConfigurationManager.AppSettings["smtpserver"];
+                        client.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+                        client.Credentials = new NetworkCredential(
+                            ConfigurationManager.AppSettings["User"],
+                            ConfigurationManager.AppSettings["Password"]);
+                        client.EnableSsl = true;
+
+                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                        client.Send(msg);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error properly
+                string error = ex.Message;
+            }
+        }
+
     }
 }

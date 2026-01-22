@@ -103,8 +103,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in ViewData["Test"] as IEnumerable<TuvVision.Models.Report>)
+                                    @{
+                                        var testData = ViewData["Test"] as IEnumerable<TuvVision.Models.Report>;
+                                    }
+
+                                    @if (testData != null && testData.Any())
                                     {
+                                        foreach (var item in testData)
+                                        {
                                         <tr>
                                             <td>
                                                 @item.IAFScope
@@ -128,7 +134,10 @@
                                                 @item.BasisOfAuthorization
                                             </td>
                                         </tr>
-                                    }
+                                            }
+                                        }
+                                        else {
+                                        }
                                 </tbody>
                             </table>
                             <table width="100%" cellpadding="3" cellspacing="0" class="lasttable" border="1" @*style="border: 2px solid #000;"*@>
