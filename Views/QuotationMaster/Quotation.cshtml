@@ -329,20 +329,44 @@
                                                             4) Insert estimated figures as per type. i.e. Mandays for type Man days, Lump sum and Percentage;<br />
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             Man months for type Man month; Man hours for type Man hours.
+
                                                             <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             5) Insert brief for Lump Sum and percentage enquiries. Examples – 1.5 %, Audit visits + certification charges, 3 welder
+
                                                             qualification + Visit <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;charges
                                                             and Design appraisal charges etc.
                                                             <br />
                                                         </div>
+
                                                     </div>
                                                 </div>
+
+
                                                 <div class="row">
                                                     <div class="col-xs-12">
                                                         <hr class="custom-hr1">
                                                     </div>
                                                 </div>
+
+
                                                 <div class="col-xs-12 text-left">
+                                                    @*@if (Model.PK_QTID == 0)
+
+                                                        {*@
+                                                    @*<div class="row">
+                                                            <div class="col-xs-12 col-sm-2">
+                                                                <div class="form-group">
+                                                                    <span style="color: blue;">Copy Quotation: </span>
+                                                                </div>
+                                                            </div>
+
+
+
+
+                                                        </div>*@
+
+
+                                                    <!--  vaibhav Copy quo start-->
                                                     <div id="Div4">
 
                                                         <div class="row">
@@ -410,6 +434,44 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                    @*<div class="row">
+                                                            <div class="form-group">
+
+                                                                <div class="col-xs-12 col-sm-4">
+                                                                    <button type="button" id="NewSearch" class="btn btn-default insert-form-btn"><i class="fa "></i> Search</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>*@
+                                                    @*<div class="col-xs-12 text-right">*@
+                                                    @*<div class="row">
+                                                            <div class="form-group">
+                                                                <div class="col-xs-12 col-sm-4 text-left">
+                                                                    <div class="form-group text-left">
+                                                                        <span>Copy Quotation </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-xs-12 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <select id="ddlCustomers" class="form-control"></select>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="col-xs-12 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <button type="button" id="NewCopyQuotation" class="btn btn-default insert-form-btn"><i class="fa "></i> Copy Quotation</button>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>*@
+                                                    @*</div>*@
+                                                    <!--  vaibhav Copy quo start-->
+                                                    @*}*@
+
                                                 </div>
 
 
@@ -854,6 +916,11 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-4">
+                                                            @*<div class="form-group">
+                                                                <label>One Order Type Multiple job:</label>
+                                                                @Html.CheckBoxFor(model => model.MultiplejobCreated, new { @class = "MultipleJob" })
+                                                            </div>*@
+
                                                         </div>
                                                         <div class="col-xs-12 col-sm-4" id="divGST">
                                                             <div class="form-group">
@@ -861,16 +928,25 @@
                                                                 @Html.TextBoxFor(model => model.GST, new { placeholder = "Enter GST", @class = "form-control form-control-custom" })
                                                             </div>
                                                         </div>
+
                                                         <div class="col-xs-12 col-sm-4" id="divIGST">
                                                             <div class="form-group">
                                                                 <label>Taxation (International) :</label><span style="color:#FA3746;">*</span>
                                                                 @Html.TextBoxFor(model => model.IGST, new { placeholder = "Enter International GST", @class = "form-control form-control-custom" })
                                                             </div>
                                                         </div>
+
                                                     </div>
-                                                    <div id="DomesticCurrency" style="display:none;align:center">
+
+
+
+
+
+                                                    <div id="DomesticCurrency" style='display:none;align:center'>
                                                         @*<div class="form-page-title" style="width:110%;"> <label>Domestic</label> </div>*@
                                                         <div class="form-page-title" style="width:120%;height:35px;vertical-align:central;margin-left:-86px">Domestic</div>
+
+
                                                         <table id="DTestTable" cellspacing="0" cellpadding="3" border="1" style="width: 120%;font-family:'TNG Pro';font-size:13px;margin-left:-86px">
                                                             <tr style="background-color:lightgray;color:black">
                                                                 <td width="120px" style="text-align: center;vertical-align:top;">
@@ -1256,13 +1332,13 @@
                                                                                     {
                                                                                     new SelectListItem{ Text="Select Order Type", Value = "" },
                                                                                     new SelectListItem{ Text="Man Days", Value = "ManDays"  , Selected = (item.IOrderType == "ManDays") ?true : false} ,
-                                                                                    new SelectListItem{ Text="1/2 ManDays", Value = "1/2ManDays", Selected = (item.OrderType == "1/2ManDays") ?true : false },
+                                                                                    //new SelectListItem{ Text="1/2 ManDays", Value = "1/2ManDays", Selected = (item.OrderType == "1/2ManDays") ?true : false },
 
                                                                                     new SelectListItem{ Text="Man Month", Value = "ManMonth" , Selected = (item.IOrderType == "ManMonth") ?true : false} ,
                                                                                     new SelectListItem{ Text="Lump Sum", Value = "LumSum" , Selected = (item.IOrderType == "LumSum") ?true : false} ,
-                                                                                    new SelectListItem{ Text="Percentage", Value = "Perc" , Selected = (item.IOrderType == "Perc") ?true : false} ,
-                                                                                    new SelectListItem{ Text="Certification", Value = "Certification", Selected = (item.OrderType == "Certification") ?true : false },
-                                                                                    new SelectListItem{ Text="Man Hours", Value = "ManHR" , Selected = (item.IOrderType == "ManHR") ?true : false} ,
+                                                                                   // new SelectListItem{ Text="Percentage", Value = "Perc" , Selected = (item.IOrderType == "Perc") ?true : false} ,
+                                                                                    //new SelectListItem{ Text="Certification", Value = "Certification", Selected = (item.OrderType == "Certification") ?true : false },
+                                                                                    //new SelectListItem{ Text="Man Hours", Value = "ManHR" , Selected = (item.IOrderType == "ManHR") ?true : false} ,
 
 
 
@@ -1342,14 +1418,14 @@
                                                                     {
                                                                     new SelectListItem{ Text="Select Order Type", Value = "" },
                                                                     new SelectListItem{ Text="Man Days", Value = "ManDays" },
-                                                                    new SelectListItem{ Text="1/2 ManDays", Value = "1/2ManDays"},
+                                                                   // new SelectListItem{ Text="1/2 ManDays", Value = "1/2ManDays"},
 
                                                                     new SelectListItem{ Text="Man Month", Value = "ManMonth" },
                                                                     new SelectListItem{ Text="Lump Sum", Value = "LumSum" },
-                                                                    new SelectListItem{ Text="Percentage", Value = "Perc" },
+                                                                    //new SelectListItem{ Text="Percentage", Value = "Perc" },
 
-                                                                             new SelectListItem{ Text="Certification", Value = "Certification"},
-                                                                             new SelectListItem{ Text="Man Hours", Value = "ManHR" },
+                                                                             //new SelectListItem{ Text="Certification", Value = "Certification"},
+                                                                             //new SelectListItem{ Text="Man Hours", Value = "ManHR" },
                                                                     },
                                                                  new { @class = "form-control CIOrderType", @id = "ddlOrderType" })
 
@@ -1416,13 +1492,13 @@
                                                                     {
                                                                     new SelectListItem{ Text="Select Order Type", Value = "" },
                                                                     new SelectListItem{ Text="Man Days", Value = "ManDays" },
-                                                                    new SelectListItem{ Text="1/2 ManDays", Value = "1/2ManDays"},
+                                                                   // new SelectListItem{ Text="1/2 ManDays", Value = "1/2ManDays"},
 
                                                                     new SelectListItem{ Text="Man Month", Value = "ManMonth" },
                                                                     new SelectListItem{ Text="Lump Sum", Value = "LumSum" },
-                                                                    new SelectListItem{ Text="Percentage", Value = "Perc" },
-                                                                             new SelectListItem{ Text="Certification", Value = "Certification"},
-                                                                             new SelectListItem{ Text="Man Hours", Value = "ManHR" },
+                                                                    //new SelectListItem{ Text="Percentage", Value = "Perc" },
+                                                                             //new SelectListItem{ Text="Certification", Value = "Certification"},
+                                                                             //new SelectListItem{ Text="Man Hours", Value = "ManHR" },
 
                                                                     },
                                                                  new { @class = "form-control CIOrderType", @id = "ddlOrderType" })
@@ -1486,6 +1562,10 @@
                                                         }
                                                     </table><br />
                                                 </div>
+
+
+
+
                                                 <div id="Div2">
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-4">
@@ -2484,32 +2564,33 @@
                                                 </div>
 
 
-                                                @if (Model.Visible == "Yes")
-                                                {
-                                                    <div class="col-xs-12">
 
-                                                        @*@if (Model.DCostSheetApproveStatus == "2" || Model.DCostSheetApproveStatus == "3")
-                                                            {*@
-                                                        @if (Model.IsConfirmation == true)
-                                                        {
-                                                            <div class="form-group" style="pointer-events:none;">
-                                                                @Html.CheckBoxFor(model => model.IsConfirmation, new { @class = "checkBox_" })
-                                                                <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
-                                                                <label style="margin-left: 21px;">
+                                                <div class="col-xs-12">
 
-                                                                    I hereby confirm that I have reviewed the content of the Quotation and found it accurate. <br />
+                                                    @*@if (Model.DCostSheetApproveStatus == "2" || Model.DCostSheetApproveStatus == "3")
+                                                        {*@
+                                                    @if (Model.IsConfirmation == true)
+                                                    {
+                                                        <div class="form-group" style="pointer-events:none;">
+                                                            @Html.CheckBoxFor(model => model.IsConfirmation, new { @class = "checkBox_" })
+                                                            <label style="margin-left: 3px;color:#001ED2;"> Declaration:</label><br />
+                                                            <label style="margin-left: 21px;">
 
-                                                                    <label style="color:#E12F24;">
-                                                                        I authorize TIIMES to affix the digital signature on the Quotation PDF.
-                                                                    </label><br />
-                                                                    <label style="color:#001ED2;"> Note:</label><br />
-                                                                    <label>Once this declaration is submitted, no further modifications will be allowed.</label>
+                                                                I hereby confirm that I have reviewed the content of the Quotation and found it accurate. <br />
 
-                                                                </label>
-                                                                @Html.ValidationMessageFor(model => model.IsConfirmation, "", new { @class = "text-danger validation-msg" })
-                                                            </div>
-                                                        }
-                                                        else
+                                                                <label style="color:#E12F24;">
+                                                                    I authorize TIIMES to affix the digital signature on the Quotation PDF.
+                                                                </label><br />
+                                                                <label style="color:#001ED2;"> Note:</label><br />
+                                                                <label>Once this declaration is submitted, no further modifications will be allowed.</label>
+
+                                                            </label>
+                                                            @Html.ValidationMessageFor(model => model.IsConfirmation, "", new { @class = "text-danger validation-msg" })
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (Model.Visible == "Yes")
                                                         {
                                                             <div class="form-group">
                                                                 @Html.CheckBoxFor(model => model.IsConfirmation, new { @class = "checkBox_" })
@@ -2528,11 +2609,12 @@
                                                                 @Html.ValidationMessageFor(model => model.IsConfirmation, "", new { @class = "text-danger validation-msg" })
                                                             </div>
                                                         }
-                                                        @*}*@
+                                                    }
+                                                    @*}*@
 
 
-                                                    </div>
-                                                }
+                                                </div>
+
 
                                                 @if (Model.IsConfirmation == true)
                                                 {
@@ -2614,8 +2696,8 @@
 
 
 
-                                               @if (Model.IsConfirmation == true)
-                                               {
+                                                @if (Model.IsConfirmation == true)
+                                                {
                                                     <div class="col-xs-12 col-xs-6">
                                                         @if (Model.CostSheetApproveStatus == "2" || Model.CostSheetApproveStatus == "3")
                                                         {
@@ -2626,7 +2708,15 @@
                                                                     <div class="col-xs-12 col-sm-6">
                                                                         <div class="form-group">
                                                                             <label>Domestic Status :<span style="color:#FA3746;">*</span></label>
-                                                                            @if (Model.ValidityExpireStatus == "Yes")
+
+                                                                            @if(Model.DomStatus.ToString().ToUpper() == "2")
+                                                                            {
+                                                                                <select id="DStatusList" class="form-control" name="StatusList" placeholder="Select Option">
+                                                                                    <option value="2">WON</option>
+                                                                                </select>
+                                                                            }
+
+                                                                            else if (Model.ValidityExpireStatus == "Yes")
                                                                             {
                                                                                 <select id="DStatusList" class="form-control" name="StatusList" placeholder="Select Option">
                                                                                     <option value="10" selected>Validity Expired</option>
@@ -2683,7 +2773,13 @@
                                                                 <div class="col-xs-12 col-sm-6">
                                                                     <div class="form-group">
                                                                         <label>Domestic Status :<span style="color:#FA3746;">*</span></label>
-                                                                        @if (Model.ValidityExpireStatus == "Yes")
+                                                                        @if (Model.DomStatus.ToString().ToUpper() == "2")
+                                                                        {
+                                                                            <select id="DStatusList" class="form-control" name="StatusList" placeholder="Select Option">
+                                                                                <option value="2">WON</option>
+                                                                            </select>
+                                                                        }
+                                                                        else if (Model.ValidityExpireStatus == "Yes")
                                                                         {
                                                                             <select id="DStatusList" class="form-control" name="StatusList" placeholder="Select Option">
                                                                                 <option value="10" selected>Validity Expired</option>
@@ -2784,7 +2880,13 @@
                                                                     <div class="col-xs-12 col-sm-6">
                                                                         <div class="form-group">
                                                                             <label>International Status :<span style="color:#FA3746;">*</span></label>
-                                                                            @if (Model.ValidityExpireStatus == "Yes")
+                                                                            @if (Model.IntStatus.ToString().ToUpper() == "2")
+                                                                            {
+                                                                                <select id="IStatusList" class="form-control" name="IStatusList" placeholder="Select Option">
+                                                                                    <option value="2">WON</option>
+                                                                                </select>
+                                                                            }
+                                                                            else if (Model.ValidityExpireStatus == "Yes")
                                                                             {
                                                                                 <select id="DStatusList" class="form-control" name="StatusList" placeholder="Select Option">
                                                                                     <option value="10" selected>Validity Expired</option>
@@ -2804,31 +2906,31 @@
                                                                                         if (Model.IntStatus.ToString().ToUpper() == "1")
                                                                                         {
                                                                                             <option value="0">Select Option</option>
-                                                                                            <option value="1" selected>LOST</option>
-                                                                                            @*<option value="10">InValid</option>*@
-                                                                                            <option value="2">WON</option>
+                                                                                                                                                                            <option value="1" selected>LOST</option>
+                                                                                                                                                                            @*<option value="10">InValid</option>*@
+                                                                                                                                                                            <option value="2">WON</option>
                                                                                         }
                                                                                         else if (Model.IntStatus.ToString().ToUpper() == "10")
                                                                                         {
                                                                                             <option value="0">Select Option</option>
-                                                                                            <option value="1">LOST</option>
-                                                                                            @*<option value="10" selected>InValid</option>*@
-                                                                                            <option value="2">WON</option>
+                                                                                                                                                                            <option value="1">LOST</option>
+                                                                                                                                                                            @*<option value="10" selected>InValid</option>*@
+                                                                                                                                                                            <option value="2">WON</option>
                                                                                         }
                                                                                         else
                                                                                         {
                                                                                             <option value="0">Select Option</option>
-                                                                                            <option value="1">LOST</option>
-                                                                                            @*<option value="10">InValid</option>*@
-                                                                                            <option value="2" selected>WON</option>
+                                                                                                                                                                            <option value="1">LOST</option>
+                                                                                                                                                                            @*<option value="10">InValid</option>*@
+                                                                                                                                                                            <option value="2" selected>WON</option>
                                                                                         }
                                                                                     }
                                                                                     else
                                                                                     {
                                                                                         <option value="0" selected>Select Option</option>
-                                                                                        <option value="1">LOST</option>
-                                                                                        @*<option value="10" selected>InValid</option>*@
-                                                                                        <option value="2">WON</option>
+                                                                                                                                                                        <option value="1">LOST</option>
+                                                                                                                                                                        @*<option value="10" selected>InValid</option>*@
+                                                                                                                                                                        <option value="2">WON</option>
                                                                                     }
                                                                                 </select>
                                                                             }
@@ -2841,7 +2943,13 @@
                                                                 <div class="col-xs-12 col-sm-6">
                                                                     <div class="form-group">
                                                                         <label>International Status :<span style="color:#FA3746;">*</span></label>
-                                                                        @if (Model.ValidityExpireStatus == "Yes")
+                                                                        @if (Model.IntStatus.ToString().ToUpper() == "2")
+                                                                        {
+                                                                            <select id="IStatusList" class="form-control" name="IStatusList" placeholder="Select Option">
+                                                                                <option value="2">WON</option>
+                                                                            </select>
+                                                                        }
+                                                                        else if (Model.ValidityExpireStatus == "Yes")
                                                                         {
                                                                             <select id="DStatusList" class="form-control" name="StatusList" placeholder="Select Option">
                                                                                 <option value="10" selected>Validity Expired</option>
@@ -2965,21 +3073,15 @@
                                                         }
                                                         else
                                                         {
-
                                                         }
                                                         if (Model.QuotationNumber == null) //============Code Added By rahul
                                                         {
-                                                            @*<button type="button" class="btn btn-default news-btn" id="btnReset" value="Reset" title="Reset">Reset</button>*@
                                                             <button type="button" class="btn btn-default insert-form-btn" id="btnQuotaionMasterSave" title="Submit"><i class="fa fa-plus-circle"></i> Save </button>
-
                                                         }
                                                         else
                                                         {
-
-
-                                                            if (Model.QuotationNumber != null) //=========Code By Rahul
-                                                            {
-                                                                @*<button type="button" class="btn btn-default insert-form-btn" id="btnQuotaionMasterUpdate" title="Submit"><i class="fa fa-plus-circle"></i> Revise Quotation</button>*@
+                                                     if (Model.QuotationNumber != null) //=========Code By Rahul
+                                                     {
                                                     if (Model.Revise == "Revise")
                                                     {
                                                         if (ViewBag.WonCount == "pass")
@@ -3055,10 +3157,9 @@
                                                     else
                                                     {
                                                         <a href="@Url.Action("ViewPDF", "QuotationMaster", new { pdfFilePath = @Model.QuotationPDF})" class="btn btn-default insert-form-btn" id="showPdfButton" target="_blank">View PDF</a>
+                                                        <button type="button" class="btn btn-default insert-form-btn" id="btnPrint_" title="Submit" style="width:200px;">Invalid Copy Download</button>
                                                     }
 
-
-                                                    <button type="button" class="btn btn-default insert-form-btn" id="btnPrint_" title="Submit" style="width:200px;">Download Quotation invalid</button>
 
                                                                     <!--Message Start-->
 
@@ -3329,7 +3430,14 @@
                                                                                             }
                                                                                             else
                                                                                             {
-                                                                                                if (Model.Status == 3 || Model.Status == 8)
+
+                                                                                                if (Model.Budgetary.ToString().ToUpper() == "1")
+                                                                                                {
+                                                                                                    <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
+
+                                                                                                }
+
+                                                                                                else if (Model.Status == 3 || Model.Status == 8)
                                                                                                 {
                                                                                                     if (Model.Statusname != "Deleted")
                                                                                                     {
@@ -3346,7 +3454,12 @@
                                                                                         {
                                                                                             if (strDMessage != string.Empty)
                                                                                             {
-                                                                                                if (Model.Status == 3 || Model.Status == 8)
+                                                                                                if (Model.Budgetary.ToString().ToUpper() == "1")
+                                                                                                {
+                                                                                                    <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
+
+                                                                                                }
+                                                                                                else if (Model.Status == 3 || Model.Status == 8)
                                                                                                 {
                                                                                                     if (Model.Statusname != "Deleted")
                                                                                                     {
@@ -3365,7 +3478,12 @@
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        if (Model.Status == 3 || Model.Status == 8)
+                                                                                        if (Model.Budgetary.ToString().ToUpper() == "1")
+                                                                                        {
+                                                                                            <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
+
+                                                                                        }
+                                                                                        else if (Model.Status == 3 || Model.Status == 8)
                                                                                         {
                                                                                             <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
                                                                                         }
@@ -3411,7 +3529,14 @@
                                                                                             {
                                                                                                 if (Model.CostSheetCLStatus == "2")
                                                                                                 {
-                                                                                                    if (Model.Status == 3) ///// Quotation Won or Partially Won
+
+                                                                                                    if (Model.Budgetary.ToString().ToUpper() == "1")
+                                                                                                    {
+                                                                                                        <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
+
+                                                                                                    }
+
+                                                                                                    else if (Model.Status == 3) ///// Quotation Won or Partially Won
                                                                                                     {
                                                                                                         if (Model.Statusname != "Deleted")
                                                                                                         {
@@ -3431,7 +3556,12 @@
                                                                                             }
                                                                                             else
                                                                                             {
-                                                                                                if (Model.Status == 3)
+                                                                                                if (Model.Budgetary.ToString().ToUpper() == "1")
+                                                                                                {
+                                                                                                    <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
+
+                                                                                                }
+                                                                                                else if (Model.Status == 3)
                                                                                                 {
                                                                                                     if (Model.Statusname != "Deleted")
                                                                                                     {
@@ -3463,7 +3593,12 @@
 
                                                                                     else
                                                                                     {
-                                                                                        if (Model.Status == 3)
+                                                                                        if (Model.Budgetary.ToString().ToUpper() == "1")
+                                                                                        {
+                                                                                            <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
+
+                                                                                        }
+                                                                                        else if (Model.Status == 3)
                                                                                         {
                                                                                             if (Model.Statusname != "Deleted")
                                                                                             {
@@ -3495,7 +3630,13 @@
                                                                                             {
                                                                                                 if (Model.ICostSheetFINStatus == "2")
                                                                                                 {
-                                                                                                    if (Model.Status == 3) ///// Quotation Won or Partially Won
+
+                                                                                                    if (Model.Budgetary.ToString().ToUpper() == "1")
+                                                                                                    {
+                                                                                                        <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
+
+                                                                                                    }
+                                                                                                    else if (Model.Status == 3) ///// Quotation Won or Partially Won
                                                                                                     {
                                                                                                         if (Model.Statusname != "Deleted")
                                                                                                         {
@@ -3521,7 +3662,12 @@
                                                                                         {
                                                                                             if (Model.ICostSheetCLStatus == "2")
                                                                                             {
-                                                                                                if (Model.Status == 3) ///// Quotation Won or Partially Won
+                                                                                                if (Model.Budgetary.ToString().ToUpper() == "1")
+                                                                                                {
+                                                                                                    <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
+
+                                                                                                }
+                                                                                                else if (Model.Status == 3) ///// Quotation Won or Partially Won
                                                                                                 {
                                                                                                     if (Model.Statusname != "Deleted")
                                                                                                     {
@@ -3540,7 +3686,12 @@
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            if (Model.Status == 3)
+                                                                                            if (Model.Budgetary.ToString().ToUpper() == "1")
+                                                                                            {
+                                                                                                <button class="btn btn-default insert-form-btn" type="button" style="width: 282px;" onclick="location.href='@Url.Action("JobCreation", "JobMaster", new { @PK_QT_ID = Model.PK_QTID })'"><i class="fa fa-plus-circle"></i>Job Creation</button>
+
+                                                                                            }
+                                                                                            else if (Model.Status == 3)
                                                                                             {
                                                                                                 if (Model.Statusname != "Deleted")
                                                                                                 {
@@ -3900,6 +4051,7 @@
 
 <script>
     $(document).ready(function () {
+        debugger;
      var selectedValue = $('#ddlFurtherAction option:selected').val(); //$(this).val(); // Get the selected value
         if (selectedValue == "Customer Requested a Final Offer") {
             $('#txtTiimesEnquiryNumber').show();
@@ -3911,22 +4063,26 @@
 
 
         var selectedVal = $("#DStatusList").val();
+        var selectedValIStatusList = $("#IStatusList").val();
+
         if (selectedVal == "1" || selectedVal == "2" || selectedVal == "8") {
             $('#txtdate_').show();
         }
-        else {
-            $('#txtdate_').hide();
-
-        }
-
-        var selectedValIStatusList = $("#IStatusList").val();
-        if (selectedValIStatusList == "1" || selectedValIStatusList == "2" || selectedValIStatusList == "8") {
+        else if (selectedValIStatusList == "1" || selectedValIStatusList == "2" || selectedValIStatusList == "8") {
             $('#txtdate_').show();
         }
         else {
             $('#txtdate_').hide();
 
         }
+
+        //if (selectedValIStatusList == "1" || selectedValIStatusList == "2" || selectedValIStatusList == "8") {
+        //    $('#txtdate_').show();
+        //}
+        //else {
+        //    $('#txtdate_').hide();
+
+        //}
 
     });
 
@@ -4171,6 +4327,10 @@
                     if (DEstimatedAmount == '') {
                         //alert("Please Fill all details in Domestic")
                         $("#LostReason").focus()
+                        return a = "2";
+                    }
+                    if (distance == '') {
+                        $(".CDistance").focus()
                         return a = "2";
                     }
                     if (Dcurrency == '') {
@@ -4550,7 +4710,8 @@
                     ValidityDate: $("#ValidityDate").val(),
                     validityNumber: $("#validityNumber").val(),
                     FurtherAction: FurtherAction,
-                    TiimesEnquiryNumber: $("#TiimesEnquiryNumber").val()
+                    TiimesEnquiryNumber: $("#TiimesEnquiryNumber").val(),
+                    MultiplejobCreated: $('#MultiplejobCreated').val()
 
                 }
             console.log(QuotationDetails);
@@ -4564,7 +4725,7 @@
                 url: '@Url.Action("Quotation", "QuotationMaster")',
                 dataType: 'json',
                 Async: false,
-                data: JSON.stringify({ QM: QuotationDetails, "C": checkbox, "ExclusionCheckBox": varExclusionCheckBox, "o": DArray, "DArray": DArray, "IArray": IArray, "GeneralTermsCheckbox": varGeneralTermsCheckbox }),
+                data: JSON.stringify({ QM: QuotationDetails, "C": checkbox, "ExclusionCheckBox": varExclusionCheckBox,  "DArray": DArray, "IArray": IArray, "GeneralTermsCheckbox": varGeneralTermsCheckbox }),
                 enctype: "multipart/form-data",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
@@ -4832,6 +4993,10 @@
                         $(this).find('.CEstimatedAmount').focus()
                         return a = "2";
                     }
+                    if (distance == '') {
+                        $(this).find('.CDistance').focus()
+                        return a = "2";
+                    }
                     if (Dcurrency == '') {
                         //alert("Please Fill all details in Domestic")
                         $(this).find('.CDcurrency').focus()
@@ -4938,6 +5103,10 @@
                     if (IEstimatedAmount == '') {
                         //alert("Please Fill all details in Domestic")
                         $(this).find('.CIEstimatedAmount').focus()
+                        return b = "2";
+                    }
+                    if (Idistance == '') {
+                        $(this).find('.CIDistance').focus()
                         return b = "2";
                     }
                     if (Icurrency == '') {
@@ -5138,6 +5307,7 @@
                         if ($("#Followupddate").val() == "" || $("#Followupddate").val() == null) {
                             alert("Please select Follow up date");
                             return false;
+
                         }
                     }
                 }
@@ -5272,7 +5442,8 @@
                     validityNumber: $("#validityNumber").val(),
                     FurtherAction: FurtherAction,
                     TiimesEnquiryNumber: $("#TiimesEnquiryNumber").val(),
-                    wonlost_date:wonlost_date
+                    wonlost_date:wonlost_date,
+                    MultiplejobCreated: $('#MultiplejobCreated').val()
 
                 }
             $.ajax({
@@ -5280,7 +5451,7 @@
                 url: '@Url.Action("Quotation", "QuotationMaster")',
                 dataType: 'json',
                 Async: false,
-                data: JSON.stringify({ QM: QuotationDetails, "C": checkbox, "ExclusionCheckBox": varExclusionCheckBox, "o": DArray, "DArray": DArray, "IArray": IArray, "GeneralTermsCheckbox": varGeneralTermsCheckbox }),
+                data: JSON.stringify({ QM: QuotationDetails, "C": checkbox, "ExclusionCheckBox": varExclusionCheckBox,  "DArray": DArray, "IArray": IArray, "GeneralTermsCheckbox": varGeneralTermsCheckbox }),
                 enctype: "multipart/form-data",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
@@ -6279,7 +6450,7 @@
                 '<td>' +
 
 
-            ' <select name="IOrderType"  class="form-control CIOrderType" id="IddlOrderType" onchange="IDropdownChange()"> <option value="">Select Order Type</option> <option value="ManDays">Man Days</option> <option value="ManMonth">Man Month</option> <option value="LumSum">Lump Sum</option><option value="Perc">Percentage</option> <option value="ManHR">Man Hours</option><option value="1/2ManDays">1/2 ManDays</option><option value="Certification">Certification</option></select>  </td>' +
+            ' <select name="IOrderType"  class="form-control CIOrderType" id="IddlOrderType" onchange="IDropdownChange()"> <option value="">Select Order Type</option> <option value="ManDays">Man Days</option> <option value="ManMonth">Man Month</option> <option value="LumSum">Lump Sum</option></select>  </td>' +
              '<td><select name="Icurrency"  class="form-control CIcurrency"> <option value="">--Select Currency--</option> <option value="1">INR</option> <option value="2">EUR</option> <option value="3" selected>USD</option><option value="4">GBP</option><option value="5">LKR</option><option value="6">THB</option></select>  </td>' +
                 '<td><input type="number" name="IOrderRate" class="form-control CIOrderRate" onkeyup="CICI()"/></td>' +
                 '<td><input type="number" name="IEstimate_ManDays_ManMonth"  class="form-control CIEstimate_ManDays_ManMonth" onkeyup="CICICI()" /></td>' +
@@ -6808,23 +6979,52 @@
 
         if (CIcurrency != "1") {
             if (OrderType == "ManDays" || OrderType == "ManDays") {
-                if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
-                    if (two < 100 || two > 1200) {
-                        alert("The value must be between 100 and 1200");
-                        $(this).val("");
-                        return false;
+                if (P == "1") {
+
+
+                    if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                        if (two < 100 || two > 1200) {
+                            alert("The value must be between 100 and 1200");
+                            $(this).val("");
+                            return false;
+                        }
+                    } else {
+                        // if (two < 31.5 || two > 1200)
+                        if (two < 100 || two > 1200) {
+                            alert("The value must be between 100 and 1200.");
+                            $(this).val("");
+                            return false;
+                        }
                     }
+                    var MandaysRateINR = two * one;
+                    Number(tableRow.find(".CIManday").val(Math.round(MandaysRateINR)));
+                    tableRow.find(".IActualManDays").val(Math.round(three));
                 } else {
-                    // if (two < 31.5 || two > 1200)
-                    if (two < 100 || two > 1200) {
-                        alert("The value must be between 100 and 1200.");
-                        $(this).val("");
-                        return false;
-                    }
+
+
+                    if (OrderType == "ManDays" || OrderType == "ManDays") {
+                        if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                            if (two < 8000 || two > 96000) {
+                                alert("The value must be between 8000 and 96000");
+                                $(this).val("");
+                                return false;
+                            }
+                        } else {
+                            //if (two < 31.5 || two > 312.5)
+                            if (two < 8000 || two > 96000) {
+                                alert("The value must be between 8000 and 96000.");
+                                $(this).val("");
+                                return false;
+                            }
+                        }
+                        var MandaysRateINR = two * one;
+                        Number(tableRow.find(".CActualManDays").val(Math.round(three)));
+                        tableRow.find(".CManday").val(Math.round(MandaysRateINR));
+
+
+
                 }
-                var MandaysRateINR = two * one;
-                Number(tableRow.find(".CIManday").val(Math.round(MandaysRateINR)));
-                tableRow.find(".IActualManDays").val(Math.round(three));
+                }
 
             }
             else if (OrderType == "ManMonth" || OrderType == "ManMonth") {
@@ -7144,13 +7344,14 @@
         else {
 
             if (OrderType == "ManDays") {
-                if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
-                    if (two < 6000 || two > 150000) {
-                        alert("The value must be between 6000 and 150000.");
-                        $(this).val("");
-                        return false;
-                    }
-                } else {
+                if (P == "1") {
+                    if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                        if (two < 6000 || two > 150000) {
+                            alert("The value must be between 6000 and 150000.");
+                            $(this).val("");
+                            return false;
+                        }
+                    } else {
 
 
 
@@ -7160,14 +7361,40 @@
                             return false;
                         }
 
+                    }
+                    tableRow.find(".CIManday").val(Math.round(two));
+                    tableRow.find(".IActualManDays").val(Math.round(three));
+                    if (two < 2500) {
+                        alert("Please select Mandays value of 2500 or more.");
+                        $(this).val("");
+                        tableRow.find(".CIManday").val(Math.round(""));
+                        return false;
+                    }
                 }
-                tableRow.find(".CIManday").val(Math.round(two));
-                tableRow.find(".IActualManDays").val(Math.round(three));
-                if (two < 2500) {
-                    alert("Please select Mandays value of 2500 or more.");
-                    $(this).val("");
-                    tableRow.find(".CIManday").val(Math.round(""));
-                    return false;
+                else {
+
+                    if (OrderType == "ManDays" || OrderType == "ManDays") {
+                        if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                            if (two < 8000 || two > 96000) {
+                                alert("The value must be between 8000 and 96000");
+                                $(this).val("");
+                                return false;
+                            }
+                        } else {
+                            //if (two < 31.5 || two > 312.5)
+                            if (two < 8000 || two > 96000) {
+                                alert("The value must be between 8000 and 96000.");
+                                $(this).val("");
+                                return false;
+                            }
+                        }
+                        var MandaysRateINR = two * one;
+                        Number(tableRow.find(".CActualManDays").val(Math.round(three)));
+                        tableRow.find(".CManday").val(Math.round(MandaysRateINR));
+
+
+
+                    }
                 }
 
             } else if (OrderType == "ManMonth") {
@@ -7179,8 +7406,8 @@
                     }
                 }
                 else {
-                    if (two < 65000 || two > 500000) {
-                        alert("The value must be between 65,000 and 500,000.");
+                    if (two < 20000 || two > 500000) {
+                        alert("The value must be between 20,000 and 500,000.");
                         $(this).val("");
                         return false;
                     }
@@ -7339,15 +7566,15 @@
             }
             else if (OrderType == "Certification") {
                 if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
-                    if (two < 15000 || two > 1000000) {
+                    if (two < 15000 || two > 5000000) {
                         alert("The value must be between 15,000 and 10,00,000.");
                         $(this).val("");
                         return false;
                     }
                 }
                 else {
-                    if (two < 15000 || two > 300000) {
-                        alert("The value must be between 15,000 and 300,000.");
+                    if (two < 15000 || two > 2000000) {
+                        alert("The value must be between 15,000 and 2000,000.");
                         $(this).val("");
                         return false;
                     }
@@ -8657,8 +8884,8 @@
                     }
                 }
                 else {
-                    if (two < 65000 || two > 500000) {
-                        alert("The value must be between 65,000 and 500,000.");
+                    if (two < 20000 || two > 500000) {
+                        alert("The value must be between 20,000 and 500,000.");
                         $(this).val("");
                         return false;
                     }
@@ -8827,15 +9054,15 @@
             }
             else if (OrderType == "Certification") {
                 if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
-                    if (two < 15000 || two > 1000000) {
+                    if (two < 15000 || two > 5000000) {
                         alert("The value must be between 15,000 and 10,00,000.");
                         $(this).val("");
                         return false;
                     }
                 }
                 else {
-                    if (two < 15000 || two > 300000) {
-                        alert("The value must be between 15,000 and 3,00,000.");
+                    if (two < 15000 || two > 2000000) {
+                        alert("The value must be between 15,000 and 20,00,000.");
                         $(this).val("");
                         return false;
                     }
@@ -8916,26 +9143,56 @@
             sumIt();
         } else {
 
-            if (OrderType == "ManDays" || OrderType == "ManDays") {
-                if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
-                    if (two < 100 || two > 1200) {
-                        alert("The value must be between 100 and 1200");
-                        $(this).val("");
-                        return false;
-                    }
-                } else {
-                    //if (two < 31.5 || two > 312.5)
-                    if (two < 100 || two > 1200) {
-                        alert("The value must be between 100 and 1200.");
-                        $(this).val("");
-                        return false;
-                    }
-                }
-                var MandaysRateINR = two * one;
-                Number(tableRow.find(".CActualManDays").val(Math.round(three)));
-                tableRow.find(".CManday").val(Math.round(MandaysRateINR));
 
+            if (OrderType == "ManDays" || OrderType == "ManDays") {
+                if (P == "1") {
+                    if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                        if (two < 100 || two > 1200) {
+                            alert("The value must be between 100 and 1200");
+                            $(this).val("");
+                            return false;
+                        }
+                    } else {
+                        //if (two < 31.5 || two > 312.5)
+                        if (two < 100 || two > 1200) {
+                            alert("The value must be between 100 and 1200.");
+                            $(this).val("");
+                            return false;
+                        }
+                    }
+                    var MandaysRateINR = two * one;
+                    Number(tableRow.find(".CActualManDays").val(Math.round(three)));
+                    tableRow.find(".CManday").val(Math.round(MandaysRateINR));
+
+                }
+
+                else {
+
+                    if (OrderType == "ManDays" || OrderType == "ManDays") {
+                        if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                            if (two < 8000 || two > 96000) {
+                                alert("The value must be between 8000 and 96000");
+                                $(this).val("");
+                                return false;
+                            }
+                        } else {
+                            //if (two < 31.5 || two > 312.5)
+                            if (two < 8000 || two > 96000) {
+                                alert("The value must be between 8000 and 96000.");
+                                $(this).val("");
+                                return false;
+                            }
+                        }
+                        var MandaysRateINR = two * one;
+                        Number(tableRow.find(".CActualManDays").val(Math.round(three)));
+                        tableRow.find(".CManday").val(Math.round(MandaysRateINR));
+
+                    }
+
+                }
             }
+
+
             else if (OrderType == "ManMonth" || OrderType == "ManMonth") {
 
                 if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
@@ -9950,6 +10207,7 @@
 
 
     });
+
 </script>
 
 @*<input type="hidden" id="hiddenUserID" value="<%= Session[" UserID"] %>" />*@
@@ -10089,8 +10347,8 @@
                             }
                         }
                         else {
-                            if (two < 65000 || two > 500000) {
-                                alert("The value must be between 65,000 and 500,000.");
+                            if (two < 20000 || two > 500000) {
+                                alert("The value must be between 20,000 and 500,000.");
                                 //$('.COrderRate').val("");
                                 tableRow.find(".COrderRate").val("");
                                 return false;
@@ -10259,7 +10517,7 @@
                     }
                     else if (OrderType == "Certification") {
                         if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
-                            if (two < 15000 || two > 1000000) {
+                            if (two < 15000 || two > 5000000) {
                                 alert("The value must be between 15,000 and 10,00,000.");
                                 //$(this).val("");
                                 //$('.COrderRate').val("");
@@ -10268,8 +10526,8 @@
                             }
                         }
                         else {
-                            if (two < 15000 || two > 300000) {
-                                alert("The value must be between 15,000 and 3,00,000.");
+                            if (two < 15000 || two > 2000000) {
+                                alert("The value must be between 15,000 and 20,00,000.");
                                 //$(this).val("");
                                 //$('.COrderRate').val("");
                                 tableRow.find(".COrderRate").val("");
@@ -10358,27 +10616,57 @@
                 // $('.CDExchangeRate').val("75");
                 tableRow.find(".CDExchangeRate").val("75").prop("readonly", false);;
                 if (OrderType == "ManDays" || OrderType == "ManDays") {
-                    if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
-                        if (two < 100 || two > 1200) {
-                            alert("The value must be between 100 and 1200");
-                            //$(this).val("");
-                            //$('.COrderRate').val("");
-                            tableRow.find(".COrderRate").val("");
-                            return false;
+
+                    if (P == "1") {
+
+
+
+                        if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                            if (two < 100 || two > 1200) {
+                                alert("The value must be between 100 and 1200");
+                                //$(this).val("");
+                                //$('.COrderRate').val("");
+                                tableRow.find(".COrderRate").val("");
+                                return false;
+                            }
+                        } else {
+                            // if (two < 31.5 || two > 1200)
+                            if (two < 100 || two > 1200) {
+                                alert("The value must be between 100 and 1200.");
+                                //$(this).val("");
+                                //$('.COrderRate').val("");
+                                tableRow.find(".COrderRate").val("");
+                                return false;
+                            }
                         }
+                        var MandaysRateINR = two * one;
+                        Number(tableRow.find(".CActualManDays").val(Math.round(three)));
+                        tableRow.find(".CManday").val(Math.round(MandaysRateINR));
                     } else {
-                        // if (two < 31.5 || two > 1200)
-                        if (two < 100 || two > 1200) {
-                            alert("The value must be between 100 and 1200.");
-                            //$(this).val("");
-                            //$('.COrderRate').val("");
-                            tableRow.find(".COrderRate").val("");
-                            return false;
+
+                        if (OrderType == "ManDays" || OrderType == "ManDays") {
+                            if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                                if (two < 8000 || two > 96000) {
+                                    alert("The value must be between 8000 and 96000");
+                                    $(this).val("");
+                                    return false;
+                                }
+                            } else {
+                                //if (two < 31.5 || two > 312.5)
+                                if (two < 8000 || two > 96000) {
+                                    alert("The value must be between 8000 and 96000.");
+                                    $(this).val("");
+                                    return false;
+                                }
+                            }
+                            var MandaysRateINR = two * one;
+                            Number(tableRow.find(".CActualManDays").val(Math.round(three)));
+                            tableRow.find(".CManday").val(Math.round(MandaysRateINR));
+
                         }
+
                     }
-                    var MandaysRateINR = two * one;
-                    Number(tableRow.find(".CActualManDays").val(Math.round(three)));
-                    tableRow.find(".CManday").val(Math.round(MandaysRateINR));
+
 
                 }
                 else if (OrderType == "ManMonth" || OrderType == "ManMonth") {
@@ -10678,27 +10966,54 @@
             //$('.CIExchangeRate').val("75");
             tableRow.find(".CIExchangeRate").val("75").prop("readonly", false);
             if (OrderType == "ManDays" || OrderType == "ManDays") {
-                if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
-                    if (two < 100 || two > 1200) {
-                        alert("The value must be between 100 and 1200");
-                        //$(this).val("");
-                        //$('.CIOrderRate').val("");
-                        tableRow.find(".CIOrderRate").val("");
-                        return false;
+                if (P == "1") {
+
+
+                    if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                        if (two < 100 || two > 1200) {
+                            alert("The value must be between 100 and 1200");
+                            //$(this).val("");
+                            //$('.CIOrderRate').val("");
+                            tableRow.find(".CIOrderRate").val("");
+                            return false;
+                        }
+                    } else {
+                        // if (two < 31.5 || two > 1200)
+                        if (two < 100 || two > 1200) {
+                            alert("The value must be between 100 and 1200.");
+                            // $(this).val("");
+                            //$('.CIOrderRate').val("");
+                            tableRow.find(".CIOrderRate").val("");
+                            return false;
+                        }
                     }
+                    var MandaysRateINR = two * one;
+                    Number(tableRow.find(".CIManday").val(Math.round(MandaysRateINR)));
+                    tableRow.find(".IActualManDays").val(Math.round(three));
                 } else {
-                    // if (two < 31.5 || two > 1200)
-                    if (two < 100 || two > 1200) {
-                        alert("The value must be between 100 and 1200.");
-                        // $(this).val("");
-                        //$('.CIOrderRate').val("");
-                        tableRow.find(".CIOrderRate").val("");
-                        return false;
+
+                    if (OrderType == "ManDays" || OrderType == "ManDays") {
+                        if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
+                            if (two < 8000 || two > 96000) {
+                                alert("The value must be between 8000 and 96000");
+                                $(this).val("");
+                                return false;
+                            }
+                        } else {
+                            //if (two < 31.5 || two > 312.5)
+                            if (two < 8000 || two > 96000) {
+                                alert("The value must be between 8000 and 96000.");
+                                $(this).val("");
+                                return false;
+                            }
+                        }
+                        var MandaysRateINR = two * one;
+                        Number(tableRow.find(".CActualManDays").val(Math.round(three)));
+                        tableRow.find(".CManday").val(Math.round(MandaysRateINR));
+
                     }
+
                 }
-                var MandaysRateINR = two * one;
-                Number(tableRow.find(".CIManday").val(Math.round(MandaysRateINR)));
-                tableRow.find(".IActualManDays").val(Math.round(three));
 
             }
             else if (OrderType == "ManMonth" || OrderType == "ManMonth") {
@@ -11114,8 +11429,8 @@
                     }
                 }
                 else {
-                    if (two < 65000 || two > 500000) {
-                        alert("The value must be between 65,000 and 500,000.");
+                    if (two < 20000 || two > 500000) {
+                        alert("The value must be between 20,000 and 500,000.");
                         //$(this).val("");
                         //$('.CIOrderRate').val("");
                         tableRow.find(".CIOrderRate").val("");
@@ -11337,7 +11652,7 @@
             }
             else if (OrderType == "Certification") {
                 if (PortfolioType == "6" || PortfolioType == "7" || PortfolioType == "41" || PortfolioType == "42" || PortfolioType == "43" || PortfolioType == "44") {
-                    if (two < 15000 || two > 1000000) {
+                    if (two < 15000 || two > 5000000) {
                         alert("The value must be between 15,000 and 10,00,000.");
                         // $(this).val("");
                         //$('.CIOrderRate').val("");
@@ -11346,8 +11661,8 @@
                     }
                 }
                 else {
-                    if (two < 15000 || two > 300000) {
-                        alert("The value must be between 15,000 and 3,00,000.");
+                    if (two < 15000 || two > 2000000) {
+                        alert("The value must be between 15,000 and 20,00,000.");
                         //$(this).val("");
                         //$('.CIOrderRate').val("");
                         tableRow.find(".CIOrderRate").val("");

@@ -5659,7 +5659,7 @@ namespace TuvVision.Controllers
                     bodyTxt = $@"
             <html>
             <body>
-                <p>Dear {InspectorName},</p>
+                <p>Dear Sir,</p>
                 <p>{CreatedbyName} has verified the technical competency form.</p>
                 <br/>
                 <p style='color:red;'>Note: This is a system-generated email. Please do not reply.</p>

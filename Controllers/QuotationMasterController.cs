@@ -672,7 +672,6 @@ Upon acceptance of an order, a contract in the specified format of TUV NORD woul
                                           {
                                               Name = n.Field<string>(DSGetEditQuotationAllddllst.Tables[2].Columns["Name"].ToString()),
                                               Code = n.Field<Int32>(DSGetEditQuotationAllddllst.Tables[2].Columns["PK_ID"].ToString())
-
                                           }).ToList();
                 }
                 IEnumerable<SelectListItem> ServiceTypeItems;

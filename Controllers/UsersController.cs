@@ -3044,8 +3044,6 @@ namespace TuvVision.Controllers
                             new CostCenterModel
                             {
                                 Cost_Center = Convert.ToString(dr["Cost_Center"]),
-
-
                             }
                             );
                     }
