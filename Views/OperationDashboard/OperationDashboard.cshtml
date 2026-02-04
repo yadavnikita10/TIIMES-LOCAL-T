@@ -1,7 +1,331 @@
-﻿
-@{
-    ViewBag.Title = "OperationDashboard";
+﻿@{
+    Layout = null;// "~/Views/Shared/_TuvVision.cshtml";
 }
 
-<h2>OperationDashboard</h2>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    @@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:400,500,600');
+
+#datatable{
+	width:1136px;
+}
+
+#datatable td{
+	padding:10px;
+}
+
+.statistic{
+	float:left;
+	width:250px;
+	height:150px;
+	margin-right:25px;
+	text-align:center;
+	background-color:#eee;
+	border-bottom-left-radius:5px;
+	border-bottom-right-radius:5px;
+	border:1px solid #ccc;
+	-webkit-box-shadow: 0px 10px 62px -25px rgba(0,0,0,0.7);
+-moz-box-shadow: 0px 10px 62px -25px rgba(0,0,0,0.7);
+box-shadow: 0px 10px 62px -25px rgba(0,0,0,0.7);
+}
+
+.title{
+	width:255px;
+	margin-top:-2px;
+	margin-left:-2px;
+	padding:10px 0;
+	border-top-left-radius:5px;
+	border-top-right-radius:5px;
+	color: #ffffff;
+	font-family: 'Barlow Condensed', sans-serif;
+	text-transform:uppercase;
+	font-weight:500;
+	background-color:#102c58;
+	-webkit-box-shadow: 0px 10px 51px -14px rgba(0,0,0,0.7);
+-moz-box-shadow: 0px 10px 51px -14px rgba(0,0,0,0.7);
+box-shadow: 0px 10px 51px -14px rgba(0,0,0,0.7);
+}
+
+.numbers{
+	width:250px;
+	padding:2px 0px 0px 0px;
+	color: #102c58;
+	font-size:80px;
+	font-family: 'Barlow Condensed', sans-serif;
+}
+
+.statistic:hover .title{
+	background-color:#183e7a;
+	transition: 0.2s;
+}
+
+.statistic:hover .numbers{
+	color:#183e7a;
+	transition: 0.2s;
+}
+.fy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(98px, 1fr));
+    gap: 5px;
+}
+
+.fy-box {
+    background: linear-gradient(135deg, #1f3c88, #4e73df);
+    color: white;
+    padding: 12px;
+    border-radius: 14px;
+    text-align: center;
+    font-weight: 600;
+    border-color:white;
+}
+.progress {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 20px;
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+.progress span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #1cc88a, #17a673);
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(120deg, #eef2f7, #dfe7f3);
+    color: #333;
+}
+
+header {
+    background: linear-gradient(135deg, #1f3c88, #4e73df);
+    color: #fff;
+    padding: 30px 40px;
+    border-radius: 0 0 30px 30px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+header span {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.container {
+    padding: 35px 40px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 30px 0 18px;
+}
+
+/* KPI CARDS */
+.kpi-grid {
+    display: grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.kpi-card {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 18px;
+    box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+}
+
+.kpi-card h3 {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.kpi-card .value {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+
+</style>
+<div class="grey-bg-f3">
+    <header>
+        <h1>📊 Financial Year Overview</h1>
+    </header>
+
+    <!--Start of header-->
+    <div class="container-fluid">
+
+            @*<div class="col-xs-12 form-col">
+                <div class="row">
+                    <div id="folderButtonsContainer">
+                       
+                    </div>
+
+                    </div>
+                </div>*@
+        @*<div class="section-title" style="font-weight:bold;font-size:30px;">Financial Year Overview</div>*@
+        <br />
+        <div class="fy-grid" id="folderButtonsContainer">
+            
+        </div>
+        </div>
+
+    @*<center>
+        <table id="datatable" border="0">
+            <tr>
+                <td width="100%">
+                    <a href="#">
+                        <div class="statistic">
+                            <div class="title">KPI</div>
+                            <div class="numbers">4</div>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="statistic">
+                            <div class="title">Originating Branch</div>
+                            <div class="numbers">15</div>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="statistic">
+                            <div class="title">Executing Branch</div>
+                            <div class="numbers">15</div>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="statistic">
+                            <div class="title">On Time</div>
+                            <div class="numbers">31</div>
+                        </div>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td width="100%">
+                    <a href="#">
+                        <div class="statistic">
+                            <div class="title">Total Call</div>
+                            <div class="numbers">10</div>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="statistic">
+                            <div class="title">Open Calls</div>
+                            <div class="numbers">15</div>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="statistic">
+                            <div class="title">Assigned calls</div>
+                            <div class="numbers">15</div>
+                        </div>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </center>*@
+    @*<div class="section-title">Coordinator Performance</div>*@
+    <br />
+    <br />
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <h3>Total Calls</h3>
+            <div class="value">97</div>
+            <div class="progress"><span style="width:85%"></span></div>
+        </div>
+        <div class="kpi-card">
+            <h3>Original Calls</h3>
+            <div class="value">60</div>
+            <div class="progress"><span style="width:70%"></span></div>
+        </div>
+        <div class="kpi-card">
+            <h3>Pending</h3>
+            <div class="value">15</div>
+            <div class="progress"><span style="width:35%;background:#f6c23e"></span></div>
+        </div>
+        <div class="kpi-card">
+            <h3>Delivered</h3>
+            <div class="value">22</div>
+            <div class="progress"><span style="width:65%"></span></div>
+        </div>
+        <div class="kpi-card">
+            <h3>Delivered</h3>
+            <div class="value">22</div>
+            <div class="progress"><span style="width:65%"></span></div>
+        </div>
+        <div class="kpi-card">
+            <h3>Delivered</h3>
+            <div class="value">22</div>
+            <div class="progress"><span style="width:65%"></span></div>
+        </div>
+        <div class="kpi-card">
+            <h3>Delivered</h3>
+            <div class="value">22</div>
+            <div class="progress"><span style="width:65%"></span></div>
+        </div>
+        <div class="kpi-card">
+            <h3>Delivered</h3>
+            <div class="value">22</div>
+            <div class="progress"><span style="width:65%"></span></div>
+        </div>
+    </div>
+    
+    </div>
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    <script>
+                        $(document).ready(function () {
+                            $.ajax({
+                                url: '@Url.Action("GetFolder")',
+                                type: 'GET',
+                                success: function (folders) {
+                                    $("#folderButtonsContainer").empty();
+
+                                    folders.forEach(function (folderName) {
+                                        // Create a button with folderName as the value
+                                        var btn = $('<button>')
+                                            .attr('type', 'button')        // button type
+                                            .val(folderName)               // Set the value attribute
+                                            .text(folderName)              // Optional: display text on button
+                                            .addClass('fy-box')
+                                            .click(function () {
+                                                var selectedFolder = $(this).val();  // Get the folder from value
+                                                alert('You clicked folder: ' + selectedFolder);
+                                                // Or send selectedFolder to your controller
+                                            });
+
+                                        $("#folderButtonsContainer").append(btn);
+                                    });
+                                },
+                                error: function () {
+                                    alert('Failed to load folders.');
+                                }
+                            });
+                        });
+
+                        
+                    </script>
+<script>
+    new Chart(callTypeChart, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Inbound', 'Outbound', 'Assigned', 'Delivered'],
+                                datasets: [{
+                                    data: [45, 32, 20, 18],
+                                    backgroundColor: ['#4e73df', '#1cc88a', '#f6c23e', '#36b9cc']
+                                }]
+                            },
+                            options: { cutout: '65%', plugins: { legend: { position: 'bottom' } } }
+                        });
+
+</script>
+                   

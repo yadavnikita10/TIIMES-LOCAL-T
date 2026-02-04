@@ -78,7 +78,6 @@ namespace TuvVision.Controllers
                                 ModifiedDate = Convert.ToString(dr["ModifiedDate"]),
                                 AttributeToFaultiInspection = Convert.ToString(dr["AttributeToFaultiInspection"]),
                                 showData1 = Convert.ToString(dr["showData1"]),
-                              
                             }
                             );
                     }

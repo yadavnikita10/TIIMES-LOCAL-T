@@ -1070,5 +1070,28 @@ namespace TuvVision.DataAccessLayer
             }
             return ds1;
         }
+
+
+        public DataSet GetFolder()
+        {
+            DataSet  ds1 = new DataSet();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("SP_OperationDashboard", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@SP_Type", "2");
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds1);
+            }
+            catch (Exception ex)
+            {
+                string Error = ex.Message.ToString();
+            }
+            finally
+            {
+                ds1.Dispose();
+            }
+            return ds1;
+        }
     }
 }
